@@ -18,7 +18,7 @@
 		{
 			"label": "QB64 Build Task - Build & Run",
 			"type": "shell",
-			"command": "C:\\QB64\\qb64.exe -c ${fileDirname}\\${fileBasename} -o ${fileDirname}\\$${fileBasenameNoExtension}.exe -x; ${fileDirname}\\${fileBasenameNoExtension}.exe",
+			"command": "C:\\QB64\\qb64.exe -c ${fileDirname}\\${fileBasename} -o ${fileDirname}\\${fileBasenameNoExtension}.exe -x; ${fileDirname}\\${fileBasenameNoExtension}.exe",
 			"options": {},
 			"group": {
 				"kind": "test",
