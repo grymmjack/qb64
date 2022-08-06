@@ -1,0 +1,33 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "QB64 Build Task - Build Only",
+			"type": "shell",
+			"command": "C:\\QB64\\qb64.exe -c ${fileDirname}\\${fileBasename} -o ${fileDirname}\\${fileBasenameNoExtension}.exe -x",
+			"options": {},
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			},
+			"presentation": {
+				"reveal": "always",
+				"panel": "new"
+			}
+		},
+		{
+			"label": "QB64 Build Task - Build & Run",
+			"type": "shell",
+			"command": "C:\\QB64\\qb64.exe -c ${fileDirname}\\${fileBasename} -o ${fileDirname}\\$${fileBasenameNoExtension}.exe -x; ${fileDirname}\\${fileBasenameNoExtension}.exe",
+			"options": {},
+			"group": {
+				"kind": "test",
+				"isDefault": true
+			},
+			"presentation": {
+				"reveal": "always",
+				"panel": "new"
+			}
+		}
+	]
+}
