@@ -1,2 +1,3 @@
 *.exe
+*.command
 .vscode/launch.json
