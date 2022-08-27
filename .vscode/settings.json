@@ -1,10 +1,10 @@
 {
-	"files.exclude": {
-		"**/*.bas-bak": true,
-		"**/*.bi-bak": true,
-		"**/*.bm-bak": true,
-		"**/*.cmp-out": true,
-	},
+    "files.exclude": {
+        "**/*.bas-bak": true,
+        "**/*.bi-bak": true,
+        "**/*.bm-bak": true,
+        "**/*.cmp-out": true,
+    },
     "qb64.compilerPath": "c:\\QB64\\qb64.exe",
     "extensions.ignoreRecommendations": true,
     "editor.fontFamily": "\"Perfect DOS VGA 437 Win\", monospace",
@@ -61,7 +61,7 @@
         "editor.selectionBackground": "#000000",
         "editor.selectionForeground": "#ffff55",
         "list.activeSelectionBackground": "#00a3a3",
-        "list.activeSelectionForeground":"#ffffff",
+        "list.activeSelectionForeground": "#ffffff",
         "list.inactiveSelectionBackground": "#00a3a3",
         "list.inactiveSelectionForeground": "#ffffff",
         "editorBracketHighlight.unexpectedBracket.foreground": "#ff0000",
@@ -141,9 +141,18 @@
     "editor.matchBrackets": "always",
     "editor.guides.bracketPairs": "active",
     "editor.language.brackets": [
-        [ "[", "]" ],
-        [ "{", "}" ],
-        [ "(", ")" ]
+        [
+            "[",
+            "]"
+        ],
+        [
+            "{",
+            "}"
+        ],
+        [
+            "(",
+            ")"
+        ]
     ],
     "editor.guides.highlightActiveIndentation": true,
     "editor.rulers": [
