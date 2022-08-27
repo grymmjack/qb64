@@ -5,7 +5,6 @@
         "**/*.bm-bak": true,
         "**/*.cmp-out": true,
     },
-    "qb64.compilerPath": "c:\\QB64\\qb64.exe",
     "extensions.ignoreRecommendations": true,
     "editor.fontFamily": "\"Perfect DOS VGA 437 Win\", monospace",
     "terminal.integrated.fontFamily": "\"Perfect DOS VGA 437 Win\", monospace",
