@@ -5,7 +5,7 @@
             "name": "QB64",
             "type": "f5anything",
             "request": "launch",
-            "command": "${config:qb64.compilerPath} -c ${fileDirname}\\${fileBasename} -o ${fileDirname}\\${fileBasenameNoExtension}.exe -x; ${fileDirname}\\${fileBasenameNoExtension}.exe",
+            "command": "${config:qb64.compilerPath} -c ${fileDirname}/${fileBasename} -o ${fileDirname}/${fileBasenameNoExtension} -x; ${fileDirname}/${fileBasenameNoExtension}",
             "terminalName": "QB64",
             "terminalIndex": -1,
             "showTerminal": true
