@@ -19,9 +19,16 @@
     "git.autofetch": true,
     "git.confirmSync": false,
     "workbench.iconTheme": "file-icons",
-    "workbench.colorTheme": "MS-DOS Editor Theme",
+    // "workbench.colorTheme": "MS-DOS Editor Theme",
     "editor.suggest.preview": true,
     "workbench.colorCustomizations": {
+        "editorGutter.background": "#00000060",
+        "editorGutter.addedBackground": "#00aa00",
+        "editorGutter.deletedBackground": "#aa0000",
+        "editorGutter.modifiedBackground": "#ffff55",
+        "minimapGutter.addedBackground": "#00aa00",
+        "minimapGutter.deletedBackground": "#aa0000",
+        "minimapGutter.modifiedBackground": "#ffff55",
         "editor.background": "#0000aa",
         "editor.foreground": "#93c4eb",
         "terminal.background": "#000000",
@@ -37,7 +44,7 @@
         "activityBarBadge.foreground": "#ffff55",
         "activityBar.inactiveForeground": "#ffffff",
         "editor.lineHighlightBackground": "#00000060",
-        "editor.lineHighlightBorder": "#ffffff60",
+        "editor.lineHighlightBorder": "#ffffff00",
         "statusBar.background": "#00a3a3",
         "icon.foreground": "#ffffff",
         "sideBar.border": "#ffffff",
@@ -58,9 +65,9 @@
         "list.inactiveSelectionBackground": "#00a3a3",
         "list.inactiveSelectionForeground": "#ffffff",
         "editorBracketHighlight.unexpectedBracket.foreground": "#ff0000",
-        "editor.findMatchBackground": "#000000",
-        "editor.findMatchHighlightBackground": "#000000",
-        "editor.findMatchBorder": "#000000",
+        "editor.findMatchBackground": "#ffff5550",
+        "editor.findMatchHighlightBackground": "#ffff5550",
+        "editor.findMatchBorder": "#ffff55",
         "tab.activeBackground": "#00a3a3",
         "tab.activeForeground": "#ffffff",
         "button.background": "#555555",
@@ -95,8 +102,20 @@
         "terminal.findMatchBackground": "#ffff55",
         "terminal.findMatchHighlightBackground": "#ffff55",
         "terminalCursor.background": "#ffffff",
-        "terminalCursor.foreground": "#ffffff"
-        
+        "terminalCursor.foreground": "#ffffff",
+        "editorBracketPairGuide.background1": "#ffffff60",
+        "editorBracketPairGuide.background2": "#ffffff60",
+        "editorBracketPairGuide.background3": "#ffffff60",
+        "editorBracketPairGuide.background4": "#ffffff60",
+        "editorBracketPairGuide.background5": "#ffffff60",
+        "editorBracketPairGuide.background6": "#ffffff60",
+        "editorBracketPairGuide.activeBackground1": "#ffff55",
+        "editorBracketPairGuide.activeBackground2": "#ffff55",
+        "editorBracketPairGuide.activeBackground3": "#ffff55",
+        "editorBracketPairGuide.activeBackground4": "#ffff55",
+        "editorBracketPairGuide.activeBackground5": "#ffff55",
+        "editorBracketPairGuide.activeBackground6": "#ffff55",
+        "editorWhitespace.foreground": "#555555"     
     },
     "terminal.integrated.copyOnSelection": true,
     "terminal.integrated.cursorBlinking": true,
@@ -107,6 +126,13 @@
     "terminal.integrated.scrollback": 9999,
     "terminal.integrated.shellIntegration.enabled": true,
     "editor.cursorBlinking": "blink",
+    "editor.matchBrackets": "always",
+    "editor.guides.bracketPairs": "active",
+    "editor.language.brackets": [
+        [ "[", "]" ],
+        [ "{", "}" ],
+        [ "(", ")" ]
+    ],
     "editor.guides.highlightActiveIndentation": true,
     "editor.rulers": [
         80
@@ -119,5 +145,7 @@
         "comments": "#55ffff",
         "keywords": "#93c4eb"
     },
-    "editor.bracketPairColorization.enabled": true	
+    "editor.bracketPairColorization.enabled": true,
+    "editor.guides.bracketPairsHorizontal": true,
+    "editor.guides.highlightActiveBracketPair": true
 }
