@@ -1,0 +1,8 @@
+SUB PETSCII_LoadChars()
+END SUB
+
+SUB PETSCII_LoadColors()
+END SUB
+
+SUB PETSCII_ReadData()
+END SUB
