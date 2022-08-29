@@ -23,7 +23,7 @@
 ' @depends  C64_Pro-STYLE.ttf
 ' @see      https://style64.org/c64-truetype
 '
-_FULLSCREEN _SQUAREPIXELS
+' _FULLSCREEN _SQUAREPIXELS
 SCREEN 9
 ROOT_PATH$ = ENVIRON$("SYSTEMROOT")
 FONT_FILE$ = "C64_Pro-STYLE.ttf"
