@@ -45,12 +45,13 @@ TYPE FRAMEDATA
   transColor AS _UNSIGNED _BYTE
 END TYPE
 
-SCREEN _NEWIMAGE(200, 200, 32)
+SCREEN _NEWIMAGE(220, 220, 32)
 
 ' Open gif file. This reads the headers and palette but not the image data.
 ' The array will be redimentioned to fit the exact number of frames in the file.
 
-DIM gifData AS GIFDATA, frameData(0 TO 0) AS FRAMEDATA
+DIM gifData AS GIFDATA
+DIM frameData(0 TO 0) AS FRAMEDATA
 
 filename$ = "nyan-cat.gif"  '<<<<<<<<<<<< Enter a file name here!!!
 
@@ -59,6 +60,7 @@ openGif filename$, gifData, frameData()
 
 ' Loop away.
 frame = 0
+frame2 = 0
 DO
   ' Request a frame. If it has been requested before, it is re-used,
   ' otherwise it is read and decoded from the file.

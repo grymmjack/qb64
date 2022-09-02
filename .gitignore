@@ -1,5 +1,6 @@
 *.DS_Store
 *.exe
+*.run
 *.command
 .vscode/launch.json
 *.bas-bak
