@@ -45,14 +45,14 @@ TYPE FRAMEDATA
   transColor AS _UNSIGNED _BYTE
 END TYPE
 
-SCREEN _NEWIMAGE(512, 512, 32)
+SCREEN _NEWIMAGE(200, 200, 32)
 
 ' Open gif file. This reads the headers and palette but not the image data.
 ' The array will be redimentioned to fit the exact number of frames in the file.
 
 DIM gifData AS GIFDATA, frameData(0 TO 0) AS FRAMEDATA
 
-filename$ = "1pixmove-256.gif"  '<<<<<<<<<<<< Enter a file name here!!!
+filename$ = "nyan-cat.gif"  '<<<<<<<<<<<< Enter a file name here!!!
 
 IF LEN(filename$) = 0 THEN END
 openGif filename$, gifData, frameData()
