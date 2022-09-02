@@ -4,6 +4,8 @@
         "**/*.bi-bak": true,
         "**/*.bm-bak": true,
         "**/*.cmp-out": true,
+        "**/*.run": true,
+        "**/*_start.command": true
     },
     "extensions.ignoreRecommendations": true,
     "editor.fontFamily": "\"Perfect DOS VGA 437 Win\", monospace",
