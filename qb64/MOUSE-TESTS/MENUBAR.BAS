@@ -7,6 +7,7 @@
 '
 ' @author Rick Christy <grymmjack@gmail.com>
 '
+'$DYNAMIC
 
 'SETUP SCREEN
 _FULLSCREEN _SQUAREPIXELS 'Optional: Comment out for window mode
@@ -30,54 +31,10 @@ CONST G_MENU_PADDING = 2
 CONST G_DBC_PADDING  = 10
 CONST G_DBC_ROWS     = 5
 
-'Setup Menu
-'$DYNAMIC
-DIM AS INTEGER MenuIndex(99), MenuOptionsIndex(99)
-DIM MenuOptions(99) AS STRING
-RESTORE MenuData
-i = 0
-token = 0
-DO:
-    READ token
-    IF token <> -1 THEN
-        MenuIndex(i) = token
-        READ MenuOptionsIndex(i)
-        READ MenuOptions$(i)
-        i = i + 1
-    END IF
-LOOP UNTIL token = -1
-REDIM _PRESERVE MenuIndex(i)
-REDIM _PRESERVE MenuOptionsIndex(i)
-REDIM _PRESERVE MenuOptions(i)
-
-'TODO: Populate MenuBar using arrays
-_PRINTSTRING (0, 100), _
-    STR$(MenuIndex(0)) + "," _
-    + STR$(MenuOptionsIndex(0)) _
-    + "," + MenuOptions$(0) _
-    + "," + STR$(LBOUND(MenuOptionsIndex)) _
-    + "," + STR$(UBOUND(MenuOptionsIndex))
-
-MenuData:
-    DATA 0, 1, "FILE"
-        DATA 1, 0, "NEW"
-        DATA 1, 1, "SAVE"
-        DATA 1, 2, "-"
-        DATA 1, 3, "QUIT"
-    DATA 0, 2, "EDIT"
-        DATA 2, 0, "COPY"
-        DATA 2, 1, "PASTE"
-    DATA -1
-
-'Custom palette colors
-_PALETTECOLOR 50, _RGB32(16, 16, 16)
-_PALETTECOLOR 51, _RGB32(96, 96, 96)
-
 'Mouse button constants
 CONST LEFT_CLICK   = 1
 CONST RIGHT_CLICK  = 2
 CONST MIDDLE_CLICK = 3
-
 'Mouse over (mo_) check variables : 0 = mouse not over, 1 = mouse is over
 mo_Menu        = 0
 mo_MenuFile    = 0
@@ -85,6 +42,91 @@ mo_MenuFile    = 0
 mc_LeftClick   = 0
 mc_RightClick  = 0
 mc_MiddleClick = 0
+
+'Custom palette colors
+_PALETTECOLOR 50, _RGB32(16, 16, 16)
+_PALETTECOLOR 51, _RGB32(96, 96, 96)
+
+'SETUP MENU
+TYPE MENU_OPTION
+    label     AS STRING
+    index     AS INTEGER
+    parent    AS INTEGER
+    selected  AS INTEGER
+    activated AS INTEGER
+    visible   AS INTEGER
+    width     AS INTEGER
+    height    AS INTEGER
+    posX      AS INTEGER
+    posY      AS INTEGER
+END TYPE
+DIM Menu(99) AS MENU_OPTION
+RESTORE MENU_DATA
+CONST END_OF_DATA = -1
+i = 0
+DO:
+    READ parent
+    IF parent <> END_OF_DATA THEN
+        READ index
+        READ label$
+        Menu(i).label     = space$(1) + label$ + space$(1)
+        Menu(i).index     = index
+        Menu(i).parent    = parent
+        Menu(i).selected  = 0
+        Menu(i).visible   = 0
+        Menu(i).activated = 0
+
+        Menu(i).width  = _FONTWIDTH * LEN(Menu(i).label) + (G_MENU_PADDING * 2)
+        Menu(i).height = _FONTHEIGHT
+
+        'Calculate menu item positions
+        IF parent = 0 THEN 'Top level menu options
+            IF index = 1 THEN 'First menu option
+                Menu(i).posX = 0 + G_MENU_PADDING 
+                Menu(i).posY = 0 + G_MENU_PADDING
+            ELSE 'Still top level but not first menu option
+                Menu(i).posX = Menu(i-1).posX + Menu(i-1).width + G_MENU_PADDING
+                Menu(i).posY = 0 + G_MENU_PADDING
+            END IF
+        ELSE 'Sub menu options
+            Menu(i).posX = Menu(parent-1).posX
+            Menu(i).posY = Menu(parent-1).posY + (index * _FONTHEIGHT)
+        END IF
+        i = i + 1
+    END IF
+LOOP UNTIL parent = END_OF_DATA
+REDIM _PRESERVE Menu(i) AS MENU_OPTION
+
+'Draw menu for test
+FOR i = 0 TO UBOUND(Menu)
+    _PRINTSTRING (Menu(i).posX, Menu(i).posY), Menu(i).label
+NEXT i
+
+MENU_DATA:
+    DATA 0, 1, "FILE"
+    DATA 0, 2, "EDIT"
+    DATA 0, 3, "VIEW"
+    DATA 0, 4, "LAST MENU"
+
+    DATA 1, 1, "NEW"
+    DATA 1, 2, "SAVE"
+    DATA 1, 3, "-"
+    DATA 1, 4, "QUIT"
+
+    DATA 2, 1, "COPY"
+    DATA 2, 2, "PASTE"
+
+    DATA 3, 1, "TEXT"
+    DATA 3, 2, "GRAPHICS"
+
+    DATA 4, 1, "MORE"
+    DATA 4, 2, "COMMANDS"
+
+    DATA -1
+
+
+
+END
 
 
 
