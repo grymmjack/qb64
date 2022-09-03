@@ -73,18 +73,18 @@ MenuData:
 _PALETTECOLOR 50, _RGB32(16, 16, 16)
 _PALETTECOLOR 51, _RGB32(96, 96, 96)
 
-'Mouse constants (M_)
-CONST M_LEFT_CLICK   = 1
-CONST M_RIGHT_CLICK  = 2
-CONST M_MIDDLE_CLICK = 3
+'Mouse button constants
+CONST LEFT_CLICK   = 1
+CONST RIGHT_CLICK  = 2
+CONST MIDDLE_CLICK = 3
 
-'Mouse over check variables (mo_) 0 = mouse not over, 1 = mouse is over
+'Mouse over (mo_) check variables : 0 = mouse not over, 1 = mouse is over
 mo_Menu        = 0
 mo_MenuFile    = 0
-'Mouse click check variables
-mo_LeftClick   = 0
-mo_RightClick  = 0
-mo_MiddleClick = 0
+'Mouse button click check (mc_) variables : 0 = not clicked, 1 = clicked
+mc_LeftClick   = 0
+mc_RightClick  = 0
+mc_MiddleClick = 0
 
 
 
@@ -92,7 +92,6 @@ mo_MiddleClick = 0
 'MAIN LOOP
 '=========
 _MOUSESHOW "CROSSHAIR"
-DIM k AS INTEGER
 DO:
     _LIMIT 30
     k = _KEYHIT '
@@ -103,9 +102,9 @@ DO:
     '_MOUSEINPUT is required to poll the mouse
     DO WHILE _MOUSEINPUT:
         ' See if any buttons are clicked
-        mo_LeftClick   = _MOUSEBUTTON(M_LEFT_CLICK)
-        mo_RightClick  = _MOUSEBUTTON(M_RIGHT_CLICK)
-        mo_MiddleClick = _MOUSEBUTTON(M_MIDDLE_CLICK)
+        mc_LeftClick   = _MOUSEBUTTON(LEFT_CLICK)
+        mc_RightClick  = _MOUSEBUTTON(RIGHT_CLICK)
+        mc_MiddleClick = _MOUSEBUTTON(MIDDLE_CLICK)
 
         'Check if mouse is over any part of the menu bar
         mo_Menu = isMouseOver( _
@@ -134,7 +133,7 @@ DO:
             " FILE "
     END IF
 
-    IF mo_MenuFile AND mo_LeftClick THEN
+    IF mo_MenuFile AND mc_LeftClick THEN
         DrawMenuBarOptionClicked _
             1, _
             1, _
