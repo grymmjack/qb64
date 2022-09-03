@@ -53,6 +53,25 @@ REDIM _PRESERVE MenuIndex(i%)
 REDIM _PRESERVE MenuOptionsIndex(i%)
 REDIM _PRESERVE MenuOptions(i%)
 
+' @TODO: Populate MenuBar using arrays
+_PRINTSTRING (0, 100), _
+    STR$(MenuIndex(0)) + "," _
+    + STR$(MenuOptionsIndex(0)) _
+    + "," + MenuOptions$(0) _
+    + "," + STR$(LBOUND(MenuOptionsIndex)) _
+    + "," + STR$(UBOUND(MenuOptionsIndex))
+
+MenuData:
+    DATA 0, 1, "FILE"
+        DATA 1, 0, "NEW"
+        DATA 1, 1, "SAVE"
+        DATA 1, 2, "-"
+        DATA 1, 3, "QUIT"
+    DATA 0, 2, "EDIT"
+        DATA 2, 0, "COPY"
+        DATA 2, 1, "PASTE"
+    DATA -1
+
 ' Custom palette colors
 _PALETTECOLOR 13, _RGB32(16, 16, 16)
 _PALETTECOLOR 14, _RGB32(96, 96, 96)
@@ -398,23 +417,3 @@ SUB DrawRect(posX%, posY%, width%, height%, bgColor%)
     ' Draw filled rectangle
     LINE(boxLeft%, boxTop%)-(boxRight%, boxBottom%), bgColor%, BF
 END SUB
-
-
-
-' _PRINTSTRING (100, 100), _
-'     STR$(MenuIndex(0)) + "," _
-'     + STR$(MenuOptionsIndex(0)) _
-'     + "," + MenuOptions$(0) _
-'     + "," + STR$(LBOUND(MenuOptionsIndex)) _
-'     + "," + STR$(UBOUND(MenuOptionsIndex))
-
-MenuData:
-    DATA 0, 1, "FILE"
-        DATA 1, 0, "NEW"
-        DATA 1, 1, "SAVE"
-        DATA 1, 2, "-"
-        DATA 1, 3, "QUIT"
-    DATA 0, 2, "EDIT"
-        DATA 2, 0, "COPY"
-        DATA 2, 1, "PASTE"
-    DATA -1
