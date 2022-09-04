@@ -8,6 +8,7 @@
 ' @author Rick Christy <grymmjack@gmail.com>
 '
 '$DYNAMIC
+DEFINT A-Z
 
 'SETUP SCREEN
 _FULLSCREEN _SQUAREPIXELS 'Optional: Comment out for window mode
@@ -198,7 +199,7 @@ END
 
 
 
-SUB DrawMenuBar()
+SUB DrawMenuBar ()
     _PRINTMODE _KEEPBACKGROUND
     DrawRectStroked _
         0, _
@@ -212,7 +213,7 @@ SUB DrawMenuBar()
 END SUB
 
 
-SUB DrawMenuBarHighlighted()
+SUB DrawMenuBarHighlighted ()
     _PRINTMODE _KEEPBACKGROUND
     DrawRectStroked _
         0, _
@@ -226,7 +227,7 @@ SUB DrawMenuBarHighlighted()
 END SUB
 
 
-SUB DrawMenuBarOptionHighlighted(posX, posY, width, height, option$)
+SUB DrawMenuBarOptionHighlighted (posX, posY, width, height, option$)
     _PRINTMODE _KEEPBACKGROUND
     DrawRect _
         posX, _
@@ -239,7 +240,7 @@ SUB DrawMenuBarOptionHighlighted(posX, posY, width, height, option$)
 END SUB
 
 
-SUB DrawMenuBarOptionClicked(posX, posY, width, height, option$)
+SUB DrawMenuBarOptionClicked (posX, posY, width, height, option$)
     _PRINTMODE _KEEPBACKGROUND
     DrawRect _
         posX, _
@@ -252,7 +253,7 @@ SUB DrawMenuBarOptionClicked(posX, posY, width, height, option$)
 END SUB
 
 
-SUB DebugConsole(message$)
+SUB DebugConsole (message$)
     cols = _WIDTH \ _FONTWIDTH
     rows = _HEIGHT \ _FONTHEIGHT
     COLOR C_DBC_FOREGROUND, C_DBC_BACKGROUND
@@ -285,7 +286,7 @@ SUB DebugConsole(message$)
 END SUB
 
 
-FUNCTION isMouseOver(posX, posY, width, height)
+FUNCTION isMouseOver (posX, posY, width, height)
     mX = _MOUSEX
     mY = _MOUSEY
     isMouseOver = ABS( _
@@ -296,7 +297,7 @@ FUNCTION isMouseOver(posX, posY, width, height)
 END FUNCTION
 
 
-SUB DrawRectStroked(posX, posY, width, height, bgColor, fgColor)
+SUB DrawRectStroked (posX, posY, width, height, bgColor, fgColor)
     boxTop    = posY
     boxLeft   = posX
     boxRight  = posX + width
@@ -308,7 +309,7 @@ SUB DrawRectStroked(posX, posY, width, height, bgColor, fgColor)
 END SUB
 
 
-SUB DrawRect(posX, posY, width, height, bgColor)
+SUB DrawRect (posX, posY, width, height, bgColor)
     boxTop    = posY
     boxLeft   = posX
     boxRight  = posX + width
