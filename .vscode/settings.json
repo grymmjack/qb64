@@ -19,7 +19,7 @@
     "git.enableSmartCommit": true,
     "git.autofetch": true,
     "git.confirmSync": false,
-    "workbench.iconTheme": "file-icons",
+    "workbench.iconTheme": "vs-seti",
     "workbench.colorTheme": "MS-DOS Editor Theme",
     "editor.suggest.preview": true,
     "workbench.colorCustomizations": {
@@ -129,6 +129,13 @@
         "panelSectionHeader.border": "#ffffff",
         "panelSectionHeader.foreground": "#ffffff",
         "panelSection.dropBackground": "#ff0000",
+        "editorStickyScroll.background": "#5555ff",
+        "editorStickyScrollHover.background": "#555555",
+        "breadcrumb.background": "#00a3a3",
+        "breadcrumb.foreground": "#ffff00",
+        "breadcrumb.focusForeground": "#ffffff",
+        "breadcrumbPicker.background": "#222222",
+        "breadcrumb.activeSelectionForeground": "#ffffff"
     },
     "terminal.integrated.copyOnSelection": true,
     "terminal.integrated.cursorBlinking": true,
