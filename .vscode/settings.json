@@ -169,5 +169,6 @@
     },
     "editor.bracketPairColorization.enabled": true,
     "editor.guides.bracketPairsHorizontal": true,
-    "editor.guides.highlightActiveBracketPair": true
+    "editor.guides.highlightActiveBracketPair": true,
+    "editor.quickSuggestionsDelay": 3000
 }
