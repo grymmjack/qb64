@@ -129,7 +129,7 @@
         "panelSectionHeader.border": "#ffffff",
         "panelSectionHeader.foreground": "#ffffff",
         "panelSection.dropBackground": "#ff0000",
-        "editorStickyScroll.background": "#5555ff",
+        "editorStickyScroll.background": "#3333ff",
         "editorStickyScrollHover.background": "#555555",
         "breadcrumb.background": "#00a3a3",
         "breadcrumb.foreground": "#ffff00",
