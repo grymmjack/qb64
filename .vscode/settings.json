@@ -132,7 +132,7 @@
         "panelSection.dropBackground": "#ff0000",
         "editorStickyScroll.background": "#3333ff",
         "editorStickyScrollHover.background": "#555555",
-        "breadcrumb.background": "#00a3a3",
+        "breadcrumb.background": "#007777",
         "breadcrumb.foreground": "#ffff00",
         "breadcrumb.focusForeground": "#ffffff",
         "breadcrumbPicker.background": "#222222",
