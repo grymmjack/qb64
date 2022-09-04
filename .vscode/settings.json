@@ -7,7 +7,7 @@
         "**/*.run": true,
         "**/*_start.command": true
     },
-    "extensions.ignoreRecommendations": true,
+    "extensions.ignoreRecommendations": false,
     "editor.fontFamily": "\"Perfect DOS VGA 437 Win\", monospace",
     "terminal.integrated.fontFamily": "\"Perfect DOS VGA 437 Win\", monospace",
     "terminal.integrated.fontSize": 16,
