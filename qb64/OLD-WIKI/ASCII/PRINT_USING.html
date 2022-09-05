@@ -1,0 +1,401 @@
+
+<!DOCTYPE html>
+<html class="client-nojs" lang="en" dir="ltr">
+
+<!-- Mirrored from www.qb64.org/wiki/PRINT_USING by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 07 Aug 2021 13:22:28 GMT -->
+<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=UTF-8" /><!-- /Added by HTTrack -->
+<head>
+<meta charset="UTF-8"/>
+<title>PRINT USING - QB64 Wiki</title>
+<script>document.documentElement.className="client-js";RLCONF={"wgBreakFrames":!1,"wgSeparatorTransformTable":["",""],"wgDigitTransformTable":["",""],"wgDefaultDateFormat":"dmy","wgMonthNames":["","January","February","March","April","May","June","July","August","September","October","November","December"],"wgRequestId":"YOWlqw0lOz7XOc3uS6UvPQAAAQE","wgCSPNonce":!1,"wgCanonicalNamespace":"","wgCanonicalSpecialPageName":!1,"wgNamespaceNumber":0,"wgPageName":"PRINT_USING","wgTitle":"PRINT USING","wgCurRevisionId":23536,"wgRevisionId":23536,"wgArticleId":541,"wgIsArticle":!0,"wgIsRedirect":!1,"wgAction":"view","wgUserName":null,"wgUserGroups":["*"],"wgCategories":[],"wgPageContentLanguage":"en","wgPageContentModel":"wikitext","wgRelevantPageName":"PRINT_USING","wgRelevantArticleId":541,"wgIsProbablyEditable":!1,"wgRelevantPageIsProbablyEditable":!1,"wgRestrictionEdit":[],"wgRestrictionMove":[]};RLSTATE={"site.styles":"ready","noscript":"ready","user.styles":"ready","user":
+"ready","user.options":"loading","skins.vector.styles.legacy":"ready","mediawiki.toc.styles":"ready"};RLPAGEMODULES=["site","mediawiki.page.startup","mediawiki.page.ready","mediawiki.toc","skins.vector.legacy.js"];</script>
+<script>(RLQ=window.RLQ||[]).push(function(){mw.loader.implement("user.options@1hzgi",function($,jQuery,require,module){/*@nomin*/mw.user.tokens.set({"patrolToken":"+\\","watchToken":"+\\","csrfToken":"+\\"});
+});});</script>
+<link rel="stylesheet" href="loadd8b0.css?lang=en&amp;modules=mediawiki.toc.styles%7Cskins.vector.styles.legacy&amp;only=styles&amp;skin=vector"/>
+<script async="" src="load52c0.php?lang=en&amp;modules=startup&amp;only=scripts&amp;raw=1&amp;skin=vector"></script>
+<meta name="generator" content="MediaWiki 1.35.2"/>
+<link rel="shortcut icon" href="https://www.qb64.org/favicon.ico"/>
+<link rel="search" type="application/opensearchdescription+xml" href="opensearch_desc.php" title="QB64 Wiki (en)"/>
+<link rel="EditURI" type="application/rsd+xml" href="api-result251f.xml?action=rsd"/>
+<link rel="alternate" type="application/atom+xml" title="QB64 Wiki Atom feed" href="feeda295.xml?title=Special:RecentChanges&amp;feed=atom"/>
+<!--[if lt IE 9]><script src="/wiki/resources/lib/html5shiv/html5shiv.js"></script><![endif]-->
+</head>
+<body class="mediawiki ltr sitedir-ltr mw-hide-empty-elt ns-0 ns-subject page-PRINT_USING rootpage-PRINT_USING skin-vector action-view skin-vector-legacy">
+<div id="mw-page-base" class="noprint"></div>
+<div id="mw-head-base" class="noprint"></div>
+<div id="content" class="mw-body" role="main">
+	<a id="top"></a>
+	<div id="siteNotice" class="mw-body-content"></div>
+	<div class="mw-indicators mw-body-content">
+	</div>
+	<h1 id="firstHeading" class="firstHeading" lang="en">PRINT USING</h1>
+	<div id="bodyContent" class="mw-body-content">
+		<div id="siteSub" class="noprint">From QB64 Wiki</div>
+		<div id="contentSub"></div>
+		<div id="contentSub2"></div>
+		
+		<div id="jump-to-nav"></div>
+		<a class="mw-jump-link" href="#mw-head">Jump to navigation</a>
+		<a class="mw-jump-link" href="#searchInput">Jump to search</a>
+		<div id="mw-content-text" lang="en" dir="ltr" class="mw-content-ltr"><div class="mw-parser-output"><p>The <a class="mw-selflink selflink">PRINT USING</a> statement is used to <a href="PRINT.html" title="PRINT">PRINT</a> formatted data to the Screen or a file using a <a href="STRING.html" title="STRING">STRING</a> template.
+</p><p><br />
+</p>
+<div id="toc" class="toc" role="navigation" aria-labelledby="mw-toc-heading"><input type="checkbox" role="button" id="toctogglecheckbox" class="toctogglecheckbox" style="display:none" /><div class="toctitle" lang="en" dir="ltr"><h2 id="mw-toc-heading">Contents</h2><span class="toctogglespan"><label class="toctogglelabel" for="toctogglecheckbox"></label></span></div>
+<ul>
+<li class="toclevel-1"><a href="#Syntax"><span class="tocnumber">1</span> <span class="toctext">Syntax</span></a></li>
+<li class="toclevel-1"><a href="#Parameters"><span class="tocnumber">2</span> <span class="toctext">Parameters</span></a></li>
+<li class="toclevel-1"><a href="#Description"><span class="tocnumber">3</span> <span class="toctext">Description</span></a></li>
+<li class="toclevel-1"><a href="#QBasic.2FQuickBASIC"><span class="tocnumber">4</span> <span class="toctext">QBasic/QuickBASIC</span></a></li>
+<li class="toclevel-1"><a href="#Examples"><span class="tocnumber">5</span> <span class="toctext">Examples</span></a></li>
+<li class="toclevel-1"><a href="#See_also"><span class="tocnumber">6</span> <span class="toctext">See also</span></a></li>
+</ul>
+</div>
+
+<h2><span class="mw-headline" id="Syntax">Syntax</span></h2>
+<dl><dd><dl><dd><b>PRINT</b> [<i>text$</i>{;|,}] <b>USING</b> <i>template$</i>; <i>variable</i>[; ...][{;|,}]</dd></dl></dd></dl>
+<p><br />
+</p>
+<h2><span class="mw-headline" id="Parameters">Parameters</span></h2>
+<ul><li>Literal or variable <a href="STRING.html" title="STRING">STRING</a> <i>text$</i> can be placed between PRINT and USING or it can be included in the <i>template</i>.</li>
+<li>A <a href="Semicolon.html" title="Semicolon">semicolon</a> or <a href="Comma.html" title="Comma">comma</a> may follow the <i>text</i> to stop or tab the print cursor before the <i>template</i> <a href="PRINT.html" title="PRINT">PRINT</a>.</li>
+<li>The literal or variable <a href="STRING.html" title="STRING">STRING</a> <i>template</i> should use the template symbols to display each variable <a href="Variable_Types.html" title="Variable Types">type</a> in the list following it.</li>
+<li>The list of data <i>variables</i> used in the <i>template</i> are separated by semicolons after the template string value.</li>
+<li>In QB64 one <a href="Semicolon.html" title="Semicolon">semicolon</a> or <a href="Comma.html" title="Comma">comma</a> may follow the variable list to stop the print cursor for pending prints. QB only allowed a semicolon.</li></ul>
+<p><br />
+</p>
+<h2><span class="mw-headline" id="Description">Description</span></h2>
+<ul><li>The <i>variables</i> should be listed in the order that they are used in the template from left to right.</li>
+<li>If the <i>template</i> string is omitted or symbols don't match the <i>variable(s)</i> an "Illegal Function Call" <a href="ERROR_Codes.html" title="ERROR Codes">ERROR</a> will occur.</li>
+<li>Can convert numerical exponential or <a href="Scientific_notation.html" title="Scientific notation">scientific notation</a> values to normal decimal point values using less digits.</li>
+<li>NOTE: If the numerical value exceeds the template's digit range a&#160;% symbol will appear in the leftmost digit area.</li>
+<li>WARNING: The numbers displayed are rounded so the actual values are never changed and are actually more accurate.</li></ul>
+<p><br />
+</p>
+<center><b>Template is a literal or variable <a href="STRING.html" title="STRING">string</a> using the following formatting characters:</b>
+<p><br />
+</p>
+<table border="1&#93;&#93;">
+
+<tbody><tr>
+<td>&#160;&#160;<b>&amp;</b></td>
+<td>Prints an entire string value. <a href="STRING.html" title="STRING">STRING</a> length should be limited as template width will vary.
+</td></tr>
+<tr>
+<td>&#160;&#160;<b>\ &#160;\</b></td>
+<td>Denotes the start and end point of a fixed string area with spaces between(<a href="LEN.html" title="LEN">LEN</a> = spaces + 2).
+</td></tr>
+<tr>
+<td>&#160;&#160;<b>!</b></td>
+<td>Prints only the leading character of a string value. Exclamation points require underscore prefix.
+</td></tr>
+<tr>
+<td>&#160;&#160;<b>#</b></td>
+<td>Denotes a numerical digit. An appropriate number of digits should be used for values received.
+</td></tr>
+<tr>
+<td><b>^^^^</b></td>
+<td>After # digits prints numerical value in exponential E+xx format. Use  <b>^^^^^</b> for E+xxx values.<span style="color:red">*</span>
+</td></tr>
+<tr>
+<td>&#160;&#160;<b>.</b></td>
+<td>Period sets a number's decimal point position. Digits following determine <a href="CINT.html" title="CINT">rounded</a> value accuracy.
+</td></tr>
+<tr>
+<td>&#160;&#160;<b>,.</b></td>
+<td><a href="Comma.html" title="Comma">Comma</a> to left of decimal point, prints a comma every 3 used # digit places left of the decimal point.
+</td></tr>
+<tr>
+<td>&#160;&#160;<b>+</b></td>
+<td>Plus sign denotes the position of the number's sign. + or - will be displayed.
+</td></tr>
+<tr>
+<td>&#160;&#160;<b>-</b></td>
+<td>Minus sign (dash) placed after the number, displays only a negative value's sign.
+</td></tr>
+<tr>
+<td>&#160;&#160;<b>$$</b></td>
+<td>Prints a dollar sign immediately before the highest non-zero # digit position of the numerical value.
+</td></tr>
+<tr>
+<td>&#160;&#160;<b>**</b></td>
+<td>Prints an asterisk in any leading empty spaces of a numerical value. Adds 2 extra digit positions.
+</td></tr>
+<tr>
+<td>&#160;<b>**$</b></td>
+<td>Combines ** and $$. Negative values will display minus sign to left of $.
+</td></tr>
+<tr>
+<td>&#160;&#160;<b>_</b></td>
+<td><a href="Underscore.html" title="Underscore">Underscore</a> preceding a format symbol prints those symbols as literal string characters.
+</td></tr></tbody></table>
+<p><b>Note: Any string character not listed above will be printed as a literal text character.</b>
+</p>
+<span style="color:red">*</span> Any # decimal point position may be specified. The exponent is adjusted with significant digits left-justified. </center>
+<p><br />
+</p>
+<h2><span id="QBasic/QuickBASIC"></span><span class="mw-headline" id="QBasic.2FQuickBASIC">QBasic/QuickBASIC</span></h2>
+<ul><li>QBasic limited the number of specified digit positions to 24; QB64 has no such restriction.</li></ul>
+<p><br />
+</p>
+<h2><span class="mw-headline" id="Examples">Examples</span></h2>
+<p><i>Example 1:</i> Printing formatted data using a predefined <a href="STRING.html" title="STRING">string</a> template variable.
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: Courier, monospace; background-color: darkblue; color: lightgrey; word-wrap: break-word;"> <i> </i>
+first$ = "Bobby": last$ = "Smith"
+boxes% = 1510: sales! = 4530
+tmp$ = "Salesperson: &amp; &amp;  #####,.   $$#####,.##"
+
+<a class="mw-selflink selflink"><span style="color:#87cefa;">PRINT USING</span></a> tmp$; first$; last$; boxes%; sales!
+</p> <p><i> </i>
+</p><p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: Courier; background-color: black; color: white;">Salesperson: Bobby Smith  1,510  $4,530.00
+</p>
+<p><i>Explanation:</i> The <i>Salesperson:</i> text precedes the formatted data. The name lengths will change the length of the string template accordingly so columns will not all line up. If \  \ was used, the columns would stay the same, but parts of some names might be lost. If the box or sales values exceed 3 digits, a comma is used in the value every 3 digits.
+</p><p><br />
+<i>Example 2:</i> How to display formatting symbols as normal text using underscores in a PRINT USING template.
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: Courier, monospace; background-color: darkblue; color: lightgrey; word-wrap: break-word;">
+errcode = 35
+<a class="mw-selflink selflink"><span style="color:#87cefa;">PRINT USING</span></a> "Error ## occurred!"; errcode
+'the&#160;! is now displayed at the end of the printed string
+<a class="mw-selflink selflink"><span style="color:#87cefa;">PRINT USING</span></a> "Error ## occurred_!"; errcode
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: Courier; background-color: black; color: white;">Error 35 occurred
+Error 35 occurred!
+</p> 
+<dl><dd><i>Explanation:</i> The first template will not print the exclamation points or error when the requested text parameters are omitted.</dd></dl>
+<p><br />
+<i>Example 3:</i> Exponential notation is designated after the leading digits are formatted. Digit places determine rounded value displayed.
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: Courier, monospace; background-color: darkblue; color: lightgrey; word-wrap: break-word;">
+<a class="mw-selflink selflink"><span style="color:#87cefa;">PRINT USING</span></a> "##.##^^^^"; 234.56
+<a class="mw-selflink selflink"><span style="color:#87cefa;">PRINT USING</span></a> ".####^^^^-"; -777777
+<a class="mw-selflink selflink"><span style="color:#87cefa;">PRINT USING</span></a> "+.##^^^^"; 123
+<a class="mw-selflink selflink"><span style="color:#87cefa;">PRINT USING</span></a> "+.##^^^^^"; 123 <i> </i>
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: Courier; background-color: black; color: white;"> 2.35E+02
+.7778E+06-
++.12E+03
++.12E+003
+</p>
+<dl><dd><i>Explanation:</i> Note how 5 carets in the bottom format expands the number of exponent digits to accommodate larger exponent values.</dd></dl>
+<p><br />
+<i>Example 4:</i> USING does not necessarily have to immediately follow PRINT, but it must follow it in the code line.
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: Courier, monospace; background-color: darkblue; color: lightgrey; word-wrap: break-word;"> <i> </i>
+money = 12345.45
+tmp$ = "$$#######,.##"
+
+<a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> "I have this much money!"; <a class="mw-selflink selflink"><span style="color:#87cefa;">USING</span></a> tmp$; money <i> </i>
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: Courier; background-color: black; color: white;">
+I have this much money!   $12,345.45
+</p>
+<dl><dd><i>Note:</i> This can also be used to print the USING formatting characters outside of the template.</dd></dl>
+<p><br />
+</p>
+<h2><span class="mw-headline" id="See_also">See also</span></h2>
+<ul><li><a href="PRINT.html" title="PRINT">PRINT</a>, <a href="PRINT_USING_(file_statement).html" title="PRINT USING (file statement)">PRINT #, USING</a></li>
+<li><a href="LPRINT.html" title="LPRINT">LPRINT</a>, <a href="LPRINT_USING.html" title="LPRINT USING">LPRINT USING</a></li></ul>
+<p><br />
+</p>
+<hr />
+<center><i>Navigation:</i>
+<dl><dd><a href="Keyword_Reference_-_Alphabetical.html" title="Keyword Reference - Alphabetical">Keyword Reference - Alphabetical</a></dd>
+<dd><a href="Keyword_Reference_-_By_usage.html" title="Keyword Reference - By usage">Keyword Reference - By Usage</a></dd>
+<dd><a href="Main_Page.html" title="Main Page">Main Wiki Page</a></dd></dl></center>
+<!-- 
+NewPP limit report
+Cached time: 20210707012355
+Cache expiry: 86400
+Dynamic content: false
+Complications: []
+CPU time usage: 0.081 seconds
+Real time usage: 0.158 seconds
+Preprocessor visited node count: 128/1000000
+Post‐expand include size: 4680/2097152 bytes
+Template argument size: 188/2097152 bytes
+Highest expansion depth: 4/40
+Expensive parser function count: 0/100
+Unstrip recursion depth: 0/20
+Unstrip post‐expand size: 0/5000000 bytes
+-->
+<!--
+Transclusion expansion time report (%,ms,calls,template)
+100.00%   66.561      1 -total
+ 14.97%    9.963      1 Template:PageExamples
+ 14.69%    9.779      1 Template:PageDescription
+ 10.31%    6.864      1 Template:PrintUsing
+  7.97%    5.306      1 Template:PageSyntax
+  6.23%    4.149      1 Template:PageParameters
+  5.95%    3.962      9 Template:Cl
+  5.92%    3.942      1 Template:PageSeeAlso
+  5.32%    3.543      1 Template:PageNavigation
+  5.31%    3.532      4 Template:CodeStart
+-->
+
+<!-- Saved in parser cache with key i4224360_mw2-mw_:pcache:idhash:541-0!canonical and timestamp 20210707012355 and revision id 23536
+ -->
+</div></div><div class="printfooter">Retrieved from "<a dir="ltr" href="index37a2.html?title=PRINT_USING&amp;oldid=23536">http://www.qb64.org/wiki/index.php?title=PRINT_USING&amp;oldid=23536</a>"</div>
+		<div id="catlinks" class="catlinks catlinks-allhidden" data-mw="interface"></div>
+	</div>
+</div>
+
+<div id="mw-navigation">
+	<h2>Navigation menu</h2>
+	<div id="mw-head">
+		<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-personal" class="vector-menu" aria-labelledby="p-personal-label" role="navigation" 
+	 >
+	<h3 id="p-personal-label">
+		<span>Personal tools</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="pt-login"><a href="indexa8e6.html?title=Special:UserLogin&amp;returnto=PRINT+USING" title="You are encouraged to log in; however, it is not mandatory [o]" accesskey="o">Log in</a></li></ul>
+		
+	</div>
+</nav>
+
+
+		<div id="left-navigation">
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-namespaces" class="vector-menu vector-menu-tabs vectorTabs" aria-labelledby="p-namespaces-label" role="navigation" 
+	 >
+	<h3 id="p-namespaces-label">
+		<span>Namespaces</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="ca-nstab-main" class="selected"><a href="PRINT_USING.html" title="View the content page [c]" accesskey="c">Page</a></li><li id="ca-talk" class="new"><a href="Talk_PRINT_USING.html?title=Talk:PRINT_USING&amp;action=edit&amp;redlink=1" rel="discussion" title="Discussion about the content page (page does not exist) [t]" accesskey="t">Discussion</a></li></ul>
+		
+	</div>
+</nav>
+
+
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-variants" class="vector-menu-empty emptyPortlet vector-menu vector-menu-dropdown vectorMenu" aria-labelledby="p-variants-label" role="navigation" 
+	 >
+	<input type="checkbox" class="vector-menu-checkbox vectorMenuCheckbox" aria-labelledby="p-variants-label" />
+	<h3 id="p-variants-label">
+		<span>Variants</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="menu vector-menu-content-list"></ul>
+		
+	</div>
+</nav>
+
+
+		</div>
+		<div id="right-navigation">
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-views" class="vector-menu vector-menu-tabs vectorTabs" aria-labelledby="p-views-label" role="navigation" 
+	 >
+	<h3 id="p-views-label">
+		<span>Views</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="ca-view" class="collapsible selected"><a href="PRINT_USING.html">Read</a></li><li id="ca-viewsource" class="collapsible"><a href="indexbe03.html?title=PRINT_USING&amp;action=edit" title="This page is protected.&#10;You can view its source [e]" accesskey="e">View source</a></li><li id="ca-history" class="collapsible"><a href="indexaee9.html?title=PRINT_USING&amp;action=history" title="Past revisions of this page [h]" accesskey="h">View history</a></li></ul>
+		
+	</div>
+</nav>
+
+
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-cactions" class="vector-menu-empty emptyPortlet vector-menu vector-menu-dropdown vectorMenu" aria-labelledby="p-cactions-label" role="navigation" 
+	 >
+	<input type="checkbox" class="vector-menu-checkbox vectorMenuCheckbox" aria-labelledby="p-cactions-label" />
+	<h3 id="p-cactions-label">
+		<span>More</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="menu vector-menu-content-list"></ul>
+		
+	</div>
+</nav>
+
+
+			<div id="p-search" role="search">
+	<h3 >
+		<label for="searchInput">Search</label>
+	</h3>
+	<form action="https://www.qb64.org/wiki/index.php" id="searchform">
+		<div id="simpleSearch">
+			<input type="search" name="search" placeholder="Search QB64 Wiki" title="Search QB64 Wiki [f]" accesskey="f" id="searchInput"/>
+			<input type="hidden" name="title" value="Special:Search">
+			<input type="submit" name="fulltext" value="Search" title="Search the pages for this text" id="mw-searchButton" class="searchButton mw-fallbackSearchButton"/>
+			<input type="submit" name="go" value="Go" title="Go to a page with this exact name if it exists" id="searchButton" class="searchButton"/>
+		</div>
+	</form>
+</div>
+
+		</div>
+	</div>
+	
+<div id="mw-panel">
+	<div id="p-logo" role="banner">
+		<a  title="Visit the main page" class="mw-wiki-logo" href="Main_Page.html"></a>
+	</div>
+	<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-navigation" class="vector-menu vector-menu-portal portal portal-first" aria-labelledby="p-navigation-label" role="navigation" 
+	 >
+	<h3 id="p-navigation-label">
+		<span>Navigation</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="n-mainpage-description"><a href="Main_Page.html" title="Visit the main page [z]" accesskey="z">Main page</a></li><li id="n-recentchanges"><a href="Special_RecentChanges.html" title="A list of recent changes in the wiki [r]" accesskey="r">Recent changes</a></li><li id="n-randompage"><a href="SNDCOPY.html" title="Load a random page [x]" accesskey="x">Random page</a></li><li id="n-help-mediawiki"><a href="https://www.mediawiki.org/wiki/Special:MyLanguage/Help:Contents">Help about MediaWiki</a></li></ul>
+		
+	</div>
+</nav>
+
+
+	<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-tb" class="vector-menu vector-menu-portal portal" aria-labelledby="p-tb-label" role="navigation" 
+	 >
+	<h3 id="p-tb-label">
+		<span>Tools</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="t-whatlinkshere"><a href="Special_WhatLinksHere/PRINT_USING.html" title="A list of all wiki pages that link here [j]" accesskey="j">What links here</a></li><li id="t-recentchangeslinked"><a href="Special_RecentChangesLinked/PRINT_USING.html" rel="nofollow" title="Recent changes in pages linked from this page [k]" accesskey="k">Related changes</a></li><li id="t-specialpages"><a href="Special_SpecialPages.html" title="A list of all special pages [q]" accesskey="q">Special pages</a></li><li id="t-print"><a href="javascript:print();" rel="alternate" title="Printable version of this page [p]" accesskey="p">Printable version</a></li><li id="t-permalink"><a href="index37a2.html?title=PRINT_USING&amp;oldid=23536" title="Permanent link to this revision of the page">Permanent link</a></li><li id="t-info"><a href="index233d.html?title=PRINT_USING&amp;action=info" title="More information about this page">Page information</a></li></ul>
+		
+	</div>
+</nav>
+
+
+	
+</div>
+
+</div>
+
+<footer id="footer" class="mw-footer" role="contentinfo" >
+	<ul id="footer-info" >
+		<li id="footer-info-lastmod"> This page was last edited on 1 March 2021, at 07:23.</li>
+	</ul>
+	<ul id="footer-places" >
+		<li id="footer-places-privacy"><a href="My_wiki_Privacy_policy.html" title="My wiki:Privacy policy">Privacy policy</a></li>
+		<li id="footer-places-about"><a href="My_wiki_About.html" title="My wiki:About">About QB64 Wiki</a></li>
+		<li id="footer-places-disclaimer"><a href="My_wiki_General_disclaimer.html" title="My wiki:General disclaimer">Disclaimers</a></li>
+	</ul>
+	<ul id="footer-icons" class="noprint">
+		<li id="footer-poweredbyico"><a href="https://www.mediawiki.org/"><img src="resources/assets/poweredby_mediawiki_88x31.png" alt="Powered by MediaWiki" srcset="/wiki/resources/assets/poweredby_mediawiki_132x47.png 1.5x, /wiki/resources/assets/poweredby_mediawiki_176x62.png 2x" width="88" height="31" loading="lazy"/></a></li>
+	</ul>
+	<div style="clear: both;"></div>
+</footer>
+
+
+
+<script>(RLQ=window.RLQ||[]).push(function(){mw.config.set({"wgPageParseReport":{"limitreport":{"cputime":"0.081","walltime":"0.158","ppvisitednodes":{"value":128,"limit":1000000},"postexpandincludesize":{"value":4680,"limit":2097152},"templateargumentsize":{"value":188,"limit":2097152},"expansiondepth":{"value":4,"limit":40},"expensivefunctioncount":{"value":0,"limit":100},"unstrip-depth":{"value":0,"limit":20},"unstrip-size":{"value":0,"limit":5000000},"timingprofile":["100.00%   66.561      1 -total"," 14.97%    9.963      1 Template:PageExamples"," 14.69%    9.779      1 Template:PageDescription"," 10.31%    6.864      1 Template:PrintUsing","  7.97%    5.306      1 Template:PageSyntax","  6.23%    4.149      1 Template:PageParameters","  5.95%    3.962      9 Template:Cl","  5.92%    3.942      1 Template:PageSeeAlso","  5.32%    3.543      1 Template:PageNavigation","  5.31%    3.532      4 Template:CodeStart"]},"cachereport":{"timestamp":"20210707012355","ttl":86400,"transientcontent":false}}});mw.config.set({"wgBackendResponseTime":1651});});</script></body>
+<!-- Mirrored from www.qb64.org/wiki/PRINT_USING by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 07 Aug 2021 13:22:33 GMT -->
+</html>

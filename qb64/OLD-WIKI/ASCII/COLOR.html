@@ -1,0 +1,492 @@
+
+<!DOCTYPE html>
+<html class="client-nojs" lang="en" dir="ltr">
+
+<!-- Mirrored from www.qb64.org/wiki/COLOR by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 07 Aug 2021 13:11:59 GMT -->
+<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=UTF-8" /><!-- /Added by HTTrack -->
+<head>
+<meta charset="UTF-8"/>
+<title>COLOR - QB64 Wiki</title>
+<script>document.documentElement.className="client-js";RLCONF={"wgBreakFrames":!1,"wgSeparatorTransformTable":["",""],"wgDigitTransformTable":["",""],"wgDefaultDateFormat":"dmy","wgMonthNames":["","January","February","March","April","May","June","July","August","September","October","November","December"],"wgRequestId":"YOWlUKdTx2XheSMCc395sgAAAAI","wgCSPNonce":!1,"wgCanonicalNamespace":"","wgCanonicalSpecialPageName":!1,"wgNamespaceNumber":0,"wgPageName":"COLOR","wgTitle":"COLOR","wgCurRevisionId":23680,"wgRevisionId":23680,"wgArticleId":105,"wgIsArticle":!0,"wgIsRedirect":!1,"wgAction":"view","wgUserName":null,"wgUserGroups":["*"],"wgCategories":[],"wgPageContentLanguage":"en","wgPageContentModel":"wikitext","wgRelevantPageName":"COLOR","wgRelevantArticleId":105,"wgIsProbablyEditable":!1,"wgRelevantPageIsProbablyEditable":!1,"wgRestrictionEdit":[],"wgRestrictionMove":[]};RLSTATE={"site.styles":"ready","noscript":"ready","user.styles":"ready","user":"ready","user.options"
+:"loading","skins.vector.styles.legacy":"ready","mediawiki.toc.styles":"ready"};RLPAGEMODULES=["site","mediawiki.page.startup","mediawiki.page.ready","mediawiki.toc","skins.vector.legacy.js"];</script>
+<script>(RLQ=window.RLQ||[]).push(function(){mw.loader.implement("user.options@1hzgi",function($,jQuery,require,module){/*@nomin*/mw.user.tokens.set({"patrolToken":"+\\","watchToken":"+\\","csrfToken":"+\\"});
+});});</script>
+<link rel="stylesheet" href="loadd8b0.css?lang=en&amp;modules=mediawiki.toc.styles%7Cskins.vector.styles.legacy&amp;only=styles&amp;skin=vector"/>
+<script async="" src="load52c0.php?lang=en&amp;modules=startup&amp;only=scripts&amp;raw=1&amp;skin=vector"></script>
+<meta name="generator" content="MediaWiki 1.35.2"/>
+<link rel="shortcut icon" href="https://www.qb64.org/favicon.ico"/>
+<link rel="search" type="application/opensearchdescription+xml" href="opensearch_desc.php" title="QB64 Wiki (en)"/>
+<link rel="EditURI" type="application/rsd+xml" href="api-result251f.xml?action=rsd"/>
+<link rel="alternate" type="application/atom+xml" title="QB64 Wiki Atom feed" href="feeda295.xml?title=Special:RecentChanges&amp;feed=atom"/>
+<!--[if lt IE 9]><script src="/wiki/resources/lib/html5shiv/html5shiv.js"></script><![endif]-->
+</head>
+<body class="mediawiki ltr sitedir-ltr mw-hide-empty-elt ns-0 ns-subject page-COLOR rootpage-COLOR skin-vector action-view skin-vector-legacy">
+<div id="mw-page-base" class="noprint"></div>
+<div id="mw-head-base" class="noprint"></div>
+<div id="content" class="mw-body" role="main">
+	<a id="top"></a>
+	<div id="siteNotice" class="mw-body-content"></div>
+	<div class="mw-indicators mw-body-content">
+	</div>
+	<h1 id="firstHeading" class="firstHeading" lang="en">COLOR</h1>
+	<div id="bodyContent" class="mw-body-content">
+		<div id="siteSub" class="noprint">From QB64 Wiki</div>
+		<div id="contentSub"></div>
+		<div id="contentSub2"></div>
+		
+		<div id="jump-to-nav"></div>
+		<a class="mw-jump-link" href="#mw-head">Jump to navigation</a>
+		<a class="mw-jump-link" href="#searchInput">Jump to search</a>
+		<div id="mw-content-text" lang="en" dir="ltr" class="mw-content-ltr"><div class="mw-parser-output"><p>The <a class="mw-selflink selflink">COLOR</a> statement is used to change the foreground and background colors for printing text.
+</p>
+<div id="toc" class="toc" role="navigation" aria-labelledby="mw-toc-heading"><input type="checkbox" role="button" id="toctogglecheckbox" class="toctogglecheckbox" style="display:none" /><div class="toctitle" lang="en" dir="ltr"><h2 id="mw-toc-heading">Contents</h2><span class="toctogglespan"><label class="toctogglelabel" for="toctogglecheckbox"></label></span></div>
+<ul>
+<li class="toclevel-1"><a href="#Syntax"><span class="tocnumber">1</span> <span class="toctext">Syntax</span></a></li>
+<li class="toclevel-1"><a href="#Description"><span class="tocnumber">2</span> <span class="toctext">Description</span></a></li>
+<li class="toclevel-1 tocsection-1"><a href="#Screen_Mode_Attributes"><span class="tocnumber">3</span> <span class="toctext">Screen Mode Attributes</span></a>
+<ul>
+<li class="toclevel-2 tocsection-2"><a href="#24.2F32-Bit_colors_using_QB64"><span class="tocnumber">3.1</span> <span class="toctext">24/32-Bit colors using QB64</span></a></li>
+</ul>
+</li>
+<li class="toclevel-1 tocsection-3"><a href="#RGB_Palette_Intensities"><span class="tocnumber">4</span> <span class="toctext">RGB Palette Intensities</span></a>
+<ul>
+<li class="toclevel-2 tocsection-4"><a href="#Reading_and_setting_color_port_intensities_using_INP_and_OUT"><span class="tocnumber">4.1</span> <span class="toctext">Reading and setting color port intensities using INP and OUT</span></a></li>
+</ul>
+</li>
+<li class="toclevel-1"><a href="#Examples"><span class="tocnumber">5</span> <span class="toctext">Examples</span></a></li>
+<li class="toclevel-1"><a href="#See_also"><span class="tocnumber">6</span> <span class="toctext">See also</span></a></li>
+</ul>
+</div>
+
+<h2><span class="mw-headline" id="Syntax">Syntax</span></h2>
+<dl><dd><a class="mw-selflink selflink">COLOR</a> [<i>foreground&amp;</i>][, <i>background&amp;</i>]</dd></dl>
+<p><br />
+</p>
+<h2><span class="mw-headline" id="Description">Description</span></h2>
+<ul><li><i>background&amp;</i> colors are available in all QB64 color SCREEN modes.</li>
+<li><a href="SCREEN.html" title="SCREEN">SCREEN</a> mode 10 has only 3 white foreground attributes including flashing.</li>
+<li>To change the <i>background&amp;</i> color only, use a comma and the desired color. Ex: <a class="mw-selflink selflink">COLOR</a> , <i>background&amp;</i></li>
+<li>Graphic drawing statements like <a href="PSET.html" title="PSET">PSET</a>, <a href="PRESET.html" title="PRESET">PRESET</a>, <a href="LINE.html" title="LINE">LINE</a>, etc, also use the colors set by the <a class="mw-selflink selflink">COLOR</a> statement if no color is passed when they are called.</li>
+<li>The <a href="%24COLOR.html" title="$COLOR">$COLOR</a> metacommand adds named color constants for both text and 32-bit modes.</li>
+<li><a class="mw-selflink selflink">COLOR</a> works when outputting text to <a href="%24CONSOLE.html" title="$CONSOLE">$CONSOLE</a>.
+<ul><li>On macOS, colors in console mode will not match the VGA palette. See <a rel="nofollow" class="external text" href="https://en.wikipedia.org/wiki/ANSI_escape_code#8-bit">8-bit ANSI colors</a></li></ul></li></ul>
+<p><br />
+</p>
+<h2><span class="mw-headline" id="Screen_Mode_Attributes">Screen Mode Attributes</span></h2>
+<ul><li><b>SCREEN 0</b> <i>background&amp;</i> colors 0 to 7 can be changed each text character without affecting other text. Use <a href="CLS.html" title="CLS">CLS</a> after a background color statement to create a fullscreen background color. 64 <a href="DAC.html" title="DAC">DAC</a> hues with 16 high intensity blinking foreground (16 to 31) color attributes. See <a href="BLINK.html" title="BLINK">_BLINK</a>.
+<ul><li>See example 7 below for more SCREEN 0 background colors.</li></ul></li>
+<li><b>SCREEN 1</b> has <b>4 background color attributes</b>: 0 = black, 1 = blue, 2 = green, 3 = grey. White foreground color only.</li>
+<li><b>SCREEN 2</b> is <b>monochrome</b> with white forecolor and black background.</li>
+<li><b>SCREEN 7</b> can use 16 (<a href="DAC.html" title="DAC">DAC</a>) colors with background colors. RGB settings can be changed in colors 0 to 7 using <a href="PALETTECOLOR.html" title="PALETTECOLOR">_PALETTECOLOR</a>.</li>
+<li><b>SCREEN 8</b> has 16 color attributes with 16 background colors.</li>
+<li><b>SCREEN 9</b> can use up to 64 <a href="DAC.html" title="DAC">DAC</a> color hues in 16 color attributes with background colors assigned to attribute 0 with a <a href="PALETTECOLOR.html" title="PALETTECOLOR">_PALETTECOLOR</a> swap. RGB settings can be changed in colors 0 to 5 and 7 using <a href="PALETTECOLOR.html" title="PALETTECOLOR">_PALETTECOLOR</a>.</li>
+<li><b>SCREEN 10</b> has <b>only 4 color attributes</b> with black background. COLOR 0 = black, 1 = grey, 2 = flash white and 3 = bright white.</li>
+<li><b>SCREEN 11</b> is <b>monochrome</b> with white forecolor and a black background.</li>
+<li><b>SCREEN 12</b> can use 16 color attributes with a black background. 256K possible RGB color hues. Background colors can be used with QB64.</li>
+<li><b>SCREEN 13</b> can use 256 color attributes with a black background. 256K possible RGB hues.</li>
+<li><a href="PALETTE.html" title="PALETTE">PALETTE</a> swaps can be made in SCREEN 7 and 9 only. Those screens were <a href="DAC.html" title="DAC">DAC</a> screen modes in QBasic.</li>
+<li><a href="DEST.html" title="DEST">_DEST</a> can be used to set the destination page or image to color using <b>QB64</b>.</li>
+<li><a href="DEFAULTCOLOR.html" title="DEFAULTCOLOR">_DEFAULTCOLOR</a> returns the current color being used on an image or screen page handle.</li></ul>
+<p><br />
+</p>
+<h3><span id="24/32-Bit_colors_using_QB64"></span><span class="mw-headline" id="24.2F32-Bit_colors_using_QB64">24/32-Bit colors using QB64</span></h3>
+<ul><li>Pixel color intensities for red, green, blue and alpha range from 0 to 255 when used with <a href="RGB.html" title="RGB">_RGB</a>, <a href="RGBA.html" title="RGBA">_RGBA</a>, <a href="RGB32.html" title="RGB32">_RGB32</a> and <a href="RGBA32.html" title="RGBA32">RGBA32</a>.</li>
+<li>Combined RGB function values returned are <a href="LONG.html" title="LONG">LONG</a> values. <b>Blue intensity values may be cut off using <a href="SINGLE.html" title="SINGLE">SINGLE</a> variables.</b></li>
+<li><a href="ALPHA.html" title="ALPHA">_ALPHA</a> transparency values can range from 0 as transparent up to 255 which is fully opaque.</li>
+<li><a href="CLEARCOLOR.html" title="CLEARCOLOR">_CLEARCOLOR</a> can also be used to set a color as transparent.</li>
+<li>Colors can be mixed by using <a href="BLEND.html" title="BLEND">_BLEND</a> (default) in 32-bit screen modes. <a href="DONTBLEND.html" title="DONTBLEND">_DONTBLEND</a> disables blending.</li>
+<li><b>NOTE: Default 32-bit backgrounds are clear black or <a href="RGBA.html" title="RGBA">_RGBA</a>(0, 0, 0, 0). Use <a href="CLS.html" title="CLS">CLS</a> to make the black opaque.</b></li></ul>
+<p style="text-align: center">(<a href="#toc">Return to Table of Contents</a>)</p>
+<h2><span class="mw-headline" id="RGB_Palette_Intensities">RGB Palette Intensities</span></h2>
+<p>RGB intensity values can be converted to hexadecimal values to create the <a href="LONG.html" title="LONG">LONG</a> <a href="PALETTECOLOR.html" title="PALETTECOLOR">_PALETTECOLOR</a> value in non-32-bit screens:
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: Courier, monospace; background-color: darkblue; color: lightgrey; word-wrap: break-word;"> <i> </i>
+<a href="SCREEN.html" title="SCREEN"><span style="color:#87cefa;">SCREEN</span></a> 12
+alpha$ = "FF" 'solid alpha colors only
+<a href="OUT.html" title="OUT"><span style="color:#87cefa;">OUT</span></a> <a href="%26H.html" title="&amp;H"><span style="color:#87cefa;">&amp;H</span></a>3C8, 0: <a href="OUT.html" title="OUT"><span style="color:#87cefa;">OUT</span></a> <a href="%26H.html" title="&amp;H"><span style="color:#87cefa;">&amp;H</span></a>3C9, 0: <a href="OUT.html" title="OUT"><span style="color:#87cefa;">OUT</span></a> <a href="%26H.html" title="&amp;H"><span style="color:#87cefa;">&amp;H</span></a>3C9, 0: <a href="OUT.html" title="OUT"><span style="color:#87cefa;">OUT</span></a> <a href="%26H.html" title="&amp;H"><span style="color:#87cefa;">&amp;H</span></a>3C9, 20 'set black background to dark blue
+<a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> "Attribute = Hex value      Red          Green         Blue "
+<a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a>
+<a class="mw-selflink selflink"><span style="color:#87cefa;">COLOR</span></a> 7 
+<a href="FOR...html" title="FOR...NEXT"><span style="color:#87cefa;">FOR</span></a> attribute = 0 <a href="TO.html" title="TO"><span style="color:#87cefa;">TO</span></a> 15
+  <a href="OUT.html" title="OUT"><span style="color:#87cefa;">OUT</span></a> <a href="%26H.html" title="&amp;H"><span style="color:#87cefa;">&amp;H</span></a>3C7, attribute 'set color attribute to read
+  red$ = <a href="HEX%24.html" title="HEX$"><span style="color:#87cefa;">HEX$</span></a>(<a href="INP.html" title="INP"><span style="color:#87cefa;">INP</span></a>(<a href="%26H.html" title="&amp;H"><span style="color:#87cefa;">&amp;H</span></a>3C9) * 4) 'convert port setting to 32 bit values
+  grn$ = <a href="HEX%24.html" title="HEX$"><span style="color:#87cefa;">HEX$</span></a>(<a href="INP.html" title="INP"><span style="color:#87cefa;">INP</span></a>(<a href="%26H.html" title="&amp;H"><span style="color:#87cefa;">&amp;H</span></a>3C9) * 4)
+  blu$ = <a href="HEX%24.html" title="HEX$"><span style="color:#87cefa;">HEX$</span></a>(<a href="INP.html" title="INP"><span style="color:#87cefa;">INP</span></a>(<a href="%26H.html" title="&amp;H"><span style="color:#87cefa;">&amp;H</span></a>3C9) * 4)
+  <a href="IF...html" title="IF...THEN"><span style="color:#87cefa;">IF</span></a> <a href="LEN.html" title="LEN"><span style="color:#87cefa;">LEN</span></a>(red$) = 1 <a href="THEN.html" title="THEN"><span style="color:#87cefa;">THEN</span></a> red$ = "0" + red$ '2 hex digits required
+  <a href="IF...html" title="IF...THEN"><span style="color:#87cefa;">IF</span></a> <a href="LEN.html" title="LEN"><span style="color:#87cefa;">LEN</span></a>(grn$) = 1 <a href="THEN.html" title="THEN"><span style="color:#87cefa;">THEN</span></a> grn$ = "0" + grn$ 'for low or zero hex values
+  <a href="IF...html" title="IF...THEN"><span style="color:#87cefa;">IF</span></a> <a href="LEN.html" title="LEN"><span style="color:#87cefa;">LEN</span></a>(blu$) = 1 <a href="THEN.html" title="THEN"><span style="color:#87cefa;">THEN</span></a> blu$ = "0" + blu$
+  hex32$ = "<a href="%26H.html" title="&amp;H"><span style="color:#87cefa;">&amp;H</span></a>" + alpha$ + red$ + grn$ + blu$
+  <a href="PALETTECOLOR.html" title="PALETTECOLOR"><span style="color:#87cefa;">_PALETTECOLOR</span></a> attribute, <a href="VAL.html" title="VAL"><span style="color:#87cefa;">VAL</span></a>(hex32$) 'VAL converts hex string to a LONG 32 bit value
+  <a href="IF...html" title="IF...THEN"><span style="color:#87cefa;">IF</span></a> attribute <a href="THEN.html" title="THEN"><span style="color:#87cefa;">THEN</span></a> <a class="mw-selflink selflink"><span style="color:#87cefa;">COLOR</span></a> attribute 'exclude black color print
+  <a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> "<a class="mw-selflink selflink"><span style="color:#87cefa;">COLOR</span></a>" + <a href="STR%24.html" title="STR$"><span style="color:#87cefa;">STR$</span></a>(attribute) + " = " + hex32$, red$, grn$, blu$ 'returns closest attribute
+<a href="NEXT.html" title="NEXT"><span style="color:#87cefa;">NEXT</span></a> <i> </i>
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: Courier; background-color: black; color: white;">Attribute  Hex value      Red        Green       Blue 
+
+<span style="color:#A8A8A8">COLOR 0 = &amp;HFF000050       00         00         50</span>
+<span style="color:#0050A8">COLOR 1 = &amp;HFF0000A8       00         00         A8</span>
+<span style="color:#00A800">COLOR 2 = &amp;HFF00A800       00         A8         00</span>
+<span style="color:#00A8A8">COLOR 3 = &amp;HFF00A8A8       00         A8         A8</span>
+<span style="color:#A80000">COLOR 4 = &amp;HFFA80000       A8         00         00</span>
+<span style="color:#A800A8">COLOR 5 = &amp;HFFA800A8       A8         00         A8</span>
+<span style="color:#A85400">COLOR 6 = &amp;HFFA85400       A8         54         00</span>
+<span style="color:#A8A8A8">COLOR 7 = &amp;HFFA8A8A8       A8         A8         A8</span>
+<span style="color:#545454">COLOR 8 = &amp;HFF545454       54         54         54</span>
+<span style="color:#5454FC">COLOR 9 = &amp;HFF5454FC       54         54         FC</span>
+<span style="color:#54FC54">COLOR 10 = &amp;HFF54FC54      54         FC         54</span>
+<span style="color:#54FCFC">COLOR 11 = &amp;HFF5454FC      54         FC         FC</span>
+<span style="color:#FC5454">COLOR 12 = &amp;HFFFC5454      FC         54         54</span>
+<span style="color:#FC54FC">COLOR 13 = &amp;HFFFC54FC      FC         54         FC</span>
+<span style="color:#FCFC54">COLOR 14 = &amp;HFFFCFC54      FC         FC         54</span>
+<span style="color:#FCFCFC">COLOR 15 = &amp;HFFFCFCFC      FC         FC         FC</span>
+</p>
+<dl><dd><i>Explanation:</i> The RGB intensity values are multiplied by 4 to get the <a href="RGB.html" title="RGB">_RGB</a> intensity values as <a href="HEX%24.html" title="HEX$">hexadecimal</a> values. The individual 2 digit <a href="HEX%24.html" title="HEX$">HEX$</a> intensity values can be added to "&amp;HFF" to make up the 32-bit hexadecimal string value necessary for <a href="VAL.html" title="VAL">VAL</a> to return to <a href="PALETTECOLOR.html" title="PALETTECOLOR">_PALETTECOLOR</a>. The statement is only included in the example to show how that can be done with any 32-bit color value.</dd>
+<dd><b>Note:</b> Black has a blue hex value of 50 due to the <a href="OUT.html" title="OUT">OUT</a> background color setting which makes it dark blue.</dd></dl>
+<p><br />
+</p>
+<h3><span class="mw-headline" id="Reading_and_setting_color_port_intensities_using_INP_and_OUT">Reading and setting color port intensities using <a href="INP.html" title="INP">INP</a> and <a href="OUT.html" title="OUT">OUT</a></span></h3>
+<ul><li>Legacy code may use <a href="INP.html" title="INP">INP</a> and <a href="OUT.html" title="OUT">OUT</a> to read or set color port intensities. <b>QB64</b> emulates VGA memory to maintain compatibility.</li>
+<li>The same can be achieved using <a href="PALETTECOLOR.html" title="PALETTECOLOR">_PALETTECOLOR</a> (<b>recommended practice</b>).</li></ul>
+<dl><dd><b><span style="color:green">OUT &amp;H3C7, attribute</span></b> 'Set port to read RGB settings with:</dd>
+<dd><b><span style="color:green">color_intensity = INP(&amp;H3C9)</span></b> 'reads present intensity setting</dd></dl>
+<dl><dd><b><span style="color:green">OUT &amp;H3C8, attribute</span></b> 'Set port to write RGB settings with:</dd>
+<dd><b><span style="color:green">OUT &amp;H3C9, color_intensity</span></b> 'writes new intensity setting</dd></dl>
+<ul><li>After every 3 reads or writes, changes to next higher color attribute. Loops can be used to set more than one attribute's intensities.</li>
+<li>Color port setting of red, green and blue intensities can be done in ascending order.</li>
+<li>Color port attribute intensity values range from 0 to 63 (1/4 of the 32-bit values) in QBasic's legacy 4 and 8 bit screen modes.</li></ul>
+<p style="text-align: center">(<a href="#toc">Return to Table of Contents</a>)</p>
+<p><br />
+</p>
+<h2><span class="mw-headline" id="Examples">Examples</span></h2>
+<p><i>Example 1:</i> Reading the default RGB color settings of color attribute 15.
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: Courier, monospace; background-color: darkblue; color: lightgrey; word-wrap: break-word;"> <i> </i>
+ <a href="OUT.html" title="OUT"><span style="color:#87cefa;">OUT</span></a> &amp;H3C7, 15
+ red% = <a href="INP.html" title="INP"><span style="color:#87cefa;">INP</span></a>(&amp;H3C9)
+ green% = <a href="INP.html" title="INP"><span style="color:#87cefa;">INP</span></a>(&amp;H3C9)
+ blue% = <a href="INP.html" title="INP"><span style="color:#87cefa;">INP</span></a>(&amp;H3C9)
+ <a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> red%, green%, blue% <i> </i>
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: Courier; background-color: black; color: white;">
+ 63       63       63
+</p>
+<p><br />
+<i>Example 2:</i> Changing the color settings of attribute 0 (the background) to dark blue in <a href="SCREEN.html" title="SCREEN">SCREENs</a> 12 or 13.
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: Courier, monospace; background-color: darkblue; color: lightgrey; word-wrap: break-word;"> <i> </i>
+<a href="SCREEN.html" title="SCREEN"><span style="color:#87cefa;">SCREEN</span></a> 12
+<a href="OUT.html" title="OUT"><span style="color:#87cefa;">OUT</span></a> <a href="%26H.html" title="&amp;H"><span style="color:#87cefa;">&amp;H</span></a>3C8, 0          'set color port attribute to write
+<a href="OUT.html" title="OUT"><span style="color:#87cefa;">OUT</span></a> <a href="%26H.html" title="&amp;H"><span style="color:#87cefa;">&amp;H</span></a>3C9, 0          'red intensity
+<a href="OUT.html" title="OUT"><span style="color:#87cefa;">OUT</span></a> <a href="%26H.html" title="&amp;H"><span style="color:#87cefa;">&amp;H</span></a>3C9, 0          'green intensity
+<a href="OUT.html" title="OUT"><span style="color:#87cefa;">OUT</span></a> <a href="%26H.html" title="&amp;H"><span style="color:#87cefa;">&amp;H</span></a>3C9, 30         'blue intensity 
+
+<a href="OUT.html" title="OUT"><span style="color:#87cefa;">OUT</span></a> <a href="%26H.html" title="&amp;H"><span style="color:#87cefa;">&amp;H</span></a>3C7, 0
+<a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> <a href="INP.html" title="INP"><span style="color:#87cefa;">INP</span></a>(<a href="%26H.html" title="&amp;H"><span style="color:#87cefa;">&amp;H</span></a>3C9); <a href="INP.html" title="INP"><span style="color:#87cefa;">INP</span></a>(<a href="%26H.html" title="&amp;H"><span style="color:#87cefa;">&amp;H</span></a>3C9); <a href="INP.html" title="INP"><span style="color:#87cefa;">INP</span></a>(<a href="%26H.html" title="&amp;H"><span style="color:#87cefa;">&amp;H</span></a>3C9)
+<a href="END.html" title="END"><span style="color:#87cefa;">END</span></a><i> </i>
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: Courier, monospace; background-color: darkblue; color: lightgrey; word-wrap: break-word;"> 0  0  30 </p>
+<p><br />
+<i>Example 3:</i> Printing in fullscreen SCREEN 0 mode with a color background under the text only.
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: Courier, monospace; background-color: darkblue; color: lightgrey; word-wrap: break-word;"> <i> </i>
+<a href="SCREEN.html" title="SCREEN"><span style="color:#87cefa;">SCREEN</span></a> 0: <a href="FULLSCREEN.html" title="FULLSCREEN"><span style="color:#87cefa;">_FULLSCREEN</span></a> ' used for fullscreen instead of window
+<a class="mw-selflink selflink"><span style="color:#87cefa;">COLOR</span></a> 30, 6: <a href="LOCATE.html" title="LOCATE"><span style="color:#87cefa;">LOCATE</span></a> 12, 4: <a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> "Hello!" <i> </i>
+</p>
+<dl><dd><i>Result:</i> Hello! is printed in flashing high intensity yellow with brown background behind text only when in QBasic <a href="FULLSCREEN.html" title="FULLSCREEN">fullscreen</a>.</dd></dl>
+<p><br />
+<i>Example 4:</i> Using <a href="CLS.html" title="CLS">CLS</a> after setting the background color in SCREEN 0 to make the color cover the entire screen.
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: Courier, monospace; background-color: darkblue; color: lightgrey; word-wrap: break-word;"> <i> </i>
+<a href="SCREEN.html" title="SCREEN"><span style="color:#87cefa;">SCREEN</span></a> 0: <a href="FULLSCREEN.html" title="FULLSCREEN"><span style="color:#87cefa;">_FULLSCREEN</span></a>
+<a class="mw-selflink selflink"><span style="color:#87cefa;">COLOR</span></a> , 7: <a href="CLS.html" title="CLS"><span style="color:#87cefa;">CLS</span></a>
+<a class="mw-selflink selflink"><span style="color:#87cefa;">COLOR</span></a> 9: <a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> "Hello" <i> </i>
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: courier; background-color: lightgrey; color: black;"><span style="color:blue">Hello</span></p>
+<dl><dd><i>Result:</i> The blue word Hello is printed to a totally grey background in <a href="FULLSCREEN.html" title="FULLSCREEN">fullscreen</a>.</dd></dl>
+<p><br />
+<i>Example 5:</i> Using a different foreground color for each letter:
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: Courier, monospace; background-color: darkblue; color: lightgrey; word-wrap: break-word;"> <i> </i>
+<a href="SCREEN.html" title="SCREEN"><span style="color:#87cefa;">SCREEN</span></a> 0
+<a class="mw-selflink selflink"><span style="color:#87cefa;">COLOR</span></a> 1: <a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> "H";
+<a class="mw-selflink selflink"><span style="color:#87cefa;">COLOR</span></a> 3: <a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> "E";
+<a class="mw-selflink selflink"><span style="color:#87cefa;">COLOR</span></a> 4: <a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> "L";
+<a class="mw-selflink selflink"><span style="color:#87cefa;">COLOR</span></a> 5: <a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> "L";
+<a class="mw-selflink selflink"><span style="color:#87cefa;">COLOR</span></a> 6: <a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> "O"
+<a class="mw-selflink selflink"><span style="color:#87cefa;">COLOR</span></a> 9: <a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> "W";
+<a class="mw-selflink selflink"><span style="color:#87cefa;">COLOR</span></a> 11: <a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> "O";
+<a class="mw-selflink selflink"><span style="color:#87cefa;">COLOR</span></a> 12: <a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> "R";
+<a class="mw-selflink selflink"><span style="color:#87cefa;">COLOR</span></a> 13: <a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> "L";
+<a class="mw-selflink selflink"><span style="color:#87cefa;">COLOR</span></a> 14: <a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> "D" <i> </i>
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: Courier; background-color: black; color: white;">
+<span style="color:darkblue">H</span><span style="color:darkcyan">E</span><span style="color:darkred">L</span><span style="color:darkmagenta">L</span><span style="color:goldenrod">O</span>
+<span style="color:blue">W</span><span style="color:cyan">O</span><span style="color:red">R</span><span style="color:magenta">L</span><span style="color:yellow">D</span>
+</p>
+<p><br />
+<i>Example 6:</i> Doing the same as Example 5 but in only a few lines:
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: Courier, monospace; background-color: darkblue; color: lightgrey; word-wrap: break-word;"> <i> </i>
+<a href="SCREEN_(statement).html" title="SCREEN (statement)"><span style="color:#87cefa;">SCREEN</span></a> 0
+text$ = "HelloWorld"
+<a href="FOR...html" title="FOR...NEXT"><span style="color:#87cefa;">FOR</span></a> textpos = 1 <a href="TO.html" title="TO"><span style="color:#87cefa;">TO</span></a> <a href="LEN.html" title="LEN"><span style="color:#87cefa;">LEN</span></a>(text$)
+  <a class="mw-selflink selflink"><span style="color:#87cefa;">COLOR</span></a> textpos
+  <a href="IF...html" title="IF...THEN"><span style="color:#87cefa;">IF</span></a> textpos &lt;&gt; 5 <a href="THEN.html" title="THEN"><span style="color:#87cefa;">THEN</span></a> <a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> <a href="MID%24.html" title="MID$"><span style="color:#87cefa;">MID$</span></a>(text$, textpos, 1);
+  <a href="IF...html" title="IF...THEN"><span style="color:#87cefa;">IF</span></a> textpos = 5 <a href="THEN.html" title="THEN"><span style="color:#87cefa;">THEN</span></a> <a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> <a href="MID%24.html" title="MID$"><span style="color:#87cefa;">MID$</span></a>(text$, textpos, 1)    'start print on next row
+<a href="NEXT.html" title="NEXT"><span style="color:#87cefa;">NEXT</span></a>
+
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: Courier; background-color: black; color: white;">
+<span style="color:darkblue">H</span><span style="color:darkgreen">e</span><span style="color:darkcyan">l</span><span style="color:darkred">l</span><span style="color:darkmagenta">o</span>
+<span style="color:goldenrod">W</span><span style="color:lightgrey">o</span><span style="color:dimgray">r</span><span style="color:blue">l</span><span style="color:lime">d</span> <i> </i>
+</p>
+<dl><dd><i>Explanation:</i>Semicolon(;) means that the next PRINT happens on the same line, we don't want that when it comes to position 5 so when it is at position 5 the next PRINT will move to the next line (when it isn't at position 5 we want it to continue printing the letter side-by-side on the same line though).</dd></dl>
+<p><br />
+<i>Example 7:</i> Since SCREEN 0 only uses background colors 0 to 7 by default, use <a href="PALETTECOLOR.html" title="PALETTECOLOR">_PALETTECOLOR</a> to change color intensities of color 0.
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: Courier, monospace; background-color: darkblue; color: lightgrey; word-wrap: break-word;"> <i> </i>
+<a href="PALETTECOLOR.html" title="PALETTECOLOR"><span style="color:#87cefa;">_PALETTECOLOR</span></a> 0, _RGB32(255, 255, 255) 'change color 0 intensity
+<a href="PALETTECOLOR.html" title="PALETTECOLOR"><span style="color:#87cefa;">_PALETTECOLOR</span></a> 8, _RGB32(0, 0, 0) 'change color 8 intensity
+
+<a class="mw-selflink selflink"><span style="color:#87cefa;">COLOR</span></a> 8: <a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> "Black on bright white!" <i> </i>
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:10px; white-space: pre; font-family: courier; background-color: white; color: darkgreen;"><b><span style="color:#000000">Black on bright white!</span></b>
+</p>
+<hr />
+<dl><dd><i>Explanation:</i> Since QB64 does not have <a href="DAC.html" title="DAC">DAC</a> <a href="SCREEN.html" title="SCREEN">SCREEN</a> 0 limitations, changing color intensities for custom background colors is possible.</dd></dl>
+<p><br />
+<i>Example 8:</i> Changing light gray text in <a href="SCREEN.html" title="SCREEN">SCREEN</a> 0 to a 32 bit custom color using a <a href="LONG.html" title="LONG">LONG</a> HTML hexadecimal value:
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: Courier, monospace; background-color: darkblue; color: lightgrey; word-wrap: break-word;"> <i> </i>
+<a class="mw-selflink selflink"><span style="color:#87cefa;">COLOR</span></a> 7
+<a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> "Color 7 is gray"
+K$ = <a href="INPUT%24.html" title="INPUT$"><span style="color:#87cefa;">INPUT$</span></a>(1)
+<a href="PALETTECOLOR.html" title="PALETTECOLOR"><span style="color:#87cefa;">_PALETTECOLOR</span></a> 7, <a href="%26H.html" title="&amp;H"><span style="color:#87cefa;">&amp;H</span></a>FFDAA520 ' FF alpha makes the color translucent
+<a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> "Color 7 is now Goldenrod in <a href="SCREEN.html" title="SCREEN"><span style="color:#87cefa;">SCREEN</span></a> 0! <i> </i>
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: Courier; background-color: black; color: white;">
+<span style="color:#A8A8A8">Color 7 is gray</span>
+<span style="color:#DAA520">Color 7 is now Goldenrod in SCREEN 0!</span>
+</p>
+<dl><dd><i>Explanation:</i> <a href="RGB32.html" title="RGB32">_RGB32</a> could be used to make custom 32 bit colors or HTML values could be used after &amp;HFF for solid colors.</dd></dl>
+<p style="text-align: center">(<a href="#toc">Return to Table of Contents</a>)</p>
+<p><br />
+</p>
+<h2><span class="mw-headline" id="See_also">See also</span></h2>
+<ul><li><a href="%24COLOR.html" title="$COLOR">$COLOR</a> (metacommand)</li>
+<li><a href="RGB.html" title="RGB">_RGB</a>, <a href="RGBA.html" title="RGBA">_RGBA</a>, <a href="RGB32.html" title="RGB32">_RGB32</a>, <a href="RGBA32.html" title="RGBA32">RGBA32</a>.</li>
+<li><a href="RED.html" title="RED">_RED</a>, <a href="GREEN.html" title="GREEN">_GREEN</a>, <a href="BLUE.html" title="BLUE">_BLUE</a></li>
+<li><a href="RED32.html" title="RED32">_RED32</a>, <a href="GREEN32.html" title="GREEN32">_GREEN32</a>, <a href="BLUE32.html" title="BLUE32">_BLUE32</a></li>
+<li><a href="ALPHA.html" title="ALPHA">_ALPHA</a>, <a href="ALPHA32.html" title="ALPHA32">_ALPHA32</a>, <a href="CLEARCOLOR.html" title="CLEARCOLOR">_CLEARCOLOR</a></li>
+<li><a href="PRINT.html" title="PRINT">PRINT</a>, <a href="LOCATE.html" title="LOCATE">LOCATE</a>, <a href="SCREEN.html" title="SCREEN">SCREEN</a></li>
+<li><a href="POINT.html" title="POINT">POINT</a>, <a href="SCREEN_(function).html" title="SCREEN (function)">SCREEN (function)</a></li>
+<li><a href="OUT.html" title="OUT">OUT</a>, <a href="INP.html" title="INP">INP</a>, <a href="PALETTE.html" title="PALETTE">PALETTE</a></li>
+<li><a href="BLINK.html" title="BLINK">_BLINK</a></li>
+<li><a href="DEFAULTCOLOR.html" title="DEFAULTCOLOR">_DEFAULTCOLOR</a></li>
+<li><a href="BACKGROUNDCOLOR.html" title="BACKGROUNDCOLOR">_BACKGROUNDCOLOR</a></li>
+<li><a href="PALETTECOLOR.html" title="PALETTECOLOR">_PALETTECOLOR</a></li>
+<li><a href="Windows_Libraries.html#Color_Dialog_Box" title="Windows Libraries">Color Dialog Box</a></li>
+<li><a rel="nofollow" class="external text" href="http://www.w3schools.com/html/html_colornames.asp">Hexadecimal Color Values</a></li></ul>
+<p><br />
+</p>
+<hr />
+<center><i>Navigation:</i>
+<dl><dd><a href="Keyword_Reference_-_Alphabetical.html" title="Keyword Reference - Alphabetical">Keyword Reference - Alphabetical</a></dd>
+<dd><a href="Keyword_Reference_-_By_usage.html" title="Keyword Reference - By usage">Keyword Reference - By Usage</a></dd>
+<dd><a href="Main_Page.html" title="Main Page">Main Wiki Page</a></dd></dl></center>
+<!-- 
+NewPP limit report
+Cached time: 20210706170811
+Cache expiry: 86400
+Dynamic content: false
+Complications: []
+CPU time usage: 0.175 seconds
+Real time usage: 0.330 seconds
+Preprocessor visited node count: 1534/1000000
+Post‐expand include size: 13461/2097152 bytes
+Template argument size: 3060/2097152 bytes
+Highest expansion depth: 4/40
+Expensive parser function count: 0/100
+Unstrip recursion depth: 0/20
+Unstrip post‐expand size: 17/5000000 bytes
+-->
+<!--
+Transclusion expansion time report (%,ms,calls,template)
+100.00%  116.669      1 -total
+ 15.98%   18.644    125 Template:Cl
+ 11.69%   13.643      1 Template:TextStart
+ 11.64%   13.581      1 Template:WhiteStart
+  8.83%   10.300     10 Template:CodeEnd
+  5.61%    6.542     44 Template:Text
+  3.74%    4.363      1 Template:PageSyntax
+  3.07%    3.581      6 Template:Parameter
+  3.02%    3.525     10 Template:CodeStart
+  2.93%    3.414      5 Template:OutputEnd
+-->
+
+<!-- Saved in parser cache with key i4224360_mw2-mw_:pcache:idhash:105-0!canonical and timestamp 20210706170811 and revision id 23680
+ -->
+</div></div><div class="printfooter">Retrieved from "<a dir="ltr" href="indexdde6.html?title=COLOR&amp;oldid=23680">http://www.qb64.org/wiki/index.php?title=COLOR&amp;oldid=23680</a>"</div>
+		<div id="catlinks" class="catlinks catlinks-allhidden" data-mw="interface"></div>
+	</div>
+</div>
+
+<div id="mw-navigation">
+	<h2>Navigation menu</h2>
+	<div id="mw-head">
+		<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-personal" class="vector-menu" aria-labelledby="p-personal-label" role="navigation" 
+	 >
+	<h3 id="p-personal-label">
+		<span>Personal tools</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="pt-login"><a href="index3195.html?title=Special:UserLogin&amp;returnto=COLOR" title="You are encouraged to log in; however, it is not mandatory [o]" accesskey="o">Log in</a></li></ul>
+		
+	</div>
+</nav>
+
+
+		<div id="left-navigation">
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-namespaces" class="vector-menu vector-menu-tabs vectorTabs" aria-labelledby="p-namespaces-label" role="navigation" 
+	 >
+	<h3 id="p-namespaces-label">
+		<span>Namespaces</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="ca-nstab-main" class="selected"><a href="COLOR.html" title="View the content page [c]" accesskey="c">Page</a></li><li id="ca-talk" class="new"><a href="Talk_COLOR.html?title=Talk:COLOR&amp;action=edit&amp;redlink=1" rel="discussion" title="Discussion about the content page (page does not exist) [t]" accesskey="t">Discussion</a></li></ul>
+		
+	</div>
+</nav>
+
+
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-variants" class="vector-menu-empty emptyPortlet vector-menu vector-menu-dropdown vectorMenu" aria-labelledby="p-variants-label" role="navigation" 
+	 >
+	<input type="checkbox" class="vector-menu-checkbox vectorMenuCheckbox" aria-labelledby="p-variants-label" />
+	<h3 id="p-variants-label">
+		<span>Variants</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="menu vector-menu-content-list"></ul>
+		
+	</div>
+</nav>
+
+
+		</div>
+		<div id="right-navigation">
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-views" class="vector-menu vector-menu-tabs vectorTabs" aria-labelledby="p-views-label" role="navigation" 
+	 >
+	<h3 id="p-views-label">
+		<span>Views</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="ca-view" class="collapsible selected"><a href="COLOR.html">Read</a></li><li id="ca-viewsource" class="collapsible"><a href="indexc6c9.html?title=COLOR&amp;action=edit" title="This page is protected.&#10;You can view its source [e]" accesskey="e">View source</a></li><li id="ca-history" class="collapsible"><a href="indexbb4d.html?title=COLOR&amp;action=history" title="Past revisions of this page [h]" accesskey="h">View history</a></li></ul>
+		
+	</div>
+</nav>
+
+
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-cactions" class="vector-menu-empty emptyPortlet vector-menu vector-menu-dropdown vectorMenu" aria-labelledby="p-cactions-label" role="navigation" 
+	 >
+	<input type="checkbox" class="vector-menu-checkbox vectorMenuCheckbox" aria-labelledby="p-cactions-label" />
+	<h3 id="p-cactions-label">
+		<span>More</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="menu vector-menu-content-list"></ul>
+		
+	</div>
+</nav>
+
+
+			<div id="p-search" role="search">
+	<h3 >
+		<label for="searchInput">Search</label>
+	</h3>
+	<form action="https://www.qb64.org/wiki/index.php" id="searchform">
+		<div id="simpleSearch">
+			<input type="search" name="search" placeholder="Search QB64 Wiki" title="Search QB64 Wiki [f]" accesskey="f" id="searchInput"/>
+			<input type="hidden" name="title" value="Special:Search">
+			<input type="submit" name="fulltext" value="Search" title="Search the pages for this text" id="mw-searchButton" class="searchButton mw-fallbackSearchButton"/>
+			<input type="submit" name="go" value="Go" title="Go to a page with this exact name if it exists" id="searchButton" class="searchButton"/>
+		</div>
+	</form>
+</div>
+
+		</div>
+	</div>
+	
+<div id="mw-panel">
+	<div id="p-logo" role="banner">
+		<a  title="Visit the main page" class="mw-wiki-logo" href="Main_Page.html"></a>
+	</div>
+	<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-navigation" class="vector-menu vector-menu-portal portal portal-first" aria-labelledby="p-navigation-label" role="navigation" 
+	 >
+	<h3 id="p-navigation-label">
+		<span>Navigation</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="n-mainpage-description"><a href="Main_Page.html" title="Visit the main page [z]" accesskey="z">Main page</a></li><li id="n-recentchanges"><a href="Special_RecentChanges.html" title="A list of recent changes in the wiki [r]" accesskey="r">Recent changes</a></li><li id="n-randompage"><a href="SNDCOPY.html" title="Load a random page [x]" accesskey="x">Random page</a></li><li id="n-help-mediawiki"><a href="https://www.mediawiki.org/wiki/Special:MyLanguage/Help:Contents">Help about MediaWiki</a></li></ul>
+		
+	</div>
+</nav>
+
+
+	<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-tb" class="vector-menu vector-menu-portal portal" aria-labelledby="p-tb-label" role="navigation" 
+	 >
+	<h3 id="p-tb-label">
+		<span>Tools</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="t-whatlinkshere"><a href="Special_WhatLinksHere/COLOR.html" title="A list of all wiki pages that link here [j]" accesskey="j">What links here</a></li><li id="t-recentchangeslinked"><a href="Special_RecentChangesLinked/COLOR.html" rel="nofollow" title="Recent changes in pages linked from this page [k]" accesskey="k">Related changes</a></li><li id="t-specialpages"><a href="Special_SpecialPages.html" title="A list of all special pages [q]" accesskey="q">Special pages</a></li><li id="t-print"><a href="javascript:print();" rel="alternate" title="Printable version of this page [p]" accesskey="p">Printable version</a></li><li id="t-permalink"><a href="indexdde6.html?title=COLOR&amp;oldid=23680" title="Permanent link to this revision of the page">Permanent link</a></li><li id="t-info"><a href="index4c1e.html?title=COLOR&amp;action=info" title="More information about this page">Page information</a></li></ul>
+		
+	</div>
+</nav>
+
+
+	
+</div>
+
+</div>
+
+<footer id="footer" class="mw-footer" role="contentinfo" >
+	<ul id="footer-info" >
+		<li id="footer-info-lastmod"> This page was last edited on 14 April 2021, at 23:04.</li>
+	</ul>
+	<ul id="footer-places" >
+		<li id="footer-places-privacy"><a href="My_wiki_Privacy_policy.html" title="My wiki:Privacy policy">Privacy policy</a></li>
+		<li id="footer-places-about"><a href="My_wiki_About.html" title="My wiki:About">About QB64 Wiki</a></li>
+		<li id="footer-places-disclaimer"><a href="My_wiki_General_disclaimer.html" title="My wiki:General disclaimer">Disclaimers</a></li>
+	</ul>
+	<ul id="footer-icons" class="noprint">
+		<li id="footer-poweredbyico"><a href="https://www.mediawiki.org/"><img src="resources/assets/poweredby_mediawiki_88x31.png" alt="Powered by MediaWiki" srcset="/wiki/resources/assets/poweredby_mediawiki_132x47.png 1.5x, /wiki/resources/assets/poweredby_mediawiki_176x62.png 2x" width="88" height="31" loading="lazy"/></a></li>
+	</ul>
+	<div style="clear: both;"></div>
+</footer>
+
+
+
+<script>(RLQ=window.RLQ||[]).push(function(){mw.config.set({"wgPageParseReport":{"limitreport":{"cputime":"0.175","walltime":"0.330","ppvisitednodes":{"value":1534,"limit":1000000},"postexpandincludesize":{"value":13461,"limit":2097152},"templateargumentsize":{"value":3060,"limit":2097152},"expansiondepth":{"value":4,"limit":40},"expensivefunctioncount":{"value":0,"limit":100},"unstrip-depth":{"value":0,"limit":20},"unstrip-size":{"value":17,"limit":5000000},"timingprofile":["100.00%  116.669      1 -total"," 15.98%   18.644    125 Template:Cl"," 11.69%   13.643      1 Template:TextStart"," 11.64%   13.581      1 Template:WhiteStart","  8.83%   10.300     10 Template:CodeEnd","  5.61%    6.542     44 Template:Text","  3.74%    4.363      1 Template:PageSyntax","  3.07%    3.581      6 Template:Parameter","  3.02%    3.525     10 Template:CodeStart","  2.93%    3.414      5 Template:OutputEnd"]},"cachereport":{"timestamp":"20210706170811","ttl":86400,"transientcontent":false}}});mw.config.set({"wgBackendResponseTime":2033});});</script></body>
+<!-- Mirrored from www.qb64.org/wiki/COLOR by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 07 Aug 2021 13:12:04 GMT -->
+</html>

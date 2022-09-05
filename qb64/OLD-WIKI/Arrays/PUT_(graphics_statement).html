@@ -1,0 +1,327 @@
+
+<!DOCTYPE html>
+<html class="client-nojs" lang="en" dir="ltr">
+
+<!-- Mirrored from www.qb64.org/wiki/PUT_(graphics_statement) by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 07 Aug 2021 12:53:05 GMT -->
+<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=UTF-8" /><!-- /Added by HTTrack -->
+<head>
+<meta charset="UTF-8"/>
+<title>PUT (graphics statement) - QB64 Wiki</title>
+<script>document.documentElement.className="client-js";RLCONF={"wgBreakFrames":!1,"wgSeparatorTransformTable":["",""],"wgDigitTransformTable":["",""],"wgDefaultDateFormat":"dmy","wgMonthNames":["","January","February","March","April","May","June","July","August","September","October","November","December"],"wgRequestId":"YOWkrQ0lOz7XOc3uS6UrhwAAASA","wgCSPNonce":!1,"wgCanonicalNamespace":"","wgCanonicalSpecialPageName":!1,"wgNamespaceNumber":0,"wgPageName":"PUT_(graphics_statement)","wgTitle":"PUT (graphics statement)","wgCurRevisionId":22987,"wgRevisionId":22987,"wgArticleId":548,"wgIsArticle":!0,"wgIsRedirect":!1,"wgAction":"view","wgUserName":null,"wgUserGroups":["*"],"wgCategories":[],"wgPageContentLanguage":"en","wgPageContentModel":"wikitext","wgRelevantPageName":"PUT_(graphics_statement)","wgRelevantArticleId":548,"wgIsProbablyEditable":!1,"wgRelevantPageIsProbablyEditable":!1,"wgRestrictionEdit":[],"wgRestrictionMove":[]};RLSTATE={"site.styles":"ready","noscript":
+"ready","user.styles":"ready","user":"ready","user.options":"loading","skins.vector.styles.legacy":"ready"};RLPAGEMODULES=["site","mediawiki.page.startup","mediawiki.page.ready","skins.vector.legacy.js"];</script>
+<script>(RLQ=window.RLQ||[]).push(function(){mw.loader.implement("user.options@1hzgi",function($,jQuery,require,module){/*@nomin*/mw.user.tokens.set({"patrolToken":"+\\","watchToken":"+\\","csrfToken":"+\\"});
+});});</script>
+<link rel="stylesheet" href="load5c90.css?lang=en&amp;modules=skins.vector.styles.legacy&amp;only=styles&amp;skin=vector"/>
+<script async="" src="load52c0.php?lang=en&amp;modules=startup&amp;only=scripts&amp;raw=1&amp;skin=vector"></script>
+<meta name="generator" content="MediaWiki 1.35.2"/>
+<link rel="shortcut icon" href="https://www.qb64.org/favicon.ico"/>
+<link rel="search" type="application/opensearchdescription+xml" href="opensearch_desc.php" title="QB64 Wiki (en)"/>
+<link rel="EditURI" type="application/rsd+xml" href="api-result251f.xml?action=rsd"/>
+<link rel="alternate" type="application/atom+xml" title="QB64 Wiki Atom feed" href="feeda295.xml?title=Special:RecentChanges&amp;feed=atom"/>
+<!--[if lt IE 9]><script src="/wiki/resources/lib/html5shiv/html5shiv.js"></script><![endif]-->
+</head>
+<body class="mediawiki ltr sitedir-ltr mw-hide-empty-elt ns-0 ns-subject page-PUT_graphics_statement rootpage-PUT_graphics_statement skin-vector action-view skin-vector-legacy">
+<div id="mw-page-base" class="noprint"></div>
+<div id="mw-head-base" class="noprint"></div>
+<div id="content" class="mw-body" role="main">
+	<a id="top"></a>
+	<div id="siteNotice" class="mw-body-content"></div>
+	<div class="mw-indicators mw-body-content">
+	</div>
+	<h1 id="firstHeading" class="firstHeading" lang="en">PUT (graphics statement)</h1>
+	<div id="bodyContent" class="mw-body-content">
+		<div id="siteSub" class="noprint">From QB64 Wiki</div>
+		<div id="contentSub"></div>
+		<div id="contentSub2"></div>
+		
+		<div id="jump-to-nav"></div>
+		<a class="mw-jump-link" href="#mw-head">Jump to navigation</a>
+		<a class="mw-jump-link" href="#searchInput">Jump to search</a>
+		<div id="mw-content-text" lang="en" dir="ltr" class="mw-content-ltr"><div class="mw-parser-output"><p>The <b>PUT</b> graphics statement is used to place <a href="GET_(graphics_statement).html" title="GET (graphics statement)">GET</a> or <a href="BSAVE.html" title="BSAVE">BSAVE</a> file images stored in the designated array.
+</p><p><br />
+</p>
+<h2><span class="mw-headline" id="Syntax">Syntax</span></h2>
+<dl><dd><dl><dd><b>PUT</b> [<span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="STEP.html" title="STEP">STEP</a></span>]<b>(<i>column</i>, <i>row</i>), Array(</b>[<i>index</i>]<b>)</b>[,] [<span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="CLIP.html" title="CLIP">_CLIP</a></span>]  [{PSET|PRESET|AND|OR|XOR}]][, <i>omitcolor</i>]</dd></dl></dd></dl>
+<p><br />
+<i><a href="Parameters.html" title="Parameters">Parameters</a>:</i>
+</p>
+<ul><li>The <a href="STEP.html" title="STEP">STEP</a> keyword can be used to for coordinates relative to the last graphic coordinates used.</li>
+<li><i>column</i> and <i>row</i> <a href="INTEGER.html" title="INTEGER">INTEGER</a> coordinate values designate the top left corner where the image is to be placed and cannot be off screen.</li>
+<li>The <a href="INTEGER.html" title="INTEGER">INTEGER</a> <i>array</i> holds data of an image box area created by <a href="GET_(graphics_statement).html" title="GET (graphics statement)">GET</a>. The brackets can be empty or designate a starting <i>index</i>.</li>
+<li><a href="CLIP.html" title="CLIP">_CLIP</a> can be used in QB64 when part of an image must be off screen.</li>
+<li><a href="XOR.html" class="mw-redirect" title="XOR">XOR</a>, <a href="PSET.html" title="PSET">PSET</a>, <a href="PRESET.html" title="PRESET">PRESET</a>, <a href="OR.html" title="OR">OR</a> or <a href="AND.html" title="AND">AND</a> actions will affect the coloring of the image on certain background colors. See below.</li>
+<li><i>omitcolor</i> is the pixel color attribute to ignore in QB64 only. This may be used instead of using an <a href="AND.html" title="AND">AND</a> mask.</li></ul>
+<p><br />
+<i>Usage:</i>
+</p>
+<ul><li><b>The entire box area of the image MUST be on the screen or an "Illegal function call" <a href="ERROR_Codes.html" title="ERROR Codes">error</a> will occur!</b></li>
+<li>In <b>QB64</b> <a href="CLIP.html" title="CLIP">_CLIP</a> can be used when part of the image may be off of the screen. This will also prevent off screen errors!</li></ul>
+<dl><dd><dl><dd>PUT (-10, 10), mypic(0), PSET ' this causes an illegal function call without <a href="CLIP.html" title="CLIP">_CLIP</a></dd>
+<dd>PUT (-10, 10), mypic(0), _CLIP PSET ' allows a graphic to be placed partially off-screen</dd>
+<dd>PUT (-10, 10), mypic(0), _CLIP ' uses the default PUT XOR operation</dd>
+<dd>PUT (-10, 10), mypic(0), _CLIP PSET, 4 ' doesn't place the red pixels of the image</dd></dl></dd></dl>
+<ul><li>In <b>QB64</b> a background color attribute can be removed from the PUT image using the <i>omit color</i> option instead of creating a mask.</li>
+<li>The <a href="Arrays.html" title="Arrays">array</a> must have image data at the array index given. <a href="GET_(graphics_statement).html" title="GET (graphics statement)">GET</a> or <a href="BLOAD.html" title="BLOAD">BLOAD</a> should be used to place image data into the array.</li>
+<li>The <a href="INTEGER.html" title="INTEGER">INTEGER</a> array size can be calculated as slightly larger than the box area width times the height. A closer estimate can be done by reading the array indices from <a href="UBOUND.html" title="UBOUND">UBOUND</a> to <a href="LBOUND.html" title="LBOUND">LBOUND</a> after a <a href="GET_(graphics_statement).html" title="GET (graphics statement)">GET</a> of a white box area. In QB64 a <a href="LONG.html" title="LONG">LONG</a> array can be used for large or full screen images.</li>
+<li>If no <a href="Arrays.html" title="Arrays">array</a> index (brackets optional in QB) is designated, the image will be assumed to be at the array's starting index.</li>
+<li>The first two indices of the <a href="Arrays.html" title="Arrays">array</a> or array offset will hold the width and height of the stored image area. In <a href="SCREEN.html" title="SCREEN">SCREEN</a> 13 divide the width by 8.</li>
+<li>More than one image can be stored in the <a href="INTEGER.html" title="INTEGER">INTEGER</a> array by indexing the <a href="GET_(graphics_statement).html" title="GET (graphics statement)">GET</a> array offset. Be sure the index is not already used!</li>
+<li>A <a href="DEST.html" title="DEST">_DEST</a> <a href="Handle.html" title="Handle">handle</a> can be set to PUT images elsewhere other than on the current screen. Use <a href="SOURCE.html" title="SOURCE">_SOURCE</a> to <a href="GET_(graphics_statement).html" title="GET (graphics statement)">GET</a> images there.</li>
+<li>If no color action is listed after the image array, the action will be assumed to be the default <a href="XOR.html" class="mw-redirect" title="XOR">XOR</a>.</li></ul>
+<dl><dd><dl><dd><ul><li><a href="XOR.html" class="mw-redirect" title="XOR">XOR</a> may blend with background colors, but can be used to erase an image when placed a second time.</li>
+<li><a href="PSET.html" title="PSET">PSET</a> completely overwrites any background with the identical image.</li>
+<li><a href="PRESET.html" title="PRESET">PRESET</a> creates a inverted coloring of the original image completely overwriting the background.</li>
+<li><a href="AND.html" title="AND">AND</a> merges background colors with the black areas of the image where a white image mask is used.</li>
+<li><a href="OR.html" title="OR">OR</a> blends the background and foreground colors together.</li></ul></dd></dl></dd></dl>
+<ul><li>In QB64 <a href="PUTIMAGE.html" title="PUTIMAGE">_PUTIMAGE</a> is recommended over PUT as it can also do the <a href="GET_(graphics_statement).html" title="GET (graphics statement)">GET</a> directly from the image source without requiring an array.</li>
+<li><a href="PUT.html" title="PUT">PUT</a> and <a href="GET.html" title="GET">GET</a> file statements can also write and read image array data using <a href="BINARY-2.html" class="mw-redirect" title="BINARY">BINARY</a> files instead of using <a href="BSAVE.html" title="BSAVE">BSAVE</a> or <a href="BLOAD.html" title="BLOAD">BLOAD</a>.</li></ul>
+<p><br />
+<i>Example 1:</i> How <a href="GET.html" title="GET">GET</a> and PUT can be used with images loaded with <a href="LOADIMAGE.html" title="LOADIMAGE">_LOADIMAGE</a>. The background color is omitted or "masked".
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: Courier, monospace; background-color: darkblue; color: lightgrey; word-wrap: break-word;"> <i> </i>
+<a href="SCREEN_(statement).html" title="SCREEN (statement)"><span style="color:#87cefa;">SCREEN</span></a> <a href="NEWIMAGE.html" title="NEWIMAGE"><span style="color:#87cefa;">_NEWIMAGE</span></a>(640, 480, 256)
+<a href="SCREENMOVE.html" title="SCREENMOVE"><span style="color:#87cefa;">_SCREENMOVE</span></a> <a href="SCREENMOVE.html" title="SCREENMOVE"><span style="color:#87cefa;">_MIDDLE</span></a>
+image&amp; = <a href="LOADIMAGE.html" title="LOADIMAGE"><span style="color:#87cefa;">_LOADIMAGE</span></a>("QB64.png")  'replace with your own image
+
+wide&amp; = <a href="WIDTH_(function).html" title="WIDTH (function)"><span style="color:#87cefa;">_WIDTH</span></a>(image&amp;): deep&amp; = <a href="HEIGHT.html" title="HEIGHT"><span style="color:#87cefa;">_HEIGHT</span></a>(image&amp;)
+<a href="DIM.html" title="DIM"><span style="color:#87cefa;">DIM</span></a> Array(wide&amp; * deep&amp;) <a href="AS.html" title="AS"><span style="color:#87cefa;">AS</span></a> <a href="INTEGER.html" title="INTEGER"><span style="color:#87cefa;">INTEGER</span></a>
+
+<a href="SOURCE.html" title="SOURCE"><span style="color:#87cefa;">_SOURCE</span></a> image&amp;              'REQUIRED to GET the proper image area!
+<a href="GET_(graphics_statement).html" title="GET (graphics statement)"><span style="color:#87cefa;">GET</span></a> (0, 0)-(wide&amp; - 1, deep&amp; - 1), Array(0)
+
+<a href="DEST.html" title="DEST"><span style="color:#87cefa;">_DEST</span></a> 0
+<a href="COPYPALETTE.html" title="COPYPALETTE"><span style="color:#87cefa;">_COPYPALETTE</span></a> image&amp;, 0      'necessary for custom image colors other than screen defaults
+<a class="mw-selflink selflink"><span style="color:#87cefa;">PUT</span></a>(10, 10), Array(0), <a href="PSET.html" title="PSET"><span style="color:#87cefa;">PSET</span></a> , <a href="RGB.html" title="RGB"><span style="color:#87cefa;">_RGB</span></a>(255, 255, 255)   'mask white background color
+<a href="END.html" title="END"><span style="color:#87cefa;">END</span></a> <i> </i>
+</p>
+<dl><dd><i>Explanation:</i> <b>QB64</b> allows one PUT color to be "masked" to allow odd shaped sprite image backgrounds to be transparent.</dd></dl>
+<p><br />
+<i>Example 2:</i> Using a <a href="STRING.html" title="STRING">STRING</a> instead of an <a href="Arrays.html" title="Arrays">array</a> to store <a href="GET.html" title="GET">GET</a> image data that can be PUT later. For images up to 256 colors only.
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: Courier, monospace; background-color: darkblue; color: lightgrey; word-wrap: break-word;"> <i> </i>
+a$ = <a href="SPACE%24.html" title="SPACE$"><span style="color:#87cefa;">SPACE$</span></a>(4 + 100)            '4 byte header + 100 pixels for a 10 X 10 image
+<a href="SCREEN.html" title="SCREEN"><span style="color:#87cefa;">SCREEN</span></a> 13
+<a href="LINE.html" title="LINE"><span style="color:#87cefa;">LINE</span></a> (0, 0)-(319, 199), 4, BF   'color 4 = CHR$(4) = ♦
+<a href="LINE.html" title="LINE"><span style="color:#87cefa;">LINE</span></a> (40, 40)-(49, 49), 14, B   'color 14 = CHR$(14) = ♫
+<a href="GET_(graphics_statement).html" title="GET (graphics statement)"><span style="color:#87cefa;">GET</span></a> (40, 40)-(49, 49), a$
+
+K$ = <a href="INPUT%24.html" title="INPUT$"><span style="color:#87cefa;">INPUT$</span></a>(1)
+
+<a href="CLS.html" title="CLS"><span style="color:#87cefa;">CLS</span></a>
+<a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> a$                        'display string data. Width = <a href="CHR%24.html" title="CHR$"><span style="color:#87cefa;">CHR$</span></a>(10 * 8) = "P"
+<a class="mw-selflink selflink"><span style="color:#87cefa;">PUT</span></a>(100, 100), a$, <a href="PSET.html" title="PSET"><span style="color:#87cefa;">PSET</span></a> <i> </i>
+</p>
+<center><span style="font-family: Courier New, Courier, monospace; font-size: 0.80em; line-height: 50%;">Code by Galleon</span></center>
+<dl><dd><i>Explanation:</i> The header holds the <a href="INTEGER.html" title="INTEGER">INTEGER</a> width and depth of the image area as 2 bytes each. Screen 13 width is multiplied by 8.</dd></dl>
+<p><br />
+<i>See also:</i> 
+</p>
+<ul><li><a href="PUTIMAGE.html" title="PUTIMAGE">_PUTIMAGE</a>, <a href="LOADIMAGE.html" title="LOADIMAGE">_LOADIMAGE</a></li>
+<li><a href="MAPTRIANGLE.html" title="MAPTRIANGLE">_MAPTRIANGLE</a></li>
+<li><a href="GET_(graphics_statement).html" title="GET (graphics statement)">GET</a>, <a href="BSAVE.html" title="BSAVE">BSAVE</a>, <a href="BLOAD.html" title="BLOAD">BLOAD</a></li>
+<li><a href="SCREEN_(statement).html" title="SCREEN (statement)">SCREEN</a>, <a href="Scancodes.html" title="Scancodes">Scancodes</a><span style="color:gray">(Example 3)</span></li>
+<li><a href="Creating_Sprite_Masks.html" title="Creating Sprite Masks">Creating Sprite Masks</a> <span style="color:gray">(for non-box shaped sprites)</span></li>
+<li><a href="GET_and_PUT_Demo.html" title="GET and PUT Demo">GET and PUT Demo</a></li>
+<li><a href="Bitmaps.html" title="Bitmaps">Bitmaps</a></li></ul>
+<p><br />
+</p>
+<hr />
+<center><i>Navigation:</i>
+<dl><dd><a href="Keyword_Reference_-_Alphabetical.html" title="Keyword Reference - Alphabetical">Keyword Reference - Alphabetical</a></dd>
+<dd><a href="Keyword_Reference_-_By_usage.html" title="Keyword Reference - By usage">Keyword Reference - By Usage</a></dd>
+<dd><a href="Main_Page.html" title="Main Page">Main Wiki Page</a></dd></dl></center>
+<!-- 
+NewPP limit report
+Cached time: 20210706193845
+Cache expiry: 86400
+Dynamic content: false
+Complications: []
+CPU time usage: 0.074 seconds
+Real time usage: 0.144 seconds
+Preprocessor visited node count: 248/1000000
+Post‐expand include size: 2773/2097152 bytes
+Template argument size: 497/2097152 bytes
+Highest expansion depth: 3/40
+Expensive parser function count: 0/100
+Unstrip recursion depth: 0/20
+Unstrip post‐expand size: 0/5000000 bytes
+-->
+<!--
+Transclusion expansion time report (%,ms,calls,template)
+100.00%   47.666      1 -total
+ 33.39%   15.914      2 Template:CodeEnd
+ 10.67%    5.086     29 Template:Cl
+  9.18%    4.374      1 Template:Small
+  8.82%    4.203      2 Template:Text
+  8.46%    4.031      1 Template:PageNavigation
+  8.12%    3.871      1 Template:PageSyntax
+  6.78%    3.230      2 Template:KW
+  6.21%    2.959      2 Template:CodeStart
+-->
+
+<!-- Saved in parser cache with key i4224360_mw2-mw_:pcache:idhash:548-0!canonical and timestamp 20210706193845 and revision id 22987
+ -->
+</div></div><div class="printfooter">Retrieved from "<a dir="ltr" href="index70d3.html?title=PUT_(graphics_statement)&amp;oldid=22987">http://www.qb64.org/wiki/index.php?title=PUT_(graphics_statement)&amp;oldid=22987</a>"</div>
+		<div id="catlinks" class="catlinks catlinks-allhidden" data-mw="interface"></div>
+	</div>
+</div>
+
+<div id="mw-navigation">
+	<h2>Navigation menu</h2>
+	<div id="mw-head">
+		<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-personal" class="vector-menu" aria-labelledby="p-personal-label" role="navigation" 
+	 >
+	<h3 id="p-personal-label">
+		<span>Personal tools</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="pt-login"><a href="indexb1a7.html?title=Special:UserLogin&amp;returnto=PUT+%28graphics+statement%29" title="You are encouraged to log in; however, it is not mandatory [o]" accesskey="o">Log in</a></li></ul>
+		
+	</div>
+</nav>
+
+
+		<div id="left-navigation">
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-namespaces" class="vector-menu vector-menu-tabs vectorTabs" aria-labelledby="p-namespaces-label" role="navigation" 
+	 >
+	<h3 id="p-namespaces-label">
+		<span>Namespaces</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="ca-nstab-main" class="selected"><a href="PUT_(graphics_statement).html" title="View the content page [c]" accesskey="c">Page</a></li><li id="ca-talk" class="new"><a href="Talk_PUT_(graphics_statement).html?title=Talk:PUT_(graphics_statement)&amp;action=edit&amp;redlink=1" rel="discussion" title="Discussion about the content page (page does not exist) [t]" accesskey="t">Discussion</a></li></ul>
+		
+	</div>
+</nav>
+
+
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-variants" class="vector-menu-empty emptyPortlet vector-menu vector-menu-dropdown vectorMenu" aria-labelledby="p-variants-label" role="navigation" 
+	 >
+	<input type="checkbox" class="vector-menu-checkbox vectorMenuCheckbox" aria-labelledby="p-variants-label" />
+	<h3 id="p-variants-label">
+		<span>Variants</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="menu vector-menu-content-list"></ul>
+		
+	</div>
+</nav>
+
+
+		</div>
+		<div id="right-navigation">
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-views" class="vector-menu vector-menu-tabs vectorTabs" aria-labelledby="p-views-label" role="navigation" 
+	 >
+	<h3 id="p-views-label">
+		<span>Views</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="ca-view" class="collapsible selected"><a href="PUT_(graphics_statement).html">Read</a></li><li id="ca-viewsource" class="collapsible"><a href="indexd9f3.html?title=PUT_(graphics_statement)&amp;action=edit" title="This page is protected.&#10;You can view its source [e]" accesskey="e">View source</a></li><li id="ca-history" class="collapsible"><a href="index1d64.html?title=PUT_(graphics_statement)&amp;action=history" title="Past revisions of this page [h]" accesskey="h">View history</a></li></ul>
+		
+	</div>
+</nav>
+
+
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-cactions" class="vector-menu-empty emptyPortlet vector-menu vector-menu-dropdown vectorMenu" aria-labelledby="p-cactions-label" role="navigation" 
+	 >
+	<input type="checkbox" class="vector-menu-checkbox vectorMenuCheckbox" aria-labelledby="p-cactions-label" />
+	<h3 id="p-cactions-label">
+		<span>More</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="menu vector-menu-content-list"></ul>
+		
+	</div>
+</nav>
+
+
+			<div id="p-search" role="search">
+	<h3 >
+		<label for="searchInput">Search</label>
+	</h3>
+	<form action="https://www.qb64.org/wiki/index.php" id="searchform">
+		<div id="simpleSearch">
+			<input type="search" name="search" placeholder="Search QB64 Wiki" title="Search QB64 Wiki [f]" accesskey="f" id="searchInput"/>
+			<input type="hidden" name="title" value="Special:Search">
+			<input type="submit" name="fulltext" value="Search" title="Search the pages for this text" id="mw-searchButton" class="searchButton mw-fallbackSearchButton"/>
+			<input type="submit" name="go" value="Go" title="Go to a page with this exact name if it exists" id="searchButton" class="searchButton"/>
+		</div>
+	</form>
+</div>
+
+		</div>
+	</div>
+	
+<div id="mw-panel">
+	<div id="p-logo" role="banner">
+		<a  title="Visit the main page" class="mw-wiki-logo" href="Main_Page.html"></a>
+	</div>
+	<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-navigation" class="vector-menu vector-menu-portal portal portal-first" aria-labelledby="p-navigation-label" role="navigation" 
+	 >
+	<h3 id="p-navigation-label">
+		<span>Navigation</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="n-mainpage-description"><a href="Main_Page.html" title="Visit the main page [z]" accesskey="z">Main page</a></li><li id="n-recentchanges"><a href="Special_RecentChanges.html" title="A list of recent changes in the wiki [r]" accesskey="r">Recent changes</a></li><li id="n-randompage"><a href="SNDCOPY.html" title="Load a random page [x]" accesskey="x">Random page</a></li><li id="n-help-mediawiki"><a href="https://www.mediawiki.org/wiki/Special:MyLanguage/Help:Contents">Help about MediaWiki</a></li></ul>
+		
+	</div>
+</nav>
+
+
+	<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-tb" class="vector-menu vector-menu-portal portal" aria-labelledby="p-tb-label" role="navigation" 
+	 >
+	<h3 id="p-tb-label">
+		<span>Tools</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="t-whatlinkshere"><a href="Special_WhatLinksHere/PUT_(graphics_statement).html" title="A list of all wiki pages that link here [j]" accesskey="j">What links here</a></li><li id="t-recentchangeslinked"><a href="Special_RecentChangesLinked/PUT_(graphics_statement).html" rel="nofollow" title="Recent changes in pages linked from this page [k]" accesskey="k">Related changes</a></li><li id="t-specialpages"><a href="Special_SpecialPages.html" title="A list of all special pages [q]" accesskey="q">Special pages</a></li><li id="t-print"><a href="javascript:print();" rel="alternate" title="Printable version of this page [p]" accesskey="p">Printable version</a></li><li id="t-permalink"><a href="index70d3.html?title=PUT_(graphics_statement)&amp;oldid=22987" title="Permanent link to this revision of the page">Permanent link</a></li><li id="t-info"><a href="index5b65.html?title=PUT_(graphics_statement)&amp;action=info" title="More information about this page">Page information</a></li></ul>
+		
+	</div>
+</nav>
+
+
+	
+</div>
+
+</div>
+
+<footer id="footer" class="mw-footer" role="contentinfo" >
+	<ul id="footer-info" >
+		<li id="footer-info-lastmod"> This page was last edited on 7 January 2021, at 16:06.</li>
+	</ul>
+	<ul id="footer-places" >
+		<li id="footer-places-privacy"><a href="My_wiki_Privacy_policy.html" title="My wiki:Privacy policy">Privacy policy</a></li>
+		<li id="footer-places-about"><a href="My_wiki_About.html" title="My wiki:About">About QB64 Wiki</a></li>
+		<li id="footer-places-disclaimer"><a href="My_wiki_General_disclaimer.html" title="My wiki:General disclaimer">Disclaimers</a></li>
+	</ul>
+	<ul id="footer-icons" class="noprint">
+		<li id="footer-poweredbyico"><a href="https://www.mediawiki.org/"><img src="resources/assets/poweredby_mediawiki_88x31.png" alt="Powered by MediaWiki" srcset="/wiki/resources/assets/poweredby_mediawiki_132x47.png 1.5x, /wiki/resources/assets/poweredby_mediawiki_176x62.png 2x" width="88" height="31" loading="lazy"/></a></li>
+	</ul>
+	<div style="clear: both;"></div>
+</footer>
+
+
+
+<script>(RLQ=window.RLQ||[]).push(function(){mw.config.set({"wgPageParseReport":{"limitreport":{"cputime":"0.074","walltime":"0.144","ppvisitednodes":{"value":248,"limit":1000000},"postexpandincludesize":{"value":2773,"limit":2097152},"templateargumentsize":{"value":497,"limit":2097152},"expansiondepth":{"value":3,"limit":40},"expensivefunctioncount":{"value":0,"limit":100},"unstrip-depth":{"value":0,"limit":20},"unstrip-size":{"value":0,"limit":5000000},"timingprofile":["100.00%   47.666      1 -total"," 33.39%   15.914      2 Template:CodeEnd"," 10.67%    5.086     29 Template:Cl","  9.18%    4.374      1 Template:Small","  8.82%    4.203      2 Template:Text","  8.46%    4.031      1 Template:PageNavigation","  8.12%    3.871      1 Template:PageSyntax","  6.78%    3.230      2 Template:KW","  6.21%    2.959      2 Template:CodeStart"]},"cachereport":{"timestamp":"20210706193845","ttl":86400,"transientcontent":false}}});mw.config.set({"wgBackendResponseTime":1571});});</script></body>
+<!-- Mirrored from www.qb64.org/wiki/PUT_(graphics_statement) by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 07 Aug 2021 12:53:10 GMT -->
+</html>

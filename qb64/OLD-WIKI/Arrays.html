@@ -1,0 +1,531 @@
+
+<!DOCTYPE html>
+<html class="client-nojs" lang="en" dir="ltr">
+
+<!-- Mirrored from www.qb64.org/wiki/Arrays by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 07 Aug 2021 12:41:20 GMT -->
+<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=UTF-8" /><!-- /Added by HTTrack -->
+<head>
+<meta charset="UTF-8"/>
+<title>Arrays - QB64 Wiki</title>
+<script>document.documentElement.className="client-js";RLCONF={"wgBreakFrames":!1,"wgSeparatorTransformTable":["",""],"wgDigitTransformTable":["",""],"wgDefaultDateFormat":"dmy","wgMonthNames":["","January","February","March","April","May","June","July","August","September","October","November","December"],"wgRequestId":"YOWkR@kbkwEB08KNhNehewAAAFU","wgCSPNonce":!1,"wgCanonicalNamespace":"","wgCanonicalSpecialPageName":!1,"wgNamespaceNumber":0,"wgPageName":"Arrays","wgTitle":"Arrays","wgCurRevisionId":23261,"wgRevisionId":23261,"wgArticleId":54,"wgIsArticle":!0,"wgIsRedirect":!1,"wgAction":"view","wgUserName":null,"wgUserGroups":["*"],"wgCategories":[],"wgPageContentLanguage":"en","wgPageContentModel":"wikitext","wgRelevantPageName":"Arrays","wgRelevantArticleId":54,"wgIsProbablyEditable":!1,"wgRelevantPageIsProbablyEditable":!1,"wgRestrictionEdit":[],"wgRestrictionMove":[]};RLSTATE={"site.styles":"ready","noscript":"ready","user.styles":"ready","user":"ready",
+"user.options":"loading","skins.vector.styles.legacy":"ready","mediawiki.toc.styles":"ready"};RLPAGEMODULES=["site","mediawiki.page.startup","mediawiki.page.ready","mediawiki.toc","skins.vector.legacy.js"];</script>
+<script>(RLQ=window.RLQ||[]).push(function(){mw.loader.implement("user.options@1hzgi",function($,jQuery,require,module){/*@nomin*/mw.user.tokens.set({"patrolToken":"+\\","watchToken":"+\\","csrfToken":"+\\"});
+});});</script>
+<link rel="stylesheet" href="loadd8b0.css?lang=en&amp;modules=mediawiki.toc.styles%7Cskins.vector.styles.legacy&amp;only=styles&amp;skin=vector"/>
+<script async="" src="load52c0.php?lang=en&amp;modules=startup&amp;only=scripts&amp;raw=1&amp;skin=vector"></script>
+<meta name="generator" content="MediaWiki 1.35.2"/>
+<link rel="shortcut icon" href="https://www.qb64.org/favicon.ico"/>
+<link rel="search" type="application/opensearchdescription+xml" href="opensearch_desc.php" title="QB64 Wiki (en)"/>
+<link rel="EditURI" type="application/rsd+xml" href="api-result251f.xml?action=rsd"/>
+<link rel="alternate" type="application/atom+xml" title="QB64 Wiki Atom feed" href="feeda295.xml?title=Special:RecentChanges&amp;feed=atom"/>
+<!--[if lt IE 9]><script src="/wiki/resources/lib/html5shiv/html5shiv.js"></script><![endif]-->
+</head>
+<body class="mediawiki ltr sitedir-ltr mw-hide-empty-elt ns-0 ns-subject page-Arrays rootpage-Arrays skin-vector action-view skin-vector-legacy">
+<div id="mw-page-base" class="noprint"></div>
+<div id="mw-head-base" class="noprint"></div>
+<div id="content" class="mw-body" role="main">
+	<a id="top"></a>
+	<div id="siteNotice" class="mw-body-content"></div>
+	<div class="mw-indicators mw-body-content">
+	</div>
+	<h1 id="firstHeading" class="firstHeading" lang="en">Arrays</h1>
+	<div id="bodyContent" class="mw-body-content">
+		<div id="siteSub" class="noprint">From QB64 Wiki</div>
+		<div id="contentSub"></div>
+		<div id="contentSub2"></div>
+		
+		<div id="jump-to-nav"></div>
+		<a class="mw-jump-link" href="#mw-head">Jump to navigation</a>
+		<a class="mw-jump-link" href="#searchInput">Jump to search</a>
+		<div id="mw-content-text" lang="en" dir="ltr" class="mw-content-ltr"><div class="mw-parser-output"><table align="center">
+<tbody><tr>
+<td><div id="toc" class="toc" role="navigation" aria-labelledby="mw-toc-heading"><input type="checkbox" role="button" id="toctogglecheckbox" class="toctogglecheckbox" style="display:none" /><div class="toctitle" lang="en" dir="ltr"><h2 id="mw-toc-heading">Contents</h2><span class="toctogglespan"><label class="toctogglelabel" for="toctogglecheckbox"></label></span></div>
+<ul>
+<li class="toclevel-1 tocsection-1"><a href="#What_are_Arrays.3F"><span class="tocnumber">1</span> <span class="toctext">What are Arrays?</span></a></li>
+<li class="toclevel-1 tocsection-2"><a href="#When_do_I_need_an_Array.3F"><span class="tocnumber">2</span> <span class="toctext">When do I need an Array?</span></a></li>
+<li class="toclevel-1 tocsection-3"><a href="#Creating_Array_Variables"><span class="tocnumber">3</span> <span class="toctext">Creating Array Variables</span></a></li>
+<li class="toclevel-1 tocsection-4"><a href="#Mult-Dimensional_Arrays"><span class="tocnumber">4</span> <span class="toctext">Mult-Dimensional Arrays</span></a></li>
+<li class="toclevel-1 tocsection-5"><a href="#Working_with_the_Array_Elements"><span class="tocnumber">5</span> <span class="toctext">Working with the Array Elements</span></a></li>
+<li class="toclevel-1 tocsection-6"><a href="#Array_Indexing"><span class="tocnumber">6</span> <span class="toctext">Array Indexing</span></a></li>
+<li class="toclevel-1 tocsection-7"><a href="#Sorting_Array_Data"><span class="tocnumber">7</span> <span class="toctext">Sorting Array Data</span></a></li>
+<li class="toclevel-1 tocsection-8"><a href="#Saving_Array_Data"><span class="tocnumber">8</span> <span class="toctext">Saving Array Data</span></a></li>
+<li class="toclevel-1 tocsection-9"><a href="#Image_Arrays"><span class="tocnumber">9</span> <span class="toctext">Image Arrays</span></a></li>
+<li class="toclevel-1 tocsection-10"><a href="#SHARED_Arrays"><span class="tocnumber">10</span> <span class="toctext">SHARED Arrays</span></a></li>
+<li class="toclevel-1 tocsection-11"><a href="#Preserving_Data"><span class="tocnumber">11</span> <span class="toctext">Preserving Data</span></a></li>
+<li class="toclevel-1 tocsection-12"><a href="#See_Also"><span class="tocnumber">12</span> <span class="toctext">See Also</span></a></li>
+</ul>
+</div>
+
+</td></tr></tbody></table>
+<h3><span id="What_are_Arrays?"></span><span class="mw-headline" id="What_are_Arrays.3F">What are Arrays?</span></h3>
+<p>Arrays are simply variables with a number of elements that can each hold data in memory. To designate a certain element, integers denote the value's position in memory. Don't let talk about memory scare you! Basic does all of the work for you just by using the simple commands in this tutorial. Besides that, you have already been using memory since you created your first variable!
+</p><p><br />
+Arrays can store element bytes of information like any other variable depending on the type of the variable. The total memory bytes used by an array type can be determined using the table below multiplied by the number of array elements: 
+</p>
+<dl><dd><dl><dd><dl><dd><dl><dd><dl><dd><dl><dd><a href="STRING.html" title="STRING">STRING</a> = 1 byte per character</dd>
+<dd><a href="INTEGER.html" title="INTEGER">INTEGER</a> = 2 bytes (signed Integer values from -32768 to 32767)</dd>
+<dd><a href="LONG.html" title="LONG">LONG</a> = 4 bytes (signed Integer values from -2147483648 to 2147483647)</dd>
+<dd><a href="SINGLE.html" title="SINGLE">SINGLE</a> = 4 bytes (up to 7 digit floating decimal point values)</dd>
+<dd><a href="DOUBLE.html" title="DOUBLE">DOUBLE</a> = 8 bytes (up to 15 digit floating point values)</dd></dl></dd></dl></dd></dl></dd></dl></dd></dl></dd></dl>
+<dl><dd><dl><dd><dl><dd><dl><dd><dl><dd><dl><dd><a href="BIT.html" title="BIT">_BIT</a> * 8 = 1 byte(signed Integer values of -1 or 0)</dd>
+<dd><a href="BYTE.html" title="BYTE">_BYTE</a> = 1 byte (signed Integer values from -128 to 127)</dd>
+<dd><a href="INTEGER64.html" title="INTEGER64">_INTEGER64</a> = 8 bytes (signed values from -9223372036854775808 to 9223372036854775807</dd>
+<dd><a href="FLOAT.html" title="FLOAT">_FLOAT</a> = 10 bytes (better than Double accuracy)</dd></dl></dd></dl></dd></dl></dd></dl></dd></dl></dd></dl>
+<p><br />
+While QBasic uses signed values <b>QB64</b> can use signed or <a href="UNSIGNED.html" title="UNSIGNED">_UNSIGNED</a> values for <a href="BIT.html" title="BIT">_BIT</a>, <a href="BYTE.html" title="BYTE">_BYTE</a>, <a href="INTEGER.html" title="INTEGER">INTEGER</a>, <a href="LONG.html" title="LONG">LONG</a> or <a href="INTEGER64.html" title="INTEGER64">_INTEGER64</a> variable type values. 
+</p><p>The array's variable type must be determined when the array is created. If no type is used, the default type is <a href="SINGLE.html" title="SINGLE">SINGLE</a>.
+</p><p><br />
+</p>
+<center><a href="#toc">Return to Top</a></center>
+<h3><span id="When_do_I_need_an_Array?"></span><span class="mw-headline" id="When_do_I_need_an_Array.3F">When do I need an Array?</span></h3>
+<p><b>When you find yourself creating several variables with numbers in their names.</b> This may seem simplistic, but normally programmers tend to use similar names to denote similar value types. This makes arrays perfect in many cases. You can get several values of the same type simply by referring to the element positions in an array. Plus you can have thousands of possibilities when needed. 
+</p><p>Arrays can be created to hold values until they are needed. They can hold image or file data too! There are many possible uses! 
+</p><p>The only drawback is that the data is lost when the program ends, but array data can be permanently stored in files when you want to save the data. All that you need is a simple loop to transfer the data sequencially or save the entire array to a <a href="BINARY-2.html" class="mw-redirect" title="BINARY">BINARY</a> file using <b>QB64</b> with a simple <a href="PUT.html" title="PUT">PUT</a> statement. You also can retrieve the array data using one <a href="GET.html" title="GET">GET</a>.
+</p><p><br />
+</p>
+<center><a href="#toc">Return to Top</a></center>
+<h3><span class="mw-headline" id="Creating_Array_Variables">Creating Array Variables</span></h3>
+<p>First we need to create a place in memory for the array. To do that we have to tell Basic the array's name, type of values it will hold and how many values we need to access. This is called dimensioning an array. 
+</p><p>How good are you at counting from zero? This might seem like a simple question, but think about this. How many elements would we have if they were numbered 0 through 10? If you said 11, then you were correct. Some people have problems counting when 0 is involved so Basic has an option to allow all arrays to start at 1. 
+</p><p><br />
+<a href="OPTION_BASE.html" title="OPTION BASE">OPTION BASE</a> 1 will cause all array dimensions to begin at 1, <a href="OPTION_BASE.html" title="OPTION BASE">OPTION BASE</a> 0 will cause all dimensions to begin at 0. The default when just using the maximum array size is 0. Use whatever option you are comfortable with.
+</p><p><br />
+Arrays in QuickBASIC 4.5 and QBASIC are limited to 32767 elements, while arrays in <b>QB64</b> are limited to 2147483647 elements (over 2 billion). When the 64-bit version of QB64 is implemented 9223372036854775807 elements will be the limit (but only on 64-bit systems).
+</p><p><br />
+<span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="DIM.html" title="DIM">DIM</a></span> reserves the array's name, variable type and number of elements in memory before the array is used. DIM reserves a <span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="STATIC.html" title="STATIC">STATIC</a></span> (unchangeable) array unless the <span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="%24DYNAMIC.html" title="$DYNAMIC">$DYNAMIC</a></span> (changeable) metacommand is used at the program's start or <span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="REDIM.html" title="REDIM">REDIM</a></span> was used to dimension the array originally.
+</p><p><br />
+<i>Example 1:</i> Dimensions an array named 'Array' that is capable of holding 101 integer values including element 0.
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: Courier, monospace; background-color: darkblue; color: lightgrey; word-wrap: break-word;">
+
+<a href="DIM.html" title="DIM"><span style="color:#87cefa;">DIM</span></a> Array(100) AS <a href="INTEGER.html" title="INTEGER"><span style="color:#87cefa;">INTEGER</span></a>
+
+</p>
+<p>An array starts at element 0 unless changed by <span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="OPTION_BASE.html" title="OPTION BASE">OPTION BASE</a></span> 1 (which can set the start at 1), you can also define the start and end area by <a href="DIM.html" title="DIM">DIMensioning</a> within a range.
+</p><p><br />
+<a href="DIM.html" title="DIM">DIMensioning</a> with a range is possible also by using TO between the minimum and  highest elements. Arrays can start and end at any element(index) value up to 32767. <b>QB64</b> allows larger array sizes! 
+</p><p><i>Example 2:</i> dimensions an Integer array that can hold 100 values in indices 1 to 100.
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: Courier, monospace; background-color: darkblue; color: lightgrey; word-wrap: break-word;">
+
+ <a href="DIM.html" title="DIM"><span style="color:#87cefa;">DIM</span></a> Array%(1 TO 100)
+
+</p>
+<p><i>Note:</i> The array type can also be designated by variable suffixes as&#160;% designates Integers above.
+</p><p><br />
+<span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="REDIM.html" title="REDIM">REDIM</a></span> can be used to redimension a dynamic array. Any information contained in the array before the REDIM will be lost...however. In order to use <span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="REDIM.html" title="REDIM">REDIM</a></span>, the variable must have originally been dimensioned using <span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="REDIM.html" title="REDIM">REDIM</a></span>, or a <span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="%24DYNAMIC.html" title="$DYNAMIC">$DYNAMIC</a></span> metacommand must be placed at the top of the program.
+</p><p><i>Example 3:</i>
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: Courier, monospace; background-color: darkblue; color: lightgrey; word-wrap: break-word;">
+ 
+<a href="OPTION_BASE.html" title="OPTION BASE"><span style="color:#87cefa;">OPTION BASE</span></a> 1          ' placed before any arrays are dimensioned 
+<a href="REDIM.html" title="REDIM"><span style="color:#87cefa;">REDIM</span></a> Array$(1000)      ' REDIM creates a dynamic array
+
+</p>
+<p><br />
+<b>QB64</b> has a REDIM <span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="PRESERVE.html" title="PRESERVE">_PRESERVE</a></span> action which can be used in a REDIM statement in order to preserve the data information in the array. 
+</p><p><br />
+<i>Example 4:</i> REDIM without the _PRESERVE action erases the array contents
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: Courier, monospace; background-color: darkblue; color: lightgrey; word-wrap: break-word;">
+
+ <a href="REM.html" title="REM"><span style="color:#87cefa;">REM</span></a> <a href="%24DYNAMIC.html" title="$DYNAMIC"><span style="color:#87cefa;">$DYNAMIC</span></a>
+ <a href="DIM.html" title="DIM"><span style="color:#87cefa;">DIM</span></a> array(20)
+ array(10) = 24
+ <a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> array(10)
+ <a href="REDIM.html" title="REDIM"><span style="color:#87cefa;">REDIM</span></a> <a href="PRESERVE.html" title="PRESERVE"><span style="color:#87cefa;">_PRESERVE</span></a> array(30)
+ <a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> array(10)
+ <a href="REDIM.html" title="REDIM"><span style="color:#87cefa;">REDIM</span></a> array(10)
+ <a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> array(10)
+
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: Courier; background-color: black; color: white;">
+24
+24
+0
+</p>
+<p><br />
+<span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="PRESERVE.html" title="PRESERVE">_PRESERVE</a></span> also allows the lowest index to be changed. The old starting index data value will always be in the lowest new index when the index range limits are changed.
+</p><p><br />
+<i>Example 5:</i> Changing the starting index number using the <span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="PRESERVE.html" title="PRESERVE">_PRESERVE</a></span> action moves the data. 
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: Courier, monospace; background-color: darkblue; color: lightgrey; word-wrap: break-word;">
+
+ <a href="REDIM.html" title="REDIM"><span style="color:#87cefa;">REDIM</span></a> Array$(1 TO 50)
+ Array$(1) = "I'm number one!"
+ Array$(50) = "I'm 50..."
+ <a href="REDIM.html" title="REDIM"><span style="color:#87cefa;">REDIM</span></a> <a href="PRESERVE.html" title="PRESERVE"><span style="color:#87cefa;">_PRESERVE</span></a> Array$(51 TO 100)
+ PRINT Array$(51)              ' display new start index data
+ PRINT Array$(100)             ' display new end data
+
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: Courier; background-color: black; color: white;">
+I'm number one!
+I'm 50...
+</p>
+<p><br />
+</p><p><i>Example 6:</i> The memory segment address of the array is defined in <span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="DEF_SEG.html" title="DEF SEG">DEF SEG</a></span>.
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: Courier, monospace; background-color: darkblue; color: lightgrey; word-wrap: break-word;">
+
+ <a href="DEF_SEG.html" title="DEF SEG"><span style="color:#87cefa;">DEF SEG</span></a> = <a href="VARSEG.html" title="VARSEG"><span style="color:#87cefa;">VARSEG</span></a>(array(0))
+ offset = <a href="VARPTR.html" title="VARPTR"><span style="color:#87cefa;">VARPTR</span></a>(array(0)) 'program designated offset element 
+</p>
+<p>NOTE: If <span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="OPTION_BASE.html" title="OPTION BASE">OPTION BASE</a></span> 1 is used change the 0 to 1. The array start index can be changed when some other data is indexed in the array.
+</p><p><br />
+</p>
+<center><a href="#toc">Return to Top</a></center>
+<h3><span class="mw-headline" id="Mult-Dimensional_Arrays">Mult-Dimensional Arrays</span></h3>
+<p>Multiple dimensions are possible to create tables of values. QuickBASIC can use up to 60 dimensions. In <b>QB64</b> the number of dimensions possible depends on your system memory (a lot more than 60 dimensions). Array data can be saved and restored using file data. 
+</p>
+<center><b>Otherwise the data is lost when a program closes.</b></center>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: courier; background-color: lightgrey; color: black;">
+                             <b> TWO DIMENSIONAL ARRAY TABLES</b>
+
+    Setting up a car sales Database: The sales for each month as represented in an array.
+              
+                     DIM Vehicle%(12, 4)       ' Vehicle%(month%, type%)
+   
+                       Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec
+                    <b>    1   2   3   4   5   6   7   8   9   10  11  12  ← Month index</b>
+         <b>Type index ↓</b>  -----------------------------------------------  
+           Cars     <b>1:</b>  5  10  15  20  30   19  17  12  24  20  33  30
+           Trucks   <b>2:</b>  3   8   7  10  15    9  11   8  15  10  16  11
+           Vans     <b>3:</b>  4   6   8   9   7   10   9   7   9   8  10   7 
+           SUV      <b>4:</b> 10   8   8   5  10    8   6   8  10  11   9   8
+
+             To find monthly and yearly totals you could do something like this:  
+
+                FOR month% = 1 TO 12
+                   FOR type% = 1 TO 4
+                      MonthlySales% = MonthlySales% + Vehicle%(month%, type%)
+                   NEXT
+                   YearlySales% = YearlySales% + MonthlySales%
+                   PRINT "Monthly =", MonthlySales%; " Yearly ="; YearlySales%; "   "
+                   INPUT$(1)               'stop to view each month 
+                   MonthlySales% = 0       'zero month sales for next months total
+                NEXT
+
+
+</p>
+<p><br />
+<i>Example 7:</i> Creating a two-dimensional array. A comma separates each dimension size.
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: Courier, monospace; background-color: darkblue; color: lightgrey; word-wrap: break-word;">
+
+  <a href="DIM.html" title="DIM"><span style="color:#87cefa;">DIM</span></a> Array(12, 10)           ' 2 dimensions can hold 143 data values 
+
+</p>
+<p>One dimension could hold the month number and the other the number of items sold in 10 categories.
+</p><p><i>Example 8:</i> Dimensioning using index ranges.
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: Courier, monospace; background-color: darkblue; color: lightgrey; word-wrap: break-word;">
+
+  <a href="DIM.html" title="DIM"><span style="color:#87cefa;">DIM</span></a> Array(1 TO 12, 1 TO 10) ' 2 dimensions can hold 120 data values
+
+</p>
+<p><br />
+</p>
+<center><a href="#toc">Return to Top</a></center>
+<h3><span class="mw-headline" id="Working_with_the_Array_Elements">Working with the Array Elements</span></h3>
+<p>Once an array is created, you have to put something in it. As you may have noticed, each element or index has an integer value associated with it. Array(number%) refers to just one element of the array no matter what type it is. <b>Arrays CAN have negative numbered elements!</b>
+</p><p>You can place data into an array using several methods. The slowest method is directly placing data from the user. You can even use the array as the <a href="INPUT.html" title="INPUT">INPUT</a> variable. It is recommended that ANY program user entries be limited to text as INPUT will give Redo from start errors if a user enters a string value when a numerical input was desired. Numerical string data can be converted from strings simply by using <a href="VAL.html" title="VAL">VAL</a>. This creates less user errors! NOTE: <b>QB64</b> does not return a "Redo from start" error as <a href="INPUT.html" title="INPUT">INPUT</a> monitors entries.
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: Courier, monospace; background-color: darkblue; color: lightgrey; word-wrap: break-word;"> 
+
+DO
+<a href="INPUT.html" title="INPUT"><span style="color:#87cefa;">INPUT</span></a> "Enter your age: ", howold$ 
+age% = <a href="VAL.html" title="VAL"><span style="color:#87cefa;">VAL</span></a>(howold$)
+LOOP UNTIL age% &gt; 0
+
+Playerage%(user%) = age%   'saves the players age to an indexed player number
+
+PRINT Playerage%(user%)    'print array element to screen to verify entry
+
+user% = user% + 1          'increment user number when all data has been entered
+
+</p>
+<p>You could use several arrays to hold the player's name, high scores, etc. Once the data is in the array, it can be used until the program ends. Then the data is lost, but you can store the data to a file before closing the program simply by using a loop. See next section.
+</p><p><br />
+<b>To pass array data to a <a href="SUB.html" title="SUB">SUB</a> or <a href="FUNCTION.html" title="FUNCTION">FUNCTION</a> parameter, an empty element bracket passes all elements while a number only passes one specified element of the array.</b>
+</p>
+<h3><span class="mw-headline" id="Array_Indexing">Array Indexing</span></h3>
+<p>Arrays can be set up to hold more than one kind of data, by indexing the two or more kinds of data. To do this, the programmer reserves one set of element or index values for each kind of data. The type of values MUST be the same except when using a <a href="TYPE.html" title="TYPE">TYPE</a> definition value.
+</p><p><br />
+</p>
+<center><a href="#toc">Return to Top</a></center>
+<h3><span class="mw-headline" id="Sorting_Array_Data">Sorting Array Data</span></h3>
+<p>Arrays can be sorted numerically or alphabetically using various sorting routines. Commonly <a href="SWAP.html" title="SWAP">SWAP</a> is used to trade element values in descending or ascending order.
+</p><p><br />
+</p>
+<center><a href="#toc">Return to Top</a></center>
+<h3><span class="mw-headline" id="Saving_Array_Data">Saving Array Data</span></h3>
+<p>Since variables and arrays exist in memory, data is lost when a program closes. To preserve program data you must either create a permanent <a href="DATA.html" title="DATA">DATA</a> field or save the data to files.
+</p><p>The next time a program is used, it can <a href="OPEN.html" title="OPEN">OPEN</a> that file and quickly restore all of the array data using a loop or <b>QB64</b> can <a href="GET.html" title="GET">GET</a> the entire file's data in one GET. Use <a href="LINE_INPUT_(file_statement).html" title="LINE INPUT (file statement)">LINE INPUT</a> # to set the array sizes by counting the number of data rows in a file if you used a <a href="WRITE.html" title="WRITE">WRITE</a> <b>CSV</b>(comma separated values) or a <a href="PRINT_(file_statement).html" title="PRINT (file statement)">PRINT</a> # sequencial file. The number of records in a <a href="TYPE.html" title="TYPE">TYPE</a> or <a href="FIELD.html" title="FIELD">FIELD</a> defined <a href="RANDOM.html" title="RANDOM">RANDOM</a> access file can be found by dividing the record size into the <a href="LOF.html" title="LOF">LOF</a>. You may want to make the array slightly larger for new entries.
+</p><p><br />
+</p>
+<center><a href="#toc">Return to Top</a></center>
+<h3><span class="mw-headline" id="Image_Arrays">Image Arrays</span></h3>
+<p><a href="INTEGER.html" title="INTEGER">INTEGER</a> arrays are used to hold image information when using the following graphic procedures: <a href="GET_(graphics_statement).html" title="GET (graphics statement)">GET</a>, <a href="PUT_(graphics_statement).html" title="PUT (graphics statement)"> PUT</a>, <a href="BSAVE.html" title="BSAVE">BSAVE</a> and <a href="BLOAD.html" title="BLOAD">BLOAD</a>. 
+</p><p><br />
+The <a href="INTEGER.html" title="INTEGER">INTEGER</a> array size can be estimated by multiplying the height by the width of the image area. To find the actual size needed you can use the following routine to count backwards until something is found in the array. The example below returns the array size required to create a 20 by 20 image:
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: Courier, monospace; background-color: darkblue; color: lightgrey; word-wrap: break-word;">
+wide&amp; = 20: deep&amp; = 20  'change the sizes for any image area
+<a href="DIM.html" title="DIM"><span style="color:#87cefa;">DIM</span></a> array(wide&amp; * deep&amp;) AS <a href="INTEGER.html" title="INTEGER"><span style="color:#87cefa;">INTEGER</span></a>
+<a href="LINE.html" title="LINE"><span style="color:#87cefa;">LINE</span></a> (0, 0)-(wide&amp; - 1, deep&amp; - 1), 12, B 'the box border is all that you need to color.
+<a href="GET_(graphics_statement).html" title="GET (graphics statement)"><span style="color:#87cefa;">GET</span></a> (0, 0)-(wide&amp; - 1, deep&amp; - 1), array(0)
+<a href="FOR...html" title="FOR...NEXT"><span style="color:#87cefa;">FOR</span></a> s&amp; = wide&amp; * deep&amp; <a href="TO.html" title="TO"><span style="color:#87cefa;">TO</span></a> 0 <a href="STEP.html" title="STEP"><span style="color:#87cefa;">STEP</span></a> -1
+  <a href="IF...html" title="IF...THEN"><span style="color:#87cefa;">IF</span></a> array(s&amp;) <a href="THEN.html" title="THEN"><span style="color:#87cefa;">THEN</span></a> arraysize&amp; = s&amp;: <a href="EXIT.html" title="EXIT"><span style="color:#87cefa;">EXIT</span></a> <a href="FOR...html" title="FOR...NEXT"><span style="color:#87cefa;">FOR</span></a>
+<a href="NEXT.html" title="NEXT"><span style="color:#87cefa;">NEXT</span></a>
+<a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> arraysize&amp;
+<a href="END.html" title="END"><span style="color:#87cefa;">END</span></a> <i> </i>
+</p>
+<center><b>Note: QB64 can <a href="GET_(graphics_statement).html" title="GET (graphics statement)">GET</a> the entire SCREEN 12 area into one array!</b></center>
+<p><br />
+See also: <a href="Creating_Sprite_Masks.html" title="Creating Sprite Masks">Creating Sprite Masks</a>
+</p><p><br />
+</p>
+<center><a href="#toc">Return to Top</a></center>
+<h3><span class="mw-headline" id="SHARED_Arrays">SHARED Arrays</span></h3>
+<p>When array data is used with <a href="SUB.html" title="SUB">SUB</a> or <a href="FUNCTION.html" title="FUNCTION">FUNCTION</a> procedures they can be passed as parameters. When passed as parameters, a specific index or the entire array can be used. To specify an index, the array is passed with the element number. If the entire array is passed, the element brackets should be empty. Example: <b><span style="color:green">SUB SubName (ArrayName() AS INTEGER)</span></b>
+</p><p><br />
+Arrays can also be <a href="SHARED.html" title="SHARED">SHARED</a> by all procedures by using <a href="DIM.html" title="DIM">DIM</a> <a href="SHARED.html" title="SHARED">SHARED</a> when the array is created. This allows the array data to be used in the main procedure and all sub-procedures. 
+</p><p><br />
+<a href="COMMON.html" title="COMMON">COMMON</a> allows Array data to be shared between program modules when used with <a href="CHAIN.html" title="CHAIN">CHAIN</a>. The two modules can share any variable values in a list of variables. The lists can use different variable names, but the types of values MUST be listed in the SAME order in both modules.
+</p><p><br />
+<a href="COMMON_SHARED.html" title="COMMON SHARED">COMMON SHARED</a> allows data to be shared between both modules and SUB or FUNCTION procedures.
+</p><p><br />
+Arrays can be created inside of <a href="SUB.html" title="SUB">SUB</a> or <a href="FUNCTION.html" title="FUNCTION">FUNCTION</a> procedures by using <a href="DIM.html" title="DIM">DIM</a> or <a href="REDIM.html" title="REDIM">REDIM</a>. Also <a href="SHARED.html" title="SHARED">SHARED</a>(without DIM) can be used inside of a sub-procedure to share variable data with the Main program module ONLY. Other sub-procedures cannot reference the data. To share array data with other sub-procedures, array FUNCTIONS can be created that use the internal array elements as a parameter. <b>QB64 may allow sub-procedures to share values with other procedures soon!</b>
+</p><p><br />
+Arrays can be set as <a href="STATIC.html" title="STATIC">STATIC</a> to retain the values when a sub-procedure is exited. The values will be retained until changed inside of the procedure. If the procedure creates it's own array, you can use a STATIC True or False variable to determine when to <a href="DIM.html" title="DIM">DIM</a> or <a href="REDIM.html" title="REDIM">REDIM</a> a STATIC array so that values are not lost every call. The <i>Ready%</i> variable below DIMs the array when the function is first used:
+</p><p><br />
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: Courier, monospace; background-color: darkblue; color: lightgrey; word-wrap: break-word;"> <i> </i>
+<a href="FUNCTION.html" title="FUNCTION"><span style="color:#87cefa;">FUNCTION</span></a> ScanKey% (scancode%)
+<a href="STATIC.html" title="STATIC"><span style="color:#87cefa;">STATIC</span></a> Ready%, keyflags%()
+<a href="IF.html" class="mw-redirect" title="IF"><span style="color:#87cefa;">IF</span></a> <a href="NOT.html" title="NOT"><span style="color:#87cefa;">NOT</span></a> Ready% <a href="THEN.html" title="THEN"><span style="color:#87cefa;">THEN</span></a> <a href="REDIM.html" title="REDIM"><span style="color:#87cefa;">REDIM</span></a> keyflags%(0 <a href="TO.html" title="TO"><span style="color:#87cefa;">TO</span></a> 127): Ready% = -1 
+i% = <a href="INP.html" title="INP"><span style="color:#87cefa;">INP</span></a>(<a href="%26H.html" title="&amp;H"><span style="color:#87cefa;">&amp;H</span></a>60)  'read keyboard states
+<a href="IF.html" class="mw-redirect" title="IF"><span style="color:#87cefa;">IF</span></a> (i% <a href="AND_(boolean).html" title="AND (boolean)"><span style="color:#87cefa;">AND</span></a> 128) <a href="THEN.html" title="THEN"><span style="color:#87cefa;">THEN</span></a> keyflags%(i% <a href="XOR_(boolean).html" title="XOR (boolean)"><span style="color:#87cefa;">XOR</span></a> 128) = 0
+<a href="IF.html" class="mw-redirect" title="IF"><span style="color:#87cefa;">IF</span></a> (i% <a href="AND_(boolean).html" title="AND (boolean)"><span style="color:#87cefa;">AND</span></a> 128) = 0 <a href="THEN.html" title="THEN"><span style="color:#87cefa;">THEN</span></a> keyflags%(i%) = -1
+K$ = <a href="INKEY%24.html" title="INKEY$"><span style="color:#87cefa;">INKEY$</span></a>
+ScanKey% = keyflags%(scancode%)
+<a href="IF.html" class="mw-redirect" title="IF"><span style="color:#87cefa;">IF</span></a> scancode% = 0 <a href="THEN.html" title="THEN"><span style="color:#87cefa;">THEN</span></a> Ready% = 0  'allows program to reset all values to 0 with a REDIM
+<a href="END_FUNCTION.html" title="END FUNCTION"><span style="color:#87cefa;">END FUNCTION</span></a> <i> </i>
+</p>
+<dl><dd><i>Explanation:</i> The STATIC <i>Ready%</i> value is always 0 when a procedure is first run. <a href="NOT.html" title="NOT">NOT</a> zero makes the IF statement True so the array is created. The <i>Ready%</i> value is then changed to anything but zero to make NOT <i>Ready%</i> False when the procedure is called again. The FUNCTION is referenced just like an array would be. The value it returns is either 0 or -1 to verify that a certain key was released or pressed respectively. The keyboard status is also updated in the array each call. If the <i>scancode%</i> sent is 0(a key scan code that does not exist), the array is reset(re-dimensioned) on the next call as <i>Ready%</i> is reset to zero.</dd></dl>
+<p><br />
+</p>
+<center><a href="#toc">Return to Top</a></center>
+<p><br />
+</p>
+<h3><span class="mw-headline" id="Preserving_Data">Preserving Data</span></h3>
+<p><a href="PRESERVE.html" title="PRESERVE">_PRESERVE</a> can preserve data when <a href="REDIM.html" title="REDIM">REDIM</a> or <a href="%24DYNAMIC.html" title="$DYNAMIC">$DYNAMIC</a> is used to create dynamic arrays. The current array data can be preserved while changing the array element size. Increasing the size will preserve data inside of existing indices in the resized array. If the size is decreased, only the existing indices values will be preserved. <b>The array <a href="TYPE.html" title="TYPE">TYPE</a> and number of array dimensions cannot be changed!</b>
+</p><p><br />
+</p>
+<center><b><span style="color:green">REDIM _PRESERVE ArrayName(1 TO 100)</span></b></center>
+<p><br />
+</p>
+<center><a href="#toc">Return to Top</a></center>
+<h3><span class="mw-headline" id="See_Also">See Also</span></h3>
+<hr />
+<center><i>Navigation:</i>
+<dl><dd><a href="Keyword_Reference_-_Alphabetical.html" title="Keyword Reference - Alphabetical">Keyword Reference - Alphabetical</a></dd>
+<dd><a href="Keyword_Reference_-_By_usage.html" title="Keyword Reference - By usage">Keyword Reference - By Usage</a></dd>
+<dd><a href="Main_Page.html" title="Main Page">Main Wiki Page</a></dd></dl></center>
+<!-- 
+NewPP limit report
+Cached time: 20210706211841
+Cache expiry: 86400
+Dynamic content: false
+Complications: []
+CPU time usage: 0.133 seconds
+Real time usage: 0.272 seconds
+Preprocessor visited node count: 887/1000000
+Post‐expand include size: 7927/2097152 bytes
+Template argument size: 875/2097152 bytes
+Highest expansion depth: 3/40
+Expensive parser function count: 0/100
+Unstrip recursion depth: 0/20
+Unstrip post‐expand size: 0/5000000 bytes
+-->
+<!--
+Transclusion expansion time report (%,ms,calls,template)
+100.00%   94.224      1 -total
+ 26.03%   24.528     14 Template:KW
+ 20.36%   19.182      1 Template:PageNavigation
+ 10.82%   10.194      2 Template:OutputStart
+  8.65%    8.149      2 Template:Text
+  7.93%    7.476     58 Template:Cl
+  3.69%    3.478     11 Template:CodeStart
+  3.62%    3.409     11 Template:CodeEnd
+  3.50%    3.301      2 Template:OutputEnd
+  3.41%    3.215      1 Template:TextEnd
+-->
+
+<!-- Saved in parser cache with key i4224360_mw2-mw_:pcache:idhash:54-0!canonical and timestamp 20210706211841 and revision id 23261
+ -->
+</div></div><div class="printfooter">Retrieved from "<a dir="ltr" href="indexba0c.html?title=Arrays&amp;oldid=23261">http://www.qb64.org/wiki/index.php?title=Arrays&amp;oldid=23261</a>"</div>
+		<div id="catlinks" class="catlinks catlinks-allhidden" data-mw="interface"></div>
+	</div>
+</div>
+
+<div id="mw-navigation">
+	<h2>Navigation menu</h2>
+	<div id="mw-head">
+		<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-personal" class="vector-menu" aria-labelledby="p-personal-label" role="navigation" 
+	 >
+	<h3 id="p-personal-label">
+		<span>Personal tools</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="pt-login"><a href="index61a0.html?title=Special:UserLogin&amp;returnto=Arrays" title="You are encouraged to log in; however, it is not mandatory [o]" accesskey="o">Log in</a></li></ul>
+		
+	</div>
+</nav>
+
+
+		<div id="left-navigation">
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-namespaces" class="vector-menu vector-menu-tabs vectorTabs" aria-labelledby="p-namespaces-label" role="navigation" 
+	 >
+	<h3 id="p-namespaces-label">
+		<span>Namespaces</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="ca-nstab-main" class="selected"><a href="Arrays.html" title="View the content page [c]" accesskey="c">Page</a></li><li id="ca-talk" class="new"><a href="Talk_Arrays.html?title=Talk:Arrays&amp;action=edit&amp;redlink=1" rel="discussion" title="Discussion about the content page (page does not exist) [t]" accesskey="t">Discussion</a></li></ul>
+		
+	</div>
+</nav>
+
+
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-variants" class="vector-menu-empty emptyPortlet vector-menu vector-menu-dropdown vectorMenu" aria-labelledby="p-variants-label" role="navigation" 
+	 >
+	<input type="checkbox" class="vector-menu-checkbox vectorMenuCheckbox" aria-labelledby="p-variants-label" />
+	<h3 id="p-variants-label">
+		<span>Variants</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="menu vector-menu-content-list"></ul>
+		
+	</div>
+</nav>
+
+
+		</div>
+		<div id="right-navigation">
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-views" class="vector-menu vector-menu-tabs vectorTabs" aria-labelledby="p-views-label" role="navigation" 
+	 >
+	<h3 id="p-views-label">
+		<span>Views</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="ca-view" class="collapsible selected"><a href="Arrays.html">Read</a></li><li id="ca-viewsource" class="collapsible"><a href="index7e74.html?title=Arrays&amp;action=edit" title="This page is protected.&#10;You can view its source [e]" accesskey="e">View source</a></li><li id="ca-history" class="collapsible"><a href="index8926.html?title=Arrays&amp;action=history" title="Past revisions of this page [h]" accesskey="h">View history</a></li></ul>
+		
+	</div>
+</nav>
+
+
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-cactions" class="vector-menu-empty emptyPortlet vector-menu vector-menu-dropdown vectorMenu" aria-labelledby="p-cactions-label" role="navigation" 
+	 >
+	<input type="checkbox" class="vector-menu-checkbox vectorMenuCheckbox" aria-labelledby="p-cactions-label" />
+	<h3 id="p-cactions-label">
+		<span>More</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="menu vector-menu-content-list"></ul>
+		
+	</div>
+</nav>
+
+
+			<div id="p-search" role="search">
+	<h3 >
+		<label for="searchInput">Search</label>
+	</h3>
+	<form action="https://www.qb64.org/wiki/index.php" id="searchform">
+		<div id="simpleSearch">
+			<input type="search" name="search" placeholder="Search QB64 Wiki" title="Search QB64 Wiki [f]" accesskey="f" id="searchInput"/>
+			<input type="hidden" name="title" value="Special:Search">
+			<input type="submit" name="fulltext" value="Search" title="Search the pages for this text" id="mw-searchButton" class="searchButton mw-fallbackSearchButton"/>
+			<input type="submit" name="go" value="Go" title="Go to a page with this exact name if it exists" id="searchButton" class="searchButton"/>
+		</div>
+	</form>
+</div>
+
+		</div>
+	</div>
+	
+<div id="mw-panel">
+	<div id="p-logo" role="banner">
+		<a  title="Visit the main page" class="mw-wiki-logo" href="Main_Page.html"></a>
+	</div>
+	<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-navigation" class="vector-menu vector-menu-portal portal portal-first" aria-labelledby="p-navigation-label" role="navigation" 
+	 >
+	<h3 id="p-navigation-label">
+		<span>Navigation</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="n-mainpage-description"><a href="Main_Page.html" title="Visit the main page [z]" accesskey="z">Main page</a></li><li id="n-recentchanges"><a href="Special_RecentChanges.html" title="A list of recent changes in the wiki [r]" accesskey="r">Recent changes</a></li><li id="n-randompage"><a href="SNDCOPY.html" title="Load a random page [x]" accesskey="x">Random page</a></li><li id="n-help-mediawiki"><a href="https://www.mediawiki.org/wiki/Special:MyLanguage/Help:Contents">Help about MediaWiki</a></li></ul>
+		
+	</div>
+</nav>
+
+
+	<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-tb" class="vector-menu vector-menu-portal portal" aria-labelledby="p-tb-label" role="navigation" 
+	 >
+	<h3 id="p-tb-label">
+		<span>Tools</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="t-whatlinkshere"><a href="Special_WhatLinksHere/Arrays.html" title="A list of all wiki pages that link here [j]" accesskey="j">What links here</a></li><li id="t-recentchangeslinked"><a href="Special_RecentChangesLinked/Arrays.html" rel="nofollow" title="Recent changes in pages linked from this page [k]" accesskey="k">Related changes</a></li><li id="t-specialpages"><a href="Special_SpecialPages.html" title="A list of all special pages [q]" accesskey="q">Special pages</a></li><li id="t-print"><a href="javascript:print();" rel="alternate" title="Printable version of this page [p]" accesskey="p">Printable version</a></li><li id="t-permalink"><a href="indexba0c.html?title=Arrays&amp;oldid=23261" title="Permanent link to this revision of the page">Permanent link</a></li><li id="t-info"><a href="index29d2.html?title=Arrays&amp;action=info" title="More information about this page">Page information</a></li></ul>
+		
+	</div>
+</nav>
+
+
+	
+</div>
+
+</div>
+
+<footer id="footer" class="mw-footer" role="contentinfo" >
+	<ul id="footer-info" >
+		<li id="footer-info-lastmod"> This page was last edited on 10 February 2021, at 13:11.</li>
+	</ul>
+	<ul id="footer-places" >
+		<li id="footer-places-privacy"><a href="My_wiki_Privacy_policy.html" title="My wiki:Privacy policy">Privacy policy</a></li>
+		<li id="footer-places-about"><a href="My_wiki_About.html" title="My wiki:About">About QB64 Wiki</a></li>
+		<li id="footer-places-disclaimer"><a href="My_wiki_General_disclaimer.html" title="My wiki:General disclaimer">Disclaimers</a></li>
+	</ul>
+	<ul id="footer-icons" class="noprint">
+		<li id="footer-poweredbyico"><a href="https://www.mediawiki.org/"><img src="resources/assets/poweredby_mediawiki_88x31.png" alt="Powered by MediaWiki" srcset="/wiki/resources/assets/poweredby_mediawiki_132x47.png 1.5x, /wiki/resources/assets/poweredby_mediawiki_176x62.png 2x" width="88" height="31" loading="lazy"/></a></li>
+	</ul>
+	<div style="clear: both;"></div>
+</footer>
+
+
+
+<script>(RLQ=window.RLQ||[]).push(function(){mw.config.set({"wgPageParseReport":{"limitreport":{"cputime":"0.133","walltime":"0.272","ppvisitednodes":{"value":887,"limit":1000000},"postexpandincludesize":{"value":7927,"limit":2097152},"templateargumentsize":{"value":875,"limit":2097152},"expansiondepth":{"value":3,"limit":40},"expensivefunctioncount":{"value":0,"limit":100},"unstrip-depth":{"value":0,"limit":20},"unstrip-size":{"value":0,"limit":5000000},"timingprofile":["100.00%   94.224      1 -total"," 26.03%   24.528     14 Template:KW"," 20.36%   19.182      1 Template:PageNavigation"," 10.82%   10.194      2 Template:OutputStart","  8.65%    8.149      2 Template:Text","  7.93%    7.476     58 Template:Cl","  3.69%    3.478     11 Template:CodeStart","  3.62%    3.409     11 Template:CodeEnd","  3.50%    3.301      2 Template:OutputEnd","  3.41%    3.215      1 Template:TextEnd"]},"cachereport":{"timestamp":"20210706211841","ttl":86400,"transientcontent":false}}});mw.config.set({"wgBackendResponseTime":1622});});</script></body>
+<!-- Mirrored from www.qb64.org/wiki/Arrays by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 07 Aug 2021 12:41:26 GMT -->
+</html>

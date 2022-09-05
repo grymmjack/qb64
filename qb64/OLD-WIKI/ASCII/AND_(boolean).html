@@ -1,0 +1,347 @@
+
+<!DOCTYPE html>
+<html class="client-nojs" lang="en" dir="ltr">
+
+<!-- Mirrored from www.qb64.org/wiki/AND_(boolean) by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 07 Aug 2021 13:10:14 GMT -->
+<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=UTF-8" /><!-- /Added by HTTrack -->
+<head>
+<meta charset="UTF-8"/>
+<title>AND (boolean) - QB64 Wiki</title>
+<script>document.documentElement.className="client-js";RLCONF={"wgBreakFrames":!1,"wgSeparatorTransformTable":["",""],"wgDigitTransformTable":["",""],"wgDefaultDateFormat":"dmy","wgMonthNames":["","January","February","March","April","May","June","July","August","September","October","November","December"],"wgRequestId":"YOWlOekbkwEB08KNhNel5QAAAGw","wgCSPNonce":!1,"wgCanonicalNamespace":"","wgCanonicalSpecialPageName":!1,"wgNamespaceNumber":0,"wgPageName":"AND_(boolean)","wgTitle":"AND (boolean)","wgCurRevisionId":805,"wgRevisionId":805,"wgArticleId":34,"wgIsArticle":!0,"wgIsRedirect":!1,"wgAction":"view","wgUserName":null,"wgUserGroups":["*"],"wgCategories":[],"wgPageContentLanguage":"en","wgPageContentModel":"wikitext","wgRelevantPageName":"AND_(boolean)","wgRelevantArticleId":34,"wgIsProbablyEditable":!1,"wgRelevantPageIsProbablyEditable":!1,"wgRestrictionEdit":[],"wgRestrictionMove":[]};RLSTATE={"site.styles":"ready","noscript":"ready","user.styles":"ready","user":
+"ready","user.options":"loading","skins.vector.styles.legacy":"ready","mediawiki.toc.styles":"ready"};RLPAGEMODULES=["site","mediawiki.page.startup","mediawiki.page.ready","mediawiki.toc","skins.vector.legacy.js"];</script>
+<script>(RLQ=window.RLQ||[]).push(function(){mw.loader.implement("user.options@1hzgi",function($,jQuery,require,module){/*@nomin*/mw.user.tokens.set({"patrolToken":"+\\","watchToken":"+\\","csrfToken":"+\\"});
+});});</script>
+<link rel="stylesheet" href="loadd8b0.css?lang=en&amp;modules=mediawiki.toc.styles%7Cskins.vector.styles.legacy&amp;only=styles&amp;skin=vector"/>
+<script async="" src="load52c0.php?lang=en&amp;modules=startup&amp;only=scripts&amp;raw=1&amp;skin=vector"></script>
+<meta name="generator" content="MediaWiki 1.35.2"/>
+<link rel="shortcut icon" href="https://www.qb64.org/favicon.ico"/>
+<link rel="search" type="application/opensearchdescription+xml" href="opensearch_desc.php" title="QB64 Wiki (en)"/>
+<link rel="EditURI" type="application/rsd+xml" href="api-result251f.xml?action=rsd"/>
+<link rel="alternate" type="application/atom+xml" title="QB64 Wiki Atom feed" href="feeda295.xml?title=Special:RecentChanges&amp;feed=atom"/>
+<!--[if lt IE 9]><script src="/wiki/resources/lib/html5shiv/html5shiv.js"></script><![endif]-->
+</head>
+<body class="mediawiki ltr sitedir-ltr mw-hide-empty-elt ns-0 ns-subject page-AND_boolean rootpage-AND_boolean skin-vector action-view skin-vector-legacy">
+<div id="mw-page-base" class="noprint"></div>
+<div id="mw-head-base" class="noprint"></div>
+<div id="content" class="mw-body" role="main">
+	<a id="top"></a>
+	<div id="siteNotice" class="mw-body-content"></div>
+	<div class="mw-indicators mw-body-content">
+	</div>
+	<h1 id="firstHeading" class="firstHeading" lang="en">AND (boolean)</h1>
+	<div id="bodyContent" class="mw-body-content">
+		<div id="siteSub" class="noprint">From QB64 Wiki</div>
+		<div id="contentSub"></div>
+		<div id="contentSub2"></div>
+		
+		<div id="jump-to-nav"></div>
+		<a class="mw-jump-link" href="#mw-head">Jump to navigation</a>
+		<a class="mw-jump-link" href="#searchInput">Jump to search</a>
+		<div id="mw-content-text" lang="en" dir="ltr" class="mw-content-ltr"><div class="mw-parser-output"><p>The <a class="mw-selflink selflink">AND</a> conditonal operator is used to include another evaluation in an <a href="IF...html" title="IF...THEN">IF...THEN</a> or <a href="Boolean.html" title="Boolean">Boolean</a> statement.
+</p><p><br />
+</p>
+<div id="toc" class="toc" role="navigation" aria-labelledby="mw-toc-heading"><input type="checkbox" role="button" id="toctogglecheckbox" class="toctogglecheckbox" style="display:none" /><div class="toctitle" lang="en" dir="ltr"><h2 id="mw-toc-heading">Contents</h2><span class="toctogglespan"><label class="toctogglelabel" for="toctogglecheckbox"></label></span></div>
+<ul>
+<li class="toclevel-1"><a href="#Syntax"><span class="tocnumber">1</span> <span class="toctext">Syntax</span></a></li>
+<li class="toclevel-1"><a href="#Description"><span class="tocnumber">2</span> <span class="toctext">Description</span></a></li>
+<li class="toclevel-1"><a href="#Examples"><span class="tocnumber">3</span> <span class="toctext">Examples</span></a></li>
+<li class="toclevel-1"><a href="#See_also"><span class="tocnumber">4</span> <span class="toctext">See also</span></a></li>
+</ul>
+</div>
+
+<h2><span class="mw-headline" id="Syntax">Syntax</span></h2>
+<dl><dd>IF <i>condition</i> <a class="mw-selflink selflink">AND</a> <i>condition2</i></dd></dl>
+<p><br />
+</p>
+<h2><span class="mw-headline" id="Description">Description</span></h2>
+<ul><li>If <i>condition</i> <a class="mw-selflink selflink">AND</a> <i>condition2</i> are true then the evaluation returns true (-1).</li>
+<li><i>condition</i> and <i>condition2</i> can also contain their own AND evaluations.</li>
+<li>Both the IF evaluation and the AND evaluation must be true for the statement to be true.</li>
+<li>Statements can use parenthesis to clarify an evaluation.</li>
+<li><a class="mw-selflink selflink">AND (boolean)</a> and <a href="OR_(boolean).html" title="OR (boolean)">OR (boolean)</a> cannot be used to combine command line operations.</li>
+<li>Not to be confused with the <a href="AND.html" title="AND">AND</a> and <a href="OR.html" title="OR">OR</a> numerical operations.</li></ul>
+<p><br />
+</p>
+<center><b>Relational Operators:</b></center>
+<table class="wikitable">
+<tbody><tr>
+<th>Symbol</th>
+<th>Condition</th>
+<th>Example Usage
+</th></tr>
+<tr>
+<td><a href="Equal.html" title="Equal">=</a></td>
+<td>Equal</td>
+<td>IF a = b THEN
+</td></tr>
+<tr>
+<td><a href="Not_Equal.html" title="Not Equal">&lt;&gt;</a></td>
+<td>NOT equal</td>
+<td>IF a &lt;&gt; b THEN
+</td></tr>
+<tr>
+<td><a href="Less_Than.html" title="Less Than">&lt;</a></td>
+<td>Less than</td>
+<td>IF a &lt; b THEN
+</td></tr>
+<tr>
+<td><a href="Greater_Than.html" title="Greater Than">&gt;</a></td>
+<td>Greater than</td>
+<td>IF a &gt; b THEN
+</td></tr>
+<tr>
+<td><a href="Less_Than_Or_Equal.html" title="Less Than Or Equal">&lt;=</a></td>
+<td>Less than or equal</td>
+<td>IF a &lt;= b THEN
+</td></tr>
+<tr>
+<td><a href="Greater_Than_Or_Equal.html" title="Greater Than Or Equal">&gt;=</a></td>
+<td>Greater than or equal</td>
+<td>IF a &gt;= b THEN
+</td></tr></tbody></table>
+<p><br />
+</p>
+<h2><span class="mw-headline" id="Examples">Examples</span></h2>
+<p><i>Example:</i> Using AND in an IF statement.
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: Courier, monospace; background-color: darkblue; color: lightgrey; word-wrap: break-word;">
+
+a% = 100
+b% = 50
+
+<a href="IF...html" title="IF...THEN"><span style="color:#87cefa;">IF</span></a> a% &gt; b% <a class="mw-selflink selflink"><span style="color:#87cefa;">AND</span></a> a% &lt; 200 <a href="THEN.html" title="THEN"><span style="color:#87cefa;">THEN</span></a> <a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> "True"
+
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: Courier; background-color: black; color: white;">
+True
+</p>
+<p><i>Explanation:</i> Both condition evaluations must be true for the code to be executed.
+</p><p><br />
+<i>Example:</i> Using a AND a more complex way.
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: Courier, monospace; background-color: darkblue; color: lightgrey; word-wrap: break-word;"> <i> </i>
+a% = 100
+b% = 50
+c% = 25
+d% = 50
+e% = 100
+
+<a href="IF...html" title="IF...THEN"><span style="color:#87cefa;">IF</span></a> (a% &gt; b% <a class="mw-selflink selflink"><span style="color:#87cefa;">AND</span></a> b% &gt; c%) <a class="mw-selflink selflink"><span style="color:#87cefa;">AND</span></a> (c% &lt; d% <a class="mw-selflink selflink"><span style="color:#87cefa;">AND</span></a> d% &lt; e%) <a href="THEN.html" title="THEN"><span style="color:#87cefa;">THEN</span></a>
+<a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> "True"
+<a href="ELSE.html" title="ELSE"><span style="color:#87cefa;">ELSE</span></a>
+<a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> "False"
+<a href="END_IF.html" class="mw-redirect" title="END IF"><span style="color:#87cefa;">END IF</span></a> <i> </i>
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: Courier; background-color: black; color: white;">
+True
+</p>
+<p><i>Explanation:</i> The evaluations in the paranteses are evaluated first then the evaluation <i>of</i> the paranteses takes place, since all evaluations return True the IF...THEN evaluation returns True. If any of the evaluations returned False then the IF...THEN evaluation would also return False.
+</p><p><br />
+</p>
+<h2><span class="mw-headline" id="See_also">See also</span></h2>
+<ul><li><a href="AND.html" title="AND">AND</a>, <a href="OR.html" title="OR">OR</a> <span style="color:gray">(logical operators)</span></li>
+<li><a href="OR_(boolean).html" title="OR (boolean)">OR (boolean)</a>, <a href="XOR_(boolean).html" title="XOR (boolean)">XOR (boolean)</a></li>
+<li><a href="IF...html" title="IF...THEN">IF...THEN</a></li></ul>
+<p><br />
+</p>
+<hr />
+<center><i>Navigation:</i>
+<dl><dd><a href="Keyword_Reference_-_Alphabetical.html" title="Keyword Reference - Alphabetical">Keyword Reference - Alphabetical</a></dd>
+<dd><a href="Keyword_Reference_-_By_usage.html" title="Keyword Reference - By usage">Keyword Reference - By Usage</a></dd>
+<dd><a href="Main_Page.html" title="Main Page">Main Wiki Page</a></dd></dl></center>
+<!-- 
+NewPP limit report
+Cached time: 20210706194106
+Cache expiry: 86400
+Dynamic content: false
+Complications: []
+CPU time usage: 0.067 seconds
+Real time usage: 0.094 seconds
+Preprocessor visited node count: 154/1000000
+Post‐expand include size: 2485/2097152 bytes
+Template argument size: 228/2097152 bytes
+Highest expansion depth: 3/40
+Expensive parser function count: 0/100
+Unstrip recursion depth: 0/20
+Unstrip post‐expand size: 0/5000000 bytes
+-->
+<!--
+Transclusion expansion time report (%,ms,calls,template)
+100.00%   49.464      1 -total
+  8.60%    4.254     13 Template:Cl
+  8.48%    4.195      1 Template:PageSyntax
+  7.42%    3.668      6 Template:Parameter
+  7.39%    3.656      1 Template:Text
+  7.24%    3.583      1 Template:PageNavigation
+  7.21%    3.566      1 Template:PageSeeAlso
+  7.07%    3.496      1 Template:RelationalTable
+  7.06%    3.493      2 Template:OutputEnd
+  6.92%    3.425      2 Template:CodeEnd
+-->
+
+<!-- Saved in parser cache with key i4224360_mw2-mw_:pcache:idhash:34-0!canonical and timestamp 20210706194106 and revision id 805
+ -->
+</div></div><div class="printfooter">Retrieved from "<a dir="ltr" href="indexc45a.html?title=AND_(boolean)&amp;oldid=805">http://www.qb64.org/wiki/index.php?title=AND_(boolean)&amp;oldid=805</a>"</div>
+		<div id="catlinks" class="catlinks catlinks-allhidden" data-mw="interface"></div>
+	</div>
+</div>
+
+<div id="mw-navigation">
+	<h2>Navigation menu</h2>
+	<div id="mw-head">
+		<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-personal" class="vector-menu" aria-labelledby="p-personal-label" role="navigation" 
+	 >
+	<h3 id="p-personal-label">
+		<span>Personal tools</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="pt-login"><a href="index29f4.html?title=Special:UserLogin&amp;returnto=AND+%28boolean%29" title="You are encouraged to log in; however, it is not mandatory [o]" accesskey="o">Log in</a></li></ul>
+		
+	</div>
+</nav>
+
+
+		<div id="left-navigation">
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-namespaces" class="vector-menu vector-menu-tabs vectorTabs" aria-labelledby="p-namespaces-label" role="navigation" 
+	 >
+	<h3 id="p-namespaces-label">
+		<span>Namespaces</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="ca-nstab-main" class="selected"><a href="AND_(boolean).html" title="View the content page [c]" accesskey="c">Page</a></li><li id="ca-talk" class="new"><a href="Talk_AND_(boolean).html?title=Talk:AND_(boolean)&amp;action=edit&amp;redlink=1" rel="discussion" title="Discussion about the content page (page does not exist) [t]" accesskey="t">Discussion</a></li></ul>
+		
+	</div>
+</nav>
+
+
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-variants" class="vector-menu-empty emptyPortlet vector-menu vector-menu-dropdown vectorMenu" aria-labelledby="p-variants-label" role="navigation" 
+	 >
+	<input type="checkbox" class="vector-menu-checkbox vectorMenuCheckbox" aria-labelledby="p-variants-label" />
+	<h3 id="p-variants-label">
+		<span>Variants</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="menu vector-menu-content-list"></ul>
+		
+	</div>
+</nav>
+
+
+		</div>
+		<div id="right-navigation">
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-views" class="vector-menu vector-menu-tabs vectorTabs" aria-labelledby="p-views-label" role="navigation" 
+	 >
+	<h3 id="p-views-label">
+		<span>Views</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="ca-view" class="collapsible selected"><a href="AND_(boolean).html">Read</a></li><li id="ca-viewsource" class="collapsible"><a href="indexbcb5.html?title=AND_(boolean)&amp;action=edit" title="This page is protected.&#10;You can view its source [e]" accesskey="e">View source</a></li><li id="ca-history" class="collapsible"><a href="index51c1.html?title=AND_(boolean)&amp;action=history" title="Past revisions of this page [h]" accesskey="h">View history</a></li></ul>
+		
+	</div>
+</nav>
+
+
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-cactions" class="vector-menu-empty emptyPortlet vector-menu vector-menu-dropdown vectorMenu" aria-labelledby="p-cactions-label" role="navigation" 
+	 >
+	<input type="checkbox" class="vector-menu-checkbox vectorMenuCheckbox" aria-labelledby="p-cactions-label" />
+	<h3 id="p-cactions-label">
+		<span>More</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="menu vector-menu-content-list"></ul>
+		
+	</div>
+</nav>
+
+
+			<div id="p-search" role="search">
+	<h3 >
+		<label for="searchInput">Search</label>
+	</h3>
+	<form action="https://www.qb64.org/wiki/index.php" id="searchform">
+		<div id="simpleSearch">
+			<input type="search" name="search" placeholder="Search QB64 Wiki" title="Search QB64 Wiki [f]" accesskey="f" id="searchInput"/>
+			<input type="hidden" name="title" value="Special:Search">
+			<input type="submit" name="fulltext" value="Search" title="Search the pages for this text" id="mw-searchButton" class="searchButton mw-fallbackSearchButton"/>
+			<input type="submit" name="go" value="Go" title="Go to a page with this exact name if it exists" id="searchButton" class="searchButton"/>
+		</div>
+	</form>
+</div>
+
+		</div>
+	</div>
+	
+<div id="mw-panel">
+	<div id="p-logo" role="banner">
+		<a  title="Visit the main page" class="mw-wiki-logo" href="Main_Page.html"></a>
+	</div>
+	<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-navigation" class="vector-menu vector-menu-portal portal portal-first" aria-labelledby="p-navigation-label" role="navigation" 
+	 >
+	<h3 id="p-navigation-label">
+		<span>Navigation</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="n-mainpage-description"><a href="Main_Page.html" title="Visit the main page [z]" accesskey="z">Main page</a></li><li id="n-recentchanges"><a href="Special_RecentChanges.html" title="A list of recent changes in the wiki [r]" accesskey="r">Recent changes</a></li><li id="n-randompage"><a href="SNDCOPY.html" title="Load a random page [x]" accesskey="x">Random page</a></li><li id="n-help-mediawiki"><a href="https://www.mediawiki.org/wiki/Special:MyLanguage/Help:Contents">Help about MediaWiki</a></li></ul>
+		
+	</div>
+</nav>
+
+
+	<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-tb" class="vector-menu vector-menu-portal portal" aria-labelledby="p-tb-label" role="navigation" 
+	 >
+	<h3 id="p-tb-label">
+		<span>Tools</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="t-whatlinkshere"><a href="Special_WhatLinksHere/AND_(boolean).html" title="A list of all wiki pages that link here [j]" accesskey="j">What links here</a></li><li id="t-recentchangeslinked"><a href="Special_RecentChangesLinked/AND_(boolean).html" rel="nofollow" title="Recent changes in pages linked from this page [k]" accesskey="k">Related changes</a></li><li id="t-specialpages"><a href="Special_SpecialPages.html" title="A list of all special pages [q]" accesskey="q">Special pages</a></li><li id="t-print"><a href="javascript:print();" rel="alternate" title="Printable version of this page [p]" accesskey="p">Printable version</a></li><li id="t-permalink"><a href="indexc45a.html?title=AND_(boolean)&amp;oldid=805" title="Permanent link to this revision of the page">Permanent link</a></li><li id="t-info"><a href="index1bd1.html?title=AND_(boolean)&amp;action=info" title="More information about this page">Page information</a></li></ul>
+		
+	</div>
+</nav>
+
+
+	
+</div>
+
+</div>
+
+<footer id="footer" class="mw-footer" role="contentinfo" >
+	<ul id="footer-info" >
+		<li id="footer-info-lastmod"> This page was last edited on 9 September 2017, at 18:46.</li>
+	</ul>
+	<ul id="footer-places" >
+		<li id="footer-places-privacy"><a href="My_wiki_Privacy_policy.html" title="My wiki:Privacy policy">Privacy policy</a></li>
+		<li id="footer-places-about"><a href="My_wiki_About.html" title="My wiki:About">About QB64 Wiki</a></li>
+		<li id="footer-places-disclaimer"><a href="My_wiki_General_disclaimer.html" title="My wiki:General disclaimer">Disclaimers</a></li>
+	</ul>
+	<ul id="footer-icons" class="noprint">
+		<li id="footer-poweredbyico"><a href="https://www.mediawiki.org/"><img src="resources/assets/poweredby_mediawiki_88x31.png" alt="Powered by MediaWiki" srcset="/wiki/resources/assets/poweredby_mediawiki_132x47.png 1.5x, /wiki/resources/assets/poweredby_mediawiki_176x62.png 2x" width="88" height="31" loading="lazy"/></a></li>
+	</ul>
+	<div style="clear: both;"></div>
+</footer>
+
+
+
+<script>(RLQ=window.RLQ||[]).push(function(){mw.config.set({"wgPageParseReport":{"limitreport":{"cputime":"0.067","walltime":"0.094","ppvisitednodes":{"value":154,"limit":1000000},"postexpandincludesize":{"value":2485,"limit":2097152},"templateargumentsize":{"value":228,"limit":2097152},"expansiondepth":{"value":3,"limit":40},"expensivefunctioncount":{"value":0,"limit":100},"unstrip-depth":{"value":0,"limit":20},"unstrip-size":{"value":0,"limit":5000000},"timingprofile":["100.00%   49.464      1 -total","  8.60%    4.254     13 Template:Cl","  8.48%    4.195      1 Template:PageSyntax","  7.42%    3.668      6 Template:Parameter","  7.39%    3.656      1 Template:Text","  7.24%    3.583      1 Template:PageNavigation","  7.21%    3.566      1 Template:PageSeeAlso","  7.07%    3.496      1 Template:RelationalTable","  7.06%    3.493      2 Template:OutputEnd","  6.92%    3.425      2 Template:CodeEnd"]},"cachereport":{"timestamp":"20210706194106","ttl":86400,"transientcontent":false}}});mw.config.set({"wgBackendResponseTime":1697});});</script></body>
+<!-- Mirrored from www.qb64.org/wiki/AND_(boolean) by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 07 Aug 2021 13:10:18 GMT -->
+</html>

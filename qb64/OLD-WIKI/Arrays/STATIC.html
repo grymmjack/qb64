@@ -1,0 +1,346 @@
+
+<!DOCTYPE html>
+<html class="client-nojs" lang="en" dir="ltr">
+
+<!-- Mirrored from www.qb64.org/wiki/STATIC by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 07 Aug 2021 13:14:44 GMT -->
+<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=UTF-8" /><!-- /Added by HTTrack -->
+<head>
+<meta charset="UTF-8"/>
+<title>STATIC - QB64 Wiki</title>
+<script>document.documentElement.className="client-js";RLCONF={"wgBreakFrames":!1,"wgSeparatorTransformTable":["",""],"wgDigitTransformTable":["",""],"wgDefaultDateFormat":"dmy","wgMonthNames":["","January","February","March","April","May","June","July","August","September","October","November","December"],"wgRequestId":"YQ58wRfRH1qEVj9okg8TRQAAAKk","wgCSPNonce":!1,"wgCanonicalNamespace":"","wgCanonicalSpecialPageName":!1,"wgNamespaceNumber":0,"wgPageName":"STATIC","wgTitle":"STATIC","wgCurRevisionId":23701,"wgRevisionId":23701,"wgArticleId":668,"wgIsArticle":!0,"wgIsRedirect":!1,"wgAction":"view","wgUserName":null,"wgUserGroups":["*"],"wgCategories":[],"wgPageContentLanguage":"en","wgPageContentModel":"wikitext","wgRelevantPageName":"STATIC","wgRelevantArticleId":668,"wgIsProbablyEditable":!1,"wgRelevantPageIsProbablyEditable":!1,"wgRestrictionEdit":[],"wgRestrictionMove":[]};RLSTATE={"site.styles":"ready","noscript":"ready","user.styles":"ready","user":"ready",
+"user.options":"loading","skins.vector.styles.legacy":"ready","mediawiki.toc.styles":"ready"};RLPAGEMODULES=["site","mediawiki.page.startup","mediawiki.page.ready","mediawiki.toc","skins.vector.legacy.js"];</script>
+<script>(RLQ=window.RLQ||[]).push(function(){mw.loader.implement("user.options@1hzgi",function($,jQuery,require,module){/*@nomin*/mw.user.tokens.set({"patrolToken":"+\\","watchToken":"+\\","csrfToken":"+\\"});
+});});</script>
+<link rel="stylesheet" href="loadd8b0.css?lang=en&amp;modules=mediawiki.toc.styles%7Cskins.vector.styles.legacy&amp;only=styles&amp;skin=vector"/>
+<script async="" src="load52c0.php?lang=en&amp;modules=startup&amp;only=scripts&amp;raw=1&amp;skin=vector"></script>
+<meta name="generator" content="MediaWiki 1.35.2"/>
+<link rel="shortcut icon" href="https://www.qb64.org/favicon.ico"/>
+<link rel="search" type="application/opensearchdescription+xml" href="opensearch_desc.php" title="QB64 Wiki (en)"/>
+<link rel="EditURI" type="application/rsd+xml" href="api-result251f.xml?action=rsd"/>
+<link rel="alternate" type="application/atom+xml" title="QB64 Wiki Atom feed" href="feeda295.xml?title=Special:RecentChanges&amp;feed=atom"/>
+<!--[if lt IE 9]><script src="/wiki/resources/lib/html5shiv/html5shiv.js"></script><![endif]-->
+</head>
+<body class="mediawiki ltr sitedir-ltr mw-hide-empty-elt ns-0 ns-subject page-STATIC rootpage-STATIC skin-vector action-view skin-vector-legacy">
+<div id="mw-page-base" class="noprint"></div>
+<div id="mw-head-base" class="noprint"></div>
+<div id="content" class="mw-body" role="main">
+	<a id="top"></a>
+	<div id="siteNotice" class="mw-body-content"></div>
+	<div class="mw-indicators mw-body-content">
+	</div>
+	<h1 id="firstHeading" class="firstHeading" lang="en">STATIC</h1>
+	<div id="bodyContent" class="mw-body-content">
+		<div id="siteSub" class="noprint">From QB64 Wiki</div>
+		<div id="contentSub"></div>
+		<div id="contentSub2"></div>
+		
+		<div id="jump-to-nav"></div>
+		<a class="mw-jump-link" href="#mw-head">Jump to navigation</a>
+		<a class="mw-jump-link" href="#searchInput">Jump to search</a>
+		<div id="mw-content-text" lang="en" dir="ltr" class="mw-content-ltr"><div class="mw-parser-output"><p>The <span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a class="mw-selflink selflink">STATIC</a></span> keyword is used in declaration statements to control where variables are stored.
+</p><p><br />
+</p>
+<div id="toc" class="toc" role="navigation" aria-labelledby="mw-toc-heading"><input type="checkbox" role="button" id="toctogglecheckbox" class="toctogglecheckbox" style="display:none" /><div class="toctitle" lang="en" dir="ltr"><h2 id="mw-toc-heading">Contents</h2><span class="toctogglespan"><label class="toctogglelabel" for="toctogglecheckbox"></label></span></div>
+<ul>
+<li class="toclevel-1"><a href="#Syntax"><span class="tocnumber">1</span> <span class="toctext">Syntax</span></a></li>
+<li class="toclevel-1"><a href="#Syntax_2"><span class="tocnumber">2</span> <span class="toctext">Syntax</span></a></li>
+<li class="toclevel-1"><a href="#Description"><span class="tocnumber">3</span> <span class="toctext">Description</span></a></li>
+<li class="toclevel-1"><a href="#See_also"><span class="tocnumber">4</span> <span class="toctext">See also</span></a></li>
+</ul>
+</div>
+
+<h2><span class="mw-headline" id="Syntax">Syntax</span></h2>
+<dl><dd><span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a class="mw-selflink selflink">STATIC</a></span> <i>variableName</i>[()] [<span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="AS.html" title="AS">AS</a></span> <i>dataType</i>][, ...]</dd>
+<dd><span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a class="mw-selflink selflink">STATIC</a></span> [<span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="AS.html" title="AS">AS</a></span> <i>dataType</i>] <i>variableName</i>[()][, ...]</dd></dl>
+<h2><span class="mw-headline" id="Syntax_2">Syntax</span></h2>
+<dl><dd>{<a href="SUB.html" title="SUB">SUB</a>|<a href="FUNCTION.html" title="FUNCTION">FUNCTION</a>} <i>procedureName</i> [(<i>parameterList</i>)] STATIC</dd></dl>
+<p><br />
+</p>
+<h2><span class="mw-headline" id="Description">Description</span></h2>
+<ul><li>A STATIC list can be used in <a href="SUB.html" title="SUB">SUB</a> and <a href="FUNCTION.html" title="FUNCTION">FUNCTION</a> procedures to designate one or more variables to retain their values.</li>
+<li>Variables and arrays with static storage will retain their values in between procedure calls. The values may also be used recursively.</li></ul>
+<dl><dd><ul><li><i>variableName</i> may include a type suffix or use <a href="AS.html" title="AS">AS</a> to specify a type other than the default <a href="SINGLE.html" title="SINGLE">SINGLE</a> type.</li>
+<li>Arrays with static storage are declared by specifying empty parenthesis following the array name. See <a href="Arrays.html" title="Arrays">Arrays</a></li></ul></dd></dl>
+<ul><li>STATIC can be used after the name of a <a href="SUB.html" title="SUB">SUB</a> or <a href="FUNCTION.html" title="FUNCTION">FUNCTION</a> in the procedure to force all variables to retain their values.</li>
+<li><b>Recursive procedures may be required to be STATIC to avoid a Stack Overflow error. QB64 programs may just close.</b></li>
+<li><a href="%24STATIC.html" title="$STATIC">$STATIC</a> defined program <a href="Arrays.html" title="Arrays">arrays</a> cannot be <a href="REDIM.html" title="REDIM">re-sized</a> or use <a href="PRESERVE.html" title="PRESERVE">_PRESERVE</a>.</li></ul>
+<p><br />
+<i>Example 1: Finding the binary bit settings from a 32 bit <a href="LONG.html" title="LONG">LONG</a> register return using recursion.</i>
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: Courier, monospace; background-color: darkblue; color: lightgrey; word-wrap: break-word;"> <i> </i>
+<a href="INPUT.html" title="INPUT"><span style="color:#87cefa;">INPUT</span></a> "Enter a numerical value to see binary value: ", num&amp;
+<a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> Bin$(num&amp;)
+
+<a href="END.html" title="END"><span style="color:#87cefa;">END</span></a>
+
+<a href="FUNCTION.html" title="FUNCTION"><span style="color:#87cefa;">FUNCTION</span></a> Bin$ (n&amp;) <a class="mw-selflink selflink"><span style="color:#87cefa;">STATIC</span></a> 'comment out STATIC to see what happens!
+<a href="DIM.html" title="DIM"><span style="color:#87cefa;">DIM</span></a> p%, s$
+<a href="IF...html" title="IF...THEN"><span style="color:#87cefa;">IF</span></a> 2 ^ p% &gt; n&amp; <a href="THEN.html" title="THEN"><span style="color:#87cefa;">THEN</span></a>
+  p% = 0
+<a href="ELSE.html" title="ELSE"><span style="color:#87cefa;">ELSE</span></a>
+  <a href="IF...html" title="IF...THEN"><span style="color:#87cefa;">IF</span></a> n&amp; <a href="AND_(boolean).html" title="AND (boolean)"><span style="color:#87cefa;">AND</span></a> 2 ^ p% <a href="THEN.html" title="THEN"><span style="color:#87cefa;">THEN</span></a> s$ = "1" + s$ <a href="ELSE.html" title="ELSE"><span style="color:#87cefa;">ELSE</span></a> s$ = "0" + s$
+  <a href="IF...html" title="IF...THEN"><span style="color:#87cefa;">IF</span></a> n&amp; &gt; 2 ^ p% <a href="THEN.html" title="THEN"><span style="color:#87cefa;">THEN</span></a>
+    p% = p% + 1
+    s$ = Bin$(n&amp;) 'recursive call to itself
+  <a href="ELSE.html" title="ELSE"><span style="color:#87cefa;">ELSE</span></a>: p% = 0
+  <a href="END_IF.html" class="mw-redirect" title="END IF"><span style="color:#87cefa;">END IF</span></a>
+<a href="END_IF.html" class="mw-redirect" title="END IF"><span style="color:#87cefa;">END IF</span></a>
+<a href="IF...html" title="IF...THEN"><span style="color:#87cefa;">IF</span></a> s$ = "" <a href="THEN.html" title="THEN"><span style="color:#87cefa;">THEN</span></a> Bin$ = "0" <a href="ELSE.html" title="ELSE"><span style="color:#87cefa;">ELSE</span></a> Bin$ = s$
+<a href="END_FUNCTION.html" title="END FUNCTION"><span style="color:#87cefa;">END FUNCTION</span></a> <i> </i>
+</p>
+<dl><dd><i>Explanation:</i> The <a href="FUNCTION.html" title="FUNCTION">FUNCTION</a> above returns a <a href="STRING.html" title="STRING">STRING</a> value representing the bits ON in an <a href="INTEGER.html" title="INTEGER">INTEGER</a> value. The string can be printed to the screen to see what is happening in a port register. <b>STATIC</b> keeps the function from overloading the memory "Stack" and is normally REQUIRED when recursive calls are used in QBasic! <b>QB64 procedures will close without warning or error!</b></dd></dl>
+<p><br />
+<i>Example 2:</i> Using a static array to cache factorials, speeding up repeated calculations:
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: Courier, monospace; background-color: darkblue; color: lightgrey; word-wrap: break-word;">
+
+<a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> Factorial(0)
+<a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> Factorial(5)
+<a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> Factorial(50)
+
+<a href="FUNCTION.html" title="FUNCTION"><span style="color:#87cefa;">FUNCTION</span></a> Factorial# ( n <a href="AS.html" title="AS"><span style="color:#87cefa;">AS</span></a> <a href="DOUBLE.html" title="DOUBLE"><span style="color:#87cefa;">DOUBLE</span></a> )
+    <a href="CONST.html" title="CONST"><span style="color:#87cefa;">CONST</span></a> maxNToCache = 50
+    <a class="mw-selflink selflink"><span style="color:#87cefa;">STATIC</span></a> resultCache() <a href="AS.html" title="AS"><span style="color:#87cefa;">AS</span></a> <a href="DOUBLE.html" title="DOUBLE"><span style="color:#87cefa;">DOUBLE</span></a>
+    <a class="mw-selflink selflink"><span style="color:#87cefa;">STATIC</span></a> firstCall <a href="AS.html" title="AS"><span style="color:#87cefa;">AS</span></a> <a href="INTEGER.html" title="INTEGER"><span style="color:#87cefa;">INTEGER</span></a>
+    
+    ' The lookup table is initially empty, so re-size it..
+    <a href="IF...html" title="IF...THEN"><span style="color:#87cefa;">IF</span></a> firstCall = 0 <a href="IF...html" title="IF...THEN"><span style="color:#87cefa;">THEN</span></a>
+        firstCall = -1
+        <a href="REDIM.html" title="REDIM"><span style="color:#87cefa;">REDIM</span></a> resultCache(maxNToCache) <a href="AS.html" title="AS"><span style="color:#87cefa;">AS</span></a> <a href="DOUBLE.html" title="DOUBLE"><span style="color:#87cefa;">DOUBLE</span></a>
+        
+        ' ..and pre-calculate some factorials.
+        resultCache(0) = 1
+        resultCache(1) = 1
+        resultCache(2) = 2
+    <a href="IF...html" title="IF...THEN"><span style="color:#87cefa;">END IF</span></a>
+    
+    ' See if we have the result cached. If so, we're done.
+    <a href="IF...html" title="IF...THEN"><span style="color:#87cefa;">IF</span></a> n &lt;= maxNToCache <a href="IF...html" title="IF...THEN"><span style="color:#87cefa;">THEN</span></a>
+        <a href="IF...html" title="IF...THEN"><span style="color:#87cefa;">IF</span></a> resultCache(n) &lt;&gt; 0 <a href="IF...html" title="IF...THEN"><span style="color:#87cefa;">THEN</span></a>
+            Factorial = resultCache(n)
+            <a href="EXIT_FUNCTION.html" title="EXIT FUNCTION"><span style="color:#87cefa;">EXIT FUNCTION</span></a>
+        <a href="IF...html" title="IF...THEN"><span style="color:#87cefa;">END IF</span></a>
+    <a href="IF...html" title="IF...THEN"><span style="color:#87cefa;">END IF</span></a>
+    
+    ' If not, we use recursion to calculate the result, then cache it for later use:
+    resultCache(n) = <a href="INT.html" title="INT"><span style="color:#87cefa;">INT</span></a>(n) * Factorial(<a href="INT.html" title="INT"><span style="color:#87cefa;">INT</span></a>(n) - 1)
+    Factorial = resultCache(n)
+<a href="END_FUNCTION.html" title="END FUNCTION"><span style="color:#87cefa;">END FUNCTION</span></a>
+
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: Courier; background-color: black; color: white;"> 
+ 1
+ 120
+ 3.041409320171338D+64
+</p>
+<p><br />
+</p>
+<h2><span class="mw-headline" id="See_also">See also</span></h2>
+<ul><li><a href="DIM.html" title="DIM">DIM</a>, <a href="REDIM.html" title="REDIM">REDIM</a>, <a href="COMMON.html" title="COMMON">COMMON</a></li>
+<li><a href="SUB.html" title="SUB">SUB</a>, <a href="FUNCTION.html" title="FUNCTION">FUNCTION</a></li>
+<li><a href="TYPE.html" title="TYPE">TYPE</a>, <a href="Arrays.html" title="Arrays">Arrays</a></li>
+<li><a href="%24STATIC.html" title="$STATIC">$STATIC</a>, <a href="%24DYNAMIC.html" title="$DYNAMIC">$DYNAMIC</a> <span style="color:gray">(<a href="Metacommand.html" title="Metacommand">Metacommands</a>)</span></li>
+<li><a href="Data_types.html" title="Data types">Data types</a></li></ul>
+<p><br />
+</p>
+<hr />
+<center><i>Navigation:</i>
+<dl><dd><a href="Keyword_Reference_-_Alphabetical.html" title="Keyword Reference - Alphabetical">Keyword Reference - Alphabetical</a></dd>
+<dd><a href="Keyword_Reference_-_By_usage.html" title="Keyword Reference - By usage">Keyword Reference - By Usage</a></dd>
+<dd><a href="Main_Page.html" title="Main Page">Main Wiki Page</a></dd></dl></center>
+<!-- 
+NewPP limit report
+Cached time: 20210806151838
+Cache expiry: 86400
+Dynamic content: false
+Complications: []
+CPU time usage: 0.091 seconds
+Real time usage: 0.340 seconds
+Preprocessor visited node count: 452/1000000
+Post‐expand include size: 4325/2097152 bytes
+Template argument size: 707/2097152 bytes
+Highest expansion depth: 3/40
+Expensive parser function count: 0/100
+Unstrip recursion depth: 0/20
+Unstrip post‐expand size: 0/5000000 bytes
+-->
+<!--
+Transclusion expansion time report (%,ms,calls,template)
+100.00%  138.249      1 -total
+ 13.41%   18.539      1 Template:OutputStart
+ 13.27%   18.339      1 Template:PageDescription
+ 13.18%   18.223      2 Template:PageSyntax
+ 12.81%   17.714      2 Template:CodeEnd
+ 12.01%   16.604      1 Template:OutputEnd
+  9.37%   12.955      1 Template:PageNavigation
+  5.45%    7.531     51 Template:Cl
+  4.29%    5.931      5 Template:KW
+  3.15%    4.350      7 Template:Parameter
+-->
+
+<!-- Saved in parser cache with key i4224360_mw2-mw_:pcache:idhash:668-0!canonical and timestamp 20210806151838 and revision id 23701
+ -->
+</div></div><div class="printfooter">Retrieved from "<a dir="ltr" href="index6a5c.html?title=STATIC&amp;oldid=23701">http://www.qb64.org/wiki/index.php?title=STATIC&amp;oldid=23701</a>"</div>
+		<div id="catlinks" class="catlinks catlinks-allhidden" data-mw="interface"></div>
+	</div>
+</div>
+
+<div id="mw-navigation">
+	<h2>Navigation menu</h2>
+	<div id="mw-head">
+		<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-personal" class="vector-menu" aria-labelledby="p-personal-label" role="navigation" 
+	 >
+	<h3 id="p-personal-label">
+		<span>Personal tools</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="pt-login"><a href="index022c.html?title=Special:UserLogin&amp;returnto=STATIC" title="You are encouraged to log in; however, it is not mandatory [o]" accesskey="o">Log in</a></li></ul>
+		
+	</div>
+</nav>
+
+
+		<div id="left-navigation">
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-namespaces" class="vector-menu vector-menu-tabs vectorTabs" aria-labelledby="p-namespaces-label" role="navigation" 
+	 >
+	<h3 id="p-namespaces-label">
+		<span>Namespaces</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="ca-nstab-main" class="selected"><a href="STATIC.html" title="View the content page [c]" accesskey="c">Page</a></li><li id="ca-talk" class="new"><a href="Talk_STATIC.html?title=Talk:STATIC&amp;action=edit&amp;redlink=1" rel="discussion" title="Discussion about the content page (page does not exist) [t]" accesskey="t">Discussion</a></li></ul>
+		
+	</div>
+</nav>
+
+
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-variants" class="vector-menu-empty emptyPortlet vector-menu vector-menu-dropdown vectorMenu" aria-labelledby="p-variants-label" role="navigation" 
+	 >
+	<input type="checkbox" class="vector-menu-checkbox vectorMenuCheckbox" aria-labelledby="p-variants-label" />
+	<h3 id="p-variants-label">
+		<span>Variants</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="menu vector-menu-content-list"></ul>
+		
+	</div>
+</nav>
+
+
+		</div>
+		<div id="right-navigation">
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-views" class="vector-menu vector-menu-tabs vectorTabs" aria-labelledby="p-views-label" role="navigation" 
+	 >
+	<h3 id="p-views-label">
+		<span>Views</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="ca-view" class="collapsible selected"><a href="STATIC.html">Read</a></li><li id="ca-viewsource" class="collapsible"><a href="index8afa.html?title=STATIC&amp;action=edit" title="This page is protected.&#10;You can view its source [e]" accesskey="e">View source</a></li><li id="ca-history" class="collapsible"><a href="indexb065.html?title=STATIC&amp;action=history" title="Past revisions of this page [h]" accesskey="h">View history</a></li></ul>
+		
+	</div>
+</nav>
+
+
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-cactions" class="vector-menu-empty emptyPortlet vector-menu vector-menu-dropdown vectorMenu" aria-labelledby="p-cactions-label" role="navigation" 
+	 >
+	<input type="checkbox" class="vector-menu-checkbox vectorMenuCheckbox" aria-labelledby="p-cactions-label" />
+	<h3 id="p-cactions-label">
+		<span>More</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="menu vector-menu-content-list"></ul>
+		
+	</div>
+</nav>
+
+
+			<div id="p-search" role="search">
+	<h3 >
+		<label for="searchInput">Search</label>
+	</h3>
+	<form action="https://www.qb64.org/wiki/index.php" id="searchform">
+		<div id="simpleSearch">
+			<input type="search" name="search" placeholder="Search QB64 Wiki" title="Search QB64 Wiki [f]" accesskey="f" id="searchInput"/>
+			<input type="hidden" name="title" value="Special:Search">
+			<input type="submit" name="fulltext" value="Search" title="Search the pages for this text" id="mw-searchButton" class="searchButton mw-fallbackSearchButton"/>
+			<input type="submit" name="go" value="Go" title="Go to a page with this exact name if it exists" id="searchButton" class="searchButton"/>
+		</div>
+	</form>
+</div>
+
+		</div>
+	</div>
+	
+<div id="mw-panel">
+	<div id="p-logo" role="banner">
+		<a  title="Visit the main page" class="mw-wiki-logo" href="Main_Page.html"></a>
+	</div>
+	<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-navigation" class="vector-menu vector-menu-portal portal portal-first" aria-labelledby="p-navigation-label" role="navigation" 
+	 >
+	<h3 id="p-navigation-label">
+		<span>Navigation</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="n-mainpage-description"><a href="Main_Page.html" title="Visit the main page [z]" accesskey="z">Main page</a></li><li id="n-recentchanges"><a href="Special_RecentChanges.html" title="A list of recent changes in the wiki [r]" accesskey="r">Recent changes</a></li><li id="n-randompage"><a href="SNDCOPY.html" title="Load a random page [x]" accesskey="x">Random page</a></li><li id="n-help-mediawiki"><a href="https://www.mediawiki.org/wiki/Special:MyLanguage/Help:Contents">Help about MediaWiki</a></li></ul>
+		
+	</div>
+</nav>
+
+
+	<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-tb" class="vector-menu vector-menu-portal portal" aria-labelledby="p-tb-label" role="navigation" 
+	 >
+	<h3 id="p-tb-label">
+		<span>Tools</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="t-whatlinkshere"><a href="Special_WhatLinksHere/STATIC.html" title="A list of all wiki pages that link here [j]" accesskey="j">What links here</a></li><li id="t-recentchangeslinked"><a href="Special_RecentChangesLinked/STATIC.html" rel="nofollow" title="Recent changes in pages linked from this page [k]" accesskey="k">Related changes</a></li><li id="t-specialpages"><a href="Special_SpecialPages.html" title="A list of all special pages [q]" accesskey="q">Special pages</a></li><li id="t-print"><a href="javascript:print();" rel="alternate" title="Printable version of this page [p]" accesskey="p">Printable version</a></li><li id="t-permalink"><a href="index6a5c.html?title=STATIC&amp;oldid=23701" title="Permanent link to this revision of the page">Permanent link</a></li><li id="t-info"><a href="indexd9f1.html?title=STATIC&amp;action=info" title="More information about this page">Page information</a></li></ul>
+		
+	</div>
+</nav>
+
+
+	
+</div>
+
+</div>
+
+<footer id="footer" class="mw-footer" role="contentinfo" >
+	<ul id="footer-info" >
+		<li id="footer-info-lastmod"> This page was last edited on 29 July 2021, at 14:49.</li>
+	</ul>
+	<ul id="footer-places" >
+		<li id="footer-places-privacy"><a href="My_wiki_Privacy_policy.html" title="My wiki:Privacy policy">Privacy policy</a></li>
+		<li id="footer-places-about"><a href="My_wiki_About.html" title="My wiki:About">About QB64 Wiki</a></li>
+		<li id="footer-places-disclaimer"><a href="My_wiki_General_disclaimer.html" title="My wiki:General disclaimer">Disclaimers</a></li>
+	</ul>
+	<ul id="footer-icons" class="noprint">
+		<li id="footer-poweredbyico"><a href="https://www.mediawiki.org/"><img src="resources/assets/poweredby_mediawiki_88x31.png" alt="Powered by MediaWiki" srcset="/wiki/resources/assets/poweredby_mediawiki_132x47.png 1.5x, /wiki/resources/assets/poweredby_mediawiki_176x62.png 2x" width="88" height="31" loading="lazy"/></a></li>
+	</ul>
+	<div style="clear: both;"></div>
+</footer>
+
+
+
+<script>(RLQ=window.RLQ||[]).push(function(){mw.config.set({"wgPageParseReport":{"limitreport":{"cputime":"0.091","walltime":"0.340","ppvisitednodes":{"value":452,"limit":1000000},"postexpandincludesize":{"value":4325,"limit":2097152},"templateargumentsize":{"value":707,"limit":2097152},"expansiondepth":{"value":3,"limit":40},"expensivefunctioncount":{"value":0,"limit":100},"unstrip-depth":{"value":0,"limit":20},"unstrip-size":{"value":0,"limit":5000000},"timingprofile":["100.00%  138.249      1 -total"," 13.41%   18.539      1 Template:OutputStart"," 13.27%   18.339      1 Template:PageDescription"," 13.18%   18.223      2 Template:PageSyntax"," 12.81%   17.714      2 Template:CodeEnd"," 12.01%   16.604      1 Template:OutputEnd","  9.37%   12.955      1 Template:PageNavigation","  5.45%    7.531     51 Template:Cl","  4.29%    5.931      5 Template:KW","  3.15%    4.350      7 Template:Parameter"]},"cachereport":{"timestamp":"20210806151838","ttl":86400,"transientcontent":false}}});mw.config.set({"wgBackendResponseTime":1008});});</script></body>
+<!-- Mirrored from www.qb64.org/wiki/STATIC by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 07 Aug 2021 13:14:48 GMT -->
+</html>

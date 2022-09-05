@@ -1,0 +1,365 @@
+
+<!DOCTYPE html>
+<html class="client-nojs" lang="en" dir="ltr">
+
+<!-- Mirrored from www.qb64.org/wiki/SWAP by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 07 Aug 2021 13:25:30 GMT -->
+<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=UTF-8" /><!-- /Added by HTTrack -->
+<head>
+<meta charset="UTF-8"/>
+<title>SWAP - QB64 Wiki</title>
+<script>document.documentElement.className="client-js";RLCONF={"wgBreakFrames":!1,"wgSeparatorTransformTable":["",""],"wgDigitTransformTable":["",""],"wgDefaultDateFormat":"dmy","wgMonthNames":["","January","February","March","April","May","June","July","August","September","October","November","December"],"wgRequestId":"YOWlwXRlrus40@nKpqjr8AAAAJk","wgCSPNonce":!1,"wgCanonicalNamespace":"","wgCanonicalSpecialPageName":!1,"wgNamespaceNumber":0,"wgPageName":"SWAP","wgTitle":"SWAP","wgCurRevisionId":19907,"wgRevisionId":19907,"wgArticleId":681,"wgIsArticle":!0,"wgIsRedirect":!1,"wgAction":"view","wgUserName":null,"wgUserGroups":["*"],"wgCategories":[],"wgPageContentLanguage":"en","wgPageContentModel":"wikitext","wgRelevantPageName":"SWAP","wgRelevantArticleId":681,"wgIsProbablyEditable":!1,"wgRelevantPageIsProbablyEditable":!1,"wgRestrictionEdit":[],"wgRestrictionMove":[]};RLSTATE={"site.styles":"ready","noscript":"ready","user.styles":"ready","user":"ready","user.options":
+"loading","skins.vector.styles.legacy":"ready"};RLPAGEMODULES=["site","mediawiki.page.startup","mediawiki.page.ready","skins.vector.legacy.js"];</script>
+<script>(RLQ=window.RLQ||[]).push(function(){mw.loader.implement("user.options@1hzgi",function($,jQuery,require,module){/*@nomin*/mw.user.tokens.set({"patrolToken":"+\\","watchToken":"+\\","csrfToken":"+\\"});
+});});</script>
+<link rel="stylesheet" href="load5c90.css?lang=en&amp;modules=skins.vector.styles.legacy&amp;only=styles&amp;skin=vector"/>
+<script async="" src="load52c0.php?lang=en&amp;modules=startup&amp;only=scripts&amp;raw=1&amp;skin=vector"></script>
+<meta name="generator" content="MediaWiki 1.35.2"/>
+<link rel="shortcut icon" href="https://www.qb64.org/favicon.ico"/>
+<link rel="search" type="application/opensearchdescription+xml" href="opensearch_desc.php" title="QB64 Wiki (en)"/>
+<link rel="EditURI" type="application/rsd+xml" href="api-result251f.xml?action=rsd"/>
+<link rel="alternate" type="application/atom+xml" title="QB64 Wiki Atom feed" href="feeda295.xml?title=Special:RecentChanges&amp;feed=atom"/>
+<!--[if lt IE 9]><script src="/wiki/resources/lib/html5shiv/html5shiv.js"></script><![endif]-->
+</head>
+<body class="mediawiki ltr sitedir-ltr mw-hide-empty-elt ns-0 ns-subject page-SWAP rootpage-SWAP skin-vector action-view skin-vector-legacy">
+<div id="mw-page-base" class="noprint"></div>
+<div id="mw-head-base" class="noprint"></div>
+<div id="content" class="mw-body" role="main">
+	<a id="top"></a>
+	<div id="siteNotice" class="mw-body-content"></div>
+	<div class="mw-indicators mw-body-content">
+	</div>
+	<h1 id="firstHeading" class="firstHeading" lang="en">SWAP</h1>
+	<div id="bodyContent" class="mw-body-content">
+		<div id="siteSub" class="noprint">From QB64 Wiki</div>
+		<div id="contentSub"></div>
+		<div id="contentSub2"></div>
+		
+		<div id="jump-to-nav"></div>
+		<a class="mw-jump-link" href="#mw-head">Jump to navigation</a>
+		<a class="mw-jump-link" href="#searchInput">Jump to search</a>
+		<div id="mw-content-text" lang="en" dir="ltr" class="mw-content-ltr"><div class="mw-parser-output"><p>The <span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a class="mw-selflink selflink">SWAP</a></span> statement is used to exchange two variable or array element values.
+</p><p><br />
+</p>
+<h2><span class="mw-headline" id="Syntax">Syntax</span></h2>
+<dl><dd><span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a class="mw-selflink selflink">SWAP</a></span> <i>variable1</i>, <i>variable2</i></dd></dl>
+<p><br />
+</p>
+<h2><span class="mw-headline" id="Description">Description</span></h2>
+<ul><li><i>variable1</i> and <i>variable2</i> are any type variables whose values will be exchanged.</li>
+<li>If either <i>variable1</i> or <i>variable2</i> is an array, then an element in the array must be designated.</li>
+<li><span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a class="mw-selflink selflink">SWAP</a></span> can be used with string or number variable values. Both must be of the same type.</li>
+<li>SWAP is often used to sort array elements into greater or lesser numerical or cumulative <a href="ASCII.html" title="ASCII">ASCII</a> <a href="STRING.html" title="STRING">STRING</a> values.</li>
+<li>SWAP can be used in page flipping to change between source and destination pages.</li></ul>
+<p><br />
+<i>Example 1:</i> A simple SWAP of <a href="STRING.html" title="STRING">string</a> values.
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: Courier, monospace; background-color: darkblue; color: lightgrey; word-wrap: break-word;">
+a$ = "one"
+b$ = "two"
+
+<a class="mw-selflink selflink"><span style="color:#87cefa;">SWAP</span></a> a$, b$
+
+<a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> a$
+<a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> b$
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: Courier; background-color: black; color: white;">two
+one
+</p>
+<p><br />
+<i>Example 2:</i> Creating Cryptograms by scrambling EVERY capital letter in the alphabet.
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: Courier, monospace; background-color: darkblue; color: lightgrey; word-wrap: break-word;"> <i> </i>
+<a href="DIM.html" title="DIM"><span style="color:#87cefa;">DIM</span></a> Letter$(65 <a href="TO.html" title="TO"><span style="color:#87cefa;">TO</span></a> 90)
+<a href="RANDOMIZE.html" title="RANDOMIZE"><span style="color:#87cefa;">RANDOMIZE</span></a> <a href="TIMER.html" title="TIMER"><span style="color:#87cefa;">TIMER</span></a>
+<a href="CLS.html" title="CLS"><span style="color:#87cefa;">CLS</span></a>
+<a href="FOR...html" title="FOR...NEXT"><span style="color:#87cefa;">FOR</span></a> a = 65 <a href="TO.html" title="TO"><span style="color:#87cefa;">TO</span></a> 90                    'set ASCII codes and letters in order
+  Letter$(a) = <a href="CHR%24.html" title="CHR$"><span style="color:#87cefa;">CHR$</span></a>(a)              'create capitalized characters
+<a href="NEXT.html" title="NEXT"><span style="color:#87cefa;">NEXT</span></a> a
+
+<a href="COLOR.html" title="COLOR"><span style="color:#87cefa;">COLOR</span></a> 11: <a href="LOCATE.html" title="LOCATE"><span style="color:#87cefa;">LOCATE</span></a> 10, 10
+<a href="FOR...html" title="FOR...NEXT"><span style="color:#87cefa;">FOR</span></a> i = 65 <a href="TO.html" title="TO"><span style="color:#87cefa;">TO</span></a> 90
+  <a href="IF...html" title="IF...THEN"><span style="color:#87cefa;">IF</span></a> Letter$(i) = <a href="CHR%24.html" title="CHR$"><span style="color:#87cefa;">CHR$</span></a>(i) <a href="THEN.html" title="THEN"><span style="color:#87cefa;">THEN</span></a>      'find characters the same as the <a href="ASCII.html" title="ASCII"><span style="color:#87cefa;">ASCII</span></a> code index
+    <a href="DO...html" title="DO...LOOP"><span style="color:#87cefa;">DO</span></a>: j = <a href="INT.html" title="INT"><span style="color:#87cefa;">INT</span></a>(<a href="RND.html" title="RND"><span style="color:#87cefa;">RND</span></a> * 26) + 65: <a href="LOOP.html" title="LOOP"><span style="color:#87cefa;">LOOP</span></a> <a href="WHILE.html" title="WHILE"><span style="color:#87cefa;">WHILE</span></a> j = i    'loop until j &lt;&gt; i
+    <a class="mw-selflink selflink"><span style="color:#87cefa;">SWAP</span></a> Letter$(i), Letter$(j)     'swap corresponding letter characters
+  <a href="END_IF.html" class="mw-redirect" title="END IF"><span style="color:#87cefa;">END IF</span></a>
+  <a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> <a href="CHR%24.html" title="CHR$"><span style="color:#87cefa;">CHR$</span></a>(i); " ";               'print normal alphabetical order
+<a href="NEXT.html" title="NEXT"><span style="color:#87cefa;">NEXT</span></a>
+
+<a href="COLOR.html" title="COLOR"><span style="color:#87cefa;">COLOR</span></a> 14: <a href="LOCATE.html" title="LOCATE"><span style="color:#87cefa;">LOCATE</span></a> 12, 10
+<a href="FOR...html" title="FOR...NEXT"><span style="color:#87cefa;">FOR</span></a> a = 65 <a href="TO.html" title="TO"><span style="color:#87cefa;">TO</span></a> 90                    'display new alphabetical order
+  <a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> Letter$(a); " ";
+<a href="NEXT.html" title="NEXT"><span style="color:#87cefa;">NEXT</span></a>
+
+text$ = "This is how a normal sentence would look before being encrypted."
+<a href="COLOR.html" title="COLOR"><span style="color:#87cefa;">COLOR</span></a> 11: <a href="LOCATE.html" title="LOCATE"><span style="color:#87cefa;">LOCATE</span></a> 20, 5: <a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> text$
+L = <a href="LEN.html" title="LEN"><span style="color:#87cefa;">LEN</span></a>(text$)
+<a href="DIM.html" title="DIM"><span style="color:#87cefa;">DIM</span></a> Code(L)                         'place ASCII code solution into an array
+<a href="COLOR.html" title="COLOR"><span style="color:#87cefa;">COLOR</span></a> 14: <a href="LOCATE.html" title="LOCATE"><span style="color:#87cefa;">LOCATE</span></a> 22, 5
+<a href="FOR...html" title="FOR...NEXT"><span style="color:#87cefa;">FOR</span></a> i = 1 <a href="TO.html" title="TO"><span style="color:#87cefa;">TO</span></a> L
+  Code(i) = <a href="ASC.html" title="ASC"><span style="color:#87cefa;">ASC</span></a>(<a href="UCASE%24.html" title="UCASE$"><span style="color:#87cefa;">UCASE$</span></a>(text$), i)   'in QB64, ASC can read by character position
+  <a href="IF...html" title="IF...THEN"><span style="color:#87cefa;">IF</span></a> Code(i) &gt;= 65 <a href="AND_(boolean).html" title="AND (boolean)"><span style="color:#87cefa;">AND</span></a> Code(i) &lt;= 90 <a href="THEN.html" title="THEN"><span style="color:#87cefa;">THEN</span></a> <a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> Letter$(Code(i)); <a href="ELSE.html" title="ELSE"><span style="color:#87cefa;">ELSE</span></a> <a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> <a href="CHR%24.html" title="CHR$"><span style="color:#87cefa;">CHR$</span></a>(Code(i));
+<a href="NEXT.html" title="NEXT"><span style="color:#87cefa;">NEXT</span></a>
+<a href="END.html" title="END"><span style="color:#87cefa;">END</span></a> <i> </i>
+</p>
+<center><span style="font-family: Courier New, Courier, monospace; font-size: 0.80em; line-height: 50%;">Code by Ted Weissgerber</span></center>
+<dl><dd><i> Explanation:</i> The Letter$ <a href="STRING.html" title="STRING">STRING</a> <a href="Arrays.html" title="Arrays">array</a> is first created with the letters matching the <a href="ASCII.html" title="ASCII">ASCII</a> code index value. Every index is <b>swap</b>ped when the letter matches it's index code until every letter is different. The Code array holds the text code solution.</dd></dl>
+<p><br />
+<i>Example 3:</i> A very quick array sorting SUB procedure using recursion sorts 10 thousand numbers in milliseconds.
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: Courier, monospace; background-color: darkblue; color: lightgrey; word-wrap: break-word;"> <i> </i>
+<a href="DEFINT.html" title="DEFINT"><span style="color:#87cefa;">DEFINT</span></a> A-Z
+<a href="DIM.html" title="DIM"><span style="color:#87cefa;">DIM</span></a> <a href="SHARED.html" title="SHARED"><span style="color:#87cefa;">SHARED</span></a> swap2 <a href="AS.html" title="AS"><span style="color:#87cefa;">AS</span></a> <a href="LONG.html" title="LONG"><span style="color:#87cefa;">LONG</span></a>  'Demo only
+<a href="DIM.html" title="DIM"><span style="color:#87cefa;">DIM</span></a> array(10000) <a href="AS.html" title="AS"><span style="color:#87cefa;">AS</span></a> <a href="SINGLE.html" title="SINGLE"><span style="color:#87cefa;">SINGLE</span></a> 'array can hold any type of value
+<a href="RANDOMIZE.html" title="RANDOMIZE"><span style="color:#87cefa;">RANDOMIZE</span></a> <a href="TIMER.html" title="TIMER"><span style="color:#87cefa;">TIMER</span></a>
+<a href="FOR...html" title="FOR...NEXT"><span style="color:#87cefa;">FOR</span></a> i = 0 <a href="TO.html" title="TO"><span style="color:#87cefa;">TO</span></a> 10000
+  array(i) = <a href="RND.html" title="RND"><span style="color:#87cefa;">RND</span></a> * 1000 'populate array with random values to sort
+<a href="NEXT.html" title="NEXT"><span style="color:#87cefa;">NEXT</span></a>
+start = <a href="LBOUND.html" title="LBOUND"><span style="color:#87cefa;">LBOUND</span></a>(array)  'lowest element
+finish = <a href="UBOUND.html" title="UBOUND"><span style="color:#87cefa;">UBOUND</span></a>(array) 'highest element
+swap2 = 0                     'count swaps for demo only
+start! = <a href="TIMER.html" title="TIMER"><span style="color:#87cefa;">TIMER</span></a>(.001)
+<a href="CALL.html" title="CALL"><span style="color:#87cefa;">CALL</span></a> QuickSort(start, finish, array())
+ending! = <a href="TIMER.html" title="TIMER"><span style="color:#87cefa;">TIMER</span></a>(.001)
+tmp$ = " array(0)= ##.#####     array(5000)= ###.####   array(10000)= ###.####"
+<a href="PRINT_USING.html" title="PRINT USING"><span style="color:#87cefa;">PRINT USING</span></a> tmp$; array(0); array(5000); array(10000) 
+<a href="PRINT_USING.html" title="PRINT USING"><span style="color:#87cefa;">PRINT USING</span></a> " Elapsed time: #.###### seconds with #######, swaps"; ending! - start!; swap2&amp;
+<a href="FOR...html" title="FOR...NEXT"><span style="color:#87cefa;">FOR</span></a> n = 0 <a href="TO.html" title="TO"><span style="color:#87cefa;">TO</span></a> 10000             'check array sort order
+  <a href="IF.html" class="mw-redirect" title="IF"><span style="color:#87cefa;">IF</span></a> array(n) &gt;= max! <a href="THEN.html" title="THEN"><span style="color:#87cefa;">THEN</span></a>     'max should match the array type
+    max! = array(n)
+  <a href="ELSE.html" title="ELSE"><span style="color:#87cefa;">ELSE</span></a> <a href="BEEP.html" title="BEEP"><span style="color:#87cefa;">BEEP</span></a>
+    <a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> "Bad sort order!"
+    <a href="EXIT.html" title="EXIT"><span style="color:#87cefa;">EXIT</span></a> <a href="FOR...html" title="FOR...NEXT"><span style="color:#87cefa;">FOR</span></a>
+  <a href="END_IF.html" class="mw-redirect" title="END IF"><span style="color:#87cefa;">END IF</span></a>
+<a href="NEXT.html" title="NEXT"><span style="color:#87cefa;">NEXT</span></a>
+<a href="END.html" title="END"><span style="color:#87cefa;">END</span></a>
+
+<a href="SUB.html" title="SUB"><span style="color:#87cefa;">SUB</span></a> QuickSort (start <a href="AS.html" title="AS"><span style="color:#87cefa;">AS</span></a> <a href="INTEGER.html" title="INTEGER"><span style="color:#87cefa;">INTEGER</span></a>, finish <a href="AS.html" title="AS"><span style="color:#87cefa;">AS</span></a> <a href="INTEGER.html" title="INTEGER"><span style="color:#87cefa;">INTEGER</span></a>, array() <a href="AS.html" title="AS"><span style="color:#87cefa;">AS</span></a> <a href="SINGLE.html" title="SINGLE"><span style="color:#87cefa;">SINGLE</span></a>)    
+<a href="DIM.html" title="DIM"><span style="color:#87cefa;">DIM</span></a> Hi <a href="AS.html" title="AS"><span style="color:#87cefa;">AS</span></a> <a href="INTEGER.html" title="INTEGER"><span style="color:#87cefa;">INTEGER</span></a>, Lo <a href="AS.html" title="AS"><span style="color:#87cefa;">AS</span></a> <a href="INTEGER.html" title="INTEGER"><span style="color:#87cefa;">INTEGER</span></a>, Middle <a href="AS.html" title="AS"><span style="color:#87cefa;">AS</span></a> <a href="SINGLE.html" title="SINGLE"><span style="color:#87cefa;">SINGLE</span></a>
+Hi = finish: Lo = start
+Middle = array((Lo + Hi) / 2) 'find middle of array
+<a href="DO.html" class="mw-redirect" title="DO"><span style="color:#87cefa;">DO</span></a>
+  <a href="DO.html" class="mw-redirect" title="DO"><span style="color:#87cefa;">DO</span></a> <a href="WHILE.html" title="WHILE"><span style="color:#87cefa;">WHILE</span></a> array(Lo) &lt; Middle: Lo = Lo + 1: <a href="LOOP.html" title="LOOP"><span style="color:#87cefa;">LOOP</span></a>
+  <a href="DO.html" class="mw-redirect" title="DO"><span style="color:#87cefa;">DO</span></a> <a href="WHILE.html" title="WHILE"><span style="color:#87cefa;">WHILE</span></a> array(Hi) &gt; Middle: Hi = Hi - 1: <a href="LOOP.html" title="LOOP"><span style="color:#87cefa;">LOOP</span></a>
+  <a href="IF.html" class="mw-redirect" title="IF"><span style="color:#87cefa;">IF</span></a> Lo &lt;= Hi <a href="THEN.html" title="THEN"><span style="color:#87cefa;">THEN</span></a>
+    <a class="mw-selflink selflink"><span style="color:#87cefa;">SWAP</span></a> array(Lo), array(Hi)
+    swap2 = swap2 + 1                  'count swaps for demo only    
+    Lo = Lo + 1: Hi = Hi - 1
+  <a href="END_IF.html" class="mw-redirect" title="END IF"><span style="color:#87cefa;">END IF</span></a>                               'If homework, you will fail
+<a href="LOOP.html" title="LOOP"><span style="color:#87cefa;">LOOP</span></a> <a href="UNTIL.html" title="UNTIL"><span style="color:#87cefa;">UNTIL</span></a> Lo &gt; Hi
+<a href="IF.html" class="mw-redirect" title="IF"><span style="color:#87cefa;">IF</span></a> Hi &gt; start <a href="THEN.html" title="THEN"><span style="color:#87cefa;">THEN</span></a> <a href="CALL.html" title="CALL"><span style="color:#87cefa;">CALL</span></a> QuickSort(start, Hi, array())
+<a href="IF.html" class="mw-redirect" title="IF"><span style="color:#87cefa;">IF</span></a> Lo &lt; finish <a href="THEN.html" title="THEN"><span style="color:#87cefa;">THEN</span></a> <a href="CALL.html" title="CALL"><span style="color:#87cefa;">CALL</span></a> QuickSort(Lo, finish, array())
+<a href="END_SUB.html" class="mw-redirect" title="END SUB"><span style="color:#87cefa;">END SUB</span></a> <i> </i>
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: Courier; background-color: black; color: white;"> array(0)= 0.20200    array(5000)= 525.8505   array(10000)= 999.6196
+ Elapsed time: 0.023438 seconds with 33,759 swaps
+</p>
+<dl><dd><b>NOTE:</b> The <i>swap2</i> shared value is used to count the swaps for the demo and can be removed from the SUB procedure for speed.</dd></dl>
+<p><br />
+<i>See also:</i>
+</p>
+<ul><li><a href="RND.html" title="RND">RND</a>, <a href="RANDOMIZE.html" title="RANDOMIZE">RANDOMIZE</a></li>
+<li><a href="CHR%24.html" title="CHR$">CHR$</a>, <a href="ASC.html" title="ASC">ASC</a></li>
+<li><a href="ASCII.html" title="ASCII">ASCII</a>, <a href="Arrays.html" title="Arrays">Arrays</a></li></ul>
+<p><br />
+</p>
+<hr />
+<center><i>Navigation:</i>
+<dl><dd><a href="Keyword_Reference_-_Alphabetical.html" title="Keyword Reference - Alphabetical">Keyword Reference - Alphabetical</a></dd>
+<dd><a href="Keyword_Reference_-_By_usage.html" title="Keyword Reference - By usage">Keyword Reference - By Usage</a></dd>
+<dd><a href="Main_Page.html" title="Main Page">Main Wiki Page</a></dd></dl></center>
+<!-- 
+NewPP limit report
+Cached time: 20210707130154
+Cache expiry: 86400
+Dynamic content: false
+Complications: []
+CPU time usage: 0.114 seconds
+Real time usage: 0.331 seconds
+Preprocessor visited node count: 939/1000000
+Post‐expand include size: 8027/2097152 bytes
+Template argument size: 1201/2097152 bytes
+Highest expansion depth: 3/40
+Expensive parser function count: 0/100
+Unstrip recursion depth: 0/20
+Unstrip post‐expand size: 0/5000000 bytes
+-->
+<!--
+Transclusion expansion time report (%,ms,calls,template)
+100.00%  120.702      1 -total
+ 27.23%   32.861    123 Template:Cl
+ 10.18%   12.290      1 Template:PageDescription
+ 10.06%   12.141      3 Template:CodeEnd
+  8.32%   10.039      1 Template:PageSyntax
+  8.30%   10.015      1 Template:PageNavigation
+  6.49%    7.832      1 Template:Small
+  3.93%    4.740      3 Template:KW
+  2.79%    3.367      6 Template:Parameter
+  2.77%    3.345      3 Template:CodeStart
+-->
+
+<!-- Saved in parser cache with key i4224360_mw2-mw_:pcache:idhash:681-0!canonical and timestamp 20210707130154 and revision id 19907
+ -->
+</div></div><div class="printfooter">Retrieved from "<a dir="ltr" href="index6cd5.html?title=SWAP&amp;oldid=19907">http://www.qb64.org/wiki/index.php?title=SWAP&amp;oldid=19907</a>"</div>
+		<div id="catlinks" class="catlinks catlinks-allhidden" data-mw="interface"></div>
+	</div>
+</div>
+
+<div id="mw-navigation">
+	<h2>Navigation menu</h2>
+	<div id="mw-head">
+		<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-personal" class="vector-menu" aria-labelledby="p-personal-label" role="navigation" 
+	 >
+	<h3 id="p-personal-label">
+		<span>Personal tools</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="pt-login"><a href="indexdb63.html?title=Special:UserLogin&amp;returnto=SWAP" title="You are encouraged to log in; however, it is not mandatory [o]" accesskey="o">Log in</a></li></ul>
+		
+	</div>
+</nav>
+
+
+		<div id="left-navigation">
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-namespaces" class="vector-menu vector-menu-tabs vectorTabs" aria-labelledby="p-namespaces-label" role="navigation" 
+	 >
+	<h3 id="p-namespaces-label">
+		<span>Namespaces</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="ca-nstab-main" class="selected"><a href="SWAP.html" title="View the content page [c]" accesskey="c">Page</a></li><li id="ca-talk" class="new"><a href="Talk_SWAP.html?title=Talk:SWAP&amp;action=edit&amp;redlink=1" rel="discussion" title="Discussion about the content page (page does not exist) [t]" accesskey="t">Discussion</a></li></ul>
+		
+	</div>
+</nav>
+
+
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-variants" class="vector-menu-empty emptyPortlet vector-menu vector-menu-dropdown vectorMenu" aria-labelledby="p-variants-label" role="navigation" 
+	 >
+	<input type="checkbox" class="vector-menu-checkbox vectorMenuCheckbox" aria-labelledby="p-variants-label" />
+	<h3 id="p-variants-label">
+		<span>Variants</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="menu vector-menu-content-list"></ul>
+		
+	</div>
+</nav>
+
+
+		</div>
+		<div id="right-navigation">
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-views" class="vector-menu vector-menu-tabs vectorTabs" aria-labelledby="p-views-label" role="navigation" 
+	 >
+	<h3 id="p-views-label">
+		<span>Views</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="ca-view" class="collapsible selected"><a href="SWAP.html">Read</a></li><li id="ca-viewsource" class="collapsible"><a href="indexff79.html?title=SWAP&amp;action=edit" title="This page is protected.&#10;You can view its source [e]" accesskey="e">View source</a></li><li id="ca-history" class="collapsible"><a href="indexccb9.html?title=SWAP&amp;action=history" title="Past revisions of this page [h]" accesskey="h">View history</a></li></ul>
+		
+	</div>
+</nav>
+
+
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-cactions" class="vector-menu-empty emptyPortlet vector-menu vector-menu-dropdown vectorMenu" aria-labelledby="p-cactions-label" role="navigation" 
+	 >
+	<input type="checkbox" class="vector-menu-checkbox vectorMenuCheckbox" aria-labelledby="p-cactions-label" />
+	<h3 id="p-cactions-label">
+		<span>More</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="menu vector-menu-content-list"></ul>
+		
+	</div>
+</nav>
+
+
+			<div id="p-search" role="search">
+	<h3 >
+		<label for="searchInput">Search</label>
+	</h3>
+	<form action="https://www.qb64.org/wiki/index.php" id="searchform">
+		<div id="simpleSearch">
+			<input type="search" name="search" placeholder="Search QB64 Wiki" title="Search QB64 Wiki [f]" accesskey="f" id="searchInput"/>
+			<input type="hidden" name="title" value="Special:Search">
+			<input type="submit" name="fulltext" value="Search" title="Search the pages for this text" id="mw-searchButton" class="searchButton mw-fallbackSearchButton"/>
+			<input type="submit" name="go" value="Go" title="Go to a page with this exact name if it exists" id="searchButton" class="searchButton"/>
+		</div>
+	</form>
+</div>
+
+		</div>
+	</div>
+	
+<div id="mw-panel">
+	<div id="p-logo" role="banner">
+		<a  title="Visit the main page" class="mw-wiki-logo" href="Main_Page.html"></a>
+	</div>
+	<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-navigation" class="vector-menu vector-menu-portal portal portal-first" aria-labelledby="p-navigation-label" role="navigation" 
+	 >
+	<h3 id="p-navigation-label">
+		<span>Navigation</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="n-mainpage-description"><a href="Main_Page.html" title="Visit the main page [z]" accesskey="z">Main page</a></li><li id="n-recentchanges"><a href="Special_RecentChanges.html" title="A list of recent changes in the wiki [r]" accesskey="r">Recent changes</a></li><li id="n-randompage"><a href="SNDCOPY.html" title="Load a random page [x]" accesskey="x">Random page</a></li><li id="n-help-mediawiki"><a href="https://www.mediawiki.org/wiki/Special:MyLanguage/Help:Contents">Help about MediaWiki</a></li></ul>
+		
+	</div>
+</nav>
+
+
+	<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-tb" class="vector-menu vector-menu-portal portal" aria-labelledby="p-tb-label" role="navigation" 
+	 >
+	<h3 id="p-tb-label">
+		<span>Tools</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="t-whatlinkshere"><a href="Special_WhatLinksHere/SWAP.html" title="A list of all wiki pages that link here [j]" accesskey="j">What links here</a></li><li id="t-recentchangeslinked"><a href="Special_RecentChangesLinked/SWAP.html" rel="nofollow" title="Recent changes in pages linked from this page [k]" accesskey="k">Related changes</a></li><li id="t-specialpages"><a href="Special_SpecialPages.html" title="A list of all special pages [q]" accesskey="q">Special pages</a></li><li id="t-print"><a href="javascript:print();" rel="alternate" title="Printable version of this page [p]" accesskey="p">Printable version</a></li><li id="t-permalink"><a href="index6cd5.html?title=SWAP&amp;oldid=19907" title="Permanent link to this revision of the page">Permanent link</a></li><li id="t-info"><a href="indexd8d0.html?title=SWAP&amp;action=info" title="More information about this page">Page information</a></li></ul>
+		
+	</div>
+</nav>
+
+
+	
+</div>
+
+</div>
+
+<footer id="footer" class="mw-footer" role="contentinfo" >
+	<ul id="footer-info" >
+		<li id="footer-info-lastmod"> This page was last edited on 21 July 2013, at 22:31.</li>
+	</ul>
+	<ul id="footer-places" >
+		<li id="footer-places-privacy"><a href="My_wiki_Privacy_policy.html" title="My wiki:Privacy policy">Privacy policy</a></li>
+		<li id="footer-places-about"><a href="My_wiki_About.html" title="My wiki:About">About QB64 Wiki</a></li>
+		<li id="footer-places-disclaimer"><a href="My_wiki_General_disclaimer.html" title="My wiki:General disclaimer">Disclaimers</a></li>
+	</ul>
+	<ul id="footer-icons" class="noprint">
+		<li id="footer-poweredbyico"><a href="https://www.mediawiki.org/"><img src="resources/assets/poweredby_mediawiki_88x31.png" alt="Powered by MediaWiki" srcset="/wiki/resources/assets/poweredby_mediawiki_132x47.png 1.5x, /wiki/resources/assets/poweredby_mediawiki_176x62.png 2x" width="88" height="31" loading="lazy"/></a></li>
+	</ul>
+	<div style="clear: both;"></div>
+</footer>
+
+
+
+<script>(RLQ=window.RLQ||[]).push(function(){mw.config.set({"wgPageParseReport":{"limitreport":{"cputime":"0.114","walltime":"0.331","ppvisitednodes":{"value":939,"limit":1000000},"postexpandincludesize":{"value":8027,"limit":2097152},"templateargumentsize":{"value":1201,"limit":2097152},"expansiondepth":{"value":3,"limit":40},"expensivefunctioncount":{"value":0,"limit":100},"unstrip-depth":{"value":0,"limit":20},"unstrip-size":{"value":0,"limit":5000000},"timingprofile":["100.00%  120.702      1 -total"," 27.23%   32.861    123 Template:Cl"," 10.18%   12.290      1 Template:PageDescription"," 10.06%   12.141      3 Template:CodeEnd","  8.32%   10.039      1 Template:PageSyntax","  8.30%   10.015      1 Template:PageNavigation","  6.49%    7.832      1 Template:Small","  3.93%    4.740      3 Template:KW","  2.79%    3.367      6 Template:Parameter","  2.77%    3.345      3 Template:CodeStart"]},"cachereport":{"timestamp":"20210707130154","ttl":86400,"transientcontent":false}}});mw.config.set({"wgBackendResponseTime":1663});});</script></body>
+<!-- Mirrored from www.qb64.org/wiki/SWAP by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 07 Aug 2021 13:25:36 GMT -->
+</html>

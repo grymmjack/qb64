@@ -1,0 +1,359 @@
+
+<!DOCTYPE html>
+<html class="client-nojs" lang="en" dir="ltr">
+
+<!-- Mirrored from www.qb64.org/wiki/LEN by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 07 Aug 2021 13:18:39 GMT -->
+<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=UTF-8" /><!-- /Added by HTTrack -->
+<head>
+<meta charset="UTF-8"/>
+<title>LEN - QB64 Wiki</title>
+<script>document.documentElement.className="client-js";RLCONF={"wgBreakFrames":!1,"wgSeparatorTransformTable":["",""],"wgDigitTransformTable":["",""],"wgDefaultDateFormat":"dmy","wgMonthNames":["","January","February","March","April","May","June","July","August","September","October","November","December"],"wgRequestId":"YOWlj6dTx2XheSMCc396uAAAAAg","wgCSPNonce":!1,"wgCanonicalNamespace":"","wgCanonicalSpecialPageName":!1,"wgNamespaceNumber":0,"wgPageName":"LEN","wgTitle":"LEN","wgCurRevisionId":22771,"wgRevisionId":22771,"wgArticleId":403,"wgIsArticle":!0,"wgIsRedirect":!1,"wgAction":"view","wgUserName":null,"wgUserGroups":["*"],"wgCategories":[],"wgPageContentLanguage":"en","wgPageContentModel":"wikitext","wgRelevantPageName":"LEN","wgRelevantArticleId":403,"wgIsProbablyEditable":!1,"wgRelevantPageIsProbablyEditable":!1,"wgRestrictionEdit":[],"wgRestrictionMove":[]};RLSTATE={"site.styles":"ready","noscript":"ready","user.styles":"ready","user":"ready","user.options":
+"loading","skins.vector.styles.legacy":"ready"};RLPAGEMODULES=["site","mediawiki.page.startup","mediawiki.page.ready","skins.vector.legacy.js"];</script>
+<script>(RLQ=window.RLQ||[]).push(function(){mw.loader.implement("user.options@1hzgi",function($,jQuery,require,module){/*@nomin*/mw.user.tokens.set({"patrolToken":"+\\","watchToken":"+\\","csrfToken":"+\\"});
+});});</script>
+<link rel="stylesheet" href="load5c90.css?lang=en&amp;modules=skins.vector.styles.legacy&amp;only=styles&amp;skin=vector"/>
+<script async="" src="load52c0.php?lang=en&amp;modules=startup&amp;only=scripts&amp;raw=1&amp;skin=vector"></script>
+<meta name="generator" content="MediaWiki 1.35.2"/>
+<link rel="shortcut icon" href="https://www.qb64.org/favicon.ico"/>
+<link rel="search" type="application/opensearchdescription+xml" href="opensearch_desc.php" title="QB64 Wiki (en)"/>
+<link rel="EditURI" type="application/rsd+xml" href="api-result251f.xml?action=rsd"/>
+<link rel="alternate" type="application/atom+xml" title="QB64 Wiki Atom feed" href="feeda295.xml?title=Special:RecentChanges&amp;feed=atom"/>
+<!--[if lt IE 9]><script src="/wiki/resources/lib/html5shiv/html5shiv.js"></script><![endif]-->
+</head>
+<body class="mediawiki ltr sitedir-ltr mw-hide-empty-elt ns-0 ns-subject page-LEN rootpage-LEN skin-vector action-view skin-vector-legacy">
+<div id="mw-page-base" class="noprint"></div>
+<div id="mw-head-base" class="noprint"></div>
+<div id="content" class="mw-body" role="main">
+	<a id="top"></a>
+	<div id="siteNotice" class="mw-body-content"></div>
+	<div class="mw-indicators mw-body-content">
+	</div>
+	<h1 id="firstHeading" class="firstHeading" lang="en">LEN</h1>
+	<div id="bodyContent" class="mw-body-content">
+		<div id="siteSub" class="noprint">From QB64 Wiki</div>
+		<div id="contentSub"></div>
+		<div id="contentSub2"></div>
+		
+		<div id="jump-to-nav"></div>
+		<a class="mw-jump-link" href="#mw-head">Jump to navigation</a>
+		<a class="mw-jump-link" href="#searchInput">Jump to search</a>
+		<div id="mw-content-text" lang="en" dir="ltr" class="mw-content-ltr"><div class="mw-parser-output"><p>The <a class="mw-selflink selflink">LEN</a> function returns the number of bytes used by a variable value and the number of characters in a <a href="STRING.html" title="STRING">STRING</a>.
+</p><p><br />
+</p>
+<h2><span class="mw-headline" id="Syntax">Syntax</span></h2>
+<dl><dd><i>length%</i> = <a class="mw-selflink selflink">LEN</a>(<i>literalTextOrVariable</i>)</dd></dl>
+<p><br />
+</p>
+<ul><li>Literal or variable <a href="STRING.html" title="STRING">STRING</a> values return the number of string bytes which is the same as the number of string characters.</li>
+<li>A numerical <i>variable</i> will return the number of bytes used by a numerical variable type.
+<ul><li><a href="BYTE.html" title="BYTE">_BYTE</a> variable types return 1 byte.</li>
+<li><a href="INTEGER.html" title="INTEGER">INTEGER</a> variable types return 2 bytes.</li>
+<li><a href="SINGLE.html" title="SINGLE">SINGLE</a> and <a href="LONG.html" title="LONG">LONG</a> integer variable types return 4 bytes.</li>
+<li><a href="DOUBLE.html" title="DOUBLE">DOUBLE</a> and <a href="INTEGER64.html" title="INTEGER64">_INTEGER64</a> variable types return 8 bytes.</li>
+<li><a href="FLOAT.html" title="FLOAT">_FLOAT</a> variable types return 32 bytes.</li>
+<li><a href="OFFSET.html" title="OFFSET">_OFFSET</a> and <a href="MEM.html" title="MEM">_MEM</a> variable types return varying byte sizes.</li>
+<li><i>Note:</i> <a href="BIT.html" title="BIT">_BIT</a> variable types and bit multiples <b>cannot be measured in bytes</b>.</li></ul></li>
+<li><b>LEN cannot return lengths of literal numerical values and will create a "variable required" status error in the IDE.</b></li>
+<li><b>LEN =</b> can be used with a user defined <a href="TYPE.html" title="TYPE">TYPE</a> variable to determine the number of bytes used in <a href="RANDOM.html" title="RANDOM">RANDOM</a> file records:</li></ul>
+<dl><dd><dl><dd><dl><dd><dl><dd><span style="font-family: Courier New, monospace, Courier; background: #dddddd"><a href="OPEN.html" title="OPEN">OPEN</a> file$ FOR <a href="RANDOM.html" title="RANDOM">RANDOM</a> AS #n LEN = LEN(recordTypeVariable)</span><b> </b></dd></dl></dd></dl></dd></dl>
+<ul><li>If a LEN = statement is not used, <a href="RANDOM.html" title="RANDOM">RANDOM</a> default record length is 128 or sequencial is 512 up to a maximum of 32767 bytes.</li>
+<li><a href="BINARY-2.html" class="mw-redirect" title="BINARY">BINARY</a> OPEN statements will ignore LEN = statements. The byte size of a <a href="GET.html" title="GET">read</a> or <a href="PUT.html" title="PUT">write</a> is determined by the <a href="Variable_Types.html" title="Variable Types">variable type</a>.</li></ul></dd></dl>
+<p><br />
+</p>
+<h2><span class="mw-headline" id="Examples">Examples</span></h2>
+<p><i>Example 1:</i> With a string variable the byte size is the same as the number of characters.
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: Courier, monospace; background-color: darkblue; color: lightgrey; word-wrap: break-word;">
+LastName$ = "Williams"
+PRINT <a class="mw-selflink selflink"><span style="color:#87cefa;">LEN</span></a>(LastName$); "bytes" <i> </i>
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: Courier; background-color: black; color: white;"> 8 bytes
+</p>
+<p><br />
+<i>Example 2:</i> Testing <a href="INPUT.html" title="INPUT">INPUT</a> for numerical <a href="STRING.html" title="STRING">STRING</a> entries from a user. 
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: Courier, monospace; background-color: darkblue; color: lightgrey; word-wrap: break-word;"> <i> </i>
+<a href="INPUT.html" title="INPUT"><span style="color:#87cefa;">INPUT</span></a> "number: ", num$
+
+value$ = <a href="LTRIM%24.html" title="LTRIM$"><span style="color:#87cefa;">LTRIM$</span></a>(<a href="STR%24.html" title="STR$"><span style="color:#87cefa;">STR$</span></a>(<a href="VAL.html" title="VAL"><span style="color:#87cefa;">VAL</span></a>(num$)))
+L = <a class="mw-selflink selflink"><span style="color:#87cefa;">LEN</span></a>(value$)
+
+<a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> <a class="mw-selflink selflink"><span style="color:#87cefa;">LEN</span></a>(num$), L <i> </i>
+</p>
+<dl><dd><i>Note:</i> <a href="%26H.html" title="&amp;H">&amp;H</a>, <a href="%26O.html" title="&amp;O">&amp;O</a>, D and E will also be accepted as numerical type data in a <a href="VAL.html" title="VAL">VAL</a> conversion, but will add to the entry length.</dd></dl>
+<p><br />
+<i>Example 3:</i> With numerical value types you MUST use a variable to find the inherent byte length when using LEN.
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: Courier, monospace; background-color: darkblue; color: lightgrey; word-wrap: break-word;"> <i> </i>
+DIM I AS INTEGER
+PRINT "INTEGER ="; LEN(I); "bytes"
+DIM L AS LONG
+PRINT "LONG ="; LEN(L); "bytes"
+DIM I64 AS _INTEGER64
+PRINT "_INTEGER64 ="; LEN(I64); "bytes"
+DIM S AS SINGLE
+PRINT "SINGLE ="; LEN(S); "bytes"
+DIM D AS DOUBLE
+PRINT "DOUBLE ="; LEN(D); "bytes"
+DIM F AS _FLOAT
+PRINT "_FLOAT ="; LEN(F); "bytes" <i> </i>
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: Courier; background-color: black; color: white;">INTEGER = 2 bytes
+LONG = 4 bytes
+_INTEGER64 = 8 bytes
+SINGLE = 4 bytes
+DOUBLE = 8 bytes
+_FLOAT = 32 bytes
+</p>
+<p><br />
+<i>Example 4:</i> Opening a RANDOM file using LEN to calculate and LEN = to designate the file record size.
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: Courier, monospace; background-color: darkblue; color: lightgrey; word-wrap: break-word;"> <i> </i>
+<a href="TYPE.html" title="TYPE"><span style="color:#87cefa;">TYPE</span></a> variabletype
+  x <a href="AS.html" title="AS"><span style="color:#87cefa;">AS</span></a> <a href="INTEGER.html" title="INTEGER"><span style="color:#87cefa;">INTEGER</span></a>'       '2 bytes
+  y <a href="AS.html" title="AS"><span style="color:#87cefa;">AS</span></a> <a href="STRING.html" title="STRING"><span style="color:#87cefa;">STRING</span></a> * 10'  '10 bytes
+  z <a href="AS.html" title="AS"><span style="color:#87cefa;">AS</span></a> <a href="LONG.html" title="LONG"><span style="color:#87cefa;">LONG</span></a>'          '4 bytes
+<a href="END.html" title="END"><span style="color:#87cefa;">END</span></a> <a href="TYPE.html" title="TYPE"><span style="color:#87cefa;">TYPE</span></a>'            '16 bytes total
+<a href="DIM.html" title="DIM"><span style="color:#87cefa;">DIM</span></a> record <a href="AS.html" title="AS"><span style="color:#87cefa;">AS</span></a> variabletype
+<a href="DIM.html" title="DIM"><span style="color:#87cefa;">DIM</span></a> newrec <a href="AS.html" title="AS"><span style="color:#87cefa;">AS</span></a> variabletype
+
+file$ = "testrand.inf" '&lt;&lt;&lt;&lt; filename may overwrite existing file
+number% = 1 '&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt; record number to write cannot be zero
+RecordLEN% = <a class="mw-selflink selflink"><span style="color:#87cefa;">LEN</span></a>(record)
+<a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> RecordLEN%; "bytes"
+record.x = 255
+record.y = "Hello world!"
+record.z = 65535
+<a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> record.x, record.y, record.z
+
+<a href="OPEN.html" title="OPEN"><span style="color:#87cefa;">OPEN</span></a> file$ <a href="FOR...html" title="FOR...NEXT"><span style="color:#87cefa;">FOR</span></a> <a href="RANDOM.html" title="RANDOM"><span style="color:#87cefa;">RANDOM</span></a> <a href="AS.html" title="AS"><span style="color:#87cefa;">AS</span></a> #1 <a class="mw-selflink selflink"><span style="color:#87cefa;">LEN</span></a> = RecordLEN%
+<a href="PUT.html" title="PUT"><span style="color:#87cefa;">PUT</span></a> #1, number% , record 'change record position number to add records
+<a href="CLOSE.html" title="CLOSE"><span style="color:#87cefa;">CLOSE</span></a> #1
+
+<a href="OPEN.html" title="OPEN"><span style="color:#87cefa;">OPEN</span></a> file$ <a href="FOR...html" title="FOR...NEXT"><span style="color:#87cefa;">FOR</span></a> <a href="RANDOM.html" title="RANDOM"><span style="color:#87cefa;">RANDOM</span></a> <a href="AS.html" title="AS"><span style="color:#87cefa;">AS</span></a> #2 <a class="mw-selflink selflink"><span style="color:#87cefa;">LEN</span></a> = RecordLEN%
+NumRecords% = <a href="LOF.html" title="LOF"><span style="color:#87cefa;">LOF</span></a>(2) \ RecordLEN%
+PRINT NumRecords%; "records"
+
+<a href="GET.html" title="GET"><span style="color:#87cefa;">GET</span></a> #2, NumRecords% , newrec 'GET last record available
+<a href="CLOSE.html" title="CLOSE"><span style="color:#87cefa;">CLOSE</span></a> #2
+<a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> newrec.x, newrec.y, newrec.z
+
+<a href="END.html" title="END"><span style="color:#87cefa;">END</span></a> <i> </i>
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: Courier; background-color: black; color: white;"> 16 bytes
+ 255        Hello worl       65535
+ 1 records
+ 255        Hello worl       65535
+</p>
+<dl><dd><i>Explanation:</i> The byte size of the record <a href="TYPE.html" title="TYPE">TYPE</a> determines the <a href="LOF.html" title="LOF">LOF</a> byte size of the file and can determine the number of records.</dd>
+<dd>To read the last record <a href="GET.html" title="GET">GET</a> the number of records. To add a record, use the number of records + 1 to <a href="PUT.html" title="PUT">PUT</a> new record data.</dd></dl>
+<p><br />
+</p>
+<h2><span class="mw-headline" id="See_also">See also</span></h2>
+<ul><li><a href="LOF.html" title="LOF">LOF</a>, <a href="EOF.html" title="EOF">EOF</a></li>
+<li><a href="AS.html" title="AS">AS</a>, <a href="TYPE.html" title="TYPE">TYPE</a></li>
+<li><a href="RANDOM.html" title="RANDOM">RANDOM</a>, <a href="BINARY-2.html" class="mw-redirect" title="BINARY">BINARY</a></li>
+<li><a href="Variable_Types.html" title="Variable Types">Variable Types</a></li></ul>
+<p><br />
+</p>
+<hr />
+<center><i>Navigation:</i>
+<dl><dd><a href="Keyword_Reference_-_Alphabetical.html" title="Keyword Reference - Alphabetical">Keyword Reference - Alphabetical</a></dd>
+<dd><a href="Keyword_Reference_-_By_usage.html" title="Keyword Reference - By usage">Keyword Reference - By Usage</a></dd>
+<dd><a href="Main_Page.html" title="Main Page">Main Wiki Page</a></dd></dl></center>
+<!-- 
+NewPP limit report
+Cached time: 20210706194220
+Cache expiry: 86400
+Dynamic content: false
+Complications: []
+CPU time usage: 0.081 seconds
+Real time usage: 0.160 seconds
+Preprocessor visited node count: 340/1000000
+Post‐expand include size: 3943/2097152 bytes
+Template argument size: 346/2097152 bytes
+Highest expansion depth: 3/40
+Expensive parser function count: 0/100
+Unstrip recursion depth: 0/20
+Unstrip post‐expand size: 1/5000000 bytes
+-->
+<!--
+Transclusion expansion time report (%,ms,calls,template)
+100.00%   58.609      1 -total
+ 24.93%   14.611      1 Template:PageNavigation
+ 10.63%    6.232     41 Template:Cl
+  7.12%    4.175      1 Template:PageSyntax
+  6.74%    3.953      1 Template:PageSeeAlso
+  5.68%    3.331      4 Template:CodeStart
+  5.43%    3.182      2 Template:Parameter
+  5.43%    3.182      4 Template:CodeEnd
+  5.25%    3.078      3 Template:OutputEnd
+  5.23%    3.066      3 Template:OutputStart
+-->
+
+<!-- Saved in parser cache with key i4224360_mw2-mw_:pcache:idhash:403-0!canonical and timestamp 20210706194219 and revision id 22771
+ -->
+</div></div><div class="printfooter">Retrieved from "<a dir="ltr" href="index6751.html?title=LEN&amp;oldid=22771">http://www.qb64.org/wiki/index.php?title=LEN&amp;oldid=22771</a>"</div>
+		<div id="catlinks" class="catlinks catlinks-allhidden" data-mw="interface"></div>
+	</div>
+</div>
+
+<div id="mw-navigation">
+	<h2>Navigation menu</h2>
+	<div id="mw-head">
+		<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-personal" class="vector-menu" aria-labelledby="p-personal-label" role="navigation" 
+	 >
+	<h3 id="p-personal-label">
+		<span>Personal tools</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="pt-login"><a href="index4d5a.html?title=Special:UserLogin&amp;returnto=LEN" title="You are encouraged to log in; however, it is not mandatory [o]" accesskey="o">Log in</a></li></ul>
+		
+	</div>
+</nav>
+
+
+		<div id="left-navigation">
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-namespaces" class="vector-menu vector-menu-tabs vectorTabs" aria-labelledby="p-namespaces-label" role="navigation" 
+	 >
+	<h3 id="p-namespaces-label">
+		<span>Namespaces</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="ca-nstab-main" class="selected"><a href="LEN.html" title="View the content page [c]" accesskey="c">Page</a></li><li id="ca-talk" class="new"><a href="Talk_LEN.html?title=Talk:LEN&amp;action=edit&amp;redlink=1" rel="discussion" title="Discussion about the content page (page does not exist) [t]" accesskey="t">Discussion</a></li></ul>
+		
+	</div>
+</nav>
+
+
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-variants" class="vector-menu-empty emptyPortlet vector-menu vector-menu-dropdown vectorMenu" aria-labelledby="p-variants-label" role="navigation" 
+	 >
+	<input type="checkbox" class="vector-menu-checkbox vectorMenuCheckbox" aria-labelledby="p-variants-label" />
+	<h3 id="p-variants-label">
+		<span>Variants</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="menu vector-menu-content-list"></ul>
+		
+	</div>
+</nav>
+
+
+		</div>
+		<div id="right-navigation">
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-views" class="vector-menu vector-menu-tabs vectorTabs" aria-labelledby="p-views-label" role="navigation" 
+	 >
+	<h3 id="p-views-label">
+		<span>Views</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="ca-view" class="collapsible selected"><a href="LEN.html">Read</a></li><li id="ca-viewsource" class="collapsible"><a href="index7a54.html?title=LEN&amp;action=edit" title="This page is protected.&#10;You can view its source [e]" accesskey="e">View source</a></li><li id="ca-history" class="collapsible"><a href="indexdcad.html?title=LEN&amp;action=history" title="Past revisions of this page [h]" accesskey="h">View history</a></li></ul>
+		
+	</div>
+</nav>
+
+
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-cactions" class="vector-menu-empty emptyPortlet vector-menu vector-menu-dropdown vectorMenu" aria-labelledby="p-cactions-label" role="navigation" 
+	 >
+	<input type="checkbox" class="vector-menu-checkbox vectorMenuCheckbox" aria-labelledby="p-cactions-label" />
+	<h3 id="p-cactions-label">
+		<span>More</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="menu vector-menu-content-list"></ul>
+		
+	</div>
+</nav>
+
+
+			<div id="p-search" role="search">
+	<h3 >
+		<label for="searchInput">Search</label>
+	</h3>
+	<form action="https://www.qb64.org/wiki/index.php" id="searchform">
+		<div id="simpleSearch">
+			<input type="search" name="search" placeholder="Search QB64 Wiki" title="Search QB64 Wiki [f]" accesskey="f" id="searchInput"/>
+			<input type="hidden" name="title" value="Special:Search">
+			<input type="submit" name="fulltext" value="Search" title="Search the pages for this text" id="mw-searchButton" class="searchButton mw-fallbackSearchButton"/>
+			<input type="submit" name="go" value="Go" title="Go to a page with this exact name if it exists" id="searchButton" class="searchButton"/>
+		</div>
+	</form>
+</div>
+
+		</div>
+	</div>
+	
+<div id="mw-panel">
+	<div id="p-logo" role="banner">
+		<a  title="Visit the main page" class="mw-wiki-logo" href="Main_Page.html"></a>
+	</div>
+	<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-navigation" class="vector-menu vector-menu-portal portal portal-first" aria-labelledby="p-navigation-label" role="navigation" 
+	 >
+	<h3 id="p-navigation-label">
+		<span>Navigation</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="n-mainpage-description"><a href="Main_Page.html" title="Visit the main page [z]" accesskey="z">Main page</a></li><li id="n-recentchanges"><a href="Special_RecentChanges.html" title="A list of recent changes in the wiki [r]" accesskey="r">Recent changes</a></li><li id="n-randompage"><a href="SNDCOPY.html" title="Load a random page [x]" accesskey="x">Random page</a></li><li id="n-help-mediawiki"><a href="https://www.mediawiki.org/wiki/Special:MyLanguage/Help:Contents">Help about MediaWiki</a></li></ul>
+		
+	</div>
+</nav>
+
+
+	<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-tb" class="vector-menu vector-menu-portal portal" aria-labelledby="p-tb-label" role="navigation" 
+	 >
+	<h3 id="p-tb-label">
+		<span>Tools</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="t-whatlinkshere"><a href="Special_WhatLinksHere/LEN.html" title="A list of all wiki pages that link here [j]" accesskey="j">What links here</a></li><li id="t-recentchangeslinked"><a href="Special_RecentChangesLinked/LEN.html" rel="nofollow" title="Recent changes in pages linked from this page [k]" accesskey="k">Related changes</a></li><li id="t-specialpages"><a href="Special_SpecialPages.html" title="A list of all special pages [q]" accesskey="q">Special pages</a></li><li id="t-print"><a href="javascript:print();" rel="alternate" title="Printable version of this page [p]" accesskey="p">Printable version</a></li><li id="t-permalink"><a href="index6751.html?title=LEN&amp;oldid=22771" title="Permanent link to this revision of the page">Permanent link</a></li><li id="t-info"><a href="index9f7a.html?title=LEN&amp;action=info" title="More information about this page">Page information</a></li></ul>
+		
+	</div>
+</nav>
+
+
+	
+</div>
+
+</div>
+
+<footer id="footer" class="mw-footer" role="contentinfo" >
+	<ul id="footer-info" >
+		<li id="footer-info-lastmod"> This page was last edited on 20 April 2020, at 02:06.</li>
+	</ul>
+	<ul id="footer-places" >
+		<li id="footer-places-privacy"><a href="My_wiki_Privacy_policy.html" title="My wiki:Privacy policy">Privacy policy</a></li>
+		<li id="footer-places-about"><a href="My_wiki_About.html" title="My wiki:About">About QB64 Wiki</a></li>
+		<li id="footer-places-disclaimer"><a href="My_wiki_General_disclaimer.html" title="My wiki:General disclaimer">Disclaimers</a></li>
+	</ul>
+	<ul id="footer-icons" class="noprint">
+		<li id="footer-poweredbyico"><a href="https://www.mediawiki.org/"><img src="resources/assets/poweredby_mediawiki_88x31.png" alt="Powered by MediaWiki" srcset="/wiki/resources/assets/poweredby_mediawiki_132x47.png 1.5x, /wiki/resources/assets/poweredby_mediawiki_176x62.png 2x" width="88" height="31" loading="lazy"/></a></li>
+	</ul>
+	<div style="clear: both;"></div>
+</footer>
+
+
+
+<script>(RLQ=window.RLQ||[]).push(function(){mw.config.set({"wgPageParseReport":{"limitreport":{"cputime":"0.081","walltime":"0.160","ppvisitednodes":{"value":340,"limit":1000000},"postexpandincludesize":{"value":3943,"limit":2097152},"templateargumentsize":{"value":346,"limit":2097152},"expansiondepth":{"value":3,"limit":40},"expensivefunctioncount":{"value":0,"limit":100},"unstrip-depth":{"value":0,"limit":20},"unstrip-size":{"value":1,"limit":5000000},"timingprofile":["100.00%   58.609      1 -total"," 24.93%   14.611      1 Template:PageNavigation"," 10.63%    6.232     41 Template:Cl","  7.12%    4.175      1 Template:PageSyntax","  6.74%    3.953      1 Template:PageSeeAlso","  5.68%    3.331      4 Template:CodeStart","  5.43%    3.182      2 Template:Parameter","  5.43%    3.182      4 Template:CodeEnd","  5.25%    3.078      3 Template:OutputEnd","  5.23%    3.066      3 Template:OutputStart"]},"cachereport":{"timestamp":"20210706194220","ttl":86400,"transientcontent":false}}});mw.config.set({"wgBackendResponseTime":1635});});</script></body>
+<!-- Mirrored from www.qb64.org/wiki/LEN by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 07 Aug 2021 13:18:43 GMT -->
+</html>

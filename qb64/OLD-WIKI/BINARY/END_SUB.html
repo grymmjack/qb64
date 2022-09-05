@@ -1,0 +1,321 @@
+
+<!DOCTYPE html>
+<html class="client-nojs" lang="en" dir="ltr">
+
+<!-- Mirrored from www.qb64.org/wiki/END_SUB by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 07 Aug 2021 13:46:08 GMT -->
+<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=UTF-8" /><!-- /Added by HTTrack -->
+<head>
+<meta charset="UTF-8"/>
+<title>SUB - QB64 Wiki</title>
+<script>document.documentElement.className="client-js";RLCONF={"wgBreakFrames":!1,"wgSeparatorTransformTable":["",""],"wgDigitTransformTable":["",""],"wgDefaultDateFormat":"dmy","wgMonthNames":["","January","February","March","April","May","June","July","August","September","October","November","December"],"wgRequestId":"YOWng1wGkAHY3MqNUQNeswAAAKg","wgCSPNonce":!1,"wgCanonicalNamespace":"","wgCanonicalSpecialPageName":!1,"wgNamespaceNumber":0,"wgPageName":"SUB","wgTitle":"SUB","wgCurRevisionId":23358,"wgRevisionId":23358,"wgArticleId":680,"wgIsArticle":!0,"wgIsRedirect":!1,"wgAction":"view","wgUserName":null,"wgUserGroups":["*"],"wgCategories":[],"wgPageContentLanguage":"en","wgPageContentModel":"wikitext","wgRelevantPageName":"SUB","wgRelevantArticleId":680,"wgIsProbablyEditable":!1,"wgRelevantPageIsProbablyEditable":!1,"wgRestrictionEdit":[],"wgRestrictionMove":[],"wgRedirectedFrom":"END_SUB","wgInternalRedirectTargetUrl":"/wiki/SUB"};RLSTATE={"site.styles":"ready",
+"noscript":"ready","user.styles":"ready","user":"ready","user.options":"loading","skins.vector.styles.legacy":"ready"};RLPAGEMODULES=["mediawiki.action.view.redirect","site","mediawiki.page.startup","mediawiki.page.ready","skins.vector.legacy.js"];</script>
+<script>(RLQ=window.RLQ||[]).push(function(){mw.loader.implement("user.options@1hzgi",function($,jQuery,require,module){/*@nomin*/mw.user.tokens.set({"patrolToken":"+\\","watchToken":"+\\","csrfToken":"+\\"});
+});});</script>
+<link rel="stylesheet" href="load5c90.css?lang=en&amp;modules=skins.vector.styles.legacy&amp;only=styles&amp;skin=vector"/>
+<script async="" src="load52c0.php?lang=en&amp;modules=startup&amp;only=scripts&amp;raw=1&amp;skin=vector"></script>
+<meta name="generator" content="MediaWiki 1.35.2"/>
+<link rel="shortcut icon" href="https://www.qb64.org/favicon.ico"/>
+<link rel="search" type="application/opensearchdescription+xml" href="opensearch_desc.php" title="QB64 Wiki (en)"/>
+<link rel="EditURI" type="application/rsd+xml" href="api-result251f.xml?action=rsd"/>
+<link rel="alternate" type="application/atom+xml" title="QB64 Wiki Atom feed" href="feeda295.xml?title=Special:RecentChanges&amp;feed=atom"/>
+<link rel="canonical" href="SUB.html"/>
+<!--[if lt IE 9]><script src="/wiki/resources/lib/html5shiv/html5shiv.js"></script><![endif]-->
+</head>
+<body class="mediawiki ltr sitedir-ltr mw-hide-empty-elt ns-0 ns-subject page-SUB rootpage-SUB skin-vector action-view skin-vector-legacy">
+<div id="mw-page-base" class="noprint"></div>
+<div id="mw-head-base" class="noprint"></div>
+<div id="content" class="mw-body" role="main">
+	<a id="top"></a>
+	<div id="siteNotice" class="mw-body-content"></div>
+	<div class="mw-indicators mw-body-content">
+	</div>
+	<h1 id="firstHeading" class="firstHeading" lang="en">SUB</h1>
+	<div id="bodyContent" class="mw-body-content">
+		<div id="siteSub" class="noprint">From QB64 Wiki</div>
+		<div id="contentSub"><span class="mw-redirectedfrom">(Redirected from <a href="index69da.html?title=END_SUB&amp;redirect=no" class="mw-redirect" title="END SUB">END SUB</a>)</span></div>
+		<div id="contentSub2"></div>
+		
+		<div id="jump-to-nav"></div>
+		<a class="mw-jump-link" href="#mw-head">Jump to navigation</a>
+		<a class="mw-jump-link" href="#searchInput">Jump to search</a>
+		<div id="mw-content-text" lang="en" dir="ltr" class="mw-content-ltr"><div class="mw-parser-output"><p>A <b>SUB</b> procedure is a procedure within a program that can calculate and return multiple parameter values just like a full program.
+</p><p><br />
+</p>
+<h2><span class="mw-headline" id="Syntax">Syntax</span></h2>
+<dl><dd><dl><dd><b>SUB Procedure_name</b> [(<i>parameter</i>[, <i>list</i>...])]</dd>
+<dd>...</dd>
+<dd>... 'procedure variable definitions and statements</dd>
+<dd>...</dd>
+<dd><b>END SUB</b></dd></dl></dd></dl>
+<p><br />
+</p>
+<h2><span class="mw-headline" id="Parameters">Parameters</span></h2>
+<ul><li>Parameters passed after the procedure call must match the variable types in the SUB parameters in order.</li>
+<li>If there are no <i>parameter</i>s passed or they are <a href="SHARED.html" title="SHARED">SHARED</a> the parameters and parenthesis are not required in the procedure.</li>
+<li>Parameter <a href="Variable.html" title="Variable">Variable</a> names in the procedure do not have to match the names used in the <a href="CALL.html" title="CALL">CALL</a>, just the value types.</li></ul>
+<p><br />
+</p>
+<h2><span class="mw-headline" id="Description">Description</span></h2>
+<ul><li>All <a href="%24DYNAMIC.html" title="$DYNAMIC">dynamic</a> <a href="Variable.html" title="Variable">variable</a> values return to 0 or null strings when the procedure is exited except for <a href="STATIC.html" title="STATIC">STATIC</a> variable values.</li>
+<li>SUB procedures can return multiple values through the parameters unlike functions.</li>
+<li>SUB procedures return to the next code statement after the call in the main or other procedures.</li>
+<li><a href="EXIT.html" title="EXIT">EXIT</a> SUB can be used to exit early or to exit before <a href="GOSUB.html" title="GOSUB">GOSUB</a> procedures using <a href="RETURN.html" title="RETURN">RETURN</a>.</li>
+<li><a href="TYPE.html" title="TYPE">TYPE</a> and <a href="DECLARE_LIBRARY.html" title="DECLARE LIBRARY">DECLARE LIBRARY</a> declarations can be made inside of SUB procedures in QB64 only.</li>
+<li>SUB procedures can save program memory as all memory used in a SUB is released on procedure exit except for <a href="STATIC.html" title="STATIC">STATIC</a> values.</li>
+<li><a href="DEFINE.html" title="DEFINE">_DEFINE</a> can be used to define all new or old QB64 variable <a href="TYPE.html" title="TYPE">TYPE</a> definitions instead of DEF***.</li>
+<li><a href="%24INCLUDE.html" title="$INCLUDE">$INCLUDE</a> text library files with needed SUB and <a href="FUNCTION.html" title="FUNCTION">FUNCTION</a> procedures can be included in programs after all sub-procedures.</li>
+<li><b>QB64 ignores all procedural DECLARE statements!</b> Define all <i>parameter</i> <a href="TYPE.html" title="TYPE">TYPEs</a> in the SUB procedure.</li>
+<li><b>Images are not deallocated when the <a class="mw-selflink selflink">SUB</a> or <a href="FUNCTION.html" title="FUNCTION">FUNCTION</a> they are created in ends. Free them with <a href="FREEIMAGE.html" title="FREEIMAGE">_FREEIMAGE</a>.</b></li></ul>
+<p><br />
+<i>Example 1:</i> Text <a href="PRINT.html" title="PRINT">PRINT</a> screen centering using <a href="PEEK.html" title="PEEK">PEEK</a> to find the SCREEN mode width. Call and SUB procedure code:
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: Courier, monospace; background-color: darkblue; color: lightgrey; word-wrap: break-word;"> <i> </i>
+<a href="DEFINT.html" title="DEFINT"><span style="color:#87cefa;">DEFINT</span></a> A-Z
+<a href="SCREEN.html" title="SCREEN"><span style="color:#87cefa;">SCREEN</span></a> 13
+Center 10, 15, "This text is centered." ' example module sub call
+<a href="END.html" title="END"><span style="color:#87cefa;">END</span></a>
+
+<a href="DEFINT.html" title="DEFINT"><span style="color:#87cefa;">DEFINT</span></a> A-Z ' only code allowed before SUB line is a DEF statement or a comment
+<a class="mw-selflink selflink"><span style="color:#87cefa;">SUB</span></a> Center (Tclr, Trow, Text$)
+Columns = <a href="WIDTH.html" title="WIDTH"><span style="color:#87cefa;">_WIDTH</span></a> / <a href="FONTWIDTH.html" title="FONTWIDTH"><span style="color:#87cefa;">_FONTWIDTH</span></a> 'Convert _WIDTH (in pixels) to width in characters
+Middle = (Columns \ 2) + 1 ' reads any screen mode width
+Tcol = Middle - (<a href="LEN.html" title="LEN"><span style="color:#87cefa;">LEN</span></a>(Text$) \ 2)
+<a href="COLOR.html" title="COLOR"><span style="color:#87cefa;">COLOR</span></a> Tclr: <a href="LOCATE.html" title="LOCATE"><span style="color:#87cefa;">LOCATE</span></a> Trow, Tcol: <a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> Text$; ' end semicolon prevents screen roll
+<a href="END_SUB.html" class="mw-redirect" title="END SUB"><span style="color:#87cefa;">END SUB</span></a> <i> </i>
+</p>
+<dl><dd><i>Explanation:</i> The procedure centers text printed to the screen. The parameters are the text color, row and the text itself as a string or string variable. The maximum width of the screen mode in characters is found and divided in half to find the center point. The text string's length is also divided in half and subtracted from the screen's center position. The procedure will also work when the <a href="WIDTH.html" title="WIDTH">WIDTH</a> statement has been used. When adding variables to Text$ use the + concatenation operator. Not semicolons!</dd></dl>
+<p><br />
+<i>Example 2:</i> SUB and <a href="FUNCTION.html" title="FUNCTION">FUNCTION</a> procedures always return to the place they were called in the main or other sub-procedures:
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: Courier, monospace; background-color: darkblue; color: lightgrey; word-wrap: break-word;"> <i> </i>
+a = 10
+Add1 a
+<a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> a  'Add1 returns final 'a' value here
+
+<a href="END.html" title="END"><span style="color:#87cefa;">END</span></a>
+
+<a class="mw-selflink selflink"><span style="color:#87cefa;">SUB</span></a> Add1 (n)
+n = n + 1
+Add2 n
+<a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> "exit 1"
+<a href="END_SUB.html" class="mw-redirect" title="END SUB"><span style="color:#87cefa;">END SUB</span></a>
+
+<a class="mw-selflink selflink"><span style="color:#87cefa;">SUB</span></a> Add2 (m)
+m = m + 2
+<a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> "exit 2"
+<a href="END_SUB.html" class="mw-redirect" title="END SUB"><span style="color:#87cefa;">END SUB</span></a>
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: Courier; background-color: black; color: white;">exit 2
+exit 1
+ 13
+</p>
+<dl><dd><i>Note:</i> Parameter <b>a</b> is used to call the sub-procedures even though parameters <b>n</b> and <b>m</b> are used internally.</dd></dl>
+<p><br />
+<i>See also:</i> 
+</p>
+<ul><li><a href="FUNCTION.html" title="FUNCTION">FUNCTION</a>, <a href="CALL.html" title="CALL">CALL</a></li>
+<li><a href="BYVAL.html" class="mw-redirect" title="BYVAL">BYVAL</a>, <a href="SCREEN_(statement).html" title="SCREEN (statement)">SCREEN (statement)</a></li>
+<li><a href="EXIT.html" title="EXIT">EXIT</a>, <a href="END.html" title="END">END</a></li></ul>
+<p><br />
+</p>
+<hr />
+<center><i>Navigation:</i>
+<dl><dd><a href="Keyword_Reference_-_Alphabetical.html" title="Keyword Reference - Alphabetical">Keyword Reference - Alphabetical</a></dd>
+<dd><a href="Keyword_Reference_-_By_usage.html" title="Keyword Reference - By usage">Keyword Reference - By Usage</a></dd>
+<dd><a href="Main_Page.html" title="Main Page">Main Wiki Page</a></dd></dl></center>
+<!-- 
+NewPP limit report
+Cached time: 20210707114258
+Cache expiry: 86400
+Dynamic content: false
+Complications: []
+CPU time usage: 0.066 seconds
+Real time usage: 0.128 seconds
+Preprocessor visited node count: 165/1000000
+Post‐expand include size: 2014/2097152 bytes
+Template argument size: 208/2097152 bytes
+Highest expansion depth: 3/40
+Expensive parser function count: 0/100
+Unstrip recursion depth: 0/20
+Unstrip post‐expand size: 0/5000000 bytes
+-->
+<!--
+Transclusion expansion time report (%,ms,calls,template)
+100.00%   46.064      1 -total
+ 24.23%   11.162      2 Template:CodeEnd
+ 11.85%    5.459     20 Template:Cl
+  9.67%    4.456      1 Template:PageParameters
+  9.31%    4.288      1 Template:PageSyntax
+  9.27%    4.270      2 Template:CodeStart
+  8.91%    4.106      1 Template:PageDescription
+  7.50%    3.453      1 Template:PageNavigation
+  7.02%    3.235      1 Template:OutputStart
+  6.95%    3.200      1 Template:OutputEnd
+-->
+
+<!-- Saved in parser cache with key i4224360_mw2-mw_:pcache:idhash:680-0!canonical and timestamp 20210707114258 and revision id 23358
+ -->
+</div></div><div class="printfooter">Retrieved from "<a dir="ltr" href="index7a4b.html?title=SUB&amp;oldid=23358">http://www.qb64.org/wiki/index.php?title=SUB&amp;oldid=23358</a>"</div>
+		<div id="catlinks" class="catlinks catlinks-allhidden" data-mw="interface"></div>
+	</div>
+</div>
+
+<div id="mw-navigation">
+	<h2>Navigation menu</h2>
+	<div id="mw-head">
+		<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-personal" class="vector-menu" aria-labelledby="p-personal-label" role="navigation" 
+	 >
+	<h3 id="p-personal-label">
+		<span>Personal tools</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="pt-login"><a href="indexc092.html?title=Special:UserLogin&amp;returnto=SUB" title="You are encouraged to log in; however, it is not mandatory [o]" accesskey="o">Log in</a></li></ul>
+		
+	</div>
+</nav>
+
+
+		<div id="left-navigation">
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-namespaces" class="vector-menu vector-menu-tabs vectorTabs" aria-labelledby="p-namespaces-label" role="navigation" 
+	 >
+	<h3 id="p-namespaces-label">
+		<span>Namespaces</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="ca-nstab-main" class="selected"><a href="SUB.html" title="View the content page [c]" accesskey="c">Page</a></li><li id="ca-talk" class="new"><a href="Talk_SUB.html?title=Talk:SUB&amp;action=edit&amp;redlink=1" rel="discussion" title="Discussion about the content page (page does not exist) [t]" accesskey="t">Discussion</a></li></ul>
+		
+	</div>
+</nav>
+
+
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-variants" class="vector-menu-empty emptyPortlet vector-menu vector-menu-dropdown vectorMenu" aria-labelledby="p-variants-label" role="navigation" 
+	 >
+	<input type="checkbox" class="vector-menu-checkbox vectorMenuCheckbox" aria-labelledby="p-variants-label" />
+	<h3 id="p-variants-label">
+		<span>Variants</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="menu vector-menu-content-list"></ul>
+		
+	</div>
+</nav>
+
+
+		</div>
+		<div id="right-navigation">
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-views" class="vector-menu vector-menu-tabs vectorTabs" aria-labelledby="p-views-label" role="navigation" 
+	 >
+	<h3 id="p-views-label">
+		<span>Views</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="ca-view" class="collapsible selected"><a href="SUB.html">Read</a></li><li id="ca-viewsource" class="collapsible"><a href="indexb78c.html?title=SUB&amp;action=edit" title="This page is protected.&#10;You can view its source [e]" accesskey="e">View source</a></li><li id="ca-history" class="collapsible"><a href="index8d47.html?title=SUB&amp;action=history" title="Past revisions of this page [h]" accesskey="h">View history</a></li></ul>
+		
+	</div>
+</nav>
+
+
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-cactions" class="vector-menu-empty emptyPortlet vector-menu vector-menu-dropdown vectorMenu" aria-labelledby="p-cactions-label" role="navigation" 
+	 >
+	<input type="checkbox" class="vector-menu-checkbox vectorMenuCheckbox" aria-labelledby="p-cactions-label" />
+	<h3 id="p-cactions-label">
+		<span>More</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="menu vector-menu-content-list"></ul>
+		
+	</div>
+</nav>
+
+
+			<div id="p-search" role="search">
+	<h3 >
+		<label for="searchInput">Search</label>
+	</h3>
+	<form action="https://www.qb64.org/wiki/index.php" id="searchform">
+		<div id="simpleSearch">
+			<input type="search" name="search" placeholder="Search QB64 Wiki" title="Search QB64 Wiki [f]" accesskey="f" id="searchInput"/>
+			<input type="hidden" name="title" value="Special:Search">
+			<input type="submit" name="fulltext" value="Search" title="Search the pages for this text" id="mw-searchButton" class="searchButton mw-fallbackSearchButton"/>
+			<input type="submit" name="go" value="Go" title="Go to a page with this exact name if it exists" id="searchButton" class="searchButton"/>
+		</div>
+	</form>
+</div>
+
+		</div>
+	</div>
+	
+<div id="mw-panel">
+	<div id="p-logo" role="banner">
+		<a  title="Visit the main page" class="mw-wiki-logo" href="Main_Page.html"></a>
+	</div>
+	<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-navigation" class="vector-menu vector-menu-portal portal portal-first" aria-labelledby="p-navigation-label" role="navigation" 
+	 >
+	<h3 id="p-navigation-label">
+		<span>Navigation</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="n-mainpage-description"><a href="Main_Page.html" title="Visit the main page [z]" accesskey="z">Main page</a></li><li id="n-recentchanges"><a href="Special_RecentChanges.html" title="A list of recent changes in the wiki [r]" accesskey="r">Recent changes</a></li><li id="n-randompage"><a href="SNDCOPY.html" title="Load a random page [x]" accesskey="x">Random page</a></li><li id="n-help-mediawiki"><a href="https://www.mediawiki.org/wiki/Special:MyLanguage/Help:Contents">Help about MediaWiki</a></li></ul>
+		
+	</div>
+</nav>
+
+
+	<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-tb" class="vector-menu vector-menu-portal portal" aria-labelledby="p-tb-label" role="navigation" 
+	 >
+	<h3 id="p-tb-label">
+		<span>Tools</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="t-whatlinkshere"><a href="Special_WhatLinksHere/SUB.html" title="A list of all wiki pages that link here [j]" accesskey="j">What links here</a></li><li id="t-recentchangeslinked"><a href="Special_RecentChangesLinked/SUB.html" rel="nofollow" title="Recent changes in pages linked from this page [k]" accesskey="k">Related changes</a></li><li id="t-specialpages"><a href="Special_SpecialPages.html" title="A list of all special pages [q]" accesskey="q">Special pages</a></li><li id="t-print"><a href="javascript:print();" rel="alternate" title="Printable version of this page [p]" accesskey="p">Printable version</a></li><li id="t-permalink"><a href="index7a4b.html?title=SUB&amp;oldid=23358" title="Permanent link to this revision of the page">Permanent link</a></li><li id="t-info"><a href="index03bf.html?title=SUB&amp;action=info" title="More information about this page">Page information</a></li></ul>
+		
+	</div>
+</nav>
+
+
+	
+</div>
+
+</div>
+
+<footer id="footer" class="mw-footer" role="contentinfo" >
+	<ul id="footer-info" >
+		<li id="footer-info-lastmod"> This page was last edited on 17 February 2021, at 12:40.</li>
+	</ul>
+	<ul id="footer-places" >
+		<li id="footer-places-privacy"><a href="My_wiki_Privacy_policy.html" title="My wiki:Privacy policy">Privacy policy</a></li>
+		<li id="footer-places-about"><a href="My_wiki_About.html" title="My wiki:About">About QB64 Wiki</a></li>
+		<li id="footer-places-disclaimer"><a href="My_wiki_General_disclaimer.html" title="My wiki:General disclaimer">Disclaimers</a></li>
+	</ul>
+	<ul id="footer-icons" class="noprint">
+		<li id="footer-poweredbyico"><a href="https://www.mediawiki.org/"><img src="resources/assets/poweredby_mediawiki_88x31.png" alt="Powered by MediaWiki" srcset="/wiki/resources/assets/poweredby_mediawiki_132x47.png 1.5x, /wiki/resources/assets/poweredby_mediawiki_176x62.png 2x" width="88" height="31" loading="lazy"/></a></li>
+	</ul>
+	<div style="clear: both;"></div>
+</footer>
+
+
+
+<script>(RLQ=window.RLQ||[]).push(function(){mw.config.set({"wgPageParseReport":{"limitreport":{"cputime":"0.066","walltime":"0.128","ppvisitednodes":{"value":165,"limit":1000000},"postexpandincludesize":{"value":2014,"limit":2097152},"templateargumentsize":{"value":208,"limit":2097152},"expansiondepth":{"value":3,"limit":40},"expensivefunctioncount":{"value":0,"limit":100},"unstrip-depth":{"value":0,"limit":20},"unstrip-size":{"value":0,"limit":5000000},"timingprofile":["100.00%   46.064      1 -total"," 24.23%   11.162      2 Template:CodeEnd"," 11.85%    5.459     20 Template:Cl","  9.67%    4.456      1 Template:PageParameters","  9.31%    4.288      1 Template:PageSyntax","  9.27%    4.270      2 Template:CodeStart","  8.91%    4.106      1 Template:PageDescription","  7.50%    3.453      1 Template:PageNavigation","  7.02%    3.235      1 Template:OutputStart","  6.95%    3.200      1 Template:OutputEnd"]},"cachereport":{"timestamp":"20210707114258","ttl":86400,"transientcontent":false}}});mw.config.set({"wgBackendResponseTime":1367});});</script></body>
+<!-- Mirrored from www.qb64.org/wiki/END_SUB by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 07 Aug 2021 13:46:08 GMT -->
+</html>

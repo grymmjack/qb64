@@ -1,0 +1,387 @@
+
+<!DOCTYPE html>
+<html class="client-nojs" lang="en" dir="ltr">
+
+<!-- Mirrored from www.qb64.org/wiki/PDS_(7.1)_Procedures by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 07 Aug 2021 12:43:26 GMT -->
+<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=UTF-8" /><!-- /Added by HTTrack -->
+<head>
+<meta charset="UTF-8"/>
+<title>PDS (7.1) Procedures - QB64 Wiki</title>
+<script>document.documentElement.className="client-js";RLCONF={"wgBreakFrames":!1,"wgSeparatorTransformTable":["",""],"wgDigitTransformTable":["",""],"wgDefaultDateFormat":"dmy","wgMonthNames":["","January","February","March","April","May","June","July","August","September","October","November","December"],"wgRequestId":"YOWkU1pP-65vp3So6LulxQAAANY","wgCSPNonce":!1,"wgCanonicalNamespace":"","wgCanonicalSpecialPageName":!1,"wgNamespaceNumber":0,"wgPageName":"PDS_(7.1)_Procedures","wgTitle":"PDS (7.1) Procedures","wgCurRevisionId":23495,"wgRevisionId":23495,"wgArticleId":521,"wgIsArticle":!0,"wgIsRedirect":!1,"wgAction":"view","wgUserName":null,"wgUserGroups":["*"],"wgCategories":[],"wgPageContentLanguage":"en","wgPageContentModel":"wikitext","wgRelevantPageName":"PDS_(7.1)_Procedures","wgRelevantArticleId":521,"wgIsProbablyEditable":!1,"wgRelevantPageIsProbablyEditable":!1,"wgRestrictionEdit":[],"wgRestrictionMove":[]};RLSTATE={"site.styles":"ready","noscript":"ready",
+"user.styles":"ready","user":"ready","user.options":"loading","skins.vector.styles.legacy":"ready","mediawiki.toc.styles":"ready"};RLPAGEMODULES=["site","mediawiki.page.startup","mediawiki.page.ready","mediawiki.toc","skins.vector.legacy.js"];</script>
+<script>(RLQ=window.RLQ||[]).push(function(){mw.loader.implement("user.options@1hzgi",function($,jQuery,require,module){/*@nomin*/mw.user.tokens.set({"patrolToken":"+\\","watchToken":"+\\","csrfToken":"+\\"});
+});});</script>
+<link rel="stylesheet" href="loadd8b0.css?lang=en&amp;modules=mediawiki.toc.styles%7Cskins.vector.styles.legacy&amp;only=styles&amp;skin=vector"/>
+<script async="" src="load52c0.php?lang=en&amp;modules=startup&amp;only=scripts&amp;raw=1&amp;skin=vector"></script>
+<meta name="generator" content="MediaWiki 1.35.2"/>
+<link rel="shortcut icon" href="https://www.qb64.org/favicon.ico"/>
+<link rel="search" type="application/opensearchdescription+xml" href="opensearch_desc.php" title="QB64 Wiki (en)"/>
+<link rel="EditURI" type="application/rsd+xml" href="api-result251f.xml?action=rsd"/>
+<link rel="alternate" type="application/atom+xml" title="QB64 Wiki Atom feed" href="feeda295.xml?title=Special:RecentChanges&amp;feed=atom"/>
+<!--[if lt IE 9]><script src="/wiki/resources/lib/html5shiv/html5shiv.js"></script><![endif]-->
+</head>
+<body class="mediawiki ltr sitedir-ltr mw-hide-empty-elt ns-0 ns-subject page-PDS_7_1_Procedures rootpage-PDS_7_1_Procedures skin-vector action-view skin-vector-legacy">
+<div id="mw-page-base" class="noprint"></div>
+<div id="mw-head-base" class="noprint"></div>
+<div id="content" class="mw-body" role="main">
+	<a id="top"></a>
+	<div id="siteNotice" class="mw-body-content"></div>
+	<div class="mw-indicators mw-body-content">
+	</div>
+	<h1 id="firstHeading" class="firstHeading" lang="en">PDS (7.1) Procedures</h1>
+	<div id="bodyContent" class="mw-body-content">
+		<div id="siteSub" class="noprint">From QB64 Wiki</div>
+		<div id="contentSub"></div>
+		<div id="contentSub2"></div>
+		
+		<div id="jump-to-nav"></div>
+		<a class="mw-jump-link" href="#mw-head">Jump to navigation</a>
+		<a class="mw-jump-link" href="#searchInput">Jump to search</a>
+		<div id="mw-content-text" lang="en" dir="ltr" class="mw-content-ltr"><div class="mw-parser-output"><p>QB64 was created to be compatible with Quick Basic 4.5 only as it was the most popular version. The following sub-procedures have been created to do things that were available in PDS versions of Quick Basic 7.0 and 7.1.
+</p>
+<div id="toc" class="toc" role="navigation" aria-labelledby="mw-toc-heading"><input type="checkbox" role="button" id="toctogglecheckbox" class="toctogglecheckbox" style="display:none" /><div class="toctitle" lang="en" dir="ltr"><h2 id="mw-toc-heading">Contents</h2><span class="toctogglespan"><label class="toctogglelabel" for="toctogglecheckbox"></label></span></div>
+<ul>
+<li class="toclevel-1 tocsection-1"><a href="#CURRENCY"><span class="tocnumber">1</span> <span class="toctext">CURRENCY</span></a>
+<ul>
+<li class="toclevel-2 tocsection-2"><a href="#MKC.24"><span class="tocnumber">1.1</span> <span class="toctext">MKC$</span></a></li>
+<li class="toclevel-2 tocsection-3"><a href="#CVC"><span class="tocnumber">1.2</span> <span class="toctext">CVC</span></a></li>
+<li class="toclevel-2 tocsection-4"><a href="#PUT"><span class="tocnumber">1.3</span> <span class="toctext">PUT</span></a></li>
+<li class="toclevel-2 tocsection-5"><a href="#GET"><span class="tocnumber">1.4</span> <span class="toctext">GET</span></a></li>
+</ul>
+</li>
+<li class="toclevel-1 tocsection-6"><a href="#DIR.24"><span class="tocnumber">2</span> <span class="toctext">DIR$</span></a></li>
+<li class="toclevel-1"><a href="#See_also"><span class="tocnumber">3</span> <span class="toctext">See also</span></a></li>
+</ul>
+</div>
+
+<h2><span class="mw-headline" id="CURRENCY">CURRENCY</span></h2>
+<h3><span id="MKC$"></span><span class="mw-headline" id="MKC.24">MKC$</span></h3>
+<p>PDS could use the CURRENCY variable type and had the MKC$ function to convert those values to <b>8 byte</b> <a href="ASCII.html" title="ASCII">ASCII</a> string values. QB64 can convert <a href="FLOAT.html" title="FLOAT">_FLOAT</a> currency amounts to strings using <a href="MK%24.html" title="MK$">_MK$</a> with <a href="INTEGER64.html" title="INTEGER64">_INTEGER64</a> values:
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: Courier, monospace; background-color: darkblue; color: lightgrey; word-wrap: break-word;">
+<a href="SCREEN.html" title="SCREEN"><span style="color:#87cefa;">SCREEN</span></a> 12
+<a href="DIM.html" title="DIM"><span style="color:#87cefa;">DIM</span></a> value <a href="AS.html" title="AS"><span style="color:#87cefa;">AS</span></a> <a href="FLOAT.html" title="FLOAT"><span style="color:#87cefa;">_FLOAT</span></a>
+value = 12345678901234.6789 '    any currency value with up to 4 decimal point places
+
+<a href="PRINTSTRING.html" title="PRINTSTRING"><span style="color:#87cefa;">_PRINTSTRING</span></a> (1, 50), "[" + MKC$(value) + "]" ' show ASCII string value
+
+<a href="END.html" title="END"><span style="color:#87cefa;">END</span></a>
+
+<a href="FUNCTION.html" title="FUNCTION"><span style="color:#87cefa;">FUNCTION</span></a> MKC$ (CurrVal <a href="AS.html" title="AS"><span style="color:#87cefa;">AS</span></a> <a href="FLOAT.html" title="FLOAT"><span style="color:#87cefa;">_FLOAT</span></a>) 'converts currency amount to PDS or VB currency string
+    <a href="DIM.html" title="DIM"><span style="color:#87cefa;">DIM</span></a> CVal <a href="AS.html" title="AS"><span style="color:#87cefa;">AS</span></a> <a href="INTEGER64.html" title="INTEGER64"><span style="color:#87cefa;">_INTEGER64</span></a>
+    CVal = CurrVal * 10000 '        multiply float value by 10 thousand
+    MKC = <a href="MK%24.html" title="MK$"><span style="color:#87cefa;">_MK$</span></a>(<a href="INTEGER64.html" title="INTEGER64"><span style="color:#87cefa;">_INTEGER64</span></a>, CVal)
+<a href="END_FUNCTION.html" title="END FUNCTION"><span style="color:#87cefa;">END FUNCTION</span></a> <i> </i>
+</p>
+<dl><dd><i>Note:</i> The <a href="FLOAT.html" title="FLOAT">_FLOAT</a> currency amount must be multiplied by 10000 before it is converted to the <a href="ASCII.html" title="ASCII">ASCII</a> string value.</dd></dl>
+<h3><span class="mw-headline" id="CVC">CVC</span></h3>
+<p>PDS also had the CVC function to convert MKC$ currency string values back to currency amounts. QB64 can use <a href="CV.html" title="CV">_CV</a> with <a href="INTEGER64.html" title="INTEGER64">_INTEGER64</a> to convert those <b>8 byte</b> values back to <a href="FLOAT.html" title="FLOAT">_FLOAT</a> currency values. The procedure gets the currency string from a file:
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: Courier, monospace; background-color: darkblue; color: lightgrey; word-wrap: break-word;"> <i> </i>
+<a href="SCREEN.html" title="SCREEN"><span style="color:#87cefa;">SCREEN</span></a> 12
+<a href="DIM.html" title="DIM"><span style="color:#87cefa;">DIM</span></a> currency <a href="AS.html" title="AS"><span style="color:#87cefa;">AS</span></a> <a href="STRING.html" title="STRING"><span style="color:#87cefa;">STRING</span></a> * 8
+<a href="OPEN.html" title="OPEN"><span style="color:#87cefa;">OPEN</span></a> "Currency.bin" <a href="FOR_(file_statement).html" class="mw-redirect" title="FOR (file statement)"><span style="color:#87cefa;">FOR</span></a> <a href="BINARY-2.html" class="mw-redirect" title="BINARY"><span style="color:#87cefa;">BINARY</span></a> <a href="AS.html" title="AS"><span style="color:#87cefa;">AS</span></a> #1 'binary file with MKC$ values created by PDS or VB
+<a href="GET.html" title="GET"><span style="color:#87cefa;">GET</span></a> #1, , currency
+<a href="CLOSE.html" title="CLOSE"><span style="color:#87cefa;">CLOSE</span></a> #1
+
+<a href="PRINTSTRING.html" title="PRINTSTRING"><span style="color:#87cefa;">_PRINTSTRING</span></a> (1, 10), "[" + currency + "]" 'show ASCII string value from file
+
+<a href="PRINTSTRING.html" title="PRINTSTRING"><span style="color:#87cefa;">_PRINTSTRING</span></a> (1, 30), <a href="STR%24.html" title="STR$"><span style="color:#87cefa;">STR$</span></a>(CVC##(currency))
+
+<a href="END.html" title="END"><span style="color:#87cefa;">END</span></a>
+
+<a href="FUNCTION.html" title="FUNCTION"><span style="color:#87cefa;">FUNCTION</span></a> CVC## (CurrStr <a href="AS.html" title="AS"><span style="color:#87cefa;">AS</span></a> <a href="STRING.html" title="STRING"><span style="color:#87cefa;">STRING</span></a>) 'converts currency string to a <a href="FLOAT.html" title="FLOAT"><span style="color:#87cefa;">_FLOAT</span></a> currency amount
+    <a href="DIM.html" title="DIM"><span style="color:#87cefa;">DIM</span></a> CV <a href="AS.html" title="AS"><span style="color:#87cefa;">AS</span></a> <a href="INTEGER64.html" title="INTEGER64"><span style="color:#87cefa;">_INTEGER64</span></a>
+    CV = <a href="CV.html" title="CV"><span style="color:#87cefa;">_CV</span></a>(<a href="INTEGER64.html" title="INTEGER64"><span style="color:#87cefa;">_INTEGER64</span></a>, CurrStr)
+    CVC = CV / 10000 '                   divide by 10 thousand
+<a href="END_FUNCTION.html" title="END FUNCTION"><span style="color:#87cefa;">END FUNCTION</span></a> <i> </i>
+</p>
+<dl><dd><i>Note:</i> The <a href="FLOAT.html" title="FLOAT">_FLOAT</a> currency amount must be divided by 10000 to create up to 4 decimal point places.</dd></dl>
+<h3><span class="mw-headline" id="PUT">PUT</span></h3>
+<p>Currency values can be <a href="PUT.html" title="PUT">PUT</a> directly into <a href="BINARY-2.html" class="mw-redirect" title="BINARY">BINARY</a> or <a href="RANDOM.html" title="RANDOM">RANDOM</a> files using an <a href="INTEGER64.html" title="INTEGER64">_INTEGER64</a> variable value.
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: Courier, monospace; background-color: darkblue; color: lightgrey; word-wrap: break-word;"> <i> </i>
+<a href="DIM.html" title="DIM"><span style="color:#87cefa;">DIM</span></a> curr <a href="AS.html" title="AS"><span style="color:#87cefa;">AS</span></a> <a href="INTEGER64.html" title="INTEGER64"><span style="color:#87cefa;">_INTEGER64</span></a>, currency <a href="AS.html" title="AS"><span style="color:#87cefa;">AS</span></a> <a href="FLOAT.html" title="FLOAT"><span style="color:#87cefa;">_FLOAT</span></a>
+
+currency = 9876.543
+curr = currency * 10000 ' multiply currency value by 10000
+
+<a href="OPEN.html" title="OPEN"><span style="color:#87cefa;">OPEN</span></a> "currency.bin" <a href="FOR_(file_statement).html" class="mw-redirect" title="FOR (file statement)"><span style="color:#87cefa;">FOR</span></a> <a href="BINARY-2.html" class="mw-redirect" title="BINARY"><span style="color:#87cefa;">BINARY</span></a> <a href="AS.html" title="AS"><span style="color:#87cefa;">AS</span></a> #1 ' a binary file to hold PDS currency values
+<a href="PUT.html" title="PUT"><span style="color:#87cefa;">PUT</span></a> #1, , curr
+<a href="CLOSE.html" title="CLOSE"><span style="color:#87cefa;">CLOSE</span></a> #1
+
+<a href="END.html" title="END"><span style="color:#87cefa;">END</span></a> <i> </i>
+</p>
+<h3><span class="mw-headline" id="GET">GET</span></h3>
+<p>When currency values are <a href="PUT.html" title="PUT">PUT</a> directly into a <a href="BINARY-2.html" class="mw-redirect" title="BINARY">BINARY</a> or <a href="RANDOM.html" title="RANDOM">RANDOM</a> file, <a href="INTEGER64.html" title="INTEGER64">_INTEGER64</a> can <a href="GET.html" title="GET">GET</a> them directly. Then divide by 10 ^ 4: 
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: Courier, monospace; background-color: darkblue; color: lightgrey; word-wrap: break-word;"> <i> </i>
+<a href="DIM.html" title="DIM"><span style="color:#87cefa;">DIM</span></a> curr <a href="AS.html" title="AS"><span style="color:#87cefa;">AS</span></a> <a href="INTEGER64.html" title="INTEGER64"><span style="color:#87cefa;">_INTEGER64</span></a>, currency <a href="AS.html" title="AS"><span style="color:#87cefa;">AS</span></a> <a href="FLOAT.html" title="FLOAT"><span style="color:#87cefa;">_FLOAT</span></a>
+<a href="OPEN.html" title="OPEN"><span style="color:#87cefa;">OPEN</span></a> "currency.bin" <a href="FOR_(file_statement).html" class="mw-redirect" title="FOR (file statement)"><span style="color:#87cefa;">FOR</span></a> <a href="BINARY-2.html" class="mw-redirect" title="BINARY"><span style="color:#87cefa;">BINARY</span></a> <a href="AS.html" title="AS"><span style="color:#87cefa;">AS</span></a> #1 ' any binary file holding PDS currency values
+<a href="GET.html" title="GET"><span style="color:#87cefa;">GET</span></a> #1, , curr
+<a href="CLOSE.html" title="CLOSE"><span style="color:#87cefa;">CLOSE</span></a> #1
+
+currency = curr / 10000 ' use any floating decimal point type within currency range
+
+<a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> currency
+
+<a href="END.html" title="END"><span style="color:#87cefa;">END</span></a> <i> </i>
+</p>
+<dl><dd><i>Note:</i> The currency value can be any <a href="SINGLE.html" title="SINGLE">SINGLE</a>, <a href="DOUBLE.html" title="DOUBLE">DOUBLE</a> or <a href="FLOAT.html" title="FLOAT">_FLOAT</a> floating decimal point value that will hold the range of values.</dd></dl>
+<p><br />
+</p>
+<p style="text-align: center">(<a href="#toc">Return to Table of Contents</a>)</p>
+<h2><span id="DIR$"></span><span class="mw-headline" id="DIR.24">DIR$</span></h2>
+<p><i>Not to be confused with QB64's <a href="DIR%24.html" title="DIR$">_DIR$</a> function.</i>
+</p><p>This PDS(7.1) <b>derived DIR$ function</b> returns a filename or a list when more than one exist. The file spec can use a path and/or wildcards.
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: Courier, monospace; background-color: darkblue; color: lightgrey; word-wrap: break-word;"> <i> </i>
+<a href="FOR...html" title="FOR...NEXT"><span style="color:#87cefa;">FOR</span></a> i = 1 <a href="TO.html" title="TO"><span style="color:#87cefa;">TO</span></a> 2
+    <a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a>
+    <a href="LINE_INPUT.html" title="LINE INPUT"><span style="color:#87cefa;">LINE INPUT</span></a> "Enter a file spec: ", spec$
+    file$ = DIR$(spec$) 'use a file spec ONCE to find the last file name listed
+    <a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> DIRCount%, file$, 'function can return the file count using <a href="SHARED.html" title="SHARED"><span style="color:#87cefa;">SHARED</span></a> variable
+    <a href="IF...html" title="IF...THEN"><span style="color:#87cefa;">IF</span></a> DIRCount% &gt; 1 <a href="THEN.html" title="THEN"><span style="color:#87cefa;">THEN</span></a>
+        DO
+            K$ = <a href="INPUT%24.html" title="INPUT$"><span style="color:#87cefa;">INPUT$</span></a>(1)
+            file$ = DIR$("") 'use an empty string parameter to return a list of files!
+            <a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> file$,
+        <a href="LOOP.html" title="LOOP"><span style="color:#87cefa;">LOOP</span></a> <a href="UNTIL.html" title="UNTIL"><span style="color:#87cefa;">UNTIL</span></a> <a href="LEN.html" title="LEN"><span style="color:#87cefa;">LEN</span></a>(file$) = 0 'file list ends with an empty string
+    <a href="END_IF.html" class="mw-redirect" title="END IF"><span style="color:#87cefa;">END IF</span></a>
+<a href="NEXT.html" title="NEXT"><span style="color:#87cefa;">NEXT</span></a>
+
+<a href="END.html" title="END"><span style="color:#87cefa;">END</span></a>
+
+<a href="FUNCTION.html" title="FUNCTION"><span style="color:#87cefa;">FUNCTION</span></a> DIR$ (spec$)
+    <a href="CONST.html" title="CONST"><span style="color:#87cefa;">CONST</span></a> TmpFile$ = "DIR$INF0.INF", ListMAX% = 500 'change maximum to suit your needs
+    <a href="SHARED.html" title="SHARED"><span style="color:#87cefa;">SHARED</span></a> <b>DIRCount% 'returns file count if desired. MAY conflict with user's existing code</b>
+    <a href="STATIC.html" title="STATIC"><span style="color:#87cefa;">STATIC</span></a> Ready%, Index%, DirList$()
+    <a href="IF...html" title="IF...THEN"><span style="color:#87cefa;">IF</span></a> <a href="NOT.html" title="NOT"><span style="color:#87cefa;">NOT</span></a> Ready% <a href="THEN.html" title="THEN"><span style="color:#87cefa;">THEN</span></a> <a href="REDIM.html" title="REDIM"><span style="color:#87cefa;">REDIM</span></a> DirList$(ListMAX%): Ready% = -1 '<a href="DIM.html" title="DIM"><span style="color:#87cefa;">DIM</span></a> array first use
+    <a href="IF...html" title="IF...THEN"><span style="color:#87cefa;">IF</span></a> spec$ &gt; "" <a href="THEN.html" title="THEN"><span style="color:#87cefa;">THEN</span></a> 'get file names when a spec is given
+        <a href="SHELL.html" title="SHELL"><span style="color:#87cefa;">SHELL</span></a> <a href="HIDE.html" title="HIDE"><span style="color:#87cefa;">_HIDE</span></a> "DIR " + spec$ + " /b &gt; " + TmpFile$
+        Index% = 0: DirList$(Index%) = "": ff% = <a href="FREEFILE.html" title="FREEFILE"><span style="color:#87cefa;">FREEFILE</span></a>
+        <a href="OPEN.html" title="OPEN"><span style="color:#87cefa;">OPEN</span></a> TmpFile$ <a href="FOR...html" title="FOR...NEXT"><span style="color:#87cefa;">FOR</span></a> <a href="APPEND.html" class="mw-redirect" title="APPEND"><span style="color:#87cefa;">APPEND</span></a> <a href="AS.html" title="AS"><span style="color:#87cefa;">AS</span></a> #ff%
+        size&amp; = <a href="LOF.html" title="LOF"><span style="color:#87cefa;">LOF</span></a>(ff%)
+        <a href="CLOSE.html" title="CLOSE"><span style="color:#87cefa;">CLOSE</span></a> #ff%
+        <a href="IF...html" title="IF...THEN"><span style="color:#87cefa;">IF</span></a> size&amp; = 0 <a href="THEN.html" title="THEN"><span style="color:#87cefa;">THEN</span></a> <a href="KILL.html" title="KILL"><span style="color:#87cefa;">KILL</span></a> TmpFile$: <a href="EXIT_FUNCTION.html" title="EXIT FUNCTION"><span style="color:#87cefa;">EXIT FUNCTION</span></a>
+        <a href="OPEN.html" title="OPEN"><span style="color:#87cefa;">OPEN</span></a> TmpFile$ <a href="FOR_(file_statement).html" class="mw-redirect" title="FOR (file statement)"><span style="color:#87cefa;">FOR</span></a> <a href="INPUT_(file_mode).html" class="mw-redirect" title="INPUT (file mode)"><span style="color:#87cefa;">INPUT</span></a> <a href="AS.html" title="AS"><span style="color:#87cefa;">AS</span></a> #ff%
+        <a href="DO...html" title="DO...LOOP"><span style="color:#87cefa;">DO</span></a> <a href="WHILE.html" title="WHILE"><span style="color:#87cefa;">WHILE</span></a> <a href="NOT.html" title="NOT"><span style="color:#87cefa;">NOT</span></a> <a href="EOF.html" title="EOF"><span style="color:#87cefa;">EOF</span></a>(ff%) <a href="AND_(boolean).html" title="AND (boolean)"><span style="color:#87cefa;">AND</span></a> Index% &lt; ListMAX%
+            Index% = Index% + 1
+            <a href="LINE_INPUT_(file_statement).html" title="LINE INPUT (file statement)"><span style="color:#87cefa;">LINE INPUT</span></a> #ff%, DirList$(Index%)
+        <a href="LOOP.html" title="LOOP"><span style="color:#87cefa;">LOOP</span></a>
+        DIRCount% = Index% '<a href="SHARED.html" title="SHARED"><span style="color:#87cefa;">SHARED</span></a> variable can return the file count
+        <a href="CLOSE.html" title="CLOSE"><span style="color:#87cefa;">CLOSE</span></a> #ff%
+        <a href="KILL.html" title="KILL"><span style="color:#87cefa;">KILL</span></a> TmpFile$
+    <a href="ELSE.html" title="ELSE"><span style="color:#87cefa;">ELSE</span></a> <a href="IF...html" title="IF...THEN"><span style="color:#87cefa;">IF</span></a> Index% &gt; 0 <a href="THEN.html" title="THEN"><span style="color:#87cefa;">THEN</span></a> Index% = Index% - 1 'no spec sends next file name
+    <a href="END_IF.html" class="mw-redirect" title="END IF"><span style="color:#87cefa;">END IF</span></a>
+    DIR$ = DirList$(Index%)
+<a href="END_FUNCTION.html" title="END FUNCTION"><span style="color:#87cefa;">END FUNCTION</span></a> <i> </i>
+</p> <center><span style="font-family: Courier New, Courier, monospace; font-size: 0.80em; line-height: 50%;">Code by Ted Weissgerber</span></center>
+<dl><dd><i>Explanation:</i> The function will verify that a file exists (even if it is empty) by returning it's name or it returns an empty string if no file exists. It can return a list of file names by using an empty string parameter("") after sending a wildcard spec to get the first file name. The number of file names found is returned by using the SHARED variable, <b>DIRCount%</b>. Unlike the PDS DIR$ function, <b>it MUST use an empty string parameter until QB64 supports optional parameters!</b> The function does NOT delete empty files.</dd></dl>
+<p><br />
+</p>
+<p style="text-align: center">(<a href="#toc">Return to Table of Contents</a>)</p>
+<p><br />
+</p>
+<h2><span class="mw-headline" id="See_also">See also</span></h2>
+<ul><li><a href="VB_Procedures.html" title="VB Procedures">VB Procedures</a></li></ul>
+<p><br />
+</p>
+<hr />
+<center><i>Navigation:</i>
+<dl><dd><a href="Keyword_Reference_-_Alphabetical.html" title="Keyword Reference - Alphabetical">Keyword Reference - Alphabetical</a></dd>
+<dd><a href="Keyword_Reference_-_By_usage.html" title="Keyword Reference - By usage">Keyword Reference - By Usage</a></dd>
+<dd><a href="Main_Page.html" title="Main Page">Main Wiki Page</a></dd></dl></center>
+<!-- 
+NewPP limit report
+Cached time: 20210706155152
+Cache expiry: 86400
+Dynamic content: false
+Complications: []
+CPU time usage: 0.108 seconds
+Real time usage: 0.121 seconds
+Preprocessor visited node count: 1075/1000000
+Post‐expand include size: 7968/2097152 bytes
+Template argument size: 1380/2097152 bytes
+Highest expansion depth: 3/40
+Expensive parser function count: 0/100
+Unstrip recursion depth: 0/20
+Unstrip post‐expand size: 0/5000000 bytes
+-->
+<!--
+Transclusion expansion time report (%,ms,calls,template)
+100.00%   37.190      1 -total
+ 30.94%   11.505    123 Template:Cl
+ 11.03%    4.101      5 Template:CodeStart
+  8.60%    3.197      1 Template:Small
+  8.20%    3.048      5 Template:CodeEnd
+  7.97%    2.965      1 Template:PageNavigation
+  7.94%    2.953      1 Template:PageSeeAlso
+-->
+
+<!-- Saved in parser cache with key i4224360_mw2-mw_:pcache:idhash:521-0!canonical and timestamp 20210706155152 and revision id 23495
+ -->
+</div></div><div class="printfooter">Retrieved from "<a dir="ltr" href="index021a.html?title=PDS_(7.1)_Procedures&amp;oldid=23495">http://www.qb64.org/wiki/index.php?title=PDS_(7.1)_Procedures&amp;oldid=23495</a>"</div>
+		<div id="catlinks" class="catlinks catlinks-allhidden" data-mw="interface"></div>
+	</div>
+</div>
+
+<div id="mw-navigation">
+	<h2>Navigation menu</h2>
+	<div id="mw-head">
+		<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-personal" class="vector-menu" aria-labelledby="p-personal-label" role="navigation" 
+	 >
+	<h3 id="p-personal-label">
+		<span>Personal tools</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="pt-login"><a href="indexfbd7.html?title=Special:UserLogin&amp;returnto=PDS+%287.1%29+Procedures" title="You are encouraged to log in; however, it is not mandatory [o]" accesskey="o">Log in</a></li></ul>
+		
+	</div>
+</nav>
+
+
+		<div id="left-navigation">
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-namespaces" class="vector-menu vector-menu-tabs vectorTabs" aria-labelledby="p-namespaces-label" role="navigation" 
+	 >
+	<h3 id="p-namespaces-label">
+		<span>Namespaces</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="ca-nstab-main" class="selected"><a href="PDS_(7.html" title="View the content page [c]" accesskey="c">Page</a></li><li id="ca-talk" class="new"><a href="Talk_PDS_(7.html?title=Talk:PDS_(7.1)_Procedures&amp;action=edit&amp;redlink=1" rel="discussion" title="Discussion about the content page (page does not exist) [t]" accesskey="t">Discussion</a></li></ul>
+		
+	</div>
+</nav>
+
+
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-variants" class="vector-menu-empty emptyPortlet vector-menu vector-menu-dropdown vectorMenu" aria-labelledby="p-variants-label" role="navigation" 
+	 >
+	<input type="checkbox" class="vector-menu-checkbox vectorMenuCheckbox" aria-labelledby="p-variants-label" />
+	<h3 id="p-variants-label">
+		<span>Variants</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="menu vector-menu-content-list"></ul>
+		
+	</div>
+</nav>
+
+
+		</div>
+		<div id="right-navigation">
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-views" class="vector-menu vector-menu-tabs vectorTabs" aria-labelledby="p-views-label" role="navigation" 
+	 >
+	<h3 id="p-views-label">
+		<span>Views</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="ca-view" class="collapsible selected"><a href="PDS_(7.html">Read</a></li><li id="ca-viewsource" class="collapsible"><a href="indexc4ed.html?title=PDS_(7.1)_Procedures&amp;action=edit" title="This page is protected.&#10;You can view its source [e]" accesskey="e">View source</a></li><li id="ca-history" class="collapsible"><a href="indexf474.html?title=PDS_(7.1)_Procedures&amp;action=history" title="Past revisions of this page [h]" accesskey="h">View history</a></li></ul>
+		
+	</div>
+</nav>
+
+
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-cactions" class="vector-menu-empty emptyPortlet vector-menu vector-menu-dropdown vectorMenu" aria-labelledby="p-cactions-label" role="navigation" 
+	 >
+	<input type="checkbox" class="vector-menu-checkbox vectorMenuCheckbox" aria-labelledby="p-cactions-label" />
+	<h3 id="p-cactions-label">
+		<span>More</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="menu vector-menu-content-list"></ul>
+		
+	</div>
+</nav>
+
+
+			<div id="p-search" role="search">
+	<h3 >
+		<label for="searchInput">Search</label>
+	</h3>
+	<form action="https://www.qb64.org/wiki/index.php" id="searchform">
+		<div id="simpleSearch">
+			<input type="search" name="search" placeholder="Search QB64 Wiki" title="Search QB64 Wiki [f]" accesskey="f" id="searchInput"/>
+			<input type="hidden" name="title" value="Special:Search">
+			<input type="submit" name="fulltext" value="Search" title="Search the pages for this text" id="mw-searchButton" class="searchButton mw-fallbackSearchButton"/>
+			<input type="submit" name="go" value="Go" title="Go to a page with this exact name if it exists" id="searchButton" class="searchButton"/>
+		</div>
+	</form>
+</div>
+
+		</div>
+	</div>
+	
+<div id="mw-panel">
+	<div id="p-logo" role="banner">
+		<a  title="Visit the main page" class="mw-wiki-logo" href="Main_Page.html"></a>
+	</div>
+	<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-navigation" class="vector-menu vector-menu-portal portal portal-first" aria-labelledby="p-navigation-label" role="navigation" 
+	 >
+	<h3 id="p-navigation-label">
+		<span>Navigation</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="n-mainpage-description"><a href="Main_Page.html" title="Visit the main page [z]" accesskey="z">Main page</a></li><li id="n-recentchanges"><a href="Special_RecentChanges.html" title="A list of recent changes in the wiki [r]" accesskey="r">Recent changes</a></li><li id="n-randompage"><a href="SNDCOPY.html" title="Load a random page [x]" accesskey="x">Random page</a></li><li id="n-help-mediawiki"><a href="https://www.mediawiki.org/wiki/Special:MyLanguage/Help:Contents">Help about MediaWiki</a></li></ul>
+		
+	</div>
+</nav>
+
+
+	<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-tb" class="vector-menu vector-menu-portal portal" aria-labelledby="p-tb-label" role="navigation" 
+	 >
+	<h3 id="p-tb-label">
+		<span>Tools</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="t-whatlinkshere"><a href="Special_WhatLinksHere/PDS_(7.html" title="A list of all wiki pages that link here [j]" accesskey="j">What links here</a></li><li id="t-recentchangeslinked"><a href="Special_RecentChangesLinked/PDS_(7.html" rel="nofollow" title="Recent changes in pages linked from this page [k]" accesskey="k">Related changes</a></li><li id="t-specialpages"><a href="Special_SpecialPages.html" title="A list of all special pages [q]" accesskey="q">Special pages</a></li><li id="t-print"><a href="javascript:print();" rel="alternate" title="Printable version of this page [p]" accesskey="p">Printable version</a></li><li id="t-permalink"><a href="index021a.html?title=PDS_(7.1)_Procedures&amp;oldid=23495" title="Permanent link to this revision of the page">Permanent link</a></li><li id="t-info"><a href="indexfe46.html?title=PDS_(7.1)_Procedures&amp;action=info" title="More information about this page">Page information</a></li></ul>
+		
+	</div>
+</nav>
+
+
+	
+</div>
+
+</div>
+
+<footer id="footer" class="mw-footer" role="contentinfo" >
+	<ul id="footer-info" >
+		<li id="footer-info-lastmod"> This page was last edited on 23 February 2021, at 07:28.</li>
+	</ul>
+	<ul id="footer-places" >
+		<li id="footer-places-privacy"><a href="My_wiki_Privacy_policy.html" title="My wiki:Privacy policy">Privacy policy</a></li>
+		<li id="footer-places-about"><a href="My_wiki_About.html" title="My wiki:About">About QB64 Wiki</a></li>
+		<li id="footer-places-disclaimer"><a href="My_wiki_General_disclaimer.html" title="My wiki:General disclaimer">Disclaimers</a></li>
+	</ul>
+	<ul id="footer-icons" class="noprint">
+		<li id="footer-poweredbyico"><a href="https://www.mediawiki.org/"><img src="resources/assets/poweredby_mediawiki_88x31.png" alt="Powered by MediaWiki" srcset="/wiki/resources/assets/poweredby_mediawiki_132x47.png 1.5x, /wiki/resources/assets/poweredby_mediawiki_176x62.png 2x" width="88" height="31" loading="lazy"/></a></li>
+	</ul>
+	<div style="clear: both;"></div>
+</footer>
+
+
+
+<script>(RLQ=window.RLQ||[]).push(function(){mw.config.set({"wgPageParseReport":{"limitreport":{"cputime":"0.108","walltime":"0.121","ppvisitednodes":{"value":1075,"limit":1000000},"postexpandincludesize":{"value":7968,"limit":2097152},"templateargumentsize":{"value":1380,"limit":2097152},"expansiondepth":{"value":3,"limit":40},"expensivefunctioncount":{"value":0,"limit":100},"unstrip-depth":{"value":0,"limit":20},"unstrip-size":{"value":0,"limit":5000000},"timingprofile":["100.00%   37.190      1 -total"," 30.94%   11.505    123 Template:Cl"," 11.03%    4.101      5 Template:CodeStart","  8.60%    3.197      1 Template:Small","  8.20%    3.048      5 Template:CodeEnd","  7.97%    2.965      1 Template:PageNavigation","  7.94%    2.953      1 Template:PageSeeAlso"]},"cachereport":{"timestamp":"20210706155152","ttl":86400,"transientcontent":false}}});mw.config.set({"wgBackendResponseTime":1730});});</script></body>
+<!-- Mirrored from www.qb64.org/wiki/PDS_(7.1)_Procedures by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 07 Aug 2021 12:43:33 GMT -->
+</html>

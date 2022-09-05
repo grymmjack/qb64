@@ -1,0 +1,333 @@
+
+<!DOCTYPE html>
+<html class="client-nojs" lang="en" dir="ltr">
+
+<!-- Mirrored from www.qb64.org/wiki/BIT by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 07 Aug 2021 12:51:25 GMT -->
+<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=UTF-8" /><!-- /Added by HTTrack -->
+<head>
+<meta charset="UTF-8"/>
+<title>_BIT - QB64 Wiki</title>
+<script>document.documentElement.className="client-js";RLCONF={"wgBreakFrames":!1,"wgSeparatorTransformTable":["",""],"wgDigitTransformTable":["",""],"wgDefaultDateFormat":"dmy","wgMonthNames":["","January","February","March","April","May","June","July","August","September","October","November","December"],"wgRequestId":"YOWko@kbkwEB08KNhNejuAAAAGw","wgCSPNonce":!1,"wgCanonicalNamespace":"","wgCanonicalSpecialPageName":!1,"wgNamespaceNumber":0,"wgPageName":"BIT","wgTitle":"BIT","wgCurRevisionId":1954,"wgRevisionId":1954,"wgArticleId":61,"wgIsArticle":!0,"wgIsRedirect":!1,"wgAction":"view","wgUserName":null,"wgUserGroups":["*"],"wgCategories":[],"wgPageContentLanguage":"en","wgPageContentModel":"wikitext","wgRelevantPageName":"BIT","wgRelevantArticleId":61,"wgIsProbablyEditable":!1,"wgRelevantPageIsProbablyEditable":!1,"wgRestrictionEdit":[],"wgRestrictionMove":[]};RLSTATE={"site.styles":"ready","noscript":"ready","user.styles":"ready","user":"ready","user.options":"loading"
+,"skins.vector.styles.legacy":"ready","mediawiki.toc.styles":"ready"};RLPAGEMODULES=["site","mediawiki.page.startup","mediawiki.page.ready","mediawiki.toc","skins.vector.legacy.js"];</script>
+<script>(RLQ=window.RLQ||[]).push(function(){mw.loader.implement("user.options@1hzgi",function($,jQuery,require,module){/*@nomin*/mw.user.tokens.set({"patrolToken":"+\\","watchToken":"+\\","csrfToken":"+\\"});
+});});</script>
+<link rel="stylesheet" href="loadd8b0.css?lang=en&amp;modules=mediawiki.toc.styles%7Cskins.vector.styles.legacy&amp;only=styles&amp;skin=vector"/>
+<script async="" src="load52c0.php?lang=en&amp;modules=startup&amp;only=scripts&amp;raw=1&amp;skin=vector"></script>
+<meta name="generator" content="MediaWiki 1.35.2"/>
+<link rel="shortcut icon" href="https://www.qb64.org/favicon.ico"/>
+<link rel="search" type="application/opensearchdescription+xml" href="opensearch_desc.php" title="QB64 Wiki (en)"/>
+<link rel="EditURI" type="application/rsd+xml" href="api-result251f.xml?action=rsd"/>
+<link rel="alternate" type="application/atom+xml" title="QB64 Wiki Atom feed" href="feeda295.xml?title=Special:RecentChanges&amp;feed=atom"/>
+<!--[if lt IE 9]><script src="/wiki/resources/lib/html5shiv/html5shiv.js"></script><![endif]-->
+</head>
+<body class="mediawiki ltr sitedir-ltr mw-hide-empty-elt ns-0 ns-subject page-BIT rootpage-BIT skin-vector action-view skin-vector-legacy">
+<div id="mw-page-base" class="noprint"></div>
+<div id="mw-head-base" class="noprint"></div>
+<div id="content" class="mw-body" role="main">
+	<a id="top"></a>
+	<div id="siteNotice" class="mw-body-content"></div>
+	<div class="mw-indicators mw-body-content">
+	</div>
+	<h1 id="firstHeading" class="firstHeading" lang="en">_BIT</h1>
+	<div id="bodyContent" class="mw-body-content">
+		<div id="siteSub" class="noprint">From QB64 Wiki</div>
+		<div id="contentSub"></div>
+		<div id="contentSub2"></div>
+		
+		<div id="jump-to-nav"></div>
+		<a class="mw-jump-link" href="#mw-head">Jump to navigation</a>
+		<a class="mw-jump-link" href="#searchInput">Jump to search</a>
+		<div id="mw-content-text" lang="en" dir="ltr" class="mw-content-ltr"><div class="mw-parser-output"><p>The <a class="mw-selflink selflink">_BIT</a> datatype can return only values of 0 (bit off) and -1 (bit on). 
+</p><p><br />
+</p>
+<div id="toc" class="toc" role="navigation" aria-labelledby="mw-toc-heading"><input type="checkbox" role="button" id="toctogglecheckbox" class="toctogglecheckbox" style="display:none" /><div class="toctitle" lang="en" dir="ltr"><h2 id="mw-toc-heading">Contents</h2><span class="toctogglespan"><label class="toctogglelabel" for="toctogglecheckbox"></label></span></div>
+<ul>
+<li class="toclevel-1"><a href="#Syntax"><span class="tocnumber">1</span> <span class="toctext">Syntax</span></a></li>
+<li class="toclevel-1"><a href="#Description"><span class="tocnumber">2</span> <span class="toctext">Description</span></a></li>
+<li class="toclevel-1"><a href="#Examples"><span class="tocnumber">3</span> <span class="toctext">Examples</span></a></li>
+<li class="toclevel-1"><a href="#See_also"><span class="tocnumber">4</span> <span class="toctext">See also</span></a></li>
+</ul>
+</div>
+
+<h2><span class="mw-headline" id="Syntax">Syntax</span></h2>
+<dl><dd><a href="DIM.html" title="DIM">DIM</a> <i>variable</i> <a href="AS.html" title="AS">AS</a> [<span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="UNSIGNED.html" title="UNSIGNED">_UNSIGNED</a></span>] <a class="mw-selflink selflink">_BIT</a> [* <i>numberofbits</i>]</dd></dl>
+<dl><dd><a href="DEFINE.html" title="DEFINE">_DEFINE</a> <i>Letter</i>[<i>-Range</i>|,...] <a href="AS.html" title="AS">AS</a> [<span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="UNSIGNED.html" title="UNSIGNED">_UNSIGNED</a></span>] <a class="mw-selflink selflink">_BIT</a> [* <i>numberofbits</i>]</dd></dl>
+<p><br />
+</p>
+<h2><span class="mw-headline" id="Description">Description</span></h2>
+<ul><li>An <a href="UNSIGNED.html" title="UNSIGNED">_UNSIGNED</a> _BIT can hold 0 or 1 instead of 0 and -1, if you set the numberofbits you can hold larger values depending on the number of bits you have set (_BIT * 8 can hold the same values as <a href="BYTE.html" title="BYTE">_BYTE</a> for example) and the information below is compromised if setting any number of bits other than 1.</li>
+<li>If you set the variable to any other number then the least significant bit of that number will be set as the variables number, if the bit is 1 (on) then the variable will be -1 and if the bit is 0 (off) then the variable will be 0.</li>
+<li>The least significant bit is the last bit on a string of bits (11111) since that bit will only add 1 to the value if set. The most significant bit is the first bit on a string of bits and changes the value more dramatically (significantly) if set on or off.</li>
+<li>The _BIT datatype can be succesfully used as a <a href="Boolean.html" title="Boolean">Boolean</a> (TRUE or FALSE) and it requires minimal amount of memory (the lowest amount possible actually, one byte can hold 8 bits, if you want to use bits in order to decrease memory usage, use them as arrays as a _BIT variable by itself allocates 4 bytes - DIM bitarray(800) AS _BIT uses 100 bytes).</li>
+<li><b>When a variable has not been assigned or has no type suffix, the value defaults to <a href="SINGLE.html" title="SINGLE">SINGLE</a>.</b></li>
+<li><b><a href="Keywords_currently_not_supported_by_QB64.html" title="Keywords currently not supported by QB64">_BIT is not supported in User Defined TYPES.</a></b> Use a <a href="BYTE.html" title="BYTE">_BYTE</a> and assign up to 8 bit values as shown below.</li></ul>
+<p><br />
+</p>
+<ul><li><b>Suffix Symbols</b> The <a class="mw-selflink selflink">_BIT</a> type suffix used is below the grave accent (`), usually located under the tilde (~) key (not an apostrophe). Foreign keyboards may not have the ` key. Try Alt+96 in the IDE.</li></ul>
+<dl><dd>You can define a bit on-the-fly by adding a ` after the variable, like this: <span style="font-family: Courier New, monospace, Courier; background: #dddddd">variable` = -1</span></dd></dl>
+<dl><dd>If you want an unsigned bit you can define it on-the-fly by adding ~` instead, like this: <span style="font-family: Courier New, monospace, Courier; background: #dddddd">variable~` = 1</span></dd></dl>
+<dl><dd>You can set the number of bits on the fly by just adding that number - this defines it as being two bits: <span style="font-family: Courier New, monospace, Courier; background: #dddddd">variable`2 = -1</span></dd></dl>
+<p><br />
+</p>
+<center><b><a class="mw-selflink selflink">BITS</a></b></center>
+<ul><li>The <b>MSB</b> is the most significant(largest) bit value and <b>LSB</b> is the least significant bit of a binary or register memory address value. The order in which the bits are read determines the binary or decimal byte value. There are two common ways to read a byte:</li></ul>
+<dl><dd><ul><li><b>"Big-endian"</b>: MSB is the first bit encountered, decreasing to the LSB as the last bit by position, memory address or time.</li>
+<li><b>"Little-endian"</b>: LSB is the first bit encountered, increasing to the MSB as the last bit by position, memory address or time.</li></ul></dd></dl>
+<p style="padding: 1em; line-height:100%; margin-left:10px; white-space: pre; font-family: courier; background-color: white; color: darkgreen;">
+         <b>Offset or Position:    0    1   2   3   4   5   6   7      Example: 11110000</b>
+                              ----------------------------------             --------
+    <b>Big-Endian Bit On Value:</b>   128  64  32  16   8   4   2   1                 240
+ <b>Little-Endian Bit On Value:</b>    1    2   4   8  16  32  64  128                 15
+</p>
+<dl><dd><dl><dd>The big-endian method compares exponents of 2 <sup>7</sup> down to 2 <sup>0</sup> while the little-endian method does the opposite.</dd></dl></dd></dl>
+<center><b><a href="BYTE.html" title="BYTE">BYTES</a></b></center>
+<ul><li><a href="INTEGER.html" title="INTEGER">INTEGER</a> values consist of 2 bytes called the <b>HI</b> and <b>LO</b> bytes. Anytime that the number of binary digits is a multiple of 16 (2bytes, 4 bytes, etc.) and the HI byte's MSB is on(1), the value returned will be negative. Even with <a href="SINGLE.html" title="SINGLE">SINGLE</a> or <a href="DOUBLE.html" title="DOUBLE">DOUBLE</a> values!</li></ul>
+<p style="padding: 1em; line-height:100%; margin-left:10px; white-space: pre; font-family: courier; background-color: white; color: darkgreen;">                                 <b>16 BIT INTEGER OR REGISTER</b>
+              <b>AH (High Byte Bits)                         AL (Low Byte Bits)</b>
+   BIT:    15    14   13   12   11   10   9   8  |   7   6    5   4    3    2   1    0
+          ---------------------------------------|--------------------------------------
+   HEX:   8000  4000 2000 1000  800 400  200 100 |  80   40  20   10   8    4   2    1
+                                                 |
+   DEC: -32768 16384 8192 4096 2048 1024 512 256 | 128   64  32   16   8    4   2    1
+</p>
+<dl><dd><dl><dd>The HI byte's <b>MSB</b> is often called the <b>sign</b> bit! When all 16 of the integer binary bits are on, the decimal return is -1.</dd></dl></dd></dl>
+<p><br />
+</p>
+<h2><span class="mw-headline" id="Examples">Examples</span></h2>
+<p><i>Example:</i> Shifting bits in a value in QB64 versions prior to 1.3 (you can use <a href="SHL.html" title="SHL">_SHL</a> and <a href="SHR.html" title="SHR">_SHR</a> starting with version 1.3).
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: Courier, monospace; background-color: darkblue; color: lightgrey; word-wrap: break-word;"> <i> </i>
+n = 24
+Shift = 3
+
+<a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> LShift(n, Shift)
+<a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> RShift(n, Shift)
+<a href="END.html" title="END"><span style="color:#87cefa;">END</span></a>
+
+<a href="FUNCTION.html" title="FUNCTION"><span style="color:#87cefa;">FUNCTION</span></a> LShift&amp;(n AS <a href="LONG.html" title="LONG"><span style="color:#87cefa;">LONG</span></a>, LS AS <a href="LONG.html" title="LONG"><span style="color:#87cefa;">LONG</span></a>)
+IF LS &lt; 0 THEN <a href="EXIT_FUNCTION.html" title="EXIT FUNCTION"><span style="color:#87cefa;">EXIT FUNCTION</span></a>
+LShift = <a href="INT.html" title="INT"><span style="color:#87cefa;">INT</span></a>(n * (2 ^ LS))    
+<a href="END_FUNCTION.html" title="END FUNCTION"><span style="color:#87cefa;">END FUNCTION</span></a>
+
+<a href="FUNCTION.html" title="FUNCTION"><span style="color:#87cefa;">FUNCTION</span></a> RShift&amp;(n AS <a href="LONG.html" title="LONG"><span style="color:#87cefa;">LONG</span></a>, RS AS <a href="LONG.html" title="LONG"><span style="color:#87cefa;">LONG</span></a>)
+IF RS &lt; 0 THEN <a href="EXIT_FUNCTION.html" title="EXIT FUNCTION"><span style="color:#87cefa;">EXIT FUNCTION</span></a>
+RShift = <a href="INT.html" title="INT"><span style="color:#87cefa;">INT</span></a>(n / (2 ^ RS))
+<a href="END_FUNCTION.html" title="END FUNCTION"><span style="color:#87cefa;">END FUNCTION</span></a> <i> </i>
+</p>
+<center><span style="font-family: Courier New, Courier, monospace; font-size: 0.80em; line-height: 50%;">Adapted from code by RThorpe</span></center>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: Courier; background-color: black; color: white;"> 192
+ 3
+</p>
+<p><br />
+</p>
+<h2><span class="mw-headline" id="See_also">See also</span></h2>
+<ul><li><a href="%26B.html" title="&amp;B">&amp;B</a> (binary), <a href="BYTE.html" title="BYTE">_BYTE</a></li>
+<li><a href="SHL.html" title="SHL">_SHL</a>, <a href="SHR.html" title="SHR">_SHR</a></li>
+<li><a href="DEFINE.html" title="DEFINE">_DEFINE</a>, <a href="UNSIGNED.html" title="UNSIGNED">_UNSIGNED</a></li>
+<li><a href="DIM.html" title="DIM">DIM</a></li>
+<li><a href="Binary.html" title="Binary">Binary</a>, <a href="Boolean.html" title="Boolean">Boolean</a></li>
+<li><a href="Variable_Types.html" title="Variable Types">Variable Types</a></li>
+<li><a href="Converting_Bytes_to_Bits.html" title="Converting Bytes to Bits">Converting Bytes to Bits</a></li></ul>
+<p><br />
+</p>
+<hr />
+<center><i>Navigation:</i>
+<dl><dd><a href="Keyword_Reference_-_Alphabetical.html" title="Keyword Reference - Alphabetical">Keyword Reference - Alphabetical</a></dd>
+<dd><a href="Keyword_Reference_-_By_usage.html" title="Keyword Reference - By usage">Keyword Reference - By Usage</a></dd>
+<dd><a href="Main_Page.html" title="Main Page">Main Wiki Page</a></dd></dl></center>
+<!-- 
+NewPP limit report
+Cached time: 20210707125708
+Cache expiry: 86400
+Dynamic content: false
+Complications: []
+CPU time usage: 0.096 seconds
+Real time usage: 0.470 seconds
+Preprocessor visited node count: 189/1000000
+Post‐expand include size: 2674/2097152 bytes
+Template argument size: 310/2097152 bytes
+Highest expansion depth: 3/40
+Expensive parser function count: 0/100
+Unstrip recursion depth: 0/20
+Unstrip post‐expand size: 0/5000000 bytes
+-->
+<!--
+Transclusion expansion time report (%,ms,calls,template)
+100.00%  207.085      1 -total
+ 11.39%   23.597      1 Template:PageSyntax
+  8.18%   16.939      1 Template:PageNavigation
+  7.82%   16.184      1 Template:CodeEnd
+  7.79%   16.131      1 Template:Small
+  7.68%   15.901      1 Template:PageDescription
+  7.64%   15.822      5 Template:Parameter
+  6.67%   13.803      3 Template:InlineCodeEnd
+  6.41%   13.270      2 Template:WhiteEnd
+  4.84%   10.022      1 Template:PageSeeAlso
+-->
+
+<!-- Saved in parser cache with key i4224360_mw2-mw_:pcache:idhash:61-0!canonical and timestamp 20210707125708 and revision id 1954
+ -->
+</div></div><div class="printfooter">Retrieved from "<a dir="ltr" href="index3e72.html?title=BIT&amp;oldid=1954">http://www.qb64.org/wiki/index.php?title=BIT&amp;oldid=1954</a>"</div>
+		<div id="catlinks" class="catlinks catlinks-allhidden" data-mw="interface"></div>
+	</div>
+</div>
+
+<div id="mw-navigation">
+	<h2>Navigation menu</h2>
+	<div id="mw-head">
+		<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-personal" class="vector-menu" aria-labelledby="p-personal-label" role="navigation" 
+	 >
+	<h3 id="p-personal-label">
+		<span>Personal tools</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="pt-login"><a href="indexa032.html?title=Special:UserLogin&amp;returnto=BIT" title="You are encouraged to log in; however, it is not mandatory [o]" accesskey="o">Log in</a></li></ul>
+		
+	</div>
+</nav>
+
+
+		<div id="left-navigation">
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-namespaces" class="vector-menu vector-menu-tabs vectorTabs" aria-labelledby="p-namespaces-label" role="navigation" 
+	 >
+	<h3 id="p-namespaces-label">
+		<span>Namespaces</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="ca-nstab-main" class="selected"><a href="BIT.html" title="View the content page [c]" accesskey="c">Page</a></li><li id="ca-talk" class="new"><a href="Talk_BIT.html?title=Talk:BIT&amp;action=edit&amp;redlink=1" rel="discussion" title="Discussion about the content page (page does not exist) [t]" accesskey="t">Discussion</a></li></ul>
+		
+	</div>
+</nav>
+
+
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-variants" class="vector-menu-empty emptyPortlet vector-menu vector-menu-dropdown vectorMenu" aria-labelledby="p-variants-label" role="navigation" 
+	 >
+	<input type="checkbox" class="vector-menu-checkbox vectorMenuCheckbox" aria-labelledby="p-variants-label" />
+	<h3 id="p-variants-label">
+		<span>Variants</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="menu vector-menu-content-list"></ul>
+		
+	</div>
+</nav>
+
+
+		</div>
+		<div id="right-navigation">
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-views" class="vector-menu vector-menu-tabs vectorTabs" aria-labelledby="p-views-label" role="navigation" 
+	 >
+	<h3 id="p-views-label">
+		<span>Views</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="ca-view" class="collapsible selected"><a href="BIT.html">Read</a></li><li id="ca-viewsource" class="collapsible"><a href="index1cf5.html?title=BIT&amp;action=edit" title="This page is protected.&#10;You can view its source [e]" accesskey="e">View source</a></li><li id="ca-history" class="collapsible"><a href="indexd407.html?title=BIT&amp;action=history" title="Past revisions of this page [h]" accesskey="h">View history</a></li></ul>
+		
+	</div>
+</nav>
+
+
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-cactions" class="vector-menu-empty emptyPortlet vector-menu vector-menu-dropdown vectorMenu" aria-labelledby="p-cactions-label" role="navigation" 
+	 >
+	<input type="checkbox" class="vector-menu-checkbox vectorMenuCheckbox" aria-labelledby="p-cactions-label" />
+	<h3 id="p-cactions-label">
+		<span>More</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="menu vector-menu-content-list"></ul>
+		
+	</div>
+</nav>
+
+
+			<div id="p-search" role="search">
+	<h3 >
+		<label for="searchInput">Search</label>
+	</h3>
+	<form action="https://www.qb64.org/wiki/index.php" id="searchform">
+		<div id="simpleSearch">
+			<input type="search" name="search" placeholder="Search QB64 Wiki" title="Search QB64 Wiki [f]" accesskey="f" id="searchInput"/>
+			<input type="hidden" name="title" value="Special:Search">
+			<input type="submit" name="fulltext" value="Search" title="Search the pages for this text" id="mw-searchButton" class="searchButton mw-fallbackSearchButton"/>
+			<input type="submit" name="go" value="Go" title="Go to a page with this exact name if it exists" id="searchButton" class="searchButton"/>
+		</div>
+	</form>
+</div>
+
+		</div>
+	</div>
+	
+<div id="mw-panel">
+	<div id="p-logo" role="banner">
+		<a  title="Visit the main page" class="mw-wiki-logo" href="Main_Page.html"></a>
+	</div>
+	<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-navigation" class="vector-menu vector-menu-portal portal portal-first" aria-labelledby="p-navigation-label" role="navigation" 
+	 >
+	<h3 id="p-navigation-label">
+		<span>Navigation</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="n-mainpage-description"><a href="Main_Page.html" title="Visit the main page [z]" accesskey="z">Main page</a></li><li id="n-recentchanges"><a href="Special_RecentChanges.html" title="A list of recent changes in the wiki [r]" accesskey="r">Recent changes</a></li><li id="n-randompage"><a href="SNDCOPY.html" title="Load a random page [x]" accesskey="x">Random page</a></li><li id="n-help-mediawiki"><a href="https://www.mediawiki.org/wiki/Special:MyLanguage/Help:Contents">Help about MediaWiki</a></li></ul>
+		
+	</div>
+</nav>
+
+
+	<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-tb" class="vector-menu vector-menu-portal portal" aria-labelledby="p-tb-label" role="navigation" 
+	 >
+	<h3 id="p-tb-label">
+		<span>Tools</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="t-whatlinkshere"><a href="Special_WhatLinksHere/BIT.html" title="A list of all wiki pages that link here [j]" accesskey="j">What links here</a></li><li id="t-recentchangeslinked"><a href="Special_RecentChangesLinked/BIT.html" rel="nofollow" title="Recent changes in pages linked from this page [k]" accesskey="k">Related changes</a></li><li id="t-specialpages"><a href="Special_SpecialPages.html" title="A list of all special pages [q]" accesskey="q">Special pages</a></li><li id="t-print"><a href="javascript:print();" rel="alternate" title="Printable version of this page [p]" accesskey="p">Printable version</a></li><li id="t-permalink"><a href="index3e72.html?title=BIT&amp;oldid=1954" title="Permanent link to this revision of the page">Permanent link</a></li><li id="t-info"><a href="indexb2a2.html?title=BIT&amp;action=info" title="More information about this page">Page information</a></li></ul>
+		
+	</div>
+</nav>
+
+
+	
+</div>
+
+</div>
+
+<footer id="footer" class="mw-footer" role="contentinfo" >
+	<ul id="footer-info" >
+		<li id="footer-info-lastmod"> This page was last edited on 11 April 2019, at 14:39.</li>
+	</ul>
+	<ul id="footer-places" >
+		<li id="footer-places-privacy"><a href="My_wiki_Privacy_policy.html" title="My wiki:Privacy policy">Privacy policy</a></li>
+		<li id="footer-places-about"><a href="My_wiki_About.html" title="My wiki:About">About QB64 Wiki</a></li>
+		<li id="footer-places-disclaimer"><a href="My_wiki_General_disclaimer.html" title="My wiki:General disclaimer">Disclaimers</a></li>
+	</ul>
+	<ul id="footer-icons" class="noprint">
+		<li id="footer-poweredbyico"><a href="https://www.mediawiki.org/"><img src="resources/assets/poweredby_mediawiki_88x31.png" alt="Powered by MediaWiki" srcset="/wiki/resources/assets/poweredby_mediawiki_132x47.png 1.5x, /wiki/resources/assets/poweredby_mediawiki_176x62.png 2x" width="88" height="31" loading="lazy"/></a></li>
+	</ul>
+	<div style="clear: both;"></div>
+</footer>
+
+
+
+<script>(RLQ=window.RLQ||[]).push(function(){mw.config.set({"wgPageParseReport":{"limitreport":{"cputime":"0.096","walltime":"0.470","ppvisitednodes":{"value":189,"limit":1000000},"postexpandincludesize":{"value":2674,"limit":2097152},"templateargumentsize":{"value":310,"limit":2097152},"expansiondepth":{"value":3,"limit":40},"expensivefunctioncount":{"value":0,"limit":100},"unstrip-depth":{"value":0,"limit":20},"unstrip-size":{"value":0,"limit":5000000},"timingprofile":["100.00%  207.085      1 -total"," 11.39%   23.597      1 Template:PageSyntax","  8.18%   16.939      1 Template:PageNavigation","  7.82%   16.184      1 Template:CodeEnd","  7.79%   16.131      1 Template:Small","  7.68%   15.901      1 Template:PageDescription","  7.64%   15.822      5 Template:Parameter","  6.67%   13.803      3 Template:InlineCodeEnd","  6.41%   13.270      2 Template:WhiteEnd","  4.84%   10.022      1 Template:PageSeeAlso"]},"cachereport":{"timestamp":"20210707125708","ttl":86400,"transientcontent":false}}});mw.config.set({"wgBackendResponseTime":2388});});</script></body>
+<!-- Mirrored from www.qb64.org/wiki/BIT by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 07 Aug 2021 12:51:30 GMT -->
+</html>

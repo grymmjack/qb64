@@ -1,0 +1,1239 @@
+
+<!DOCTYPE html>
+<html class="client-nojs" lang="en" dir="ltr">
+
+<!-- Mirrored from www.qb64.org/wiki/ASCII by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 07 Aug 2021 12:41:26 GMT -->
+<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=UTF-8" /><!-- /Added by HTTrack -->
+<head>
+<meta charset="UTF-8"/>
+<title>ASCII - QB64 Wiki</title>
+<script>document.documentElement.className="client-js";RLCONF={"wgBreakFrames":!1,"wgSeparatorTransformTable":["",""],"wgDigitTransformTable":["",""],"wgDefaultDateFormat":"dmy","wgMonthNames":["","January","February","March","April","May","June","July","August","September","October","November","December"],"wgRequestId":"YOWkSVpP-65vp3So6LulmQAAANY","wgCSPNonce":!1,"wgCanonicalNamespace":"","wgCanonicalSpecialPageName":!1,"wgNamespaceNumber":0,"wgPageName":"ASCII","wgTitle":"ASCII","wgCurRevisionId":23229,"wgRevisionId":23229,"wgArticleId":38,"wgIsArticle":!0,"wgIsRedirect":!1,"wgAction":"view","wgUserName":null,"wgUserGroups":["*"],"wgCategories":[],"wgPageContentLanguage":"en","wgPageContentModel":"wikitext","wgRelevantPageName":"ASCII","wgRelevantArticleId":38,"wgIsProbablyEditable":!1,"wgRelevantPageIsProbablyEditable":!1,"wgRestrictionEdit":[],"wgRestrictionMove":[]};RLSTATE={"site.styles":"ready","noscript":"ready","user.styles":"ready","user":"ready","user.options":
+"loading","skins.vector.styles.legacy":"ready","mediawiki.toc.styles":"ready"};RLPAGEMODULES=["site","mediawiki.page.startup","mediawiki.page.ready","mediawiki.toc","skins.vector.legacy.js"];</script>
+<script>(RLQ=window.RLQ||[]).push(function(){mw.loader.implement("user.options@1hzgi",function($,jQuery,require,module){/*@nomin*/mw.user.tokens.set({"patrolToken":"+\\","watchToken":"+\\","csrfToken":"+\\"});
+});});</script>
+<link rel="stylesheet" href="loadd8b0.css?lang=en&amp;modules=mediawiki.toc.styles%7Cskins.vector.styles.legacy&amp;only=styles&amp;skin=vector"/>
+<script async="" src="load52c0.php?lang=en&amp;modules=startup&amp;only=scripts&amp;raw=1&amp;skin=vector"></script>
+<meta name="generator" content="MediaWiki 1.35.2"/>
+<link rel="shortcut icon" href="https://www.qb64.org/favicon.ico"/>
+<link rel="search" type="application/opensearchdescription+xml" href="opensearch_desc.php" title="QB64 Wiki (en)"/>
+<link rel="EditURI" type="application/rsd+xml" href="api-result251f.xml?action=rsd"/>
+<link rel="alternate" type="application/atom+xml" title="QB64 Wiki Atom feed" href="feeda295.xml?title=Special:RecentChanges&amp;feed=atom"/>
+<!--[if lt IE 9]><script src="/wiki/resources/lib/html5shiv/html5shiv.js"></script><![endif]-->
+</head>
+<body class="mediawiki ltr sitedir-ltr mw-hide-empty-elt ns-0 ns-subject page-ASCII rootpage-ASCII skin-vector action-view skin-vector-legacy">
+<div id="mw-page-base" class="noprint"></div>
+<div id="mw-head-base" class="noprint"></div>
+<div id="content" class="mw-body" role="main">
+	<a id="top"></a>
+	<div id="siteNotice" class="mw-body-content"></div>
+	<div class="mw-indicators mw-body-content">
+	</div>
+	<h1 id="firstHeading" class="firstHeading" lang="en">ASCII</h1>
+	<div id="bodyContent" class="mw-body-content">
+		<div id="siteSub" class="noprint">From QB64 Wiki</div>
+		<div id="contentSub"></div>
+		<div id="contentSub2"></div>
+		
+		<div id="jump-to-nav"></div>
+		<a class="mw-jump-link" href="#mw-head">Jump to navigation</a>
+		<a class="mw-jump-link" href="#searchInput">Jump to search</a>
+		<div id="mw-content-text" lang="en" dir="ltr" class="mw-content-ltr"><div class="mw-parser-output"><h2><span class="mw-headline" id="ASCII_and_Extended_Codes">ASCII and Extended Codes</span></h2>
+<table align="right">
+<tbody><tr>
+<td><div id="toc" class="toc" role="navigation" aria-labelledby="mw-toc-heading"><input type="checkbox" role="button" id="toctogglecheckbox" class="toctogglecheckbox" style="display:none" /><div class="toctitle" lang="en" dir="ltr"><h2 id="mw-toc-heading">Contents</h2><span class="toctogglespan"><label class="toctogglelabel" for="toctogglecheckbox"></label></span></div>
+<ul>
+<li class="toclevel-1 tocsection-1"><a href="#ASCII_and_Extended_Codes"><span class="tocnumber">1</span> <span class="toctext">ASCII and Extended Codes</span></a></li>
+<li class="toclevel-1 tocsection-2"><a href="#Control_Characters"><span class="tocnumber">2</span> <span class="toctext">Control Characters</span></a></li>
+<li class="toclevel-1 tocsection-3"><a href="#ASC_Codes"><span class="tocnumber">3</span> <span class="toctext">ASC Codes</span></a></li>
+<li class="toclevel-1 tocsection-4"><a href="#Two_Byte_Codes"><span class="tocnumber">4</span> <span class="toctext">Two Byte Codes</span></a></li>
+<li class="toclevel-1 tocsection-5"><a href="#Code_Examples"><span class="tocnumber">5</span> <span class="toctext">Code Examples</span></a></li>
+<li class="toclevel-1 tocsection-6"><a href="#References"><span class="tocnumber">6</span> <span class="toctext">References</span></a></li>
+<li class="toclevel-1"><a href="#See_also"><span class="tocnumber">7</span> <span class="toctext">See also</span></a></li>
+</ul>
+</div>
+
+</td></tr></tbody></table>
+<p><br />
+</p>
+<center><a rel="nofollow" class="external text" href="http://en.wikipedia.org/wiki/Code_page_437">MS-DOS code page 437</a>:</center>
+<dl><dd><table border="1" cellpadding="2">
+<tbody><tr>
+<th colspan="8"><a rel="nofollow" class="external text" href="http://ascii.cl/control-characters.htm">ASCII Control 0 to 31</a> &#160;&#160;|&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;ASCII Keyboard Character Codes 32 to 127 &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;
+</th></tr>
+<tr>
+<th>Code</th>
+<th>Character <tt>[key]</tt></th>
+<th>Code</th>
+<th>Character</th>
+<th>Code</th>
+<th>Character</th>
+<th>Code</th>
+<th>Character
+</th></tr>
+<tr>
+<td>0</td>
+<td>&#160;&#160;&#160;&#160;&#160;&#160;&#160;(NUL)</td>
+<td>32</td>
+<td>&#160;[<tt><a href="SPACE%24.html" title="SPACE$">Spacebar</a></tt>]</td>
+<td>64</td>
+<td>&#160;<tt>@</tt></td>
+<td>96</td>
+<td>&#160;<tt>`</tt>
+</td></tr>
+<tr>
+<td>1</td>
+<td>&#160;☺ &#160;&#160;(SOH)</td>
+<td>33</td>
+<td>&#160;!</td>
+<td>65</td>
+<td>&#160;A</td>
+<td>97</td>
+<td>&#160;a
+</td></tr>
+<tr>
+<td>2</td>
+<td>&#160;☻ &#160;&#160;(STX)</td>
+<td>34</td>
+<td>&#160;"</td>
+<td>66</td>
+<td>&#160;B</td>
+<td>98</td>
+<td>&#160;b
+</td></tr>
+<tr>
+<td>3</td>
+<td>&#160;♥ &#160;&#160;(ETX)</td>
+<td>35</td>
+<td>&#160;#</td>
+<td>67</td>
+<td>&#160;C</td>
+<td>99</td>
+<td>&#160;c
+</td></tr>
+<tr>
+<td>4</td>
+<td>&#160;♦ &#160;&#160;(EOT)</td>
+<td>36</td>
+<td>&#160;$</td>
+<td>68</td>
+<td>&#160;D</td>
+<td>100</td>
+<td>&#160;d
+</td></tr>
+<tr>
+<td>5</td>
+<td>&#160;♣ &#160;&#160;(ENQ)</td>
+<td>37</td>
+<td>&#160;%</td>
+<td>69</td>
+<td>&#160;E</td>
+<td>101</td>
+<td>&#160;e
+</td></tr>
+<tr>
+<td>6</td>
+<td>&#160;♠ &#160;&#160;(ACK)</td>
+<td>38</td>
+<td>&#160;&amp;</td>
+<td>70</td>
+<td>&#160;F</td>
+<td>102</td>
+<td>&#160;f
+</td></tr>
+<tr>
+<td>7</td>
+<td>&#160;• &#160;&#160;(BEL) &#160;&#160;<tt><a href="BEEP.html" title="BEEP">BEEP</a></tt></td>
+<td>39</td>
+<td>&#160;'</td>
+<td>71</td>
+<td>&#160;G</td>
+<td>103</td>
+<td>&#160;g
+</td></tr>
+<tr>
+<td>8</td>
+<td>&#160;◘ &#160;&#160;&#160;[<tt>BackSpace</tt>] **</td>
+<td>40</td>
+<td>&#160;(</td>
+<td>72</td>
+<td>&#160;H</td>
+<td>104</td>
+<td>&#160;h
+</td></tr>
+<tr>
+<td>9</td>
+<td>&#160;○ &#160;&#160;(HT) &#160;&#160;&#160;[<tt>TAB</tt>] **</td>
+<td>41</td>
+<td>&#160;)</td>
+<td>73</td>
+<td>&#160;I</td>
+<td>105</td>
+<td>&#160;&#160;i
+</td></tr>
+<tr>
+<td>10</td>
+<td>&#160;◙ &#160;&#160;(LineFeed)&#160; **</td>
+<td>42</td>
+<td>&#160;*</td>
+<td>74</td>
+<td>&#160;J</td>
+<td>106</td>
+<td>&#160;j
+</td></tr>
+<tr>
+<td>11</td>
+<td>&#160;♂ &#160;&#160;(VT) **</td>
+<td>43</td>
+<td>&#160;+</td>
+<td>75</td>
+<td>&#160;K</td>
+<td>107</td>
+<td>&#160;k
+</td></tr>
+<tr>
+<td>12</td>
+<td>&#160;♀ &#160;&#160;(FormFeed) **</td>
+<td>44</td>
+<td>&#160;,</td>
+<td>76</td>
+<td>&#160;L</td>
+<td>108</td>
+<td>&#160;l
+</td></tr>
+<tr>
+<td>13</td>
+<td>&#160;♪ &#160;&#160;(CR) [<tt>Enter</tt>] **</td>
+<td>45</td>
+<td>&#160;-</td>
+<td>77</td>
+<td>&#160;M</td>
+<td>109</td>
+<td>&#160;m
+</td></tr>
+<tr>
+<td>14</td>
+<td>&#160;♫ &#160;&#160;(SO)</td>
+<td>46</td>
+<td>&#160;.</td>
+<td>78</td>
+<td>&#160;N</td>
+<td>110</td>
+<td>&#160;n
+</td></tr>
+<tr>
+<td>15</td>
+<td>&#160;☼ &#160;&#160;(SI)</td>
+<td>47</td>
+<td>&#160;/</td>
+<td>79</td>
+<td>&#160;O</td>
+<td>111</td>
+<td>&#160;o
+</td></tr>
+<tr>
+<td>16</td>
+<td>&#160;► &#160;&#160;(DLE)</td>
+<td>48</td>
+<td>&#160;0</td>
+<td>80</td>
+<td>&#160;P</td>
+<td>112</td>
+<td>&#160;p
+</td></tr>
+<tr>
+<td>17</td>
+<td>&#160;◄ &#160;&#160;(DC1)</td>
+<td>49</td>
+<td>&#160;1</td>
+<td>81</td>
+<td>&#160;Q</td>
+<td>113</td>
+<td>&#160;q
+</td></tr>
+<tr>
+<td>18</td>
+<td>&#160;↕ &#160;&#160;(DC2)</td>
+<td>50</td>
+<td>&#160;2</td>
+<td>82</td>
+<td>&#160;R</td>
+<td>114</td>
+<td>&#160;r
+</td></tr>
+<tr>
+<td>19</td>
+<td>&#160;‼ &#160;&#160;(DC3)</td>
+<td>51</td>
+<td>&#160;3</td>
+<td>83</td>
+<td>&#160;S</td>
+<td>115</td>
+<td>&#160;s
+</td></tr>
+<tr>
+<td>20</td>
+<td>&#160;¶ &#160;&#160;(DC4)</td>
+<td>52</td>
+<td>&#160;4</td>
+<td>84</td>
+<td>&#160;T</td>
+<td>116</td>
+<td>&#160;t
+</td></tr>
+<tr>
+<td>21</td>
+<td>&#160;§ &#160;&#160;(NAK)</td>
+<td>53</td>
+<td>&#160;5</td>
+<td>85</td>
+<td>&#160;U</td>
+<td>117</td>
+<td>&#160;u
+</td></tr>
+<tr>
+<td>22</td>
+<td>&#160;▬ &#160;&#160;(SYN)</td>
+<td>54</td>
+<td>&#160;6</td>
+<td>86</td>
+<td>&#160;V</td>
+<td>118</td>
+<td>&#160;v
+</td></tr>
+<tr>
+<td>23</td>
+<td>&#160;↨ &#160;&#160;(ETB)</td>
+<td>55</td>
+<td>&#160;7</td>
+<td>87</td>
+<td>&#160;W</td>
+<td>119</td>
+<td>&#160;w
+</td></tr>
+<tr>
+<td>24</td>
+<td>&#160;↑ &#160;&#160;(CAN)</td>
+<td>56</td>
+<td>&#160;8</td>
+<td>88</td>
+<td>&#160;X</td>
+<td>120</td>
+<td>&#160;x
+</td></tr>
+<tr>
+<td>25</td>
+<td>&#160;↓ &#160;&#160;(EM)</td>
+<td>57</td>
+<td>&#160;9</td>
+<td>89</td>
+<td>&#160;Y</td>
+<td>121</td>
+<td>&#160;y
+</td></tr>
+<tr>
+<td>26</td>
+<td>&#160;→ &#160;&#160;(SUB) &#160;&#160;&#160;<tt><a href="EOF.html" title="EOF">EOF</a></tt></td>
+<td>58</td>
+<td>&#160;:</td>
+<td>90</td>
+<td>&#160;Z</td>
+<td>122</td>
+<td>&#160;z
+</td></tr>
+<tr>
+<td>27</td>
+<td>&#160;← &#160;&#160;(ESC) &#160;&#160;[<tt>Esc</tt>]</td>
+<td>59</td>
+<td>&#160;;</td>
+<td>91</td>
+<td>&#160;[</td>
+<td>123</td>
+<td>&#160;{
+</td></tr>
+<tr>
+<td>28</td>
+<td>&#160;∟ &#160;&#160;(FS) **</td>
+<td>60</td>
+<td>&#160;&lt;</td>
+<td>92</td>
+<td>&#160;\</td>
+<td>124</td>
+<td>&#160;|
+</td></tr>
+<tr>
+<td>29</td>
+<td>&#160;↔ &#160;&#160;(GS) **</td>
+<td>61</td>
+<td>&#160;=</td>
+<td>93</td>
+<td>&#160;]</td>
+<td>125</td>
+<td>&#160;}
+</td></tr>
+<tr>
+<td>30</td>
+<td>&#160;▲ &#160;&#160;(RS) **</td>
+<td>62</td>
+<td>&#160;&gt;</td>
+<td>94</td>
+<td>&#160;^</td>
+<td>126</td>
+<td>&#160;~
+</td></tr>
+<tr>
+<td>31</td>
+<td>&#160;▼ &#160;&#160;(US) **</td>
+<td>63</td>
+<td>&#160;?</td>
+<td>95</td>
+<td>&#160;_</td>
+<td>127</td>
+<td>&#160;⌂ (DEL) *
+</td></tr>
+<tr>
+<th colspan="8">IBM, International, graphical, mathematical and other characters
+</th></tr>
+<tr>
+<th>Code</th>
+<th>Character</th>
+<th>Code</th>
+<th>Character</th>
+<th>Code</th>
+<th>Character</th>
+<th>Code</th>
+<th>Character
+</th></tr>
+<tr>
+<td>128</td>
+<td>&#160;Ç</td>
+<td>160</td>
+<td>&#160;á</td>
+<td>192</td>
+<td>&#160;└</td>
+<td>224</td>
+<td>&#160;α
+</td></tr>
+<tr>
+<td>129</td>
+<td>&#160;ü</td>
+<td>161</td>
+<td>&#160;í</td>
+<td>193</td>
+<td>&#160;┴</td>
+<td>225</td>
+<td>&#160;ß
+</td></tr>
+<tr>
+<td>130</td>
+<td>&#160;é</td>
+<td>162</td>
+<td>&#160;ó</td>
+<td>194</td>
+<td>&#160;┬</td>
+<td>226</td>
+<td>&#160;Γ
+</td></tr>
+<tr>
+<td>131</td>
+<td>&#160;â</td>
+<td>163</td>
+<td>&#160;ú</td>
+<td>195</td>
+<td>&#160;├</td>
+<td>227</td>
+<td>&#160;π
+</td></tr>
+<tr>
+<td>132</td>
+<td>&#160;ä</td>
+<td>164</td>
+<td>&#160;ñ</td>
+<td>196</td>
+<td>&#160;─</td>
+<td>228</td>
+<td>&#160;Σ
+</td></tr>
+<tr>
+<td>133</td>
+<td>&#160;à</td>
+<td>165</td>
+<td>&#160;Ñ</td>
+<td>197</td>
+<td>&#160;┼</td>
+<td>229</td>
+<td>&#160;σ
+</td></tr>
+<tr>
+<td>134</td>
+<td>&#160;å</td>
+<td>166</td>
+<td>&#160;ª</td>
+<td>198</td>
+<td>&#160;╞</td>
+<td>230</td>
+<td>&#160;µ
+</td></tr>
+<tr>
+<td>135</td>
+<td>&#160;ç</td>
+<td>167</td>
+<td>&#160;º</td>
+<td>199</td>
+<td>&#160;╟</td>
+<td>231</td>
+<td>&#160;τ
+</td></tr>
+<tr>
+<td>136</td>
+<td>&#160;ê</td>
+<td>168</td>
+<td>&#160;¿</td>
+<td>200</td>
+<td>&#160;╚</td>
+<td>232</td>
+<td>&#160;Φ
+</td></tr>
+<tr>
+<td>137</td>
+<td>&#160;ë</td>
+<td>169</td>
+<td>&#160;⌐</td>
+<td>201</td>
+<td>&#160;╔</td>
+<td>233</td>
+<td>&#160;Θ
+</td></tr>
+<tr>
+<td>138</td>
+<td>&#160;è</td>
+<td>170</td>
+<td>&#160;¬</td>
+<td>202</td>
+<td>&#160;╩</td>
+<td>234</td>
+<td>&#160;Ω
+</td></tr>
+<tr>
+<td>139</td>
+<td>&#160;ï</td>
+<td>171</td>
+<td>&#160;½</td>
+<td>203</td>
+<td>&#160;╦</td>
+<td>235</td>
+<td>&#160;δ
+</td></tr>
+<tr>
+<td>140</td>
+<td>&#160;î</td>
+<td>172</td>
+<td>&#160;¼</td>
+<td>204</td>
+<td>&#160;╠</td>
+<td>236</td>
+<td>&#160;∞
+</td></tr>
+<tr>
+<td>141</td>
+<td>&#160;ì</td>
+<td>173</td>
+<td>&#160;¡</td>
+<td>205</td>
+<td>&#160;═</td>
+<td>237</td>
+<td>&#160;φ
+</td></tr>
+<tr>
+<td>142</td>
+<td>&#160;Ä</td>
+<td>174</td>
+<td>&#160;«</td>
+<td>206</td>
+<td>&#160;╬</td>
+<td>238</td>
+<td>&#160;ε
+</td></tr>
+<tr>
+<td>143</td>
+<td>&#160;Å</td>
+<td>175</td>
+<td>&#160;»</td>
+<td>207</td>
+<td>&#160;╧</td>
+<td>239</td>
+<td>&#160;∩
+</td></tr>
+<tr>
+<td>144</td>
+<td>&#160;É</td>
+<td>176</td>
+<td>&#160;░</td>
+<td>208</td>
+<td>&#160;╨</td>
+<td>240</td>
+<td>&#160;≡
+</td></tr>
+<tr>
+<td>145</td>
+<td>&#160;æ</td>
+<td>177</td>
+<td>&#160;▒</td>
+<td>209</td>
+<td>&#160;╤</td>
+<td>241</td>
+<td>&#160;±
+</td></tr>
+<tr>
+<td>146</td>
+<td>&#160;Æ</td>
+<td>178</td>
+<td>&#160;▓</td>
+<td>210</td>
+<td>&#160;╥</td>
+<td>242</td>
+<td>&#160;≥
+</td></tr>
+<tr>
+<td>147</td>
+<td>&#160;ô</td>
+<td>179</td>
+<td>&#160;│</td>
+<td>211</td>
+<td>&#160;╙</td>
+<td>243</td>
+<td>&#160;≤
+</td></tr>
+<tr>
+<td>148</td>
+<td>&#160;ö</td>
+<td>180</td>
+<td>&#160;┤</td>
+<td>212</td>
+<td>&#160;╘</td>
+<td>244</td>
+<td>&#160;⌠
+</td></tr>
+<tr>
+<td>149</td>
+<td>&#160;ò</td>
+<td>181</td>
+<td>&#160;╡</td>
+<td>213</td>
+<td>&#160;╒</td>
+<td>245</td>
+<td>&#160;⌡
+</td></tr>
+<tr>
+<td>150</td>
+<td>&#160;û</td>
+<td>182</td>
+<td>&#160;╢</td>
+<td>214</td>
+<td>&#160;╓</td>
+<td>246</td>
+<td>&#160;÷
+</td></tr>
+<tr>
+<td>151</td>
+<td>&#160;ù</td>
+<td>183</td>
+<td>&#160;╖</td>
+<td>215</td>
+<td>&#160;╫</td>
+<td>247</td>
+<td>&#160;≈
+</td></tr>
+<tr>
+<td>152</td>
+<td>&#160;ÿ</td>
+<td>184</td>
+<td>&#160;╕</td>
+<td>216</td>
+<td>&#160;╪</td>
+<td>248</td>
+<td>&#160;°
+</td></tr>
+<tr>
+<td>153</td>
+<td>&#160;Ö</td>
+<td>185</td>
+<td>&#160;╣</td>
+<td>217</td>
+<td>&#160;┘</td>
+<td>249</td>
+<td>&#160;∙
+</td></tr>
+<tr>
+<td>154</td>
+<td>&#160;Ü</td>
+<td>186</td>
+<td>&#160;║</td>
+<td>218</td>
+<td>&#160;┌</td>
+<td>250</td>
+<td>&#160;·
+</td></tr>
+<tr>
+<td>155</td>
+<td>&#160;¢</td>
+<td>187</td>
+<td>&#160;╗</td>
+<td>219</td>
+<td>&#160;█</td>
+<td>251</td>
+<td>&#160;√
+</td></tr>
+<tr>
+<td>156</td>
+<td>&#160;£</td>
+<td>188</td>
+<td>&#160;╝</td>
+<td>220</td>
+<td>&#160;▄</td>
+<td>252</td>
+<td>&#160;ⁿ
+</td></tr>
+<tr>
+<td>157</td>
+<td>&#160;¥</td>
+<td>189</td>
+<td>&#160;╜</td>
+<td>221</td>
+<td>&#160;▌</td>
+<td>253</td>
+<td>&#160;²
+</td></tr>
+<tr>
+<td>158</td>
+<td>&#160;₧</td>
+<td>190</td>
+<td>&#160;╛</td>
+<td>222</td>
+<td>&#160;▐</td>
+<td>254</td>
+<td>&#160;■
+</td></tr>
+<tr>
+<td>159</td>
+<td>&#160;ƒ</td>
+<td>191</td>
+<td>&#160;┐</td>
+<td>223</td>
+<td>▀</td>
+<td>255</td>
+<td>&#160;<i>NBSP</i> ***
+</td></tr></tbody></table></dd></dl>
+<dl><dd><b> * DEL was used to erase paper tape data by punching out all of the 7 holes.</b></dd>
+<dd><b>** Control characters 8 to 13 and 28 to 31 can move text formatting when <a href="PRINT.html" title="PRINT">printed</a> and do not display</b></dd>
+<dd><b>*** NBSP is a Non-breaking Space used to indent text. Some browsers may handle this character differently</b></dd></dl>
+<center><a rel="nofollow" class="external text" href="http://www.lammertbies.nl/comm/info/ascii-characters.html">More information about ASCII  Control Characters</a> </center>
+<p><br />
+</p>
+<center><a href="Unicode.html" title="Unicode">Unicode Character Table</a></center>
+<h2><span class="mw-headline" id="Control_Characters">Control Characters</span></h2>
+<ul><li><a href="INKEY%24.html" title="INKEY$">INKEY$</a> will return Control + letter key press combinations as the equivalent control characters or bold <b>function keys</b> listed below:</li></ul>
+<p style="padding: 1em; line-height:100%; margin-left:10px; white-space: pre; font-family: courier; background-color: white; color: darkgreen;"> CTRL + A = CHR$(1)   ☺  StartHeader (SOH)    CTRL + B = CHR$(2)   ☻  StartText         (STX)
+ CTRL + C = CHR$(3)   ♥  EndText     (ETX)    CTRL + D = CHR$(4)   ♦  EndOfTransmit     (EOT)
+ CTRL + E = CHR$(5)   ♣  Enquiry     (ENQ)    CTRL + F = CHR$(6)   ♠  Acknowledge       (ACK)
+ CTRL + G = CHR$(7)   <span style="color:red">•</span>  <a href="BEEP.html" title="BEEP">Bell</a>        (BEL)    CTRL + H = CHR$(8)   ◘  <b>[Backspace]</b>       (BSP)
+ CTRL + I = CHR$(9)   <span style="color:red">○</span>  Horiz.Tab   <b>[Tab]</b>    CTRL + J = CHR$(10)  <span style="color:red">◙</span>  LineFeed(printer) (LF)
+ CTRL + K = CHR$(11)  <span style="color:red">♂</span>  Vert. Tab   (VT)     CTRL + L = CHR$(12)  <span style="color:red">♀</span>  FormFeed(printer) (FF)
+ CTRL + M = CHR$(13)  <span style="color:red">♪</span>  <b>[Enter]</b>     (CR)     CTRL + N = CHR$(14)  ♫  ShiftOut          (SO)
+ CTRL + O = CHR$(15)  ☼  ShiftIn     (SI)     CTRL + P = CHR$(16)  ►  DataLinkEscape    (DLE)
+ CTRL + Q = CHR$(17)  ◄  DevControl1 (DC1)    CTRL + R = CHR$(18)  ↕  DeviceControl2    (DC2)
+ CTRL + S = CHR$(19)  ‼  DevControl3 (DC3)    CTRL + T = CHR$(20)  ¶  DeviceControl4    (DC4)
+ CTRL + U = CHR$(21)  §  NegativeACK (NAK)    CTRL + V = CHR$(22)  ▬  Synchronous Idle  (SYN)
+ CTRL + W = CHR$(23)  ↨  EndTXBlock  (ETB)    CTRL + X = CHR$(24)  ↑  Cancel            (CAN)
+ CTRL + Y = CHR$(25)  ↓  EndMedium   (EM)     CTRL + Z = CHR$(26)  →  End Of File(SUB)  (EOF)
+
+   <b><span style="color:red">Red symbols will format text and not <a href="PRINT.html" title="PRINT">PRINT</a> the symbol.</span> <a href="PRINTSTRING.html" title="PRINTSTRING">_PRINTSTRING</a> can print in QB64</b>                           
+</p>
+<ul><li>Control characters <b>1 to 26</b> can be used to simulate <i>Ctrl + letter</i> key shortcuts in Windows programs using <a href="SCREENPRINT.html" title="SCREENPRINT">_SCREENPRINT</a>.</li>
+<li><a href="CONTROLCHR.html" title="CONTROLCHR">_CONTROLCHR</a> OFF can also be used in QB64 to allow control characters to be printed without formatting the text.</li></ul>
+<p><br />
+</p>
+<center><b>ASCII in Text and Printing</b></center>
+<ul><li>Characters <b>0</b>(NULL) and <b>255</b>(NBSP) can also be used to print spaces(<b>32</b>). Useful for making file names harder to delete too.</li>
+<li>Character <b>7</b> will create a <a href="BEEP.html" title="BEEP">BEEP</a> sound when printed in <b>QB64</b> or an error sound in QBasic using a <b>SCREEN 0</b> window.</li>
+<li>Character <b>8</b> is returned when the <b>Backspace</b> key is pressed.</li>
+<li>Characters <b>9 thru 13</b> and <b>28 thru 31</b> can affect screen or file text placements and do not display the character when <a href="PRINT.html" title="PRINT">printed</a>:</li></ul>
+<dl><dd><ul><li>Character <b>9</b> will <b>Tab</b> space the cursor 8 column spaces when printed.</li>
+<li>Character <b>10</b> moves the cursor or <i>"line feeds"</i> the printer head down one row.</li>
+<li>Character <b>11</b> vertical tabs the cursor back to top left position of page or screen. Acts like <a href="CLS.html" title="CLS">CLS</a>.</li>
+<li>Character <b>12</b> acts like <a href="CLS.html" title="CLS">CLS</a> when printed. <i>"Form feeds"</i> the page out of printers.</li>
+<li>Character <b>13</b> is the cursor or typing <b>"carriage return"</b> to the start of the line on left side. Returned when <b>Enter</b> key pressed.</li>
+<li>Character <b>28</b> designates a File Separator. Moves the print cursor one space right. Combination Ctrl + \</li>
+<li>Character <b>29</b> designates a Group Separator. Moves the print cursor one space left. Combination Ctrl + ]</li>
+<li>Character <b>30</b> designates a Record Separator. Moves the print cursor one row up. Combination Ctrl + ^</li>
+<li>Character <b>31</b> designates a Unit Separator. Moves the print cursor one row down. Combination Ctrl + _</li></ul></dd></dl>
+<ul><li><b>QB64</b> can display all of the control characters without formatting the text using <a href="PRINTSTRING.html" title="PRINTSTRING">_PRINTSTRING</a>.</li>
+<li>Characters <b>13</b> and <b>10</b> can be combined to create the <b>CrLf</b> carriage return used in files or printing. crlf$ = CHR$(13) + CHR$(10).</li>
+<li>Character <b>16</b>, the data link escape(DLE) character, can designate that a control character is being sent from a <a href="OPEN_COM.html" title="OPEN COM">COM port</a>.</li></ul>
+<dl><dd><i>Example:</i> (DLE) &lt;XON&gt; <data> (DLE) &lt;XOFF&gt; or (DLE) &lt;STX&gt; <data> (DLE) &lt;ETX&gt;</data></data></dd></dl>
+<ul><li>Character <b>17</b>, Device Control 1, is used with <a href="OPEN_COM.html" title="OPEN COM">COM ports</a> to mark the start of a transmission as "XON". The character is read.</li>
+<li>Character <b>19</b>, Device Control 3, is used with <a href="OPEN_COM.html" title="OPEN COM">COM ports</a> to mark the end of a transmission as "XOFF". The character is NOT read.</li>
+<li>Character <b>26</b> can be used to designate the end of a file. See <a href="EOF.html" title="EOF">EOF</a>.</li>
+<li>Character <b>27</b> <b><span style="color:green">←</span></b> is returned when the <b>Escape</b> key is pressed.</li></ul>
+<center><b>Control character <a href="PRINT.html" title="PRINT">PRINT</a> actions can be controlled using <a href="CONTROLCHR.html" title="CONTROLCHR">_CONTROLCHR</a> OFF or ON in QB64.</b></center>
+<p><br />
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: Courier, monospace; background-color: darkblue; color: lightgrey; word-wrap: break-word;"> <i> </i>
+<a href="SCREEN.html" title="SCREEN"><span style="color:#87cefa;">SCREEN</span></a> 12
+<a href="COLOR.html" title="COLOR"><span style="color:#87cefa;">COLOR</span></a> 14: <a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> "Press Control + letter key combinations."
+DO
+  K$ = <a href="INKEY%24.html" title="INKEY$"><span style="color:#87cefa;">INKEY$</span></a>
+  <a href="IF...html" title="IF...THEN"><span style="color:#87cefa;">IF</span></a> <a href="LEN.html" title="LEN"><span style="color:#87cefa;">LEN</span></a>(K$) <a href="THEN.html" title="THEN"><span style="color:#87cefa;">THEN</span></a>
+    code = <a href="ASC.html" title="ASC"><span style="color:#87cefa;">ASC</span></a>(K$)
+    <a href="IF...html" title="IF...THEN"><span style="color:#87cefa;">IF</span></a> code &lt; 32 <a href="THEN.html" title="THEN"><span style="color:#87cefa;">THEN</span></a> <a href="PRINTSTRING.html" title="PRINTSTRING"><span style="color:#87cefa;">_PRINTSTRING</span></a> (220, 100), "Ctrl + " + <a href="CHR%24.html" title="CHR$"><span style="color:#87cefa;">CHR$</span></a>(code + 64) + " = " + K$ + " "
+  <a href="END_IF.html" class="mw-redirect" title="END IF"><span style="color:#87cefa;">END IF</span></a>
+<a href="LOOP.html" title="LOOP"><span style="color:#87cefa;">LOOP</span></a> <a href="UNTIL.html" title="UNTIL"><span style="color:#87cefa;">UNTIL</span></a> K$ = <a href="CHR%24.html" title="CHR$"><span style="color:#87cefa;">CHR$</span></a>(27)
+
+<a href="END.html" title="END"><span style="color:#87cefa;">END</span></a> <i> </i>
+</p>
+<p><br />
+</p>
+<center><b>ASCII Character Usage</b></center>
+<ul><li>Characters are one byte and take up one space(byte) in a <a href="STRING.html" title="STRING">STRING</a> value or variable.</li>
+<li>Extended(non-keyboard) characters can be entered by holding down <i>Alt</i> key and entering the code number on the Number pad.</li>
+<li><a href="PRINT.html" title="PRINT">PRINTs</a> text characters and symbols or formats the screen, printer or file.</li>
+<li><a href="BINARY-2.html" class="mw-redirect" title="BINARY">BINARY</a> files often store values below 256 in the one byte character. To read the value get the code with <a href="ASC.html" title="ASC">ASC</a>.</li>
+<li>Numerical values placed into a <a href="BINARY-2.html" class="mw-redirect" title="BINARY">BINARY</a> or <a href="RANDOM.html" title="RANDOM">RANDOM</a> file using a <a href="GET.html" title="GET">GET</a> or <a href="PUT.html" title="PUT">PUT</a> variable, they will be stored in <a href="MK%24.html" title="MK$">_MK$</a> format.</li>
+<li>Characters <b>176</b> to <b>223</b> can be used to create screen borders or boundaries in an ASCII game. See: <a href="SCREEN_(function).html" title="SCREEN (function)">SCREEN (function)</a></li>
+<li>Character <b>253</b>(small 2) can be found as the first character byte of a <a href="BSAVE.html" title="BSAVE">BSAVEd</a> image file opened in <a href="BINARY-2.html" class="mw-redirect" title="BINARY">BINARY</a> mode.</li>
+<li>Character <b>255</b> can be used as the NBSP(non-breaking space) character on web pages to fill in extra spaces.</li>
+<li>Can be used to crudely encrypt a file so others cannot read it by shifting the code values. See <a href="CHR%24.html" title="CHR$">CHR$</a> example 2.</li></ul>
+<p style="text-align: center">(<a href="#toc">Return to Table of Contents</a>)</p>
+<h2><span class="mw-headline" id="ASC_Codes"><a href="ASC.html" title="ASC">ASC</a> Codes</span></h2>
+<center><b><a href="ASC.html" title="ASC">ASC</a> cannot read empty <a href="INKEY%24.html" title="INKEY$">INKEY$</a> = "" loop reads! Check for them before reading <a href="ASC.html" title="ASC">ASC</a> key press codes!</b></center>
+<p style="padding: 1em; line-height:100%; margin-left:10px; white-space: pre; font-family: courier; background-color: white; color: darkgreen;">'                                <b>ASCII Keyboard Codes</b>
+'
+'<b> Esc  F1  F2  F3  F4  F5  F6  F7  F8  F9  F10  F11  F12  Sys ScL Pause</b>                  
+'  27 +59 +60 +61 +62 +63 +64 +65 +66 +67 +68  +133 +134   -   -    -
+'<b> `~  1!  2@  3#  4$  5%  6^  7&amp;  8*  9(  0) -_ =+ BkSp   Ins Hme PUp   NumL  /   *    -</b> 
+' 126 33  64  35  36  37  94  38  42  40  41 95 43   8    +82 +71 +73    -    47  42   45
+'<i>  96 49  50  51  52  53  54  55  56  57  48 45 61</i>
+'<b> Tab Q   W   E   R   T   Y   U   I   O   P  [{  ]}  \|   Del End PDn   7Hme 8/▲  9PU  + </b>
+'  9  81  87  69  82  84  89  85  73  79  80 123 125 124  +83 +79 +81   +71  +72  +73  43
+'<i>    113 119 101 114 116 121 117 105 111 112  91  93  92                 55   56   57 </i>
+'<b> CapL  A   S   D   F   G   H   J   K   L   ;:  '" Enter                4/◄-  5   6/-►  </b>
+'   -   65  83  68  70  71  72  74  75  76  58  34  13                  +75  +76  +77  <b>E</b>
+'<i>       97 115 100 102 103 104 106 107 108  59  39                       52   53   54 </i> <b>n</b>                                    
+'<b> Shift  Z   X   C   V   B   N   M   ,&lt;  .&gt;  /?    Shift       ▲        1End 2/▼  3PD  t</b>
+'   *    90  88  67  86  66  78  77  60  62  63      *        +72       +79  +80  +81  <b>e</b>
+'<i>       122 120  99 118  98 110 109  44  46  47                          49   50   51 </i> <b>r</b>
+'<b> Ctrl Win Alt       Spacebar          Alt Win Menu Ctrl   ◄-  ▼   -►   0Ins     .Del </b>
+'  *    -   *           32              *   -   -    *    +75 +80 +77   +82       +83  13 
+'                                                                   <i>     48        46</i>
+'
+' <b>    <i>Italics</i> = LCase/NumLock On  ____________  + = 2 Byte: CHR$(0) + CHR$(code)</b>
+'</p><center><span style="font-family: Courier New, Courier, monospace; font-size: 0.80em; line-height: 50%;">NOTE: The above commented table can be copied and pasted directly into the QB64 IDE</span></center>
+<p class="mw-empty-elt"></p> 
+<p><br />
+</p>
+<center>Use <b><span style="color:green">ASC(RIGHT$(key$, 1))</span></b> or <b><span style="color:green">ASC(key$, 2)</span></b> in QB64 to read a two byte code when <b><span style="color:green">ASC(key$) = 0</span></b></center>
+<center><b>* See the Two Byte Ctrl, Alt and Shift + Function key combinations below</b></center>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: Courier, monospace; background-color: darkblue; color: lightgrey; word-wrap: break-word;">'             Demo displays all ASCII codes and 2 byte code combinations
+<a href="DO...html" title="DO...LOOP"><span style="color:#87cefa;">DO</span></a>: K$ = <a href="INKEY%24.html" title="INKEY$"><span style="color:#87cefa;">INKEY$</span></a>
+  <a href="IF...html" title="IF...THEN"><span style="color:#87cefa;">IF</span></a> K$ &lt;&gt; "" <a href="THEN.html" title="THEN"><span style="color:#87cefa;">THEN</span></a>      'ASC will return an error if an empty string is read!
+    <a href="IF...html" title="IF...THEN"><span style="color:#87cefa;">IF</span></a> <a href="ASC.html" title="ASC"><span style="color:#87cefa;">ASC</span></a>(K$) &gt; 0 <a href="THEN.html" title="THEN"><span style="color:#87cefa;">THEN</span></a>        
+      <a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> "<a href="CHR%24.html" title="CHR$"><span style="color:#87cefa;">CHR$</span></a>(" + <a href="LTRIM%24.html" title="LTRIM$"><span style="color:#87cefa;">LTRIM$</span></a>(<a href="STR%24.html" title="STR$"><span style="color:#87cefa;">STR$</span></a>(<a href="ASC.html" title="ASC"><span style="color:#87cefa;">ASC</span></a>(K$))) + ")"  'display normal keypress codes
+    <a href="ELSE.html" title="ELSE"><span style="color:#87cefa;">ELSE</span></a> <a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> "<a href="CHR%24.html" title="CHR$"><span style="color:#87cefa;">CHR$</span></a>(0) + <a href="CHR%24.html" title="CHR$"><span style="color:#87cefa;">CHR$</span></a>(" + <a href="LTRIM%24.html" title="LTRIM$"><span style="color:#87cefa;">LTRIM$</span></a>(<a href="STR%24.html" title="STR$"><span style="color:#87cefa;">STR$</span></a>(<a href="ASC.html" title="ASC"><span style="color:#87cefa;">ASC</span></a>(K$, 2))) + ")"  'display 2 byte codes
+    <a href="END_IF.html" class="mw-redirect" title="END IF"><span style="color:#87cefa;">END IF</span></a>
+  <a href="END_IF.html" class="mw-redirect" title="END IF"><span style="color:#87cefa;">END IF</span></a>
+<a href="LOOP.html" title="LOOP"><span style="color:#87cefa;">LOOP</span></a> <a href="UNTIL.html" title="UNTIL"><span style="color:#87cefa;">UNTIL</span></a> K$ = <a href="CHR%24.html" title="CHR$"><span style="color:#87cefa;">CHR$</span></a>(27) 'escape key press exits <i> </i>
+</p>
+<dl><dd><i>Note:</i> In QB64 <a href="ASC.html" title="ASC">ASC</a>(K$, 2) can read the second byte of the 2 byte code when <a href="ASC.html" title="ASC">ASC</a>(K$) reads the first byte as 0.</dd></dl>
+<p style="text-align: center">(<a href="#toc">Return to Table of Contents</a>)</p>
+<h2><span class="mw-headline" id="Two_Byte_Codes">Two Byte Codes</span></h2>
+<center><b>Two Byte ASCII Keyboard Return Values</b></center>
+<ul><li><a href="INKEY%24.html" title="INKEY$">INKEY$</a> returns both bytes when two byte keys or key combinations are pressed. The second byte = <a href="RIGHT%24.html" title="RIGHT$">RIGHT$</a>(keypress$, 1)</li>
+<li>If the character returned is a two byte code, <a href="ASC.html" title="ASC">ASC</a> will return 0. <b>Warning:</b> ASC cannot read empty <a href="INKEY%24.html" title="INKEY$">INKEY$</a> string values!</li>
+<li>In <b>QB64</b> only, <a href="ASC.html" title="ASC">ASC</a>(keypress$, 2) can return the second byte code. Don't read empty string values!</li>
+<li>String values returned can be compared in an <a href="IF...html" title="IF...THEN">IF</a> or <a href="SELECT_CASE.html" title="SELECT CASE">SELECT CASE</a> routine by using the actual string definitions such as:</li></ul>
+<dl><dd>IF INKEY$ = CHR$(0) + CHR$(80) THEN row = row + 1 <b>or</b> IF INKEY$ = CHR$(0) + "P" THEN row = row + 1</dd></dl>
+<p style="padding: 1em; line-height:100%; margin-left:10px; white-space: pre; font-family: courier; background-color: white; color: darkgreen;">                 <b>Two Byte Character Codes &#160;    &#160;Key &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;CHR$(0)&#160;+ "?" </b>
+
+                    CHR$(0) + CHR$(16-50)      [Alt] + letter       
+                    CHR$(0) + CHR$(59)         [F1]                 ";"
+                    CHR$(0) + CHR$(60)         [F2]                 "&lt;"
+                    CHR$(0) + CHR$(61)         [F3]                 "="
+                    CHR$(0) + CHR$(62)         [F4]                 "&gt;"
+                    CHR$(0) + CHR$(63)         [F5]                 "?"
+                    CHR$(0) + CHR$(64)         [F6]                 "@"
+                    CHR$(0) + CHR$(65)         [F7]                 "A"
+                    CHR$(0) + CHR$(66)         [F8]                 "B"
+                    CHR$(0) + CHR$(67)         [F9]                 "C"
+                    CHR$(0) + CHR$(68)         [F10]                "D"
+                    CHR$(0) + CHR$(71)         [Home]               "G"
+                    CHR$(0) + CHR$(72)         [↑] Up Arrow         "H"
+                    CHR$(0) + CHR$(73)         [Page Up]            "I"
+                    CHR$(0) + CHR$(75)         [←] Left Arrow       "K"
+                    CHR$(0) + CHR$(76)         [5 NumberPad]        "L" (NumLock off in QB64)
+                    CHR$(0) + CHR$(77)         [→] Right Arrow      "M"
+                    CHR$(0) + CHR$(79)         [End]                "O"
+                    CHR$(0) + CHR$(80)         [↓] Down Arrow       "P"
+                    CHR$(0) + CHR$(81)         [Page Down]          "Q"
+                    CHR$(0) + CHR$(82)         [Insert]             "R"
+                    CHR$(0) + CHR$(83)         [Delete]             "S"
+                    CHR$(0) + CHR$(84-93)      [Shift] + F1-10
+                    CHR$(0) + CHR$(94-103)     [Ctrl] + F1-10
+                    CHR$(0) + CHR$(104-113)    [Alt] + F1-10
+                    CHR$(0) + CHR$(114-119)    [Ctrl] + keypad 
+                    CHR$(0) + CHR$(120-129)    [Alt] + number
+                    CHR$(0) + CHR$(130 or 131) [Alt] + _/- or +/=   "é" or "â"
+                    CHR$(0) + CHR$(133)        [F11]                "à"
+                    CHR$(0) + CHR$(134)        [F12]                "å"
+                    CHR$(0) + CHR$(135)        [Shift] + [F11]      "ç"
+                    CHR$(0) + CHR$(136)        [Shift] + [F12]      "ê"
+                    CHR$(0) + CHR$(137)        [Ctrl] + [F11]       "ë"
+                    CHR$(0) + CHR$(138)        [Ctrl] + [F12]       "è"
+                    CHR$(0) + CHR$(139)        [Alt] + [F11]        "ï"
+                    CHR$(0) + CHR$(140)        [Alt] + [F12]        "î"
+</p>
+<dl><dd>In <b>QB64</b>, <a href="CVI.html" title="CVI">CVI</a> can be used to get the <a href="KEYDOWN.html" title="KEYDOWN">_KEYDOWN</a> 2-byte code value. Example: <b><span style="color:green">status = _KEYDOWN(CVI(CHR$(0) + "P"))</span></b></dd></dl>
+<center><b>See <a href="Scancodes.html" title="Scancodes">Scancodes</a> for other keyboard function keys.</b></center>
+<p style="text-align: center">(<a href="#toc">Return to Table of Contents</a>)</p>
+<h2><span class="mw-headline" id="Code_Examples">Code Examples</span></h2>
+<p><i>Example 1:</i> Using arrow keys to move a text character. A change from a previous position tells program when to PRINT:
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: Courier, monospace; background-color: darkblue; color: lightgrey; word-wrap: break-word;">movey = 1: movex = 1 'text coordinates can never be 0
+at$ = "@"  'text sprite could be almost any ASCII character
+<a href="LOCATE.html" title="LOCATE"><span style="color:#87cefa;">LOCATE</span></a> movey, movex: <a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> at$;
+DO
+    px = movex: py = movey 'previous positions
+    B$ = <a href="INKEY%24.html" title="INKEY$"><span style="color:#87cefa;">INKEY$</span></a>
+    <a href="IF...html" title="IF...THEN"><span style="color:#87cefa;">IF</span></a> B$ = <a href="CHR%24.html" title="CHR$"><span style="color:#87cefa;">CHR$</span></a>(0) + <a href="CHR%24.html" title="CHR$"><span style="color:#87cefa;">CHR$</span></a>(72) <a href="AND_(boolean).html" title="AND (boolean)"><span style="color:#87cefa;">AND</span></a> movey &gt; 1 <a href="THEN.html" title="THEN"><span style="color:#87cefa;">THEN</span></a> movey = movey - 1 'rows 1 to 23 only
+    <a href="IF...html" title="IF...THEN"><span style="color:#87cefa;">IF</span></a> B$ = <a href="CHR%24.html" title="CHR$"><span style="color:#87cefa;">CHR$</span></a>(0) + <a href="CHR%24.html" title="CHR$"><span style="color:#87cefa;">CHR$</span></a>(80) <a href="AND_(boolean).html" title="AND (boolean)"><span style="color:#87cefa;">AND</span></a> movey &lt; 23 <a href="THEN.html" title="THEN"><span style="color:#87cefa;">THEN</span></a> movey = movey + 1
+    <a href="IF...html" title="IF...THEN"><span style="color:#87cefa;">IF</span></a> B$ = <a href="CHR%24.html" title="CHR$"><span style="color:#87cefa;">CHR$</span></a>(0) + <a href="CHR%24.html" title="CHR$"><span style="color:#87cefa;">CHR$</span></a>(75) <a href="AND_(boolean).html" title="AND (boolean)"><span style="color:#87cefa;">AND</span></a> movex &gt; 1 <a href="THEN.html" title="THEN"><span style="color:#87cefa;">THEN</span></a> movex = movex - 1 'columns 1 to 80 only
+    <a href="IF...html" title="IF...THEN"><span style="color:#87cefa;">IF</span></a> B$ = <a href="CHR%24.html" title="CHR$"><span style="color:#87cefa;">CHR$</span></a>(0) + <a href="CHR%24.html" title="CHR$"><span style="color:#87cefa;">CHR$</span></a>(77) <a href="AND_(boolean).html" title="AND (boolean)"><span style="color:#87cefa;">AND</span></a> movex &lt; 80 <a href="THEN.html" title="THEN"><span style="color:#87cefa;">THEN</span></a> movex = movex + 1 
+    
+    <a href="IF...html" title="IF...THEN"><span style="color:#87cefa;">IF</span></a> px &lt;&gt; movex <a href="OR_(boolean).html" title="OR (boolean)"><span style="color:#87cefa;">OR</span></a> py &lt;&gt; movey <a href="THEN.html" title="THEN"><span style="color:#87cefa;">THEN</span></a> 'only changes when needed
+        <a href="LOCATE.html" title="LOCATE"><span style="color:#87cefa;">LOCATE</span></a> py, px: <a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> <a href="SPACE%24.html" title="SPACE$"><span style="color:#87cefa;">SPACE$</span></a>(1); 'erase old sprite
+        <a href="LOCATE.html" title="LOCATE"><span style="color:#87cefa;">LOCATE</span></a> movey, movex: <a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> at$; 'show new position
+    <a href="END_IF.html" class="mw-redirect" title="END IF"><span style="color:#87cefa;">END IF</span></a>
+<a href="LOOP.html" title="LOOP"><span style="color:#87cefa;">LOOP</span></a> <a href="UNTIL.html" title="UNTIL"><span style="color:#87cefa;">UNTIL</span></a> B$ = <a href="CHR%24.html" title="CHR$"><span style="color:#87cefa;">CHR$</span></a>(27) 'ESCape key exit
+<a href="END.html" title="END"><span style="color:#87cefa;">END</span></a>
+</p>
+<p><br />
+<i>Example 2:</i> Routine displays all keypress codes including Ctrl, Alt and Shift combinations. Ctrl + letter = control codes 1 to 26.
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: Courier, monospace; background-color: darkblue; color: lightgrey; word-wrap: break-word;">
+ <i> </i>
+ SCREEN 13
+ tmp$ = "   CHR$(###),\\,\          \       "
+ tmp2$ = "  CHR$(0) + CHR$(###) \           \"
+ COLOR 14: LOCATE 3, 3: PRINT "The code can tell what key is pressed"
+ COLOR 12: LOCATE 5, 14: PRINT CHR$(3); SPACE$(3);
+ COLOR 13: PRINT CHR$(5); SPACE$(3);
+ COLOR 12: PRINT CHR$(4); SPACE$(3);
+ COLOR 13: PRINT CHR$(6)
+ COLOR 10: LOCATE 7, 4: PRINT " Hit a key to find the ASCII Code"
+ COLOR 5: LOCATE 13, 1: PRINT " Codes below 33 are called control keys"
+ LOCATE 14, 1: PRINT " CHR$(0) + are 2 byte Extended key codes"
+ COLOR 13: LOCATE 16, 1: PRINT " Extended: Press Alt + numberpad: Enter"
+ LOCATE 18, 1: PRINT "  Try some Ctrl, Alt, or Shift Combo's"
+ COLOR 5: LOCATE 20, 1: PRINT " INKEY$ is used to detect the key entry"
+ COLOR 2: LOCATE 22, 15: PRINT CHR$(1); "       "; CHR$(2)
+ COLOR 4: LOCATE 24, 10: PRINT "To Quit hit the TAB key";
+
+ COLOR 9
+ DO
+     DO: <a href="SLEEP.html" title="SLEEP"><span style="color:#87cefa;">SLEEP</span></a>: A$ = <a href="INKEY%24.html" title="INKEY$"><span style="color:#87cefa;">INKEY$</span></a>: LOOP UNTIL A$ &lt;&gt; ""  'legal ASC read keys
+     IF <a href="ASC.html" title="ASC"><span style="color:#87cefa;">ASC</span></a>(A$) &gt; 0 THEN  ' normal key codes
+         code% = ASC(A$)
+         SELECT CASE code%
+           CASE 7: Key$ = "Beep"
+           CASE 8: Key$ = "Backspace"
+           CASE 9: Key$ = "Tab Key"
+           CASE 10: Key$ = "Line Feed"
+           CASE 12: Key$ = "Form Feed"
+           CASE 13: Key$ = "Enter"
+           CASE 27: Key$ = "Escape"
+           CASE 32: Key$ = "Space Bar"
+           CASE 48 TO 57: Key$ = "Number"
+           CASE 65 TO 90: Key$ = "Uppercase"
+           CASE 97 TO 122: Key$ = "Lowercase"
+           CASE ELSE: Key$ = ""
+         END SELECT
+         SELECT CASE code%  'check for unprintable control combo characters
+           CASE 10 TO 13: Kcode% = 32
+           CASE ELSE: Kcode% = code%
+         END SELECT
+         COLOR 9: LOCATE 10, 5: <a href="PRINT_USING.html" title="PRINT USING"><span style="color:#87cefa;">PRINT USING</span></a> tmp$; code%; <a href="CHR%24.html" title="CHR$"><span style="color:#87cefa;">CHR$</span></a>(Kcode%); Key$;
+     END IF
+     IF <a href="ASC.html" title="ASC"><span style="color:#87cefa;">ASC</span></a>(A$) = 0 THEN  'two byte key codes
+         code% = ASC(<a href="RIGHT%24.html" title="RIGHT$"><span style="color:#87cefa;">RIGHT$</span></a>(A$, 1)) 'QBasic code
+         'code% = ASC(A$, 2)        'QB64 code alternative
+         SELECT CASE code%
+            CASE 16 TO 50: Key$ = "Alt+ letter"
+            CASE 72: Key$ = CHR$(24) + " Arrow"
+            CASE 75: Key$ = CHR$(27) + " Arrow"
+            CASE 77: Key$ = CHR$(26) + " Arrow"
+            CASE 80: Key$ = CHR$(25) + " Arrow"
+            CASE 83: Key$ = "Delete"            
+            CASE 59: Key$ = "F1"
+            CASE 60: Key$ = "F2"
+            CASE 61: Key$ = "F3"
+            CASE 62: Key$ = "F4"
+            CASE 63: Key$ = "F5"
+            CASE 64: Key$ = "F6"
+            CASE 65: Key$ = "F7"
+            CASE 66: Key$ = "F8"
+            CASE 67: Key$ = "F9"
+            CASE 68: Key$ = "F10"            
+            CASE 71: Key$ = "Home"
+            CASE 73: Key$ = "Page " + CHR$(24)
+            CASE 79: Key$ = "End"            
+            CASE 81: Key$ = "Page " + CHR$(25)
+            CASE 82: Key$ = "Insert"
+            CASE 83: Key$ = "Delete"
+            CASE 84 TO 93: Key$ = "Shift+ F"
+            CASE 94 TO 103: Key$ = "Ctrl+ F"
+            CASE 104 TO 113: Key$ = "Alt+ F"
+            CASE 114 TO 119: Key$ = "Ctrl + pad"
+            CASE 120 TO 129: Key$ = "Alt+ number"
+            CASE 132: Key$ = "Ctrl + pad"
+            CASE 133: Key$ = "F11"
+            CASE 134: Key$ = "F12"
+            CASE 135: Key$ = "Shift+ F11"
+            CASE 136: Key$ = "Shift+ F12"
+            CASE 137: Key$ = "Ctrl+ F11"
+            CASE 138: Key$ = "Ctrl+ F12"
+            CASE 139: Key$ = "Alt+ F11"
+            CASE 140: Key$ = "Alt+ F12"
+            CASE ELSE: Key$ = ""
+         END SELECT
+         LOCATE 10, 5: <a href="PRINT_USING.html" title="PRINT USING"><span style="color:#87cefa;">PRINT USING</span></a> tmp2$; code%; Key$
+     END IF
+ LOOP UNTIL A$ = CHR$(9)
+ SOUND 400, 4
+ SLEEP 3
+ SYSTEM <i> </i>
+
+</p>
+<center><span style="font-family: Courier New, Courier, monospace; font-size: 0.80em; line-height: 50%;">Code by Ted Weissgerber</span></center>
+<p><i>Explanation:</i> The routine checks for a keypress and <a href="SLEEP.html" title="SLEEP">SLEEP</a> guarantees that <a href="ASC.html" title="ASC">ASC</a> will never read an empty string from INKEY$. When the keypress is determined to be two bytes (<a href="ASC.html" title="ASC">ASC</a>(A$) = 0) the second SELECT CASE routine is used. You can even display non-keyboard extended characters. Just press Alt + numberpad code, release and press enter.
+</p>
+<dl><dd><dl><dd><dl><dd>Note: Ctrl + letter keys will list the contol keys as normal codes. EX: Ctrl + G will BEEP (CHR$(7)).</dd></dl></dd></dl></dd></dl>
+<p style="text-align: center">(<a href="#toc">Return to Table of Contents</a>)</p>
+<h2><span class="mw-headline" id="References">References</span></h2>
+<p><i>Printable ASCII Table:</i> <a href="PRINTIMAGE.html" title="PRINTIMAGE">_PRINTIMAGE</a> (see Example 2 on page)
+</p><p><br />
+</p>
+<h2><span class="mw-headline" id="See_also">See also</span></h2>
+<ul><li><a href="KEYHIT.html" title="KEYHIT">_KEYHIT</a>, <a href="KEYDOWN.html" title="KEYDOWN">_KEYDOWN</a></li>
+<li><a href="MAPUNICODE.html" title="MAPUNICODE">_MAPUNICODE</a>, <a href="MAPUNICODE_(function).html" title="MAPUNICODE (function)">_MAPUNICODE (function)</a></li>
+<li><a href="Code_Pages.html" title="Code Pages">Code Pages</a> <span style="color:gray">(Various Unicode Languages)</span></li>
+<li><a href="ASC_(statement).html" title="ASC (statement)">ASC (statement)</a> <span style="color:gray">(QB64 only)</span></li>
+<li><a href="ASC.html" title="ASC">ASC</a>, <a href="INSTR.html" title="INSTR">INSTR</a></li>
+<li><a href="CHR%24.html" title="CHR$">CHR$</a>, <a href="INKEY%24.html" title="INKEY$">INKEY$</a></li>
+<li><a href="LEFT%24.html" title="LEFT$">LEFT$</a>, <a href="MID%24.html" title="MID$">MID$</a>, <a href="RIGHT%24.html" title="RIGHT$">RIGHT$</a></li>
+<li><a href="PRINT.html" title="PRINT">PRINT</a>, <a href="SCREEN.html" title="SCREEN">SCREEN</a></li>
+<li><a href="MKI%24.html" title="MKI$">MKI$</a>, <a href="MKL%24.html" title="MKL$">MKL$</a>, <a href="MKS%24.html" title="MKS$">MKS$</a>, <a href="MKD%24.html" title="MKD$">MKD$</a>, <a href="MK%24.html" title="MK$">_MK$</a></li>
+<li><a href="PRINTSTRING.html" title="PRINTSTRING">_PRINTSTRING</a>, <a href="SCREENPRINT.html" title="SCREENPRINT">_SCREENPRINT</a></li>
+<li><a href="CONTROLCHR.html" title="CONTROLCHR">_CONTROLCHR</a> <span style="color:gray">(turns control PRINT actions OFF/ON)</span></li>
+<li><a href="Scancodes.html" title="Scancodes">Scancodes</a>(keyboard), <a href="Unicode.html" title="Unicode">Unicode</a>(character table)</li>
+<li><a href="Text_Using_Graphics.html" title="Text Using Graphics">Text Using Graphics</a></li></ul>
+<p><br />
+</p>
+<hr />
+<center><i>Navigation:</i>
+<dl><dd><a href="Keyword_Reference_-_Alphabetical.html" title="Keyword Reference - Alphabetical">Keyword Reference - Alphabetical</a></dd>
+<dd><a href="Keyword_Reference_-_By_usage.html" title="Keyword Reference - By usage">Keyword Reference - By Usage</a></dd>
+<dd><a href="Main_Page.html" title="Main Page">Main Wiki Page</a></dd></dl></center>
+<!-- 
+NewPP limit report
+Cached time: 20210707061641
+Cache expiry: 86400
+Dynamic content: false
+Complications: []
+CPU time usage: 0.169 seconds
+Real time usage: 0.239 seconds
+Preprocessor visited node count: 1053/1000000
+Post‐expand include size: 7238/2097152 bytes
+Template argument size: 1313/2097152 bytes
+Highest expansion depth: 4/40
+Expensive parser function count: 0/100
+Unstrip recursion depth: 0/20
+Unstrip post‐expand size: 3/5000000 bytes
+-->
+<!--
+Transclusion expansion time report (%,ms,calls,template)
+100.00%   75.901      1 -total
+ 20.60%   15.635     85 Template:Cl
+ 20.25%   15.370      3 Template:WhiteStart
+ 16.68%   12.664      1 Template:PageSeeAlso
+  7.24%    5.498     15 Template:Text
+  4.79%    3.633      4 Template:CodeStart
+  4.75%    3.606      2 Template:Small
+  4.75%    3.604      1 Template:PageNavigation
+  4.70%    3.569      4 Template:CodeEnd
+  4.57%    3.465      3 Template:WhiteEnd
+-->
+
+<!-- Saved in parser cache with key i4224360_mw2-mw_:pcache:idhash:38-0!canonical and timestamp 20210707061641 and revision id 23229
+ -->
+</div></div><div class="printfooter">Retrieved from "<a dir="ltr" href="index85fb.html?title=ASCII&amp;oldid=23229">http://www.qb64.org/wiki/index.php?title=ASCII&amp;oldid=23229</a>"</div>
+		<div id="catlinks" class="catlinks catlinks-allhidden" data-mw="interface"></div>
+	</div>
+</div>
+
+<div id="mw-navigation">
+	<h2>Navigation menu</h2>
+	<div id="mw-head">
+		<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-personal" class="vector-menu" aria-labelledby="p-personal-label" role="navigation" 
+	 >
+	<h3 id="p-personal-label">
+		<span>Personal tools</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="pt-login"><a href="index41f6.html?title=Special:UserLogin&amp;returnto=ASCII" title="You are encouraged to log in; however, it is not mandatory [o]" accesskey="o">Log in</a></li></ul>
+		
+	</div>
+</nav>
+
+
+		<div id="left-navigation">
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-namespaces" class="vector-menu vector-menu-tabs vectorTabs" aria-labelledby="p-namespaces-label" role="navigation" 
+	 >
+	<h3 id="p-namespaces-label">
+		<span>Namespaces</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="ca-nstab-main" class="selected"><a href="ASCII.html" title="View the content page [c]" accesskey="c">Page</a></li><li id="ca-talk" class="new"><a href="Talk_ASCII.html?title=Talk:ASCII&amp;action=edit&amp;redlink=1" rel="discussion" title="Discussion about the content page (page does not exist) [t]" accesskey="t">Discussion</a></li></ul>
+		
+	</div>
+</nav>
+
+
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-variants" class="vector-menu-empty emptyPortlet vector-menu vector-menu-dropdown vectorMenu" aria-labelledby="p-variants-label" role="navigation" 
+	 >
+	<input type="checkbox" class="vector-menu-checkbox vectorMenuCheckbox" aria-labelledby="p-variants-label" />
+	<h3 id="p-variants-label">
+		<span>Variants</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="menu vector-menu-content-list"></ul>
+		
+	</div>
+</nav>
+
+
+		</div>
+		<div id="right-navigation">
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-views" class="vector-menu vector-menu-tabs vectorTabs" aria-labelledby="p-views-label" role="navigation" 
+	 >
+	<h3 id="p-views-label">
+		<span>Views</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="ca-view" class="collapsible selected"><a href="ASCII.html">Read</a></li><li id="ca-viewsource" class="collapsible"><a href="index010a.html?title=ASCII&amp;action=edit" title="This page is protected.&#10;You can view its source [e]" accesskey="e">View source</a></li><li id="ca-history" class="collapsible"><a href="index1f8e.html?title=ASCII&amp;action=history" title="Past revisions of this page [h]" accesskey="h">View history</a></li></ul>
+		
+	</div>
+</nav>
+
+
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-cactions" class="vector-menu-empty emptyPortlet vector-menu vector-menu-dropdown vectorMenu" aria-labelledby="p-cactions-label" role="navigation" 
+	 >
+	<input type="checkbox" class="vector-menu-checkbox vectorMenuCheckbox" aria-labelledby="p-cactions-label" />
+	<h3 id="p-cactions-label">
+		<span>More</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="menu vector-menu-content-list"></ul>
+		
+	</div>
+</nav>
+
+
+			<div id="p-search" role="search">
+	<h3 >
+		<label for="searchInput">Search</label>
+	</h3>
+	<form action="https://www.qb64.org/wiki/index.php" id="searchform">
+		<div id="simpleSearch">
+			<input type="search" name="search" placeholder="Search QB64 Wiki" title="Search QB64 Wiki [f]" accesskey="f" id="searchInput"/>
+			<input type="hidden" name="title" value="Special:Search">
+			<input type="submit" name="fulltext" value="Search" title="Search the pages for this text" id="mw-searchButton" class="searchButton mw-fallbackSearchButton"/>
+			<input type="submit" name="go" value="Go" title="Go to a page with this exact name if it exists" id="searchButton" class="searchButton"/>
+		</div>
+	</form>
+</div>
+
+		</div>
+	</div>
+	
+<div id="mw-panel">
+	<div id="p-logo" role="banner">
+		<a  title="Visit the main page" class="mw-wiki-logo" href="Main_Page.html"></a>
+	</div>
+	<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-navigation" class="vector-menu vector-menu-portal portal portal-first" aria-labelledby="p-navigation-label" role="navigation" 
+	 >
+	<h3 id="p-navigation-label">
+		<span>Navigation</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="n-mainpage-description"><a href="Main_Page.html" title="Visit the main page [z]" accesskey="z">Main page</a></li><li id="n-recentchanges"><a href="Special_RecentChanges.html" title="A list of recent changes in the wiki [r]" accesskey="r">Recent changes</a></li><li id="n-randompage"><a href="SNDCOPY.html" title="Load a random page [x]" accesskey="x">Random page</a></li><li id="n-help-mediawiki"><a href="https://www.mediawiki.org/wiki/Special:MyLanguage/Help:Contents">Help about MediaWiki</a></li></ul>
+		
+	</div>
+</nav>
+
+
+	<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-tb" class="vector-menu vector-menu-portal portal" aria-labelledby="p-tb-label" role="navigation" 
+	 >
+	<h3 id="p-tb-label">
+		<span>Tools</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="t-whatlinkshere"><a href="Special_WhatLinksHere/ASCII.html" title="A list of all wiki pages that link here [j]" accesskey="j">What links here</a></li><li id="t-recentchangeslinked"><a href="Special_RecentChangesLinked/ASCII.html" rel="nofollow" title="Recent changes in pages linked from this page [k]" accesskey="k">Related changes</a></li><li id="t-specialpages"><a href="Special_SpecialPages.html" title="A list of all special pages [q]" accesskey="q">Special pages</a></li><li id="t-print"><a href="javascript:print();" rel="alternate" title="Printable version of this page [p]" accesskey="p">Printable version</a></li><li id="t-permalink"><a href="index85fb.html?title=ASCII&amp;oldid=23229" title="Permanent link to this revision of the page">Permanent link</a></li><li id="t-info"><a href="index42e7.html?title=ASCII&amp;action=info" title="More information about this page">Page information</a></li></ul>
+		
+	</div>
+</nav>
+
+
+	
+</div>
+
+</div>
+
+<footer id="footer" class="mw-footer" role="contentinfo" >
+	<ul id="footer-info" >
+		<li id="footer-info-lastmod"> This page was last edited on 10 February 2021, at 13:10.</li>
+	</ul>
+	<ul id="footer-places" >
+		<li id="footer-places-privacy"><a href="My_wiki_Privacy_policy.html" title="My wiki:Privacy policy">Privacy policy</a></li>
+		<li id="footer-places-about"><a href="My_wiki_About.html" title="My wiki:About">About QB64 Wiki</a></li>
+		<li id="footer-places-disclaimer"><a href="My_wiki_General_disclaimer.html" title="My wiki:General disclaimer">Disclaimers</a></li>
+	</ul>
+	<ul id="footer-icons" class="noprint">
+		<li id="footer-poweredbyico"><a href="https://www.mediawiki.org/"><img src="resources/assets/poweredby_mediawiki_88x31.png" alt="Powered by MediaWiki" srcset="/wiki/resources/assets/poweredby_mediawiki_132x47.png 1.5x, /wiki/resources/assets/poweredby_mediawiki_176x62.png 2x" width="88" height="31" loading="lazy"/></a></li>
+	</ul>
+	<div style="clear: both;"></div>
+</footer>
+
+
+
+<script>(RLQ=window.RLQ||[]).push(function(){mw.config.set({"wgPageParseReport":{"limitreport":{"cputime":"0.169","walltime":"0.239","ppvisitednodes":{"value":1053,"limit":1000000},"postexpandincludesize":{"value":7238,"limit":2097152},"templateargumentsize":{"value":1313,"limit":2097152},"expansiondepth":{"value":4,"limit":40},"expensivefunctioncount":{"value":0,"limit":100},"unstrip-depth":{"value":0,"limit":20},"unstrip-size":{"value":3,"limit":5000000},"timingprofile":["100.00%   75.901      1 -total"," 20.60%   15.635     85 Template:Cl"," 20.25%   15.370      3 Template:WhiteStart"," 16.68%   12.664      1 Template:PageSeeAlso","  7.24%    5.498     15 Template:Text","  4.79%    3.633      4 Template:CodeStart","  4.75%    3.606      2 Template:Small","  4.75%    3.604      1 Template:PageNavigation","  4.70%    3.569      4 Template:CodeEnd","  4.57%    3.465      3 Template:WhiteEnd"]},"cachereport":{"timestamp":"20210707061641","ttl":86400,"transientcontent":false}}});mw.config.set({"wgBackendResponseTime":660});});</script></body>
+<!-- Mirrored from www.qb64.org/wiki/ASCII by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 07 Aug 2021 12:41:32 GMT -->
+</html>

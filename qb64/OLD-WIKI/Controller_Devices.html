@@ -1,0 +1,405 @@
+
+<!DOCTYPE html>
+<html class="client-nojs" lang="en" dir="ltr">
+
+<!-- Mirrored from www.qb64.org/wiki/Controller_Devices by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 07 Aug 2021 12:42:08 GMT -->
+<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=UTF-8" /><!-- /Added by HTTrack -->
+<head>
+<meta charset="UTF-8"/>
+<title>Controller Devices - QB64 Wiki</title>
+<script>document.documentElement.className="client-js";RLCONF={"wgBreakFrames":!1,"wgSeparatorTransformTable":["",""],"wgDigitTransformTable":["",""],"wgDefaultDateFormat":"dmy","wgMonthNames":["","January","February","March","April","May","June","July","August","September","October","November","December"],"wgRequestId":"YOWkTOkbkwEB08KNhNehmQAAAFU","wgCSPNonce":!1,"wgCanonicalNamespace":"","wgCanonicalSpecialPageName":!1,"wgNamespaceNumber":0,"wgPageName":"Controller_Devices","wgTitle":"Controller Devices","wgCurRevisionId":23008,"wgRevisionId":23008,"wgArticleId":141,"wgIsArticle":!0,"wgIsRedirect":!1,"wgAction":"view","wgUserName":null,"wgUserGroups":["*"],"wgCategories":[],"wgPageContentLanguage":"en","wgPageContentModel":"wikitext","wgRelevantPageName":"Controller_Devices","wgRelevantArticleId":141,"wgIsProbablyEditable":!1,"wgRelevantPageIsProbablyEditable":!1,"wgRestrictionEdit":[],"wgRestrictionMove":[]};RLSTATE={"site.styles":"ready","noscript":"ready",
+"user.styles":"ready","user":"ready","user.options":"loading","skins.vector.styles.legacy":"ready","mediawiki.toc.styles":"ready"};RLPAGEMODULES=["site","mediawiki.page.startup","mediawiki.page.ready","mediawiki.toc","skins.vector.legacy.js"];</script>
+<script>(RLQ=window.RLQ||[]).push(function(){mw.loader.implement("user.options@1hzgi",function($,jQuery,require,module){/*@nomin*/mw.user.tokens.set({"patrolToken":"+\\","watchToken":"+\\","csrfToken":"+\\"});
+});});</script>
+<link rel="stylesheet" href="loadd8b0.css?lang=en&amp;modules=mediawiki.toc.styles%7Cskins.vector.styles.legacy&amp;only=styles&amp;skin=vector"/>
+<script async="" src="load52c0.php?lang=en&amp;modules=startup&amp;only=scripts&amp;raw=1&amp;skin=vector"></script>
+<meta name="generator" content="MediaWiki 1.35.2"/>
+<link rel="shortcut icon" href="https://www.qb64.org/favicon.ico"/>
+<link rel="search" type="application/opensearchdescription+xml" href="opensearch_desc.php" title="QB64 Wiki (en)"/>
+<link rel="EditURI" type="application/rsd+xml" href="api-result251f.xml?action=rsd"/>
+<link rel="alternate" type="application/atom+xml" title="QB64 Wiki Atom feed" href="feeda295.xml?title=Special:RecentChanges&amp;feed=atom"/>
+<!--[if lt IE 9]><script src="/wiki/resources/lib/html5shiv/html5shiv.js"></script><![endif]-->
+</head>
+<body class="mediawiki ltr sitedir-ltr mw-hide-empty-elt ns-0 ns-subject page-Controller_Devices rootpage-Controller_Devices skin-vector action-view skin-vector-legacy">
+<div id="mw-page-base" class="noprint"></div>
+<div id="mw-head-base" class="noprint"></div>
+<div id="content" class="mw-body" role="main">
+	<a id="top"></a>
+	<div id="siteNotice" class="mw-body-content"></div>
+	<div class="mw-indicators mw-body-content">
+	</div>
+	<h1 id="firstHeading" class="firstHeading" lang="en">Controller Devices</h1>
+	<div id="bodyContent" class="mw-body-content">
+		<div id="siteSub" class="noprint">From QB64 Wiki</div>
+		<div id="contentSub"></div>
+		<div id="contentSub2"></div>
+		
+		<div id="jump-to-nav"></div>
+		<a class="mw-jump-link" href="#mw-head">Jump to navigation</a>
+		<a class="mw-jump-link" href="#searchInput">Jump to search</a>
+		<div id="mw-content-text" lang="en" dir="ltr" class="mw-content-ltr"><div class="mw-parser-output"><p>QB64 supports all kinds of keyboard, mouse, joystick, gamepad, steering wheel and other multi-stick controller input devices. 
+</p>
+<ul><li><b>In order to read the device controls, the number of input devices MUST first be found using <a href="DEVICES.html" title="DEVICES">_DEVICES</a>.</b></li></ul>
+<ul><li>After the device count is determined we can find out the type of device, the device name and the type of controls available using the <a href="DEVICE%24.html" title="DEVICE$">_DEVICE$</a>(device_number) function. The function returns a <a href="STRING.html" title="STRING">STRING</a> containing information about each numbered device.</li></ul>
+<p><br />
+</p>
+<table align="Right">
+<tbody><tr>
+<td><div id="toc" class="toc" role="navigation" aria-labelledby="mw-toc-heading"><input type="checkbox" role="button" id="toctogglecheckbox" class="toctogglecheckbox" style="display:none" /><div class="toctitle" lang="en" dir="ltr"><h2 id="mw-toc-heading">Contents</h2><span class="toctogglespan"><label class="toctogglelabel" for="toctogglecheckbox"></label></span></div>
+<ul>
+<li class="toclevel-1 tocsection-1"><a href="#.5BKEYBOARD.5D"><span class="tocnumber">1</span> <span class="toctext">[KEYBOARD]</span></a></li>
+<li class="toclevel-1 tocsection-2"><a href="#.5BMOUSE.5D"><span class="tocnumber">2</span> <span class="toctext">[MOUSE]</span></a></li>
+<li class="toclevel-1 tocsection-3"><a href="#.5BCONTROLLER.5D"><span class="tocnumber">3</span> <span class="toctext">[CONTROLLER]</span></a></li>
+<li class="toclevel-1 tocsection-4"><a href="#Example"><span class="tocnumber">4</span> <span class="toctext">Example</span></a></li>
+<li class="toclevel-1 tocsection-5"><a href="#Reference"><span class="tocnumber">5</span> <span class="toctext">Reference</span></a></li>
+</ul>
+</div>
+
+</td></tr></tbody></table>
+<dl><dd><dl><dd><dl><dd><b><span style="color:green">"[CONTROLLER][[DEVICENAME] device description][BUTTON][AXIS][WHEEL]"</span></b></dd></dl></dd></dl></dd></dl>
+<p><br />
+</p>
+<ul><li><a href="DEVICEINPUT.html" title="DEVICEINPUT">_DEVICEINPUT</a> can indicate a used device number or true when a specified device number  is active.</li></ul>
+<dl><dd><b>device = _DEVICEINPUT</b> would return 1 for a keyboard event and 2 for a mouse event.</dd></dl>
+<dl><dd><b>mouse = _DEVICEINPUT(2)</b> would return -1(true) when the mouse was moved, clicked or scrolled.</dd></dl>
+<p><br />
+</p>
+<h2><span id="[KEYBOARD]"></span><span class="mw-headline" id=".5BKEYBOARD.5D">[KEYBOARD]</span></h2>
+<p>Normally the number 1 device, it usually only has [<span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="BUTTON.html" title="BUTTON">BUTTON</a></span>] controls. Program window must be in focus to read key activity.
+</p><p><br />
+</p>
+<dl><dd><dl><dd><dl><dd><dl><dd><b><span style="color:green">[KEYBOARD][BUTTON]</span></b></dd></dl></dd></dl></dd></dl></dd></dl>
+<p><br />
+</p>
+<dl><dd><a href="LASTBUTTON.html" title="LASTBUTTON">_LASTBUTTON</a>(1) will normally return 512 buttons.
+<dl><dd><a href="BUTTONCHANGE.html" title="BUTTONCHANGE">_BUTTONCHANGE</a>(number) returns -1 when pressed, 1 when released and 0 when there is no event since the last read.</dd>
+<dd><a href="BUTTON.html" title="BUTTON">_BUTTON</a>(number) returns -1 when a button is pressed and 0 when released.</dd></dl></dd></dl>
+<p style="padding: 1em; line-height:100%; margin-left:10px; white-space: pre; font-family: courier; background-color: white; color: darkgreen;">'                                  <b>Keyboard Device Button Numbers</b>
+'
+'<b>  Esc F1  F2  F3  F4  F5  F6  F7  F8  F9  F10  F11 F12      SysReq ScrL Pause</b>                  
+'   2  60  61  62  63  64  65  66  67  68  --   88  89        --    71    70
+'  <b>`~  1!  2@  3#  4$  5%  6^  7&amp;  8*  9(  0)  -_  =+ BkSpc  Insert Home PgUp   NumL    /    *    -</b> 
+'  42   3   4   5   6   7   8   9  10  11  12  13  14  15     339   328   330   326    310  56   75
+'  <b>Tab  Q   W   E   R   T   Y   U   I   O   P   [{  ]}  \|   Delete End  PgDn   7/Home 8/▲  9/PU  + </b>
+'  16  17  18  19  20  21  22  23  24  25  26   27 28  44     340   336   338   72     73   74   79
+'  <b>CapL  A   S   D   F   G   H   J   K   L   ;:  '"   Enter                     4/◄-    5   6/-►  E</b>
+'  59   31  32  33  34  35  36  37  38  39   40  41    29                       76     77   78    <b>n</b>
+'  <b>Shift  Z   X   C   V   B   N   M  ,&lt;  .&gt;  /?       Shift          ▲          1/End  2/▼  3/PD  t</b>
+'  43    45  46  47  48  49  50  51  52  53  54        55           329         80     81   82    <b>e</b>
+'  <b>Ctrl Win  Alt    Spacebar    Alt  Win  Menu Ctrl            ◄-    ▼    -►    0/Insert    ./Del r</b>
+'  30   348  --       58        --   349? 350  286             332  337  334    83          84   285 
+'
+
+</p>
+<p style="text-align: center">(<a href="#toc">Return to Table of Contents</a>)</p>
+<h2><span id="[MOUSE]"></span><span class="mw-headline" id=".5BMOUSE.5D">[MOUSE]</span></h2>
+<p>Normally the number 2 device, a mouse usually has [<span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="AXIS.html" title="AXIS">AXIS</a></span>], [<span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="BUTTON.html" title="BUTTON">BUTTON</a></span>] and [<span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="WHEEL.html" title="WHEEL">WHEEL</a></span>] controls. Pointer must be in program screen area.
+</p><p><br />
+</p>
+<dl><dd><dl><dd><dl><dd><dl><dd><b><span style="color:green">[MOUSE][BUTTON][AXIS][WHEEL]</span></b></dd></dl></dd></dl></dd></dl></dd></dl>
+<p><br />
+</p>
+<dl><dd><a href="LASTAXIS.html" title="LASTAXIS">_LASTAXIS</a>(2) normally returns 2 axis representing the horizontal and vertical mouse, trackball, touch pad or touchscreen axis.
+<dl><dd><a href="AXIS.html" title="AXIS">_AXIS</a>(number) returns a <a href="SINGLE.html" title="SINGLE">SINGLE</a> value from -1 to 1 with 0 representing the axis center in normal movement mode.
+<dl><dd><a href="AXIS.html" title="AXIS">_AXIS</a>(1) returns the horizontal axis position in normal movement mode only.</dd>
+<dd><a href="AXIS.html" title="AXIS">_AXIS</a>(2) returns the vertical axis position in normal movement mode only.</dd></dl></dd></dl></dd></dl>
+<center>Program window pointer AXIS values change from 0 at the center to -1 or + 1 values at the window borders.</center>
+<p><br />
+</p>
+<dl><dd><a href="LASTBUTTON.html" title="LASTBUTTON">_LASTBUTTON</a>(2) will normally return 3 buttons when mouse has a center or scroll wheel button.
+<dl><dd><a href="BUTTONCHANGE.html" title="BUTTONCHANGE">_BUTTONCHANGE</a>(number) returns -1 when pressed, 1 when released and 0 when there is no event since the last read.</dd>
+<dd><a href="BUTTON.html" title="BUTTON">_BUTTON</a>(number) returns -1 when corresponding button is pressed and 0 when released.
+<dl><dd><a href="BUTTON.html" title="BUTTON">_BUTTON</a>(1) returns Left button presses like <a href="MOUSEBUTTON.html" title="MOUSEBUTTON">_MOUSEBUTTON</a>(1) and <a href="BUTTONCHANGE.html" title="BUTTONCHANGE">_BUTTONCHANGE</a>(1) returns events.</dd>
+<dd><a href="BUTTON.html" title="BUTTON">_BUTTON</a>(2) returns Center button presses like <a href="MOUSEBUTTON.html" title="MOUSEBUTTON">_MOUSEBUTTON</a>(3) and <a href="BUTTONCHANGE.html" title="BUTTONCHANGE">_BUTTONCHANGE</a>(2) returns events.</dd>
+<dd><a href="BUTTON.html" title="BUTTON">_BUTTON</a>(3) returns Right button presses like <a href="MOUSEBUTTON.html" title="MOUSEBUTTON">_MOUSEBUTTON</a>(2) and <a href="BUTTONCHANGE.html" title="BUTTONCHANGE">_BUTTONCHANGE</a>(3) returns events.</dd></dl></dd></dl></dd></dl>
+<center><b>Note that middle _BUTTON(2) is equivalent to <a href="MOUSEBUTTON.html" title="MOUSEBUTTON">_MOUSEBUTTON</a>(3)!</b></center>
+<p><br />
+</p>
+<dl><dd><a href="LASTWHEEL.html" title="LASTWHEEL">_LASTWHEEL</a>(2) will normally return 3 wheels where the first two return relative coordinate movements when set.
+<dl><dd><a href="WHEEL.html" title="WHEEL">_WHEEL</a>(number) returns -1 when wheel is scrolled up or forward and 1 when wheel is scrolled down or backward.
+<dl><dd><a href="WHEEL.html" title="WHEEL">_WHEEL</a>(1) returns relative horizontal pixel moves after <a href="MOUSEMOVEMENTX.html" title="MOUSEMOVEMENTX">_MOUSEMOVEMENTX</a> or Y enables relative mode.</dd>
+<dd><a href="WHEEL.html" title="WHEEL">_WHEEL</a>(2) returns relative vertical pixel moves after <a href="MOUSEMOVEMENTX.html" title="MOUSEMOVEMENTX">_MOUSEMOVEMENTX</a> or Y enables relative mode.</dd>
+<dd><a href="WHEEL.html" title="WHEEL">_WHEEL</a>(3) returns -1 when scroll wheel is moved forward or up and 1 when scrolled backward or down.</dd></dl></dd></dl></dd></dl>
+<center>Relative WHEEL move values are negative when mouse is moved up or left. Positive when mouse is moved down or right.</center>
+<center>WHEEL values can be added for a cumulative movement value when needed. Scroll reads can be off program screen.</center>
+<p style="text-align: center">(<a href="#toc">Return to Table of Contents</a>)</p>
+<h2><span id="[CONTROLLER]"></span><span class="mw-headline" id=".5BCONTROLLER.5D">[CONTROLLER]</span></h2>
+<p>[[NAME][manufacturer name]] may follow in the controller <a href="DEVICE%24.html" title="DEVICE$">_DEVICE$</a> string. Devices can be joysticks, game pads or multi-stick.
+</p><p><br />
+</p>
+<dl><dd><dl><dd><dl><dd><dl><dd><b><span style="color:green">[CONTROLLER][[DeviceName]description][BUTTON][AXIS][WHEEL]</span></b></dd></dl></dd></dl></dd></dl></dd></dl>
+<p><br />
+Normally device numbers 3 or higher, controllers may have any number of [<span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="AXIS.html" title="AXIS">AXIS</a></span>], [<span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="BUTTON.html" title="BUTTON">BUTTON</a></span>] and/or [<span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="WHEEL.html" title="WHEEL">WHEEL</a></span>] controls.
+</p><p><br />
+</p>
+<dl><dd><a href="LASTAXIS.html" title="LASTAXIS">_LASTAXIS</a>(device_number) normally returns dual axis representing the horizontal and vertical axis or view point("top hat").
+<dl><dd><a href="AXIS.html" title="AXIS">_AXIS</a>(number) returns a <a href="SINGLE.html" title="SINGLE">SINGLE</a> value from -1 to 1 with 0 representing the axis center.
+<dl><dd><a href="AXIS.html" title="AXIS">_AXIS</a>(1) returns the horizontal axis position.</dd>
+<dd><a href="AXIS.html" title="AXIS">_AXIS</a>(2) returns the vertical axis position.</dd></dl></dd></dl></dd></dl>
+<center><b>Note: Some slide controls may only have one axis!</b></center>
+<p><br />
+</p>
+<dl><dd><a href="LASTBUTTON.html" title="LASTBUTTON">_LASTBUTTON</a>(device_number) will return the number of buttons or triggers a device has.
+<dl><dd><a href="BUTTONCHANGE.html" title="BUTTONCHANGE">_BUTTONCHANGE</a>(number) returns -1 when pressed, 1 when released and 0 when there is no event since the last read.</dd>
+<dd><a href="BUTTON.html" title="BUTTON">_BUTTON</a>(number) returns -1 when button number is pressed and 0 when released.</dd></dl></dd></dl>
+<p><br />
+</p>
+<dl><dd><a href="LASTWHEEL.html" title="LASTWHEEL">_LASTWHEEL</a>(device_number) will return the number of wheel controls a device has.
+<dl><dd><a href="WHEEL.html" title="WHEEL">_WHEEL</a>(number) returns -1 when wheel is scrolled up or forward and 1 when wheel is scrolled down or backward.</dd></dl></dd></dl>
+<p style="text-align: center">(<a href="#toc">Return to Table of Contents</a>)</p>
+<h2><span class="mw-headline" id="Example">Example</span></h2>
+<dl><dd>Displays all keyboard, mouse and game controller button, axis and wheel control input values when each device is being used.</dd></dl>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: Courier, monospace; background-color: darkblue; color: lightgrey; word-wrap: break-word;"> <i> </i>
+<a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> "Use relative mouse movement mode with ESC key exit only?(Y/N) ";
+K$ = <a href="UCASE%24.html" title="UCASE$"><span style="color:#87cefa;">UCASE$</span></a>(<a href="INPUT%24.html" title="INPUT$"><span style="color:#87cefa;">INPUT$</span></a>(1))
+<a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> K$
+<a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a>
+
+<a href="FOR...html" title="FOR...NEXT"><span style="color:#87cefa;">FOR</span></a> i = 1 <a href="TO.html" title="TO"><span style="color:#87cefa;">TO</span></a> <a href="DEVICES.html" title="DEVICES"><span style="color:#87cefa;">_DEVICES</span></a> 'DEVICES MUST be read first!
+  <a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> <a href="STR%24.html" title="STR$"><span style="color:#87cefa;">STR$</span></a>(i) + ") " + <a href="DEVICE%24.html" title="DEVICE$"><span style="color:#87cefa;">_DEVICE$</span></a>(i) + " Buttons:"; <a href="LASTBUTTON.html" title="LASTBUTTON"><span style="color:#87cefa;">_LASTBUTTON</span></a>(i); ",Axis:"; <a href="LASTAXIS.html" title="LASTAXIS"><span style="color:#87cefa;">_LASTAXIS</span></a>(i); ",Wheel:"; <a href="LASTWHEEL.html" title="LASTWHEEL"><span style="color:#87cefa;">_LASTWHEEL</span></a>(i)
+<a href="NEXT.html" title="NEXT"><span style="color:#87cefa;">NEXT</span></a>
+<a href="IF...html" title="IF...THEN"><span style="color:#87cefa;">IF</span></a> K$ = "Y" <a href="THEN.html" title="THEN"><span style="color:#87cefa;">THEN</span></a> dummy = <a href="MOUSEMOVEMENTX.html" title="MOUSEMOVEMENTX"><span style="color:#87cefa;">_MOUSEMOVEMENTX</span></a> 'enable relative mouse movement reads
+<a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a>
+
+<a href="DO...html" title="DO...LOOP"><span style="color:#87cefa;">DO</span></a>
+  x&amp; = <a href="DEVICEINPUT.html" title="DEVICEINPUT"><span style="color:#87cefa;">_DEVICEINPUT</span></a> 'determines which device is currently being used
+  <a href="IF...html" title="IF...THEN"><span style="color:#87cefa;">IF</span></a> x&amp; = 1 <a href="THEN.html" title="THEN"><span style="color:#87cefa;">THEN</span></a>
+    <a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> "Keyboard: ";
+    <a href="FOR...html" title="FOR...NEXT"><span style="color:#87cefa;">FOR</span></a> b = 1 <a href="TO.html" title="TO"><span style="color:#87cefa;">TO</span></a> <a href="LASTBUTTON.html" title="LASTBUTTON"><span style="color:#87cefa;">_LASTBUTTON</span></a>(x&amp;)
+      bb = <a href="BUTTONCHANGE.html" title="BUTTONCHANGE"><span style="color:#87cefa;">_BUTTONCHANGE</span></a>(b)
+      <a href="IF...html" title="IF...THEN"><span style="color:#87cefa;">IF</span></a> bb <a href="THEN.html" title="THEN"><span style="color:#87cefa;">THEN</span></a> <a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> b; bb; <a href="BUTTON.html" title="BUTTON"><span style="color:#87cefa;">_BUTTON</span></a>(b);
+    <a href="NEXT.html" title="NEXT"><span style="color:#87cefa;">NEXT</span></a>
+    <a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a>
+  <a href="END_IF.html" class="mw-redirect" title="END IF"><span style="color:#87cefa;">END IF</span></a>
+  <a href="IF...html" title="IF...THEN"><span style="color:#87cefa;">IF</span></a> x&amp; &gt; 1 <a href="THEN.html" title="THEN"><span style="color:#87cefa;">THEN</span></a> '  skip keyboard reads
+    <a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> "Device:"; x&amp;;
+    <a href="FOR...html" title="FOR...NEXT"><span style="color:#87cefa;">FOR</span></a> b = 1 <a href="TO.html" title="TO"><span style="color:#87cefa;">TO</span></a> <a href="LASTBUTTON.html" title="LASTBUTTON"><span style="color:#87cefa;">_LASTBUTTON</span></a>(x&amp;)
+      <a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> <a href="BUTTONCHANGE.html" title="BUTTONCHANGE"><span style="color:#87cefa;">_BUTTONCHANGE</span></a>(b); <a href="BUTTON.html" title="BUTTON"><span style="color:#87cefa;">_BUTTON</span></a>(b);
+    <a href="NEXT.html" title="NEXT"><span style="color:#87cefa;">NEXT</span></a>
+    <a href="FOR...html" title="FOR...NEXT"><span style="color:#87cefa;">FOR</span></a> a = 1 <a href="TO.html" title="TO"><span style="color:#87cefa;">TO</span></a> <a href="LASTAXIS.html" title="LASTAXIS"><span style="color:#87cefa;">_LASTAXIS</span></a>(x&amp;)
+      <a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> <a href="AXIS.html" title="AXIS"><span style="color:#87cefa;">_AXIS</span></a>(a); 'mouse axis returns -1 to 1 with 0 center screen
+    <a href="NEXT.html" title="NEXT"><span style="color:#87cefa;">NEXT</span></a>
+    <a href="FOR...html" title="FOR...NEXT"><span style="color:#87cefa;">FOR</span></a> w = 1 <a href="TO.html" title="TO"><span style="color:#87cefa;">TO</span></a> <a href="LASTWHEEL.html" title="LASTWHEEL"><span style="color:#87cefa;">_LASTWHEEL</span></a>(x&amp;)
+      <a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> <a href="WHEEL.html" title="WHEEL"><span style="color:#87cefa;">_WHEEL</span></a>(w); 'wheels 1 and 2 of mouse return relative pixel moves when enabled
+    <a href="NEXT.html" title="NEXT"><span style="color:#87cefa;">NEXT</span></a>
+    <a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a>
+  <a href="END_IF.html" class="mw-redirect" title="END IF"><span style="color:#87cefa;">END IF</span></a>
+<a href="LOOP.html" title="LOOP"><span style="color:#87cefa;">LOOP</span></a> <a href="UNTIL.html" title="UNTIL"><span style="color:#87cefa;">UNTIL</span></a> <a href="INKEY%24.html" title="INKEY$"><span style="color:#87cefa;">INKEY$</span></a> = <a href="CHR%24.html" title="CHR$"><span style="color:#87cefa;">CHR$</span></a>(27) 'escape key exit
+
+<a href="END.html" title="END"><span style="color:#87cefa;">END</span></a> <i> </i>
+</p>
+<center><span style="font-family: Courier New, Courier, monospace; font-size: 0.80em; line-height: 50%;">Code by Ted Weissgerber</span></center>
+<dl><dd><dl><dd><i>Note:</i> When there is no device control to read, a <a href="FOR...html" title="FOR...NEXT">FOR</a> n = 1 TO 0 loop will not run thus avoiding a control function read error.</dd></dl></dd>
+<dd>Using <a href="MOUSEMOVEMENTX.html" title="MOUSEMOVEMENTX">_MOUSEMOVEMENTX</a> or Y will hide the mouse cursor and return relative mouse movements with the 1 and 2 <a href="WHEEL.html" title="WHEEL">_WHEEL</a> controls.</dd></dl>
+<center><a href="MOUSESHOW.html" title="MOUSESHOW">_MOUSESHOW</a> will return the mouse coordinate reads to the <a href="AXIS.html" title="AXIS">_AXIS</a> control after it is used!</center>
+<p style="text-align: center">(<a href="#toc">Return to Table of Contents</a>)</p>
+<h2><span class="mw-headline" id="Reference">Reference</span></h2>
+<ul><li><a href="DEVICEINPUT.html" title="DEVICEINPUT">_DEVICEINPUT</a>, <a href="AXIS.html" title="AXIS">_AXIS</a>, <a href="BUTTON.html" title="BUTTON">_BUTTON</a>, <a href="BUTTONCHANGE.html" title="BUTTONCHANGE">_BUTTONCHANGE</a>, <a href="WHEEL.html" title="WHEEL">_WHEEL</a></li>
+<li><a href="DEVICES.html" title="DEVICES">_DEVICES</a>, <a href="DEVICE%24.html" title="DEVICE$">_DEVICE$</a>, <a href="LASTAXIS.html" title="LASTAXIS">_LASTAXIS</a>, <a href="LASTBUTTON.html" title="LASTBUTTON">_LASTBUTTON</a>, <a href="LASTWHEEL.html" title="LASTWHEEL">_LASTWHEEL</a></li>
+<li><a href="MOUSEINPUT.html" title="MOUSEINPUT">_MOUSEINPUT</a>, <a href="MOUSEX.html" title="MOUSEX">_MOUSEX</a>, <a href="MOUSEY.html" title="MOUSEY">_MOUSEY</a>, <a href="MOUSEBUTTON.html" title="MOUSEBUTTON">_MOUSEBUTTON</a>, <a href="MOUSEWHEEL.html" title="MOUSEWHEEL">_MOUSEWHEEL</a></li>
+<li><a href="MOUSEMOVE.html" title="MOUSEMOVE">_MOUSEMOVE</a>, <a href="MOUSEHIDE.html" title="MOUSEHIDE">_MOUSEHIDE</a>, <a href="MOUSESHOW.html" title="MOUSESHOW">_MOUSESHOW</a></li>
+<li><a href="MOUSEMOVEMENTX.html" title="MOUSEMOVEMENTX">_MOUSEMOVEMENTX</a>, <a href="MOUSEMOVEMENTY.html" title="MOUSEMOVEMENTY">_MOUSEMOVEMENTY</a> <span style="color:gray">(relative movement)</span></li>
+<li><a href="STRIG.html" title="STRIG">STRIG</a> <span style="color:gray">(button)</span>, <a href="STICK.html" title="STICK">STICK</a> <span style="color:gray">(axis)</span></li></ul>
+<p><br />
+</p>
+<hr />
+<center><i>Navigation:</i>
+<dl><dd><a href="Keyword_Reference_-_Alphabetical.html" title="Keyword Reference - Alphabetical">Keyword Reference - Alphabetical</a></dd>
+<dd><a href="Keyword_Reference_-_By_usage.html" title="Keyword Reference - By usage">Keyword Reference - By Usage</a></dd>
+<dd><a href="Main_Page.html" title="Main Page">Main Wiki Page</a></dd></dl></center>
+<!-- 
+NewPP limit report
+Cached time: 20210707103759
+Cache expiry: 86400
+Dynamic content: false
+Complications: []
+CPU time usage: 0.105 seconds
+Real time usage: 0.124 seconds
+Preprocessor visited node count: 798/1000000
+Post‐expand include size: 5386/2097152 bytes
+Template argument size: 1158/2097152 bytes
+Highest expansion depth: 4/40
+Expensive parser function count: 0/100
+Unstrip recursion depth: 0/20
+Unstrip post‐expand size: 2/5000000 bytes
+-->
+<!--
+Transclusion expansion time report (%,ms,calls,template)
+100.00%   42.470      1 -total
+ 18.24%    7.747     64 Template:Cl
+ 12.65%    5.373      7 Template:Text
+  9.91%    4.207      7 Template:KW
+  7.93%    3.366      1 Template:CodeEnd
+  7.74%    3.286      1 Template:Small
+  7.29%    3.095      1 Template:CodeStart
+  7.27%    3.087      1 Template:PageNavigation
+  7.19%    3.054      1 Template:WhiteStart
+  7.02%    2.981      1 Template:WhiteEnd
+-->
+
+<!-- Saved in parser cache with key i4224360_mw2-mw_:pcache:idhash:141-0!canonical and timestamp 20210707103759 and revision id 23008
+ -->
+</div></div><div class="printfooter">Retrieved from "<a dir="ltr" href="indexe84f.html?title=Controller_Devices&amp;oldid=23008">http://www.qb64.org/wiki/index.php?title=Controller_Devices&amp;oldid=23008</a>"</div>
+		<div id="catlinks" class="catlinks catlinks-allhidden" data-mw="interface"></div>
+	</div>
+</div>
+
+<div id="mw-navigation">
+	<h2>Navigation menu</h2>
+	<div id="mw-head">
+		<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-personal" class="vector-menu" aria-labelledby="p-personal-label" role="navigation" 
+	 >
+	<h3 id="p-personal-label">
+		<span>Personal tools</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="pt-login"><a href="index6d60.html?title=Special:UserLogin&amp;returnto=Controller+Devices" title="You are encouraged to log in; however, it is not mandatory [o]" accesskey="o">Log in</a></li></ul>
+		
+	</div>
+</nav>
+
+
+		<div id="left-navigation">
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-namespaces" class="vector-menu vector-menu-tabs vectorTabs" aria-labelledby="p-namespaces-label" role="navigation" 
+	 >
+	<h3 id="p-namespaces-label">
+		<span>Namespaces</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="ca-nstab-main" class="selected"><a href="Controller_Devices.html" title="View the content page [c]" accesskey="c">Page</a></li><li id="ca-talk" class="new"><a href="Talk_Controller_Devices.html?title=Talk:Controller_Devices&amp;action=edit&amp;redlink=1" rel="discussion" title="Discussion about the content page (page does not exist) [t]" accesskey="t">Discussion</a></li></ul>
+		
+	</div>
+</nav>
+
+
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-variants" class="vector-menu-empty emptyPortlet vector-menu vector-menu-dropdown vectorMenu" aria-labelledby="p-variants-label" role="navigation" 
+	 >
+	<input type="checkbox" class="vector-menu-checkbox vectorMenuCheckbox" aria-labelledby="p-variants-label" />
+	<h3 id="p-variants-label">
+		<span>Variants</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="menu vector-menu-content-list"></ul>
+		
+	</div>
+</nav>
+
+
+		</div>
+		<div id="right-navigation">
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-views" class="vector-menu vector-menu-tabs vectorTabs" aria-labelledby="p-views-label" role="navigation" 
+	 >
+	<h3 id="p-views-label">
+		<span>Views</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="ca-view" class="collapsible selected"><a href="Controller_Devices.html">Read</a></li><li id="ca-viewsource" class="collapsible"><a href="index34ce.html?title=Controller_Devices&amp;action=edit" title="This page is protected.&#10;You can view its source [e]" accesskey="e">View source</a></li><li id="ca-history" class="collapsible"><a href="index1b03.html?title=Controller_Devices&amp;action=history" title="Past revisions of this page [h]" accesskey="h">View history</a></li></ul>
+		
+	</div>
+</nav>
+
+
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-cactions" class="vector-menu-empty emptyPortlet vector-menu vector-menu-dropdown vectorMenu" aria-labelledby="p-cactions-label" role="navigation" 
+	 >
+	<input type="checkbox" class="vector-menu-checkbox vectorMenuCheckbox" aria-labelledby="p-cactions-label" />
+	<h3 id="p-cactions-label">
+		<span>More</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="menu vector-menu-content-list"></ul>
+		
+	</div>
+</nav>
+
+
+			<div id="p-search" role="search">
+	<h3 >
+		<label for="searchInput">Search</label>
+	</h3>
+	<form action="https://www.qb64.org/wiki/index.php" id="searchform">
+		<div id="simpleSearch">
+			<input type="search" name="search" placeholder="Search QB64 Wiki" title="Search QB64 Wiki [f]" accesskey="f" id="searchInput"/>
+			<input type="hidden" name="title" value="Special:Search">
+			<input type="submit" name="fulltext" value="Search" title="Search the pages for this text" id="mw-searchButton" class="searchButton mw-fallbackSearchButton"/>
+			<input type="submit" name="go" value="Go" title="Go to a page with this exact name if it exists" id="searchButton" class="searchButton"/>
+		</div>
+	</form>
+</div>
+
+		</div>
+	</div>
+	
+<div id="mw-panel">
+	<div id="p-logo" role="banner">
+		<a  title="Visit the main page" class="mw-wiki-logo" href="Main_Page.html"></a>
+	</div>
+	<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-navigation" class="vector-menu vector-menu-portal portal portal-first" aria-labelledby="p-navigation-label" role="navigation" 
+	 >
+	<h3 id="p-navigation-label">
+		<span>Navigation</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="n-mainpage-description"><a href="Main_Page.html" title="Visit the main page [z]" accesskey="z">Main page</a></li><li id="n-recentchanges"><a href="Special_RecentChanges.html" title="A list of recent changes in the wiki [r]" accesskey="r">Recent changes</a></li><li id="n-randompage"><a href="SNDCOPY.html" title="Load a random page [x]" accesskey="x">Random page</a></li><li id="n-help-mediawiki"><a href="https://www.mediawiki.org/wiki/Special:MyLanguage/Help:Contents">Help about MediaWiki</a></li></ul>
+		
+	</div>
+</nav>
+
+
+	<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-tb" class="vector-menu vector-menu-portal portal" aria-labelledby="p-tb-label" role="navigation" 
+	 >
+	<h3 id="p-tb-label">
+		<span>Tools</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="t-whatlinkshere"><a href="Special_WhatLinksHere/Controller_Devices.html" title="A list of all wiki pages that link here [j]" accesskey="j">What links here</a></li><li id="t-recentchangeslinked"><a href="Special_RecentChangesLinked/Controller_Devices.html" rel="nofollow" title="Recent changes in pages linked from this page [k]" accesskey="k">Related changes</a></li><li id="t-specialpages"><a href="Special_SpecialPages.html" title="A list of all special pages [q]" accesskey="q">Special pages</a></li><li id="t-print"><a href="javascript:print();" rel="alternate" title="Printable version of this page [p]" accesskey="p">Printable version</a></li><li id="t-permalink"><a href="indexe84f.html?title=Controller_Devices&amp;oldid=23008" title="Permanent link to this revision of the page">Permanent link</a></li><li id="t-info"><a href="index38f3.html?title=Controller_Devices&amp;action=info" title="More information about this page">Page information</a></li></ul>
+		
+	</div>
+</nav>
+
+
+	
+</div>
+
+</div>
+
+<footer id="footer" class="mw-footer" role="contentinfo" >
+	<ul id="footer-info" >
+		<li id="footer-info-lastmod"> This page was last edited on 17 January 2021, at 08:18.</li>
+	</ul>
+	<ul id="footer-places" >
+		<li id="footer-places-privacy"><a href="My_wiki_Privacy_policy.html" title="My wiki:Privacy policy">Privacy policy</a></li>
+		<li id="footer-places-about"><a href="My_wiki_About.html" title="My wiki:About">About QB64 Wiki</a></li>
+		<li id="footer-places-disclaimer"><a href="My_wiki_General_disclaimer.html" title="My wiki:General disclaimer">Disclaimers</a></li>
+	</ul>
+	<ul id="footer-icons" class="noprint">
+		<li id="footer-poweredbyico"><a href="https://www.mediawiki.org/"><img src="resources/assets/poweredby_mediawiki_88x31.png" alt="Powered by MediaWiki" srcset="/wiki/resources/assets/poweredby_mediawiki_132x47.png 1.5x, /wiki/resources/assets/poweredby_mediawiki_176x62.png 2x" width="88" height="31" loading="lazy"/></a></li>
+	</ul>
+	<div style="clear: both;"></div>
+</footer>
+
+
+
+<script>(RLQ=window.RLQ||[]).push(function(){mw.config.set({"wgPageParseReport":{"limitreport":{"cputime":"0.105","walltime":"0.124","ppvisitednodes":{"value":798,"limit":1000000},"postexpandincludesize":{"value":5386,"limit":2097152},"templateargumentsize":{"value":1158,"limit":2097152},"expansiondepth":{"value":4,"limit":40},"expensivefunctioncount":{"value":0,"limit":100},"unstrip-depth":{"value":0,"limit":20},"unstrip-size":{"value":2,"limit":5000000},"timingprofile":["100.00%   42.470      1 -total"," 18.24%    7.747     64 Template:Cl"," 12.65%    5.373      7 Template:Text","  9.91%    4.207      7 Template:KW","  7.93%    3.366      1 Template:CodeEnd","  7.74%    3.286      1 Template:Small","  7.29%    3.095      1 Template:CodeStart","  7.27%    3.087      1 Template:PageNavigation","  7.19%    3.054      1 Template:WhiteStart","  7.02%    2.981      1 Template:WhiteEnd"]},"cachereport":{"timestamp":"20210707103759","ttl":86400,"transientcontent":false}}});mw.config.set({"wgBackendResponseTime":1254});});</script></body>
+<!-- Mirrored from www.qb64.org/wiki/Controller_Devices by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 07 Aug 2021 12:42:14 GMT -->
+</html>

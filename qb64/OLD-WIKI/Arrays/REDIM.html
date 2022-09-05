@@ -1,0 +1,317 @@
+
+<!DOCTYPE html>
+<html class="client-nojs" lang="en" dir="ltr">
+
+<!-- Mirrored from www.qb64.org/wiki/REDIM by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 07 Aug 2021 13:04:15 GMT -->
+<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=UTF-8" /><!-- /Added by HTTrack -->
+<head>
+<meta charset="UTF-8"/>
+<title>REDIM - QB64 Wiki</title>
+<script>document.documentElement.className="client-js";RLCONF={"wgBreakFrames":!1,"wgSeparatorTransformTable":["",""],"wgDigitTransformTable":["",""],"wgDefaultDateFormat":"dmy","wgMonthNames":["","January","February","March","April","May","June","July","August","September","October","November","December"],"wgRequestId":"YOWlBekbkwEB08KNhNelNQAAAGw","wgCSPNonce":!1,"wgCanonicalNamespace":"","wgCanonicalSpecialPageName":!1,"wgNamespaceNumber":0,"wgPageName":"REDIM","wgTitle":"REDIM","wgCurRevisionId":23188,"wgRevisionId":23188,"wgArticleId":575,"wgIsArticle":!0,"wgIsRedirect":!1,"wgAction":"view","wgUserName":null,"wgUserGroups":["*"],"wgCategories":[],"wgPageContentLanguage":"en","wgPageContentModel":"wikitext","wgRelevantPageName":"REDIM","wgRelevantArticleId":575,"wgIsProbablyEditable":!1,"wgRelevantPageIsProbablyEditable":!1,"wgRestrictionEdit":[],"wgRestrictionMove":[]};RLSTATE={"site.styles":"ready","noscript":"ready","user.styles":"ready","user":"ready","user.options"
+:"loading","skins.vector.styles.legacy":"ready","mediawiki.toc.styles":"ready"};RLPAGEMODULES=["site","mediawiki.page.startup","mediawiki.page.ready","mediawiki.toc","skins.vector.legacy.js"];</script>
+<script>(RLQ=window.RLQ||[]).push(function(){mw.loader.implement("user.options@1hzgi",function($,jQuery,require,module){/*@nomin*/mw.user.tokens.set({"patrolToken":"+\\","watchToken":"+\\","csrfToken":"+\\"});
+});});</script>
+<link rel="stylesheet" href="loadd8b0.css?lang=en&amp;modules=mediawiki.toc.styles%7Cskins.vector.styles.legacy&amp;only=styles&amp;skin=vector"/>
+<script async="" src="load52c0.php?lang=en&amp;modules=startup&amp;only=scripts&amp;raw=1&amp;skin=vector"></script>
+<meta name="generator" content="MediaWiki 1.35.2"/>
+<link rel="shortcut icon" href="https://www.qb64.org/favicon.ico"/>
+<link rel="search" type="application/opensearchdescription+xml" href="opensearch_desc.php" title="QB64 Wiki (en)"/>
+<link rel="EditURI" type="application/rsd+xml" href="api-result251f.xml?action=rsd"/>
+<link rel="alternate" type="application/atom+xml" title="QB64 Wiki Atom feed" href="feeda295.xml?title=Special:RecentChanges&amp;feed=atom"/>
+<!--[if lt IE 9]><script src="/wiki/resources/lib/html5shiv/html5shiv.js"></script><![endif]-->
+</head>
+<body class="mediawiki ltr sitedir-ltr mw-hide-empty-elt ns-0 ns-subject page-REDIM rootpage-REDIM skin-vector action-view skin-vector-legacy">
+<div id="mw-page-base" class="noprint"></div>
+<div id="mw-head-base" class="noprint"></div>
+<div id="content" class="mw-body" role="main">
+	<a id="top"></a>
+	<div id="siteNotice" class="mw-body-content"></div>
+	<div class="mw-indicators mw-body-content">
+	</div>
+	<h1 id="firstHeading" class="firstHeading" lang="en">REDIM</h1>
+	<div id="bodyContent" class="mw-body-content">
+		<div id="siteSub" class="noprint">From QB64 Wiki</div>
+		<div id="contentSub"></div>
+		<div id="contentSub2"></div>
+		
+		<div id="jump-to-nav"></div>
+		<a class="mw-jump-link" href="#mw-head">Jump to navigation</a>
+		<a class="mw-jump-link" href="#searchInput">Jump to search</a>
+		<div id="mw-content-text" lang="en" dir="ltr" class="mw-content-ltr"><div class="mw-parser-output"><p>A <span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a class="mw-selflink selflink">REDIM</a></span> statement can re-dimension one <a href="%24DYNAMIC.html" title="$DYNAMIC">dynamic</a>(flexible) <a href="Arrays.html" title="Arrays">array</a> or a <a href="Comma.html" title="Comma">comma</a> separated list of arrays.
+</p><p><br />
+</p>
+<div id="toc" class="toc" role="navigation" aria-labelledby="mw-toc-heading"><input type="checkbox" role="button" id="toctogglecheckbox" class="toctogglecheckbox" style="display:none" /><div class="toctitle" lang="en" dir="ltr"><h2 id="mw-toc-heading">Contents</h2><span class="toctogglespan"><label class="toctogglelabel" for="toctogglecheckbox"></label></span></div>
+<ul>
+<li class="toclevel-1"><a href="#Syntax"><span class="tocnumber">1</span> <span class="toctext">Syntax</span></a></li>
+<li class="toclevel-1"><a href="#Description"><span class="tocnumber">2</span> <span class="toctext">Description</span></a></li>
+<li class="toclevel-1"><a href="#Examples"><span class="tocnumber">3</span> <span class="toctext">Examples</span></a></li>
+<li class="toclevel-1"><a href="#See_also"><span class="tocnumber">4</span> <span class="toctext">See also</span></a></li>
+</ul>
+</div>
+
+<h2><span class="mw-headline" id="Syntax">Syntax</span></h2>
+<dl><dd><a class="mw-selflink selflink">REDIM</a> [<span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="PRESERVE.html" title="PRESERVE">_PRESERVE</a></span>] [<span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="SHARED.html" title="SHARED">SHARED</a></span>] ArrayName[<i>typesuffix</i>] ({<i>max_element</i>|low_element[<span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="TO.html" title="TO">TO</a></span> <i>upper_element</i>, ...]}) [<span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="AS.html" title="AS">AS</a></span> <span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="TYPE.html" title="TYPE">Type</a></span>]</dd>
+<dd><a class="mw-selflink selflink">REDIM</a> [<span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="PRESERVE.html" title="PRESERVE">_PRESERVE</a></span>] [<span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="SHARED.html" title="SHARED">SHARED</a></span>] [<span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="AS.html" title="AS">AS</a></span> <span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="TYPE.html" title="TYPE">Type</a></span>] ArrayName({<i>max_element</i>|low_element[<span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="TO.html" title="TO">TO</a></span> <i>upper_element</i>, ...]})</dd></dl>
+<p><br />
+</p>
+<h2><span class="mw-headline" id="Description">Description</span></h2>
+<ul><li>Can change the number of elements in an array (the present array data is lost unless <a href="PRESERVE.html" title="PRESERVE">_PRESERVE</a> is used).</li>
+<li>Dynamic array elements can also be sized or resized by a program user's entry.</li>
+<li>The <a href="PRESERVE.html" title="PRESERVE">_PRESERVE</a> option also allows the <i>element</i> range values to be moved upward or downward.</li>
+<li><i>Array</i> is the name of the array to be dimensioned or re-dimensioned.</li>
+<li><i>elements</i> is the number of elements the array should hold. Use the optional <a href="TO.html" title="TO">TO</a> <i>elements2</i> to set a range.</li>
+<li><b>Always use the same array <a href="TYPE.html" title="TYPE">TYPE</a> suffix (<a href="AS.html" title="AS">AS</a> type) or a new array type with the same name may be created.</b></li>
+<li>REDIM cannot change <a href="%24STATIC.html" title="$STATIC">$STATIC</a> arrays created with a <a href="DIM.html" title="DIM">DIM</a> statement unless the <a href="%24DYNAMIC.html" title="$DYNAMIC">$DYNAMIC</a> <a href="Metacommand.html" title="Metacommand">metacommand</a> is used.</li>
+<li>To create a dynamic array use the <a href="%24DYNAMIC.html" title="$DYNAMIC">$DYNAMIC</a> metacommand or use <a class="mw-selflink selflink">REDIM</a> rather than <a href="DIM.html" title="DIM">DIM</a> when first creating the array.</li>
+<li>Use REDIM <a href="PRESERVE.html" title="PRESERVE">_PRESERVE</a> to change the range or number of array elements without losing the remaining elements. Data may move up or down to accommodate those boundary changes.</li>
+<li><b>REDIM <a href="PRESERVE.html" title="PRESERVE">_PRESERVE</a> cannot change the number of array dimensions or type.</b></li>
+<li><a href="%24DYNAMIC.html" title="$DYNAMIC">Dynamic</a> arrays MUST be <a class="mw-selflink selflink">REDIMensioned</a> if <a href="ERASE.html" title="ERASE">ERASE</a> or <a href="CLEAR.html" title="CLEAR">CLEAR</a> are used to clear the arrays as they no longer exist.</li>
+<li>When <a href="AS.html" title="AS">AS</a> is used to declare the type, use <a href="AS.html" title="AS">AS</a> to retain that type or it will change to <a href="SINGLE.html" title="SINGLE">SINGLE</a>!</li>
+<li><b>Warning! Do not use negative array upper bound index values as OS access or "Out of Memory" <a href="ERROR_Codes.html" title="ERROR Codes">errors</a> will occur.</b></li>
+<li>When using the <b>AS type variable-list</b> syntax, type symbols cannot be used.</li></ul>
+<p><br />
+</p>
+<h2><span class="mw-headline" id="Examples">Examples</span></h2>
+<p><i>Example 1:</i> The <a href="%24DYNAMIC.html" title="$DYNAMIC">$DYNAMIC</a> metacommand allows an array to be re-sized using <a href="DIM.html" title="DIM">DIM</a> and REDIM.
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: Courier, monospace; background-color: darkblue; color: lightgrey; word-wrap: break-word;"> <i> </i>
+'<a href="%24DYNAMIC.html" title="$DYNAMIC"><span style="color:#87cefa;">$DYNAMIC</span></a>
+
+<a href="INPUT.html" title="INPUT"><span style="color:#87cefa;">INPUT</span></a> "Enter array size: ", size 
+<a href="DIM.html" title="DIM"><span style="color:#87cefa;">DIM</span></a> Array(size)
+
+<a class="mw-selflink selflink"><span style="color:#87cefa;">REDIM</span></a> Array(2 * size)
+
+<a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> <a href="UBOUND.html" title="UBOUND"><span style="color:#87cefa;">UBOUND</span></a>(Array) <i> </i>
+</p>
+<p><br />
+<i>Example 2:</i> Shows the difference between REDIM and REDIM <a href="PRESERVE.html" title="PRESERVE">_PRESERVE</a>.
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: Courier, monospace; background-color: darkblue; color: lightgrey; word-wrap: break-word;"> <i> </i>
+<a class="mw-selflink selflink"><span style="color:#87cefa;">REDIM</span></a> array(20)
+array(10) = 24
+
+<a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> array(10)
+
+<a class="mw-selflink selflink"><span style="color:#87cefa;">REDIM</span></a> <a href="PRESERVE.html" title="PRESERVE"><span style="color:#87cefa;">_PRESERVE</span></a> array(30)
+<a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> array(10)
+
+<a class="mw-selflink selflink"><span style="color:#87cefa;">REDIM</span></a> array(15)
+<a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> array(10) <i> </i>
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: Courier; background-color: black; color: white;">
+ 24
+ 24
+ 0
+</p>
+<dl><dd><i>Explanation:</i> REDIM without _PRESERVE erases the array data and cannot change the number of dimensions.</dd></dl>
+<p><br />
+</p>
+<h2><span class="mw-headline" id="See_also">See also</span></h2>
+<ul><li><a href="Arrays.html" title="Arrays">Arrays</a></li>
+<li><a href="DIM.html" title="DIM">DIM</a>, <a href="SHARED.html" title="SHARED">SHARED</a></li>
+<li><a href="PRESERVE.html" title="PRESERVE">_PRESERVE</a>, <a href="ERASE.html" title="ERASE">ERASE</a></li>
+<li><a href="%24DYNAMIC.html" title="$DYNAMIC">$DYNAMIC</a>, <a href="%24STATIC.html" title="$STATIC">$STATIC</a></li></ul>
+<p><br />
+</p>
+<hr />
+<center><i>Navigation:</i>
+<dl><dd><a href="Keyword_Reference_-_Alphabetical.html" title="Keyword Reference - Alphabetical">Keyword Reference - Alphabetical</a></dd>
+<dd><a href="Keyword_Reference_-_By_usage.html" title="Keyword Reference - By usage">Keyword Reference - By Usage</a></dd>
+<dd><a href="Main_Page.html" title="Main Page">Main Wiki Page</a></dd></dl></center>
+<!-- 
+NewPP limit report
+Cached time: 20210707075414
+Cache expiry: 86400
+Dynamic content: false
+Complications: []
+CPU time usage: 0.074 seconds
+Real time usage: 0.291 seconds
+Preprocessor visited node count: 208/1000000
+Post‐expand include size: 2818/2097152 bytes
+Template argument size: 266/2097152 bytes
+Highest expansion depth: 3/40
+Expensive parser function count: 0/100
+Unstrip recursion depth: 0/20
+Unstrip post‐expand size: 0/5000000 bytes
+-->
+<!--
+Transclusion expansion time report (%,ms,calls,template)
+100.00%  129.393      1 -total
+ 19.13%   24.755     11 Template:KW
+ 12.96%   16.771      1 Template:PageDescription
+ 12.54%   16.223      1 Template:PageSyntax
+ 10.14%   13.121      1 Template:OutputEnd
+  9.56%   12.371      2 Template:CodeEnd
+  7.87%   10.186      2 Template:CodeStart
+  6.72%    8.699      1 Template:PageExamples
+  6.24%    8.076      1 Template:PageSeeAlso
+  4.36%    5.637     13 Template:Cl
+-->
+
+<!-- Saved in parser cache with key i4224360_mw2-mw_:pcache:idhash:575-0!canonical and timestamp 20210707075414 and revision id 23188
+ -->
+</div></div><div class="printfooter">Retrieved from "<a dir="ltr" href="index1c68.html?title=REDIM&amp;oldid=23188">http://www.qb64.org/wiki/index.php?title=REDIM&amp;oldid=23188</a>"</div>
+		<div id="catlinks" class="catlinks catlinks-allhidden" data-mw="interface"></div>
+	</div>
+</div>
+
+<div id="mw-navigation">
+	<h2>Navigation menu</h2>
+	<div id="mw-head">
+		<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-personal" class="vector-menu" aria-labelledby="p-personal-label" role="navigation" 
+	 >
+	<h3 id="p-personal-label">
+		<span>Personal tools</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="pt-login"><a href="index3186.html?title=Special:UserLogin&amp;returnto=REDIM" title="You are encouraged to log in; however, it is not mandatory [o]" accesskey="o">Log in</a></li></ul>
+		
+	</div>
+</nav>
+
+
+		<div id="left-navigation">
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-namespaces" class="vector-menu vector-menu-tabs vectorTabs" aria-labelledby="p-namespaces-label" role="navigation" 
+	 >
+	<h3 id="p-namespaces-label">
+		<span>Namespaces</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="ca-nstab-main" class="selected"><a href="REDIM.html" title="View the content page [c]" accesskey="c">Page</a></li><li id="ca-talk" class="new"><a href="Talk_REDIM.html?title=Talk:REDIM&amp;action=edit&amp;redlink=1" rel="discussion" title="Discussion about the content page (page does not exist) [t]" accesskey="t">Discussion</a></li></ul>
+		
+	</div>
+</nav>
+
+
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-variants" class="vector-menu-empty emptyPortlet vector-menu vector-menu-dropdown vectorMenu" aria-labelledby="p-variants-label" role="navigation" 
+	 >
+	<input type="checkbox" class="vector-menu-checkbox vectorMenuCheckbox" aria-labelledby="p-variants-label" />
+	<h3 id="p-variants-label">
+		<span>Variants</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="menu vector-menu-content-list"></ul>
+		
+	</div>
+</nav>
+
+
+		</div>
+		<div id="right-navigation">
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-views" class="vector-menu vector-menu-tabs vectorTabs" aria-labelledby="p-views-label" role="navigation" 
+	 >
+	<h3 id="p-views-label">
+		<span>Views</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="ca-view" class="collapsible selected"><a href="REDIM.html">Read</a></li><li id="ca-viewsource" class="collapsible"><a href="index83d9.html?title=REDIM&amp;action=edit" title="This page is protected.&#10;You can view its source [e]" accesskey="e">View source</a></li><li id="ca-history" class="collapsible"><a href="index287e.html?title=REDIM&amp;action=history" title="Past revisions of this page [h]" accesskey="h">View history</a></li></ul>
+		
+	</div>
+</nav>
+
+
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-cactions" class="vector-menu-empty emptyPortlet vector-menu vector-menu-dropdown vectorMenu" aria-labelledby="p-cactions-label" role="navigation" 
+	 >
+	<input type="checkbox" class="vector-menu-checkbox vectorMenuCheckbox" aria-labelledby="p-cactions-label" />
+	<h3 id="p-cactions-label">
+		<span>More</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="menu vector-menu-content-list"></ul>
+		
+	</div>
+</nav>
+
+
+			<div id="p-search" role="search">
+	<h3 >
+		<label for="searchInput">Search</label>
+	</h3>
+	<form action="https://www.qb64.org/wiki/index.php" id="searchform">
+		<div id="simpleSearch">
+			<input type="search" name="search" placeholder="Search QB64 Wiki" title="Search QB64 Wiki [f]" accesskey="f" id="searchInput"/>
+			<input type="hidden" name="title" value="Special:Search">
+			<input type="submit" name="fulltext" value="Search" title="Search the pages for this text" id="mw-searchButton" class="searchButton mw-fallbackSearchButton"/>
+			<input type="submit" name="go" value="Go" title="Go to a page with this exact name if it exists" id="searchButton" class="searchButton"/>
+		</div>
+	</form>
+</div>
+
+		</div>
+	</div>
+	
+<div id="mw-panel">
+	<div id="p-logo" role="banner">
+		<a  title="Visit the main page" class="mw-wiki-logo" href="Main_Page.html"></a>
+	</div>
+	<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-navigation" class="vector-menu vector-menu-portal portal portal-first" aria-labelledby="p-navigation-label" role="navigation" 
+	 >
+	<h3 id="p-navigation-label">
+		<span>Navigation</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="n-mainpage-description"><a href="Main_Page.html" title="Visit the main page [z]" accesskey="z">Main page</a></li><li id="n-recentchanges"><a href="Special_RecentChanges.html" title="A list of recent changes in the wiki [r]" accesskey="r">Recent changes</a></li><li id="n-randompage"><a href="SNDCOPY.html" title="Load a random page [x]" accesskey="x">Random page</a></li><li id="n-help-mediawiki"><a href="https://www.mediawiki.org/wiki/Special:MyLanguage/Help:Contents">Help about MediaWiki</a></li></ul>
+		
+	</div>
+</nav>
+
+
+	<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-tb" class="vector-menu vector-menu-portal portal" aria-labelledby="p-tb-label" role="navigation" 
+	 >
+	<h3 id="p-tb-label">
+		<span>Tools</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="t-whatlinkshere"><a href="Special_WhatLinksHere/REDIM.html" title="A list of all wiki pages that link here [j]" accesskey="j">What links here</a></li><li id="t-recentchangeslinked"><a href="Special_RecentChangesLinked/REDIM.html" rel="nofollow" title="Recent changes in pages linked from this page [k]" accesskey="k">Related changes</a></li><li id="t-specialpages"><a href="Special_SpecialPages.html" title="A list of all special pages [q]" accesskey="q">Special pages</a></li><li id="t-print"><a href="javascript:print();" rel="alternate" title="Printable version of this page [p]" accesskey="p">Printable version</a></li><li id="t-permalink"><a href="index1c68.html?title=REDIM&amp;oldid=23188" title="Permanent link to this revision of the page">Permanent link</a></li><li id="t-info"><a href="index1868.html?title=REDIM&amp;action=info" title="More information about this page">Page information</a></li></ul>
+		
+	</div>
+</nav>
+
+
+	
+</div>
+
+</div>
+
+<footer id="footer" class="mw-footer" role="contentinfo" >
+	<ul id="footer-info" >
+		<li id="footer-info-lastmod"> This page was last edited on 7 February 2021, at 16:07.</li>
+	</ul>
+	<ul id="footer-places" >
+		<li id="footer-places-privacy"><a href="My_wiki_Privacy_policy.html" title="My wiki:Privacy policy">Privacy policy</a></li>
+		<li id="footer-places-about"><a href="My_wiki_About.html" title="My wiki:About">About QB64 Wiki</a></li>
+		<li id="footer-places-disclaimer"><a href="My_wiki_General_disclaimer.html" title="My wiki:General disclaimer">Disclaimers</a></li>
+	</ul>
+	<ul id="footer-icons" class="noprint">
+		<li id="footer-poweredbyico"><a href="https://www.mediawiki.org/"><img src="resources/assets/poweredby_mediawiki_88x31.png" alt="Powered by MediaWiki" srcset="/wiki/resources/assets/poweredby_mediawiki_132x47.png 1.5x, /wiki/resources/assets/poweredby_mediawiki_176x62.png 2x" width="88" height="31" loading="lazy"/></a></li>
+	</ul>
+	<div style="clear: both;"></div>
+</footer>
+
+
+
+<script>(RLQ=window.RLQ||[]).push(function(){mw.config.set({"wgPageParseReport":{"limitreport":{"cputime":"0.074","walltime":"0.291","ppvisitednodes":{"value":208,"limit":1000000},"postexpandincludesize":{"value":2818,"limit":2097152},"templateargumentsize":{"value":266,"limit":2097152},"expansiondepth":{"value":3,"limit":40},"expensivefunctioncount":{"value":0,"limit":100},"unstrip-depth":{"value":0,"limit":20},"unstrip-size":{"value":0,"limit":5000000},"timingprofile":["100.00%  129.393      1 -total"," 19.13%   24.755     11 Template:KW"," 12.96%   16.771      1 Template:PageDescription"," 12.54%   16.223      1 Template:PageSyntax"," 10.14%   13.121      1 Template:OutputEnd","  9.56%   12.371      2 Template:CodeEnd","  7.87%   10.186      2 Template:CodeStart","  6.72%    8.699      1 Template:PageExamples","  6.24%    8.076      1 Template:PageSeeAlso","  4.36%    5.637     13 Template:Cl"]},"cachereport":{"timestamp":"20210707075414","ttl":86400,"transientcontent":false}}});mw.config.set({"wgBackendResponseTime":2148});});</script></body>
+<!-- Mirrored from www.qb64.org/wiki/REDIM by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 07 Aug 2021 13:04:20 GMT -->
+</html>

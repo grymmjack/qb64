@@ -1,0 +1,379 @@
+
+<!DOCTYPE html>
+<html class="client-nojs" lang="en" dir="ltr">
+
+<!-- Mirrored from www.qb64.org/wiki/AND by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 07 Aug 2021 13:10:10 GMT -->
+<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=UTF-8" /><!-- /Added by HTTrack -->
+<head>
+<meta charset="UTF-8"/>
+<title>AND - QB64 Wiki</title>
+<script>document.documentElement.className="client-js";RLCONF={"wgBreakFrames":!1,"wgSeparatorTransformTable":["",""],"wgDigitTransformTable":["",""],"wgDefaultDateFormat":"dmy","wgMonthNames":["","January","February","March","April","May","June","July","August","September","October","November","December"],"wgRequestId":"YOWlOA0lOz7XOc3uS6UtsQAAASA","wgCSPNonce":!1,"wgCanonicalNamespace":"","wgCanonicalSpecialPageName":!1,"wgNamespaceNumber":0,"wgPageName":"AND","wgTitle":"AND","wgCurRevisionId":793,"wgRevisionId":793,"wgArticleId":33,"wgIsArticle":!0,"wgIsRedirect":!1,"wgAction":"view","wgUserName":null,"wgUserGroups":["*"],"wgCategories":[],"wgPageContentLanguage":"en","wgPageContentModel":"wikitext","wgRelevantPageName":"AND","wgRelevantArticleId":33,"wgIsProbablyEditable":!1,"wgRelevantPageIsProbablyEditable":!1,"wgRestrictionEdit":[],"wgRestrictionMove":[]};RLSTATE={"site.styles":"ready","noscript":"ready","user.styles":"ready","user":"ready","user.options":"loading",
+"skins.vector.styles.legacy":"ready","mediawiki.toc.styles":"ready"};RLPAGEMODULES=["site","mediawiki.page.startup","mediawiki.page.ready","mediawiki.toc","skins.vector.legacy.js"];</script>
+<script>(RLQ=window.RLQ||[]).push(function(){mw.loader.implement("user.options@1hzgi",function($,jQuery,require,module){/*@nomin*/mw.user.tokens.set({"patrolToken":"+\\","watchToken":"+\\","csrfToken":"+\\"});
+});});</script>
+<link rel="stylesheet" href="loadd8b0.css?lang=en&amp;modules=mediawiki.toc.styles%7Cskins.vector.styles.legacy&amp;only=styles&amp;skin=vector"/>
+<script async="" src="load52c0.php?lang=en&amp;modules=startup&amp;only=scripts&amp;raw=1&amp;skin=vector"></script>
+<meta name="generator" content="MediaWiki 1.35.2"/>
+<link rel="shortcut icon" href="https://www.qb64.org/favicon.ico"/>
+<link rel="search" type="application/opensearchdescription+xml" href="opensearch_desc.php" title="QB64 Wiki (en)"/>
+<link rel="EditURI" type="application/rsd+xml" href="api-result251f.xml?action=rsd"/>
+<link rel="alternate" type="application/atom+xml" title="QB64 Wiki Atom feed" href="feeda295.xml?title=Special:RecentChanges&amp;feed=atom"/>
+<!--[if lt IE 9]><script src="/wiki/resources/lib/html5shiv/html5shiv.js"></script><![endif]-->
+</head>
+<body class="mediawiki ltr sitedir-ltr mw-hide-empty-elt ns-0 ns-subject page-AND rootpage-AND skin-vector action-view skin-vector-legacy">
+<div id="mw-page-base" class="noprint"></div>
+<div id="mw-head-base" class="noprint"></div>
+<div id="content" class="mw-body" role="main">
+	<a id="top"></a>
+	<div id="siteNotice" class="mw-body-content"></div>
+	<div class="mw-indicators mw-body-content">
+	</div>
+	<h1 id="firstHeading" class="firstHeading" lang="en">AND</h1>
+	<div id="bodyContent" class="mw-body-content">
+		<div id="siteSub" class="noprint">From QB64 Wiki</div>
+		<div id="contentSub"></div>
+		<div id="contentSub2"></div>
+		
+		<div id="jump-to-nav"></div>
+		<a class="mw-jump-link" href="#mw-head">Jump to navigation</a>
+		<a class="mw-jump-link" href="#searchInput">Jump to search</a>
+		<div id="mw-content-text" lang="en" dir="ltr" class="mw-content-ltr"><div class="mw-parser-output"><p>The logical <a class="mw-selflink selflink">AND</a> numerical operator compares two values in respect of their bits. If both bits at a certain position in both values are set, then that bit position is set in the result.
+</p><p><br />
+</p>
+<div id="toc" class="toc" role="navigation" aria-labelledby="mw-toc-heading"><input type="checkbox" role="button" id="toctogglecheckbox" class="toctogglecheckbox" style="display:none" /><div class="toctitle" lang="en" dir="ltr"><h2 id="mw-toc-heading">Contents</h2><span class="toctogglespan"><label class="toctogglelabel" for="toctogglecheckbox"></label></span></div>
+<ul>
+<li class="toclevel-1"><a href="#Syntax"><span class="tocnumber">1</span> <span class="toctext">Syntax</span></a></li>
+<li class="toclevel-1"><a href="#Description"><span class="tocnumber">2</span> <span class="toctext">Description</span></a></li>
+<li class="toclevel-1"><a href="#Examples"><span class="tocnumber">3</span> <span class="toctext">Examples</span></a></li>
+<li class="toclevel-1"><a href="#See_also"><span class="tocnumber">4</span> <span class="toctext">See also</span></a></li>
+</ul>
+</div>
+
+<h2><span class="mw-headline" id="Syntax">Syntax</span></h2>
+<dl><dd><i>result</i> = <i>firstvalue</i> AND <i>secondvalue</i></dd></dl>
+<p><br />
+</p>
+<h2><span class="mw-headline" id="Description">Description</span></h2>
+<ul><li><a class="mw-selflink selflink">AND</a> compares the bits of the <i>firstvalue</i> against the bits of the <i>secondvalue</i>, the result is stored in the <i>result</i> variable.</li>
+<li>If both bits are on (1) then the result is on (1).</li>
+<li>All other conditions return 0 (bit is off).</li>
+<li>AND is often used to see if a bit is on by comparing a value to an exponent of 2.</li>
+<li>Can turn off a bit by subtracting the bit on value from 255 and using that value to AND a byte value.</li></ul>
+<p><br />
+</p>
+<center>The results of the bitwise logical operations, where <i>A</i> and <i>B</i> are operands, and <i>T</i> and <i>F</i> indicate that a bit is set or not set:</center>
+<dl><dd><table border="1" cellpadding="2" align="center">
+
+<tbody><tr>
+<th colspan="2">Operands</th>
+<th colspan="6">Operations
+</th></tr>
+<tr>
+<td align="center">A</td>
+<td align="center">B</td>
+<td align="center"><tt><a href="NOT.html" title="NOT">NOT</a> B</tt></td>
+<td align="center"><tt>A <a class="mw-selflink selflink">AND</a> B</tt></td>
+<td align="center"><tt>A <a href="OR.html" title="OR">OR</a> B</tt></td>
+<td align="center"><tt>A <a href="XOR.html" class="mw-redirect" title="XOR">XOR</a> B</tt></td>
+<td align="center"><tt>A <a href="EQV.html" title="EQV">EQV</a> B</tt></td>
+<td align="center"><tt>A <a href="IMP.html" title="IMP">IMP</a> B</tt>
+</td></tr>
+<tr>
+<td align="center">T</td>
+<td align="center">T</td>
+<td align="center">F</td>
+<td align="center">T</td>
+<td align="center">T</td>
+<td align="center">F</td>
+<td align="center">T</td>
+<td align="center">T
+</td></tr>
+<tr>
+<td align="center">T</td>
+<td align="center">F</td>
+<td align="center">T</td>
+<td align="center">F</td>
+<td align="center">T</td>
+<td align="center">T</td>
+<td align="center">F</td>
+<td align="center">F
+</td></tr>
+<tr>
+<td align="center">F</td>
+<td align="center">T</td>
+<td align="center">F</td>
+<td align="center">F</td>
+<td align="center">T</td>
+<td align="center">T</td>
+<td align="center">F</td>
+<td align="center">T
+</td></tr>
+<tr>
+<td align="center">F</td>
+<td align="center">F</td>
+<td align="center">T</td>
+<td align="center">F</td>
+<td align="center">F</td>
+<td align="center">F</td>
+<td align="center">T</td>
+<td align="center">T
+</td></tr></tbody></table></dd></dl>
+<center><b><a href="Relational_Operations.html" title="Relational Operations">Relational Operations</a> return negative one (-1, all bits set) and zero (0, no bits set) for <i>true</i> and <i>false</i>, respectively.</b></center>
+<center> This allows relational tests to be inverted and combined using the bitwise logical operations.<b></b></center>
+<p><br />
+</p><p><br />
+</p>
+<h2><span class="mw-headline" id="Examples">Examples</span></h2>
+<p><i>Example 1:</i>
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:10px; white-space: pre; font-family: courier; background-color: white; color: darkgreen;">
+         101
+         AND
+         011
+        -----
+         001
+</p>
+<dl><dd>The 101 bit pattern equals 5 and the 011 bit pattern equals 3, it returns the bit pattern 001 which equals 1. Only the Least Significant Bits (LSB) match. So decimal values 5 AND 3 = 1.</dd></dl>
+<p><br />
+<i>Example 2:</i>
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:10px; white-space: pre; font-family: courier; background-color: white; color: darkgreen;">
+      11111011
+        AND
+      11101111
+     ----------
+      11101011
+</p>
+<dl><dd>Both bits have to be set for the resulting bit to be set. You can use the <a class="mw-selflink selflink">AND</a> operator to get one byte of a two byte integer this way:</dd></dl>
+<dl><dd><dl><dd>firstbyte = twobyteint AND 255</dd></dl></dd></dl>
+<dl><dd>Since 255 is 11111111 in binary, it will represent the first byte completely when compared with AND.</dd></dl>
+<dl><dd>To find the second (HI) byte's decimal value of two byte <a href="INTEGER.html" title="INTEGER">INTEGERs</a> use: secondbyte = twobyteint \ 256</dd></dl>
+<p><br />
+<i>Example 3:</i> Finding the binary bits on in an <a href="INTEGER.html" title="INTEGER">INTEGER</a> value. 
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: Courier, monospace; background-color: darkblue; color: lightgrey; word-wrap: break-word;">
+
+ DO
+  <a href="INPUT.html" title="INPUT"><span style="color:#87cefa;">INPUT</span></a> "Enter Integer value from -32768 to 32767 (Enter quits): ", INTvalue&amp; 
+  IF INTvalue&amp; &lt; -32768 OR INTvalue&amp; &gt; 32767 OR INTval&amp; = 0 THEN <a href="EXIT_DO.html" title="EXIT DO"><span style="color:#87cefa;">EXIT DO</span></a>
+  <a href="FOR...html" title="FOR...NEXT"><span style="color:#87cefa;">FOR</span></a> exponent = 15 <a href="TO.html" title="TO"><span style="color:#87cefa;">TO</span></a> 0 <a href="STEP.html" title="STEP"><span style="color:#87cefa;">STEP</span></a> -1
+    <a href="IF...html" title="IF...THEN"><span style="color:#87cefa;">IF</span></a> (INTvalue&amp; <a class="mw-selflink selflink"><span style="color:#87cefa;">AND</span></a> 2 ^ exponent) <a href="THEN.html" title="THEN"><span style="color:#87cefa;">THEN</span></a> <a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> "1"; <a href="ELSE.html" title="ELSE"><span style="color:#87cefa;">ELSE</span></a> <a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> "0";
+  <a href="NEXT.html" title="NEXT"><span style="color:#87cefa;">NEXT</span></a>
+  PRINT " "
+ LOOP UNTIL INTvalue&amp; = 0 'zero entry quits
+
+</p>
+<dl><dd>Example output for 6055.</dd></dl>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: Courier; background-color: black; color: white;">
+0001011110100111
+</p>
+<dl><dd><dl><dd><i>Note:</i> The value of 32767 sets 15 bits. -1 sets all 16 bits. Negative values will all have the highest bit set. Use <a href="LONG.html" title="LONG">LONG</a> variables for input values to prevent overflow errors.</dd></dl></dd></dl>
+<p><br />
+</p>
+<h2><span class="mw-headline" id="See_also">See also</span></h2>
+<ul><li><a href="OR.html" title="OR">OR</a>, <a href="XOR.html" class="mw-redirect" title="XOR">XOR</a>, <a href="NOT.html" title="NOT">NOT</a> <span style="color:gray">(logical operators)</span></li>
+<li><a href="AND_(boolean).html" title="AND (boolean)">AND (boolean)</a></li>
+<li><a href="Binary.html" title="Binary">Binary</a>, <a href="Boolean.html" title="Boolean">Boolean</a></li></ul>
+<p><br />
+</p>
+<hr />
+<center><i>Navigation:</i>
+<dl><dd><a href="Keyword_Reference_-_Alphabetical.html" title="Keyword Reference - Alphabetical">Keyword Reference - Alphabetical</a></dd>
+<dd><a href="Keyword_Reference_-_By_usage.html" title="Keyword Reference - By usage">Keyword Reference - By Usage</a></dd>
+<dd><a href="Main_Page.html" title="Main Page">Main Wiki Page</a></dd></dl></center>
+<!-- 
+NewPP limit report
+Cached time: 20210707013633
+Cache expiry: 86400
+Dynamic content: false
+Complications: []
+CPU time usage: 0.073 seconds
+Real time usage: 0.099 seconds
+Preprocessor visited node count: 149/1000000
+Post‐expand include size: 3341/2097152 bytes
+Template argument size: 183/2097152 bytes
+Highest expansion depth: 3/40
+Expensive parser function count: 0/100
+Unstrip recursion depth: 0/20
+Unstrip post‐expand size: 0/5000000 bytes
+-->
+<!--
+Transclusion expansion time report (%,ms,calls,template)
+100.00%   50.521      1 -total
+  7.86%    3.971      1 Template:PageSyntax
+  7.71%    3.896     12 Template:Cl
+  6.56%    3.315      1 Template:LogicalTruthTable
+  6.48%    3.276      6 Template:Parameter
+  6.14%    3.104      1 Template:PageDescription
+  6.07%    3.065      1 Template:CodeEnd
+  6.04%    3.050      1 Template:CodeStart
+  6.02%    3.040      1 Template:PageExamples
+  6.01%    3.037      1 Template:PageNavigation
+-->
+
+<!-- Saved in parser cache with key i4224360_mw2-mw_:pcache:idhash:33-0!canonical and timestamp 20210707013633 and revision id 793
+ -->
+</div></div><div class="printfooter">Retrieved from "<a dir="ltr" href="index91dd.html?title=AND&amp;oldid=793">http://www.qb64.org/wiki/index.php?title=AND&amp;oldid=793</a>"</div>
+		<div id="catlinks" class="catlinks catlinks-allhidden" data-mw="interface"></div>
+	</div>
+</div>
+
+<div id="mw-navigation">
+	<h2>Navigation menu</h2>
+	<div id="mw-head">
+		<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-personal" class="vector-menu" aria-labelledby="p-personal-label" role="navigation" 
+	 >
+	<h3 id="p-personal-label">
+		<span>Personal tools</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="pt-login"><a href="index470a.html?title=Special:UserLogin&amp;returnto=AND" title="You are encouraged to log in; however, it is not mandatory [o]" accesskey="o">Log in</a></li></ul>
+		
+	</div>
+</nav>
+
+
+		<div id="left-navigation">
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-namespaces" class="vector-menu vector-menu-tabs vectorTabs" aria-labelledby="p-namespaces-label" role="navigation" 
+	 >
+	<h3 id="p-namespaces-label">
+		<span>Namespaces</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="ca-nstab-main" class="selected"><a href="AND.html" title="View the content page [c]" accesskey="c">Page</a></li><li id="ca-talk" class="new"><a href="Talk_AND.html?title=Talk:AND&amp;action=edit&amp;redlink=1" rel="discussion" title="Discussion about the content page (page does not exist) [t]" accesskey="t">Discussion</a></li></ul>
+		
+	</div>
+</nav>
+
+
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-variants" class="vector-menu-empty emptyPortlet vector-menu vector-menu-dropdown vectorMenu" aria-labelledby="p-variants-label" role="navigation" 
+	 >
+	<input type="checkbox" class="vector-menu-checkbox vectorMenuCheckbox" aria-labelledby="p-variants-label" />
+	<h3 id="p-variants-label">
+		<span>Variants</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="menu vector-menu-content-list"></ul>
+		
+	</div>
+</nav>
+
+
+		</div>
+		<div id="right-navigation">
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-views" class="vector-menu vector-menu-tabs vectorTabs" aria-labelledby="p-views-label" role="navigation" 
+	 >
+	<h3 id="p-views-label">
+		<span>Views</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="ca-view" class="collapsible selected"><a href="AND.html">Read</a></li><li id="ca-viewsource" class="collapsible"><a href="index6e66.html?title=AND&amp;action=edit" title="This page is protected.&#10;You can view its source [e]" accesskey="e">View source</a></li><li id="ca-history" class="collapsible"><a href="index5f4a.html?title=AND&amp;action=history" title="Past revisions of this page [h]" accesskey="h">View history</a></li></ul>
+		
+	</div>
+</nav>
+
+
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-cactions" class="vector-menu-empty emptyPortlet vector-menu vector-menu-dropdown vectorMenu" aria-labelledby="p-cactions-label" role="navigation" 
+	 >
+	<input type="checkbox" class="vector-menu-checkbox vectorMenuCheckbox" aria-labelledby="p-cactions-label" />
+	<h3 id="p-cactions-label">
+		<span>More</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="menu vector-menu-content-list"></ul>
+		
+	</div>
+</nav>
+
+
+			<div id="p-search" role="search">
+	<h3 >
+		<label for="searchInput">Search</label>
+	</h3>
+	<form action="https://www.qb64.org/wiki/index.php" id="searchform">
+		<div id="simpleSearch">
+			<input type="search" name="search" placeholder="Search QB64 Wiki" title="Search QB64 Wiki [f]" accesskey="f" id="searchInput"/>
+			<input type="hidden" name="title" value="Special:Search">
+			<input type="submit" name="fulltext" value="Search" title="Search the pages for this text" id="mw-searchButton" class="searchButton mw-fallbackSearchButton"/>
+			<input type="submit" name="go" value="Go" title="Go to a page with this exact name if it exists" id="searchButton" class="searchButton"/>
+		</div>
+	</form>
+</div>
+
+		</div>
+	</div>
+	
+<div id="mw-panel">
+	<div id="p-logo" role="banner">
+		<a  title="Visit the main page" class="mw-wiki-logo" href="Main_Page.html"></a>
+	</div>
+	<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-navigation" class="vector-menu vector-menu-portal portal portal-first" aria-labelledby="p-navigation-label" role="navigation" 
+	 >
+	<h3 id="p-navigation-label">
+		<span>Navigation</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="n-mainpage-description"><a href="Main_Page.html" title="Visit the main page [z]" accesskey="z">Main page</a></li><li id="n-recentchanges"><a href="Special_RecentChanges.html" title="A list of recent changes in the wiki [r]" accesskey="r">Recent changes</a></li><li id="n-randompage"><a href="SNDCOPY.html" title="Load a random page [x]" accesskey="x">Random page</a></li><li id="n-help-mediawiki"><a href="https://www.mediawiki.org/wiki/Special:MyLanguage/Help:Contents">Help about MediaWiki</a></li></ul>
+		
+	</div>
+</nav>
+
+
+	<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-tb" class="vector-menu vector-menu-portal portal" aria-labelledby="p-tb-label" role="navigation" 
+	 >
+	<h3 id="p-tb-label">
+		<span>Tools</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="t-whatlinkshere"><a href="Special_WhatLinksHere/AND.html" title="A list of all wiki pages that link here [j]" accesskey="j">What links here</a></li><li id="t-recentchangeslinked"><a href="Special_RecentChangesLinked/AND.html" rel="nofollow" title="Recent changes in pages linked from this page [k]" accesskey="k">Related changes</a></li><li id="t-specialpages"><a href="Special_SpecialPages.html" title="A list of all special pages [q]" accesskey="q">Special pages</a></li><li id="t-print"><a href="javascript:print();" rel="alternate" title="Printable version of this page [p]" accesskey="p">Printable version</a></li><li id="t-permalink"><a href="index91dd.html?title=AND&amp;oldid=793" title="Permanent link to this revision of the page">Permanent link</a></li><li id="t-info"><a href="index5a9e.html?title=AND&amp;action=info" title="More information about this page">Page information</a></li></ul>
+		
+	</div>
+</nav>
+
+
+	
+</div>
+
+</div>
+
+<footer id="footer" class="mw-footer" role="contentinfo" >
+	<ul id="footer-info" >
+		<li id="footer-info-lastmod"> This page was last edited on 1 November 2017, at 03:16.</li>
+	</ul>
+	<ul id="footer-places" >
+		<li id="footer-places-privacy"><a href="My_wiki_Privacy_policy.html" title="My wiki:Privacy policy">Privacy policy</a></li>
+		<li id="footer-places-about"><a href="My_wiki_About.html" title="My wiki:About">About QB64 Wiki</a></li>
+		<li id="footer-places-disclaimer"><a href="My_wiki_General_disclaimer.html" title="My wiki:General disclaimer">Disclaimers</a></li>
+	</ul>
+	<ul id="footer-icons" class="noprint">
+		<li id="footer-poweredbyico"><a href="https://www.mediawiki.org/"><img src="resources/assets/poweredby_mediawiki_88x31.png" alt="Powered by MediaWiki" srcset="/wiki/resources/assets/poweredby_mediawiki_132x47.png 1.5x, /wiki/resources/assets/poweredby_mediawiki_176x62.png 2x" width="88" height="31" loading="lazy"/></a></li>
+	</ul>
+	<div style="clear: both;"></div>
+</footer>
+
+
+
+<script>(RLQ=window.RLQ||[]).push(function(){mw.config.set({"wgPageParseReport":{"limitreport":{"cputime":"0.073","walltime":"0.099","ppvisitednodes":{"value":149,"limit":1000000},"postexpandincludesize":{"value":3341,"limit":2097152},"templateargumentsize":{"value":183,"limit":2097152},"expansiondepth":{"value":3,"limit":40},"expensivefunctioncount":{"value":0,"limit":100},"unstrip-depth":{"value":0,"limit":20},"unstrip-size":{"value":0,"limit":5000000},"timingprofile":["100.00%   50.521      1 -total","  7.86%    3.971      1 Template:PageSyntax","  7.71%    3.896     12 Template:Cl","  6.56%    3.315      1 Template:LogicalTruthTable","  6.48%    3.276      6 Template:Parameter","  6.14%    3.104      1 Template:PageDescription","  6.07%    3.065      1 Template:CodeEnd","  6.04%    3.050      1 Template:CodeStart","  6.02%    3.040      1 Template:PageExamples","  6.01%    3.037      1 Template:PageNavigation"]},"cachereport":{"timestamp":"20210707013633","ttl":86400,"transientcontent":false}}});mw.config.set({"wgBackendResponseTime":2128});});</script></body>
+<!-- Mirrored from www.qb64.org/wiki/AND by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 07 Aug 2021 13:10:14 GMT -->
+</html>

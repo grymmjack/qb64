@@ -1,0 +1,1166 @@
+
+<!DOCTYPE html>
+<html class="client-nojs" lang="en" dir="ltr">
+
+<!-- Mirrored from www.qb64.org/wiki/C_Libraries by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 07 Aug 2021 12:42:57 GMT -->
+<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=UTF-8" /><!-- /Added by HTTrack -->
+<head>
+<meta charset="UTF-8"/>
+<title>C Libraries - QB64 Wiki</title>
+<script>document.documentElement.className="client-js";RLCONF={"wgBreakFrames":!1,"wgSeparatorTransformTable":["",""],"wgDigitTransformTable":["",""],"wgDefaultDateFormat":"dmy","wgMonthNames":["","January","February","March","April","May","June","July","August","September","October","November","December"],"wgRequestId":"YOWkUVpP-65vp3So6LulvAAAANg","wgCSPNonce":!1,"wgCanonicalNamespace":"","wgCanonicalSpecialPageName":!1,"wgNamespaceNumber":0,"wgPageName":"C_Libraries","wgTitle":"C Libraries","wgCurRevisionId":23690,"wgRevisionId":23690,"wgArticleId":133,"wgIsArticle":!0,"wgIsRedirect":!1,"wgAction":"view","wgUserName":null,"wgUserGroups":["*"],"wgCategories":[],"wgPageContentLanguage":"en","wgPageContentModel":"wikitext","wgRelevantPageName":"C_Libraries","wgRelevantArticleId":133,"wgIsProbablyEditable":!1,"wgRelevantPageIsProbablyEditable":!1,"wgRestrictionEdit":[],"wgRestrictionMove":[]};RLSTATE={"site.styles":"ready","noscript":"ready","user.styles":"ready","user":
+"ready","user.options":"loading","skins.vector.styles.legacy":"ready","mediawiki.toc.styles":"ready"};RLPAGEMODULES=["site","mediawiki.page.startup","mediawiki.page.ready","mediawiki.toc","skins.vector.legacy.js"];</script>
+<script>(RLQ=window.RLQ||[]).push(function(){mw.loader.implement("user.options@1hzgi",function($,jQuery,require,module){/*@nomin*/mw.user.tokens.set({"patrolToken":"+\\","watchToken":"+\\","csrfToken":"+\\"});
+});});</script>
+<link rel="stylesheet" href="loadd8b0.css?lang=en&amp;modules=mediawiki.toc.styles%7Cskins.vector.styles.legacy&amp;only=styles&amp;skin=vector"/>
+<script async="" src="load52c0.php?lang=en&amp;modules=startup&amp;only=scripts&amp;raw=1&amp;skin=vector"></script>
+<meta name="generator" content="MediaWiki 1.35.2"/>
+<link rel="shortcut icon" href="https://www.qb64.org/favicon.ico"/>
+<link rel="search" type="application/opensearchdescription+xml" href="opensearch_desc.php" title="QB64 Wiki (en)"/>
+<link rel="EditURI" type="application/rsd+xml" href="api-result251f.xml?action=rsd"/>
+<link rel="alternate" type="application/atom+xml" title="QB64 Wiki Atom feed" href="feeda295.xml?title=Special:RecentChanges&amp;feed=atom"/>
+<!--[if lt IE 9]><script src="/wiki/resources/lib/html5shiv/html5shiv.js"></script><![endif]-->
+</head>
+<body class="mediawiki ltr sitedir-ltr mw-hide-empty-elt ns-0 ns-subject page-C_Libraries rootpage-C_Libraries skin-vector action-view skin-vector-legacy">
+<div id="mw-page-base" class="noprint"></div>
+<div id="mw-head-base" class="noprint"></div>
+<div id="content" class="mw-body" role="main">
+	<a id="top"></a>
+	<div id="siteNotice" class="mw-body-content"></div>
+	<div class="mw-indicators mw-body-content">
+	</div>
+	<h1 id="firstHeading" class="firstHeading" lang="en">C Libraries</h1>
+	<div id="bodyContent" class="mw-body-content">
+		<div id="siteSub" class="noprint">From QB64 Wiki</div>
+		<div id="contentSub"></div>
+		<div id="contentSub2"></div>
+		
+		<div id="jump-to-nav"></div>
+		<a class="mw-jump-link" href="#mw-head">Jump to navigation</a>
+		<a class="mw-jump-link" href="#searchInput">Jump to search</a>
+		<div id="mw-content-text" lang="en" dir="ltr" class="mw-content-ltr"><div class="mw-parser-output"><p><b>QB64</b> uses C++ to compile a BAS program into an executable program. The following is a list of the <b>C <a href="FUNCTION.html" title="FUNCTION">FUNCTIONs</a></b> that can be used. 
+</p><p><b>Note: C++ Header files should be placed in the QB64 folder and are not required after a program is compiled.</b>
+</p><p><br />
+</p>
+<table align="Right">
+<tbody><tr>
+<td><div id="toc" class="toc" role="navigation" aria-labelledby="mw-toc-heading"><input type="checkbox" role="button" id="toctogglecheckbox" class="toctogglecheckbox" style="display:none" /><div class="toctitle" lang="en" dir="ltr"><h2 id="mw-toc-heading">Contents</h2><span class="toctogglespan"><label class="toctogglelabel" for="toctogglecheckbox"></label></span></div>
+<ul>
+<li class="toclevel-1 tocsection-1"><a href="#C_Functions_and_Subs"><span class="tocnumber">1</span> <span class="toctext">C Functions and Subs</span></a></li>
+<li class="toclevel-1 tocsection-2"><a href="#Bit_Casting"><span class="tocnumber">2</span> <span class="toctext">Bit Casting</span></a></li>
+<li class="toclevel-1 tocsection-3"><a href="#Fast_Math"><span class="tocnumber">3</span> <span class="toctext">Fast Math</span></a></li>
+</ul>
+</div>
+
+</td></tr></tbody></table>
+<p><br />
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:10px; white-space: pre; font-family: courier; background-color: white; color: darkgreen;">                        <b>C++ Variable Types</b>
+
+    <b>C Name        Description                   Size      QB64 Type</b>
+    <a href="STRING.html" title="STRING">const char</a>   String                         ANY        <a href="STRING.html" title="STRING">STRING</a>
+    <a href="BYTE.html" title="BYTE">char</a>         Character or small integer.   1 byte      <a href="BYTE.html" title="BYTE">_BYTE</a>
+    <a href="INTEGER.html" title="INTEGER">short int</a>    Short Integer(Word)           2 byte      <a href="INTEGER.html" title="INTEGER">INTEGER</a>
+    <a href="LONG.html" title="LONG">int</a>          Integer(Dword)                4 byte      <a href="LONG.html" title="LONG">LONG</a>
+    <a href="LONG.html" title="LONG">long int</a>     Int32, Long integer or Long   4 byte      <a href="LONG.html" title="LONG">LONG</a>
+    <a href="INTEGER64.html" title="INTEGER64">long long</a>    Long long (Qword)             8 byte      <a href="INTEGER64.html" title="INTEGER64">_INTEGER64</a>               
+    <a href="Boolean.html" title="Boolean">bool</a>         Boolean value true or false.  1 byte      <a href="BYTE.html" title="BYTE">_BYTE</a> 
+    <a href="SINGLE.html" title="SINGLE">float</a>        Floating point number         4 byte      <a href="SINGLE.html" title="SINGLE">SINGLE</a>
+    <a href="DOUBLE.html" title="DOUBLE">double</a>       Double precision floating.    8 byte      <a href="DOUBLE.html" title="DOUBLE">DOUBLE</a>
+    <a href="FLOAT.html" title="FLOAT">long double</a>  Long double precision float  10 byte      <a href="FLOAT.html" title="FLOAT">_FLOAT</a>
+    <a href="Unicode.html" title="Unicode">wchar_t</a>      Wide character(<a href="Unicode.html" title="Unicode">Unicode</a>)       2 or 4   
+    <a href="OFFSET.html" title="OFFSET">PVOID</a>        void pointer(void *)           ANY        <a href="OFFSET.html" title="OFFSET">_OFFSET</a>
+</p>
+<p><br />
+</p>
+<h2><span class="mw-headline" id="C_Functions_and_Subs">C Functions and Subs</span></h2>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: courier; background-color: lightgrey; color: black;"> <i> </i>
+<a href="DECLARE_LIBRARY.html" title="DECLARE LIBRARY"><span style="color:blue;">DECLARE LIBRARY</span></a> 
+                           '<b>ctime.h</b>
+<a href="FUNCTION.html" title="FUNCTION"><span style="color:blue;">FUNCTION</span></a> clock () 'arithmetic type elapsed processor representing time.
+<a href="FUNCTION.html" title="FUNCTION"><span style="color:blue;">FUNCTION</span></a> difftime# (<a href="BYVAL.html" class="mw-redirect" title="BYVAL"><span style="color:blue;">BYVAL</span></a> time2 <a href="AS.html" title="AS"><span style="color:blue;">AS</span></a> <a href="UNSIGNED.html" title="UNSIGNED"><span style="color:blue;">_UNSIGNED</span></a> <a href="LONG.html" title="LONG"><span style="color:blue;">LONG</span></a>, <a href="BYVAL.html" class="mw-redirect" title="BYVAL"><span style="color:blue;">BYVAL</span></a> time1 <a href="AS.html" title="AS"><span style="color:blue;">AS</span></a> <a href="UNSIGNED.html" title="UNSIGNED"><span style="color:blue;">_UNSIGNED</span></a> <a href="LONG.html" title="LONG"><span style="color:blue;">LONG</span></a>)
+                                      'seconds between time2 and time1
+                           '<b>ctype.h</b>
+<a href="FUNCTION.html" title="FUNCTION"><span style="color:blue;">FUNCTION</span></a> isalnum% (<a href="BYVAL.html" class="mw-redirect" title="BYVAL"><span style="color:blue;">BYVAL</span></a> c <a href="AS.html" title="AS"><span style="color:blue;">AS</span></a> <a href="INTEGER.html" title="INTEGER"><span style="color:blue;">INTEGER</span></a>) 'is an alphabet letter(isalpha(c) or isdigit(c))
+<a href="FUNCTION.html" title="FUNCTION"><span style="color:blue;">FUNCTION</span></a> isalpha% (<a href="BYVAL.html" class="mw-redirect" title="BYVAL"><span style="color:blue;">BYVAL</span></a> c <a href="AS.html" title="AS"><span style="color:blue;">AS</span></a> <a href="INTEGER.html" title="INTEGER"><span style="color:blue;">INTEGER</span></a>) 'is letter (isupper(c) or islower(c))
+<a href="FUNCTION.html" title="FUNCTION"><span style="color:blue;">FUNCTION</span></a> isdigit% (<a href="BYVAL.html" class="mw-redirect" title="BYVAL"><span style="color:blue;">BYVAL</span></a> c <a href="AS.html" title="AS"><span style="color:blue;">AS</span></a> <a href="INTEGER.html" title="INTEGER"><span style="color:blue;">INTEGER</span></a>) 'is a decimal digit
+<a href="FUNCTION.html" title="FUNCTION"><span style="color:blue;">FUNCTION</span></a> isgraph% (<a href="BYVAL.html" class="mw-redirect" title="BYVAL"><span style="color:blue;">BYVAL</span></a> c <a href="AS.html" title="AS"><span style="color:blue;">AS</span></a> <a href="INTEGER.html" title="INTEGER"><span style="color:blue;">INTEGER</span></a>) 'is a printing character other than space
+<a href="FUNCTION.html" title="FUNCTION"><span style="color:blue;">FUNCTION</span></a> islower% (<a href="BYVAL.html" class="mw-redirect" title="BYVAL"><span style="color:blue;">BYVAL</span></a> c <a href="AS.html" title="AS"><span style="color:blue;">AS</span></a> <a href="INTEGER.html" title="INTEGER"><span style="color:blue;">INTEGER</span></a>) 'is a lower-case letter
+<a href="FUNCTION.html" title="FUNCTION"><span style="color:blue;">FUNCTION</span></a> isprint% (<a href="BYVAL.html" class="mw-redirect" title="BYVAL"><span style="color:blue;">BYVAL</span></a> c <a href="AS.html" title="AS"><span style="color:blue;">AS</span></a> <a href="INTEGER.html" title="INTEGER"><span style="color:blue;">INTEGER</span></a>) 'is printing character. ASCII: <a href="%26H.html" title="&amp;H"><span style="color:blue;">&amp;H</span></a>20 (" ") to <a href="%26H.html" title="&amp;H"><span style="color:blue;">&amp;H</span></a>7E (~)
+<a href="FUNCTION.html" title="FUNCTION"><span style="color:blue;">FUNCTION</span></a> ispunct% (<a href="BYVAL.html" class="mw-redirect" title="BYVAL"><span style="color:blue;">BYVAL</span></a> c <a href="AS.html" title="AS"><span style="color:blue;">AS</span></a> <a href="INTEGER.html" title="INTEGER"><span style="color:blue;">INTEGER</span></a>) 'is printing character other than space, letter, digit
+<a href="FUNCTION.html" title="FUNCTION"><span style="color:blue;">FUNCTION</span></a> isspace% (<a href="BYVAL.html" class="mw-redirect" title="BYVAL"><span style="color:blue;">BYVAL</span></a> c <a href="AS.html" title="AS"><span style="color:blue;">AS</span></a> <a href="INTEGER.html" title="INTEGER"><span style="color:blue;">INTEGER</span></a>) 'is space, formfeed, newline, return, tab, vertical tab 
+<a href="FUNCTION.html" title="FUNCTION"><span style="color:blue;">FUNCTION</span></a> isupper% (<a href="BYVAL.html" class="mw-redirect" title="BYVAL"><span style="color:blue;">BYVAL</span></a> c <a href="AS.html" title="AS"><span style="color:blue;">AS</span></a> <a href="INTEGER.html" title="INTEGER"><span style="color:blue;">INTEGER</span></a>) 'is upper-case letter
+<a href="FUNCTION.html" title="FUNCTION"><span style="color:blue;">FUNCTION</span></a> isxdigit% (<a href="BYVAL.html" class="mw-redirect" title="BYVAL"><span style="color:blue;">BYVAL</span></a> c <a href="AS.html" title="AS"><span style="color:blue;">AS</span></a> <a href="INTEGER.html" title="INTEGER"><span style="color:blue;">INTEGER</span></a>)'is a hexdecimal digit character(0 thru 9 or A thru F)
+<a href="FUNCTION.html" title="FUNCTION"><span style="color:blue;">FUNCTION</span></a> tolower% (<a href="BYVAL.html" class="mw-redirect" title="BYVAL"><span style="color:blue;">BYVAL</span></a> c <a href="AS.html" title="AS"><span style="color:blue;">AS</span></a> <a href="INTEGER.html" title="INTEGER"><span style="color:blue;">INTEGER</span></a>) 'return lower-case equivalent
+<a href="FUNCTION.html" title="FUNCTION"><span style="color:blue;">FUNCTION</span></a> toupper% (<a href="BYVAL.html" class="mw-redirect" title="BYVAL"><span style="color:blue;">BYVAL</span></a> c <a href="AS.html" title="AS"><span style="color:blue;">AS</span></a> <a href="INTEGER.html" title="INTEGER"><span style="color:blue;">INTEGER</span></a>) 'return upper-case equivalent
+
+                           '<b>math.h</b>  
+<a href="FUNCTION.html" title="FUNCTION"><span style="color:blue;">FUNCTION</span></a> acos# (<a href="BYVAL.html" class="mw-redirect" title="BYVAL"><span style="color:blue;">BYVAL</span></a> x <a href="AS.html" title="AS"><span style="color:blue;">AS</span></a> <a href="DOUBLE.html" title="DOUBLE"><span style="color:blue;">DOUBLE</span></a>)  
+<a href="FUNCTION.html" title="FUNCTION"><span style="color:blue;">FUNCTION</span></a> asin# (<a href="BYVAL.html" class="mw-redirect" title="BYVAL"><span style="color:blue;">BYVAL</span></a> x <a href="AS.html" title="AS"><span style="color:blue;">AS</span></a> <a href="DOUBLE.html" title="DOUBLE"><span style="color:blue;">DOUBLE</span></a>)
+<a href="FUNCTION.html" title="FUNCTION"><span style="color:blue;">FUNCTION</span></a> atan# (<a href="BYVAL.html" class="mw-redirect" title="BYVAL"><span style="color:blue;">BYVAL</span></a> x <a href="AS.html" title="AS"><span style="color:blue;">AS</span></a> <a href="DOUBLE.html" title="DOUBLE"><span style="color:blue;">DOUBLE</span></a>)  'arc tangent of x does not designate the quadrant
+<a href="FUNCTION.html" title="FUNCTION"><span style="color:blue;">FUNCTION</span></a> atan2# (<a href="BYVAL.html" class="mw-redirect" title="BYVAL"><span style="color:blue;">BYVAL</span></a> y <a href="AS.html" title="AS"><span style="color:blue;">AS</span></a> <a href="DOUBLE.html" title="DOUBLE"><span style="color:blue;">DOUBLE</span></a>, <a href="BYVAL.html" class="mw-redirect" title="BYVAL"><span style="color:blue;">BYVAL</span></a> x <a href="AS.html" title="AS"><span style="color:blue;">AS</span></a> <a href="DOUBLE.html" title="DOUBLE"><span style="color:blue;">DOUBLE</span></a>) 'arc-tangent of y/x designates quadrant
+<a href="FUNCTION.html" title="FUNCTION"><span style="color:blue;">FUNCTION</span></a> cosh# (<a href="BYVAL.html" class="mw-redirect" title="BYVAL"><span style="color:blue;">BYVAL</span></a> x <a href="AS.html" title="AS"><span style="color:blue;">AS</span></a> <a href="DOUBLE.html" title="DOUBLE"><span style="color:blue;">DOUBLE</span></a>)
+<a href="FUNCTION.html" title="FUNCTION"><span style="color:blue;">FUNCTION</span></a> ldexp# (<a href="BYVAL.html" class="mw-redirect" title="BYVAL"><span style="color:blue;">BYVAL</span></a> base <a href="AS.html" title="AS"><span style="color:blue;">AS</span></a> <a href="DOUBLE.html" title="DOUBLE"><span style="color:blue;">DOUBLE</span></a>, <a href="BYVAL.html" class="mw-redirect" title="BYVAL"><span style="color:blue;">BYVAL</span></a> exponent <a href="AS.html" title="AS"><span style="color:blue;">AS</span></a> <a href="INTEGER.html" title="INTEGER"><span style="color:blue;">INTEGER</span></a>) 'base times 2 to exponent
+<a href="FUNCTION.html" title="FUNCTION"><span style="color:blue;">FUNCTION</span></a> pow# (<a href="BYVAL.html" class="mw-redirect" title="BYVAL"><span style="color:blue;">BYVAL</span></a> base <a href="AS.html" title="AS"><span style="color:blue;">AS</span></a> <a href="DOUBLE.html" title="DOUBLE"><span style="color:blue;">DOUBLE</span></a>, <a href="BYVAL.html" class="mw-redirect" title="BYVAL"><span style="color:blue;">BYVAL</span></a> exponent <a href="AS.html" title="AS"><span style="color:blue;">AS</span></a> <a href="DOUBLE.html" title="DOUBLE"><span style="color:blue;">DOUBLE</span></a>) 'base number raised to exponent
+<a href="FUNCTION.html" title="FUNCTION"><span style="color:blue;">FUNCTION</span></a> sinh# (<a href="BYVAL.html" class="mw-redirect" title="BYVAL"><span style="color:blue;">BYVAL</span></a> x <a href="AS.html" title="AS"><span style="color:blue;">AS</span></a> <a href="DOUBLE.html" title="DOUBLE"><span style="color:blue;">DOUBLE</span></a>)
+<a href="FUNCTION.html" title="FUNCTION"><span style="color:blue;">FUNCTION</span></a> tanh# (<a href="BYVAL.html" class="mw-redirect" title="BYVAL"><span style="color:blue;">BYVAL</span></a> x <a href="AS.html" title="AS"><span style="color:blue;">AS</span></a> <a href="DOUBLE.html" title="DOUBLE"><span style="color:blue;">DOUBLE</span></a>)
+
+                           '<b>stdio.h</b>   return non-zero <a href="INTEGER.html" title="INTEGER"><span style="color:blue;">INTEGER</span></a> on failure.
+<a href="FUNCTION.html" title="FUNCTION"><span style="color:blue;">FUNCTION</span></a> remove% (filename <a href="AS.html" title="AS"><span style="color:blue;">AS</span></a> <a href="STRING.html" title="STRING"><span style="color:blue;">STRING</span></a>)    'removes specified file
+<a href="FUNCTION.html" title="FUNCTION"><span style="color:blue;">FUNCTION</span></a> rename% (oldname <a href="AS.html" title="AS"><span style="color:blue;">AS</span></a> <a href="STRING.html" title="STRING"><span style="color:blue;">STRING</span></a>, newname <a href="AS.html" title="AS"><span style="color:blue;">AS</span></a> <a href="STRING.html" title="STRING"><span style="color:blue;">STRING</span></a>) 'renames file oldname to newname. 
+
+                           '<b>stdlib.h</b>
+<a href="FUNCTION.html" title="FUNCTION"><span style="color:blue;">FUNCTION</span></a> atol&amp; (str <a href="AS.html" title="AS"><span style="color:blue;">AS</span></a> <a href="STRING.html" title="STRING"><span style="color:blue;">STRING</span></a>)  'convert string to Long (errno not necessarily set)
+<a href="FUNCTION.html" title="FUNCTION"><span style="color:blue;">FUNCTION</span></a> atoi% (str <a href="AS.html" title="AS"><span style="color:blue;">AS</span></a> <a href="STRING.html" title="STRING"><span style="color:blue;">STRING</span></a>)  'convert string to Integer (errno not necessarily set)
+<a href="FUNCTION.html" title="FUNCTION"><span style="color:blue;">FUNCTION</span></a> atof# (str <a href="AS.html" title="AS"><span style="color:blue;">AS</span></a> <a href="STRING.html" title="STRING"><span style="color:blue;">STRING</span></a>)  'convert string to Double (errno not necessarily set)
+<a href="FUNCTION.html" title="FUNCTION"><span style="color:blue;">FUNCTION</span></a> rand&amp; ()               'random number
+<a href="SUB.html" title="SUB"><span style="color:blue;">SUB</span></a> srand (<a href="BYVAL.html" class="mw-redirect" title="BYVAL"><span style="color:blue;">BYVAL</span></a> seed <a href="AS.html" title="AS"><span style="color:blue;">AS</span></a> <a href="UNSIGNED.html" title="UNSIGNED"><span style="color:blue;">_UNSIGNED</span></a> <a href="LONG.html" title="LONG"><span style="color:blue;">LONG</span></a>) 'random seeded number
+
+                           '<b>string.h</b>
+<a href="FUNCTION.html" title="FUNCTION"><span style="color:blue;">FUNCTION</span></a> memchr&amp; (BasePtr, value <a href="AS.html" title="AS"><span style="color:blue;">AS</span></a> <a href="STRING.html" title="STRING"><span style="color:blue;">STRING</span></a>, <a href="BYVAL.html" class="mw-redirect" title="BYVAL"><span style="color:blue;">BYVAL</span></a> Bytes <a href="AS.html" title="AS"><span style="color:blue;">AS</span></a> <a href="LONG.html" title="LONG"><span style="color:blue;">LONG</span></a>) ' returns pointer to first 
+ 'occurance of string in a set number of bytes at the memory block pointer designated.
+
+<a href="FUNCTION.html" title="FUNCTION"><span style="color:blue;">FUNCTION</span></a> memcmp (pointer1, pointer2, <a href="BYVAL.html" class="mw-redirect" title="BYVAL"><span style="color:blue;">BYVAL</span></a> Bytes <a href="AS.html" title="AS"><span style="color:blue;">AS</span></a> <a href="UNSIGNED.html" title="UNSIGNED"><span style="color:blue;">_UNSIGNED</span></a> <a href="LONG.html" title="LONG"><span style="color:blue;">LONG</span></a> ) 
+ 'compares pointer bytes. Returns 0 if match, positive if ptr1&gt;ptr2, negative if ptr1&lt;ptr2
+
+<a href="SUB.html" title="SUB"><span style="color:blue;">SUB</span></a> memcpy (DestPtr, SourcePtr, <a href="BYVAL.html" class="mw-redirect" title="BYVAL"><span style="color:blue;">BYVAL</span></a> Bytes <a href="AS.html" title="AS"><span style="color:blue;">AS</span></a> <a href="UNSIGNED.html" title="UNSIGNED"><span style="color:blue;">_UNSIGNED</span></a> <a href="LONG.html" title="LONG"><span style="color:blue;">LONG</span></a>) 
+         'copies the number of source bytes from source pointer to destination pointer
+
+<a href="SUB.html" title="SUB"><span style="color:blue;">SUB</span></a> memmove (DestPtr <a href="AS.html" title="AS"><span style="color:blue;">AS</span></a> var_<a href="TYPE.html" title="TYPE"><span style="color:blue;">TYPE</span></a>, SourcePtr <a href="AS.html" title="AS"><span style="color:blue;">AS</span></a> var_<a href="TYPE.html" title="TYPE"><span style="color:blue;">TYPE</span></a>, <a href="BYVAL.html" class="mw-redirect" title="BYVAL"><span style="color:blue;">BYVAL</span></a> bytesize <a href="AS.html" title="AS"><span style="color:blue;">AS</span></a> <a href="LONG.html" title="LONG"><span style="color:blue;">LONG</span></a>)
+         'moves a variable pointer value to destination from a source as a type byte size.
+
+<a href="SUB.html" title="SUB"><span style="color:blue;">SUB</span></a> memset (pointer <a href="AS.html" title="AS"><span style="color:blue;">AS</span></a> <b>var_<a href="TYPE.html" title="TYPE"><span style="color:blue;">TYPE</span></a></b>, <a href="BYVAL.html" class="mw-redirect" title="BYVAL"><span style="color:blue;">BYVAL</span></a> value <a href="AS.html" title="AS"><span style="color:blue;">AS</span></a> <a href="UNSIGNED.html" title="UNSIGNED"><span style="color:blue;">_UNSIGNED</span></a> <a href="LONG.html" title="LONG"><span style="color:blue;">LONG</span></a>, <a href="BYVAL.html" class="mw-redirect" title="BYVAL"><span style="color:blue;">BYVAL</span></a> nbytes <a href="AS.html" title="AS"><span style="color:blue;">AS</span></a> <a href="UNSIGNED.html" title="UNSIGNED"><span style="color:blue;">_UNSIGNED</span></a> <a href="LONG.html" title="LONG"><span style="color:blue;">LONG</span></a>)          
+'The <b>var_<a href="TYPE.html" title="TYPE"><span style="color:blue;">TYPE</span></a></b> MUST match the type of the argument passed! Fills a block of memory. Sets the  
+'first bytes of the block of memory at pointer to the specified value as a character.
+
+<a href="FUNCTION.html" title="FUNCTION"><span style="color:blue;">FUNCTION</span></a> strcspn% (str1 <a href="AS.html" title="AS"><span style="color:blue;">AS</span></a> <a href="STRING.html" title="STRING"><span style="color:blue;">STRING</span></a>, str2 <a href="AS.html" title="AS"><span style="color:blue;">AS</span></a> <a href="STRING.html" title="STRING"><span style="color:blue;">STRING</span></a>) 
+  'length of prefix of str1 consisting of characters not in str2.
+
+<a href="FUNCTION.html" title="FUNCTION"><span style="color:blue;">FUNCTION</span></a> strcmp% (str1 <a href="AS.html" title="AS"><span style="color:blue;">AS</span></a> <a href="STRING.html" title="STRING"><span style="color:blue;">STRING</span></a>, str2 <a href="AS.html" title="AS"><span style="color:blue;">AS</span></a> <a href="STRING.html" title="STRING"><span style="color:blue;">STRING</span></a>) 'compares str1 with str2, negative value if
+ 'str1&lt;str2, zero if str1=str2, positive if str1&gt;str2
+
+<a href="FUNCTION.html" title="FUNCTION"><span style="color:blue;">FUNCTION</span></a> strncmp% (str1 <a href="AS.html" title="AS"><span style="color:blue;">AS</span></a> <a href="STRING.html" title="STRING"><span style="color:blue;">STRING</span></a>, str2 <a href="AS.html" title="AS"><span style="color:blue;">AS</span></a> <a href="STRING.html" title="STRING"><span style="color:blue;">STRING</span></a>, <a href="BYVAL.html" class="mw-redirect" title="BYVAL"><span style="color:blue;">BYVAL</span></a> Bytes <a href="AS.html" title="AS"><span style="color:blue;">AS</span></a> <a href="INTEGER.html" title="INTEGER"><span style="color:blue;">INTEGER</span></a>)'compares first byte 
+ 'characters of str1 and str2, negative if str1&lt;str2, 0 if str1=str2, positive if str1&gt;str2
+
+<a href="SUB.html" title="SUB"><span style="color:blue;">SUB</span></a> strncpy (dest <a href="AS.html" title="AS"><span style="color:blue;">AS</span></a> <a href="STRING.html" title="STRING"><span style="color:blue;">STRING</span></a>, source <a href="AS.html" title="AS"><span style="color:blue;">AS</span></a> <a href="STRING.html" title="STRING"><span style="color:blue;">STRING</span></a>, <a href="BYVAL.html" class="mw-redirect" title="BYVAL"><span style="color:blue;">BYVAL</span></a> Bytes <a href="AS.html" title="AS"><span style="color:blue;">AS</span></a> <a href="INTEGER.html" title="INTEGER"><span style="color:blue;">INTEGER</span></a>) 'Copies first
+ 'bytes of source to destination. If source ends before number of bytes, dest padded with 0's
+<a href="DECLARE_LIBRARY.html" title="DECLARE LIBRARY"><span style="color:blue;">END DECLARE</span></a> <i> </i>
+</p>
+<p><br />
+<i>Example 1:</i> How to use the SUB <b>memmove</b> to transfer <a href="TYPE.html" title="TYPE">TYPE</a> data when using Libraries.
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: Courier, monospace; background-color: darkblue; color: lightgrey; word-wrap: break-word;"> <i> </i>
+<a href="TYPE.html" title="TYPE"><span style="color:#87cefa;">TYPE</span></a> a   'Note: the TYPE must be placed before the DECLARE LIBRARY if used in it!
+    b <a href="AS.html" title="AS"><span style="color:#87cefa;">AS</span></a> <a href="DOUBLE.html" title="DOUBLE"><span style="color:#87cefa;">DOUBLE</span></a>
+    c <a href="AS.html" title="AS"><span style="color:#87cefa;">AS</span></a> <a href="LONG.html" title="LONG"><span style="color:#87cefa;">LONG</span></a>
+<a href="END.html" title="END"><span style="color:#87cefa;">END</span></a> <a href="TYPE.html" title="TYPE"><span style="color:#87cefa;">TYPE</span></a>
+
+<a href="DECLARE_LIBRARY.html" title="DECLARE LIBRARY"><span style="color:#87cefa;">DECLARE LIBRARY</span></a>
+    <a href="SUB.html" title="SUB"><span style="color:#87cefa;">SUB</span></a> memmove (Dest <a href="AS.html" title="AS"><span style="color:#87cefa;">AS</span></a> a, Source <a href="AS.html" title="AS"><span style="color:#87cefa;">AS</span></a> a, <a href="BYVAL.html" class="mw-redirect" title="BYVAL"><span style="color:#87cefa;">BYVAL</span></a> bytesize <a href="AS.html" title="AS"><span style="color:#87cefa;">AS</span></a> <a href="LONG.html" title="LONG"><span style="color:#87cefa;">LONG</span></a>)
+<a href="DECLARE_LIBRARY.html" title="DECLARE LIBRARY"><span style="color:#87cefa;">END DECLARE</span></a>
+
+
+<a href="DIM.html" title="DIM"><span style="color:#87cefa;">DIM</span></a> d(10) <a href="AS.html" title="AS"><span style="color:#87cefa;">AS</span></a> a
+d(0).b = 1.5
+d(0).c = 99
+
+memmove d(10), d(0), <a href="LEN.html" title="LEN"><span style="color:#87cefa;">LEN</span></a>(d()) 'LEN gives the total byte size of the <a href="TYPE.html" title="TYPE"><span style="color:#87cefa;">TYPE</span></a>
+
+<a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> d(10).b
+<a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> d(10).c <i> </i>
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: Courier; background-color: black; color: white;">1.5
+99 </p>
+<dl><dd><i>Explanation:</i> When a <a href="TYPE.html" title="TYPE">TYPE</a> variable is moved to another variable or array index, all <a href="TYPE.html" title="TYPE">TYPE</a> dot values are moved with it.</dd></dl>
+<p><br />
+<i>Example 2:</i> Creating different <b>memset</b> functions for each variable type to be used.
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: Courier, monospace; background-color: darkblue; color: lightgrey; word-wrap: break-word;"> <i> </i>
+<a href="DECLARE_LIBRARY.html" title="DECLARE LIBRARY"><span style="color:#87cefa;">DECLARE LIBRARY</span></a>
+<a href="FUNCTION.html" title="FUNCTION"><span style="color:#87cefa;">FUNCTION</span></a> memsetB&amp; <a href="ALIAS.html" class="mw-redirect" title="ALIAS"><span style="color:#87cefa;">ALIAS</span></a> <b>memset</b> (p <a href="AS.html" title="AS"><span style="color:#87cefa;">AS</span></a> <a href="BYTE.html" title="BYTE"><span style="color:#87cefa;">_BYTE</span></a>, <a href="BYVAL.html" class="mw-redirect" title="BYVAL"><span style="color:#87cefa;">BYVAL</span></a> c <a href="AS.html" title="AS"><span style="color:#87cefa;">AS</span></a> <a href="UNSIGNED.html" title="UNSIGNED"><span style="color:#87cefa;">_UNSIGNED</span></a> <a href="LONG.html" title="LONG"><span style="color:#87cefa;">LONG</span></a>, <a href="BYVAL.html" class="mw-redirect" title="BYVAL"><span style="color:#87cefa;">BYVAL</span></a> n <a href="AS.html" title="AS"><span style="color:#87cefa;">AS</span></a> <a href="UNSIGNED.html" title="UNSIGNED"><span style="color:#87cefa;">_UNSIGNED</span></a> <a href="LONG.html" title="LONG"><span style="color:#87cefa;">LONG</span></a>)
+<a href="FUNCTION.html" title="FUNCTION"><span style="color:#87cefa;">FUNCTION</span></a> memsetI&amp; <a href="ALIAS.html" class="mw-redirect" title="ALIAS"><span style="color:#87cefa;">ALIAS</span></a> <b>memset</b> (p <a href="AS.html" title="AS"><span style="color:#87cefa;">AS</span></a> <a href="INTEGER.html" title="INTEGER"><span style="color:#87cefa;">INTEGER</span></a>, <a href="BYVAL.html" class="mw-redirect" title="BYVAL"><span style="color:#87cefa;">BYVAL</span></a> c <a href="AS.html" title="AS"><span style="color:#87cefa;">AS</span></a> <a href="UNSIGNED.html" title="UNSIGNED"><span style="color:#87cefa;">_UNSIGNED</span></a> <a href="LONG.html" title="LONG"><span style="color:#87cefa;">LONG</span></a>, <a href="BYVAL.html" class="mw-redirect" title="BYVAL"><span style="color:#87cefa;">BYVAL</span></a> n <a href="AS.html" title="AS"><span style="color:#87cefa;">AS</span></a> <a href="UNSIGNED.html" title="UNSIGNED"><span style="color:#87cefa;">_UNSIGNED</span></a> <a href="LONG.html" title="LONG"><span style="color:#87cefa;">LONG</span></a>)
+<a href="FUNCTION.html" title="FUNCTION"><span style="color:#87cefa;">FUNCTION</span></a> memsetL&amp; <a href="ALIAS.html" class="mw-redirect" title="ALIAS"><span style="color:#87cefa;">ALIAS</span></a> <b>memset</b> (p <a href="AS.html" title="AS"><span style="color:#87cefa;">AS</span></a> <a href="LONG.html" title="LONG"><span style="color:#87cefa;">LONG</span></a>, <a href="BYVAL.html" class="mw-redirect" title="BYVAL"><span style="color:#87cefa;">BYVAL</span></a> c <a href="AS.html" title="AS"><span style="color:#87cefa;">AS</span></a> <a href="UNSIGNED.html" title="UNSIGNED"><span style="color:#87cefa;">_UNSIGNED</span></a> <a href="LONG.html" title="LONG"><span style="color:#87cefa;">LONG</span></a>, <a href="BYVAL.html" class="mw-redirect" title="BYVAL"><span style="color:#87cefa;">BYVAL</span></a> n <a href="AS.html" title="AS"><span style="color:#87cefa;">AS</span></a> <a href="UNSIGNED.html" title="UNSIGNED"><span style="color:#87cefa;">_UNSIGNED</span></a> <a href="LONG.html" title="LONG"><span style="color:#87cefa;">LONG</span></a>)
+<a href="DECLARE_LIBRARY.html" title="DECLARE LIBRARY"><span style="color:#87cefa;">END DECLARE</span></a>
+
+<a href="DIM.html" title="DIM"><span style="color:#87cefa;">DIM</span></a> Barray(1 <a href="TO.html" title="TO"><span style="color:#87cefa;">TO</span></a> 10) <a href="AS.html" title="AS"><span style="color:#87cefa;">AS</span></a> <a href="BYTE.html" title="BYTE"><span style="color:#87cefa;">_BYTE</span></a>
+res&amp; = memsetB(Barray(1), 65, 5)
+
+<a href="FOR...html" title="FOR...NEXT"><span style="color:#87cefa;">FOR</span></a> i = 1 <a href="TO.html" title="TO"><span style="color:#87cefa;">TO</span></a> 10        
+    <a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> Barray(i);                       'display BYTE array decimal values
+<a href="NEXT.html" title="NEXT"><span style="color:#87cefa;">NEXT</span></a> 
+<a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a>: <a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a>
+
+<a href="DIM.html" title="DIM"><span style="color:#87cefa;">DIM</span></a> Larray(1 <a href="TO.html" title="TO"><span style="color:#87cefa;">TO</span></a> 10) <a href="AS.html" title="AS"><span style="color:#87cefa;">AS</span></a> <a href="LONG.html" title="LONG"><span style="color:#87cefa;">LONG</span></a>
+res&amp; = memsetL(Larray(1), 65, 5)
+
+<a href="FOR...html" title="FOR...NEXT"><span style="color:#87cefa;">FOR</span></a> i = 1 <a href="TO.html" title="TO"><span style="color:#87cefa;">TO</span></a> 10
+    <a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> Larray(i);                       'displays LONG array decimal values
+<a href="NEXT.html" title="NEXT"><span style="color:#87cefa;">NEXT</span></a> i 
+<a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a>
+<a href="FOR...html" title="FOR...NEXT"><span style="color:#87cefa;">FOR</span></a> i = 1 <a href="TO.html" title="TO"><span style="color:#87cefa;">TO</span></a> 10
+    <a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> " " + HEX$(Larray(i));           'displays each byte value &amp;H41 = 65
+<a href="NEXT.html" title="NEXT"><span style="color:#87cefa;">NEXT</span></a> i  <i> </i>
+</p>
+<center><span style="font-family: Courier New, Courier, monospace; font-size: 0.80em; line-height: 50%;">Code example by stylin</span></center>
+<dl><dd><i>Explanation:</i> When 5 bytes are put into a 4 byte LONG array value, the fifth byte goes into the next array element.</dd></dl>
+<p><br />
+</p>
+<p style="text-align: center">(<a href="#toc">Return to Table of Contents</a>)</p>
+<p><br />
+</p>
+<h2><span class="mw-headline" id="Bit_Casting">Bit Casting</span></h2>
+<p>Header file: <i>Cast.h</i> 
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: courier; background-color: lightgrey; color: black;">
+float bitcast(int t)
+{
+return *(float*)&amp;t;
+}
+int swap_endian(unsigned int k)
+{
+    return (k&gt;&gt;24)|((k&lt;&lt;8) &amp; 0x00FF0000)|((k&gt;&gt;8) &amp; 0x0000FF00)|(k&lt;&lt;24);
+}
+</p>
+<center><span style="font-family: Courier New, Courier, monospace; font-size: 0.80em; line-height: 50%;">Courtesy of Darth Who</span></center>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: Courier, monospace; background-color: darkblue; color: lightgrey; word-wrap: break-word;"> <i> </i>
+<a href="DECLARE_LIBRARY.html" title="DECLARE LIBRARY"><span style="color:#87cefa;">DECLARE LIBRARY</span></a> "Cast"
+    <a href="FUNCTION.html" title="FUNCTION"><span style="color:#87cefa;">FUNCTION</span></a> bitcast## (<a href="BYVAL.html" class="mw-redirect" title="BYVAL"><span style="color:#87cefa;">BYVAL</span></a> t AS <a href="LONG.html" title="LONG"><span style="color:#87cefa;">LONG</span></a>)
+    <a href="FUNCTION.html" title="FUNCTION"><span style="color:#87cefa;">FUNCTION</span></a> swap_endian (BYVAL k AS <a href="UNSIGNED.html" title="UNSIGNED"><span style="color:#87cefa;">_UNSIGNED</span></a> <a href="LONG.html" title="LONG"><span style="color:#87cefa;">LONG</span></a>)
+<a href="DECLARE_LIBRARY.html" title="DECLARE LIBRARY"><span style="color:#87cefa;">END DECLARE</span></a>
+Value&amp; = <a href="%26H.html" title="&amp;H"><span style="color:#87cefa;">&amp;H</span></a>E7750340
+<a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> <a href="HEX%24.html" title="HEX$"><span style="color:#87cefa;">HEX$</span></a>(Value&amp;)
+<a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> bitcast##(Value&amp;)
+<a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> bitcast##(swap_endian(Value&amp;)) <i> </i>
+</p>
+<p><br />
+</p>
+<p style="text-align: center">(<a href="#toc">Return to Table of Contents</a>)</p>
+<p><br />
+</p>
+<h2><span class="mw-headline" id="Fast_Math">Fast Math</span></h2>
+<p><b>Fastmath.h</b> header file. Library to speed up program calculations. Use with <a href="DECLARE_LIBRARY.html" title="DECLARE LIBRARY">DECLARE LIBRARY</a> "Fastmath"
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: courier; background-color: lightgrey; color: black;">
+using namespace std;
+unsigned long xrander=123456789, yrander=362436069, zrander = 521288629;
+unsigned long trander;
+double compbase = 2.3025850929940456840179914546844d;
+double basecomp = 1.0d;
+int shift1 = 1;
+int shift2 = 5;
+int shift3 = 16;
+
+float Fast_Sqrt(float val) //log2(n) approximation  //this is not used in the LN approximation 
+ {
+  //float chk
+  union
+  {
+    int tmp;
+    float val;
+  } vals;
+  vals.val = val;
+  vals.tmp -= 1&lt;&lt;23; // Remove last bit so 1.0 gives 1.0 
+  // tmp is now an approximation to logbase2(val) 
+  vals.tmp &gt;&gt;= 1; // divide by 2 
+  vals.tmp += 1&lt;&lt;29; // add 64 to exponent: (e+127)/2 =(e/2)+63;
+  //vals.tmp = (1&lt;&lt;29) + (vals.tmp &gt;&gt; 1) - (1&lt;&lt;22) + 0x4C000;  // I am working on a way to improve this value
+  // that represents (e/2)-64 but want e/2
+  return vals.val;
+ }
+
+float Fast_InvSqrt( float number ) // originally by Silicon Graphics slightly higher accuracy variant below.
+ {
+  long i;
+  float x2, y;
+  const float threehalfs = 1.5F;
+  x2 = number * 0.5F;
+  y  = number;
+  i  = * ( long * ) &amp;y;                       // evil floating point bit level hacking [sic]
+  i  = 0x5f375a86 - ( i &gt;&gt; 1 );               // what the fuck? [sic]   original silicon graphics constant: 0x5f3759df
+  y  = * ( float * ) &amp;i;
+  y  = y * ( threehalfs - ( x2 * y * y ) );   // 1st iteration
+//y  = y * ( threehalfs - ( x2 * y * y ) );   // 2nd iteration, this can be removed
+  return y;
+ }
+
+double Fast_Pow(double a, double b) //fastpower originally developed by Martin Ankerl
+ {
+  int tmp = (*(1 + (int *)&amp;a));
+  int tmp2 = (int)(b * (tmp - 1072632447) + 1072632447);
+  double p = 0.0;
+  *(1 + (int * )&amp;p) = tmp2;
+  //p = p * a / 2.71828F&#160;; failed attempt to auto correct the accuracy
+  return tmp;
+ }
+
+double Fast_Exp(double y) //2.87921
+ {
+  double d; 
+  //*((int*)(&amp;d) + 0) = 0;
+  *((int*)(&amp;d) + 1) = (int)(1512775 * y + 1072632447); 
+  return d; 
+ } 
+
+
+double Fast_XLnX(double x) //Borchardt's algorithm only accurate close to the origin
+ {
+  union
+  {
+    int tmp;
+    float val;
+  } vals;
+  vals.val = x;
+  vals.tmp -= 1&lt;&lt;23; // Remove last bit so 1.0 gives 1.0  
+  vals.tmp &gt;&gt;= 1; // divide by 2 
+  vals.tmp += 1&lt;&lt;29; // add 64 to exponent: (e+127)/2 =(e/2)+63;
+  return 6.0F * x * (x - 1.0F) / (x + 4.0F * vals.val ++);
+ }
+
+double Fast_LnX(double x)
+ {
+  union
+  {
+    int tmp;
+    float val;
+  } vals;
+  vals.val = x;
+  vals.tmp -= 1&lt;&lt;23; // Remove last bit so 1.0 gives 1.0  
+  vals.tmp &gt;&gt;= 1; // divide by 2 
+  vals.tmp += 1&lt;&lt;29; // add 64 to exponent: (e+127)/2 =(e/2)+63;
+  return 6.0F * x * (x - 1.0F) / (x * (x + 4.0F * vals.val ++));
+ }
+
+double Fast_Log10 (double x)
+ {
+  union
+  {
+    int tmp;
+    float val;
+  } vals;
+  vals.val = x;
+  vals.tmp -= 1&lt;&lt;23; // Remove last bit so 1.0 gives 1.0  
+  vals.tmp &gt;&gt;= 1; // divide by 2 
+  vals.tmp += 1&lt;&lt;29; // add 64 to exponent: (e+127)/2 =(e/2)+63;
+  return 6.0F * x * (x - 1.0F) / (x * 2.302585092994F * (x + 4.0F * vals.val ++));
+ }
+
+
+double Fast_LogPi (double x)
+ {
+  union
+  {
+    int tmp;
+    float val;
+  } vals;
+  vals.val = x;
+  vals.tmp -= 1&lt;&lt;23; // Remove last bit so 1.0 gives 1.0  
+  vals.tmp &gt;&gt;= 1; // divide by 2 
+  vals.tmp += 1&lt;&lt;29; // add 64 to exponent: (e+127)/2 =(e/2)+63;
+  return 6.0F * x * (x - 1.0F) / (x * 1.1447298858494F * (x + 4.0F * vals.val ++));
+ }
+
+double Fast_Sin(double x) //currently only supports range between -3 * pi and 3 * pi
+ {
+  double sine;
+  //always wrap input angle to -PI..PI I know it is abit of a compicated algorithm but hey
+  int Piintdiv = x * 0.15915494309189F;
+  double Pix = x - 6.2831853071796F * Piintdiv;
+  if (Pix &lt; -3.14159265F)
+   Pix += 6.28318531F;
+  else
+   if (Pix &gt;  3.14159265F)
+    Pix -= 6.28318531F;
+  if (Pix &lt; 0)
+   sine = (0.405284735F * Pix + 1.27323954F) * Pix;
+   //sine = 1.27323954 * x + .405284735 * x * x; // I do so love horner form
+  else
+   sine = (1.27323954 - 0.405284735 * Pix) * Pix;
+  return sine;
+ }
+
+
+double Fast_Cos(double x)
+ {
+  double Cosine;
+  int Piintdiv = x * 0.15915494309189F;
+  double Pix = x - 6.2831853071796F * Piintdiv;
+  Pix += 1.57079632;
+  if (Pix &lt; -3.14159265F)
+   Pix += 6.28318531F;
+  else
+   if (Pix &gt;  3.14159265F)
+    Pix -= 6.28318531F;
+  if (Pix &lt; 0)
+    Cosine = (1.27323954 + 0.405284735 * Pix) * Pix;
+  else
+    Cosine = (1.27323954 - 0.405284735 * Pix) * Pix;
+  return Cosine;
+ }
+
+double Fast_Tan(double x)
+ {
+  double Cosine;
+  double sine;
+  //always wrap input angle to -PI..PI
+  if (x &lt; -3.14159265F)
+   x += 6.28318531F;
+  else
+   if (x &gt;  3.14159265F)
+    x -= 6.28318531F;
+  //compute sine
+  if (x &lt; 0)
+   sine = (0.405284735F * x + 1.27323954F) * x; // I do so love horner form the alernative on the nex line is slower
+   //sine = 1.27323954 * x + .405284735 * x * x; 
+  else
+   sine = (1.27323954 - 0.405284735 * x) * x;
+  x += 1.57079632;
+  if (x &lt; 0)
+    Cosine = (1.27323954 + 0.405284735 * x) * x;
+  else
+    Cosine = (1.27323954 - 0.405284735 * x) * x;
+  return  sine / Cosine;
+ }
+
+double Fast_CoTan(double x)
+ {
+  double Cosine;
+  double sine;
+  //always wrap input angle to -PI..PI
+  if (x &lt; -3.14159265F)
+   x += 6.28318531F;
+  else
+   if (x &gt;  3.14159265F)
+    x -= 6.28318531F;
+  //compute sine
+  if (x &lt; 0)
+   sine = (0.405284735F * x + 1.27323954F) * x; // I do so love horner form the alernative on the nex line is slower
+   //sine = 1.27323954 * x + .405284735 * x * x; 
+  else
+   sine = (1.27323954 - 0.405284735 * x) * x;
+  x += 1.57079632;
+  if (x &lt; 0)
+    Cosine = (1.27323954 + 0.405284735 * x) * x;
+  else
+    Cosine = (1.27323954 - 0.405284735 * x) * x;
+  return  Cosine / sine;
+ }
+
+double Fast_Sec(double x)
+ {
+  double Cosine;
+  x += 1.57079632;
+  if (x &gt;  3.14159265)
+    x -= 6.28318531;
+  if (x &lt; 0)
+    Cosine = (1.27323954 + 0.405284735 * x) * x;
+  else
+    Cosine = (1.27323954 - 0.405284735 * x) * x;
+  return 1 / Cosine;
+ }
+
+double Fast_Csc(double x)
+ {
+  double sine;
+  //always wrap input angle to -PI..PI
+  if (x &lt; -3.14159265F)
+   x += 6.28318531F;
+  else
+   if (x &gt;  3.14159265F)
+    x -= 6.28318531F;
+  //compute sine
+  if (x &lt; 0)
+   sine = (0.405284735F * x + 1.27323954F) * x;
+   //sine = 1.27323954 * x + .405284735 * x * x; // I do so love horner form
+  else
+   sine = (1.27323954 - 0.405284735 * x) * x;
+  return 1 / sine;
+ }
+
+
+// |error| &lt; 0.005
+float Fast_Atan2(float y, float x)
+ {
+  float PIBY2_FLOAT = 1.5707963F;
+  float PI_FLOAT = 3.14159265F;
+  if (x == 0.0f)
+   {
+    if (y &gt; 0.0f) return PIBY2_FLOAT;
+    if (y == 0.0f) return 0.0f;
+    return 0 - PIBY2_FLOAT;
+   }
+  float atan;
+  float z = y/x;
+  if ( fabsf( z ) &lt; 1.0f )
+   {
+    atan = z/(1.0f + 0.28f*z*z);
+    if ( x &lt; 0.0f )
+     {
+      if ( y &lt; 0.0f ) return atan - PI_FLOAT;
+      return atan + PI_FLOAT;
+     }
+   }
+   else
+   {
+    atan = PIBY2_FLOAT - z/(z*z + 0.28f);
+    if ( y &lt; 0.0f ) 
+     return atan - PI_FLOAT;
+   }
+   return atan;
+ }
+
+float Fast_Atan(float y)
+ {
+  float x = 1.0F;
+  float PIBY2_FLOAT = 1.5707963F;
+  float PI_FLOAT = 3.14159265F;
+  float atan;
+  float z = y/x;
+  if (fabsf( z ) &lt; 1.0f )
+   {
+    atan = z/(1.0f + 0.28f*z*z);
+    if ( x &lt; 0.0f )
+     {
+      if ( y &lt; 0.0f ) return atan - PI_FLOAT;
+      return atan + PI_FLOAT;
+     }
+   }
+   else
+   {
+    atan = PIBY2_FLOAT - z/(z*z + 0.28f);
+    if ( y &lt; 0.0f ) 
+     return atan - PI_FLOAT;
+   }
+   return atan;
+ }
+
+double Fast_ACos(double x) 
+ {
+  float retval = (-0.69813170079773212F * x * x - 0.87266462599716477F) * x + 1.5707963267948966F;
+  return retval;
+ }
+
+double Fast_ASin(double x) 
+ {
+  float retval = (0.69813170079773212F * x * x + 0.87266462599716477F) * x;
+  return retval;
+ }
+
+double Fast_SinH(double x)
+ {
+  double y = -x;
+  double k;
+  double d; 
+  //*((int*)(&amp;d) + 0) = 0;
+  *((int*)(&amp;d) + 1) = (int)(1512775 * y + 1072632447); 
+  //*((int*)(&amp;k) + 0) = 0;
+  *((int*)(&amp;k) + 1) = (int)(1512775 * x + 1072632447);
+  return (k - d) / 2; 
+ }
+
+double Fast_CosH(double x)
+ {
+  double y = -x;
+  double k;
+  double d; 
+  //*((int*)(&amp;d) + 0) = 0;
+  *((int*)(&amp;d) + 1) = (int)(1512775 * y + 1072632447); 
+  //*((int*)(&amp;k) + 0) = 0;
+  *((int*)(&amp;k) + 1) = (int)(1512775 * x + 1072632447);
+  return (k + d) / 2; 
+ }
+
+double Fast_TanH(double x) // from <a rel="nofollow" class="external free" href="http://www.musicdsp.org/showone.php?id=238">http://www.musicdsp.org/showone.php?id=238</a>
+ {
+  //double xt;
+  if (x &lt; -3)
+  {
+   return -1;
+  }
+  else if (x &gt; 3)
+  {
+   return 1;
+  }
+  else
+  {
+   double xz = x * x;
+   return x * (27 + xz) / (27 + 9 * xz);
+  }
+  //return xt
+ }
+
+double Fast_ATanH(double x)
+ {
+  double mlnx = 1-x;
+  double plnx = 1+x;
+  union
+  {
+    int tmp;
+    float val;
+  } vals;
+  union
+  {
+    int tmp;
+    float val;
+  } vals2;
+  vals.val = plnx;
+  vals.tmp -= 1&lt;&lt;23; // Remove last bit so 1.0 gives 1.0  
+  vals.tmp &gt;&gt;= 1; // divide by 2 
+  vals.tmp += 1&lt;&lt;29; // add 64 to exponent: (e+127)/2 =(e/2)+63;
+  vals2.val = mlnx;
+  vals2.tmp -= 1&lt;&lt;23; // Remove last bit so 1.0 gives 1.0  
+  vals2.tmp &gt;&gt;= 1; // divide by 2 
+  vals2.tmp += 1&lt;&lt;29; // add 64 to exponent: (e+127)/2 =(e/2)+63;
+  return (6.0F * mlnx * (mlnx - 1.0F) / (mlnx * (mlnx + 4.0F * vals.val ++)) - 6.0F * plnx * (plnx - 1.0F) / (plnx * (plnx + 4.0F * vals2.val ++))) * 0.5f;
+ }
+
+double Fast_ACosH(double val)
+ {
+  double zsqrz;
+  //float chk
+  union
+  {
+    int tmp;
+    float val;
+  } vals;
+  union
+  {
+    int tmp;
+    float val;
+  } val2s;
+  vals.val = val + 1;
+  vals.tmp -= 1&lt;&lt;23; // Remove last bit so 1.0 gives 1.0 
+  // tmp is now an approximation to logbase2(val) 
+  vals.tmp &gt;&gt;= 1; // divide by 2 
+  vals.tmp += 1&lt;&lt;29; // add 64 to exponent: (e+127)/2 =(e/2)+63;
+  val2s.val = val - 1;
+  val2s.tmp -= 1&lt;&lt;23; // Remove last bit so 1.0 gives 1.0 
+  // tmp is now an approximation to logbase2(val) 
+  val2s.tmp &gt;&gt;= 1; // divide by 2 
+  val2s.tmp += 1&lt;&lt;29; // add 64 to exponent: (e+127)/2 =(e/2)+63;
+  zsqrz = val + vals.val * val2s.val;
+  return log(zsqrz);
+ }
+
+double Fast_ASinH(double x)
+ {
+  union
+  {
+    int tmp;
+    float val;
+  } vals;
+  vals.val = x * x + 1;
+  vals.tmp -= 1&lt;&lt;23; // Remove last bit so 1.0 gives 1.0 
+  // tmp is now an approximation to logbase2(val) 
+  vals.tmp &gt;&gt;= 1; // divide by 2 
+  vals.tmp += 1&lt;&lt;29; // add 64 to exponent: (e+127)/2 =(e/2)+63;
+  return log(x + vals.val);
+ }
+
+double Fast_ASecH(double x)
+ {
+  double zsqrz;
+  //float chk
+  union
+  {
+    int tmp;
+    float val;
+  } vals;
+  union
+  {
+    int tmp;
+    float val;
+  } val2s;
+  vals.val = 1 / x + 1;
+  vals.tmp -= 1&lt;&lt;23; // Remove last bit so 1.0 gives 1.0 
+  // tmp is now an approximation to logbase2(val) 
+  vals.tmp &gt;&gt;= 1; // divide by 2 
+  vals.tmp += 1&lt;&lt;29; // add 64 to exponent: (e+127)/2 =(e/2)+63;
+  val2s.val = 1 / x - 1;
+  val2s.tmp -= 1&lt;&lt;23; // Remove last bit so 1.0 gives 1.0 
+  // tmp is now an approximation to logbase2(val) 
+  val2s.tmp &gt;&gt;= 1; // divide by 2 
+  val2s.tmp += 1&lt;&lt;29; // add 64 to exponent: (e+127)/2 =(e/2)+63;
+  zsqrz = 1 / x + vals.val * val2s.val;
+  return log(zsqrz);
+ }
+
+double Fast_ACscH(double val)
+ {
+  double x = 1 / val;
+  union
+  {
+    int tmp;
+    float val;
+  } vals;
+  vals.val = x * x + 1;
+  vals.tmp -= 1&lt;&lt;23; // Remove last bit so 1.0 gives 1.0 
+  // tmp is now an approximation to logbase2(val) 
+  vals.tmp &gt;&gt;= 1; // divide by 2 
+  vals.tmp += 1&lt;&lt;29; // add 64 to exponent: (e+127)/2 =(e/2)+63;
+  return log(x + vals.val);
+ }
+
+double Fast_ACotH(double valts)
+ {
+  double x = 1 / valts; 
+  double mlnx = 1-x;
+  double plnx = 1+x;
+  union
+  {
+    int tmp;
+    float val;
+  } vals;
+  union
+  {
+    int tmp;
+    float val;
+  } vals2;
+  vals.val = plnx;
+  vals.tmp -= 1&lt;&lt;23; // Remove last bit so 1.0 gives 1.0  
+  vals.tmp &gt;&gt;= 1; // divide by 2 
+  vals.tmp += 1&lt;&lt;29; // add 64 to exponent: (e+127)/2 =(e/2)+63;
+  vals2.val = mlnx;
+  vals2.tmp -= 1&lt;&lt;23; // Remove last bit so 1.0 gives 1.0  
+  vals2.tmp &gt;&gt;= 1; // divide by 2 
+  vals2.tmp += 1&lt;&lt;29; // add 64 to exponent: (e+127)/2 =(e/2)+63;
+  return (6.0F * mlnx * (mlnx - 1.0F) / (mlnx * (mlnx + 4.0F * vals.val ++)) - 6.0F * plnx * (plnx - 1.0F) / (plnx * (plnx + 4.0F * vals2.val ++))) / 2;
+ }
+
+void Fast_RandInit(float x,int i,int j, int k)
+ {
+   float ftl;
+   float ftl2;
+   float ftl3;
+   ftl = 10000 * sin(x*7);
+   xrander = * ( long * ) &amp;ftl;
+   ftl2 = 10000 * cos(x*3);
+   yrander = * ( long * ) &amp;ftl2; 
+   ftl3 = 10000 * sin(x*2);
+   zrander = * ( long * ) &amp;ftl3; 
+   if ((i == 0)||(j == 0)||( k == 0 )) 
+    {
+     shift1 = 1;
+     shift2 = 5;
+     shift3 = 16;
+    }
+   else
+    {
+     shift1 = i; //8 * sin(x) + 9;
+     shift3 = k; //8 * cos(x) + 9;
+     shift2 = j; //(shift1 + shift3) / 2;
+    }
+ }
+
+inline float Fast_Rand(void) //based off of George Marsaglia's XORSHIFT algorithms
+ {     //
+  xrander ^= xrander &lt;&lt; shift1; 
+  xrander ^= xrander &gt;&gt; shift2;
+  xrander ^= xrander &lt;&lt; shift3;
+  trander = xrander;
+  xrander = yrander;
+  yrander = zrander;
+  zrander = trander ^ xrander ^ yrander;
+  return float (zrander)/4294967295;
+ }
+
+inline float Fast_Sign(float f)
+{
+ float r = 1.0f;
+ (int&amp;)r |= ((int&amp;)f &amp; 0x80000000); 
+ return r;
+}
+
+double High_ATanH(double x)
+ {
+  return (log(1 + x) - log(1 - x)) / 2;
+ }
+
+double High_ACosH(double x)
+ {
+  return log(x + sqrt(x + 1) * sqrt(x - 1));
+ }
+
+double High_ASinH(double x)
+ {
+  return log(x + sqrt(x * x + 1));
+ }
+
+double High_ASecH(double x)
+ {
+  double xz = 1 / x;
+  return log(sqrt(xz - 1) * sqrt(xz + 1) + xz);
+ }
+
+double High_ACscH(double x)
+ {
+  return log(sqrt(1 + 1 / (x * x)) + 1 / x);
+ }
+
+double High_ACotH(double x)
+ {
+  double xz = 1 / x;
+  return (log(1 + xz) - log(1 - xz)) / 2;
+ }
+
+inline float High_Sign(float f)
+{
+  //this may or may not be used in QB64 in the future
+  if (((int&amp;)f &amp; 0x7FFFFFFF)==0)
+    {
+     return 0.0f; 
+    }
+    else 
+    {
+     float r = 1.0f;
+     (int&amp;)r |= ((int&amp;)f &amp; 0x80000000);    
+     return r;
+    }
+}
+int Misc_TrailZCount(unsigned int v)
+ {
+  //unsigned int v;     // 32-bit word input to count zero bits on right
+  unsigned int c;     // c will be the number of zero bits on the right,
+                    // so if v is 1101000 (base 2), then c will be 3
+ // NOTE: if 0 == v, then c = 31.
+  if (v &amp; 0x1) 
+  {
+   // special case for odd v (assumed to happen half of the time)
+   c = 0;
+  }
+  else
+  {
+   c = 1;
+   if ((v &amp; 0xffff) == 0) 
+   {  
+    v &gt;&gt;= 16;  
+    c += 16;
+   }
+   if ((v &amp; 0xff) == 0) 
+   {  
+    v &gt;&gt;= 8;  
+    c += 8;
+   }
+   if ((v &amp; 0xf) == 0) 
+   {  
+    v &gt;&gt;= 4;
+    c += 4;
+   }
+   if ((v &amp; 0x3) == 0) 
+   {  
+    v &gt;&gt;= 2;
+    c += 2;
+   }
+   c -= v &amp; 0x1;
+  }	
+  return c;
+ }
+
+int Misc_Parity(int v)// is the number of 1 bits odd? true if so
+ {
+  //unsigned int v; // 32-bit word
+  v ^= v &gt;&gt; 1;
+  v ^= v &gt;&gt; 2;
+  v = (v &amp; 0x11111111U) * 0x11111111U;
+  return (v &gt;&gt; 28) &amp; 1;
+ }
+
+int Misc_BitSet(int v)
+//u//nsigned int v; // count the number of bits set in v
+ {
+  unsigned int c; // c accumulates the total bits set in v
+  for (c = 0; v; c++)
+  {
+   v &amp;= v - 1; // clear the least significant bit set
+  }
+  return c;
+ }
+
+long Misc_FloatToLong(float y) //1132462080
+ {
+  return * ( long * ) &amp;y;
+ }
+
+float Misc_LongToFloat(long y)
+ {
+  return * ( float * ) &amp;y;
+ }
+
+long Misc_UnSetRMBit(long x)
+ {
+  return x &amp; (x - 1);
+ } <i> </i>
+</p>
+<center><span style="font-family: Courier New, Courier, monospace; font-size: 0.80em; line-height: 50%;">Library created by DarthWho</span></center>
+<p><br />
+</p>
+<center><b><a rel="nofollow" class="external text" href="http://dl.dropbox.com/u/12359848/fastmath.h">Latest Fast Math Update</a></b></center>
+<p><br />
+<i>Example 1:</i> Using <b>trailzcount</b> to speed up the process of finding the prime factors of a number.
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: Courier, monospace; background-color: darkblue; color: lightgrey; word-wrap: break-word;"> <i> </i>
+<a href="DECLARE_LIBRARY.html" title="DECLARE LIBRARY"><span style="color:#87cefa;">DECLARE LIBRARY</span></a> "fastmath"
+    <a href="FUNCTION.html" title="FUNCTION"><span style="color:#87cefa;">FUNCTION</span></a> TrailZCount% <a href="ALIAS.html" class="mw-redirect" title="ALIAS"><span style="color:#87cefa;">ALIAS</span></a> Misc_TrailZCount (<a href="BYVAL.html" class="mw-redirect" title="BYVAL"><span style="color:#87cefa;">BYVAL</span></a> vals <a href="AS.html" title="AS"><span style="color:#87cefa;">AS</span></a> <a href="LONG.html" title="LONG"><span style="color:#87cefa;">LONG</span></a>)
+<a href="DECLARE_LIBRARY.html" title="DECLARE LIBRARY"><span style="color:#87cefa;">END DECLARE</span></a>
+<a href="INPUT.html" title="INPUT"><span style="color:#87cefa;">INPUT</span></a> "enter a number: ", xt&amp;
+tabs = TrailZCount%(xt&amp;)
+<a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> "the prime factors of"; xt&amp;; " are:";
+<a href="IF...html" title="IF...THEN"><span style="color:#87cefa;">IF</span></a> tabs <a href="THEN.html" title="THEN"><span style="color:#87cefa;">THEN</span></a>
+    <a href="FOR...html" title="FOR...NEXT"><span style="color:#87cefa;">FOR</span></a> i = 1 <a href="TO.html" title="TO"><span style="color:#87cefa;">TO</span></a> tabs
+        <a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> 2;
+    <a href="NEXT.html" title="NEXT"><span style="color:#87cefa;">NEXT</span></a> i
+<a href="END_IF.html" class="mw-redirect" title="END IF"><span style="color:#87cefa;">END IF</span></a>
+x&amp; = xt&amp; / (2 ^ tabs)
+c&amp; = 3
+<a href="WHILE.html" title="WHILE"><span style="color:#87cefa;">WHILE</span></a> c&amp; &lt;= x&amp;
+    <a href="WHILE.html" title="WHILE"><span style="color:#87cefa;">WHILE</span></a> x&amp; <a href="MOD.html" title="MOD"><span style="color:#87cefa;">MOD</span></a> c&amp; = 0
+        x&amp; = x&amp; / c&amp;
+        <a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> c&amp;;
+    <a href="WEND.html" class="mw-redirect" title="WEND"><span style="color:#87cefa;">WEND</span></a>
+    c&amp; = c&amp; + 1
+<a href="WEND.html" class="mw-redirect" title="WEND"><span style="color:#87cefa;">WEND</span></a>
+<a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> <i> </i>
+</p>
+<p><br />
+<i>Example 2:</i> Using <b>parity</b> to detect single bit errors simulated using <b>unsetrmbit</b>.
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: Courier, monospace; background-color: darkblue; color: lightgrey; word-wrap: break-word;">
+'parity checking code which may be used in order to detect a download error:
+'will also use the bitset function to simulate a download error .bitset unsets the lowest set bit
+'parity checking code which may be used in order to detect a download error:
+'will also use the bitset function to simulate a download error .bitset unsets the lowest set bit
+<a href="DECLARE_LIBRARY.html" title="DECLARE LIBRARY"><span style="color:#87cefa;">DECLARE LIBRARY</span></a> "fastmath"
+    <a href="FUNCTION.html" title="FUNCTION"><span style="color:#87cefa;">FUNCTION</span></a> parity&amp; <a href="ALIAS.html" class="mw-redirect" title="ALIAS"><span style="color:#87cefa;">ALIAS</span></a> Misc_Parity (<a href="BYVAL.html" class="mw-redirect" title="BYVAL"><span style="color:#87cefa;">BYVAL</span></a> val <a href="AS.html" title="AS"><span style="color:#87cefa;">AS</span></a> <a href="LONG.html" title="LONG"><span style="color:#87cefa;">LONG</span></a>)
+    <a href="FUNCTION.html" title="FUNCTION"><span style="color:#87cefa;">FUNCTION</span></a> unsetrmbit&amp; <a href="ALIAS.html" class="mw-redirect" title="ALIAS"><span style="color:#87cefa;">ALIAS</span></a> Misc_UnSetRMBit (<a href="BYVAL.html" class="mw-redirect" title="BYVAL"><span style="color:#87cefa;">BYVAL</span></a> vals <a href="AS.html" title="AS"><span style="color:#87cefa;">AS</span></a> <a href="LONG.html" title="LONG"><span style="color:#87cefa;">LONG</span></a>)
+<a href="DECLARE_LIBRARY.html" title="DECLARE LIBRARY"><span style="color:#87cefa;">END DECLARE</span></a>
+<a href="TYPE.html" title="TYPE"><span style="color:#87cefa;">TYPE</span></a> DLDATA
+    par <a href="AS.html" title="AS"><span style="color:#87cefa;">AS</span></a> <a href="BIT.html" title="BIT"><span style="color:#87cefa;">_BIT</span></a>
+    dataa <a href="AS.html" title="AS"><span style="color:#87cefa;">AS</span></a> <a href="LONG.html" title="LONG"><span style="color:#87cefa;">LONG</span></a>
+<a href="END.html" title="END"><span style="color:#87cefa;">END</span></a> <a href="TYPE.html" title="TYPE"><span style="color:#87cefa;">TYPE</span></a>
+<a href="DIM.html" title="DIM"><span style="color:#87cefa;">DIM</span></a> values(1) 'here is where the data is created
+g&amp; = 8
+h&amp; = 9
+values.par(0) = parity&amp;(g&amp;)
+values.dataa(0) = g&amp;
+values.par(1) = parity&amp;(h&amp;)
+values.dataa(1) = h&amp; 'transfer and error in values.dataa(1)
+values.dataa(1) = unsetrmbit&amp;(values.dataa(1)) 'checking for single bit errors in download
+<a href="FOR...html" title="FOR...NEXT"><span style="color:#87cefa;">FOR</span></a> i = 0 <a href="TO.html" title="TO"><span style="color:#87cefa;">TO</span></a> 1
+    <a href="IF...html" title="IF...THEN"><span style="color:#87cefa;">IF</span></a> values.par(i) = parity&amp;(values.dataa(i)) <a href="THEN.html" title="THEN"><span style="color:#87cefa;">THEN</span></a>
+        <a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> "no single bit errors detected in in data packet"; i
+    <a href="ELSE.html" title="ELSE"><span style="color:#87cefa;">ELSE</span></a>
+        <a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> "error found in data packet"; i
+    <a href="END_IF.html" class="mw-redirect" title="END IF"><span style="color:#87cefa;">END IF</span></a>
+<a href="NEXT.html" title="NEXT"><span style="color:#87cefa;">NEXT</span></a> <i> </i>
+</p>
+<p><br />
+</p>
+<p style="text-align: center">(<a href="#toc">Return to Table of Contents</a>)</p>
+<p><br />
+<i>See also:</i>
+</p>
+<ul><li><a href="DECLARE_LIBRARY.html" title="DECLARE LIBRARY">DECLARE LIBRARY</a>, <a href="BYVAL.html" class="mw-redirect" title="BYVAL">BYVAL</a></li>
+<li><a href="OFFSET.html" title="OFFSET">_OFFSET</a>, <a href="OFFSET_(function).html" title="OFFSET (function)">_OFFSET (function)</a> <span style="color:gray">(lp, ptr and p names)</span></li>
+<li><a href="DLL_Libraries.html" title="DLL Libraries">DLL Libraries</a>, <a href="Windows_Libraries.html" title="Windows Libraries">Windows Libraries</a></li>
+<li><a href="Libraries.html#C.2B.2B_Variable_Types" title="Libraries">C++ Variable Types</a></li></ul>
+<p><br />
+</p>
+<hr />
+<center><i>Navigation:</i>
+<dl><dd><a href="Keyword_Reference_-_Alphabetical.html" title="Keyword Reference - Alphabetical">Keyword Reference - Alphabetical</a></dd>
+<dd><a href="Keyword_Reference_-_By_usage.html" title="Keyword Reference - By usage">Keyword Reference - By Usage</a></dd>
+<dd><a href="Main_Page.html" title="Main Page">Main Wiki Page</a></dd></dl></center>
+<!-- 
+NewPP limit report
+Cached time: 20210707024830
+Cache expiry: 86400
+Dynamic content: false
+Complications: []
+CPU time usage: 0.223 seconds
+Real time usage: 0.247 seconds
+Preprocessor visited node count: 3091/1000000
+Post‐expand include size: 19653/2097152 bytes
+Template argument size: 3556/2097152 bytes
+Highest expansion depth: 3/40
+Expensive parser function count: 0/100
+Unstrip recursion depth: 0/20
+Unstrip post‐expand size: 0/5000000 bytes
+-->
+<!--
+Transclusion expansion time report (%,ms,calls,template)
+100.00%   93.704      1 -total
+ 17.75%   16.631    193 Template:Cb
+ 14.20%   13.306    147 Template:Cl
+  4.64%    4.352      1 Template:WhiteStart
+  4.24%    3.974      1 Template:Text
+  3.94%    3.688      3 Template:TextEnd
+  3.84%    3.596      3 Template:Small
+  3.82%    3.576      1 Template:OutputStart
+  3.57%    3.344      1 Template:OutputEnd
+  3.54%    3.313      1 Template:PageNavigation
+-->
+
+<!-- Saved in parser cache with key i4224360_mw2-mw_:pcache:idhash:133-0!canonical and timestamp 20210707024830 and revision id 23690
+ -->
+</div></div><div class="printfooter">Retrieved from "<a dir="ltr" href="indexceda.html?title=C_Libraries&amp;oldid=23690">http://www.qb64.org/wiki/index.php?title=C_Libraries&amp;oldid=23690</a>"</div>
+		<div id="catlinks" class="catlinks catlinks-allhidden" data-mw="interface"></div>
+	</div>
+</div>
+
+<div id="mw-navigation">
+	<h2>Navigation menu</h2>
+	<div id="mw-head">
+		<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-personal" class="vector-menu" aria-labelledby="p-personal-label" role="navigation" 
+	 >
+	<h3 id="p-personal-label">
+		<span>Personal tools</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="pt-login"><a href="index6bb2.html?title=Special:UserLogin&amp;returnto=C+Libraries" title="You are encouraged to log in; however, it is not mandatory [o]" accesskey="o">Log in</a></li></ul>
+		
+	</div>
+</nav>
+
+
+		<div id="left-navigation">
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-namespaces" class="vector-menu vector-menu-tabs vectorTabs" aria-labelledby="p-namespaces-label" role="navigation" 
+	 >
+	<h3 id="p-namespaces-label">
+		<span>Namespaces</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="ca-nstab-main" class="selected"><a href="C_Libraries.html" title="View the content page [c]" accesskey="c">Page</a></li><li id="ca-talk" class="new"><a href="Talk_C_Libraries.html?title=Talk:C_Libraries&amp;action=edit&amp;redlink=1" rel="discussion" title="Discussion about the content page (page does not exist) [t]" accesskey="t">Discussion</a></li></ul>
+		
+	</div>
+</nav>
+
+
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-variants" class="vector-menu-empty emptyPortlet vector-menu vector-menu-dropdown vectorMenu" aria-labelledby="p-variants-label" role="navigation" 
+	 >
+	<input type="checkbox" class="vector-menu-checkbox vectorMenuCheckbox" aria-labelledby="p-variants-label" />
+	<h3 id="p-variants-label">
+		<span>Variants</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="menu vector-menu-content-list"></ul>
+		
+	</div>
+</nav>
+
+
+		</div>
+		<div id="right-navigation">
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-views" class="vector-menu vector-menu-tabs vectorTabs" aria-labelledby="p-views-label" role="navigation" 
+	 >
+	<h3 id="p-views-label">
+		<span>Views</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="ca-view" class="collapsible selected"><a href="C_Libraries.html">Read</a></li><li id="ca-viewsource" class="collapsible"><a href="indexd880.html?title=C_Libraries&amp;action=edit" title="This page is protected.&#10;You can view its source [e]" accesskey="e">View source</a></li><li id="ca-history" class="collapsible"><a href="indexa0de.html?title=C_Libraries&amp;action=history" title="Past revisions of this page [h]" accesskey="h">View history</a></li></ul>
+		
+	</div>
+</nav>
+
+
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-cactions" class="vector-menu-empty emptyPortlet vector-menu vector-menu-dropdown vectorMenu" aria-labelledby="p-cactions-label" role="navigation" 
+	 >
+	<input type="checkbox" class="vector-menu-checkbox vectorMenuCheckbox" aria-labelledby="p-cactions-label" />
+	<h3 id="p-cactions-label">
+		<span>More</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="menu vector-menu-content-list"></ul>
+		
+	</div>
+</nav>
+
+
+			<div id="p-search" role="search">
+	<h3 >
+		<label for="searchInput">Search</label>
+	</h3>
+	<form action="https://www.qb64.org/wiki/index.php" id="searchform">
+		<div id="simpleSearch">
+			<input type="search" name="search" placeholder="Search QB64 Wiki" title="Search QB64 Wiki [f]" accesskey="f" id="searchInput"/>
+			<input type="hidden" name="title" value="Special:Search">
+			<input type="submit" name="fulltext" value="Search" title="Search the pages for this text" id="mw-searchButton" class="searchButton mw-fallbackSearchButton"/>
+			<input type="submit" name="go" value="Go" title="Go to a page with this exact name if it exists" id="searchButton" class="searchButton"/>
+		</div>
+	</form>
+</div>
+
+		</div>
+	</div>
+	
+<div id="mw-panel">
+	<div id="p-logo" role="banner">
+		<a  title="Visit the main page" class="mw-wiki-logo" href="Main_Page.html"></a>
+	</div>
+	<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-navigation" class="vector-menu vector-menu-portal portal portal-first" aria-labelledby="p-navigation-label" role="navigation" 
+	 >
+	<h3 id="p-navigation-label">
+		<span>Navigation</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="n-mainpage-description"><a href="Main_Page.html" title="Visit the main page [z]" accesskey="z">Main page</a></li><li id="n-recentchanges"><a href="Special_RecentChanges.html" title="A list of recent changes in the wiki [r]" accesskey="r">Recent changes</a></li><li id="n-randompage"><a href="SNDCOPY.html" title="Load a random page [x]" accesskey="x">Random page</a></li><li id="n-help-mediawiki"><a href="https://www.mediawiki.org/wiki/Special:MyLanguage/Help:Contents">Help about MediaWiki</a></li></ul>
+		
+	</div>
+</nav>
+
+
+	<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-tb" class="vector-menu vector-menu-portal portal" aria-labelledby="p-tb-label" role="navigation" 
+	 >
+	<h3 id="p-tb-label">
+		<span>Tools</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="t-whatlinkshere"><a href="Special_WhatLinksHere/C_Libraries.html" title="A list of all wiki pages that link here [j]" accesskey="j">What links here</a></li><li id="t-recentchangeslinked"><a href="Special_RecentChangesLinked/C_Libraries.html" rel="nofollow" title="Recent changes in pages linked from this page [k]" accesskey="k">Related changes</a></li><li id="t-specialpages"><a href="Special_SpecialPages.html" title="A list of all special pages [q]" accesskey="q">Special pages</a></li><li id="t-print"><a href="javascript:print();" rel="alternate" title="Printable version of this page [p]" accesskey="p">Printable version</a></li><li id="t-permalink"><a href="indexceda.html?title=C_Libraries&amp;oldid=23690" title="Permanent link to this revision of the page">Permanent link</a></li><li id="t-info"><a href="indexe3f1.html?title=C_Libraries&amp;action=info" title="More information about this page">Page information</a></li></ul>
+		
+	</div>
+</nav>
+
+
+	
+</div>
+
+</div>
+
+<footer id="footer" class="mw-footer" role="contentinfo" >
+	<ul id="footer-info" >
+		<li id="footer-info-lastmod"> This page was last edited on 4 June 2021, at 14:03.</li>
+	</ul>
+	<ul id="footer-places" >
+		<li id="footer-places-privacy"><a href="My_wiki_Privacy_policy.html" title="My wiki:Privacy policy">Privacy policy</a></li>
+		<li id="footer-places-about"><a href="My_wiki_About.html" title="My wiki:About">About QB64 Wiki</a></li>
+		<li id="footer-places-disclaimer"><a href="My_wiki_General_disclaimer.html" title="My wiki:General disclaimer">Disclaimers</a></li>
+	</ul>
+	<ul id="footer-icons" class="noprint">
+		<li id="footer-poweredbyico"><a href="https://www.mediawiki.org/"><img src="resources/assets/poweredby_mediawiki_88x31.png" alt="Powered by MediaWiki" srcset="/wiki/resources/assets/poweredby_mediawiki_132x47.png 1.5x, /wiki/resources/assets/poweredby_mediawiki_176x62.png 2x" width="88" height="31" loading="lazy"/></a></li>
+	</ul>
+	<div style="clear: both;"></div>
+</footer>
+
+
+
+<script>(RLQ=window.RLQ||[]).push(function(){mw.config.set({"wgPageParseReport":{"limitreport":{"cputime":"0.223","walltime":"0.247","ppvisitednodes":{"value":3091,"limit":1000000},"postexpandincludesize":{"value":19653,"limit":2097152},"templateargumentsize":{"value":3556,"limit":2097152},"expansiondepth":{"value":3,"limit":40},"expensivefunctioncount":{"value":0,"limit":100},"unstrip-depth":{"value":0,"limit":20},"unstrip-size":{"value":0,"limit":5000000},"timingprofile":["100.00%   93.704      1 -total"," 17.75%   16.631    193 Template:Cb"," 14.20%   13.306    147 Template:Cl","  4.64%    4.352      1 Template:WhiteStart","  4.24%    3.974      1 Template:Text","  3.94%    3.688      3 Template:TextEnd","  3.84%    3.596      3 Template:Small","  3.82%    3.576      1 Template:OutputStart","  3.57%    3.344      1 Template:OutputEnd","  3.54%    3.313      1 Template:PageNavigation"]},"cachereport":{"timestamp":"20210707024830","ttl":86400,"transientcontent":false}}});mw.config.set({"wgBackendResponseTime":1442});});</script></body>
+<!-- Mirrored from www.qb64.org/wiki/C_Libraries by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 07 Aug 2021 12:43:01 GMT -->
+</html>

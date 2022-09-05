@@ -1,0 +1,359 @@
+
+<!DOCTYPE html>
+<html class="client-nojs" lang="en" dir="ltr">
+
+<!-- Mirrored from www.qb64.org/wiki/KEYHIT by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 07 Aug 2021 12:59:23 GMT -->
+<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=UTF-8" /><!-- /Added by HTTrack -->
+<head>
+<meta charset="UTF-8"/>
+<title>_KEYHIT - QB64 Wiki</title>
+<script>document.documentElement.className="client-js";RLCONF={"wgBreakFrames":!1,"wgSeparatorTransformTable":["",""],"wgDigitTransformTable":["",""],"wgDefaultDateFormat":"dmy","wgMonthNames":["","January","February","March","April","May","June","July","August","September","October","November","December"],"wgRequestId":"YOWk4qdTx2XheSMCc3932wAAAAI","wgCSPNonce":!1,"wgCanonicalNamespace":"","wgCanonicalSpecialPageName":!1,"wgNamespaceNumber":0,"wgPageName":"KEYHIT","wgTitle":"KEYHIT","wgCurRevisionId":23006,"wgRevisionId":23006,"wgArticleId":355,"wgIsArticle":!0,"wgIsRedirect":!1,"wgAction":"view","wgUserName":null,"wgUserGroups":["*"],"wgCategories":[],"wgPageContentLanguage":"en","wgPageContentModel":"wikitext","wgRelevantPageName":"KEYHIT","wgRelevantArticleId":355,"wgIsProbablyEditable":!1,"wgRelevantPageIsProbablyEditable":!1,"wgRestrictionEdit":[],"wgRestrictionMove":[]};RLSTATE={"site.styles":"ready","noscript":"ready","user.styles":"ready","user":"ready",
+"user.options":"loading","skins.vector.styles.legacy":"ready","mediawiki.toc.styles":"ready"};RLPAGEMODULES=["site","mediawiki.page.startup","mediawiki.page.ready","mediawiki.toc","skins.vector.legacy.js"];</script>
+<script>(RLQ=window.RLQ||[]).push(function(){mw.loader.implement("user.options@1hzgi",function($,jQuery,require,module){/*@nomin*/mw.user.tokens.set({"patrolToken":"+\\","watchToken":"+\\","csrfToken":"+\\"});
+});});</script>
+<link rel="stylesheet" href="loadd8b0.css?lang=en&amp;modules=mediawiki.toc.styles%7Cskins.vector.styles.legacy&amp;only=styles&amp;skin=vector"/>
+<script async="" src="load52c0.php?lang=en&amp;modules=startup&amp;only=scripts&amp;raw=1&amp;skin=vector"></script>
+<meta name="generator" content="MediaWiki 1.35.2"/>
+<link rel="shortcut icon" href="https://www.qb64.org/favicon.ico"/>
+<link rel="search" type="application/opensearchdescription+xml" href="opensearch_desc.php" title="QB64 Wiki (en)"/>
+<link rel="EditURI" type="application/rsd+xml" href="api-result251f.xml?action=rsd"/>
+<link rel="alternate" type="application/atom+xml" title="QB64 Wiki Atom feed" href="feeda295.xml?title=Special:RecentChanges&amp;feed=atom"/>
+<!--[if lt IE 9]><script src="/wiki/resources/lib/html5shiv/html5shiv.js"></script><![endif]-->
+</head>
+<body class="mediawiki ltr sitedir-ltr mw-hide-empty-elt ns-0 ns-subject page-KEYHIT rootpage-KEYHIT skin-vector action-view skin-vector-legacy">
+<div id="mw-page-base" class="noprint"></div>
+<div id="mw-head-base" class="noprint"></div>
+<div id="content" class="mw-body" role="main">
+	<a id="top"></a>
+	<div id="siteNotice" class="mw-body-content"></div>
+	<div class="mw-indicators mw-body-content">
+	</div>
+	<h1 id="firstHeading" class="firstHeading" lang="en">_KEYHIT</h1>
+	<div id="bodyContent" class="mw-body-content">
+		<div id="siteSub" class="noprint">From QB64 Wiki</div>
+		<div id="contentSub"></div>
+		<div id="contentSub2"></div>
+		
+		<div id="jump-to-nav"></div>
+		<a class="mw-jump-link" href="#mw-head">Jump to navigation</a>
+		<a class="mw-jump-link" href="#searchInput">Jump to search</a>
+		<div id="mw-content-text" lang="en" dir="ltr" class="mw-content-ltr"><div class="mw-parser-output"><p>The <a class="mw-selflink selflink">_KEYHIT</a> function returns <a href="ASCII.html" title="ASCII">ASCII</a> one and two byte, OpenGL Virtual Key and Unicode keyboard key press codes.
+</p><p><br />
+</p>
+<div id="toc" class="toc" role="navigation" aria-labelledby="mw-toc-heading"><input type="checkbox" role="button" id="toctogglecheckbox" class="toctogglecheckbox" style="display:none" /><div class="toctitle" lang="en" dir="ltr"><h2 id="mw-toc-heading">Contents</h2><span class="toctogglespan"><label class="toctogglelabel" for="toctogglecheckbox"></label></span></div>
+<ul>
+<li class="toclevel-1"><a href="#Syntax"><span class="tocnumber">1</span> <span class="toctext">Syntax</span></a></li>
+<li class="toclevel-1"><a href="#Description"><span class="tocnumber">2</span> <span class="toctext">Description</span></a></li>
+<li class="toclevel-1"><a href="#Examples"><span class="tocnumber">3</span> <span class="toctext">Examples</span></a></li>
+<li class="toclevel-1"><a href="#See_also"><span class="tocnumber">4</span> <span class="toctext">See also</span></a></li>
+</ul>
+</div>
+
+<h2><span class="mw-headline" id="Syntax">Syntax</span></h2>
+<dl><dd><i>keycode&amp;</i> = <a class="mw-selflink selflink">_KEYHIT</a></dd></dl>
+<p><br />
+</p>
+<h2><span class="mw-headline" id="Description">Description</span></h2>
+<ul><li>Return values range up to &amp;H40000000 so use a <a href="LONG.html" title="LONG">LONG</a> or <a href="INTEGER64.html" title="INTEGER64">_INTEGER64</a> variable type. See the <a href="KEYDOWN.html" title="KEYDOWN">_KEYDOWN</a> code list:</li></ul>
+<dl><dd><ul><li>0-255: <a href="ASCII.html" title="ASCII">ASCII</a> values (Refer to <a rel="nofollow" class="external text" href="http://en.wikipedia.org/wiki/Code_page_437">CP437</a>).</li>
+<li>256-65535: <a href="ASCII.html#Two_Byte_Codes" title="ASCII">2-byte</a> character codes&#160;: code = <a href="CVI.html" title="CVI">CVI</a>(<a href="CHR%24.html" title="CHR$">CHR$</a>(0) + <a href="CHR%24.html" title="CHR$">CHR$</a>(scancode)) (unaffected by SHIFT/ALT/CTRL modifiers).</li>
+<li>65536-&amp;H40000000: <a href="KEYDOWN.html" title="KEYDOWN">QB64-specific Virtual Key codes</a> (designated with + for 100000 on keyboard below)</li>
+<li><b>Negative</b> <a href="LONG.html" title="LONG">LONG</a> values returned indicate that a key was released or a lock function key has been turned off.</li></ul></dd></dl>
+<ul><li><b>Note: _KEYHIT can only return one value at a time so use the <a href="KEYDOWN.html" title="KEYDOWN">_KEYDOWN</a> keyhit value to find key combinations.</b></li>
+<li>To receive input from a <a href="%24CONSOLE.html" title="$CONSOLE">$CONSOLE</a> window, use <a href="CINP.html" title="CINP">_CINP</a>.</li></ul>
+<p style="padding: 1em; line-height:100%; margin-left:10px; white-space: pre; font-family: courier; background-color: white; color: darkgreen;">'                                <b>_KEYHIT Keyboard Codes</b>
+'
+'<b>Esc  F1    F2    F3    F4    F5    F6    F7    F8    F9    F10   F11   F12   Sys  ScL Pause</b>                  
+' 27 15104 15360 15616 15872 16128 16384 16640 16896 17152 17408 34048 34304 +316 +302 +019
+'<b>`~  1!  2@  3#  4$  5%  6^  7&amp;  8*  9(  0) -_ =+ BkSp   Ins   Hme   PUp   NumL   /     *    -</b> 
+'126 33  64  35  36  37  94  38  42  40  41 95 43   8   20992 18176 18688 +300   47    42   45
+'<i> 96 49  50  51  52  53  54  55  56  57  48 45 61</i>
+'<b>Tab Q   W   E   R   T   Y   U   I   O   P  [{  ]}  \|   Del   End   PDn   7Hme  8/▲   9PU   + </b>
+' 9  81  87  69  82  84  89  85  73  79  80 123 125 124 21248 20224 20736 18176 18432 18688 43
+'<i>   113 119 101 114 116 121 117 105 111 112  91  93  92                    55    56    57 </i>
+'<b>CapL   A   S   D   F   G   H   J   K   L   ;:  '" Enter                   4/◄-   5    6/-►  </b>
+'+301  65  83  68  70  71  72  74  75  76  58  34  13                     19200 19456 19712  <b>E</b>
+'<i>      97 115 100 102 103 104 106 107 108  59  39                          52    53    54 </i>   <b>n</b>                                    
+'<b>Shift   Z   X   C   V   B   N   M   ,&lt;  .&gt;  /?    Shift       ▲           1End  2/▼   3PD   t</b>
+'+304   90  88  67  86  66  78  77  60  62  63    +303       18432        20224 20480 20736  <b>e</b>
+'<i>      122 120  99 118  98 110 109  44  46  47                             49    50    51 </i>   <b>r</b>
+'<b>Ctrl   Win  Alt     Spacebar      Alt  Win  Menu  Ctrl   ◄-   ▼   -►      0Ins        .Del </b>
+'+306  +311 +308       32         +307 +312 +319  +305 19200 20480 19712  20992       21248 13 
+'                                                                     <i>     48          46</i>
+'
+'     <b>    Lower value = LCase/NumLock On __________________ + = add 100000 </b>
+</p>
+<center><span style="font-family: Courier New, Courier, monospace; font-size: 0.80em; line-height: 50%;">NOTE: The above commented table can be copied and pasted directly into the QB64 IDE</span></center>
+<p><br /> 
+</p>
+<dl><dd><ul><li>&gt;= &amp;H40000000: <a href="Unicode.html" title="Unicode">Unicode</a>.</li></ul></dd></dl>
+<ul><li>An <b>important difference</b> between <a href="INKEY%24.html" title="INKEY$">INKEY$</a> and _KEYHIT is how they work when <b>CTRL, ALT</b> or <b>SHIFT</b> are used. INKEY$ returns a different code if you hold down CTRL, ALT or SHIFT before pressing  F1 (for example). _KEYHIT will return the same code regardless of which modifiers were used but you can check <a href="KEYDOWN.html" title="KEYDOWN">_KEYDOWN</a> to see which modifying keys are being used.</li>
+<li><b>Keyboards with an Alt Gr key note:</b> _KEYHIT may return both Alt (100307) and Ctrl (100306) codes when AltGr key is pressed or released.</li></ul>
+<p><br />
+</p>
+<h2><span class="mw-headline" id="Examples">Examples</span></h2>
+<p><i>Example:</i> This routine will return the codes for any keyboard presses.
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: Courier, monospace; background-color: darkblue; color: lightgrey; word-wrap: break-word;">
+ <i> </i>
+<a href="DEFLNG.html" title="DEFLNG"><span style="color:#87cefa;">DEFLNG</span></a> A-Z
+<a href="SCREEN_(statement).html" title="SCREEN (statement)"><span style="color:#87cefa;">SCREEN</span></a> <a href="NEWIMAGE.html" title="NEWIMAGE"><span style="color:#87cefa;">_NEWIMAGE</span></a>(800, 600, 8)
+<a href="CLS.html" title="CLS"><span style="color:#87cefa;">CLS</span></a> , 1
+font = <a href="LOADFONT.html" title="LOADFONT"><span style="color:#87cefa;">_LOADFONT</span></a>("cyberbit.ttf", 24)
+unifont = <a href="LOADFONT.html" title="LOADFONT"><span style="color:#87cefa;">_LOADFONT</span></a>("cyberbit.ttf", 24, "UNICODE")
+<a href="FONT.html" title="FONT"><span style="color:#87cefa;">_FONT</span></a> font
+
+<a href="DO.html" class="mw-redirect" title="DO"><span style="color:#87cefa;">DO</span></a>
+  x = <a class="mw-selflink selflink"><span style="color:#87cefa;">_KEYHIT</span></a>
+  <a href="IF.html" class="mw-redirect" title="IF"><span style="color:#87cefa;">IF</span></a> x <a href="THEN.html" title="THEN"><span style="color:#87cefa;">THEN</span></a>
+    <a href="IF.html" class="mw-redirect" title="IF"><span style="color:#87cefa;">IF</span></a> x &lt; 0 <a href="THEN.html" title="THEN"><span style="color:#87cefa;">THEN</span></a>  'negative value means key released
+      <a href="COLOR.html" title="COLOR"><span style="color:#87cefa;">COLOR</span></a> 2
+      <a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> "Released ";
+      x = -x
+    <a href="ELSE.html" title="ELSE"><span style="color:#87cefa;">ELSE</span></a>
+      <a href="COLOR.html" title="COLOR"><span style="color:#87cefa;">COLOR</span></a> 10
+      <a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> "Pressed ";   'positive value means key pressed
+    <a href="END_IF.html" class="mw-redirect" title="END IF"><span style="color:#87cefa;">END IF</span></a>
+    <a href="IF.html" class="mw-redirect" title="IF"><span style="color:#87cefa;">IF</span></a> x &lt; 256 <a href="THEN.html" title="THEN"><span style="color:#87cefa;">THEN</span></a>    'ASCII code values
+      <a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> "<a href="ASC.html" title="ASC"><span style="color:#87cefa;">ASC</span></a>II "; x;
+      <a href="IF.html" class="mw-redirect" title="IF"><span style="color:#87cefa;">IF</span></a> x &gt;= 32 <a href="AND_(boolean).html" title="AND (boolean)"><span style="color:#87cefa;">AND</span></a> x &lt;= 255 <a href="THEN.html" title="THEN"><span style="color:#87cefa;">THEN</span></a> <a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> "[" + <a href="CHR%24.html" title="CHR$"><span style="color:#87cefa;">CHR$</span></a>(x) + "]" <a href="ELSE.html" title="ELSE"><span style="color:#87cefa;">ELSE</span></a> <a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a>
+    <a href="END_IF.html" class="mw-redirect" title="END IF"><span style="color:#87cefa;">END IF</span></a>
+    <a href="IF.html" class="mw-redirect" title="IF"><span style="color:#87cefa;">IF</span></a> x &gt;= 256 <a href="AND_(boolean).html" title="AND (boolean)"><span style="color:#87cefa;">AND</span></a> x &lt; 65536 <a href="THEN.html" title="THEN"><span style="color:#87cefa;">THEN</span></a> '2 byte key codes
+      <a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> "2-BYTE-<a href="COM.html?title=COM&amp;action=edit&amp;redlink=1" class="new" title="COM (page does not exist)"><span style="color:#87cefa;">COM</span></a>BO "; x <a href="AND_(boolean).html" title="AND (boolean)"><span style="color:#87cefa;">AND</span></a> 255; x \ 256;
+      x2 = x \ 256
+      <a href="IF.html" class="mw-redirect" title="IF"><span style="color:#87cefa;">IF</span></a> x2 &gt;= 32 <a href="AND_(boolean).html" title="AND (boolean)"><span style="color:#87cefa;">AND</span></a> x2 &lt;= 255 <a href="THEN.html" title="THEN"><span style="color:#87cefa;">THEN</span></a> <a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> "[" + <a href="CHR%24.html" title="CHR$"><span style="color:#87cefa;">CHR$</span></a>(x2) + "]" <a href="ELSE.html" title="ELSE"><span style="color:#87cefa;">ELSE</span></a> <a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a>
+    <a href="END_IF.html" class="mw-redirect" title="END IF"><span style="color:#87cefa;">END IF</span></a>
+    <a href="IF.html" class="mw-redirect" title="IF"><span style="color:#87cefa;">IF</span></a> x &gt;= 100000 <a href="AND_(boolean).html" title="AND (boolean)"><span style="color:#87cefa;">AND</span></a> x &lt; 200000 <a href="THEN.html" title="THEN"><span style="color:#87cefa;">THEN</span></a>      'QB84 Virtual Key codes
+      <a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> "SDL VK"; x - 100000
+      <a href="END_IF.html" class="mw-redirect" title="END IF"><span style="color:#87cefa;">END IF</span></a>
+      <a href="IF.html" class="mw-redirect" title="IF"><span style="color:#87cefa;">IF</span></a> x &gt;= 200000 <a href="AND_(boolean).html" title="AND (boolean)"><span style="color:#87cefa;">AND</span></a> x &lt; <a href="%26H.html" title="&amp;H"><span style="color:#87cefa;">&amp;H</span></a>40000000 <a href="THEN.html" title="THEN"><span style="color:#87cefa;">THEN</span></a>
+            <a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> "QB64 VK"; x - 200000
+    <a href="END_IF.html" class="mw-redirect" title="END IF"><span style="color:#87cefa;">END IF</span></a>
+    <a href="IF.html" class="mw-redirect" title="IF"><span style="color:#87cefa;">IF</span></a> x &gt;= <a href="%26H.html" title="&amp;H"><span style="color:#87cefa;">&amp;H</span></a>40000000 <a href="THEN.html" title="THEN"><span style="color:#87cefa;">THEN</span></a>              'Unicode values (IME Input mode)
+      <a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> "UNICODE "; x - <a href="%26H.html" title="&amp;H"><span style="color:#87cefa;">&amp;H</span></a>40000000; "0x" + <a href="HEX%24.html" title="HEX$"><span style="color:#87cefa;">HEX$</span></a>(x - <a href="%26H.html" title="&amp;H"><span style="color:#87cefa;">&amp;H</span></a>40000000) + " ...";
+      cx = <a href="POS.html" title="POS"><span style="color:#87cefa;">POS</span></a>(1): cy = <a href="CSRLIN.html" title="CSRLIN"><span style="color:#87cefa;">CSRLIN</span></a>
+      <a href="FONT.html" title="FONT"><span style="color:#87cefa;">_FONT</span></a> unifont
+      <a href="LOCATE.html" title="LOCATE"><span style="color:#87cefa;">LOCATE</span></a> cy, cx
+      <a href="COLOR.html" title="COLOR"><span style="color:#87cefa;">COLOR</span></a> 15
+      z$ = <a href="MKL%24.html" title="MKL$"><span style="color:#87cefa;">MKL$</span></a>(x - <a href="%26H.html" title="&amp;H"><span style="color:#87cefa;">&amp;H</span></a>40000000) + <a href="MKL%24.html" title="MKL$"><span style="color:#87cefa;">MKL$</span></a>(0)
+      <a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> z$ + z$ + z$;
+      <a href="FONT.html" title="FONT"><span style="color:#87cefa;">_FONT</span></a> font
+      <a href="LOCATE.html" title="LOCATE"><span style="color:#87cefa;">LOCATE</span></a> cy, 1: <a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a>
+    <a href="END_IF.html" class="mw-redirect" title="END IF"><span style="color:#87cefa;">END IF</span></a>
+  <a href="END_IF.html" class="mw-redirect" title="END IF"><span style="color:#87cefa;">END IF</span></a>
+<a href="LOOP.html" title="LOOP"><span style="color:#87cefa;">LOOP</span></a> <i> </i>
+</p>
+<center><span style="font-family: Courier New, Courier, monospace; font-size: 0.80em; line-height: 50%;">Code by Galleon</span></center>
+<p><br />
+</p>
+<h2><span class="mw-headline" id="See_also">See also</span></h2>
+<ul><li><a href="KEYDOWN.html" title="KEYDOWN">_KEYDOWN</a>, <a href="CINP.html" title="CINP">_CINP</a></li>
+<li><a href="MAPUNICODE.html" title="MAPUNICODE">_MAPUNICODE</a>, <a href="MAPUNICODE_(function).html" title="MAPUNICODE (function)">_MAPUNICODE (function)</a></li>
+<li><a href="INKEY%24.html" title="INKEY$">INKEY$</a>, <a href="ASCII.html" title="ASCII">ASCII</a> <span style="color:gray">(code table)</span>,</li>
+<li><a href="Unicode.html" title="Unicode">Unicode</a>, <a href="Code_Pages.html" title="Code Pages">Code Pages</a> <span style="color:gray">(by region)</span></li>
+<li><a href="INP.html" title="INP">INP</a>(<a href="%26H.html" title="&amp;H">&amp;H60</a>), <a href="Scancodes.html" title="Scancodes">Scancodes</a></li>
+<li><a href="ON_KEY(n).html" title="ON KEY(n)">ON KEY(n)</a>, <a href="KEY(n).html" title="KEY(n)">KEY(n)</a>, <a href="KEY_n.html" title="KEY n">KEY n</a></li>
+<li><a href="Windows_Libraries.html#Hot_Keys_.28maximize.29" title="Windows Libraries">Windows hot keys</a></li></ul>
+<p><br />
+</p>
+<hr />
+<center><i>Navigation:</i>
+<dl><dd><a href="Keyword_Reference_-_Alphabetical.html" title="Keyword Reference - Alphabetical">Keyword Reference - Alphabetical</a></dd>
+<dd><a href="Keyword_Reference_-_By_usage.html" title="Keyword Reference - By usage">Keyword Reference - By Usage</a></dd>
+<dd><a href="Main_Page.html" title="Main Page">Main Wiki Page</a></dd></dl></center>
+<!-- 
+NewPP limit report
+Cached time: 20210707074214
+Cache expiry: 86400
+Dynamic content: false
+Complications: []
+CPU time usage: 0.104 seconds
+Real time usage: 0.297 seconds
+Preprocessor visited node count: 598/1000000
+Post‐expand include size: 5163/2097152 bytes
+Template argument size: 867/2097152 bytes
+Highest expansion depth: 3/40
+Expensive parser function count: 0/100
+Unstrip recursion depth: 0/20
+Unstrip post‐expand size: 0/5000000 bytes
+-->
+<!--
+Transclusion expansion time report (%,ms,calls,template)
+100.00%  113.710      1 -total
+ 19.15%   21.776      1 Template:CodeEnd
+ 14.72%   16.735      1 Template:PageDescription
+ 13.92%   15.825     78 Template:Cl
+  9.33%   10.609      1 Template:PageSeeAlso
+  8.30%    9.436      1 Template:PageExamples
+  6.97%    7.922      2 Template:Text
+  4.34%    4.933      1 Template:PageSyntax
+  3.31%    3.766      1 Template:Parameter
+  2.81%    3.197      1 Template:CodeStart
+-->
+
+<!-- Saved in parser cache with key i4224360_mw2-mw_:pcache:idhash:355-0!canonical and timestamp 20210707074214 and revision id 23006
+ -->
+</div></div><div class="printfooter">Retrieved from "<a dir="ltr" href="indexb6cf.html?title=KEYHIT&amp;oldid=23006">http://www.qb64.org/wiki/index.php?title=KEYHIT&amp;oldid=23006</a>"</div>
+		<div id="catlinks" class="catlinks catlinks-allhidden" data-mw="interface"></div>
+	</div>
+</div>
+
+<div id="mw-navigation">
+	<h2>Navigation menu</h2>
+	<div id="mw-head">
+		<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-personal" class="vector-menu" aria-labelledby="p-personal-label" role="navigation" 
+	 >
+	<h3 id="p-personal-label">
+		<span>Personal tools</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="pt-login"><a href="index2f08.html?title=Special:UserLogin&amp;returnto=KEYHIT" title="You are encouraged to log in; however, it is not mandatory [o]" accesskey="o">Log in</a></li></ul>
+		
+	</div>
+</nav>
+
+
+		<div id="left-navigation">
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-namespaces" class="vector-menu vector-menu-tabs vectorTabs" aria-labelledby="p-namespaces-label" role="navigation" 
+	 >
+	<h3 id="p-namespaces-label">
+		<span>Namespaces</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="ca-nstab-main" class="selected"><a href="KEYHIT.html" title="View the content page [c]" accesskey="c">Page</a></li><li id="ca-talk" class="new"><a href="Talk_KEYHIT.html?title=Talk:KEYHIT&amp;action=edit&amp;redlink=1" rel="discussion" title="Discussion about the content page (page does not exist) [t]" accesskey="t">Discussion</a></li></ul>
+		
+	</div>
+</nav>
+
+
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-variants" class="vector-menu-empty emptyPortlet vector-menu vector-menu-dropdown vectorMenu" aria-labelledby="p-variants-label" role="navigation" 
+	 >
+	<input type="checkbox" class="vector-menu-checkbox vectorMenuCheckbox" aria-labelledby="p-variants-label" />
+	<h3 id="p-variants-label">
+		<span>Variants</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="menu vector-menu-content-list"></ul>
+		
+	</div>
+</nav>
+
+
+		</div>
+		<div id="right-navigation">
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-views" class="vector-menu vector-menu-tabs vectorTabs" aria-labelledby="p-views-label" role="navigation" 
+	 >
+	<h3 id="p-views-label">
+		<span>Views</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="ca-view" class="collapsible selected"><a href="KEYHIT.html">Read</a></li><li id="ca-viewsource" class="collapsible"><a href="indexf573.html?title=KEYHIT&amp;action=edit" title="This page is protected.&#10;You can view its source [e]" accesskey="e">View source</a></li><li id="ca-history" class="collapsible"><a href="index681e.html?title=KEYHIT&amp;action=history" title="Past revisions of this page [h]" accesskey="h">View history</a></li></ul>
+		
+	</div>
+</nav>
+
+
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-cactions" class="vector-menu-empty emptyPortlet vector-menu vector-menu-dropdown vectorMenu" aria-labelledby="p-cactions-label" role="navigation" 
+	 >
+	<input type="checkbox" class="vector-menu-checkbox vectorMenuCheckbox" aria-labelledby="p-cactions-label" />
+	<h3 id="p-cactions-label">
+		<span>More</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="menu vector-menu-content-list"></ul>
+		
+	</div>
+</nav>
+
+
+			<div id="p-search" role="search">
+	<h3 >
+		<label for="searchInput">Search</label>
+	</h3>
+	<form action="https://www.qb64.org/wiki/index.php" id="searchform">
+		<div id="simpleSearch">
+			<input type="search" name="search" placeholder="Search QB64 Wiki" title="Search QB64 Wiki [f]" accesskey="f" id="searchInput"/>
+			<input type="hidden" name="title" value="Special:Search">
+			<input type="submit" name="fulltext" value="Search" title="Search the pages for this text" id="mw-searchButton" class="searchButton mw-fallbackSearchButton"/>
+			<input type="submit" name="go" value="Go" title="Go to a page with this exact name if it exists" id="searchButton" class="searchButton"/>
+		</div>
+	</form>
+</div>
+
+		</div>
+	</div>
+	
+<div id="mw-panel">
+	<div id="p-logo" role="banner">
+		<a  title="Visit the main page" class="mw-wiki-logo" href="Main_Page.html"></a>
+	</div>
+	<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-navigation" class="vector-menu vector-menu-portal portal portal-first" aria-labelledby="p-navigation-label" role="navigation" 
+	 >
+	<h3 id="p-navigation-label">
+		<span>Navigation</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="n-mainpage-description"><a href="Main_Page.html" title="Visit the main page [z]" accesskey="z">Main page</a></li><li id="n-recentchanges"><a href="Special_RecentChanges.html" title="A list of recent changes in the wiki [r]" accesskey="r">Recent changes</a></li><li id="n-randompage"><a href="SNDCOPY.html" title="Load a random page [x]" accesskey="x">Random page</a></li><li id="n-help-mediawiki"><a href="https://www.mediawiki.org/wiki/Special:MyLanguage/Help:Contents">Help about MediaWiki</a></li></ul>
+		
+	</div>
+</nav>
+
+
+	<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-tb" class="vector-menu vector-menu-portal portal" aria-labelledby="p-tb-label" role="navigation" 
+	 >
+	<h3 id="p-tb-label">
+		<span>Tools</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="t-whatlinkshere"><a href="Special_WhatLinksHere/KEYHIT.html" title="A list of all wiki pages that link here [j]" accesskey="j">What links here</a></li><li id="t-recentchangeslinked"><a href="Special_RecentChangesLinked/KEYHIT.html" rel="nofollow" title="Recent changes in pages linked from this page [k]" accesskey="k">Related changes</a></li><li id="t-specialpages"><a href="Special_SpecialPages.html" title="A list of all special pages [q]" accesskey="q">Special pages</a></li><li id="t-print"><a href="javascript:print();" rel="alternate" title="Printable version of this page [p]" accesskey="p">Printable version</a></li><li id="t-permalink"><a href="indexb6cf.html?title=KEYHIT&amp;oldid=23006" title="Permanent link to this revision of the page">Permanent link</a></li><li id="t-info"><a href="index7ca0.html?title=KEYHIT&amp;action=info" title="More information about this page">Page information</a></li></ul>
+		
+	</div>
+</nav>
+
+
+	
+</div>
+
+</div>
+
+<footer id="footer" class="mw-footer" role="contentinfo" >
+	<ul id="footer-info" >
+		<li id="footer-info-lastmod"> This page was last edited on 13 January 2021, at 01:46.</li>
+	</ul>
+	<ul id="footer-places" >
+		<li id="footer-places-privacy"><a href="My_wiki_Privacy_policy.html" title="My wiki:Privacy policy">Privacy policy</a></li>
+		<li id="footer-places-about"><a href="My_wiki_About.html" title="My wiki:About">About QB64 Wiki</a></li>
+		<li id="footer-places-disclaimer"><a href="My_wiki_General_disclaimer.html" title="My wiki:General disclaimer">Disclaimers</a></li>
+	</ul>
+	<ul id="footer-icons" class="noprint">
+		<li id="footer-poweredbyico"><a href="https://www.mediawiki.org/"><img src="resources/assets/poweredby_mediawiki_88x31.png" alt="Powered by MediaWiki" srcset="/wiki/resources/assets/poweredby_mediawiki_132x47.png 1.5x, /wiki/resources/assets/poweredby_mediawiki_176x62.png 2x" width="88" height="31" loading="lazy"/></a></li>
+	</ul>
+	<div style="clear: both;"></div>
+</footer>
+
+
+
+<script>(RLQ=window.RLQ||[]).push(function(){mw.config.set({"wgPageParseReport":{"limitreport":{"cputime":"0.104","walltime":"0.297","ppvisitednodes":{"value":598,"limit":1000000},"postexpandincludesize":{"value":5163,"limit":2097152},"templateargumentsize":{"value":867,"limit":2097152},"expansiondepth":{"value":3,"limit":40},"expensivefunctioncount":{"value":0,"limit":100},"unstrip-depth":{"value":0,"limit":20},"unstrip-size":{"value":0,"limit":5000000},"timingprofile":["100.00%  113.710      1 -total"," 19.15%   21.776      1 Template:CodeEnd"," 14.72%   16.735      1 Template:PageDescription"," 13.92%   15.825     78 Template:Cl","  9.33%   10.609      1 Template:PageSeeAlso","  8.30%    9.436      1 Template:PageExamples","  6.97%    7.922      2 Template:Text","  4.34%    4.933      1 Template:PageSyntax","  3.31%    3.766      1 Template:Parameter","  2.81%    3.197      1 Template:CodeStart"]},"cachereport":{"timestamp":"20210707074214","ttl":86400,"transientcontent":false}}});mw.config.set({"wgBackendResponseTime":1719});});</script></body>
+<!-- Mirrored from www.qb64.org/wiki/KEYHIT by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 07 Aug 2021 12:59:28 GMT -->
+</html>

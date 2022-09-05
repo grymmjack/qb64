@@ -1,0 +1,332 @@
+
+<!DOCTYPE html>
+<html class="client-nojs" lang="en" dir="ltr">
+
+<!-- Mirrored from www.qb64.org/wiki/FUNCTION by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 07 Aug 2021 12:55:17 GMT -->
+<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=UTF-8" /><!-- /Added by HTTrack -->
+<head>
+<meta charset="UTF-8"/>
+<title>FUNCTION - QB64 Wiki</title>
+<script>document.documentElement.className="client-js";RLCONF={"wgBreakFrames":!1,"wgSeparatorTransformTable":["",""],"wgDigitTransformTable":["",""],"wgDefaultDateFormat":"dmy","wgMonthNames":["","January","February","March","April","May","June","July","August","September","October","November","December"],"wgRequestId":"YOWku@kbkwEB08KNhNekMQAAAGw","wgCSPNonce":!1,"wgCanonicalNamespace":"","wgCanonicalSpecialPageName":!1,"wgNamespaceNumber":0,"wgPageName":"FUNCTION","wgTitle":"FUNCTION","wgCurRevisionId":23306,"wgRevisionId":23306,"wgArticleId":243,"wgIsArticle":!0,"wgIsRedirect":!1,"wgAction":"view","wgUserName":null,"wgUserGroups":["*"],"wgCategories":[],"wgPageContentLanguage":"en","wgPageContentModel":"wikitext","wgRelevantPageName":"FUNCTION","wgRelevantArticleId":243,"wgIsProbablyEditable":!1,"wgRelevantPageIsProbablyEditable":!1,"wgRestrictionEdit":[],"wgRestrictionMove":[]};RLSTATE={"site.styles":"ready","noscript":"ready","user.styles":"ready","user":"ready",
+"user.options":"loading","skins.vector.styles.legacy":"ready","mediawiki.toc.styles":"ready"};RLPAGEMODULES=["site","mediawiki.page.startup","mediawiki.page.ready","mediawiki.toc","skins.vector.legacy.js"];</script>
+<script>(RLQ=window.RLQ||[]).push(function(){mw.loader.implement("user.options@1hzgi",function($,jQuery,require,module){/*@nomin*/mw.user.tokens.set({"patrolToken":"+\\","watchToken":"+\\","csrfToken":"+\\"});
+});});</script>
+<link rel="stylesheet" href="loadd8b0.css?lang=en&amp;modules=mediawiki.toc.styles%7Cskins.vector.styles.legacy&amp;only=styles&amp;skin=vector"/>
+<script async="" src="load52c0.php?lang=en&amp;modules=startup&amp;only=scripts&amp;raw=1&amp;skin=vector"></script>
+<meta name="generator" content="MediaWiki 1.35.2"/>
+<link rel="shortcut icon" href="https://www.qb64.org/favicon.ico"/>
+<link rel="search" type="application/opensearchdescription+xml" href="opensearch_desc.php" title="QB64 Wiki (en)"/>
+<link rel="EditURI" type="application/rsd+xml" href="api-result251f.xml?action=rsd"/>
+<link rel="alternate" type="application/atom+xml" title="QB64 Wiki Atom feed" href="feeda295.xml?title=Special:RecentChanges&amp;feed=atom"/>
+<!--[if lt IE 9]><script src="/wiki/resources/lib/html5shiv/html5shiv.js"></script><![endif]-->
+</head>
+<body class="mediawiki ltr sitedir-ltr mw-hide-empty-elt ns-0 ns-subject page-FUNCTION rootpage-FUNCTION skin-vector action-view skin-vector-legacy">
+<div id="mw-page-base" class="noprint"></div>
+<div id="mw-head-base" class="noprint"></div>
+<div id="content" class="mw-body" role="main">
+	<a id="top"></a>
+	<div id="siteNotice" class="mw-body-content"></div>
+	<div class="mw-indicators mw-body-content">
+	</div>
+	<h1 id="firstHeading" class="firstHeading" lang="en">FUNCTION</h1>
+	<div id="bodyContent" class="mw-body-content">
+		<div id="siteSub" class="noprint">From QB64 Wiki</div>
+		<div id="contentSub"></div>
+		<div id="contentSub2"></div>
+		
+		<div id="jump-to-nav"></div>
+		<a class="mw-jump-link" href="#mw-head">Jump to navigation</a>
+		<a class="mw-jump-link" href="#searchInput">Jump to search</a>
+		<div id="mw-content-text" lang="en" dir="ltr" class="mw-content-ltr"><div class="mw-parser-output"><p>A <a class="mw-selflink selflink">FUNCTION</a> block statement is used to create a function procedure to return a calculated value to a program.
+</p><p><br />
+</p>
+<div id="toc" class="toc" role="navigation" aria-labelledby="mw-toc-heading"><input type="checkbox" role="button" id="toctogglecheckbox" class="toctogglecheckbox" style="display:none" /><div class="toctitle" lang="en" dir="ltr"><h2 id="mw-toc-heading">Contents</h2><span class="toctogglespan"><label class="toctogglelabel" for="toctogglecheckbox"></label></span></div>
+<ul>
+<li class="toclevel-1"><a href="#Syntax"><span class="tocnumber">1</span> <span class="toctext">Syntax</span></a></li>
+<li class="toclevel-1"><a href="#Description"><span class="tocnumber">2</span> <span class="toctext">Description</span></a></li>
+<li class="toclevel-1"><a href="#QBasic.2FQuickBASIC"><span class="tocnumber">3</span> <span class="toctext">QBasic/QuickBASIC</span></a></li>
+<li class="toclevel-1"><a href="#Examples"><span class="tocnumber">4</span> <span class="toctext">Examples</span></a></li>
+<li class="toclevel-1"><a href="#See_also"><span class="tocnumber">5</span> <span class="toctext">See also</span></a></li>
+</ul>
+</div>
+
+<h2><span class="mw-headline" id="Syntax">Syntax</span></h2>
+<dl><dd><b>FUNCTION procedureName</b>[type-suffix] [(<i>parameters</i>)]
+<dl><dd><i>{code}</i></dd>
+<dd>'variable definitions and procedure statements</dd>
+<dd>⋮</dd>
+<dd>procedureName = returnValue</dd></dl></dd>
+<dd><b>END FUNCTION</b></dd></dl>
+<p><br />
+</p>
+<h2><span class="mw-headline" id="Description">Description</span></h2>
+<ul><li>The function type can be any variable type that it will return to the program and is represented by the type suffix.</li>
+<li>Functions hold one return value in the function's name which is a variable type. Other values can be passed through <i>parameters</i>.</li>
+<li>Functions are often referred to in program calculations, not called like SUB procedures. <a href="CALL.html" title="CALL">CALL</a> cannot be used with functions.</li>
+<li>If there are no parameters passed or they are <a href="SHARED.html" title="SHARED">SHARED</a> the <i>parameters</i> and parenthesis are not required.</li>
+<li>Variable names within the procedure do not have to match the names used in the reference parameters, just the value types.</li>
+<li>All <a href="%24DYNAMIC.html" title="$DYNAMIC">dynamic</a> variable values return to 0 or null strings when the procedure is exited except when a variable or the entire function is <a href="STATIC.html" title="STATIC">STATIC</a>. This can save program memory as all <a href="%24DYNAMIC.html" title="$DYNAMIC">dynamic</a> memory used in a FUNCTION is released on procedure exit.</li>
+<li>FUNCTION procedure code can use <a href="GOSUB.html" title="GOSUB">GOSUB</a> and <a href="GOTO.html" title="GOTO">GOTO</a> line numbers or labels inside of the procedure when necessary.</li>
+<li>For early function exits use <a href="EXIT.html" title="EXIT">EXIT</a> <a class="mw-selflink selflink">FUNCTION</a> before <a href="END_FUNCTION.html" title="END FUNCTION">END FUNCTION</a> and <a href="GOSUB.html" title="GOSUB">GOSUB</a> procedures using <a href="RETURN.html" title="RETURN">RETURN</a>.</li>
+<li><b>QB64 ignores all procedural DECLARE statements.</b> Define all <i>parameter</i> <a href="Data_types.html" title="Data types">types</a> in the FUNCTION procedure.</li>
+<li><b>Images are not deallocated when the <a href="SUB.html" title="SUB">SUB</a> or <a class="mw-selflink selflink">FUNCTION</a> they are created in ends. Free them with <a href="FREEIMAGE.html" title="FREEIMAGE">_FREEIMAGE</a>.</b></li>
+<li>The IDE can create the FUNCTION and END FUNCTION lines for you. Use the <i>New FUNCTION...</i> option in the Edit Menu. A box will come up for you to enter a name for the FUNCTION. Enter all code between the FUNCTION and <a href="END_FUNCTION.html" title="END FUNCTION">END FUNCTION</a> lines.</li></ul>
+<p><br />
+</p>
+<h2><span id="QBasic/QuickBASIC"></span><span class="mw-headline" id="QBasic.2FQuickBASIC">QBasic/QuickBASIC</span></h2>
+<ul><li>Once a FUNCTION was created and used, the QBasic IDE would DECLARE it when the file was saved. <b>QB64 doesn't need these declarations.</b></li>
+<li>QBasic's IDE could place a <a href="DEFINT.html" title="DEFINT">DEFINT</a>, <a href="DEFSNG.html" title="DEFSNG">DEFSNG</a>, <a href="DEFLNG.html" title="DEFLNG">DEFLNG</a>, <a href="DEFDBL.html" title="DEFDBL">DEFDBL</a> or <a href="DEFSTR.html" title="DEFSTR">DEFSTR</a> statement before the FUNCTION line if it is used in the main module. It may even be the wrong variable type needed.</li>
+<li>QBasic allowed programmers to add DATA fields anywhere because the IDE separated the main code from other procedures.</li></ul>
+<p><br />
+</p>
+<h2><span class="mw-headline" id="Examples">Examples</span></h2>
+<p><i>Example 1:</i> A simple function that returns the current path. Place <a class="mw-selflink selflink">FUNCTION</a> or <a href="SUB.html" title="SUB">SUB</a> procedures after the program <a href="END.html" title="END">END</a>.
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: Courier, monospace; background-color: darkblue; color: lightgrey; word-wrap: break-word;"> <i> </i>
+<a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> "Current path = "; PATH$
+<a href="END.html" title="END"><span style="color:#87cefa;">END</span></a>
+
+<a class="mw-selflink selflink"><span style="color:#87cefa;">FUNCTION</span></a> PATH$
+    f% = <a href="FREEFILE.html" title="FREEFILE"><span style="color:#87cefa;">FREEFILE</span></a>
+    file$ = "D0Spath.inf" 'file name uses a zero to prevent an overwrite of existing file name
+    <a href="SHELL.html" title="SHELL"><span style="color:#87cefa;">SHELL</span></a> <a href="HIDE.html" title="HIDE"><span style="color:#87cefa;">_HIDE</span></a> "CD &gt; " + file$ 'send screen information to a created text file
+    <a href="OPEN.html" title="OPEN"><span style="color:#87cefa;">OPEN</span></a> file$ <a href="FOR_(file_statement).html" class="mw-redirect" title="FOR (file statement)"><span style="color:#87cefa;">FOR</span></a> <a href="INPUT_(file_mode).html" class="mw-redirect" title="INPUT (file mode)"><span style="color:#87cefa;">INPUT</span></a> <a href="AS.html" title="AS"><span style="color:#87cefa;">AS</span></a> #f% 'file should exist with one line of text
+    <a href="LINE_INPUT_(file_statement).html" title="LINE INPUT (file statement)"><span style="color:#87cefa;">LINE INPUT</span></a> #f%, PATH$ 'read file path text to function name
+    <a href="CLOSE.html" title="CLOSE"><span style="color:#87cefa;">CLOSE</span></a> #f%
+    <a href="KILL.html" title="KILL"><span style="color:#87cefa;">KILL</span></a> file$
+<a href="END_FUNCTION.html" title="END FUNCTION"><span style="color:#87cefa;">END FUNCTION</span></a> <i> </i>
+</p>
+<p><br />
+<i>Example 2:</i> Returns a <a href="LONG.html" title="LONG">LONG</a> array byte size required for a certain sized graphics screen pixel area <a href="GET_(graphics_statement).html" title="GET (graphics statement)">GET</a>.
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: Courier, monospace; background-color: darkblue; color: lightgrey; word-wrap: break-word;"> <i> </i>
+<a href="INPUT.html" title="INPUT"><span style="color:#87cefa;">INPUT</span></a> "Enter a screen mode: ", mode%
+<a href="INPUT.html" title="INPUT"><span style="color:#87cefa;">INPUT</span></a> "Enter image width: ", wide&amp;
+<a href="INPUT.html" title="INPUT"><span style="color:#87cefa;">INPUT</span></a> "Enter image depth: ", deep&amp;
+IntegerArray&amp; = ImageBufferSize&amp;(wide&amp;, deep&amp;, mode%) \ 2 ' returns size of an <a href="INTEGER.html" title="INTEGER"><span style="color:#87cefa;">INTEGER</span></a> array.
+<a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> IntegerArray&amp;
+<a href="END.html" title="END"><span style="color:#87cefa;">END</span></a>
+
+<a href="DEFINT.html" title="DEFINT"><span style="color:#87cefa;">DEFINT</span></a> A-Z
+<a class="mw-selflink selflink"><span style="color:#87cefa;">FUNCTION</span></a> ImageBufferSize&amp; (Wide&amp;, Deep&amp;, ScreenMode%)
+    <a href="SELECT_CASE.html" title="SELECT CASE"><span style="color:#87cefa;">SELECT CASE</span></a> ScreenMode%
+        <a href="CASE.html" class="mw-redirect" title="CASE"><span style="color:#87cefa;">CASE</span></a> 1: BPPlane = 2: Planes = 1
+        <a href="CASE.html" class="mw-redirect" title="CASE"><span style="color:#87cefa;">CASE</span></a> 2, 3, 4, 11: BPPlane = 1: Planes = 1
+        <a href="CASE.html" class="mw-redirect" title="CASE"><span style="color:#87cefa;">CASE</span></a> 7, 8, 9, 12: BPPlane = 1: Planes = 4
+        <a href="CASE.html" class="mw-redirect" title="CASE"><span style="color:#87cefa;">CASE</span></a> 10: BPPlane = 1: Planes = 2
+        <a href="CASE.html" class="mw-redirect" title="CASE"><span style="color:#87cefa;">CASE</span></a> 13: BPPlane = 8: Planes = 1
+        <a href="CASE_ELSE.html" class="mw-redirect" title="CASE ELSE"><span style="color:#87cefa;">CASE ELSE</span></a>: BPPlane = 0
+    <a href="END_SELECT.html" title="END SELECT"><span style="color:#87cefa;">END SELECT</span></a>
+    ImageBufferSize&amp; = 4 + <a href="INT.html" title="INT"><span style="color:#87cefa;">INT</span></a>((Wide&amp; * BPPlane + 7) / 8) * (Deep&amp; * Planes) 'return the value to function name.
+<a href="END_FUNCTION.html" title="END FUNCTION"><span style="color:#87cefa;">END FUNCTION</span></a> <i> </i>
+</p>
+<dl><dd><i>Explanation:</i> Function calculates the array byte size required when you <a href="GET_(graphics_statement).html" title="GET (graphics statement)">GET</a> an area of a graphics <a href="SCREEN.html" title="SCREEN">SCREEN</a>. Each mode may require a different sized array. Since graphics uses <a href="INTEGER.html" title="INTEGER">INTEGER</a> arrays, 2 byte elements, the size returned is divided by 2 in the IntegerArray&amp; calculation function reference. Function returns only 4 for <a href="SCREEN.html" title="SCREEN">SCREEN</a> 0 which is a text only mode.</dd></dl>
+<p><br />
+</p>
+<h2><span class="mw-headline" id="See_also">See also</span></h2>
+<ul><li><a href="SUB.html" title="SUB">SUB</a>, <a href="SCREEN_(statement).html" title="SCREEN (statement)">SCREEN (statement)</a></li>
+<li><a href="EXIT.html" title="EXIT">EXIT</a> (statement), <a href="END.html" title="END">END</a></li>
+<li><a href="EXIT_(function).html" title="EXIT (function)">_EXIT (function)</a></li></ul>
+<p><br />
+</p>
+<hr />
+<center><i>Navigation:</i>
+<dl><dd><a href="Keyword_Reference_-_Alphabetical.html" title="Keyword Reference - Alphabetical">Keyword Reference - Alphabetical</a></dd>
+<dd><a href="Keyword_Reference_-_By_usage.html" title="Keyword Reference - By usage">Keyword Reference - By Usage</a></dd>
+<dd><a href="Main_Page.html" title="Main Page">Main Wiki Page</a></dd></dl></center>
+<!-- 
+NewPP limit report
+Cached time: 20210707062001
+Cache expiry: 86400
+Dynamic content: false
+Complications: []
+CPU time usage: 0.074 seconds
+Real time usage: 0.187 seconds
+Preprocessor visited node count: 250/1000000
+Post‐expand include size: 2608/2097152 bytes
+Template argument size: 422/2097152 bytes
+Highest expansion depth: 3/40
+Expensive parser function count: 0/100
+Unstrip recursion depth: 0/20
+Unstrip post‐expand size: 0/5000000 bytes
+-->
+<!--
+Transclusion expansion time report (%,ms,calls,template)
+100.00%   68.004      1 -total
+ 15.90%   10.810      2 Template:CodeEnd
+ 14.34%    9.749      1 Template:PageSeeAlso
+ 13.37%    9.090      1 Template:PageSyntax
+ 10.47%    7.119     32 Template:Cl
+  9.84%    6.692      2 Template:CodeStart
+  9.15%    6.223      1 Template:PageExamples
+  7.61%    5.176      1 Template:PageNavigation
+  7.47%    5.082      1 Template:PageQBasic
+  6.91%    4.702      1 Template:PageDescription
+-->
+
+<!-- Saved in parser cache with key i4224360_mw2-mw_:pcache:idhash:243-0!canonical and timestamp 20210707062001 and revision id 23306
+ -->
+</div></div><div class="printfooter">Retrieved from "<a dir="ltr" href="indexd733.html?title=FUNCTION&amp;oldid=23306">http://www.qb64.org/wiki/index.php?title=FUNCTION&amp;oldid=23306</a>"</div>
+		<div id="catlinks" class="catlinks catlinks-allhidden" data-mw="interface"></div>
+	</div>
+</div>
+
+<div id="mw-navigation">
+	<h2>Navigation menu</h2>
+	<div id="mw-head">
+		<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-personal" class="vector-menu" aria-labelledby="p-personal-label" role="navigation" 
+	 >
+	<h3 id="p-personal-label">
+		<span>Personal tools</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="pt-login"><a href="indexfdba.html?title=Special:UserLogin&amp;returnto=FUNCTION" title="You are encouraged to log in; however, it is not mandatory [o]" accesskey="o">Log in</a></li></ul>
+		
+	</div>
+</nav>
+
+
+		<div id="left-navigation">
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-namespaces" class="vector-menu vector-menu-tabs vectorTabs" aria-labelledby="p-namespaces-label" role="navigation" 
+	 >
+	<h3 id="p-namespaces-label">
+		<span>Namespaces</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="ca-nstab-main" class="selected"><a href="FUNCTION.html" title="View the content page [c]" accesskey="c">Page</a></li><li id="ca-talk" class="new"><a href="Talk_FUNCTION.html?title=Talk:FUNCTION&amp;action=edit&amp;redlink=1" rel="discussion" title="Discussion about the content page (page does not exist) [t]" accesskey="t">Discussion</a></li></ul>
+		
+	</div>
+</nav>
+
+
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-variants" class="vector-menu-empty emptyPortlet vector-menu vector-menu-dropdown vectorMenu" aria-labelledby="p-variants-label" role="navigation" 
+	 >
+	<input type="checkbox" class="vector-menu-checkbox vectorMenuCheckbox" aria-labelledby="p-variants-label" />
+	<h3 id="p-variants-label">
+		<span>Variants</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="menu vector-menu-content-list"></ul>
+		
+	</div>
+</nav>
+
+
+		</div>
+		<div id="right-navigation">
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-views" class="vector-menu vector-menu-tabs vectorTabs" aria-labelledby="p-views-label" role="navigation" 
+	 >
+	<h3 id="p-views-label">
+		<span>Views</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="ca-view" class="collapsible selected"><a href="FUNCTION.html">Read</a></li><li id="ca-viewsource" class="collapsible"><a href="indexc4ce.html?title=FUNCTION&amp;action=edit" title="This page is protected.&#10;You can view its source [e]" accesskey="e">View source</a></li><li id="ca-history" class="collapsible"><a href="index026e.html?title=FUNCTION&amp;action=history" title="Past revisions of this page [h]" accesskey="h">View history</a></li></ul>
+		
+	</div>
+</nav>
+
+
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-cactions" class="vector-menu-empty emptyPortlet vector-menu vector-menu-dropdown vectorMenu" aria-labelledby="p-cactions-label" role="navigation" 
+	 >
+	<input type="checkbox" class="vector-menu-checkbox vectorMenuCheckbox" aria-labelledby="p-cactions-label" />
+	<h3 id="p-cactions-label">
+		<span>More</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="menu vector-menu-content-list"></ul>
+		
+	</div>
+</nav>
+
+
+			<div id="p-search" role="search">
+	<h3 >
+		<label for="searchInput">Search</label>
+	</h3>
+	<form action="https://www.qb64.org/wiki/index.php" id="searchform">
+		<div id="simpleSearch">
+			<input type="search" name="search" placeholder="Search QB64 Wiki" title="Search QB64 Wiki [f]" accesskey="f" id="searchInput"/>
+			<input type="hidden" name="title" value="Special:Search">
+			<input type="submit" name="fulltext" value="Search" title="Search the pages for this text" id="mw-searchButton" class="searchButton mw-fallbackSearchButton"/>
+			<input type="submit" name="go" value="Go" title="Go to a page with this exact name if it exists" id="searchButton" class="searchButton"/>
+		</div>
+	</form>
+</div>
+
+		</div>
+	</div>
+	
+<div id="mw-panel">
+	<div id="p-logo" role="banner">
+		<a  title="Visit the main page" class="mw-wiki-logo" href="Main_Page.html"></a>
+	</div>
+	<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-navigation" class="vector-menu vector-menu-portal portal portal-first" aria-labelledby="p-navigation-label" role="navigation" 
+	 >
+	<h3 id="p-navigation-label">
+		<span>Navigation</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="n-mainpage-description"><a href="Main_Page.html" title="Visit the main page [z]" accesskey="z">Main page</a></li><li id="n-recentchanges"><a href="Special_RecentChanges.html" title="A list of recent changes in the wiki [r]" accesskey="r">Recent changes</a></li><li id="n-randompage"><a href="SNDCOPY.html" title="Load a random page [x]" accesskey="x">Random page</a></li><li id="n-help-mediawiki"><a href="https://www.mediawiki.org/wiki/Special:MyLanguage/Help:Contents">Help about MediaWiki</a></li></ul>
+		
+	</div>
+</nav>
+
+
+	<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-tb" class="vector-menu vector-menu-portal portal" aria-labelledby="p-tb-label" role="navigation" 
+	 >
+	<h3 id="p-tb-label">
+		<span>Tools</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="t-whatlinkshere"><a href="Special_WhatLinksHere/FUNCTION.html" title="A list of all wiki pages that link here [j]" accesskey="j">What links here</a></li><li id="t-recentchangeslinked"><a href="Special_RecentChangesLinked/FUNCTION.html" rel="nofollow" title="Recent changes in pages linked from this page [k]" accesskey="k">Related changes</a></li><li id="t-specialpages"><a href="Special_SpecialPages.html" title="A list of all special pages [q]" accesskey="q">Special pages</a></li><li id="t-print"><a href="javascript:print();" rel="alternate" title="Printable version of this page [p]" accesskey="p">Printable version</a></li><li id="t-permalink"><a href="indexd733.html?title=FUNCTION&amp;oldid=23306" title="Permanent link to this revision of the page">Permanent link</a></li><li id="t-info"><a href="index16f1.html?title=FUNCTION&amp;action=info" title="More information about this page">Page information</a></li></ul>
+		
+	</div>
+</nav>
+
+
+	
+</div>
+
+</div>
+
+<footer id="footer" class="mw-footer" role="contentinfo" >
+	<ul id="footer-info" >
+		<li id="footer-info-lastmod"> This page was last edited on 15 February 2021, at 18:36.</li>
+	</ul>
+	<ul id="footer-places" >
+		<li id="footer-places-privacy"><a href="My_wiki_Privacy_policy.html" title="My wiki:Privacy policy">Privacy policy</a></li>
+		<li id="footer-places-about"><a href="My_wiki_About.html" title="My wiki:About">About QB64 Wiki</a></li>
+		<li id="footer-places-disclaimer"><a href="My_wiki_General_disclaimer.html" title="My wiki:General disclaimer">Disclaimers</a></li>
+	</ul>
+	<ul id="footer-icons" class="noprint">
+		<li id="footer-poweredbyico"><a href="https://www.mediawiki.org/"><img src="resources/assets/poweredby_mediawiki_88x31.png" alt="Powered by MediaWiki" srcset="/wiki/resources/assets/poweredby_mediawiki_132x47.png 1.5x, /wiki/resources/assets/poweredby_mediawiki_176x62.png 2x" width="88" height="31" loading="lazy"/></a></li>
+	</ul>
+	<div style="clear: both;"></div>
+</footer>
+
+
+
+<script>(RLQ=window.RLQ||[]).push(function(){mw.config.set({"wgPageParseReport":{"limitreport":{"cputime":"0.074","walltime":"0.187","ppvisitednodes":{"value":250,"limit":1000000},"postexpandincludesize":{"value":2608,"limit":2097152},"templateargumentsize":{"value":422,"limit":2097152},"expansiondepth":{"value":3,"limit":40},"expensivefunctioncount":{"value":0,"limit":100},"unstrip-depth":{"value":0,"limit":20},"unstrip-size":{"value":0,"limit":5000000},"timingprofile":["100.00%   68.004      1 -total"," 15.90%   10.810      2 Template:CodeEnd"," 14.34%    9.749      1 Template:PageSeeAlso"," 13.37%    9.090      1 Template:PageSyntax"," 10.47%    7.119     32 Template:Cl","  9.84%    6.692      2 Template:CodeStart","  9.15%    6.223      1 Template:PageExamples","  7.61%    5.176      1 Template:PageNavigation","  7.47%    5.082      1 Template:PageQBasic","  6.91%    4.702      1 Template:PageDescription"]},"cachereport":{"timestamp":"20210707062001","ttl":86400,"transientcontent":false}}});mw.config.set({"wgBackendResponseTime":1406});});</script></body>
+<!-- Mirrored from www.qb64.org/wiki/FUNCTION by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 07 Aug 2021 12:55:22 GMT -->
+</html>

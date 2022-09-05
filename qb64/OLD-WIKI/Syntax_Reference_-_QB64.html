@@ -1,0 +1,430 @@
+
+<!DOCTYPE html>
+<html class="client-nojs" lang="en" dir="ltr">
+
+<!-- Mirrored from www.qb64.org/wiki/Syntax_Reference_-_QB64 by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 07 Aug 2021 12:40:57 GMT -->
+<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=UTF-8" /><!-- /Added by HTTrack -->
+<head>
+<meta charset="UTF-8"/>
+<title>Syntax Reference - QB64 - QB64 Wiki</title>
+<script>document.documentElement.className="client-js";RLCONF={"wgBreakFrames":!1,"wgSeparatorTransformTable":["",""],"wgDigitTransformTable":["",""],"wgDefaultDateFormat":"dmy","wgMonthNames":["","January","February","March","April","May","June","July","August","September","October","November","December"],"wgRequestId":"YOWkSOkbkwEB08KNhNehfAAAAGY","wgCSPNonce":!1,"wgCanonicalNamespace":"","wgCanonicalSpecialPageName":!1,"wgNamespaceNumber":0,"wgPageName":"Syntax_Reference_-_QB64","wgTitle":"Syntax Reference - QB64","wgCurRevisionId":22731,"wgRevisionId":22731,"wgArticleId":696,"wgIsArticle":!0,"wgIsRedirect":!1,"wgAction":"view","wgUserName":null,"wgUserGroups":["*"],"wgCategories":[],"wgPageContentLanguage":"en","wgPageContentModel":"wikitext","wgRelevantPageName":"Syntax_Reference_-_QB64","wgRelevantArticleId":696,"wgIsProbablyEditable":!1,"wgRelevantPageIsProbablyEditable":!1,"wgRestrictionEdit":[],"wgRestrictionMove":[]};RLSTATE={"site.styles":"ready","noscript":
+"ready","user.styles":"ready","user":"ready","user.options":"loading","skins.vector.styles.legacy":"ready"};RLPAGEMODULES=["site","mediawiki.page.startup","mediawiki.page.ready","skins.vector.legacy.js"];</script>
+<script>(RLQ=window.RLQ||[]).push(function(){mw.loader.implement("user.options@1hzgi",function($,jQuery,require,module){/*@nomin*/mw.user.tokens.set({"patrolToken":"+\\","watchToken":"+\\","csrfToken":"+\\"});
+});});</script>
+<link rel="stylesheet" href="load5c90.css?lang=en&amp;modules=skins.vector.styles.legacy&amp;only=styles&amp;skin=vector"/>
+<script async="" src="load52c0.php?lang=en&amp;modules=startup&amp;only=scripts&amp;raw=1&amp;skin=vector"></script>
+<meta name="generator" content="MediaWiki 1.35.2"/>
+<link rel="shortcut icon" href="https://www.qb64.org/favicon.ico"/>
+<link rel="search" type="application/opensearchdescription+xml" href="opensearch_desc.php" title="QB64 Wiki (en)"/>
+<link rel="EditURI" type="application/rsd+xml" href="api-result251f.xml?action=rsd"/>
+<link rel="alternate" type="application/atom+xml" title="QB64 Wiki Atom feed" href="feeda295.xml?title=Special:RecentChanges&amp;feed=atom"/>
+<!--[if lt IE 9]><script src="/wiki/resources/lib/html5shiv/html5shiv.js"></script><![endif]-->
+</head>
+<body class="mediawiki ltr sitedir-ltr mw-hide-empty-elt ns-0 ns-subject page-Syntax_Reference_-_QB64 rootpage-Syntax_Reference_-_QB64 skin-vector action-view skin-vector-legacy">
+<div id="mw-page-base" class="noprint"></div>
+<div id="mw-head-base" class="noprint"></div>
+<div id="content" class="mw-body" role="main">
+	<a id="top"></a>
+	<div id="siteNotice" class="mw-body-content"></div>
+	<div class="mw-indicators mw-body-content">
+	</div>
+	<h1 id="firstHeading" class="firstHeading" lang="en">Syntax Reference - QB64</h1>
+	<div id="bodyContent" class="mw-body-content">
+		<div id="siteSub" class="noprint">From QB64 Wiki</div>
+		<div id="contentSub"></div>
+		<div id="contentSub2"></div>
+		
+		<div id="jump-to-nav"></div>
+		<a class="mw-jump-link" href="#mw-head">Jump to navigation</a>
+		<a class="mw-jump-link" href="#searchInput">Jump to search</a>
+		<div id="mw-content-text" lang="en" dir="ltr" class="mw-content-ltr"><div class="mw-parser-output"><p>In alphabetical order. GET/PUT refer to TCP/IP. Keyword that syntax refers to is linked. A brief explanation in grey next to the syntax.
+</p><p>Best viewed with maximized browser window.
+</p><p><br />
+</p>
+<div id="toc"><p style="text-align: center">   
+<a href="#A">_A</a>   <a href="#B">_B</a>  <a href="#C">_C</a>   <a href="#D">_D</a>   <a href="#E">_E</a>   <a href="#F">_F</a>   <a href="#G">_G</a>   <a href="#H">_H</a>   <a href="#I">_I</a> _J  _K  <a href="#L">_L</a>   <a href="#M">_M</a> <a href="#N">_N</a>   <a href="#O">_O</a>   <a href="#P">_P</a>   _Q   <a href="#R">_R</a>   <a href="#S">_S</a>  <a href="#T">_T</a>  <a href="#U">_U</a>  _V   <a href="#W">_W</a>  _X  _Y  _Z</p></div>
+<h2><span class="mw-headline" id="A"><div id="A">_A</div></span></h2>
+<ul><li><code><i>result&amp;</i> = <span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="ALPHA.html" title="ALPHA">_ALPHA</a></span>(<i>c&amp;</i>[, <i>imageHandle&amp;</i>])</code>  <div style="float: right;"><span style="font-family: Courier New, Courier, monospace;color:#B0B0B0;font-size: 0.80em;line-height: 120%;">&#8594; Returns the alpha opacity for the image specified or the current image.</span></div></li></ul>
+<ul><li><code><i>result&amp;</i> = <span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="ALPHA32.html" title="ALPHA32">_ALPHA32</a></span>(<i>c&amp;</i>[, <i>imageHandle&amp;</i>])</code>  <div style="float: right;"><span style="font-family: Courier New, Courier, monospace;color:#B0B0B0;font-size: 0.80em;line-height: 120%;">&#8594; Returns the alpha opacity for the image specified or the current image.</span></div></li></ul>
+<ul><li><code><span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="AUTODISPLAY.html" title="AUTODISPLAY">_AUTODISPLAY</a></span></code> <div style="float: right;"><span style="font-family: Courier New, Courier, monospace;color:#B0B0B0;font-size: 0.80em;line-height: 120%;">&#8594; Turns on autodisplay if it was disabled using _DISPLAY.</span></div></li></ul>
+<p><br />
+</p>
+<h2><span class="mw-headline" id="B"><div id="B">_B</div></span></h2>
+<ul><li><code><i>BG</i> = <span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="BACKGROUNDCOLOR.html" title="BACKGROUNDCOLOR">_BACKGROUNDCOLOR</a></span></code> <div style="float: right;"><span style="font-family: Courier New, Courier, monospace;color:#B0B0B0;font-size: 0.80em;line-height: 120%;">&#8594; Returns the current background color.</span></div></li></ul>
+<ul><li><code>...AS [_UNSIGNED] <span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="BIT.html" title="BIT">_BIT</a></span> [*<i>numberofbits</i>]</code> <div style="float: right;"><span style="font-family: Courier New, Courier, monospace;color:#B0B0B0;font-size: 0.80em;line-height: 120%;">&#8594; The bit can only hold -1 or 0, unsigned bit can hold 1 or 0.</span></div></li></ul>
+<ul><li><code><span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="BLEND.html" title="BLEND">_BLEND</a></span> [<i>imagehandle</i>]</code>  <div style="float: right;"><span style="font-family: Courier New, Courier, monospace;color:#B0B0B0;font-size: 0.80em;line-height: 120%;">&#8594; Turns on alpha blending.</span></div></li></ul>
+<ul><li><code><i>enabledflag</i> = <span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="BLEND_(function).html" title="BLEND (function)">_BLEND</a></span> [(<i>imagehandle</i>)]</code>  <div style="float: right;"><span style="font-family: Courier New, Courier, monospace;color:#B0B0B0;font-size: 0.80em;line-height: 120%;">&#8594; Returns -1 if alpha blending is enabled on the current image or a specific one, otherwise it returns 0.</span></div></li></ul>
+<ul><li><code><i>blue</i> = <span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="BLUE.html" title="BLUE">_BLUE</a></span>(<i>palette_index/32_bit_color</i>[, <i>image_handle</i>])</code></li></ul>
+<ul><li><code><i>blue_intensity%</i> = <span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="BLUE32.html" title="BLUE32">_BLUE32</a></span>(<i>color32value</i>)</code></li></ul>
+<ul><li><code>...AS [_UNSIGNED] <span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="BYTE.html" title="BYTE">_BYTE</a></span></code> <div style="float: right;"><span style="font-family: Courier New, Courier, monospace;color:#B0B0B0;font-size: 0.80em;line-height: 120%;">&#8594; A byte can hold 256 values from -128 to 127, unsigned byte can hold 0 to 255.</span></div></li></ul>
+<p><br />
+</p>
+<h2><span class="mw-headline" id="C"><div id="C">_C</div></span></h2>
+<ul><li><code><span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="CLEARCOLOR.html" title="CLEARCOLOR">_CLEARCOLOR</a></span> <i>RGBsettings</i>[, <i>ImageHandle</i>]</code> <div style="float: right;"><span style="font-family: Courier New, Courier, monospace;color:#B0B0B0;font-size: 0.80em;line-height: 120%;">&#8594; Defines the transparent color for all images or a specific one.</span></div></li></ul>
+<ul><li><code><i>colorvalue</i> = <span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="CLEARCOLOR_(function).html" title="CLEARCOLOR (function)">_CLEARCOLOR</a></span> [(<i>handle</i>)]</code> <div style="float: right;"><span style="font-family: Courier New, Courier, monospace;color:#B0B0B0;font-size: 0.80em;line-height: 120%;">&#8594; Returns the current transparent color.</span></div></li></ul>
+<ul><li><code>PUT [STEP](<i>column</i>, <i>row</i>), <i>image</i>[, <span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="CLIP.html" title="CLIP">_CLIP</a></span>] [{XOR|PSET|AND|OR|PRESET}][, <i>omitcolor</i>]]</code> <div style="float: right;"><span style="font-family: Courier New, Courier, monospace;color:#B0B0B0;font-size: 0.80em;line-height: 120%;">&#8594; Clips parts of the image that is offscreen.</span></div></li></ul>
+<ul><li><code><i>result$</i> = <span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="CLIPBOARD%24.html" title="CLIPBOARD$">_CLIPBOARD$</a></span></code><div style="float: right;"><span style="font-family: Courier New, Courier, monospace;color:#B0B0B0;font-size: 0.80em;line-height: 120%;">&#8594; Retrieve the contents of the clipboard.</span></div></li></ul>
+<ul><li><code><span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="CLIPBOARD%24_(statement).html" title="CLIPBOARD$ (statement)">_CLIPBOARD$</a></span> = <i>string_expression$</i></code><div style="float: right;"><span style="font-family: Courier New, Courier, monospace;color:#B0B0B0;font-size: 0.80em;line-height: 120%;">&#8594; Set the contents of the clipboard.</span></div></li></ul>
+<ul><li><code><i>status</i> = <span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="CONNECTED.html" title="CONNECTED">_CONNECTED</a></span>(<i>handle</i>)</code></li></ul>
+<ul><li><code><i>address$</i> = <span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="CONNECTIONADDRESS.html" title="CONNECTIONADDRESS">_CONNECTIONADDRESS</a></span>(<i>handle</i>)</code></li></ul>
+<ul><li><code><span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="CONTROLCHR.html" title="CONTROLCHR">_CONTROLCHR</a></span> {OFF|ON}</code> <div style="float: right;"><span style="font-family: Courier New, Courier, monospace;color:#B0B0B0;font-size: 0.80em;line-height: 120%;">&#8594; Turns on/off functionality of ASCII control characters</span></div></li></ul>
+<ul><li><code><i>copyhandle&amp;</i> = <span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="COPYIMAGE.html" title="COPYIMAGE">_COPYIMAGE</a></span>&amp; [(<i>handle</i>)]</code> <div style="float: right;"><span style="font-family: Courier New, Courier, monospace;color:#B0B0B0;font-size: 0.80em;line-height: 120%;">&#8594; Returns a handle to a copy of a image.</span></div></li></ul>
+<ul><li><code><span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="COPYPALETTE.html" title="COPYPALETTE">_COPYPALETTE</a></span> [<i>sourceImageHandle&amp;</i>[, <i>destinationImageHandle&amp;</i>]]</code></li></ul>
+<ul><li><code><i>result</i> = <span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="CV.html" title="CV">_CV</a></span>(<i>numericalType</i>, <i>stringValue$</i>)</code></li></ul>
+<p><br />
+</p>
+<h2><span class="mw-headline" id="D"><div id="D">_D</div></span></h2>
+<ul><li><code><i>result&amp;</i> = <span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="DEFAULTCOLOR.html" title="DEFAULTCOLOR">_DEFAULTCOLOR</a></span> [(<i>imageHandle&amp;</i>)]</code> <div style="float: right;"><span style="font-family: Courier New, Courier, monospace;color:#B0B0B0;font-size: 0.80em;line-height: 120%;">&#8594; Returns the current default color of a specified image</span></div></li></ul>
+<ul><li><code><span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="DEFINE.html" title="DEFINE">_DEFINE</a></span> <i>range or letter</i>[, <i>range2 or letter2</i>[, <i>range3 or letter3</i>[, ...]]] AS [_UNSIGNED] datatype</code> <div style="float: right;"><span style="font-family: Courier New, Courier, monospace;color:#B0B0B0;font-size: 0.80em;line-height: 120%;">&#8594; Defines variables starting with a letter as a datatype.</span></div></li></ul>
+<ul><li><code><span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="DELAY.html" title="DELAY">_DELAY</a></span> <i>seconds!</i></code> <div style="float: right;"><span style="font-family: Courier New, Courier, monospace;color:#B0B0B0;font-size: 0.80em;line-height: 120%;">&#8594; Delays the program the specified number of seconds.</span></div></li></ul>
+<ul><li><code><span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="DEST.html" title="DEST">_DEST</a></span> handle </code> <div style="float: right;"><span style="font-family: Courier New, Courier, monospace;color:#B0B0B0;font-size: 0.80em;line-height: 120%;">&#8594; Sets the drawing destination image.</span></div></li></ul>
+<ul><li><code><i>handle</i> = <span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="DEST.html" title="DEST">_DEST</a></span></code> <div style="float: right;"><span style="font-family: Courier New, Courier, monospace;color:#B0B0B0;font-size: 0.80em;line-height: 120%;">&#8594; Returns the current drawing destination image handle.</span></div></li></ul>
+<ul><li><code><i>device$</i> = <span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="DEVICE%24.html" title="DEVICE$">_DEVICE$</a></span>(<i>device_number</i>)</code> <div style="float: right;"><span style="font-family: Courier New, Courier, monospace;color:#B0B0B0;font-size: 0.80em;line-height: 120%;">&#8594; Returns the name and type of the device for a given device number</span></div></li></ul>
+<ul><li><code><i>devicecount</i> = <span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="DEVICES.html" title="DEVICES">_DEVICES</a></span></code> <div style="float: right;"><span style="font-family: Courier New, Courier, monospace;color:#B0B0B0;font-size: 0.80em;line-height: 120%;">&#8594; Returns the number of devices. Must be used before _DEVICE$ and _LASTBUTTON</span></div></li></ul>
+<ul><li><code><i>direxists</i> = <span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="DIREXISTS.html" title="DIREXISTS">_DIREXISTS</a></span> (<i>filepath$</i>)</code> <div style="float: right;"><span style="font-family: Courier New, Courier, monospace;color:#B0B0B0;font-size: 0.80em;line-height: 120%;">&#8594; Returns -1 if the directory exists that the filepath points to.</span></div></li></ul>
+<ul><li><code><span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="DISPLAY.html" title="DISPLAY">_DISPLAY</a></span></code> <div style="float: right;"><span style="font-family: Courier New, Courier, monospace;color:#B0B0B0;font-size: 0.80em;line-height: 120%;">&#8594; Turns off automatic display, while displaying the buffer to the screen.</span></div></li></ul>
+<ul><li><code><i>displayedimage</i> = <span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="DISPLAY_(function).html" title="DISPLAY (function)">_DISPLAY</a></span></code> <div style="float: right;"><span style="font-family: Courier New, Courier, monospace;color:#B0B0B0;font-size: 0.80em;line-height: 120%;">&#8594; Returns the current displayed image.</span></div></li></ul>
+<ul><li><code><span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="DONTBLEND.html" title="DONTBLEND">_DONTBLEND</a></span> [<i>imagehandle</i>]</code>  <div style="float: right;"><span style="font-family: Courier New, Courier, monospace;color:#B0B0B0;font-size: 0.80em;line-height: 120%;">&#8594; Turns off alpha blending.</span></div></li></ul>
+<ul><li><code>SHELL [<span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="DONTWAIT.html" title="DONTWAIT">_DONTWAIT</a></span>] [<i>commandline$</i>]</code> <div style="float: right;"><span style="font-family: Courier New, Courier, monospace;color:#B0B0B0;font-size: 0.80em;line-height: 120%;">&#8594; Don't wait for the SHELLed program to end before returning control to the calling program.</span></div></li></ul>
+<p><br />
+</p>
+<h2><span class="mw-headline" id="E"><div id="E">_E</div></span></h2>
+<ul><li><code><i>erline</i> = <span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="ERRORLINE.html" title="ERRORLINE">_ERRORLINE</a></span></code> <div style="float: right;"><span style="font-family: Courier New, Courier, monospace;color:#B0B0B0;font-size: 0.80em;line-height: 120%;">&#8594; In case of error returns the line that produced the error.</span></div></li></ul>
+<ul><li><code><i>quit%</i> = <span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="EXIT.html" title="EXIT">_EXIT</a></span></code> <div style="float: right;"><span style="font-family: Courier New, Courier, monospace;color:#B0B0B0;font-size: 0.80em;line-height: 120%;">&#8594; Turns control over exit to program, gives values depending on how the user tries to exit.</span></div></li></ul>
+<p><br />
+</p>
+<h2><span class="mw-headline" id="F"><div id="F">_F</div></span></h2>
+<ul><li><code><i>fileexists</i> = <span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="FILEEXISTS.html" title="FILEEXISTS">_FILEEXISTS</a></span> (<i>filepath$</i>)</code> <div style="float: right;"><span style="font-family: Courier New, Courier, monospace;color:#B0B0B0;font-size: 0.80em;line-height: 120%;">&#8594; Returns -1 if file exists at the specified path</span></div></li></ul>
+<ul><li><code>...AS [_UNSIGNED] <span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="FLOAT.html" title="FLOAT">_FLOAT</a></span></code> <div style="float: right;"><span style="font-family: Courier New, Courier, monospace;color:#B0B0B0;font-size: 0.80em;line-height: 120%;">&#8594; Defines a variable or array to use float precision values, gives maximum precision in QB64.</span></div></li></ul>
+<ul><li><code><span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="FONT.html" title="FONT">_FONT</a></span> <i>Font_handle</i>[, <i>Image_handle&amp;</i>]</code> <div style="float: right;"><span style="font-family: Courier New, Courier, monospace;color:#B0B0B0;font-size: 0.80em;line-height: 120%;">&#8594; Set the font for the current image or a specified one.</span></div></li></ul>
+<ul><li><code><i>font_handle</i> = <span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="FONT_(function).html" title="FONT (function)">_FONT</a></span> [(<i>image_handle</i>)]</code> <div style="float: right;"><span style="font-family: Courier New, Courier, monospace;color:#B0B0B0;font-size: 0.80em;line-height: 120%;">&#8594; Returns the font handle for the current image or a specified one.</span></div></li></ul>
+<ul><li><code><i>character_height_in_pixels</i> = <span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="FONTHEIGHT.html" title="FONTHEIGHT">_FONTHEIGHT</a></span> [(<i>font_handle</i>)]</code> <div style="float: right;"><span style="font-family: Courier New, Courier, monospace;color:#B0B0B0;font-size: 0.80em;line-height: 120%;">&#8594; Returns the height of a font defined by font_handle.</span></div></li></ul>
+<ul><li><code><i>character_width_in_pixels</i> = <span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="FONTWIDTH.html" title="FONTWIDTH">_FONTWIDTH</a></span> [(<i>font_handle</i>)]</code> <div style="float: right;"><span style="font-family: Courier New, Courier, monospace;color:#B0B0B0;font-size: 0.80em;line-height: 120%;">&#8594; Returns the width of a font defined by font_handle.</span></div></li></ul>
+<ul><li><code><span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="FREEFONT.html" title="FREEFONT">_FREEFONT</a></span> <i>font_handle</i></code> <div style="float: right;"><span style="font-family: Courier New, Courier, monospace;color:#B0B0B0;font-size: 0.80em;line-height: 120%;">&#8594; Closes the font defined by font_handle.</span></div></li></ul>
+<ul><li><code><span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="FREEIMAGE.html" title="FREEIMAGE">_FREEIMAGE</a></span> [<i>handle</i>]</code> <div style="float: right;"><span style="font-family: Courier New, Courier, monospace;color:#B0B0B0;font-size: 0.80em;line-height: 120%;">&#8594; Closes the image defined by handle.</span></div></li></ul>
+<ul><li><code><i>timerhandle</i> = <span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="FREETIMER.html" title="FREETIMER">_FREETIMER</a></span></code> <div style="float: right;"><span style="font-family: Courier New, Courier, monospace;color:#B0B0B0;font-size: 0.80em;line-height: 120%;">&#8594; Returns the handle of the next free timer.</span></div></li></ul>
+<ul><li><code><i>full</i> = <span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="FULLSCREEN_(function).html" title="FULLSCREEN (function)">_FULLSCREEN</a></span></code> <div style="float: right;"><span style="font-family: Courier New, Courier, monospace;color:#B0B0B0;font-size: 0.80em;line-height: 120%;">&#8594; Returns the current fullscreen mode.</span></div></li></ul>
+<ul><li><code><span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="FULLSCREEN.html" title="FULLSCREEN">_FULLSCREEN</a></span> [{<i>_OFF</i>|<i>_STRETCH</i>|<i>_SQUAREPIXELS</i>}]</code> <div style="float: right;"><span style="font-family: Courier New, Courier, monospace;color:#B0B0B0;font-size: 0.80em;line-height: 120%;">&#8594; Set fullscreen mode.</span></div></li></ul>
+<p><br />
+</p>
+<h2><span class="mw-headline" id="G"><div id="G">_G</div></span></h2>
+<ul><li><code><span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="GET_(TCP/IP_statement).html" title="GET (TCP/IP statement)">GET</a></span> <i>#handle</i>, ,<i>b$</i></code> <div style="float: right;"><span style="font-family: Courier New, Courier, monospace;color:#B0B0B0;font-size: 0.80em;line-height: 120%;">&#8594; In QB64 gets a raw (unformatted) string from a open TCP/IP connection handle.</span></div>
+<ul><li><code><span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="GET_(TCP/IP_statement).html" title="GET (TCP/IP statement)">GET</a></span> <i>#handle</i>, ,<i>x%</i></code> <div style="float: right;"><span style="font-family: Courier New, Courier, monospace;color:#B0B0B0;font-size: 0.80em;line-height: 120%;">&#8594; In QB64 gets a raw (unformatted) integer from a open TCP/IP connection handle.</span></div></li></ul></li></ul>
+<ul><li><code><i>green</i> = <span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="GREEN.html" title="GREEN">_GREEN</a></span>(<i>palette_index/32_bit_color</i>[, <i>image_handle</i>])</code> <div style="float: right;"><span style="font-family: Courier New, Courier, monospace;color:#B0B0B0;font-size: 0.80em;line-height: 120%;">&#8594; Returns the green component of the color specified.</span></div></li></ul>
+<ul><li><code><i>green_intensity%</i> = <span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="GREEN32.html" title="GREEN32">_GREEN32</a></span>(<i>color32value</i>)</code> <div style="float: right;"><span style="font-family: Courier New, Courier, monospace;color:#B0B0B0;font-size: 0.80em;line-height: 120%;">&#8594; Returns the green component of the color specified.</span></div></li></ul>
+<p><br />
+</p>
+<h2><span class="mw-headline" id="H"><div id="H">_H</div></span></h2>
+<ul><li><code><i>height&amp;</i> = <span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="HEIGHT.html" title="HEIGHT">_HEIGHT</a></span>(<i>i&amp;</i>)</code> <div style="float: right;"><span style="font-family: Courier New, Courier, monospace;color:#B0B0B0;font-size: 0.80em;line-height: 120%;">&#8594; Returns the height of image i&amp;.</span></div></li></ul>
+<ul><li><code>SHELL <span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="HIDE.html" title="HIDE">_HIDE</a></span> <i>StringCommandLine$</i></code> <div style="float: right;"><span style="font-family: Courier New, Courier, monospace;color:#B0B0B0;font-size: 0.80em;line-height: 120%;">&#8594; Used to hide the SHELLed program.</span></div></li></ul>
+<p><br />
+</p>
+<h2><span class="mw-headline" id="I"><div id="I">_I</div></span></h2>
+<ul><li><code><span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="ICON.html" title="ICON">_ICON</a></span> <i>handle</i></code> <div style="float: right;"><span style="font-family: Courier New, Courier, monospace;color:#B0B0B0;font-size: 0.80em;line-height: 120%;">&#8594; Sets the program icon to the image defined by handle.</span></div></li>
+<li><code>...AS [_UNSIGNED] <span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="INTEGER64.html" title="INTEGER64">_INTEGER64</a></span></code> <div style="float: right;"><span style="font-family: Courier New, Courier, monospace;color:#B0B0B0;font-size: 0.80em;line-height: 120%;">&#8594; Defines a variable or array to use 64-bit integers.</span></div></li></ul>
+<p><br />
+</p>
+<h2><span class="mw-headline" id="L"><div id="L">_L</div></span></h2>
+<ul><li><code><i>button_count%</i> = <span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="LASTBUTTON.html" title="LASTBUTTON">_LASTBUTTON</a></span>(<i>device_number</i>)</code> <div style="float: right;"><span style="font-family: Courier New, Courier, monospace;color:#B0B0B0;font-size: 0.80em;line-height: 120%;">&#8594; Returns the number of buttons of the specified device. _DEVICES must have been called first.</span></div></li></ul>
+<ul><li><code><span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="LIMIT.html" title="LIMIT">_LIMIT</a></span> (<i>FramesPerSecond%</i>)</code> <div style="float: right;"><span style="font-family: Courier New, Courier, monospace;color:#B0B0B0;font-size: 0.80em;line-height: 120%;">&#8594; Limits the framerate of a loop.</span></div></li></ul>
+<ul><li><code><i>font_handle</i> = <span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="LOADFONT.html" title="LOADFONT">_LOADFONT</a></span>(<i>ttf_filename$</i>, <i>height</i> [,"BOLD,ITALIC,UNDERLINE,DONTBLEND,MONOSPACE"])</code> <div style="float: right;"><span style="font-family: Courier New, Courier, monospace;color:#B0B0B0;font-size: 0.80em;line-height: 120%;">&#8594; Loads a font and returns the handle to it.</span></div></li></ul>
+<ul><li><code><i>handle&amp;</i> = <span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="LOADIMAGE.html" title="LOADIMAGE">_LOADIMAGE</a></span>&amp; (<i>filename$</i>[, <i>mode</i>])</code> <div style="float: right;"><span style="font-family: Courier New, Courier, monospace;color:#B0B0B0;font-size: 0.80em;line-height: 120%;">&#8594; Loads a image and returns the handle to it.</span></div></li></ul>
+<p><br />
+</p>
+<h2><span class="mw-headline" id="M"><div id="M">_M</div></span></h2>
+<ul><li><code><span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="MAPTRIANGLE.html" title="MAPTRIANGLE">_MAPTRIANGLE</a></span> <i>(sx1, sy1)-(sx2, sy2)-(sx3, sy3), source&amp;,</i> <span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="TO.html" title="TO">TO</a></span> <i>(dx1, dy1)-(dx2, dy2)-(dx3, dy3)[, destination&amp;]</i></code></li></ul>
+<ul><li><code><span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="MAPUNICODE.html" title="MAPUNICODE">_MAPUNICODE</a></span> <i>Unicode&amp;</i> <span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="TO.html" title="TO">TO</a></span> <i>ascii_code%</i></code></li></ul>
+<ul><li><code><i>UTFvalue&amp;</i> = <span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="MAPUNICODE.html" title="MAPUNICODE">_MAPUNICODE</a></span>(<i>Ascii_code%</i>)</code></li></ul>
+<ul><li><code>_SCREENMOVE {<i>column&amp;</i>, <i>row&amp;</i>|<span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="SCREENMOVE.html" title="SCREENMOVE">_MIDDLE</a></span>}</code> <div style="float: right;"><span style="font-family: Courier New, Courier, monospace;color:#B0B0B0;font-size: 0.80em;line-height: 120%;">&#8594; Used to move the window to the center of the screen.</span></div></li></ul>
+<ul><li><code><i>stringvalue$</i> = <span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="MK%24.html" title="MK$">_MK$</a></span>(<i>numericaltype</i>, <i>numbervalue</i>)</code></li></ul>
+<ul><li><code><i>buttontriggered</i> = <span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="MOUSEBUTTON.html" title="MOUSEBUTTON">_MOUSEBUTTON</a></span> (<i>Button%</i>)</code> <div style="float: right;"><span style="font-family: Courier New, Courier, monospace;color:#B0B0B0;font-size: 0.80em;line-height: 120%;">&#8594; Returns -1 if the mouse button is triggered.</span></div></li></ul>
+<ul><li><code><span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="MOUSEHIDE.html" title="MOUSEHIDE">_MOUSEHIDE</a></span></code> <div style="float: right;"><span style="font-family: Courier New, Courier, monospace;color:#B0B0B0;font-size: 0.80em;line-height: 120%;">&#8594; Hides the mouse.</span></div></li></ul>
+<ul><li><code><i>newmouseinput</i> = <span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="MOUSEINPUT.html" title="MOUSEINPUT">_MOUSEINPUT</a></span></code> <div style="float: right;"><span style="font-family: Courier New, Courier, monospace;color:#B0B0B0;font-size: 0.80em;line-height: 120%;">&#8594; Returns -1 if there are new input from the mouse.</span></div></li></ul>
+<ul><li><span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="MOUSEMOVE.html" title="MOUSEMOVE">_MOUSEMOVE</a></span> <i>x</i>, <i>y</i>  <div style="float: right;"><span style="font-family: Courier New, Courier, monospace;color:#B0B0B0;font-size: 0.80em;line-height: 120%;">&#8594; Moves the mouse pointer to a designated position.</span></div></li></ul>
+<ul><li><code><i>xmovement</i> = <span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="MOUSEMOVEMENTX.html" title="MOUSEMOVEMENTX">_MOUSEMOVEMENTX</a></span></code> <div style="float: right;"><span style="font-family: Courier New, Courier, monospace;color:#B0B0B0;font-size: 0.80em;line-height: 120%;">&#8594; Returns the number of pixels in the x direction that the mouse has moved since the latest call. Also hides the mouse.</span></div></li></ul>
+<ul><li><code><i>ymovement</i> = <span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="MOUSEMOVEMENTY.html" title="MOUSEMOVEMENTY">_MOUSEMOVEMENTY</a></span></code> <div style="float: right;"><span style="font-family: Courier New, Courier, monospace;color:#B0B0B0;font-size: 0.80em;line-height: 120%;">&#8594; Returns the number of pixels in the y direction that the mouse has moved since the latest call. Also hides the mouse.</span></div></li></ul>
+<ul><li><code><span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="MOUSESHOW.html" title="MOUSESHOW">_MOUSESHOW</a></span></code> <div style="float: right;"><span style="font-family: Courier New, Courier, monospace;color:#B0B0B0;font-size: 0.80em;line-height: 120%;">&#8594; Shows the mouse.</span></div></li></ul>
+<ul><li><code><i>scroll%</i> = <span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="MOUSEWHEEL.html" title="MOUSEWHEEL">_MOUSEWHEEL</a></span></code> <div style="float: right;"><span style="font-family: Courier New, Courier, monospace;color:#B0B0B0;font-size: 0.80em;line-height: 120%;">&#8594; Returns the number of wheel turns of the mouse.</span></div></li></ul>
+<ul><li><code><i>xposmouse</i> = <span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="MOUSEX.html" title="MOUSEX">_MOUSEX</a></span></code> <div style="float: right;"><span style="font-family: Courier New, Courier, monospace;color:#B0B0B0;font-size: 0.80em;line-height: 120%;">&#8594; Returns the x position of the mouse.</span></div></li></ul>
+<ul><li><code><i>yposmouse</i> = <span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="MOUSEY.html" title="MOUSEY">_MOUSEY</a></span></code> <div style="float: right;"><span style="font-family: Courier New, Courier, monospace;color:#B0B0B0;font-size: 0.80em;line-height: 120%;">&#8594; Returns the y position of the mouse.</span></div></li></ul>
+<p><br />
+</p>
+<h2><span class="mw-headline" id="N"><div id="N">_N</div></span></h2>
+<ul><li><code><i>handle&amp;</i> = <span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="NEWIMAGE.html" title="NEWIMAGE">_NEWIMAGE</a></span>&amp; (<i>width</i>, <i>height</i>[, <i>BPPmode</i>])</code> <div style="float: right;"><span style="font-family: Courier New, Courier, monospace;color:#B0B0B0;font-size: 0.80em;line-height: 120%;">&#8594; Creates and gives the handle to a new image.</span></div></li></ul>
+<ul><li><code>_CLEARCOLOR <span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="CLEARCOLOR.html" title="CLEARCOLOR">_NONE</a></span>[, <i>imageHandle&amp;</i>]</code> <div style="float: right;"><span style="font-family: Courier New, Courier, monospace;color:#B0B0B0;font-size: 0.80em;line-height: 120%;">&#8594; Used to specify that there should be no clearcolor (transparent color) on the image.</span></div></li></ul>
+<p><br />
+</p>
+<h2><span class="mw-headline" id="O"><div id="O">_O</div></span></h2>
+<ul><li><code>...<i>variable</i> AS <span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="OFFSET.html" title="OFFSET">_OFFSET</a></span></code> <div style="float: right;"><span style="font-family: Courier New, Courier, monospace;color:#B0B0B0;font-size: 0.80em;line-height: 120%;">&#8594; Defines a variable to be of the type _OFFSET which is used to hold a pointer to memory.</span></div></li></ul>
+<ul><li><code><i>offset%&amp;</i> = <span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="OFFSET_(function).html" title="OFFSET (function)">_OFFSET</a></span>(<i>variable</i>)</code> <div style="float: right;"><span style="font-family: Courier New, Courier, monospace;color:#B0B0B0;font-size: 0.80em;line-height: 120%;">&#8594; Returns the memory offset that is used to hold the variable.</span></div></li></ul>
+<ul><li><code><i>client_handle</i> = <span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="OPENCLIENT.html" title="OPENCLIENT">_OPENCLIENT</a></span>(<i>stringargument</i>)</code></li></ul>
+<ul><li><code><i>connect_handle</i> = <span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="OPENCONNECTION.html" title="OPENCONNECTION">_OPENCONNECTION</a></span>(<i>host_handle</i>)</code></li></ul>
+<ul><li><code><i>host_handle</i> = <span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="OPENHOST.html" title="OPENHOST">_OPENHOST</a></span>(<i>stringargument</i>)</code></li></ul>
+<ul><li><code><i>osinfo$</i> = <span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="OS%24.html" title="OS$">_OS$</a></span></code> <div style="float: right;"><span style="font-family: Courier New, Courier, monospace;color:#B0B0B0;font-size: 0.80em;line-height: 120%;">&#8594; Returns a string representing the Operating System and if it is 32 or 64 bit.</span></div></li></ul>
+<p><br />
+</p>
+<h2><span class="mw-headline" id="P"><div id="P">_P</div></span></h2>
+<ul><li><code><span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="PALETTECOLOR.html" title="PALETTECOLOR">_PALETTECOLOR</a></span> <i>index%</i>, <i>colour&amp;</i>[, <i>imageHandle&amp;</i>]</code> <div style="float: right;"><span style="font-family: Courier New, Courier, monospace;color:#B0B0B0;font-size: 0.80em;line-height: 120%;">&#8594; Set the color of a palette index in a 8-bit (or less) image.</span></div></li></ul>
+<ul><li><code><i>color32value&amp;</i> = <span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="PALETTECOLOR_(function).html" title="PALETTECOLOR (function)">_PALETTECOLOR</a></span>(<i>attribute_number&amp;</i>, <i>handle&amp;</i>)</code></li></ul>
+<ul><li><code><i>BytesPerPixel&amp;</i> = <span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="PIXELSIZE.html" title="PIXELSIZE">_PIXELSIZE</a></span> (<i>imagehandle&amp;</i>)</code> <div style="float: right;"><span style="font-family: Courier New, Courier, monospace;color:#B0B0B0;font-size: 0.80em;line-height: 120%;">&#8594; Returns the number of bytes a pixel takes up in a certain image.</span></div></li></ul>
+<ul><li><code>REDIM <span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="PRESERVE.html" title="PRESERVE">_PRESERVE</a></span> <i>Array(newelements%)</i></code><div style="float: right;"><span style="font-family: Courier New, Courier, monospace;color:#B0B0B0;font-size: 0.80em;line-height: 120%;">&#8594; Optional argument to REDIM used to preserve the contents of an array while re-dimensioning.</span></div></li></ul>
+<ul><li><code><span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="PRINTIMAGE.html" title="PRINTIMAGE">_PRINTIMAGE</a></span> <i>imagehandle</i></code> <div style="float: right;"><span style="font-family: Courier New, Courier, monospace;color:#B0B0B0;font-size: 0.80em;line-height: 120%;">&#8594; Sends the image to the printer, stretching it to full paper size first</span></div></li></ul>
+<ul><li><code><span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="PRINTMODE.html" title="PRINTMODE">_PRINTMODE</a></span> <i>mode</i>[, <i>image_handle</i>]</code></li></ul>
+<ul><li><code><i>status%</i> = <span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="PRINTMODE.html" title="PRINTMODE">_PRINTMODE</a></span> [(<i>image_handle</i>)]</code></li></ul>
+<ul><li><code><span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="PRINTSTRING.html" title="PRINTSTRING">_PRINTSTRING</a></span> (<i>column</i>, <i>row</i>), <i>text_to_print$</i>[, <i>image_handle&amp;</i>]</code> <div style="float: right;"><span style="font-family: Courier New, Courier, monospace;color:#B0B0B0;font-size: 0.80em;line-height: 120%;">&#8594; Prints text to the screen.</span></div></li></ul>
+<ul><li><code><i>pixel_width</i> = <span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="PRINTWIDTH.html" title="PRINTWIDTH">_PRINTWIDTH</a></span>(<i>text_to_print$</i>[, <i>image_handle&amp;</i>])</code></li></ul>
+<ul><li><code><span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="PUT_(TCP/IP_statement).html" title="PUT (TCP/IP statement)">PUT</a></span> <i>#handle</i>, , <i>data</i></code> <div style="float: right;"><span style="font-family: Courier New, Courier, monospace;color:#B0B0B0;font-size: 0.80em;line-height: 120%;">&#8594; In QB64; Transmits raw data to a open TCP/IP connection handle.</span></div></li></ul>
+<ul><li><code><span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="PUTIMAGE.html" title="PUTIMAGE">_PUTIMAGE</a></span> [(<i>destx</i>, <i>desty</i>)][-(<i>destx2</i>, <i>desty2</i>)], [<i>srchandle</i>], [<i>desthandle</i>][,(<i>srcx</i>, <i>srcy</i>)][-(<i>srcx2</i>, <i>srcy2</i>)]</code> <div style="float: right;"><span style="font-family: Courier New, Courier, monospace;color:#B0B0B0;font-size: 0.80em;line-height: 120%;">&#8594; Puts an area of one image onto an area of another.</span></div></li></ul>
+<p><br />
+</p>
+<h2><span class="mw-headline" id="R"><div id="R">_R</div></span></h2>
+<ul><li><code><i>red</i> = <span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="RED.html" title="RED">_RED</a></span>(<i>palette_index/32_bit_color</i>[, <i>image_handle</i>])</code> <div style="float: right;"><span style="font-family: Courier New, Courier, monospace;color:#B0B0B0;font-size: 0.80em;line-height: 120%;">&#8594; Returns the red component of the color specified.</span></div></li></ul>
+<ul><li><code><i>red_intensity%</i> = <span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="RED32.html" title="RED32">_RED32</a></span>(<i>color32value</i>)</code> <div style="float: right;"><span style="font-family: Courier New, Courier, monospace;color:#B0B0B0;font-size: 0.80em;line-height: 120%;">&#8594; Returns the red component of the color specified.</span></div></li></ul>
+<ul><li><code><i>colorindex</i> = <span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="RGB.html" title="RGB">_RGB</a></span>(<i>red</i>, <i>green</i>, <i>blue</i>[, <i>image_handle</i>])</code> <div style="float: right;"><span style="font-family: Courier New, Courier, monospace;color:#B0B0B0;font-size: 0.80em;line-height: 120%;">&#8594; Returns the color index for a mix of Red, Green and Blue components.</span></div></li></ul>
+<ul><li><code><i>color32</i> = <span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="RGB32.html" title="RGB32">_RGB32</a></span>(<i>red</i>, <i>green</i>, <i>blue</i>)</code> <div style="float: right;"><span style="font-family: Courier New, Courier, monospace;color:#B0B0B0;font-size: 0.80em;line-height: 120%;">&#8594; Returns the 32-bit color value for a mix of Red, Green and Blue components.</span></div></li></ul>
+<ul><li><code><i>colorindex</i> = <span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="RGBA.html" title="RGBA">_RGBA</a></span>(<i>red</i>, <i>green</i>, <i>blue</i>, <i>alpha</i>[, <i>image_handle</i>])</code> <div style="float: right;"><span style="font-family: Courier New, Courier, monospace;color:#B0B0B0;font-size: 0.80em;line-height: 120%;">&#8594; Returns the color index for a mix of Red, Green, Blue and alpha components.</span></div></li></ul>
+<ul><li><code><i>color32</i> = <span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="RGBA32.html" title="RGBA32">_RGBA32</a></span>(<i>red</i>, <i>green</i>, <i>blue</i>, <i>alpha</i>)</code> <div style="float: right;"><span style="font-family: Courier New, Courier, monospace;color:#B0B0B0;font-size: 0.80em;line-height: 120%;">&#8594; Returns the 32-bit color value for a mix of Red, Green, Blue and alpha components.</span></div></li></ul>
+<ul><li><code><i>roundedvalue</i> = <span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="ROUND.html" title="ROUND">_ROUND</a></span>(<i>value</i>)</code> <div style="float: right;"><span style="font-family: Courier New, Courier, monospace;color:#B0B0B0;font-size: 0.80em;line-height: 120%;">&#8594; Rounds to the nearest integer with preference for even numbers, 1.5 and 2.5 rounds to 2</span></div></li></ul>
+<p><br />
+</p>
+<h2><span class="mw-headline" id="S"><div id="S">_S</div></span></h2>
+<ul><li><code><span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="SCREENCLICK.html" title="SCREENCLICK">_SCREENCLICK</a></span> <i>x%</i>, <i>y%</i></code> <div style="float: right;"><span style="font-family: Courier New, Courier, monospace;color:#B0B0B0;font-size: 0.80em;line-height: 120%;">&#8594; Simulates clicking on the screen at the specified location.</span></div></li></ul>
+<ul><li><code><i>handle&amp;</i> = <span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="SCREENIMAGE.html" title="SCREENIMAGE">_SCREENIMAGE</a></span></code> <div style="float: right;"><span style="font-family: Courier New, Courier, monospace;color:#B0B0B0;font-size: 0.80em;line-height: 120%;">&#8594; Takes a snapshot of the screen and gives the image to it.</span></div></li></ul>
+<ul><li><code><span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="SCREENMOVE.html" title="SCREENMOVE">_SCREENMOVE</a></span> {<i>x&amp;</i>, <i>y&amp;</i>|<i>_MIDDLE</i>}</code> <div style="float: right;"><span style="font-family: Courier New, Courier, monospace;color:#B0B0B0;font-size: 0.80em;line-height: 120%;">&#8594; Moves the window to the specified location.</span></div></li></ul>
+<ul><li><code><span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="SCREENPRINT.html" title="SCREENPRINT">_SCREENPRINT</a></span> <i>text$</i></code> <div style="float: right;"><span style="font-family: Courier New, Courier, monospace;color:#B0B0B0;font-size: 0.80em;line-height: 120%;">&#8594; Simulates typing on the keyboard.</span></div></li></ul>
+<ul><li><code><i>xpos</i> = <span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="SCREENX.html" title="SCREENX">_SCREENX</a></span></code> <div style="float: right;"><span style="font-family: Courier New, Courier, monospace;color:#B0B0B0;font-size: 0.80em;line-height: 120%;">&#8594; Returns the current x position of the window.</span></div></li></ul>
+<ul><li><code><i>ypos</i> = <span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="SCREENY.html" title="SCREENY">_SCREENY</a></span></code> <div style="float: right;"><span style="font-family: Courier New, Courier, monospace;color:#B0B0B0;font-size: 0.80em;line-height: 120%;">&#8594; Returns the current y position of the window.</span></div></li></ul>
+<ul><li><code><span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="SETALPHA.html" title="SETALPHA">_SETALPHA</a></span> <i>alpha&amp;</i>, [<i>c&amp;</i> [TO <i>c2&amp;</i>]] [, <i>imageHandle&amp;</i>]</code></li></ul>
+<ul><li><code><span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="SNDBAL.html" title="SNDBAL">_SNDBAL</a></span> <i>handle&amp;</i>[, <i>x!</i>][, <i>y!</i>][, <i>z!</i>]</code></li></ul>
+<ul><li><code><span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="SNDCLOSE.html" title="SNDCLOSE">_SNDCLOSE</a></span> <i>handle&amp;</i></code> <div style="float: right;"><span style="font-family: Courier New, Courier, monospace;color:#B0B0B0;font-size: 0.80em;line-height: 120%;">&#8594; Closes the sound specified by the handle</span></div></li></ul>
+<ul><li><code><i>new_handle&amp;</i> = <span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="SNDCOPY.html" title="SNDCOPY">_SNDCOPY</a></span>&amp; (<i>handle&amp;</i>)</code> <div style="float: right;"><span style="font-family: Courier New, Courier, monospace;color:#B0B0B0;font-size: 0.80em;line-height: 120%;">&#8594; Copies the sound and gives the handle to the copy.</span></div></li></ul>
+<ul><li><code><i>seconds</i> = <span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="SNDGETPOS.html" title="SNDGETPOS">_SNDGETPOS</a></span>!(<i>handle&amp;</i>)</code> <div style="float: right;"><span style="font-family: Courier New, Courier, monospace;color:#B0B0B0;font-size: 0.80em;line-height: 120%;">&#8594; Get play position in seconds of the sound specified</span></div></li></ul>
+<ul><li><code><i>lenseconds</i> = <span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="SNDLEN.html" title="SNDLEN">_SNDLEN</a></span>! (<i>handle&amp;</i>)</code> <div style="float: right;"><span style="font-family: Courier New, Courier, monospace;color:#B0B0B0;font-size: 0.80em;line-height: 120%;">&#8594; Get the length in seconds of the sound specified</span></div></li></ul>
+<ul><li><code><span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="SNDLIMIT.html" title="SNDLIMIT">_SNDLIMIT</a></span> <i>handle&amp;</i>, <i>limit!</i></code></li></ul>
+<ul><li><code><span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="SNDLOOP.html" title="SNDLOOP">_SNDLOOP</a></span> <i>handle&amp;</i></code></li></ul>
+<ul><li><code><i>sound_handle&amp;</i> = <span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="SNDOPEN.html" title="SNDOPEN">_SNDOPEN</a></span> (<i>filename$</i>, [<i>capabilities$</i>])</code> <div style="float: right;"><span style="font-family: Courier New, Courier, monospace;color:#B0B0B0;font-size: 0.80em;line-height: 120%;">&#8594; Open and load a sound into memory, the handle to the sound is returned.</span></div></li></ul>
+<ul><li><code><span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="SNDPAUSE.html" title="SNDPAUSE">_SNDPAUSE</a></span> <i>handle&amp;</i></code> <div style="float: right;"><span style="font-family: Courier New, Courier, monospace;color:#B0B0B0;font-size: 0.80em;line-height: 120%;">&#8594; Pause the sound specified.</span></div></li></ul>
+<ul><li><code><i>paused%</i> = <span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="SNDPAUSED.html" title="SNDPAUSED">_SNDPAUSED</a></span> (<i>handle&amp;</i>)</code> <div style="float: right;"><span style="font-family: Courier New, Courier, monospace;color:#B0B0B0;font-size: 0.80em;line-height: 120%;">&#8594; Returns -1 if specified sound is paused, otherwise returns 0.</span></div></li></ul>
+<ul><li><code><span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="SNDPLAY.html" title="SNDPLAY">_SNDPLAY</a></span> <i>handle&amp;</i></code> <div style="float: right;"><span style="font-family: Courier New, Courier, monospace;color:#B0B0B0;font-size: 0.80em;line-height: 120%;">&#8594; Start playing the sound specified.</span></div></li></ul>
+<ul><li><code><span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="SNDPLAYCOPY.html" title="SNDPLAYCOPY">_SNDPLAYCOPY</a></span> <i>handle&amp;</i>[, <i>volume!</i>]</code></li></ul>
+<ul><li><code><span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="SNDPLAYFILE.html" title="SNDPLAYFILE">_SNDPLAYFILE</a></span> <i>filename$</i>[, <i>sync%</i>][, <i>volume!</i>]</code></li></ul>
+<ul><li><code><i>playing%</i> = <span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="SNDPLAYING.html" title="SNDPLAYING">_SNDPLAYING</a></span>% (<i>handle&amp;</i>)</code> <div style="float: right;"><span style="font-family: Courier New, Courier, monospace;color:#B0B0B0;font-size: 0.80em;line-height: 120%;">&#8594; Returns -1 if sound is playing, otherwise returns 0.</span></div></li></ul>
+<ul><li><code><i>rate</i> = <span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="SNDRATE.html" title="SNDRATE">_SNDRATE</a></span></code> <div style="float: right;"><span style="font-family: Courier New, Courier, monospace;color:#B0B0B0;font-size: 0.80em;line-height: 120%;">&#8594; Returns the sample frequency.</span></div></li></ul>
+<ul><li><code><span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="SNDRAW.html" title="SNDRAW">_SNDRAW</a></span> <i>leftsample&amp;</i> [<i>rightsample&amp;</i>]</code> <div style="float: right;"><span style="font-family: Courier New, Courier, monospace;color:#B0B0B0;font-size: 0.80em;line-height: 120%;">&#8594; Turns the speaker membrane in or out -1 to 1 (1 being fully out).</span></div></li></ul>
+<ul><li><code><i>length#</i> = <span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="SNDRAWLEN.html" title="SNDRAWLEN">_SNDRAWLEN</a></span></code> <div style="float: right;"><span style="font-family: Courier New, Courier, monospace;color:#B0B0B0;font-size: 0.80em;line-height: 120%;">&#8594; Returns the length in seconds of the sample.</span></div></li></ul>
+<ul><li><code><span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="SNDSETPOS.html" title="SNDSETPOS">_SNDSETPOS</a></span> <i>handle&amp;</i>, <i>position!</i></code> <div style="float: right;"><span style="font-family: Courier New, Courier, monospace;color:#B0B0B0;font-size: 0.80em;line-height: 120%;">&#8594; Set the position in seconds of the sound specified.</span></div></li></ul>
+<ul><li><code><span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="SNDSTOP.html" title="SNDSTOP">_SNDSTOP</a></span> <i>handle&amp;</i></code> <div style="float: right;"><span style="font-family: Courier New, Courier, monospace;color:#B0B0B0;font-size: 0.80em;line-height: 120%;">&#8594; Stop the sound specified.</span></div></li></ul>
+<ul><li><code><span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="SNDVOL.html" title="SNDVOL">_SNDVOL</a></span> <i>handle&amp;</i>, <i>volume</i></code> <div style="float: right;"><span style="font-family: Courier New, Courier, monospace;color:#B0B0B0;font-size: 0.80em;line-height: 120%;">&#8594; Set the volume of the sound specified.</span></div></li></ul>
+<ul><li><code><span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="SOURCE.html" title="SOURCE">_SOURCE</a></span> handle&amp; </code> <div style="float: right;"><span style="font-family: Courier New, Courier, monospace;color:#B0B0B0;font-size: 0.80em;line-height: 120%;">&#8594; Sets the source image that information is retrieved from.</span></div></li></ul>
+<ul><li><code><i>present_source&amp;</i> = <span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="SOURCE_(function).html" title="SOURCE (function)">_SOURCE</a></span></code> <div style="float: right;"><span style="font-family: Courier New, Courier, monospace;color:#B0B0B0;font-size: 0.80em;line-height: 120%;">&#8594; Returns the handle of the current source image.</span></div></li></ul>
+<p><br />
+</p>
+<h2><span class="mw-headline" id="T"><div id="T">_T</div></span></h2>
+<ul><li><code><i>t</i> = <span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="TIMER.html" title="TIMER">TIMER</a></span>(<i>accuracy</i>)</code> <div style="float: right;"><span style="font-family: Courier New, Courier, monospace;color:#B0B0B0;font-size: 0.80em;line-height: 120%;">&#8594; Returns the current timer value with a chosen accuracy (can be down to .001, which is millisecond accuracy).</span></div></li></ul>
+<ul><li><code><span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="TITLE.html" title="TITLE">_TITLE</a></span> <i>Text$</i></code> <div style="float: right;"><span style="font-family: Courier New, Courier, monospace;color:#B0B0B0;font-size: 0.80em;line-height: 120%;">&#8594; Sets the title of the program window.</span></div></li></ul>
+<p><br />
+</p>
+<h2><span class="mw-headline" id="U"><div id="U">_U</div></span></h2>
+<ul><li><code>...AS [<span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="UNSIGNED.html" title="UNSIGNED">_UNSIGNED</a></span>] datatype</code> <div style="float: right;"><span style="font-family: Courier New, Courier, monospace;color:#B0B0B0;font-size: 0.80em;line-height: 120%;">&#8594; _UNSIGNED makes the datatype always positive, increases the maximum value of the datatype.</span></div></li></ul>
+<p><br />
+</p>
+<h2><span class="mw-headline" id="W"><div id="W">_W</div></span></h2>
+<ul><li><code><i>ImageWidth&amp;</i> = <span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="WIDTH_(QB64).html" class="mw-redirect" title="WIDTH (QB64)">_WIDTH</a></span>(<i>i&amp;</i>)</code> <div style="float: right;"><span style="font-family: Courier New, Courier, monospace;color:#B0B0B0;font-size: 0.80em;line-height: 120%;">&#8594; Returns the width of a image defined by i&amp;.</span></div></li></ul>
+<p><br />
+</p>
+<hr />
+<center><i>Navigation:</i>
+<dl><dd><a href="Keyword_Reference_-_Alphabetical.html" title="Keyword Reference - Alphabetical">Keyword Reference - Alphabetical</a></dd>
+<dd><a href="Keyword_Reference_-_By_usage.html" title="Keyword Reference - By usage">Keyword Reference - By Usage</a></dd>
+<dd><a href="Main_Page.html" title="Main Page">Main Wiki Page</a></dd></dl></center>
+<!-- 
+NewPP limit report
+Cached time: 20210707074542
+Cache expiry: 86400
+Dynamic content: false
+Complications: []
+CPU time usage: 0.259 seconds
+Real time usage: 0.342 seconds
+Preprocessor visited node count: 3621/1000000
+Post‐expand include size: 41004/2097152 bytes
+Template argument size: 11411/2097152 bytes
+Highest expansion depth: 3/40
+Expensive parser function count: 0/100
+Unstrip recursion depth: 0/20
+Unstrip post‐expand size: 0/5000000 bytes
+-->
+<!--
+Transclusion expansion time report (%,ms,calls,template)
+100.00%  129.596      1 -total
+ 24.37%   31.577    241 Template:Parameter
+ 14.21%   18.414    134 Template:KW
+  9.41%   12.194    109 Template:Discrete
+  2.81%    3.637      1 Template:PageNavigation
+-->
+
+<!-- Saved in parser cache with key i4224360_mw2-mw_:pcache:idhash:696-0!canonical and timestamp 20210707074541 and revision id 22731
+ -->
+</div></div><div class="printfooter">Retrieved from "<a dir="ltr" href="index1c92.html?title=Syntax_Reference_-_QB64&amp;oldid=22731">http://www.qb64.org/wiki/index.php?title=Syntax_Reference_-_QB64&amp;oldid=22731</a>"</div>
+		<div id="catlinks" class="catlinks catlinks-allhidden" data-mw="interface"></div>
+	</div>
+</div>
+
+<div id="mw-navigation">
+	<h2>Navigation menu</h2>
+	<div id="mw-head">
+		<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-personal" class="vector-menu" aria-labelledby="p-personal-label" role="navigation" 
+	 >
+	<h3 id="p-personal-label">
+		<span>Personal tools</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="pt-login"><a href="index04f5.html?title=Special:UserLogin&amp;returnto=Syntax+Reference+-+QB64" title="You are encouraged to log in; however, it is not mandatory [o]" accesskey="o">Log in</a></li></ul>
+		
+	</div>
+</nav>
+
+
+		<div id="left-navigation">
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-namespaces" class="vector-menu vector-menu-tabs vectorTabs" aria-labelledby="p-namespaces-label" role="navigation" 
+	 >
+	<h3 id="p-namespaces-label">
+		<span>Namespaces</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="ca-nstab-main" class="selected"><a href="Syntax_Reference_-_QB64.html" title="View the content page [c]" accesskey="c">Page</a></li><li id="ca-talk" class="new"><a href="Talk_Syntax_Reference_-_QB64.html?title=Talk:Syntax_Reference_-_QB64&amp;action=edit&amp;redlink=1" rel="discussion" title="Discussion about the content page (page does not exist) [t]" accesskey="t">Discussion</a></li></ul>
+		
+	</div>
+</nav>
+
+
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-variants" class="vector-menu-empty emptyPortlet vector-menu vector-menu-dropdown vectorMenu" aria-labelledby="p-variants-label" role="navigation" 
+	 >
+	<input type="checkbox" class="vector-menu-checkbox vectorMenuCheckbox" aria-labelledby="p-variants-label" />
+	<h3 id="p-variants-label">
+		<span>Variants</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="menu vector-menu-content-list"></ul>
+		
+	</div>
+</nav>
+
+
+		</div>
+		<div id="right-navigation">
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-views" class="vector-menu vector-menu-tabs vectorTabs" aria-labelledby="p-views-label" role="navigation" 
+	 >
+	<h3 id="p-views-label">
+		<span>Views</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="ca-view" class="collapsible selected"><a href="Syntax_Reference_-_QB64.html">Read</a></li><li id="ca-viewsource" class="collapsible"><a href="index72d7.html?title=Syntax_Reference_-_QB64&amp;action=edit" title="This page is protected.&#10;You can view its source [e]" accesskey="e">View source</a></li><li id="ca-history" class="collapsible"><a href="index283c.html?title=Syntax_Reference_-_QB64&amp;action=history" title="Past revisions of this page [h]" accesskey="h">View history</a></li></ul>
+		
+	</div>
+</nav>
+
+
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-cactions" class="vector-menu-empty emptyPortlet vector-menu vector-menu-dropdown vectorMenu" aria-labelledby="p-cactions-label" role="navigation" 
+	 >
+	<input type="checkbox" class="vector-menu-checkbox vectorMenuCheckbox" aria-labelledby="p-cactions-label" />
+	<h3 id="p-cactions-label">
+		<span>More</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="menu vector-menu-content-list"></ul>
+		
+	</div>
+</nav>
+
+
+			<div id="p-search" role="search">
+	<h3 >
+		<label for="searchInput">Search</label>
+	</h3>
+	<form action="https://www.qb64.org/wiki/index.php" id="searchform">
+		<div id="simpleSearch">
+			<input type="search" name="search" placeholder="Search QB64 Wiki" title="Search QB64 Wiki [f]" accesskey="f" id="searchInput"/>
+			<input type="hidden" name="title" value="Special:Search">
+			<input type="submit" name="fulltext" value="Search" title="Search the pages for this text" id="mw-searchButton" class="searchButton mw-fallbackSearchButton"/>
+			<input type="submit" name="go" value="Go" title="Go to a page with this exact name if it exists" id="searchButton" class="searchButton"/>
+		</div>
+	</form>
+</div>
+
+		</div>
+	</div>
+	
+<div id="mw-panel">
+	<div id="p-logo" role="banner">
+		<a  title="Visit the main page" class="mw-wiki-logo" href="Main_Page.html"></a>
+	</div>
+	<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-navigation" class="vector-menu vector-menu-portal portal portal-first" aria-labelledby="p-navigation-label" role="navigation" 
+	 >
+	<h3 id="p-navigation-label">
+		<span>Navigation</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="n-mainpage-description"><a href="Main_Page.html" title="Visit the main page [z]" accesskey="z">Main page</a></li><li id="n-recentchanges"><a href="Special_RecentChanges.html" title="A list of recent changes in the wiki [r]" accesskey="r">Recent changes</a></li><li id="n-randompage"><a href="SNDCOPY.html" title="Load a random page [x]" accesskey="x">Random page</a></li><li id="n-help-mediawiki"><a href="https://www.mediawiki.org/wiki/Special:MyLanguage/Help:Contents">Help about MediaWiki</a></li></ul>
+		
+	</div>
+</nav>
+
+
+	<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-tb" class="vector-menu vector-menu-portal portal" aria-labelledby="p-tb-label" role="navigation" 
+	 >
+	<h3 id="p-tb-label">
+		<span>Tools</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="t-whatlinkshere"><a href="Special_WhatLinksHere/Syntax_Reference_-_QB64.html" title="A list of all wiki pages that link here [j]" accesskey="j">What links here</a></li><li id="t-recentchangeslinked"><a href="Special_RecentChangesLinked/Syntax_Reference_-_QB64.html" rel="nofollow" title="Recent changes in pages linked from this page [k]" accesskey="k">Related changes</a></li><li id="t-specialpages"><a href="Special_SpecialPages.html" title="A list of all special pages [q]" accesskey="q">Special pages</a></li><li id="t-print"><a href="javascript:print();" rel="alternate" title="Printable version of this page [p]" accesskey="p">Printable version</a></li><li id="t-permalink"><a href="index1c92.html?title=Syntax_Reference_-_QB64&amp;oldid=22731" title="Permanent link to this revision of the page">Permanent link</a></li><li id="t-info"><a href="index8eba.html?title=Syntax_Reference_-_QB64&amp;action=info" title="More information about this page">Page information</a></li></ul>
+		
+	</div>
+</nav>
+
+
+	
+</div>
+
+</div>
+
+<footer id="footer" class="mw-footer" role="contentinfo" >
+	<ul id="footer-info" >
+		<li id="footer-info-lastmod"> This page was last edited on 20 April 2020, at 00:48.</li>
+	</ul>
+	<ul id="footer-places" >
+		<li id="footer-places-privacy"><a href="My_wiki_Privacy_policy.html" title="My wiki:Privacy policy">Privacy policy</a></li>
+		<li id="footer-places-about"><a href="My_wiki_About.html" title="My wiki:About">About QB64 Wiki</a></li>
+		<li id="footer-places-disclaimer"><a href="My_wiki_General_disclaimer.html" title="My wiki:General disclaimer">Disclaimers</a></li>
+	</ul>
+	<ul id="footer-icons" class="noprint">
+		<li id="footer-poweredbyico"><a href="https://www.mediawiki.org/"><img src="resources/assets/poweredby_mediawiki_88x31.png" alt="Powered by MediaWiki" srcset="/wiki/resources/assets/poweredby_mediawiki_132x47.png 1.5x, /wiki/resources/assets/poweredby_mediawiki_176x62.png 2x" width="88" height="31" loading="lazy"/></a></li>
+	</ul>
+	<div style="clear: both;"></div>
+</footer>
+
+
+
+<script>(RLQ=window.RLQ||[]).push(function(){mw.config.set({"wgPageParseReport":{"limitreport":{"cputime":"0.259","walltime":"0.342","ppvisitednodes":{"value":3621,"limit":1000000},"postexpandincludesize":{"value":41004,"limit":2097152},"templateargumentsize":{"value":11411,"limit":2097152},"expansiondepth":{"value":3,"limit":40},"expensivefunctioncount":{"value":0,"limit":100},"unstrip-depth":{"value":0,"limit":20},"unstrip-size":{"value":0,"limit":5000000},"timingprofile":["100.00%  129.596      1 -total"," 24.37%   31.577    241 Template:Parameter"," 14.21%   18.414    134 Template:KW","  9.41%   12.194    109 Template:Discrete","  2.81%    3.637      1 Template:PageNavigation"]},"cachereport":{"timestamp":"20210707074542","ttl":86400,"transientcontent":false}}});mw.config.set({"wgBackendResponseTime":1465});});</script></body>
+<!-- Mirrored from www.qb64.org/wiki/Syntax_Reference_-_QB64 by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 07 Aug 2021 12:41:08 GMT -->
+</html>

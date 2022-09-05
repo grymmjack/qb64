@@ -1,0 +1,368 @@
+
+<!DOCTYPE html>
+<html class="client-nojs" lang="en" dir="ltr">
+
+<!-- Mirrored from www.qb64.org/wiki/Images by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 07 Aug 2021 12:42:33 GMT -->
+<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=UTF-8" /><!-- /Added by HTTrack -->
+<head>
+<meta charset="UTF-8"/>
+<title>Images - QB64 Wiki</title>
+<script>document.documentElement.className="client-js";RLCONF={"wgBreakFrames":!1,"wgSeparatorTransformTable":["",""],"wgDigitTransformTable":["",""],"wgDefaultDateFormat":"dmy","wgMonthNames":["","January","February","March","April","May","June","July","August","September","October","November","December"],"wgRequestId":"YOWkT1pP-65vp3So6LultgAAANY","wgCSPNonce":!1,"wgCanonicalNamespace":"","wgCanonicalSpecialPageName":!1,"wgNamespaceNumber":0,"wgPageName":"Images","wgTitle":"Images","wgCurRevisionId":23225,"wgRevisionId":23225,"wgArticleId":346,"wgIsArticle":!0,"wgIsRedirect":!1,"wgAction":"view","wgUserName":null,"wgUserGroups":["*"],"wgCategories":[],"wgPageContentLanguage":"en","wgPageContentModel":"wikitext","wgRelevantPageName":"Images","wgRelevantArticleId":346,"wgIsProbablyEditable":!1,"wgRelevantPageIsProbablyEditable":!1,"wgRestrictionEdit":[],"wgRestrictionMove":[]};RLSTATE={"site.styles":"ready","noscript":"ready","user.styles":"ready","user":"ready",
+"user.options":"loading","skins.vector.styles.legacy":"ready","mediawiki.toc.styles":"ready"};RLPAGEMODULES=["site","mediawiki.page.startup","mediawiki.page.ready","mediawiki.toc","skins.vector.legacy.js"];</script>
+<script>(RLQ=window.RLQ||[]).push(function(){mw.loader.implement("user.options@1hzgi",function($,jQuery,require,module){/*@nomin*/mw.user.tokens.set({"patrolToken":"+\\","watchToken":"+\\","csrfToken":"+\\"});
+});});</script>
+<link rel="stylesheet" href="loadd8b0.css?lang=en&amp;modules=mediawiki.toc.styles%7Cskins.vector.styles.legacy&amp;only=styles&amp;skin=vector"/>
+<script async="" src="load52c0.php?lang=en&amp;modules=startup&amp;only=scripts&amp;raw=1&amp;skin=vector"></script>
+<meta name="generator" content="MediaWiki 1.35.2"/>
+<link rel="shortcut icon" href="https://www.qb64.org/favicon.ico"/>
+<link rel="search" type="application/opensearchdescription+xml" href="opensearch_desc.php" title="QB64 Wiki (en)"/>
+<link rel="EditURI" type="application/rsd+xml" href="api-result251f.xml?action=rsd"/>
+<link rel="alternate" type="application/atom+xml" title="QB64 Wiki Atom feed" href="feeda295.xml?title=Special:RecentChanges&amp;feed=atom"/>
+<!--[if lt IE 9]><script src="/wiki/resources/lib/html5shiv/html5shiv.js"></script><![endif]-->
+</head>
+<body class="mediawiki ltr sitedir-ltr mw-hide-empty-elt ns-0 ns-subject page-Images rootpage-Images skin-vector action-view skin-vector-legacy">
+<div id="mw-page-base" class="noprint"></div>
+<div id="mw-head-base" class="noprint"></div>
+<div id="content" class="mw-body" role="main">
+	<a id="top"></a>
+	<div id="siteNotice" class="mw-body-content"></div>
+	<div class="mw-indicators mw-body-content">
+	</div>
+	<h1 id="firstHeading" class="firstHeading" lang="en">Images</h1>
+	<div id="bodyContent" class="mw-body-content">
+		<div id="siteSub" class="noprint">From QB64 Wiki</div>
+		<div id="contentSub"></div>
+		<div id="contentSub2"></div>
+		
+		<div id="jump-to-nav"></div>
+		<a class="mw-jump-link" href="#mw-head">Jump to navigation</a>
+		<a class="mw-jump-link" href="#searchInput">Jump to search</a>
+		<div id="mw-content-text" lang="en" dir="ltr" class="mw-content-ltr"><div class="mw-parser-output"><p>Images are areas of graphics stored in memory, the most common image is the program screen itself, where graphics are displayed. This image is designated as image handle 0 or <a href="DEST.html" title="DEST">_DEST</a> 0. QB64 refers to the image memory by using negative <a href="LONG.html" title="LONG">LONG</a> handle values. Those values can then be referred to using other functions such as <a href="WIDTH.html" title="WIDTH">_WIDTH</a> and <a href="HEIGHT.html" title="HEIGHT">_HEIGHT</a> to find the image properties. Statements like <a href="SCREEN.html" title="SCREEN">SCREEN</a> or <a href="PUTIMAGE.html" title="PUTIMAGE">_PUTIMAGE</a> can use the image handle to display the image when necessary. QBasic functions like <a href="POINT.html" title="POINT">POINT</a> can read the colors, even 32 bit <a href="ALPHA.html" title="ALPHA">_ALPHA</a> colors.
+</p><p><br />
+Images are called by other names in other programming languages or in different situations, examples of other names can be "surfaces", "pages" or "layers".
+</p>
+<div id="toc" class="toc" role="navigation" aria-labelledby="mw-toc-heading"><input type="checkbox" role="button" id="toctogglecheckbox" class="toctogglecheckbox" style="display:none" /><div class="toctitle" lang="en" dir="ltr"><h2 id="mw-toc-heading">Contents</h2><span class="toctogglespan"><label class="toctogglelabel" for="toctogglecheckbox"></label></span></div>
+<ul>
+<li class="toclevel-1 tocsection-1"><a href="#QB64_Images"><span class="tocnumber">1</span> <span class="toctext">QB64 Images</span></a></li>
+<li class="toclevel-1 tocsection-2"><a href="#PUTIMAGE"><span class="tocnumber">2</span> <span class="toctext">_PUTIMAGE</span></a></li>
+<li class="toclevel-1 tocsection-3"><a href="#ALPHA"><span class="tocnumber">3</span> <span class="toctext">_ALPHA</span></a></li>
+<li class="toclevel-1"><a href="#Syntax"><span class="tocnumber">4</span> <span class="toctext">Syntax</span></a></li>
+<li class="toclevel-1 tocsection-4"><a href="#Image_file_types"><span class="tocnumber">5</span> <span class="toctext">Image file types</span></a></li>
+<li class="toclevel-1 tocsection-5"><a href="#QB64_statements_and_functions"><span class="tocnumber">6</span> <span class="toctext">QB64 statements and functions</span></a></li>
+</ul>
+</div>
+
+<h2><span class="mw-headline" id="QB64_Images">QB64 Images</span></h2>
+<p>You can create a program screen image by using the <a href="NEWIMAGE.html" title="NEWIMAGE">_NEWIMAGE</a> function. _NEWIMAGE returns a handle for you to use as a reference to that image. The handle is a negative number below -1 where -1 indicates a failure to load an image.
+</p><p><br />
+For the image handle parameter in a statement you can also use any positive number and this handle will not need to be defined by <a href="NEWIMAGE.html" title="NEWIMAGE">_NEWIMAGE</a> or anything else. In this case the image referred to is the screen page of that value. This is why image handle 0 refers to the screen, specifically screen page 0.
+</p><p>You can also load an image from a file using the <a href="LOADIMAGE.html" title="LOADIMAGE">_LOADIMAGE</a> function (click the link for further information), or retrieve the handle to a copy of a image by using the <a href="COPYIMAGE.html" title="COPYIMAGE">_COPYIMAGE</a> function.
+</p><p><br />
+All images except for the screen are hidden from view unless drawn onto the screen, this enables you to draw multiple things on an image and then display all of it at once, enabling smooth animation (amongst many other things), you can also put multiple images ontop of one image and then display that image to the screen to enable all sorts of effects, like parallax scrolling and objects moving in front of as well as behind each other.
+</p><p><br />
+</p>
+<p style="text-align: center">(<a href="#toc">Return to Table of Contents</a>)</p>
+<h2><span class="mw-headline" id="PUTIMAGE">_PUTIMAGE</span></h2>
+<p>To set which image you want to draw graphics on, use <a href="DEST.html" title="DEST">_DEST</a>, all drawing will now go to the desired image instead of the screen (to enable drawing to the screen set _DEST 0), if you want to retrieve information about a image you use <a href="SOURCE.html" title="SOURCE">_SOURCE</a> instead, as when you want to know the color a pixel has at a certain coordinate you would use <a href="SOURCE.html" title="SOURCE">_SOURCE</a> along with <a href="POINT.html" title="POINT">POINT</a> (see the <a href="SOURCE.html" title="SOURCE">_SOURCE</a> example for more information about this). If you have drawn graphics on one image you can display it to the screen using <a href="PUTIMAGE.html" title="PUTIMAGE">_PUTIMAGE</a>, like this;
+</p><p><br />
+_PUTIMAGE imagehandle, 0 
+</p><p><br />
+Where imagehandle is the handle you have drawn, or if you don't know the image handle you can use <a href="DEST_(function).html" title="DEST (function)">_DEST</a> as a function like this;
+</p><p><br /> 
+_PUTIMAGE _DEST, 0
+</p><p><br />
+You could also use the <a href="SCREEN_(statement).html" title="SCREEN (statement)">SCREEN</a> statement to display the image to the screen like this;
+</p><p><br />
+SCREEN imagehandle
+</p><p><br />
+or;
+</p><p><br />
+SCREEN _DEST
+</p><p><br />
+Just be careful so that <a href="DEST.html" title="DEST">_DEST</a> is indeed a negative number other than -1.
+</p><p><br />
+</p>
+<p style="text-align: center">(<a href="#toc">Return to Table of Contents</a>)</p>
+<h2><span class="mw-headline" id="ALPHA">_ALPHA</span></h2>
+<p>If you want a color to be transparent you would use the <a href="CLEARCOLOR.html" title="CLEARCOLOR">_CLEARCOLOR</a> statement, the _CLEARCOLOR statement also has a optional argument as to which image you want the color to be transparent on, if this argument is set then the color will only be transparent on that particular image. If you want the color to be solid again you would use _NONE as the color argument (see <a href="CLEARCOLOR.html" title="CLEARCOLOR">_CLEARCOLOR</a> statement for further details).
+</p><p><br />
+The <a href="SETALPHA.html" title="SETALPHA">_SETALPHA</a> statement also enables transparency (_CLEARCOLOR just sets the transparency level to full (which is 0) on images that have an alpha channel), to enable partial transparency you need a 32-bit image which has an alpha channel (a PNG image may already contain alpha information), the alpha level is between <b>0</b> (transparent) and <b>255</b> (opaque). If you have a 32-bit image but don't want to alpha blend it you have to turn it off using <a href="DONTBLEND.html" title="DONTBLEND">_DONTBLEND</a>. To turn it on again you can use the <a href="BLEND.html" title="BLEND">_BLEND</a> statement (which is on by default).
+</p><p><br />
+To put an image on top of another image you would use <a href="PUTIMAGE.html" title="PUTIMAGE">_PUTIMAGE</a>, if you want to put/stretch the whole image on top of another you would just omit the range arguments and if you only want to put part of the image on top of another image you would use the range arguments as necessary. Keep in mind that _PUTIMAGE will stretch the image to fit the destination range. If the coordinates are inverted then the image will be inverted accordingly (enables flipping).
+</p><p><br />
+The <span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="ALPHA.html" title="ALPHA">_ALPHA</a></span> function returns the alpha channel level of a color value.
+</p><p><br />
+</p>
+<h2><span class="mw-headline" id="Syntax">Syntax</span></h2>
+<dl><dd><code><i>result&amp;</i> = <span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="ALPHA.html" title="ALPHA">_ALPHA</a></span>(<i>c&amp;</i>[, <i>imageHandle&amp;</i>])</code></dd></dl>
+<p><br />
+<a href="RED32.html" title="RED32">_RED32</a>, <a href="GREEN32.html" title="GREEN32">_GREEN32</a>, <a href="BLUE32.html" title="BLUE32">_BLUE32</a> and <a href="ALPHA32.html" title="ALPHA32">_ALPHA32</a> are all equivalent to <a href="RED.html" title="RED">_RED</a>, <a href="GREEN.html" title="GREEN">_GREEN</a>, <a href="BLUE.html" title="BLUE">_BLUE</a> and <a href="ALPHA.html" title="ALPHA">_ALPHA</a> but they are highly optimized and only accept a 32-bit color (B8:G8:R8:A8). Using these in your code (as appose to dividing then ANDing 32-bit color values manually) makes your code easy to read too.
+</p><p><br />
+</p>
+<p style="text-align: center">(<a href="#toc">Return to Table of Contents</a>)</p>
+<h2><span class="mw-headline" id="Image_file_types">Image file types</span></h2>
+<ul><li><a href="Bitmaps.html" title="Bitmaps">Bitmaps</a></li>
+<li><a href="Creating_Icon_Bitmaps.html" title="Creating Icon Bitmaps">Creating Icon Bitmaps</a></li>
+<li><a href="Icons_and_Cursors.html" title="Icons and Cursors">Icons and Cursors</a></li>
+<li><a href="GIF_Images.html" title="GIF Images">GIF Images</a></li>
+<li><a href="Creating_Icons_from_Bitmaps.html" title="Creating Icons from Bitmaps">Creating Icons from Bitmaps</a></li>
+<li><a href="SaveIcon32.html" title="SaveIcon32">SaveIcon32</a> <span style="color:gray">(convert any image to icon)</span></li>
+<li><a href="SAVEIMAGE.html" title="SAVEIMAGE">SAVEIMAGE</a> <span style="color:gray">(convert any image to bitmap)</span></li>
+<li><a href="Text_Using_Graphics.html" title="Text Using Graphics">Text Using Graphics</a></li>
+<li><a href="%24EXEICON.html" title="$EXEICON">$EXEICON</a></li></ul>
+<p><br />
+</p>
+<p style="text-align: center">(<a href="#toc">Return to Table of Contents</a>)</p>
+<h2><span class="mw-headline" id="QB64_statements_and_functions">QB64 statements and functions</span></h2>
+<ul><li><a href="ALPHA.html" title="ALPHA">_ALPHA</a> (function)</li>
+<li><a href="ALPHA32.html" title="ALPHA32">_ALPHA32</a> (function)</li>
+<li><a href="BACKGROUNDCOLOR.html" title="BACKGROUNDCOLOR">_BACKGROUNDCOLOR</a> (function)</li>
+<li><a href="BLEND.html" title="BLEND">_BLEND</a> (sub)</li>
+<li><a href="BLEND_(function).html" title="BLEND (function)">_BLEND (function)</a></li>
+<li><a href="BLUE.html" title="BLUE">_BLUE</a> (function)</li>
+<li><a href="BLUE32.html" title="BLUE32">_BLUE32</a> (function)</li>
+<li><a href="CLEARCOLOR.html" title="CLEARCOLOR">_CLEARCOLOR</a> (sub)</li>
+<li><a href="CLEARCOLOR_(function).html" title="CLEARCOLOR (function)">_CLEARCOLOR (function)</a></li>
+<li><a href="COPYIMAGE.html" title="COPYIMAGE">_COPYIMAGE</a> (function)</li>
+<li><a href="COPYPALETTE.html" title="COPYPALETTE">_COPYPALETTE</a> (sub)</li>
+<li><a href="DEFAULTCOLOR.html" title="DEFAULTCOLOR">_DEFAULTCOLOR</a> (function)</li>
+<li><a href="DEST.html" title="DEST">_DEST</a> (sub)</li>
+<li><a href="DEST_(function).html" title="DEST (function)">_DEST (function)</a></li>
+<li><a href="DISPLAY_(function).html" title="DISPLAY (function)">_DISPLAY (function)</a></li>
+<li><a href="DONTBLEND.html" title="DONTBLEND">_DONTBLEND</a> (sub)</li>
+<li><a href="FONT.html" title="FONT">_FONT</a> (sub)</li>
+<li><a href="FONT_(function).html" title="FONT (function)">_FONT (function)</a></li>
+<li><a href="FONTHEIGHT_(function).html" class="mw-redirect" title="FONTHEIGHT (function)">_FONTHEIGHT (function)</a></li>
+<li><a href="FONTWIDTH_(function).html" title="FONTWIDTH (function)">_FONTWIDTH (function)</a></li>
+<li><a href="FREEFONT.html" title="FREEFONT">_FREEFONT</a> (sub)</li>
+<li><a href="FREEIMAGE.html" title="FREEIMAGE">_FREEIMAGE</a> (sub)</li>
+<li><a href="GREEN.html" title="GREEN">_GREEN</a> (function)</li>
+<li><a href="GREEN32.html" title="GREEN32">_GREEN32</a> (function)</li>
+<li><a href="HEIGHT.html" title="HEIGHT">_HEIGHT</a> (function)</li>
+<li><a href="ICON.html" title="ICON">_ICON</a></li>
+<li><a href="LOADFONT.html" title="LOADFONT">_LOADFONT</a> (function)</li>
+<li><a href="LOADIMAGE.html" title="LOADIMAGE">_LOADIMAGE</a> (function) <span style="color:gray">(cannot use Icons)</span></li>
+<li><a href="NEWIMAGE.html" title="NEWIMAGE">_NEWIMAGE</a> (function)</li>
+<li><a href="PALETTECOLOR.html" title="PALETTECOLOR">_PALETTECOLOR</a> (sub)</li>
+<li><a href="PALETTECOLOR_(function).html" title="PALETTECOLOR (function)">_PALETTECOLOR (function)</a></li>
+<li><a href="PIXELSIZE.html" title="PIXELSIZE">_PIXELSIZE</a> (function)</li>
+<li><a href="PRINTIMAGE.html" title="PRINTIMAGE">_PRINTIMAGE</a> (sub) <span style="color:gray">(printer)</span></li>
+<li><a href="PRINTMODE.html" title="PRINTMODE">_PRINTMODE</a> (sub)</li>
+<li><a href="PRINTMODE_(function).html" title="PRINTMODE (function)">_PRINTMODE (function)</a></li>
+<li><a href="PRINTSTRING.html" title="PRINTSTRING">_PRINTSTRING</a> (sub)</li>
+<li><a href="PRINTWIDTH.html" title="PRINTWIDTH">_PRINTWIDTH</a> (sub)</li>
+<li><a href="PUTIMAGE.html" title="PUTIMAGE">_PUTIMAGE</a> (sub)</li>
+<li><a href="RED.html" title="RED">_RED</a> (function)</li>
+<li><a href="RED32.html" title="RED32">_RED32</a> (function)</li>
+<li><a href="RGB.html" title="RGB">_RGB</a> (function)</li>
+<li><a href="RGB32.html" title="RGB32">_RGB32</a> (function)</li>
+<li><a href="RGBA.html" title="RGBA">_RGBA</a> (function)</li>
+<li><a href="RGBA32.html" title="RGBA32">_RGBA32</a> (function)</li>
+<li><a href="SCREEN.html" title="SCREEN">SCREEN</a> (sub)</li>
+<li><a href="SCREENIMAGE.html" title="SCREENIMAGE">_SCREENIMAGE</a> (function) <span style="color:gray">(desktop)</span></li>
+<li><a href="SETALPHA.html" title="SETALPHA">_SETALPHA</a> (sub)</li>
+<li><a href="SOURCE.html" title="SOURCE">_SOURCE</a> (sub)</li>
+<li><a href="SOURCE_(function).html" title="SOURCE (function)">_SOURCE (function)</a></li>
+<li><a href="WIDTH.html" title="WIDTH">_WIDTH</a> (function)</li></ul>
+<p><br />
+</p>
+<p style="text-align: center">(<a href="#toc">Return to Table of Contents</a>)</p>
+<p><br />
+</p>
+<hr />
+<center><i>Navigation:</i>
+<dl><dd><a href="Keyword_Reference_-_Alphabetical.html" title="Keyword Reference - Alphabetical">Keyword Reference - Alphabetical</a></dd>
+<dd><a href="Keyword_Reference_-_By_usage.html" title="Keyword Reference - By usage">Keyword Reference - By Usage</a></dd>
+<dd><a href="Main_Page.html" title="Main Page">Main Wiki Page</a></dd></dl></center>
+<!-- 
+NewPP limit report
+Cached time: 20210706164325
+Cache expiry: 86400
+Dynamic content: false
+Complications: []
+CPU time usage: 0.066 seconds
+Real time usage: 0.081 seconds
+Preprocessor visited node count: 139/1000000
+Post‐expand include size: 732/2097152 bytes
+Template argument size: 130/2097152 bytes
+Highest expansion depth: 3/40
+Expensive parser function count: 0/100
+Unstrip recursion depth: 0/20
+Unstrip post‐expand size: 0/5000000 bytes
+-->
+<!--
+Transclusion expansion time report (%,ms,calls,template)
+100.00%   20.084      1 -total
+ 23.94%    4.809      2 Template:KW
+ 19.41%    3.898      1 Template:PageSyntax
+ 18.97%    3.809      2 Template:Parameter
+ 17.28%    3.471      5 Template:Text
+ 15.81%    3.175      1 Template:PageNavigation
+-->
+
+<!-- Saved in parser cache with key i4224360_mw2-mw_:pcache:idhash:346-0!canonical and timestamp 20210706164325 and revision id 23225
+ -->
+</div></div><div class="printfooter">Retrieved from "<a dir="ltr" href="index27f6.html?title=Images&amp;oldid=23225">http://www.qb64.org/wiki/index.php?title=Images&amp;oldid=23225</a>"</div>
+		<div id="catlinks" class="catlinks catlinks-allhidden" data-mw="interface"></div>
+	</div>
+</div>
+
+<div id="mw-navigation">
+	<h2>Navigation menu</h2>
+	<div id="mw-head">
+		<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-personal" class="vector-menu" aria-labelledby="p-personal-label" role="navigation" 
+	 >
+	<h3 id="p-personal-label">
+		<span>Personal tools</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="pt-login"><a href="index7cea.html?title=Special:UserLogin&amp;returnto=Images" title="You are encouraged to log in; however, it is not mandatory [o]" accesskey="o">Log in</a></li></ul>
+		
+	</div>
+</nav>
+
+
+		<div id="left-navigation">
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-namespaces" class="vector-menu vector-menu-tabs vectorTabs" aria-labelledby="p-namespaces-label" role="navigation" 
+	 >
+	<h3 id="p-namespaces-label">
+		<span>Namespaces</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="ca-nstab-main" class="selected"><a href="Images.html" title="View the content page [c]" accesskey="c">Page</a></li><li id="ca-talk" class="new"><a href="Talk_Images.html?title=Talk:Images&amp;action=edit&amp;redlink=1" rel="discussion" title="Discussion about the content page (page does not exist) [t]" accesskey="t">Discussion</a></li></ul>
+		
+	</div>
+</nav>
+
+
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-variants" class="vector-menu-empty emptyPortlet vector-menu vector-menu-dropdown vectorMenu" aria-labelledby="p-variants-label" role="navigation" 
+	 >
+	<input type="checkbox" class="vector-menu-checkbox vectorMenuCheckbox" aria-labelledby="p-variants-label" />
+	<h3 id="p-variants-label">
+		<span>Variants</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="menu vector-menu-content-list"></ul>
+		
+	</div>
+</nav>
+
+
+		</div>
+		<div id="right-navigation">
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-views" class="vector-menu vector-menu-tabs vectorTabs" aria-labelledby="p-views-label" role="navigation" 
+	 >
+	<h3 id="p-views-label">
+		<span>Views</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="ca-view" class="collapsible selected"><a href="Images.html">Read</a></li><li id="ca-viewsource" class="collapsible"><a href="index0bc9.html?title=Images&amp;action=edit" title="This page is protected.&#10;You can view its source [e]" accesskey="e">View source</a></li><li id="ca-history" class="collapsible"><a href="index474f.html?title=Images&amp;action=history" title="Past revisions of this page [h]" accesskey="h">View history</a></li></ul>
+		
+	</div>
+</nav>
+
+
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-cactions" class="vector-menu-empty emptyPortlet vector-menu vector-menu-dropdown vectorMenu" aria-labelledby="p-cactions-label" role="navigation" 
+	 >
+	<input type="checkbox" class="vector-menu-checkbox vectorMenuCheckbox" aria-labelledby="p-cactions-label" />
+	<h3 id="p-cactions-label">
+		<span>More</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="menu vector-menu-content-list"></ul>
+		
+	</div>
+</nav>
+
+
+			<div id="p-search" role="search">
+	<h3 >
+		<label for="searchInput">Search</label>
+	</h3>
+	<form action="https://www.qb64.org/wiki/index.php" id="searchform">
+		<div id="simpleSearch">
+			<input type="search" name="search" placeholder="Search QB64 Wiki" title="Search QB64 Wiki [f]" accesskey="f" id="searchInput"/>
+			<input type="hidden" name="title" value="Special:Search">
+			<input type="submit" name="fulltext" value="Search" title="Search the pages for this text" id="mw-searchButton" class="searchButton mw-fallbackSearchButton"/>
+			<input type="submit" name="go" value="Go" title="Go to a page with this exact name if it exists" id="searchButton" class="searchButton"/>
+		</div>
+	</form>
+</div>
+
+		</div>
+	</div>
+	
+<div id="mw-panel">
+	<div id="p-logo" role="banner">
+		<a  title="Visit the main page" class="mw-wiki-logo" href="Main_Page.html"></a>
+	</div>
+	<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-navigation" class="vector-menu vector-menu-portal portal portal-first" aria-labelledby="p-navigation-label" role="navigation" 
+	 >
+	<h3 id="p-navigation-label">
+		<span>Navigation</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="n-mainpage-description"><a href="Main_Page.html" title="Visit the main page [z]" accesskey="z">Main page</a></li><li id="n-recentchanges"><a href="Special_RecentChanges.html" title="A list of recent changes in the wiki [r]" accesskey="r">Recent changes</a></li><li id="n-randompage"><a href="SNDCOPY.html" title="Load a random page [x]" accesskey="x">Random page</a></li><li id="n-help-mediawiki"><a href="https://www.mediawiki.org/wiki/Special:MyLanguage/Help:Contents">Help about MediaWiki</a></li></ul>
+		
+	</div>
+</nav>
+
+
+	<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-tb" class="vector-menu vector-menu-portal portal" aria-labelledby="p-tb-label" role="navigation" 
+	 >
+	<h3 id="p-tb-label">
+		<span>Tools</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="t-whatlinkshere"><a href="Special_WhatLinksHere/Images.html" title="A list of all wiki pages that link here [j]" accesskey="j">What links here</a></li><li id="t-recentchangeslinked"><a href="Special_RecentChangesLinked/Images.html" rel="nofollow" title="Recent changes in pages linked from this page [k]" accesskey="k">Related changes</a></li><li id="t-specialpages"><a href="Special_SpecialPages.html" title="A list of all special pages [q]" accesskey="q">Special pages</a></li><li id="t-print"><a href="javascript:print();" rel="alternate" title="Printable version of this page [p]" accesskey="p">Printable version</a></li><li id="t-permalink"><a href="index27f6.html?title=Images&amp;oldid=23225" title="Permanent link to this revision of the page">Permanent link</a></li><li id="t-info"><a href="index7683.html?title=Images&amp;action=info" title="More information about this page">Page information</a></li></ul>
+		
+	</div>
+</nav>
+
+
+	
+</div>
+
+</div>
+
+<footer id="footer" class="mw-footer" role="contentinfo" >
+	<ul id="footer-info" >
+		<li id="footer-info-lastmod"> This page was last edited on 10 February 2021, at 13:09.</li>
+	</ul>
+	<ul id="footer-places" >
+		<li id="footer-places-privacy"><a href="My_wiki_Privacy_policy.html" title="My wiki:Privacy policy">Privacy policy</a></li>
+		<li id="footer-places-about"><a href="My_wiki_About.html" title="My wiki:About">About QB64 Wiki</a></li>
+		<li id="footer-places-disclaimer"><a href="My_wiki_General_disclaimer.html" title="My wiki:General disclaimer">Disclaimers</a></li>
+	</ul>
+	<ul id="footer-icons" class="noprint">
+		<li id="footer-poweredbyico"><a href="https://www.mediawiki.org/"><img src="resources/assets/poweredby_mediawiki_88x31.png" alt="Powered by MediaWiki" srcset="/wiki/resources/assets/poweredby_mediawiki_132x47.png 1.5x, /wiki/resources/assets/poweredby_mediawiki_176x62.png 2x" width="88" height="31" loading="lazy"/></a></li>
+	</ul>
+	<div style="clear: both;"></div>
+</footer>
+
+
+
+<script>(RLQ=window.RLQ||[]).push(function(){mw.config.set({"wgPageParseReport":{"limitreport":{"cputime":"0.066","walltime":"0.081","ppvisitednodes":{"value":139,"limit":1000000},"postexpandincludesize":{"value":732,"limit":2097152},"templateargumentsize":{"value":130,"limit":2097152},"expansiondepth":{"value":3,"limit":40},"expensivefunctioncount":{"value":0,"limit":100},"unstrip-depth":{"value":0,"limit":20},"unstrip-size":{"value":0,"limit":5000000},"timingprofile":["100.00%   20.084      1 -total"," 23.94%    4.809      2 Template:KW"," 19.41%    3.898      1 Template:PageSyntax"," 18.97%    3.809      2 Template:Parameter"," 17.28%    3.471      5 Template:Text"," 15.81%    3.175      1 Template:PageNavigation"]},"cachereport":{"timestamp":"20210706164325","ttl":86400,"transientcontent":false}}});mw.config.set({"wgBackendResponseTime":1114});});</script></body>
+<!-- Mirrored from www.qb64.org/wiki/Images by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 07 Aug 2021 12:42:41 GMT -->
+</html>

@@ -1,0 +1,394 @@
+
+<!DOCTYPE html>
+<html class="client-nojs" lang="en" dir="ltr">
+
+<!-- Mirrored from www.qb64.org/wiki/Relational_Operations by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 07 Aug 2021 12:43:46 GMT -->
+<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=UTF-8" /><!-- /Added by HTTrack -->
+<head>
+<meta charset="UTF-8"/>
+<title>Relational Operations - QB64 Wiki</title>
+<script>document.documentElement.className="client-js";RLCONF={"wgBreakFrames":!1,"wgSeparatorTransformTable":["",""],"wgDigitTransformTable":["",""],"wgDefaultDateFormat":"dmy","wgMonthNames":["","January","February","March","April","May","June","July","August","September","October","November","December"],"wgRequestId":"YOWkVVpP-65vp3So6LulzwAAANY","wgCSPNonce":!1,"wgCanonicalNamespace":"","wgCanonicalSpecialPageName":!1,"wgNamespaceNumber":0,"wgPageName":"Relational_Operations","wgTitle":"Relational Operations","wgCurRevisionId":17898,"wgRevisionId":17898,"wgArticleId":598,"wgIsArticle":!0,"wgIsRedirect":!1,"wgAction":"view","wgUserName":null,"wgUserGroups":["*"],"wgCategories":[],"wgPageContentLanguage":"en","wgPageContentModel":"wikitext","wgRelevantPageName":"Relational_Operations","wgRelevantArticleId":598,"wgIsProbablyEditable":!1,"wgRelevantPageIsProbablyEditable":!1,"wgRestrictionEdit":[],"wgRestrictionMove":[]};RLSTATE={"site.styles":"ready","noscript":"ready",
+"user.styles":"ready","user":"ready","user.options":"loading","skins.vector.styles.legacy":"ready"};RLPAGEMODULES=["site","mediawiki.page.startup","mediawiki.page.ready","skins.vector.legacy.js"];</script>
+<script>(RLQ=window.RLQ||[]).push(function(){mw.loader.implement("user.options@1hzgi",function($,jQuery,require,module){/*@nomin*/mw.user.tokens.set({"patrolToken":"+\\","watchToken":"+\\","csrfToken":"+\\"});
+});});</script>
+<link rel="stylesheet" href="load5c90.css?lang=en&amp;modules=skins.vector.styles.legacy&amp;only=styles&amp;skin=vector"/>
+<script async="" src="load52c0.php?lang=en&amp;modules=startup&amp;only=scripts&amp;raw=1&amp;skin=vector"></script>
+<meta name="generator" content="MediaWiki 1.35.2"/>
+<link rel="shortcut icon" href="https://www.qb64.org/favicon.ico"/>
+<link rel="search" type="application/opensearchdescription+xml" href="opensearch_desc.php" title="QB64 Wiki (en)"/>
+<link rel="EditURI" type="application/rsd+xml" href="api-result251f.xml?action=rsd"/>
+<link rel="alternate" type="application/atom+xml" title="QB64 Wiki Atom feed" href="feeda295.xml?title=Special:RecentChanges&amp;feed=atom"/>
+<!--[if lt IE 9]><script src="/wiki/resources/lib/html5shiv/html5shiv.js"></script><![endif]-->
+</head>
+<body class="mediawiki ltr sitedir-ltr mw-hide-empty-elt ns-0 ns-subject page-Relational_Operations rootpage-Relational_Operations skin-vector action-view skin-vector-legacy">
+<div id="mw-page-base" class="noprint"></div>
+<div id="mw-head-base" class="noprint"></div>
+<div id="content" class="mw-body" role="main">
+	<a id="top"></a>
+	<div id="siteNotice" class="mw-body-content"></div>
+	<div class="mw-indicators mw-body-content">
+	</div>
+	<h1 id="firstHeading" class="firstHeading" lang="en">Relational Operations</h1>
+	<div id="bodyContent" class="mw-body-content">
+		<div id="siteSub" class="noprint">From QB64 Wiki</div>
+		<div id="contentSub"></div>
+		<div id="contentSub2"></div>
+		
+		<div id="jump-to-nav"></div>
+		<a class="mw-jump-link" href="#mw-head">Jump to navigation</a>
+		<a class="mw-jump-link" href="#searchInput">Jump to search</a>
+		<div id="mw-content-text" lang="en" dir="ltr" class="mw-content-ltr"><div class="mw-parser-output"><p>QB64 supports several relational operations, which are binary operations that test numeric or string values and return an <a href="INTEGER.html" title="INTEGER">INTEGER</a> value representing a boolean <i>true</i> (<tt>-1</tt>) or <i>false</i> (<tt>0</tt>) result. These operations are primarily used in expressions where a condition is required, such as the <a href="IF...html" title="IF...THEN">IF...THEN</a> statement.
+</p>
+<h2><span class="mw-headline" id="List_of_relational_operations">List of relational operations</span></h2>
+<p>The following table describes the relational operations, where <tt>A</tt> is the left-hand side operand, and <tt>B</tt> is the right-hand side operand:
+</p><p><br />
+</p>
+<center>
+<dl><dd><table border="1" cellpadding="2">
+<tbody><tr>
+<th colspan="2"><a class="mw-selflink selflink">Relational Operations</a>
+</th></tr>
+<tr>
+<th>Operation</th>
+<th>Description
+</th></tr>
+<tr>
+<td align="center">a <a href="Equal.html" title="Equal">=</a> b</td>
+<td>Tests if a is equal to b.
+</td></tr>
+<tr>
+<td align="center">a <a href="Not_Equal.html" title="Not Equal">&lt;&gt;</a> b</td>
+<td>Tests if a is not equal to b; equivalent to (<a href="NOT.html" title="NOT">NOT</a> (a <a href="Equal.html" title="Equal">=</a> b)).
+</td></tr>
+<tr>
+<td align="center">a <a href="Less_Than.html" title="Less Than">&lt;</a> b</td>
+<td>Tests if a is less than b.
+</td></tr>
+<tr>
+<td align="center">a <a href="Greater_Than.html" title="Greater Than">&gt;</a> b</td>
+<td>Tests if a is greater than b.
+</td></tr>
+<tr>
+<td align="center">a <a href="Less_Than_Or_Equal.html" title="Less Than Or Equal">&lt;=</a> b</td>
+<td>Tests if a is less than or equal to b; equivalent to (<a href="NOT.html" title="NOT">NOT</a> (a <a href="Greater_Than.html" title="Greater Than">&gt;</a> b)).
+</td></tr>
+<tr>
+<td align="center">a <a href="Greater_Than_Or_Equal.html" title="Greater Than Or Equal">&gt;=</a> b</td>
+<td>Tests if a is greater than or equal to b; equivalent to (<a href="NOT.html" title="NOT">NOT</a> (a <a href="Less_Than.html" title="Less Than">&lt;</a> b)).
+</td></tr></tbody></table></dd></dl>
+</center>
+<p><br />
+</p>
+<center>True statements return -1 in <a href="Boolean.html" title="Boolean">Boolean</a> evaluations. False returns zero.
+</center>
+<h2><span class="mw-headline" id="Comparing_numerical_values_and_variables">Comparing numerical values and variables</span></h2>
+<p>For numeric operands, such as <a href="INTEGER.html" title="INTEGER">INTEGER</a> or <a href="DOUBLE.html" title="DOUBLE">DOUBLE</a> values, the relational operations behave as one would expect. For example, the expression (-3.4 <a href="Less_Than.html" title="Less Than">&lt;</a> 1.2) evaluates to <i>true</i>, and the expression (50 <a href="Equal.html" title="Equal">=</a> 100) evaluates to <i>false</i>.
+</p><p><i>Example:</i> When a user enters a value greater than or equal to 5, the boolean statement returns -1 . Zero is printed otherwise.
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: Courier, monospace; background-color: darkblue; color: lightgrey; word-wrap: break-word;"> <i> </i>
+<a href="INPUT.html" title="INPUT"><span style="color:#87cefa;">INPUT</span></a> "Enter a value from 1 to 10: ", number
+<a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> number &gt;= 5 <i> </i>
+</p>
+<h2><span class="mw-headline" id="Comparing_string_values_and_variables">Comparing string values and variables</span></h2>
+<p>For string operands, the <a href="Equal.html" title="Equal">=</a> and <a href="Not_Equal.html" title="Not Equal">&lt;&gt;</a> operators test, respectively, if the operands are of the same or differing length, and that each of the corresponding characters match or don't match. For example, the three expressions ("abc" <a href="Equal.html" title="Equal">=</a> "abc"), ("abc" <a href="Not_Equal.html" title="Not Equal">&lt;&gt;</a> "abd") and ("abc" <a href="Not_Equal.html" title="Not Equal">&lt;&gt;</a> "abcdef") all evaluate to <i>true</i>.
+</p><p>When two strings are compared, the left string sets the number of characters to evaluate when not checking for equality. The <a href="Less_Than.html" title="Less Than">&lt;</a> and <a href="Greater_Than.html" title="Greater Than">&gt;</a> operators find the first set of non-matching characters and test if the <a href="ASCII.html" title="ASCII">ASCII</a> code values of those characters are less than or greater than each other, respectively. <b>Equal strings MUST be of the same length with identical <a href="UCASE%24.html" title="UCASE$">cased</a> letters or <a href="ASCII.html" title="ASCII">ASCII</a> characters!</b>
+</p><p>If one string is identical to part of the other, <a href="Less_Than.html" title="Less Than">&lt;</a> returns <i>false</i> if the left-hand side string is shorter than the right-hand side string, while <a href="Greater_Than.html" title="Greater Than">&gt;</a> returns <i>true</i> if the left-hand side string is longer than the right-hand side string. For example, the expressions ("abc" <a href="Less_Than.html" title="Less Than">&lt;</a> "abd") and ("abcdef" <a href="Greater_Than.html" title="Greater Than">&gt;</a> "abc") both evaluate to <i>true</i>. Even <a href="SPACE%24.html" title="SPACE$">space</a> <a href="ASCII.html" title="ASCII">ASCII</a> character values are evaluated!
+</p><p><br />
+<i>Example:</i> Shows that the left hand string sets the number of characters to evaluate when using &gt; or &lt; and are not equal when longer.
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: Courier, monospace; background-color: darkblue; color: lightgrey; word-wrap: break-word;"> <i> </i>
+PRINT "abc" &lt; "abcd"
+PRINT "abc" = "abc"
+PRINT "abc" = "abcd"
+PRINT "abcd" &gt; "abc" <i> </i>
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: Courier; background-color: black; color: white;"> 0
+-1
+ 0
+-1
+</p>
+<h2><span class="mw-headline" id="Comparing_user-defined_type_variables">Comparing user-defined type variables</span></h2>
+<p>Variables of a <a href="TYPE.html" title="TYPE">user-defined type</a> (UDT) cannot be used as operands to the relational operators, but numeric or string type fields can be used as described above. For example:
+</p>
+<dl><dd><dl><dd>TYPE T
+<dl><dd>a AS INTEGER</dd></dl></dd>
+<dd>END TYPE</dd></dl></dd></dl>
+<dl><dd><dl><dd>TYPE U
+<dl><dd>b AS INTEGER</dd></dl></dd>
+<dd>END TYPE</dd></dl></dd></dl>
+<dl><dd><dl><dd>DIM x AS T&#160;: x.a = 10</dd>
+<dd>DIM y AS U&#160;: y.b = 20</dd></dl></dd></dl>
+<dl><dd><dl><dd>PRINT x &lt; y         ' &lt;- error: type mismatch</dd>
+<dd>PRINT x.a &lt; y.b     ' &lt;- outputs "-1"</dd></dl></dd></dl>
+<h2><span class="mw-headline" id="Boolean_values">Boolean values</span></h2>
+<p>The <a href="INTEGER.html" title="INTEGER">INTEGER</a> values for <i>true</i> and <i>false</i> are such that the bitwise Logical Operators, such as <a href="NOT.html" title="NOT">NOT</a>, <a href="AND.html" title="AND">AND</a> and <a href="OR.html" title="OR">OR</a> can be used to invert and combine test results. For example, the expression (<a href="NOT.html" title="NOT">NOT</a> (10 <a href="Greater_Than_Or_Equal.html" title="Greater Than Or Equal">&gt;=</a> 20)) evaluates to <i>true</i>, while the expression ((2 <a href="Less_Than.html" title="Less Than">&lt;</a> 1) <a href="AND.html" title="AND">AND</a> ("three" <a href="Equal.html" title="Equal">=</a> "four")) evaluates to <i>false</i>.
+</p><p><br />
+</p>
+<center>The results of the bitwise logical operations, where <i>A</i> and <i>B</i> are operands, and <i>T</i> and <i>F</i> indicate that a bit is set or not set:</center>
+<dl><dd><table border="1" cellpadding="2" align="center">
+
+<tbody><tr>
+<th colspan="2">Operands</th>
+<th colspan="6">Operations
+</th></tr>
+<tr>
+<td align="center">A</td>
+<td align="center">B</td>
+<td align="center"><tt><a href="NOT.html" title="NOT">NOT</a> B</tt></td>
+<td align="center"><tt>A <a href="AND.html" title="AND">AND</a> B</tt></td>
+<td align="center"><tt>A <a href="OR.html" title="OR">OR</a> B</tt></td>
+<td align="center"><tt>A <a href="XOR.html" class="mw-redirect" title="XOR">XOR</a> B</tt></td>
+<td align="center"><tt>A <a href="EQV.html" title="EQV">EQV</a> B</tt></td>
+<td align="center"><tt>A <a href="IMP.html" title="IMP">IMP</a> B</tt>
+</td></tr>
+<tr>
+<td align="center">T</td>
+<td align="center">T</td>
+<td align="center">F</td>
+<td align="center">T</td>
+<td align="center">T</td>
+<td align="center">F</td>
+<td align="center">T</td>
+<td align="center">T
+</td></tr>
+<tr>
+<td align="center">T</td>
+<td align="center">F</td>
+<td align="center">T</td>
+<td align="center">F</td>
+<td align="center">T</td>
+<td align="center">T</td>
+<td align="center">F</td>
+<td align="center">F
+</td></tr>
+<tr>
+<td align="center">F</td>
+<td align="center">T</td>
+<td align="center">F</td>
+<td align="center">F</td>
+<td align="center">T</td>
+<td align="center">T</td>
+<td align="center">F</td>
+<td align="center">T
+</td></tr>
+<tr>
+<td align="center">F</td>
+<td align="center">F</td>
+<td align="center">T</td>
+<td align="center">F</td>
+<td align="center">F</td>
+<td align="center">F</td>
+<td align="center">T</td>
+<td align="center">T
+</td></tr></tbody></table></dd></dl>
+<center><b><a class="mw-selflink selflink">Relational Operations</a> return negative one (-1, all bits set) and zero (0, no bits set) for <i>true</i> and <i>false</i>, respectively.</b></center>
+<center> This allows relational tests to be inverted and combined using the bitwise logical operations.<b></b></center>
+<p><br />
+</p>
+<h2><span class="mw-headline" id="See_also">See also</span></h2>
+<ul><li><a href="IF...html" title="IF...THEN">IF...THEN</a></li>
+<li><a href="DO...html" title="DO...LOOP">DO...LOOP</a>, <a href="WHILE...html" title="WHILE...WEND">WHILE...WEND</a></li>
+<li><a href="IS.html" class="mw-redirect" title="IS">CASE IS</a>, <a href="NOT.html" title="NOT">NOT</a></li>
+<li><a href="AND.html" title="AND">AND</a>, <a href="OR.html" title="OR">OR</a>, <a href="XOR.html" class="mw-redirect" title="XOR">XOR</a>, <a href="EQV.html" title="EQV">EQV</a>, <a href="IMP.html" title="IMP">IMP</a></li></ul>
+<p><br />
+</p>
+<hr />
+<center><i>Navigation:</i>
+<dl><dd><a href="Keyword_Reference_-_Alphabetical.html" title="Keyword Reference - Alphabetical">Keyword Reference - Alphabetical</a></dd>
+<dd><a href="Keyword_Reference_-_By_usage.html" title="Keyword Reference - By usage">Keyword Reference - By Usage</a></dd>
+<dd><a href="Main_Page.html" title="Main Page">Main Wiki Page</a></dd></dl></center>
+<!-- 
+NewPP limit report
+Cached time: 20210706171748
+Cache expiry: 86400
+Dynamic content: false
+Complications: []
+CPU time usage: 0.068 seconds
+Real time usage: 0.134 seconds
+Preprocessor visited node count: 104/1000000
+Post‐expand include size: 3203/2097152 bytes
+Template argument size: 20/2097152 bytes
+Highest expansion depth: 3/40
+Expensive parser function count: 0/100
+Unstrip recursion depth: 0/20
+Unstrip post‐expand size: 0/5000000 bytes
+-->
+<!--
+Transclusion expansion time report (%,ms,calls,template)
+100.00%   28.693      1 -total
+ 15.69%    4.503      1 Template:LogicalTruthTable
+ 15.41%    4.421      1 Template:RelationalOperationsTable
+ 11.36%    3.260      1 Template:PageNavigation
+ 11.23%    3.223      2 Template:Cl
+ 10.99%    3.153      2 Template:CodeStart
+ 10.65%    3.057      2 Template:CodeEnd
+ 10.51%    3.015      1 Template:OutputStart
+ 10.42%    2.990      1 Template:OutputEnd
+-->
+
+<!-- Saved in parser cache with key i4224360_mw2-mw_:pcache:idhash:598-0!canonical and timestamp 20210706171748 and revision id 17898
+ -->
+</div></div><div class="printfooter">Retrieved from "<a dir="ltr" href="indexb6b9.html?title=Relational_Operations&amp;oldid=17898">http://www.qb64.org/wiki/index.php?title=Relational_Operations&amp;oldid=17898</a>"</div>
+		<div id="catlinks" class="catlinks catlinks-allhidden" data-mw="interface"></div>
+	</div>
+</div>
+
+<div id="mw-navigation">
+	<h2>Navigation menu</h2>
+	<div id="mw-head">
+		<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-personal" class="vector-menu" aria-labelledby="p-personal-label" role="navigation" 
+	 >
+	<h3 id="p-personal-label">
+		<span>Personal tools</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="pt-login"><a href="indexd75c.html?title=Special:UserLogin&amp;returnto=Relational+Operations" title="You are encouraged to log in; however, it is not mandatory [o]" accesskey="o">Log in</a></li></ul>
+		
+	</div>
+</nav>
+
+
+		<div id="left-navigation">
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-namespaces" class="vector-menu vector-menu-tabs vectorTabs" aria-labelledby="p-namespaces-label" role="navigation" 
+	 >
+	<h3 id="p-namespaces-label">
+		<span>Namespaces</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="ca-nstab-main" class="selected"><a href="Relational_Operations.html" title="View the content page [c]" accesskey="c">Page</a></li><li id="ca-talk" class="new"><a href="Talk_Relational_Operations.html?title=Talk:Relational_Operations&amp;action=edit&amp;redlink=1" rel="discussion" title="Discussion about the content page (page does not exist) [t]" accesskey="t">Discussion</a></li></ul>
+		
+	</div>
+</nav>
+
+
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-variants" class="vector-menu-empty emptyPortlet vector-menu vector-menu-dropdown vectorMenu" aria-labelledby="p-variants-label" role="navigation" 
+	 >
+	<input type="checkbox" class="vector-menu-checkbox vectorMenuCheckbox" aria-labelledby="p-variants-label" />
+	<h3 id="p-variants-label">
+		<span>Variants</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="menu vector-menu-content-list"></ul>
+		
+	</div>
+</nav>
+
+
+		</div>
+		<div id="right-navigation">
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-views" class="vector-menu vector-menu-tabs vectorTabs" aria-labelledby="p-views-label" role="navigation" 
+	 >
+	<h3 id="p-views-label">
+		<span>Views</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="ca-view" class="collapsible selected"><a href="Relational_Operations.html">Read</a></li><li id="ca-viewsource" class="collapsible"><a href="index9471.html?title=Relational_Operations&amp;action=edit" title="This page is protected.&#10;You can view its source [e]" accesskey="e">View source</a></li><li id="ca-history" class="collapsible"><a href="index2b44.html?title=Relational_Operations&amp;action=history" title="Past revisions of this page [h]" accesskey="h">View history</a></li></ul>
+		
+	</div>
+</nav>
+
+
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-cactions" class="vector-menu-empty emptyPortlet vector-menu vector-menu-dropdown vectorMenu" aria-labelledby="p-cactions-label" role="navigation" 
+	 >
+	<input type="checkbox" class="vector-menu-checkbox vectorMenuCheckbox" aria-labelledby="p-cactions-label" />
+	<h3 id="p-cactions-label">
+		<span>More</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="menu vector-menu-content-list"></ul>
+		
+	</div>
+</nav>
+
+
+			<div id="p-search" role="search">
+	<h3 >
+		<label for="searchInput">Search</label>
+	</h3>
+	<form action="https://www.qb64.org/wiki/index.php" id="searchform">
+		<div id="simpleSearch">
+			<input type="search" name="search" placeholder="Search QB64 Wiki" title="Search QB64 Wiki [f]" accesskey="f" id="searchInput"/>
+			<input type="hidden" name="title" value="Special:Search">
+			<input type="submit" name="fulltext" value="Search" title="Search the pages for this text" id="mw-searchButton" class="searchButton mw-fallbackSearchButton"/>
+			<input type="submit" name="go" value="Go" title="Go to a page with this exact name if it exists" id="searchButton" class="searchButton"/>
+		</div>
+	</form>
+</div>
+
+		</div>
+	</div>
+	
+<div id="mw-panel">
+	<div id="p-logo" role="banner">
+		<a  title="Visit the main page" class="mw-wiki-logo" href="Main_Page.html"></a>
+	</div>
+	<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-navigation" class="vector-menu vector-menu-portal portal portal-first" aria-labelledby="p-navigation-label" role="navigation" 
+	 >
+	<h3 id="p-navigation-label">
+		<span>Navigation</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="n-mainpage-description"><a href="Main_Page.html" title="Visit the main page [z]" accesskey="z">Main page</a></li><li id="n-recentchanges"><a href="Special_RecentChanges.html" title="A list of recent changes in the wiki [r]" accesskey="r">Recent changes</a></li><li id="n-randompage"><a href="SNDCOPY.html" title="Load a random page [x]" accesskey="x">Random page</a></li><li id="n-help-mediawiki"><a href="https://www.mediawiki.org/wiki/Special:MyLanguage/Help:Contents">Help about MediaWiki</a></li></ul>
+		
+	</div>
+</nav>
+
+
+	<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-tb" class="vector-menu vector-menu-portal portal" aria-labelledby="p-tb-label" role="navigation" 
+	 >
+	<h3 id="p-tb-label">
+		<span>Tools</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="t-whatlinkshere"><a href="Special_WhatLinksHere/Relational_Operations.html" title="A list of all wiki pages that link here [j]" accesskey="j">What links here</a></li><li id="t-recentchangeslinked"><a href="Special_RecentChangesLinked/Relational_Operations.html" rel="nofollow" title="Recent changes in pages linked from this page [k]" accesskey="k">Related changes</a></li><li id="t-specialpages"><a href="Special_SpecialPages.html" title="A list of all special pages [q]" accesskey="q">Special pages</a></li><li id="t-print"><a href="javascript:print();" rel="alternate" title="Printable version of this page [p]" accesskey="p">Printable version</a></li><li id="t-permalink"><a href="indexb6b9.html?title=Relational_Operations&amp;oldid=17898" title="Permanent link to this revision of the page">Permanent link</a></li><li id="t-info"><a href="index8a2d.html?title=Relational_Operations&amp;action=info" title="More information about this page">Page information</a></li></ul>
+		
+	</div>
+</nav>
+
+
+	
+</div>
+
+</div>
+
+<footer id="footer" class="mw-footer" role="contentinfo" >
+	<ul id="footer-info" >
+		<li id="footer-info-lastmod"> This page was last edited on 21 August 2012, at 21:50.</li>
+	</ul>
+	<ul id="footer-places" >
+		<li id="footer-places-privacy"><a href="My_wiki_Privacy_policy.html" title="My wiki:Privacy policy">Privacy policy</a></li>
+		<li id="footer-places-about"><a href="My_wiki_About.html" title="My wiki:About">About QB64 Wiki</a></li>
+		<li id="footer-places-disclaimer"><a href="My_wiki_General_disclaimer.html" title="My wiki:General disclaimer">Disclaimers</a></li>
+	</ul>
+	<ul id="footer-icons" class="noprint">
+		<li id="footer-poweredbyico"><a href="https://www.mediawiki.org/"><img src="resources/assets/poweredby_mediawiki_88x31.png" alt="Powered by MediaWiki" srcset="/wiki/resources/assets/poweredby_mediawiki_132x47.png 1.5x, /wiki/resources/assets/poweredby_mediawiki_176x62.png 2x" width="88" height="31" loading="lazy"/></a></li>
+	</ul>
+	<div style="clear: both;"></div>
+</footer>
+
+
+
+<script>(RLQ=window.RLQ||[]).push(function(){mw.config.set({"wgPageParseReport":{"limitreport":{"cputime":"0.068","walltime":"0.134","ppvisitednodes":{"value":104,"limit":1000000},"postexpandincludesize":{"value":3203,"limit":2097152},"templateargumentsize":{"value":20,"limit":2097152},"expansiondepth":{"value":3,"limit":40},"expensivefunctioncount":{"value":0,"limit":100},"unstrip-depth":{"value":0,"limit":20},"unstrip-size":{"value":0,"limit":5000000},"timingprofile":["100.00%   28.693      1 -total"," 15.69%    4.503      1 Template:LogicalTruthTable"," 15.41%    4.421      1 Template:RelationalOperationsTable"," 11.36%    3.260      1 Template:PageNavigation"," 11.23%    3.223      2 Template:Cl"," 10.99%    3.153      2 Template:CodeStart"," 10.65%    3.057      2 Template:CodeEnd"," 10.51%    3.015      1 Template:OutputStart"," 10.42%    2.990      1 Template:OutputEnd"]},"cachereport":{"timestamp":"20210706171748","ttl":86400,"transientcontent":false}}});mw.config.set({"wgBackendResponseTime":1470});});</script></body>
+<!-- Mirrored from www.qb64.org/wiki/Relational_Operations by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 07 Aug 2021 12:43:52 GMT -->
+</html>

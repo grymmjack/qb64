@@ -1,0 +1,298 @@
+
+<!DOCTYPE html>
+<html class="client-nojs" lang="en" dir="ltr">
+
+<!-- Mirrored from www.qb64.org/wiki/MAPUNICODE by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 07 Aug 2021 13:00:05 GMT -->
+<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=UTF-8" /><!-- /Added by HTTrack -->
+<head>
+<meta charset="UTF-8"/>
+<title>_MAPUNICODE - QB64 Wiki</title>
+<script>document.documentElement.className="client-js";RLCONF={"wgBreakFrames":!1,"wgSeparatorTransformTable":["",""],"wgDigitTransformTable":["",""],"wgDefaultDateFormat":"dmy","wgMonthNames":["","January","February","March","April","May","June","July","August","September","October","November","December"],"wgRequestId":"YOWk5w0lOz7XOc3uS6UsUgAAAQE","wgCSPNonce":!1,"wgCanonicalNamespace":"","wgCanonicalSpecialPageName":!1,"wgNamespaceNumber":0,"wgPageName":"MAPUNICODE","wgTitle":"MAPUNICODE","wgCurRevisionId":12416,"wgRevisionId":12416,"wgArticleId":433,"wgIsArticle":!0,"wgIsRedirect":!1,"wgAction":"view","wgUserName":null,"wgUserGroups":["*"],"wgCategories":[],"wgPageContentLanguage":"en","wgPageContentModel":"wikitext","wgRelevantPageName":"MAPUNICODE","wgRelevantArticleId":433,"wgIsProbablyEditable":!1,"wgRelevantPageIsProbablyEditable":!1,"wgRestrictionEdit":[],"wgRestrictionMove":[]};RLSTATE={"site.styles":"ready","noscript":"ready","user.styles":"ready","user":"ready"
+,"user.options":"loading","skins.vector.styles.legacy":"ready"};RLPAGEMODULES=["site","mediawiki.page.startup","mediawiki.page.ready","skins.vector.legacy.js"];</script>
+<script>(RLQ=window.RLQ||[]).push(function(){mw.loader.implement("user.options@1hzgi",function($,jQuery,require,module){/*@nomin*/mw.user.tokens.set({"patrolToken":"+\\","watchToken":"+\\","csrfToken":"+\\"});
+});});</script>
+<link rel="stylesheet" href="load5c90.css?lang=en&amp;modules=skins.vector.styles.legacy&amp;only=styles&amp;skin=vector"/>
+<script async="" src="load52c0.php?lang=en&amp;modules=startup&amp;only=scripts&amp;raw=1&amp;skin=vector"></script>
+<meta name="generator" content="MediaWiki 1.35.2"/>
+<link rel="shortcut icon" href="https://www.qb64.org/favicon.ico"/>
+<link rel="search" type="application/opensearchdescription+xml" href="opensearch_desc.php" title="QB64 Wiki (en)"/>
+<link rel="EditURI" type="application/rsd+xml" href="api-result251f.xml?action=rsd"/>
+<link rel="alternate" type="application/atom+xml" title="QB64 Wiki Atom feed" href="feeda295.xml?title=Special:RecentChanges&amp;feed=atom"/>
+<!--[if lt IE 9]><script src="/wiki/resources/lib/html5shiv/html5shiv.js"></script><![endif]-->
+</head>
+<body class="mediawiki ltr sitedir-ltr mw-hide-empty-elt ns-0 ns-subject page-MAPUNICODE rootpage-MAPUNICODE skin-vector action-view skin-vector-legacy">
+<div id="mw-page-base" class="noprint"></div>
+<div id="mw-head-base" class="noprint"></div>
+<div id="content" class="mw-body" role="main">
+	<a id="top"></a>
+	<div id="siteNotice" class="mw-body-content"></div>
+	<div class="mw-indicators mw-body-content">
+	</div>
+	<h1 id="firstHeading" class="firstHeading" lang="en">_MAPUNICODE</h1>
+	<div id="bodyContent" class="mw-body-content">
+		<div id="siteSub" class="noprint">From QB64 Wiki</div>
+		<div id="contentSub"></div>
+		<div id="contentSub2"></div>
+		
+		<div id="jump-to-nav"></div>
+		<a class="mw-jump-link" href="#mw-head">Jump to navigation</a>
+		<a class="mw-jump-link" href="#searchInput">Jump to search</a>
+		<div id="mw-content-text" lang="en" dir="ltr" class="mw-content-ltr"><div class="mw-parser-output"><p>The <a class="mw-selflink selflink">_MAPUNICODE</a> statement maps a <a href="Unicode.html" title="Unicode">Unicode</a> value to an <a href="ASCII.html" title="ASCII">ASCII</a> character code value.
+</p><p><br />
+</p>
+<h2><span class="mw-headline" id="Syntax">Syntax</span></h2>
+<dl><dd><a class="mw-selflink selflink">_MAPUNICODE</a> <i>unicode&amp;</i> <b>TO</b> <i>asciiCode%</i></dd></dl>
+<p><br />
+</p>
+<ul><li>The <a href="LONG.html" title="LONG">LONG</a> <i>unicode&amp;</i> value is a <a href="HEX%24.html" title="HEX$">hexadecimal</a> or decimal code value from a <a href="Unicode.html" title="Unicode">Unicode</a> <a href="Code_Pages.html" title="Code Pages">Code Page</a>.</li>
+<li>The <i>asciiCode%</i> <a href="INTEGER.html" title="INTEGER">INTEGER</a> parameter is any <a href="ASCII.html" title="ASCII">ASCII</a> or Extended code value from 0 to 255.</li>
+<li>Use the Unicode Page Table values listed here: <a rel="nofollow" class="external text" href="http://en.wikipedia.org/wiki/Category:DOS_code_pages">DOS Code Pages</a> or <a rel="nofollow" class="external text" href="http://unicode.org/Public/MAPPINGS/VENDORS/MICSFT/WINDOWS/">Windows Mapping</a></li>
+<li>Once the codes are mapped, key entries will display the unicode character in the <b>monospace </b> <a href="FONT.html" title="FONT">font</a> selected.</li>
+<li>The <a href="MAPUNICODE_(function).html" title="MAPUNICODE (function)">_MAPUNICODE</a> function can be used to verify or read the present <a href="Unicode.html" title="Unicode">Unicode</a> UTF32 code point settings.</li>
+<li><b><a class="mw-selflink selflink">_MAPUNICODE</a> can place the Unicode characters TO any <a href="ASCII.html" title="ASCII">ASCII</a> code space you desire (0 to 255)</b>.</li></ul>
+<p><br />
+</p>
+<h2><span class="mw-headline" id="Examples">Examples</span></h2>
+<p><i>Example:</i> Converting the extended <a href="ASCII.html" title="ASCII">ASCII</a> characters to other characters using DATA from the Unicode <a href="Code_Pages.html" title="Code Pages">Code Pages</a>.
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: Courier, monospace; background-color: darkblue; color: lightgrey; word-wrap: break-word;"> <i> </i>
+<a href="SCREEN.html" title="SCREEN"><span style="color:#87cefa;">SCREEN</span></a> 0
+<a href="FONT.html" title="FONT"><span style="color:#87cefa;">_FONT</span></a> <a href="LOADFONT.html" title="LOADFONT"><span style="color:#87cefa;">_LOADFONT</span></a>("C:\windows\fonts\cour.ttf", 20, "MONOSPACE")
+
+<a href="RESTORE.html" title="RESTORE"><span style="color:#87cefa;">RESTORE</span></a> Microsoft_pc_cpMIK
+<a href="FOR...html" title="FOR...NEXT"><span style="color:#87cefa;">FOR</span></a> ASCIIcode = 128 <a href="TO.html" title="TO"><span style="color:#87cefa;">TO</span></a> 255
+  <a href="READ.html" title="READ"><span style="color:#87cefa;">READ</span></a> unicode
+  <a class="mw-selflink selflink"><span style="color:#87cefa;">_MAPUNICODE</span></a> Unicode <a href="TO.html" title="TO"><span style="color:#87cefa;">TO</span></a> ASCIIcode
+<a href="NEXT.html" title="NEXT"><span style="color:#87cefa;">NEXT</span></a>
+
+
+<a href="FOR...html" title="FOR...NEXT"><span style="color:#87cefa;">FOR</span></a> i = 128 <a href="TO.html" title="TO"><span style="color:#87cefa;">TO</span></a> 255
+  <a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> <a href="CHR%24.html" title="CHR$"><span style="color:#87cefa;">CHR$</span></a>(i) + " ";
+  cnt = cnt + 1
+  <a href="IF...html" title="IF...THEN"><span style="color:#87cefa;">IF</span></a> cnt <a href="MOD.html" title="MOD"><span style="color:#87cefa;">MOD</span></a> 16 = 0 <a href="THEN.html" title="THEN"><span style="color:#87cefa;">THEN</span></a> <a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a>
+<a href="NEXT.html" title="NEXT"><span style="color:#87cefa;">NEXT</span></a>
+<a href="END.html" title="END"><span style="color:#87cefa;">END</span></a>
+
+Microsoft_pc_cpMIK:
+<a href="DATA.html" title="DATA"><span style="color:#87cefa;">DATA</span></a> 1040,1041,1042,1043,1044,1045,1046,1047,1048,1049,1050,1051,1052,1053,1054,1055
+<a href="DATA.html" title="DATA"><span style="color:#87cefa;">DATA</span></a> 1056,1057,1058,1059,1060,1061,1062,1063,1064,1065,1066,1067,1068,1069,1070,1071
+<a href="DATA.html" title="DATA"><span style="color:#87cefa;">DATA</span></a> 1072,1073,1074,1075,1076,1077,1078,1079,1080,1081,1082,1083,1084,1085,1086,1087
+<a href="DATA.html" title="DATA"><span style="color:#87cefa;">DATA</span></a> 1088,1089,1090,1091,1092,1093,1094,1095,1096,1097,1098,1099,1100,1101,1102,1103
+<a href="DATA.html" title="DATA"><span style="color:#87cefa;">DATA</span></a> 9492,9524,9516,9500,9472,9532,9571,9553,9562,9566,9577,9574,9568,9552,9580,9488
+<a href="DATA.html" title="DATA"><span style="color:#87cefa;">DATA</span></a> 9617,9618,9619,9474,9508,8470,167,9559,9565,9496,9484,9608,9604,9612,9616,9600
+<a href="DATA.html" title="DATA"><span style="color:#87cefa;">DATA</span></a> 945,223,915,960,931,963,181,964,934,920,937,948,8734,966,949,8745
+<a href="DATA.html" title="DATA"><span style="color:#87cefa;">DATA</span></a> 8801,177,8805,8804,8992,8993,247,8776,176,8729,183,8730,8319,178,9632,160 <i> </i>
+</p>
+<dl><dd><i>Note:</i> The Unicode data field is created by adding DATA before each line listed for the appropriate <a href="Code_Pages.html" title="Code Pages">Code Page</a>.</dd></dl>
+<p><br />
+</p>
+<h2><span class="mw-headline" id="See_also">See also</span></h2>
+<ul><li><a href="MAPUNICODE_(function).html" title="MAPUNICODE (function)">_MAPUNICODE (function)</a></li>
+<li><a href="ASCII.html" title="ASCII">ASCII</a>, <a href="Unicode.html" title="Unicode">Unicode</a>, <a href="FONT.html" title="FONT">_FONT</a></li>
+<li><a href="KEYHIT.html" title="KEYHIT">_KEYHIT</a>, <a href="KEYDOWN.html" title="KEYDOWN">_KEYDOWN</a></li>
+<li><a href="ASC.html" title="ASC">ASC</a>, <a href="INKEY%24.html" title="INKEY$">INKEY$</a>, <a href="CHR%24.html" title="CHR$">CHR$</a></li>
+<li><a href="Code_Pages.html" title="Code Pages">Code Pages</a> <span style="color:gray">(by region)</span></li>
+<li><a href="Text_Using_Graphics.html" title="Text Using Graphics">Text Using Graphics</a></li></ul>
+<p><br />
+</p>
+<hr />
+<center><i>Navigation:</i>
+<dl><dd><a href="Keyword_Reference_-_Alphabetical.html" title="Keyword Reference - Alphabetical">Keyword Reference - Alphabetical</a></dd>
+<dd><a href="Keyword_Reference_-_By_usage.html" title="Keyword Reference - By usage">Keyword Reference - By Usage</a></dd>
+<dd><a href="Main_Page.html" title="Main Page">Main Wiki Page</a></dd></dl></center>
+<!-- 
+NewPP limit report
+Cached time: 20210706193946
+Cache expiry: 86400
+Dynamic content: false
+Complications: []
+CPU time usage: 0.062 seconds
+Real time usage: 0.078 seconds
+Preprocessor visited node count: 236/1000000
+Post‐expand include size: 2062/2097152 bytes
+Template argument size: 308/2097152 bytes
+Highest expansion depth: 3/40
+Expensive parser function count: 0/100
+Unstrip recursion depth: 0/20
+Unstrip post‐expand size: 0/5000000 bytes
+-->
+<!--
+Transclusion expansion time report (%,ms,calls,template)
+100.00%   33.503      1 -total
+ 14.87%    4.983     28 Template:Cl
+ 11.77%    3.945      1 Template:PageSyntax
+ 10.14%    3.397      1 Template:Text
+  9.56%    3.202      4 Template:Parameter
+  9.38%    3.143      1 Template:PageNavigation
+  8.97%    3.004      1 Template:PageExamples
+  8.93%    2.993      1 Template:PageSeeAlso
+  8.92%    2.988      1 Template:CodeEnd
+  8.90%    2.982      1 Template:CodeStart
+-->
+
+<!-- Saved in parser cache with key i4224360_mw2-mw_:pcache:idhash:433-0!canonical and timestamp 20210706193946 and revision id 12416
+ -->
+</div></div><div class="printfooter">Retrieved from "<a dir="ltr" href="index65c4.html?title=MAPUNICODE&amp;oldid=12416">http://www.qb64.org/wiki/index.php?title=MAPUNICODE&amp;oldid=12416</a>"</div>
+		<div id="catlinks" class="catlinks catlinks-allhidden" data-mw="interface"></div>
+	</div>
+</div>
+
+<div id="mw-navigation">
+	<h2>Navigation menu</h2>
+	<div id="mw-head">
+		<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-personal" class="vector-menu" aria-labelledby="p-personal-label" role="navigation" 
+	 >
+	<h3 id="p-personal-label">
+		<span>Personal tools</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="pt-login"><a href="index30b9.html?title=Special:UserLogin&amp;returnto=MAPUNICODE" title="You are encouraged to log in; however, it is not mandatory [o]" accesskey="o">Log in</a></li></ul>
+		
+	</div>
+</nav>
+
+
+		<div id="left-navigation">
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-namespaces" class="vector-menu vector-menu-tabs vectorTabs" aria-labelledby="p-namespaces-label" role="navigation" 
+	 >
+	<h3 id="p-namespaces-label">
+		<span>Namespaces</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="ca-nstab-main" class="selected"><a href="MAPUNICODE.html" title="View the content page [c]" accesskey="c">Page</a></li><li id="ca-talk" class="new"><a href="Talk_MAPUNICODE.html?title=Talk:MAPUNICODE&amp;action=edit&amp;redlink=1" rel="discussion" title="Discussion about the content page (page does not exist) [t]" accesskey="t">Discussion</a></li></ul>
+		
+	</div>
+</nav>
+
+
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-variants" class="vector-menu-empty emptyPortlet vector-menu vector-menu-dropdown vectorMenu" aria-labelledby="p-variants-label" role="navigation" 
+	 >
+	<input type="checkbox" class="vector-menu-checkbox vectorMenuCheckbox" aria-labelledby="p-variants-label" />
+	<h3 id="p-variants-label">
+		<span>Variants</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="menu vector-menu-content-list"></ul>
+		
+	</div>
+</nav>
+
+
+		</div>
+		<div id="right-navigation">
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-views" class="vector-menu vector-menu-tabs vectorTabs" aria-labelledby="p-views-label" role="navigation" 
+	 >
+	<h3 id="p-views-label">
+		<span>Views</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="ca-view" class="collapsible selected"><a href="MAPUNICODE.html">Read</a></li><li id="ca-viewsource" class="collapsible"><a href="index5fcc.html?title=MAPUNICODE&amp;action=edit" title="This page is protected.&#10;You can view its source [e]" accesskey="e">View source</a></li><li id="ca-history" class="collapsible"><a href="indexe448.html?title=MAPUNICODE&amp;action=history" title="Past revisions of this page [h]" accesskey="h">View history</a></li></ul>
+		
+	</div>
+</nav>
+
+
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-cactions" class="vector-menu-empty emptyPortlet vector-menu vector-menu-dropdown vectorMenu" aria-labelledby="p-cactions-label" role="navigation" 
+	 >
+	<input type="checkbox" class="vector-menu-checkbox vectorMenuCheckbox" aria-labelledby="p-cactions-label" />
+	<h3 id="p-cactions-label">
+		<span>More</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="menu vector-menu-content-list"></ul>
+		
+	</div>
+</nav>
+
+
+			<div id="p-search" role="search">
+	<h3 >
+		<label for="searchInput">Search</label>
+	</h3>
+	<form action="https://www.qb64.org/wiki/index.php" id="searchform">
+		<div id="simpleSearch">
+			<input type="search" name="search" placeholder="Search QB64 Wiki" title="Search QB64 Wiki [f]" accesskey="f" id="searchInput"/>
+			<input type="hidden" name="title" value="Special:Search">
+			<input type="submit" name="fulltext" value="Search" title="Search the pages for this text" id="mw-searchButton" class="searchButton mw-fallbackSearchButton"/>
+			<input type="submit" name="go" value="Go" title="Go to a page with this exact name if it exists" id="searchButton" class="searchButton"/>
+		</div>
+	</form>
+</div>
+
+		</div>
+	</div>
+	
+<div id="mw-panel">
+	<div id="p-logo" role="banner">
+		<a  title="Visit the main page" class="mw-wiki-logo" href="Main_Page.html"></a>
+	</div>
+	<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-navigation" class="vector-menu vector-menu-portal portal portal-first" aria-labelledby="p-navigation-label" role="navigation" 
+	 >
+	<h3 id="p-navigation-label">
+		<span>Navigation</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="n-mainpage-description"><a href="Main_Page.html" title="Visit the main page [z]" accesskey="z">Main page</a></li><li id="n-recentchanges"><a href="Special_RecentChanges.html" title="A list of recent changes in the wiki [r]" accesskey="r">Recent changes</a></li><li id="n-randompage"><a href="SNDCOPY.html" title="Load a random page [x]" accesskey="x">Random page</a></li><li id="n-help-mediawiki"><a href="https://www.mediawiki.org/wiki/Special:MyLanguage/Help:Contents">Help about MediaWiki</a></li></ul>
+		
+	</div>
+</nav>
+
+
+	<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-tb" class="vector-menu vector-menu-portal portal" aria-labelledby="p-tb-label" role="navigation" 
+	 >
+	<h3 id="p-tb-label">
+		<span>Tools</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="t-whatlinkshere"><a href="Special_WhatLinksHere/MAPUNICODE.html" title="A list of all wiki pages that link here [j]" accesskey="j">What links here</a></li><li id="t-recentchangeslinked"><a href="Special_RecentChangesLinked/MAPUNICODE.html" rel="nofollow" title="Recent changes in pages linked from this page [k]" accesskey="k">Related changes</a></li><li id="t-specialpages"><a href="Special_SpecialPages.html" title="A list of all special pages [q]" accesskey="q">Special pages</a></li><li id="t-print"><a href="javascript:print();" rel="alternate" title="Printable version of this page [p]" accesskey="p">Printable version</a></li><li id="t-permalink"><a href="index65c4.html?title=MAPUNICODE&amp;oldid=12416" title="Permanent link to this revision of the page">Permanent link</a></li><li id="t-info"><a href="indexfc50.html?title=MAPUNICODE&amp;action=info" title="More information about this page">Page information</a></li></ul>
+		
+	</div>
+</nav>
+
+
+	
+</div>
+
+</div>
+
+<footer id="footer" class="mw-footer" role="contentinfo" >
+	<ul id="footer-info" >
+		<li id="footer-info-lastmod"> This page was last edited on 8 September 2017, at 14:02.</li>
+	</ul>
+	<ul id="footer-places" >
+		<li id="footer-places-privacy"><a href="My_wiki_Privacy_policy.html" title="My wiki:Privacy policy">Privacy policy</a></li>
+		<li id="footer-places-about"><a href="My_wiki_About.html" title="My wiki:About">About QB64 Wiki</a></li>
+		<li id="footer-places-disclaimer"><a href="My_wiki_General_disclaimer.html" title="My wiki:General disclaimer">Disclaimers</a></li>
+	</ul>
+	<ul id="footer-icons" class="noprint">
+		<li id="footer-poweredbyico"><a href="https://www.mediawiki.org/"><img src="resources/assets/poweredby_mediawiki_88x31.png" alt="Powered by MediaWiki" srcset="/wiki/resources/assets/poweredby_mediawiki_132x47.png 1.5x, /wiki/resources/assets/poweredby_mediawiki_176x62.png 2x" width="88" height="31" loading="lazy"/></a></li>
+	</ul>
+	<div style="clear: both;"></div>
+</footer>
+
+
+
+<script>(RLQ=window.RLQ||[]).push(function(){mw.config.set({"wgPageParseReport":{"limitreport":{"cputime":"0.062","walltime":"0.078","ppvisitednodes":{"value":236,"limit":1000000},"postexpandincludesize":{"value":2062,"limit":2097152},"templateargumentsize":{"value":308,"limit":2097152},"expansiondepth":{"value":3,"limit":40},"expensivefunctioncount":{"value":0,"limit":100},"unstrip-depth":{"value":0,"limit":20},"unstrip-size":{"value":0,"limit":5000000},"timingprofile":["100.00%   33.503      1 -total"," 14.87%    4.983     28 Template:Cl"," 11.77%    3.945      1 Template:PageSyntax"," 10.14%    3.397      1 Template:Text","  9.56%    3.202      4 Template:Parameter","  9.38%    3.143      1 Template:PageNavigation","  8.97%    3.004      1 Template:PageExamples","  8.93%    2.993      1 Template:PageSeeAlso","  8.92%    2.988      1 Template:CodeEnd","  8.90%    2.982      1 Template:CodeStart"]},"cachereport":{"timestamp":"20210706193946","ttl":86400,"transientcontent":false}}});mw.config.set({"wgBackendResponseTime":1525});});</script></body>
+<!-- Mirrored from www.qb64.org/wiki/MAPUNICODE by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 07 Aug 2021 13:00:09 GMT -->
+</html>

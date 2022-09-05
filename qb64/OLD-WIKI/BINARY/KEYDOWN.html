@@ -1,0 +1,408 @@
+
+<!DOCTYPE html>
+<html class="client-nojs" lang="en" dir="ltr">
+
+<!-- Mirrored from www.qb64.org/wiki/KEYDOWN by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 07 Aug 2021 12:59:29 GMT -->
+<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=UTF-8" /><!-- /Added by HTTrack -->
+<head>
+<meta charset="UTF-8"/>
+<title>_KEYDOWN - QB64 Wiki</title>
+<script>document.documentElement.className="client-js";RLCONF={"wgBreakFrames":!1,"wgSeparatorTransformTable":["",""],"wgDigitTransformTable":["",""],"wgDefaultDateFormat":"dmy","wgMonthNames":["","January","February","March","April","May","June","July","August","September","October","November","December"],"wgRequestId":"YOWk4ukbkwEB08KNhNekwAAAAGw","wgCSPNonce":!1,"wgCanonicalNamespace":"","wgCanonicalSpecialPageName":!1,"wgNamespaceNumber":0,"wgPageName":"KEYDOWN","wgTitle":"KEYDOWN","wgCurRevisionId":22978,"wgRevisionId":22978,"wgArticleId":354,"wgIsArticle":!0,"wgIsRedirect":!1,"wgAction":"view","wgUserName":null,"wgUserGroups":["*"],"wgCategories":[],"wgPageContentLanguage":"en","wgPageContentModel":"wikitext","wgRelevantPageName":"KEYDOWN","wgRelevantArticleId":354,"wgIsProbablyEditable":!1,"wgRelevantPageIsProbablyEditable":!1,"wgRestrictionEdit":[],"wgRestrictionMove":[]};RLSTATE={"site.styles":"ready","noscript":"ready","user.styles":"ready","user":"ready",
+"user.options":"loading","skins.vector.styles.legacy":"ready"};RLPAGEMODULES=["site","mediawiki.page.startup","mediawiki.page.ready","skins.vector.legacy.js"];</script>
+<script>(RLQ=window.RLQ||[]).push(function(){mw.loader.implement("user.options@1hzgi",function($,jQuery,require,module){/*@nomin*/mw.user.tokens.set({"patrolToken":"+\\","watchToken":"+\\","csrfToken":"+\\"});
+});});</script>
+<link rel="stylesheet" href="load5c90.css?lang=en&amp;modules=skins.vector.styles.legacy&amp;only=styles&amp;skin=vector"/>
+<script async="" src="load52c0.php?lang=en&amp;modules=startup&amp;only=scripts&amp;raw=1&amp;skin=vector"></script>
+<meta name="generator" content="MediaWiki 1.35.2"/>
+<link rel="shortcut icon" href="https://www.qb64.org/favicon.ico"/>
+<link rel="search" type="application/opensearchdescription+xml" href="opensearch_desc.php" title="QB64 Wiki (en)"/>
+<link rel="EditURI" type="application/rsd+xml" href="api-result251f.xml?action=rsd"/>
+<link rel="alternate" type="application/atom+xml" title="QB64 Wiki Atom feed" href="feeda295.xml?title=Special:RecentChanges&amp;feed=atom"/>
+<!--[if lt IE 9]><script src="/wiki/resources/lib/html5shiv/html5shiv.js"></script><![endif]-->
+</head>
+<body class="mediawiki ltr sitedir-ltr mw-hide-empty-elt ns-0 ns-subject page-KEYDOWN rootpage-KEYDOWN skin-vector action-view skin-vector-legacy">
+<div id="mw-page-base" class="noprint"></div>
+<div id="mw-head-base" class="noprint"></div>
+<div id="content" class="mw-body" role="main">
+	<a id="top"></a>
+	<div id="siteNotice" class="mw-body-content"></div>
+	<div class="mw-indicators mw-body-content">
+	</div>
+	<h1 id="firstHeading" class="firstHeading" lang="en">_KEYDOWN</h1>
+	<div id="bodyContent" class="mw-body-content">
+		<div id="siteSub" class="noprint">From QB64 Wiki</div>
+		<div id="contentSub"></div>
+		<div id="contentSub2"></div>
+		
+		<div id="jump-to-nav"></div>
+		<a class="mw-jump-link" href="#mw-head">Jump to navigation</a>
+		<a class="mw-jump-link" href="#searchInput">Jump to search</a>
+		<div id="mw-content-text" lang="en" dir="ltr" class="mw-content-ltr"><div class="mw-parser-output"><p>The <b>_KEYDOWN</b> function returns whether modifying keys like CTRL, ALT, SHIFT, and any other keys are pressed.
+</p><p><br />
+</p>
+<h2><span class="mw-headline" id="Syntax">Syntax</span></h2>
+<dl><dd><dl><dd>return% = <b>_KEYDOWN(</b><i>code&amp;</i><b>)</b></dd></dl></dd></dl>
+<p><br />
+</p>
+<ul><li>The <i>return</i> value is -1 if a specified key is pressed or 0 if it was not pressed. It can be used to monitor key combinations.</li>
+<li>The  POSITIVE <a href="LONG.html" title="LONG">LONG</a> <i>code</i> value can be from any function key that needs to be monitored in a key press combination.</li>
+<li>Unicode references:</li></ul>
+<dl><dd><ul><li>1) What is the glyph represented by that UNICODE value: <a rel="nofollow" class="external text" href="http://www.fileformat.info/info/unicode/char/search.htm">Unicode Format Info</a></li>
+<li>2) Which fonts support the characters I want to use: <a rel="nofollow" class="external text" href="http://en.wikipedia.org/wiki/Unicode_typefaces#Comparison_of_fonts">Unicode Fonts</a></li>
+<li>A UTF32 value is usually(but by no means always!) the same as a UTF16 value just with the top 2 bytes set to 0.</li></ul></dd></dl>
+<ul><li>An important difference between <a href="INKEY%24.html" title="INKEY$">INKEY$</a> and <a href="KEYHIT.html" title="KEYHIT">_KEYHIT</a> is how they work when <b>CTRL, ALT</b> or <b>SHIFT</b> are used. <a href="INKEY%24.html" title="INKEY$">INKEY$</a> returns a different code if you hold down CTRL, ALT or SHIFT before pressing F1 (for example). <a href="KEYHIT.html" title="KEYHIT">_KEYHIT</a> will return the same code regardless of which modifiers were used but you can check _KEYDOWN to see which modifying keys are being used.</li>
+<li><b>Keyboards with Alt Gr key:</b> <a href="KEYHIT.html" title="KEYHIT">_KEYHIT</a> may return both Alt(100307) and Ctrl(100306) codes when key is pressed or released.</li>
+<li><b>Linux with foreign keyboards:</b> <a href="SHELL.html" title="SHELL">SHELL</a> <a href="HIDE.html" title="HIDE">_HIDE</a> "setxkbmap us" will setup a keyboard to read US <a href="Scancodes.html" title="Scancodes">Scancodes</a>.</li></ul>
+<p><br />
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:10px; white-space: pre; font-family: courier; background-color: white; color: darkgreen;">                       <b>The QB64 Virtual Key constant values used: </b>
+
+         <b>0-255</b>: <a href="ASCII.html" title="ASCII">ASCII and Extended code</a> values (Refer to <a rel="nofollow" class="external text" href="http://en.wikipedia.org/wiki/Code_page_437">CP437</a>)
+
+         <b>256-65535</b>: <a rel="nofollow" class="external autonumber" href="ASCII.html#Two_Byte_Codes">[1]</a> character codes (unaffected by SHIFT/ALT/CTRL modifiers)
+                  Use <a href="CVI.html" title="CVI">CVI</a> to convert ASCII 2-byte codes to _KEYDOWN values.
+
+'                                <b>_KEYDOWN Keyboard Values</b>
+'
+'<b>Esc  F1    F2    F3    F4    F5    F6    F7    F8    F9    F10   F11   F12   Sys  ScL Pause</b>                  
+' 27 15104 15360 15616 15872 16128 16384 16640 16896 17152 17408 34048 34304 +316 +302 +019
+'<b>`~  1!  2@  3#  4$  5%  6^  7&amp;  8*  9(  0) -_ =+ BkSp   Ins   Hme   PUp   NumL   /     *    -</b> 
+'126 33  64  35  36  37  94  38  42  40  41 95 43   8   20992 18176 18688 +300   47    42   45
+'<i> 96 49  50  51  52  53  54  55  56  57  48 45 61</i>
+'<b>Tab Q   W   E   R   T   Y   U   I   O   P  [{  ]}  \|   Del   End   PDn   7Hme  8/▲   9PU   + </b>
+' 9  81  87  69  82  84  89  85  73  79  80 123 125 124 21248 20224 20736 18176 18432 18688 43
+'<i>   113 119 101 114 116 121 117 105 111 112  91  93  92                    55    56    57 </i>
+'<b>CapL   A   S   D   F   G   H   J   K   L   ;:  '" Enter                   4/◄-   5    6/-►  </b>
+'+301  65  83  68  70  71  72  74  75  76  58  34  13                     19200 19456 19712  <b>E</b>
+'<i>      97 115 100 102 103 104 106 107 108  59  39                          52    53    54 </i>   <b>n</b>                                    
+'<b>Shift   Z   X   C   V   B   N   M   ,&lt;  .&gt;  /?    Shift       ▲           1End  2/▼   3PD   t</b>
+'+304   90  88  67  86  66  78  77  60  62  63    +303       18432        20224 20480 20736  <b>e</b>
+'<i>      122 120  99 118  98 110 109  44  46  47                             49    50    51 </i>   <b>r</b>
+'<b>Ctrl   Win  Alt     Spacebar      Alt  Win  Menu  Ctrl   ◄-   ▼   -►      0Ins        .Del </b>
+'+306  +311 +308       32         +307 +312 +319  +305 19200 20480 19712  20992       21248 13 
+'                                                                     <i>     48          46</i>
+'
+'     <b>    Lower value = LCase/NumLock On __________________ + = add 100000 </b>
+</p>
+<center><span style="font-family: Courier New, Courier, monospace; font-size: 0.80em; line-height: 50%;">NOTE: The above commented table can be copied and pasted directly into the QB64 IDE</span></center>
+<p><br />
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:10px; white-space: pre; font-family: courier; background-color: white; color: darkgreen;">         <b>65536-&amp;H40000000: QB64-specific Virtual Key codes:</b>
+
+                        CONST KEY_PAUSE&amp; = 100019
+                        CONST KEY_NUMLOCK&amp; = 100300
+                        CONST KEY_CAPSLOCK&amp; = 100301
+                        CONST KEY_SCROLLOCK&amp; = 100302
+                        CONST KEY_RSHIFT&amp; = 100303
+                        CONST KEY_LSHIFT&amp; = 100304
+                        CONST KEY_RCTRL&amp; = 100305
+                        CONST KEY_LCTRL&amp; = 100306
+                        CONST KEY_RALT&amp; = 100307
+                        CONST KEY_LALT&amp; = 100308
+                        CONST KEY_RMETA&amp; = 100309 'Left 'Apple' key (MacOSX)
+                        CONST KEY_LMETA&amp; = 100310 'Right 'Apple' key (MacOSX)
+                        CONST KEY_LSUPER&amp; = 100311 'Left "Windows" key
+                        CONST KEY_RSUPER&amp; = 100312 'Right "Windows"key
+                        CONST KEY_MODE&amp; = 100313 '"AltGr" key
+                        CONST KEY_COMPOSE&amp; = 100314
+                        CONST KEY_HELP&amp; = 100315
+                        CONST KEY_PRINT&amp; = 100316
+                        CONST KEY_SYSREQ&amp; = 100317
+                        CONST KEY_BREAK&amp; = 100318
+                        CONST KEY_MENU&amp; = 100319
+                        CONST KEY_POWER&amp; = 100320
+                        CONST KEY_EURO&amp; = 100321
+                        CONST KEY_UNDO&amp; = 100322 
+                        CONST KEY_KP0&amp; = 100256
+                        CONST KEY_KP1&amp; = 100257
+                        CONST KEY_KP2&amp; = 100258
+                        CONST KEY_KP3&amp; = 100259
+                        CONST KEY_KP4&amp; = 100260
+                        CONST KEY_KP5&amp; = 100261
+                        CONST KEY_KP6&amp; = 100262
+                        CONST KEY_KP7&amp; = 100263
+                        CONST KEY_KP8&amp; = 100264
+                        CONST KEY_KP9&amp; = 100265
+                        CONST KEY_KP_PERIOD&amp; = 100266
+                        CONST KEY_KP_DIVIDE&amp; = 100267
+                        CONST KEY_KP_MULTIPLY&amp; = 100268
+                        CONST KEY_KP_MINUS&amp; = 100269
+                        CONST KEY_KP_PLUS&amp; = 100270
+                        CONST KEY_KP_ENTER&amp; = 100271
+                        CONST KEY_KP_INSERT&amp; = 200000
+                        CONST KEY_KP_END&amp; = 200001
+                        CONST KEY_KP_DOWN&amp; = 200002
+                        CONST KEY_KP_PAGE_DOWN&amp; = 200003
+                        CONST KEY_KP_LEFT&amp; = 200004
+                        CONST KEY_KP_MIDDLE&amp; = 200005
+                        CONST KEY_KP_RIGHT&amp; = 200006
+                        CONST KEY_KP_HOME&amp; = 200007
+                        CONST KEY_KP_UP&amp; = 200008
+                        CONST KEY_KP_PAGE_UP&amp; = 200009
+                        CONST KEY_KP_DELETE&amp; = 200010
+                        CONST KEY_SCROLL_LOCK_MODE&amp; = 200011
+                        CONST KEY_INSERT_MODE&amp; = 200012
+
+         <b>&amp;H40000000 up</b>: <a href="Unicode.html" title="Unicode">Unicode</a> using the <b>cyberbit.ttf</b> font when available.
+
+              <b>Use <a href="KEYHIT.html" title="KEYHIT">_KEYHIT</a> to find the key codes to be monitored by _KEYDOWN! </b>
+
+</p>
+<p><i>Example 1:</i> Comparing the _KEYDOWN returns using <a href="CONST.html" title="CONST">constant</a> values with 2 byte <a href="INKEY%24.html" title="INKEY$">INKEY$</a> returns.
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: Courier, monospace; background-color: darkblue; color: lightgrey; word-wrap: break-word;"> <i> </i>
+<a href="CONST.html" title="CONST"><span style="color:#87cefa;">CONST</span></a> RSHIFT&amp; = 100303
+<a href="CONST.html" title="CONST"><span style="color:#87cefa;">CONST</span></a> LSHIFT&amp; = 100304
+<a href="DO.html" class="mw-redirect" title="DO"><span style="color:#87cefa;">DO</span></a>
+    x = <a href="KEYHIT.html" title="KEYHIT"><span style="color:#87cefa;">_KEYHIT</span></a>
+    <a href="IF.html" class="mw-redirect" title="IF"><span style="color:#87cefa;">IF</span></a> x = <a href="CVI.html" title="CVI"><span style="color:#87cefa;">CVI</span></a>(<a href="CHR%24.html" title="CHR$"><span style="color:#87cefa;">CHR$</span></a>(0) + <a href="CHR%24.html" title="CHR$"><span style="color:#87cefa;">CHR$</span></a>(59)) <a href="THEN.html" title="THEN"><span style="color:#87cefa;">THEN</span></a>
+        <a href="IF.html" class="mw-redirect" title="IF"><span style="color:#87cefa;">IF</span></a> <a class="mw-selflink selflink"><span style="color:#87cefa;">_KEYDOWN</span></a>(LSHIFT&amp;) <a href="OR_(boolean).html" title="OR (boolean)"><span style="color:#87cefa;">OR</span></a> <a class="mw-selflink selflink"><span style="color:#87cefa;">_KEYDOWN</span></a>(RSHIFT&amp;) <a href="THEN.html" title="THEN"><span style="color:#87cefa;">THEN</span></a>
+            <a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> "KEYHIT: SHIFT + F1"
+        <a href="ELSE.html" title="ELSE"><span style="color:#87cefa;">ELSE</span></a>
+            <a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> "KEYHIT: F1"
+        <a href="END_IF.html" class="mw-redirect" title="END IF"><span style="color:#87cefa;">END IF</span></a>
+    <a href="END_IF.html" class="mw-redirect" title="END IF"><span style="color:#87cefa;">END IF</span></a>
+    k$ = <a href="INKEY%24.html" title="INKEY$"><span style="color:#87cefa;">INKEY$</span></a>         'compare key press return values
+    <a href="IF.html" class="mw-redirect" title="IF"><span style="color:#87cefa;">IF</span></a> k$ = <a href="CHR%24.html" title="CHR$"><span style="color:#87cefa;">CHR$</span></a>(0) + <a href="CHR%24.html" title="CHR$"><span style="color:#87cefa;">CHR$</span></a>(59) <a href="THEN.html" title="THEN"><span style="color:#87cefa;">THEN</span></a> <a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> "INKEY$: F1"
+    <a href="IF.html" class="mw-redirect" title="IF"><span style="color:#87cefa;">IF</span></a> k$ = <a href="CHR%24.html" title="CHR$"><span style="color:#87cefa;">CHR$</span></a>(0) + <a href="CHR%24.html" title="CHR$"><span style="color:#87cefa;">CHR$</span></a>(84) <a href="THEN.html" title="THEN"><span style="color:#87cefa;">THEN</span></a> <a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> "INKEY$: SHIFT+F1"
+<a href="LOOP.html" title="LOOP"><span style="color:#87cefa;">LOOP</span></a> <a href="UNTIL.html" title="UNTIL"><span style="color:#87cefa;">UNTIL</span></a> k$ = <a href="CHR%24.html" title="CHR$"><span style="color:#87cefa;">CHR$</span></a>(27)     'escape key exit
+</p>
+<center><span style="font-family: Courier New, Courier, monospace; font-size: 0.80em; line-height: 50%;">Code by Galleon</span></center>
+<p><br />
+<i>Example 2:</i> How to calculate the _KEYDOWN codes of the 2 byte INKEY$ arrow key codes using <a href="CVI.html" title="CVI">CVI</a>.
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: Courier, monospace; background-color: darkblue; color: lightgrey; word-wrap: break-word;"> <i> </i>
+<a href="SCREEN_(statement).html" title="SCREEN (statement)"><span style="color:#87cefa;">SCREEN</span></a> 12 
+
+x = 320: y = 240
+col = <a href="RGB.html" title="RGB"><span style="color:#87cefa;">_RGB</span></a>(255, 0, 0)
+radius = 20
+
+DO
+    <a href="CLS.html" title="CLS"><span style="color:#87cefa;">CLS</span></a>
+    <a href="LOCATE.html" title="LOCATE"><span style="color:#87cefa;">LOCATE</span></a> 1, 1: <a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> "Use the arrow keys to move the circle."
+    <a href="CIRCLE.html" title="CIRCLE"><span style="color:#87cefa;">CIRCLE</span></a> (x, y), radius, col
+    <a href="PAINT.html" title="PAINT"><span style="color:#87cefa;">PAINT</span></a> (x, y), col    
+
+    <a href="IF...html" title="IF...THEN"><span style="color:#87cefa;">IF</span></a> <a class="mw-selflink selflink"><span style="color:#87cefa;">_KEYDOWN</span></a>(<a href="CVI.html" title="CVI"><span style="color:#87cefa;">CVI</span></a>(<a href="CHR%24.html" title="CHR$"><span style="color:#87cefa;">CHR$</span></a>(0) + "P")) <a href="THEN.html" title="THEN"><span style="color:#87cefa;">THEN</span></a> y = y + 1   '_KEYDOWN(20480)
+    <a href="IF...html" title="IF...THEN"><span style="color:#87cefa;">IF</span></a> <a class="mw-selflink selflink"><span style="color:#87cefa;">_KEYDOWN</span></a>(<a href="CVI.html" title="CVI"><span style="color:#87cefa;">CVI</span></a>(<a href="CHR%24.html" title="CHR$"><span style="color:#87cefa;">CHR$</span></a>(0) + "H")) <a href="THEN.html" title="THEN"><span style="color:#87cefa;">THEN</span></a> y = y - 1   '_KEYDOWN(18432)
+    <a href="IF...html" title="IF...THEN"><span style="color:#87cefa;">IF</span></a> <a class="mw-selflink selflink"><span style="color:#87cefa;">_KEYDOWN</span></a>(<a href="CVI.html" title="CVI"><span style="color:#87cefa;">CVI</span></a>(<a href="CHR%24.html" title="CHR$"><span style="color:#87cefa;">CHR$</span></a>(0) + "K")) <a href="THEN.html" title="THEN"><span style="color:#87cefa;">THEN</span></a> x = x - 1   '_KEYDOWN(19200)
+    <a href="IF...html" title="IF...THEN"><span style="color:#87cefa;">IF</span></a> <a class="mw-selflink selflink"><span style="color:#87cefa;">_KEYDOWN</span></a>(<a href="CVI.html" title="CVI"><span style="color:#87cefa;">CVI</span></a>(<a href="CHR%24.html" title="CHR$"><span style="color:#87cefa;">CHR$</span></a>(0) + "M")) <a href="THEN.html" title="THEN"><span style="color:#87cefa;">THEN</span></a> x = x + 1   '_KEYDOWN(19712)
+
+    <a href="DISPLAY.html" title="DISPLAY"><span style="color:#87cefa;">_DISPLAY</span></a>
+    <a href="LIMIT.html" title="LIMIT"><span style="color:#87cefa;">_LIMIT</span></a> 100 'limit to 100 frames per second
+<a href="LOOP.html" title="LOOP"><span style="color:#87cefa;">LOOP</span></a> <i> </i>
+</p>
+<center><span style="font-family: Courier New, Courier, monospace; font-size: 0.80em; line-height: 50%;">Code by Galleon</span></center>
+<dl><dd><i>Explanation:</i> When <a href="CVI.html" title="CVI">CVI</a> is used with a 2 byte code, the code of the first character(0) is added to the second character code which is multiplied by 256. In the example, code zero is added to the <a href="ASCII.html" title="ASCII">ASCII</a> code of "P" which is 80. CVI multiplies 80 * 256 = 20480.</dd></dl>
+<p><br />
+<i>See also:</i>
+</p>
+<ul><li><a href="KEYHIT.html" title="KEYHIT">_KEYHIT</a>, <a href="Unicode.html" title="Unicode">Unicode</a>, <a href="Code_Pages.html" title="Code Pages">Code Pages</a> (by region)</li>
+<li><a href="MAPUNICODE.html" title="MAPUNICODE">_MAPUNICODE</a>, <a href="MAPUNICODE_(function).html" title="MAPUNICODE (function)">_MAPUNICODE (function)</a></li>
+<li><a href="INKEY%24.html" title="INKEY$">INKEY$</a>, <a href="ASCII.html" title="ASCII">ASCII</a>, <a href="CVI.html" title="CVI">CVI</a></li>
+<li><a href="INP.html" title="INP">INP</a>(&amp;H60), <a href="Scancodes.html" title="Scancodes">Scancodes</a></li>
+<li><a href="ON_KEY(n).html" title="ON KEY(n)">ON KEY(n)</a>, <a href="KEY(n).html" title="KEY(n)">KEY(n)</a>, <a href="KEY_n.html" title="KEY n">KEY n</a></li>
+<li><a href="Windows_Libraries.html#Hot_Keys_.28maximize.29" title="Windows Libraries">Windows hot keys</a></li></ul>
+<p><br />
+</p>
+<hr />
+<center><i>Navigation:</i>
+<dl><dd><a href="Keyword_Reference_-_Alphabetical.html" title="Keyword Reference - Alphabetical">Keyword Reference - Alphabetical</a></dd>
+<dd><a href="Keyword_Reference_-_By_usage.html" title="Keyword Reference - By usage">Keyword Reference - By Usage</a></dd>
+<dd><a href="Main_Page.html" title="Main Page">Main Wiki Page</a></dd></dl></center>
+<!-- 
+NewPP limit report
+Cached time: 20210706134328
+Cache expiry: 86400
+Dynamic content: false
+Complications: []
+CPU time usage: 0.087 seconds
+Real time usage: 0.102 seconds
+Preprocessor visited node count: 479/1000000
+Post‐expand include size: 4775/2097152 bytes
+Template argument size: 723/2097152 bytes
+Highest expansion depth: 3/40
+Expensive parser function count: 0/100
+Unstrip recursion depth: 0/20
+Unstrip post‐expand size: 0/5000000 bytes
+-->
+<!--
+Transclusion expansion time report (%,ms,calls,template)
+100.00%   38.604      1 -total
+ 22.78%    8.794     63 Template:Cl
+ 10.41%    4.018      1 Template:PageSyntax
+  8.75%    3.378      1 Template:PageNavigation
+  8.27%    3.192      2 Template:CodeEnd
+  8.06%    3.113      3 Template:Small
+  8.04%    3.104      2 Template:WhiteStart
+  7.75%    2.990      2 Template:WhiteEnd
+  7.66%    2.958      2 Template:CodeStart
+-->
+
+<!-- Saved in parser cache with key i4224360_mw2-mw_:pcache:idhash:354-0!canonical and timestamp 20210706134328 and revision id 22978
+ -->
+</div></div><div class="printfooter">Retrieved from "<a dir="ltr" href="indexe170.html?title=KEYDOWN&amp;oldid=22978">http://www.qb64.org/wiki/index.php?title=KEYDOWN&amp;oldid=22978</a>"</div>
+		<div id="catlinks" class="catlinks catlinks-allhidden" data-mw="interface"></div>
+	</div>
+</div>
+
+<div id="mw-navigation">
+	<h2>Navigation menu</h2>
+	<div id="mw-head">
+		<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-personal" class="vector-menu" aria-labelledby="p-personal-label" role="navigation" 
+	 >
+	<h3 id="p-personal-label">
+		<span>Personal tools</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="pt-login"><a href="index9c9f.html?title=Special:UserLogin&amp;returnto=KEYDOWN" title="You are encouraged to log in; however, it is not mandatory [o]" accesskey="o">Log in</a></li></ul>
+		
+	</div>
+</nav>
+
+
+		<div id="left-navigation">
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-namespaces" class="vector-menu vector-menu-tabs vectorTabs" aria-labelledby="p-namespaces-label" role="navigation" 
+	 >
+	<h3 id="p-namespaces-label">
+		<span>Namespaces</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="ca-nstab-main" class="selected"><a href="KEYDOWN.html" title="View the content page [c]" accesskey="c">Page</a></li><li id="ca-talk" class="new"><a href="Talk_KEYDOWN.html?title=Talk:KEYDOWN&amp;action=edit&amp;redlink=1" rel="discussion" title="Discussion about the content page (page does not exist) [t]" accesskey="t">Discussion</a></li></ul>
+		
+	</div>
+</nav>
+
+
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-variants" class="vector-menu-empty emptyPortlet vector-menu vector-menu-dropdown vectorMenu" aria-labelledby="p-variants-label" role="navigation" 
+	 >
+	<input type="checkbox" class="vector-menu-checkbox vectorMenuCheckbox" aria-labelledby="p-variants-label" />
+	<h3 id="p-variants-label">
+		<span>Variants</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="menu vector-menu-content-list"></ul>
+		
+	</div>
+</nav>
+
+
+		</div>
+		<div id="right-navigation">
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-views" class="vector-menu vector-menu-tabs vectorTabs" aria-labelledby="p-views-label" role="navigation" 
+	 >
+	<h3 id="p-views-label">
+		<span>Views</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="ca-view" class="collapsible selected"><a href="KEYDOWN.html">Read</a></li><li id="ca-viewsource" class="collapsible"><a href="index4ea6.html?title=KEYDOWN&amp;action=edit" title="This page is protected.&#10;You can view its source [e]" accesskey="e">View source</a></li><li id="ca-history" class="collapsible"><a href="indexfcf6.html?title=KEYDOWN&amp;action=history" title="Past revisions of this page [h]" accesskey="h">View history</a></li></ul>
+		
+	</div>
+</nav>
+
+
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-cactions" class="vector-menu-empty emptyPortlet vector-menu vector-menu-dropdown vectorMenu" aria-labelledby="p-cactions-label" role="navigation" 
+	 >
+	<input type="checkbox" class="vector-menu-checkbox vectorMenuCheckbox" aria-labelledby="p-cactions-label" />
+	<h3 id="p-cactions-label">
+		<span>More</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="menu vector-menu-content-list"></ul>
+		
+	</div>
+</nav>
+
+
+			<div id="p-search" role="search">
+	<h3 >
+		<label for="searchInput">Search</label>
+	</h3>
+	<form action="https://www.qb64.org/wiki/index.php" id="searchform">
+		<div id="simpleSearch">
+			<input type="search" name="search" placeholder="Search QB64 Wiki" title="Search QB64 Wiki [f]" accesskey="f" id="searchInput"/>
+			<input type="hidden" name="title" value="Special:Search">
+			<input type="submit" name="fulltext" value="Search" title="Search the pages for this text" id="mw-searchButton" class="searchButton mw-fallbackSearchButton"/>
+			<input type="submit" name="go" value="Go" title="Go to a page with this exact name if it exists" id="searchButton" class="searchButton"/>
+		</div>
+	</form>
+</div>
+
+		</div>
+	</div>
+	
+<div id="mw-panel">
+	<div id="p-logo" role="banner">
+		<a  title="Visit the main page" class="mw-wiki-logo" href="Main_Page.html"></a>
+	</div>
+	<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-navigation" class="vector-menu vector-menu-portal portal portal-first" aria-labelledby="p-navigation-label" role="navigation" 
+	 >
+	<h3 id="p-navigation-label">
+		<span>Navigation</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="n-mainpage-description"><a href="Main_Page.html" title="Visit the main page [z]" accesskey="z">Main page</a></li><li id="n-recentchanges"><a href="Special_RecentChanges.html" title="A list of recent changes in the wiki [r]" accesskey="r">Recent changes</a></li><li id="n-randompage"><a href="SNDCOPY.html" title="Load a random page [x]" accesskey="x">Random page</a></li><li id="n-help-mediawiki"><a href="https://www.mediawiki.org/wiki/Special:MyLanguage/Help:Contents">Help about MediaWiki</a></li></ul>
+		
+	</div>
+</nav>
+
+
+	<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-tb" class="vector-menu vector-menu-portal portal" aria-labelledby="p-tb-label" role="navigation" 
+	 >
+	<h3 id="p-tb-label">
+		<span>Tools</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="t-whatlinkshere"><a href="Special_WhatLinksHere/KEYDOWN.html" title="A list of all wiki pages that link here [j]" accesskey="j">What links here</a></li><li id="t-recentchangeslinked"><a href="Special_RecentChangesLinked/KEYDOWN.html" rel="nofollow" title="Recent changes in pages linked from this page [k]" accesskey="k">Related changes</a></li><li id="t-specialpages"><a href="Special_SpecialPages.html" title="A list of all special pages [q]" accesskey="q">Special pages</a></li><li id="t-print"><a href="javascript:print();" rel="alternate" title="Printable version of this page [p]" accesskey="p">Printable version</a></li><li id="t-permalink"><a href="indexe170.html?title=KEYDOWN&amp;oldid=22978" title="Permanent link to this revision of the page">Permanent link</a></li><li id="t-info"><a href="index059f.html?title=KEYDOWN&amp;action=info" title="More information about this page">Page information</a></li></ul>
+		
+	</div>
+</nav>
+
+
+	
+</div>
+
+</div>
+
+<footer id="footer" class="mw-footer" role="contentinfo" >
+	<ul id="footer-info" >
+		<li id="footer-info-lastmod"> This page was last edited on 7 January 2021, at 15:58.</li>
+	</ul>
+	<ul id="footer-places" >
+		<li id="footer-places-privacy"><a href="My_wiki_Privacy_policy.html" title="My wiki:Privacy policy">Privacy policy</a></li>
+		<li id="footer-places-about"><a href="My_wiki_About.html" title="My wiki:About">About QB64 Wiki</a></li>
+		<li id="footer-places-disclaimer"><a href="My_wiki_General_disclaimer.html" title="My wiki:General disclaimer">Disclaimers</a></li>
+	</ul>
+	<ul id="footer-icons" class="noprint">
+		<li id="footer-poweredbyico"><a href="https://www.mediawiki.org/"><img src="resources/assets/poweredby_mediawiki_88x31.png" alt="Powered by MediaWiki" srcset="/wiki/resources/assets/poweredby_mediawiki_132x47.png 1.5x, /wiki/resources/assets/poweredby_mediawiki_176x62.png 2x" width="88" height="31" loading="lazy"/></a></li>
+	</ul>
+	<div style="clear: both;"></div>
+</footer>
+
+
+
+<script>(RLQ=window.RLQ||[]).push(function(){mw.config.set({"wgPageParseReport":{"limitreport":{"cputime":"0.087","walltime":"0.102","ppvisitednodes":{"value":479,"limit":1000000},"postexpandincludesize":{"value":4775,"limit":2097152},"templateargumentsize":{"value":723,"limit":2097152},"expansiondepth":{"value":3,"limit":40},"expensivefunctioncount":{"value":0,"limit":100},"unstrip-depth":{"value":0,"limit":20},"unstrip-size":{"value":0,"limit":5000000},"timingprofile":["100.00%   38.604      1 -total"," 22.78%    8.794     63 Template:Cl"," 10.41%    4.018      1 Template:PageSyntax","  8.75%    3.378      1 Template:PageNavigation","  8.27%    3.192      2 Template:CodeEnd","  8.06%    3.113      3 Template:Small","  8.04%    3.104      2 Template:WhiteStart","  7.75%    2.990      2 Template:WhiteEnd","  7.66%    2.958      2 Template:CodeStart"]},"cachereport":{"timestamp":"20210706134328","ttl":86400,"transientcontent":false}}});mw.config.set({"wgBackendResponseTime":1796});});</script></body>
+<!-- Mirrored from www.qb64.org/wiki/KEYDOWN by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 07 Aug 2021 12:59:33 GMT -->
+</html>

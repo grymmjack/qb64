@@ -1,0 +1,332 @@
+
+<!DOCTYPE html>
+<html class="client-nojs" lang="en" dir="ltr">
+
+<!-- Mirrored from www.qb64.org/wiki/PRINTSTRING by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 07 Aug 2021 12:57:39 GMT -->
+<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=UTF-8" /><!-- /Added by HTTrack -->
+<head>
+<meta charset="UTF-8"/>
+<title>_PRINTSTRING - QB64 Wiki</title>
+<script>document.documentElement.className="client-js";RLCONF={"wgBreakFrames":!1,"wgSeparatorTransformTable":["",""],"wgDigitTransformTable":["",""],"wgDefaultDateFormat":"dmy","wgMonthNames":["","January","February","March","April","May","June","July","August","September","October","November","December"],"wgRequestId":"YOWkz6dTx2XheSMCc393nwAAAAI","wgCSPNonce":!1,"wgCanonicalNamespace":"","wgCanonicalSpecialPageName":!1,"wgNamespaceNumber":0,"wgPageName":"PRINTSTRING","wgTitle":"PRINTSTRING","wgCurRevisionId":23436,"wgRevisionId":23436,"wgArticleId":537,"wgIsArticle":!0,"wgIsRedirect":!1,"wgAction":"view","wgUserName":null,"wgUserGroups":["*"],"wgCategories":[],"wgPageContentLanguage":"en","wgPageContentModel":"wikitext","wgRelevantPageName":"PRINTSTRING","wgRelevantArticleId":537,"wgIsProbablyEditable":!1,"wgRelevantPageIsProbablyEditable":!1,"wgRestrictionEdit":[],"wgRestrictionMove":[]};RLSTATE={"site.styles":"ready","noscript":"ready","user.styles":"ready","user":
+"ready","user.options":"loading","skins.vector.styles.legacy":"ready","mediawiki.toc.styles":"ready"};RLPAGEMODULES=["site","mediawiki.page.startup","mediawiki.page.ready","mediawiki.toc","skins.vector.legacy.js"];</script>
+<script>(RLQ=window.RLQ||[]).push(function(){mw.loader.implement("user.options@1hzgi",function($,jQuery,require,module){/*@nomin*/mw.user.tokens.set({"patrolToken":"+\\","watchToken":"+\\","csrfToken":"+\\"});
+});});</script>
+<link rel="stylesheet" href="loadd8b0.css?lang=en&amp;modules=mediawiki.toc.styles%7Cskins.vector.styles.legacy&amp;only=styles&amp;skin=vector"/>
+<script async="" src="load52c0.php?lang=en&amp;modules=startup&amp;only=scripts&amp;raw=1&amp;skin=vector"></script>
+<meta name="generator" content="MediaWiki 1.35.2"/>
+<link rel="shortcut icon" href="https://www.qb64.org/favicon.ico"/>
+<link rel="search" type="application/opensearchdescription+xml" href="opensearch_desc.php" title="QB64 Wiki (en)"/>
+<link rel="EditURI" type="application/rsd+xml" href="api-result251f.xml?action=rsd"/>
+<link rel="alternate" type="application/atom+xml" title="QB64 Wiki Atom feed" href="feeda295.xml?title=Special:RecentChanges&amp;feed=atom"/>
+<!--[if lt IE 9]><script src="/wiki/resources/lib/html5shiv/html5shiv.js"></script><![endif]-->
+</head>
+<body class="mediawiki ltr sitedir-ltr mw-hide-empty-elt ns-0 ns-subject page-PRINTSTRING rootpage-PRINTSTRING skin-vector action-view skin-vector-legacy">
+<div id="mw-page-base" class="noprint"></div>
+<div id="mw-head-base" class="noprint"></div>
+<div id="content" class="mw-body" role="main">
+	<a id="top"></a>
+	<div id="siteNotice" class="mw-body-content"></div>
+	<div class="mw-indicators mw-body-content">
+	</div>
+	<h1 id="firstHeading" class="firstHeading" lang="en">_PRINTSTRING</h1>
+	<div id="bodyContent" class="mw-body-content">
+		<div id="siteSub" class="noprint">From QB64 Wiki</div>
+		<div id="contentSub"></div>
+		<div id="contentSub2"></div>
+		
+		<div id="jump-to-nav"></div>
+		<a class="mw-jump-link" href="#mw-head">Jump to navigation</a>
+		<a class="mw-jump-link" href="#searchInput">Jump to search</a>
+		<div id="mw-content-text" lang="en" dir="ltr" class="mw-content-ltr"><div class="mw-parser-output"><p>The <a class="mw-selflink selflink">_PRINTSTRING</a> statement prints text <a href="STRING.html" title="STRING">strings</a> using graphic column and row coordinate positions.
+</p><p><br />
+</p>
+<div id="toc" class="toc" role="navigation" aria-labelledby="mw-toc-heading"><input type="checkbox" role="button" id="toctogglecheckbox" class="toctogglecheckbox" style="display:none" /><div class="toctitle" lang="en" dir="ltr"><h2 id="mw-toc-heading">Contents</h2><span class="toctogglespan"><label class="toctogglelabel" for="toctogglecheckbox"></label></span></div>
+<ul>
+<li class="toclevel-1"><a href="#Syntax"><span class="tocnumber">1</span> <span class="toctext">Syntax</span></a></li>
+<li class="toclevel-1"><a href="#Parameters"><span class="tocnumber">2</span> <span class="toctext">Parameters</span></a></li>
+<li class="toclevel-1"><a href="#Description"><span class="tocnumber">3</span> <span class="toctext">Description</span></a></li>
+<li class="toclevel-1"><a href="#Examples"><span class="tocnumber">4</span> <span class="toctext">Examples</span></a></li>
+<li class="toclevel-1"><a href="#See_also"><span class="tocnumber">5</span> <span class="toctext">See also</span></a></li>
+</ul>
+</div>
+
+<h2><span class="mw-headline" id="Syntax">Syntax</span></h2>
+<dl><dd><a class="mw-selflink selflink">_PRINTSTRING</a>(<i>column</i>, <i>row</i>), <i>textExpression$</i>[, <i>imageHandle&amp;</i>]</dd></dl>
+<p><br />
+</p>
+<h2><span class="mw-headline" id="Parameters">Parameters</span></h2>
+<ul><li><i>column</i> and <i>row</i> are <a href="INTEGER.html" title="INTEGER">INTEGER</a> or <a href="LONG.html" title="LONG">LONG</a> starting PIXEL (graphic) column and row coordinates to set text or custom fonts.</li>
+<li><i>textExpression$</i> is any literal or variable <a href="STRING.html" title="STRING">string</a> value of text to be displayed.</li>
+<li><i>imageHandle&amp;</i> is the optional image or destination to use. Zero designates current <a href="SCREEN_(statement).html" title="SCREEN (statement)">SCREEN</a> page.</li></ul>
+<p><br />
+</p>
+<h2><span class="mw-headline" id="Description">Description</span></h2>
+<ul><li>The starting coordinate sets the top left corner of the text to be printed. Use <a href="FONTHEIGHT.html" title="FONTHEIGHT">_FONTHEIGHT</a> to calculate that text or <a href="FONT.html" title="FONT">font</a> position</li>
+<li>The <a href="FONT.html" title="FONT">_FONT</a> size can affect the <a href="SCREEN_(statement).html" title="SCREEN (statement)">screen</a> and row heights.
+<ul><li>Custom fonts are not required. <a class="mw-selflink selflink">_PRINTSTRING</a> can print all <a href="ASCII.html" title="ASCII">ASCII</a> characters.</li></ul></li>
+<li><a href="PRINTWIDTH.html" title="PRINTWIDTH">_PRINTWIDTH</a> can be used to determine how wide a text print will be so that the screen width is not exceeded.</li>
+<li>If the <i>imageHandle&amp;</i> is omitted, the current image, page or screen destination is used.</li>
+<li>Can use the current font alpha blending with a designated image background. See the <a href="RGBA.html" title="RGBA">_RGBA</a> function example.</li>
+<li>Use the <a href="PRINTMODE.html" title="PRINTMODE">_PRINTMODE</a> statement before printing to set how the background is rendered.
+<ul><li>Use the <a href="PRINTMODE_(function).html" title="PRINTMODE (function)">_PRINTMODE (function)</a> to find the current _PRINTMODE setting.</li></ul></li>
+<li>In SCREEN 0 (text only), <a class="mw-selflink selflink">_PRINTSTRING</a> works as one-line replacement for <b>LOCATE x, y: PRINT text$</b>, without changing the current cursor position.</li></ul>
+<p><br />
+</p>
+<h2><span class="mw-headline" id="Examples">Examples</span></h2>
+<p><i>Example 1:</i> Printing those unprintable <a href="ASCII.html" title="ASCII">ASCII</a> control characters is no longer a problem.
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: Courier, monospace; background-color: darkblue; color: lightgrey; word-wrap: break-word;"> <i> </i>
+<a href="SCREEN.html" title="SCREEN"><span style="color:#87cefa;">SCREEN</span></a> <a href="NEWIMAGE.html" title="NEWIMAGE"><span style="color:#87cefa;">_NEWIMAGE</span></a>(800, 600, 256)
+
+<a href="FOR...html" title="FOR...NEXT"><span style="color:#87cefa;">FOR</span></a> code = 0 <a href="TO.html" title="TO"><span style="color:#87cefa;">TO</span></a> 31
+  chrstr$ = chrstr$ + <a href="CHR%24.html" title="CHR$"><span style="color:#87cefa;">CHR$</span></a>(code) + <a href="SPACE%24.html" title="SPACE$"><span style="color:#87cefa;">SPACE$</span></a>(1)
+<a href="NEXT.html" title="NEXT"><span style="color:#87cefa;">NEXT</span></a>
+
+<a href="FONT.html" title="FONT"><span style="color:#87cefa;">_FONT</span></a> <a href="LOADFONT.html" title="LOADFONT"><span style="color:#87cefa;">_LOADFONT</span></a>("C:\Windows\Fonts\Cour.ttf", 20, "MONOSPACE") 'select monospace font
+
+<a class="mw-selflink selflink"><span style="color:#87cefa;">_PRINTSTRING</span></a> (0, 16), chrstr$
+
+<a href="END.html" title="END"><span style="color:#87cefa;">END</span></a> <i> </i>
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: Courier; background-color: black; color: white;">
+  ☺ ☻ ♥ ♦ ♣ ♠ • ◘ ○ ◙ ♂ ♀ ♪ ♫ ☼ ► ◄ ↕ ‼ ¶ § ▬ ↨ ↑ ↓ → ← ∟ ↔ ▲ ▼
+</p>
+<p><br />
+<i>Example 2:</i> Rotating a text string around a graphic object.
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: Courier, monospace; background-color: darkblue; color: lightgrey; word-wrap: break-word;"> <i> </i>
+<a href="SCREEN_(statement).html" title="SCREEN (statement)"><span style="color:#87cefa;">SCREEN</span></a> 12 <i> </i>
+<a href="DIM.html" title="DIM"><span style="color:#87cefa;">DIM</span></a> row <a href="AS.html" title="AS"><span style="color:#87cefa;">AS</span></a> <a href="INTEGER.html" title="INTEGER"><span style="color:#87cefa;">INTEGER</span></a>, cnt <a href="AS.html" title="AS"><span style="color:#87cefa;">AS</span></a> <a href="INTEGER.html" title="INTEGER"><span style="color:#87cefa;">INTEGER</span></a>, cstart <a href="AS.html" title="AS"><span style="color:#87cefa;">AS</span></a> <a href="SINGLE.html" title="SINGLE"><span style="color:#87cefa;">SINGLE</span></a>, cend <a href="AS.html" title="AS"><span style="color:#87cefa;">AS</span></a> <a href="SINGLE.html" title="SINGLE"><span style="color:#87cefa;">SINGLE</span></a>
+<a href="DIM.html" title="DIM"><span style="color:#87cefa;">DIM</span></a> xrot <a href="AS.html" title="AS"><span style="color:#87cefa;">AS</span></a> <a href="INTEGER.html" title="INTEGER"><span style="color:#87cefa;">INTEGER</span></a>, yrot <a href="AS.html" title="AS"><span style="color:#87cefa;">AS</span></a> <a href="INTEGER.html" title="INTEGER"><span style="color:#87cefa;">INTEGER</span></a>, scale <a href="AS.html" title="AS"><span style="color:#87cefa;">AS</span></a> <a href="INTEGER.html" title="INTEGER"><span style="color:#87cefa;">INTEGER</span></a>
+' <a href="FULLSCREEN.html" title="FULLSCREEN"><span style="color:#87cefa;">_FULLSCREEN</span></a>                       'full screen optional
+cstart = 0: cend = 8 * <a href="ATN.html" title="ATN"><span style="color:#87cefa;">ATN</span></a>(1)
+xrot = 6: yrot = 60: scale = 4 
+row = 1
+<a href="CIRCLE.html" title="CIRCLE"><span style="color:#87cefa;">CIRCLE</span></a> (320, 240), 15, 9: <a href="PAINT.html" title="PAINT"><span style="color:#87cefa;">PAINT</span></a> <a href="STEP.html" title="STEP"><span style="color:#87cefa;">STEP</span></a>(0, 0), 9
+<a href="DO.html" class="mw-redirect" title="DO"><span style="color:#87cefa;">DO</span></a>
+  <a href="FOR...html" title="FOR...NEXT"><span style="color:#87cefa;">FOR</span></a> i = cstart <a href="TO.html" title="TO"><span style="color:#87cefa;">TO</span></a> cend <a href="STEP.html" title="STEP"><span style="color:#87cefa;">STEP</span></a> .04
+    x = 300 + (scale * 40 - (row * xrot)) * <a href="COS.html" title="COS"><span style="color:#87cefa;">COS</span></a>(i)
+    y = 200 + (scale * 40 - (row * yrot)) * <a href="SIN.html" title="SIN"><span style="color:#87cefa;">SIN</span></a>(i)
+    cnt = cnt + 1
+    <a href="COLOR.html" title="COLOR"><span style="color:#87cefa;">COLOR</span></a> 7: <a class="mw-selflink selflink"><span style="color:#87cefa;">_PRINTSTRING</span></a> (x, y), "HELLO WORLD!", 0  'display 
+    <a href="IF.html" class="mw-redirect" title="IF"><span style="color:#87cefa;">IF</span></a> cnt = <a href="LEN.html" title="LEN"><span style="color:#87cefa;">LEN</span></a>(text$) * 8 <a href="THEN.html" title="THEN"><span style="color:#87cefa;">THEN</span></a> cnt = 0: <a href="EXIT_DO.html" title="EXIT DO"><span style="color:#87cefa;">EXIT DO</span></a>
+    <a href="DISPLAY.html" title="DISPLAY"><span style="color:#87cefa;">_DISPLAY</span></a>
+    <a href="COLOR.html" title="COLOR"><span style="color:#87cefa;">COLOR</span></a> 0: <a class="mw-selflink selflink"><span style="color:#87cefa;">_PRINTSTRING</span></a> (x, y), "HELLO WORLD!", 0  'erase 
+    <a href="DELAY.html" title="DELAY"><span style="color:#87cefa;">_DELAY</span></a> 0.02    
+  <a href="NEXT.html" title="NEXT"><span style="color:#87cefa;">NEXT</span></a>
+<a href="LOOP.html" title="LOOP"><span style="color:#87cefa;">LOOP</span></a> <a href="UNTIL.html" title="UNTIL"><span style="color:#87cefa;">UNTIL</span></a> <a href="INKEY%24.html" title="INKEY$"><span style="color:#87cefa;">INKEY$</span></a> = <a href="CHR%24.html" title="CHR$"><span style="color:#87cefa;">CHR$</span></a>(27) 'escape key exit
+<a href="COLOR.html" title="COLOR"><span style="color:#87cefa;">COLOR</span></a> 15 
+<a href="END.html" title="END"><span style="color:#87cefa;">END</span></a> <i> </i>
+</p>
+<center><span style="font-family: Courier New, Courier, monospace; font-size: 0.80em; line-height: 50%;">Adapted from code by Unseen Machine</span></center>
+<p><br />
+</p>
+<h2><span class="mw-headline" id="See_also">See also</span></h2>
+<ul><li><a href="NEWIMAGE.html" title="NEWIMAGE">_NEWIMAGE</a>, <a href="PRINTWIDTH.html" title="PRINTWIDTH">_PRINTWIDTH</a>, <a href="PRINTMODE.html" title="PRINTMODE">_PRINTMODE</a></li>
+<li><a href="CONTROLCHR.html" title="CONTROLCHR">_CONTROLCHR</a> <span style="color:gray">(turns <a href="ASCII.html" title="ASCII">ASCII</a> control characters OFF or ON)</span></li>
+<li><a href="FONT.html" title="FONT">_FONT</a>, <a href="LOADFONT.html" title="LOADFONT">_LOADFONT</a>, <a href="FONTHEIGHT.html" title="FONTHEIGHT">_FONTHEIGHT</a>, <a href="FONTWIDTH.html" title="FONTWIDTH">_FONTWIDTH</a></li>
+<li><a href="SCREENIMAGE.html" title="SCREENIMAGE">_SCREENIMAGE</a>, <a href="SCREENPRINT.html" title="SCREENPRINT">_SCREENPRINT</a></li>
+<li><a href="Text_Using_Graphics.html" title="Text Using Graphics">Text Using Graphics</a></li></ul>
+<p><br />
+</p>
+<hr />
+<center><i>Navigation:</i>
+<dl><dd><a href="Keyword_Reference_-_Alphabetical.html" title="Keyword Reference - Alphabetical">Keyword Reference - Alphabetical</a></dd>
+<dd><a href="Keyword_Reference_-_By_usage.html" title="Keyword Reference - By usage">Keyword Reference - By Usage</a></dd>
+<dd><a href="Main_Page.html" title="Main Page">Main Wiki Page</a></dd></dl></center>
+<!-- 
+NewPP limit report
+Cached time: 20210706171842
+Cache expiry: 86400
+Dynamic content: false
+Complications: []
+CPU time usage: 0.068 seconds
+Real time usage: 0.090 seconds
+Preprocessor visited node count: 471/1000000
+Post‐expand include size: 4286/2097152 bytes
+Template argument size: 745/2097152 bytes
+Highest expansion depth: 3/40
+Expensive parser function count: 0/100
+Unstrip recursion depth: 0/20
+Unstrip post‐expand size: 0/5000000 bytes
+-->
+<!--
+Transclusion expansion time report (%,ms,calls,template)
+100.00%   53.521      1 -total
+ 12.84%    6.874     56 Template:Cl
+  7.61%    4.071      1 Template:PageSyntax
+  6.48%    3.466      9 Template:Parameter
+  5.80%    3.103      1 Template:Text
+  5.75%    3.076      1 Template:Small
+  5.75%    3.075      1 Template:PageNavigation
+  5.69%    3.043      1 Template:PageDescription
+  5.64%    3.018      1 Template:PageParameters
+  5.63%    3.013      1 Template:PageSeeAlso
+-->
+
+<!-- Saved in parser cache with key i4224360_mw2-mw_:pcache:idhash:537-0!canonical and timestamp 20210706171841 and revision id 23436
+ -->
+</div></div><div class="printfooter">Retrieved from "<a dir="ltr" href="index5093.html?title=PRINTSTRING&amp;oldid=23436">http://www.qb64.org/wiki/index.php?title=PRINTSTRING&amp;oldid=23436</a>"</div>
+		<div id="catlinks" class="catlinks catlinks-allhidden" data-mw="interface"></div>
+	</div>
+</div>
+
+<div id="mw-navigation">
+	<h2>Navigation menu</h2>
+	<div id="mw-head">
+		<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-personal" class="vector-menu" aria-labelledby="p-personal-label" role="navigation" 
+	 >
+	<h3 id="p-personal-label">
+		<span>Personal tools</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="pt-login"><a href="index7fdf.html?title=Special:UserLogin&amp;returnto=PRINTSTRING" title="You are encouraged to log in; however, it is not mandatory [o]" accesskey="o">Log in</a></li></ul>
+		
+	</div>
+</nav>
+
+
+		<div id="left-navigation">
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-namespaces" class="vector-menu vector-menu-tabs vectorTabs" aria-labelledby="p-namespaces-label" role="navigation" 
+	 >
+	<h3 id="p-namespaces-label">
+		<span>Namespaces</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="ca-nstab-main" class="selected"><a href="PRINTSTRING.html" title="View the content page [c]" accesskey="c">Page</a></li><li id="ca-talk" class="new"><a href="Talk_PRINTSTRING.html?title=Talk:PRINTSTRING&amp;action=edit&amp;redlink=1" rel="discussion" title="Discussion about the content page (page does not exist) [t]" accesskey="t">Discussion</a></li></ul>
+		
+	</div>
+</nav>
+
+
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-variants" class="vector-menu-empty emptyPortlet vector-menu vector-menu-dropdown vectorMenu" aria-labelledby="p-variants-label" role="navigation" 
+	 >
+	<input type="checkbox" class="vector-menu-checkbox vectorMenuCheckbox" aria-labelledby="p-variants-label" />
+	<h3 id="p-variants-label">
+		<span>Variants</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="menu vector-menu-content-list"></ul>
+		
+	</div>
+</nav>
+
+
+		</div>
+		<div id="right-navigation">
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-views" class="vector-menu vector-menu-tabs vectorTabs" aria-labelledby="p-views-label" role="navigation" 
+	 >
+	<h3 id="p-views-label">
+		<span>Views</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="ca-view" class="collapsible selected"><a href="PRINTSTRING.html">Read</a></li><li id="ca-viewsource" class="collapsible"><a href="index28d9.html?title=PRINTSTRING&amp;action=edit" title="This page is protected.&#10;You can view its source [e]" accesskey="e">View source</a></li><li id="ca-history" class="collapsible"><a href="index861f.html?title=PRINTSTRING&amp;action=history" title="Past revisions of this page [h]" accesskey="h">View history</a></li></ul>
+		
+	</div>
+</nav>
+
+
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-cactions" class="vector-menu-empty emptyPortlet vector-menu vector-menu-dropdown vectorMenu" aria-labelledby="p-cactions-label" role="navigation" 
+	 >
+	<input type="checkbox" class="vector-menu-checkbox vectorMenuCheckbox" aria-labelledby="p-cactions-label" />
+	<h3 id="p-cactions-label">
+		<span>More</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="menu vector-menu-content-list"></ul>
+		
+	</div>
+</nav>
+
+
+			<div id="p-search" role="search">
+	<h3 >
+		<label for="searchInput">Search</label>
+	</h3>
+	<form action="https://www.qb64.org/wiki/index.php" id="searchform">
+		<div id="simpleSearch">
+			<input type="search" name="search" placeholder="Search QB64 Wiki" title="Search QB64 Wiki [f]" accesskey="f" id="searchInput"/>
+			<input type="hidden" name="title" value="Special:Search">
+			<input type="submit" name="fulltext" value="Search" title="Search the pages for this text" id="mw-searchButton" class="searchButton mw-fallbackSearchButton"/>
+			<input type="submit" name="go" value="Go" title="Go to a page with this exact name if it exists" id="searchButton" class="searchButton"/>
+		</div>
+	</form>
+</div>
+
+		</div>
+	</div>
+	
+<div id="mw-panel">
+	<div id="p-logo" role="banner">
+		<a  title="Visit the main page" class="mw-wiki-logo" href="Main_Page.html"></a>
+	</div>
+	<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-navigation" class="vector-menu vector-menu-portal portal portal-first" aria-labelledby="p-navigation-label" role="navigation" 
+	 >
+	<h3 id="p-navigation-label">
+		<span>Navigation</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="n-mainpage-description"><a href="Main_Page.html" title="Visit the main page [z]" accesskey="z">Main page</a></li><li id="n-recentchanges"><a href="Special_RecentChanges.html" title="A list of recent changes in the wiki [r]" accesskey="r">Recent changes</a></li><li id="n-randompage"><a href="SNDCOPY.html" title="Load a random page [x]" accesskey="x">Random page</a></li><li id="n-help-mediawiki"><a href="https://www.mediawiki.org/wiki/Special:MyLanguage/Help:Contents">Help about MediaWiki</a></li></ul>
+		
+	</div>
+</nav>
+
+
+	<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-tb" class="vector-menu vector-menu-portal portal" aria-labelledby="p-tb-label" role="navigation" 
+	 >
+	<h3 id="p-tb-label">
+		<span>Tools</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="t-whatlinkshere"><a href="Special_WhatLinksHere/PRINTSTRING.html" title="A list of all wiki pages that link here [j]" accesskey="j">What links here</a></li><li id="t-recentchangeslinked"><a href="Special_RecentChangesLinked/PRINTSTRING.html" rel="nofollow" title="Recent changes in pages linked from this page [k]" accesskey="k">Related changes</a></li><li id="t-specialpages"><a href="Special_SpecialPages.html" title="A list of all special pages [q]" accesskey="q">Special pages</a></li><li id="t-print"><a href="javascript:print();" rel="alternate" title="Printable version of this page [p]" accesskey="p">Printable version</a></li><li id="t-permalink"><a href="index5093.html?title=PRINTSTRING&amp;oldid=23436" title="Permanent link to this revision of the page">Permanent link</a></li><li id="t-info"><a href="indexa692.html?title=PRINTSTRING&amp;action=info" title="More information about this page">Page information</a></li></ul>
+		
+	</div>
+</nav>
+
+
+	
+</div>
+
+</div>
+
+<footer id="footer" class="mw-footer" role="contentinfo" >
+	<ul id="footer-info" >
+		<li id="footer-info-lastmod"> This page was last edited on 17 February 2021, at 12:44.</li>
+	</ul>
+	<ul id="footer-places" >
+		<li id="footer-places-privacy"><a href="My_wiki_Privacy_policy.html" title="My wiki:Privacy policy">Privacy policy</a></li>
+		<li id="footer-places-about"><a href="My_wiki_About.html" title="My wiki:About">About QB64 Wiki</a></li>
+		<li id="footer-places-disclaimer"><a href="My_wiki_General_disclaimer.html" title="My wiki:General disclaimer">Disclaimers</a></li>
+	</ul>
+	<ul id="footer-icons" class="noprint">
+		<li id="footer-poweredbyico"><a href="https://www.mediawiki.org/"><img src="resources/assets/poweredby_mediawiki_88x31.png" alt="Powered by MediaWiki" srcset="/wiki/resources/assets/poweredby_mediawiki_132x47.png 1.5x, /wiki/resources/assets/poweredby_mediawiki_176x62.png 2x" width="88" height="31" loading="lazy"/></a></li>
+	</ul>
+	<div style="clear: both;"></div>
+</footer>
+
+
+
+<script>(RLQ=window.RLQ||[]).push(function(){mw.config.set({"wgPageParseReport":{"limitreport":{"cputime":"0.068","walltime":"0.090","ppvisitednodes":{"value":471,"limit":1000000},"postexpandincludesize":{"value":4286,"limit":2097152},"templateargumentsize":{"value":745,"limit":2097152},"expansiondepth":{"value":3,"limit":40},"expensivefunctioncount":{"value":0,"limit":100},"unstrip-depth":{"value":0,"limit":20},"unstrip-size":{"value":0,"limit":5000000},"timingprofile":["100.00%   53.521      1 -total"," 12.84%    6.874     56 Template:Cl","  7.61%    4.071      1 Template:PageSyntax","  6.48%    3.466      9 Template:Parameter","  5.80%    3.103      1 Template:Text","  5.75%    3.076      1 Template:Small","  5.75%    3.075      1 Template:PageNavigation","  5.69%    3.043      1 Template:PageDescription","  5.64%    3.018      1 Template:PageParameters","  5.63%    3.013      1 Template:PageSeeAlso"]},"cachereport":{"timestamp":"20210706171842","ttl":86400,"transientcontent":false}}});mw.config.set({"wgBackendResponseTime":1679});});</script></body>
+<!-- Mirrored from www.qb64.org/wiki/PRINTSTRING by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 07 Aug 2021 12:57:43 GMT -->
+</html>

@@ -1,0 +1,657 @@
+
+<!DOCTYPE html>
+<html class="client-nojs" lang="en" dir="ltr">
+
+<!-- Mirrored from www.qb64.org/wiki/Text_Using_Graphics by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 07 Aug 2021 12:44:16 GMT -->
+<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=UTF-8" /><!-- /Added by HTTrack -->
+<head>
+<meta charset="UTF-8"/>
+<title>Text Using Graphics - QB64 Wiki</title>
+<script>document.documentElement.className="client-js";RLCONF={"wgBreakFrames":!1,"wgSeparatorTransformTable":["",""],"wgDigitTransformTable":["",""],"wgDefaultDateFormat":"dmy","wgMonthNames":["","January","February","March","April","May","June","July","August","September","October","November","December"],"wgRequestId":"YOWkWOkbkwEB08KNhNeirgAAAGY","wgCSPNonce":!1,"wgCanonicalNamespace":"","wgCanonicalSpecialPageName":!1,"wgNamespaceNumber":0,"wgPageName":"Text_Using_Graphics","wgTitle":"Text Using Graphics","wgCurRevisionId":23234,"wgRevisionId":23234,"wgArticleId":713,"wgIsArticle":!0,"wgIsRedirect":!1,"wgAction":"view","wgUserName":null,"wgUserGroups":["*"],"wgCategories":[],"wgPageContentLanguage":"en","wgPageContentModel":"wikitext","wgRelevantPageName":"Text_Using_Graphics","wgRelevantArticleId":713,"wgIsProbablyEditable":!1,"wgRelevantPageIsProbablyEditable":!1,"wgRestrictionEdit":[],"wgRestrictionMove":[]};RLSTATE={"site.styles":"ready","noscript":"ready",
+"user.styles":"ready","user":"ready","user.options":"loading","skins.vector.styles.legacy":"ready","mediawiki.toc.styles":"ready"};RLPAGEMODULES=["site","mediawiki.page.startup","mediawiki.page.ready","mediawiki.toc","skins.vector.legacy.js"];</script>
+<script>(RLQ=window.RLQ||[]).push(function(){mw.loader.implement("user.options@1hzgi",function($,jQuery,require,module){/*@nomin*/mw.user.tokens.set({"patrolToken":"+\\","watchToken":"+\\","csrfToken":"+\\"});
+});});</script>
+<link rel="stylesheet" href="loadd8b0.css?lang=en&amp;modules=mediawiki.toc.styles%7Cskins.vector.styles.legacy&amp;only=styles&amp;skin=vector"/>
+<script async="" src="load52c0.php?lang=en&amp;modules=startup&amp;only=scripts&amp;raw=1&amp;skin=vector"></script>
+<meta name="generator" content="MediaWiki 1.35.2"/>
+<link rel="shortcut icon" href="https://www.qb64.org/favicon.ico"/>
+<link rel="search" type="application/opensearchdescription+xml" href="opensearch_desc.php" title="QB64 Wiki (en)"/>
+<link rel="EditURI" type="application/rsd+xml" href="api-result251f.xml?action=rsd"/>
+<link rel="alternate" type="application/atom+xml" title="QB64 Wiki Atom feed" href="feeda295.xml?title=Special:RecentChanges&amp;feed=atom"/>
+<!--[if lt IE 9]><script src="/wiki/resources/lib/html5shiv/html5shiv.js"></script><![endif]-->
+</head>
+<body class="mediawiki ltr sitedir-ltr mw-hide-empty-elt ns-0 ns-subject page-Text_Using_Graphics rootpage-Text_Using_Graphics skin-vector action-view skin-vector-legacy">
+<div id="mw-page-base" class="noprint"></div>
+<div id="mw-head-base" class="noprint"></div>
+<div id="content" class="mw-body" role="main">
+	<a id="top"></a>
+	<div id="siteNotice" class="mw-body-content"></div>
+	<div class="mw-indicators mw-body-content">
+	</div>
+	<h1 id="firstHeading" class="firstHeading" lang="en">Text Using Graphics</h1>
+	<div id="bodyContent" class="mw-body-content">
+		<div id="siteSub" class="noprint">From QB64 Wiki</div>
+		<div id="contentSub"></div>
+		<div id="contentSub2"></div>
+		
+		<div id="jump-to-nav"></div>
+		<a class="mw-jump-link" href="#mw-head">Jump to navigation</a>
+		<a class="mw-jump-link" href="#searchInput">Jump to search</a>
+		<div id="mw-content-text" lang="en" dir="ltr" class="mw-content-ltr"><div class="mw-parser-output"><p>While QB64 offers <a href="FONT.html" title="FONT">_FONT</a> and <a href="Unicode.html" title="Unicode">Unicode</a> text options, QBasic was limited in what it could offer. This shortfall could be overcome in various ways including using sprite pictures. Thanks to QB64, we can have the best in both worlds without creating them yourself!
+</p>
+<dl><dd><dl><dd><dl><dd><dl><dd><dl><dd><dl><dd><dl><dd><dl><dd><dl><dd>1) The characters can be loaded in a file for QBasic.</dd>
+<dd>2) Text fonts can be sized without re-loading them.</dd>
+<dd>3) Data files are smaller than <a href="BSAVE.html" title="BSAVE">BSAVE</a> image files.</dd>
+<dd>4} Proper character spacing is already done for you.</dd></dl></dd></dl></dd></dl></dd></dl></dd></dl></dd></dl></dd></dl></dd></dl></dd></dl>
+<div id="toc" class="toc" role="navigation" aria-labelledby="mw-toc-heading"><input type="checkbox" role="button" id="toctogglecheckbox" class="toctogglecheckbox" style="display:none" /><div class="toctitle" lang="en" dir="ltr"><h2 id="mw-toc-heading">Contents</h2><span class="toctogglespan"><label class="toctogglelabel" for="toctogglecheckbox"></label></span></div>
+<ul>
+<li class="toclevel-1 tocsection-1"><a href="#Bit_Packing_Pixel_Data"><span class="tocnumber">1</span> <span class="toctext">Bit Packing Pixel Data</span></a></li>
+<li class="toclevel-1 tocsection-2"><a href="#Displaying_Text_Characters"><span class="tocnumber">2</span> <span class="toctext">Displaying Text Characters</span></a></li>
+<li class="toclevel-1 tocsection-3"><a href="#Font_and_Unicode_Conversion"><span class="tocnumber">3</span> <span class="toctext">Font and Unicode Conversion</span></a></li>
+<li class="toclevel-1 tocsection-4"><a href="#Reading_the_Data_File"><span class="tocnumber">4</span> <span class="toctext">Reading the Data File</span></a></li>
+<li class="toclevel-1 tocsection-5"><a href="#References"><span class="tocnumber">5</span> <span class="toctext">References</span></a></li>
+</ul>
+</div>
+
+<h2><span class="mw-headline" id="Bit_Packing_Pixel_Data">Bit Packing Pixel Data</span></h2>
+<p>In QBasic, text blocks were always 8 pixels wide no matter what screen mode was used. This allowed the total data value of a row to be set by reading 8 pixels using <a href="POINT.html" title="POINT">POINT</a>. The value can be stored in one <a href="BYTE.html" title="BYTE">_BYTE</a>(8 bits) of data using <a href="ASCII.html" title="ASCII">ASCII</a> string characters.
+</p><p><br />
+</p>
+<center><span style="font-family: Courier New, Courier, monospace; font-size: 0.80em; line-height: 50%;">QBasic concept by Artelius</span></center>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: courier; background-color: lightgrey; color: black;"> <i> </i>
+<a href="SCREEN.html" title="SCREEN"><span style="color:blue;">SCREEN</span></a> 12             'text characters are 8 X 16 pixel blocks
+<a href="DIM.html" title="DIM"><span style="color:blue;">DIM</span></a> <a href="SHARED.html" title="SHARED"><span style="color:blue;">SHARED</span></a> Char(0 <a href="TO.html" title="TO"><span style="color:blue;">TO</span></a> 255, 0 <a href="TO.html" title="TO"><span style="color:blue;">TO</span></a> 15) <a href="AS.html" title="AS"><span style="color:blue;">AS</span></a> <a href="STRING.html" title="STRING"><span style="color:blue;">STRING</span></a> * 1  'store data by character row byte values
+TextSave                     'call to SUB at start of program
+
+<a href="SUB.html" title="SUB"><span style="color:blue;">SUB</span></a> TextSave
+<a href="OUT.html" title="OUT"><span style="color:blue;">OUT</span></a> <a href="%26H.html" title="&amp;H"><span style="color:blue;">&amp;H</span></a>3C8, 1: <a href="OUT.html" title="OUT"><span style="color:blue;">OUT</span></a> <a href="%26H.html" title="&amp;H"><span style="color:blue;">&amp;H</span></a>3C9, 0: <a href="OUT.html" title="OUT"><span style="color:blue;">OUT</span></a> <a href="%26H.html" title="&amp;H"><span style="color:blue;">&amp;H</span></a>3C9, 0: <a href="OUT.html" title="OUT"><span style="color:blue;">OUT</span></a> <a href="%26H.html" title="&amp;H"><span style="color:blue;">&amp;H</span></a>3C9, 0 'print text as background color
+<a href="COLOR.html" title="COLOR"><span style="color:blue;">COLOR</span></a> 1 'hide the character printing
+<a href="FOR...html" title="FOR...NEXT"><span style="color:blue;">FOR</span></a> ascii% = 0 <a href="TO.html" title="TO"><span style="color:blue;">TO</span></a> 255 'Draw map of each character
+   <a href="IF...html" title="IF...THEN"><span style="color:blue;">IF</span></a> ascii% = 7 <a href="THEN.html" title="THEN"><span style="color:blue;">THEN</span></a> ascii% = 8              'eliminate beep character sound when printed
+   <a href="LOCATE.html" title="LOCATE"><span style="color:blue;">LOCATE</span></a> 1, 1: <a href="PRINT.html" title="PRINT"><span style="color:blue;">PRINT</span></a> <a href="CHR%24.html" title="CHR$"><span style="color:blue;">CHR$</span></a>(ascii%)            'PRINT ASCII characters to top left corner
+   <a href="FOR...html" title="FOR...NEXT"><span style="color:blue;">FOR</span></a> row% = 0 <a href="TO.html" title="TO"><span style="color:blue;">TO</span></a> 15                         'read 16 row byte values
+      byte = 0                                'reset value every row
+      <a href="FOR...html" title="FOR...NEXT"><span style="color:blue;">FOR</span></a> col% = 7 <a href="TO.html" title="TO"><span style="color:blue;">TO</span></a> 0 <a href="STEP.html" title="STEP"><span style="color:blue;">STEP</span></a> -1               'read 8 pixels from right to left
+         byte = byte * 2 - (<a href="POINT.html" title="POINT"><span style="color:blue;">POINT</span></a>(col%, row%) &gt; 0)  'bit-packing with 2 ^ bit
+      <a href="NEXT.html" title="NEXT"><span style="color:blue;">NEXT</span></a>
+      Char(ascii%, row%) = <a href="CHR%24.html" title="CHR$"><span style="color:blue;">CHR$</span></a>(byte)         'convert row byte value to ASCII character
+   <a href="NEXT.html" title="NEXT"><span style="color:blue;">NEXT</span></a>
+   <a href="LOCATE.html" title="LOCATE"><span style="color:blue;">LOCATE</span></a> <a href="CSRLIN.html" title="CSRLIN"><span style="color:blue;">CSRLIN</span></a>, <a href="POS.html" title="POS"><span style="color:blue;">POS</span></a>(0) - 1: <a href="PRINT.html" title="PRINT"><span style="color:blue;">PRINT</span></a> <a href="SPACE%24.html" title="SPACE$"><span style="color:blue;">SPACE$</span></a>(1) 'erase previous character anywhere
+<a href="NEXT.html" title="NEXT"><span style="color:blue;">NEXT</span></a>
+<a href="PALETTE.html" title="PALETTE"><span style="color:blue;">PALETTE</span></a>  'restore all palette colors
+<a href="END_SUB.html" class="mw-redirect" title="END SUB"><span style="color:blue;">END SUB</span></a> <i> </i>
+</p>
+<dl><dd>Above <a href="ASCII.html" title="ASCII">ASCII</a> Characters 7, 9, 10, 11, 12, 13, 28, 29, 30, and 31 won't print in QBasic! <b>QB64</b> can print them with <a href="PRINTSTRING.html" title="PRINTSTRING">_PRINTSTRING</a> or by using <a href="PRINT.html" title="PRINT">PRINT</a> after <a href="CONTROLCHR.html" title="CONTROLCHR">_CONTROLCHR</a> OFF is set.</dd></dl>
+<p><br />
+</p>
+<center><b>Bit Packing</b></center>
+<p style="padding: 1em; line-height:100%; margin-left:10px; white-space: pre; font-family: courier; background-color: white; color: darkgreen;">
+      <a href="FOR...html" title="FOR...NEXT"><span style="color:blue;">FOR</span></a> col% = 7 <a href="TO.html" title="TO"><span style="color:blue;">TO</span></a> 0 <a href="STEP.html" title="STEP"><span style="color:blue;">STEP</span></a> -1                     'read pixels from right to left
+         byte = byte * 2 - (<a href="POINT.html" title="POINT"><span style="color:blue;">POINT</span></a>(col%, row%) &gt; 0)  'bit-packing with 2 ^ bit
+      <a href="NEXT.html" title="NEXT"><span style="color:blue;">NEXT</span></a>
+</p>
+<dl><dd>Bit packing is done by doubling the current byte value and adding one for each bit where a pixel is not colored black.</dd></dl>
+<dl><dd>The <a href="Boolean.html" title="Boolean">boolean</a> statement: <p style="padding: 1em; line-height:100%; margin-left:10px; white-space: pre; font-family: courier; background-color: white; color: darkgreen;">                       {POINT(col%, row%) &gt; 0)</p> evaluates to -1(true) when a pixel is on or 0(false) when a pixel is off. This effectively adds 1 to the byte value. Each loop that byte value is doubled as <a href="POINT.html" title="POINT">POINT</a> goes from right to left. If the left-most pixel is on, it will only add one to the byte value as expected. This makes the total sum of the bit values or the byte value equal to 255 if all of the pixels are on as shown below:</dd></dl>
+<p style="padding: 1em; line-height:100%; margin-left:10px; white-space: pre; font-family: courier; background-color: white; color: darkgreen;"> <b>               Bit\Column #:  0   1   2   3   4   5   6   7   TOTAL </b>
+                Exponent 2 ^:  0   1   2   3   4   5   6   7
+                Bit Value On:  1   2   4   8  16  32  64  128   255
+</p>
+<dl><dd>Alpha-numeric text byte values will never be close to 255 because the first and last columns will normally be 0 as they are used to space text characters. Some characters, such as <a href="CHR%24.html" title="CHR$">CHR$</a>(219) can have byte totals of 255 and have a value every row however.</dd></dl>
+<p><br />
+<i>Example Code:</i> Displays the 16 one byte row values saved as <a href="ASCII.html" title="ASCII">ASCII</a> characters in the <a href="STRING.html" title="STRING">STRING</a> array using <a href="PRINTSTRING.html" title="PRINTSTRING">_PRINTSTRING</a>.
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: Courier, monospace; background-color: darkblue; color: lightgrey; word-wrap: break-word;"> <i> </i>
+<a href="SCREEN.html" title="SCREEN"><span style="color:#87cefa;">SCREEN</span></a> 12 'text characters are 8 X 16 pixel blocks
+<a href="DIM.html" title="DIM"><span style="color:#87cefa;">DIM</span></a> <a href="SHARED.html" title="SHARED"><span style="color:#87cefa;">SHARED</span></a> Char(0 <a href="TO.html" title="TO"><span style="color:#87cefa;">TO</span></a> 255, 0 <a href="TO.html" title="TO"><span style="color:#87cefa;">TO</span></a> 15) <a href="AS.html" title="AS"><span style="color:#87cefa;">AS</span></a> <a href="STRING.html" title="STRING"><span style="color:#87cefa;">STRING</span></a> * 1 'store data by character row byte values
+TextSave 'call to <a href="SUB.html" title="SUB"><span style="color:#87cefa;">SUB</span></a> at start of program
+
+<a href="DO...html" title="DO...LOOP"><span style="color:#87cefa;">DO</span></a>
+  <a href="COLOR.html" title="COLOR"><span style="color:#87cefa;">COLOR</span></a> 11: <a href="LOCATE.html" title="LOCATE"><span style="color:#87cefa;">LOCATE</span></a> 10, 10: <a href="INPUT.html" title="INPUT"><span style="color:#87cefa;">INPUT</span></a> "Enter keypress or an ASCII code 1 to 255: ", cod$
+  <a href="CLS.html" title="CLS"><span style="color:#87cefa;">CLS</span></a>: code = <a href="VAL.html" title="VAL"><span style="color:#87cefa;">VAL</span></a>(cod$)
+  <a href="IF...html" title="IF...THEN"><span style="color:#87cefa;">IF</span></a> (code &lt;= 0 <a href="AND_(boolean).html" title="AND (boolean)"><span style="color:#87cefa;">AND</span></a> <a href="LEN.html" title="LEN"><span style="color:#87cefa;">LEN</span></a>(cod$) &gt; 0) <a href="OR_(boolean).html" title="OR (boolean)"><span style="color:#87cefa;">OR</span></a> code &gt; 255 <a href="THEN.html" title="THEN"><span style="color:#87cefa;">THEN</span></a> code = <a href="ASC.html" title="ASC"><span style="color:#87cefa;">ASC</span></a>(cod$)
+  <a href="COLOR.html" title="COLOR"><span style="color:#87cefa;">COLOR</span></a> 14: <a href="PRINTSTRING.html" title="PRINTSTRING"><span style="color:#87cefa;">_PRINTSTRING</span></a> (0, 50), <a href="LTRIM%24.html" title="LTRIM$"><span style="color:#87cefa;">LTRIM$</span></a>(<a href="STR%24.html" title="STR$"><span style="color:#87cefa;">STR$</span></a>(code))
+  <a href="FOR...html" title="FOR...NEXT"><span style="color:#87cefa;">FOR</span></a> n = 0 <a href="TO.html" title="TO"><span style="color:#87cefa;">TO</span></a> 15
+    ch$ = Char(code, n)
+    <a href="PRINTSTRING.html" title="PRINTSTRING"><span style="color:#87cefa;">_PRINTSTRING</span></a> (n * 30 + 40, 50), ch$ + ","
+  <a href="NEXT.html" title="NEXT"><span style="color:#87cefa;">NEXT</span></a>
+  <a href="PRINTSTRING.html" title="PRINTSTRING"><span style="color:#87cefa;">_PRINTSTRING</span></a> (600, 50), <a href="CHR%24.html" title="CHR$"><span style="color:#87cefa;">CHR$</span></a>(code)
+<a href="LOOP.html" title="LOOP"><span style="color:#87cefa;">LOOP</span></a> <a href="UNTIL.html" title="UNTIL"><span style="color:#87cefa;">UNTIL</span></a> <a href="LEN.html" title="LEN"><span style="color:#87cefa;">LEN</span></a>(cod$) = 0
+<a href="END.html" title="END"><span style="color:#87cefa;">END</span></a>
+
+<a href="SUB.html" title="SUB"><span style="color:#87cefa;">SUB</span></a> TextSave
+<a href="OUT.html" title="OUT"><span style="color:#87cefa;">OUT</span></a> <a href="%26H.html" title="&amp;H"><span style="color:#87cefa;">&amp;H</span></a>3C8, 1: <a href="OUT.html" title="OUT"><span style="color:#87cefa;">OUT</span></a> <a href="%26H.html" title="&amp;H"><span style="color:#87cefa;">&amp;H</span></a>3C9, 0: <a href="OUT.html" title="OUT"><span style="color:#87cefa;">OUT</span></a> <a href="%26H.html" title="&amp;H"><span style="color:#87cefa;">&amp;H</span></a>3C9, 0: <a href="OUT.html" title="OUT"><span style="color:#87cefa;">OUT</span></a> <a href="%26H.html" title="&amp;H"><span style="color:#87cefa;">&amp;H</span></a>3C9, 0 'print text as background color
+<a href="COLOR.html" title="COLOR"><span style="color:#87cefa;">COLOR</span></a> 1 'hide the character printing
+<a href="FOR...html" title="FOR...NEXT"><span style="color:#87cefa;">FOR</span></a> ascii% = 0 <a href="TO.html" title="TO"><span style="color:#87cefa;">TO</span></a> 255 'Draw map of each character
+  <a href="PRINTSTRING.html" title="PRINTSTRING"><span style="color:#87cefa;">_PRINTSTRING</span></a> (0, 0), <a href="CHR%24.html" title="CHR$"><span style="color:#87cefa;">CHR$</span></a>(ascii%) '<a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> ASCII characters to top left corner
+  <a href="FOR...html" title="FOR...NEXT"><span style="color:#87cefa;">FOR</span></a> row% = 0 <a href="TO.html" title="TO"><span style="color:#87cefa;">TO</span></a> 15 'read 16 row byte values
+    byte = 0 'reset value every row
+    <a href="FOR...html" title="FOR...NEXT"><span style="color:#87cefa;">FOR</span></a> col% = 7 <a href="TO.html" title="TO"><span style="color:#87cefa;">TO</span></a> 0 <a href="STEP.html" title="STEP"><span style="color:#87cefa;">STEP</span></a> -1 'read 8 pixels from right to left
+      byte = byte * 2 - (<a href="POINT.html" title="POINT"><span style="color:#87cefa;">POINT</span></a>(col%, row%) &gt; 0) 'bit-packing with 2 ^ bit
+    <a href="NEXT.html" title="NEXT"><span style="color:#87cefa;">NEXT</span></a>
+    Char(ascii%, row%) = <a href="CHR%24.html" title="CHR$"><span style="color:#87cefa;">CHR$</span></a>(byte) 'convert row byte value to ASCII character
+  <a href="NEXT.html" title="NEXT"><span style="color:#87cefa;">NEXT</span></a>
+<a href="NEXT.html" title="NEXT"><span style="color:#87cefa;">NEXT</span></a>
+<a href="PALETTE.html" title="PALETTE"><span style="color:#87cefa;">PALETTE</span></a> 'restore all palette colors
+<a href="END_SUB.html" class="mw-redirect" title="END SUB"><span style="color:#87cefa;">END SUB</span></a>
+</p>
+<dl><dd><dl><dd><dl><dd><dl><dd><i>Note:</i> <a href="ASCII.html" title="ASCII">ASCII</a> character values of <a href="CHR%24.html" title="CHR$">CHR$</a>(0), <a href="CHR%24.html" title="CHR$">CHR$</a>(32) and <a href="CHR%24.html" title="CHR$">CHR$</a>(255) will only display an empty space!</dd></dl></dd></dl></dd></dl></dd></dl>
+<p><br />
+</p>
+<dl><dd>The <a href="ASCII.html" title="ASCII">ASCII</a> character data in the array can also be saved to a comma separated file with <a href="WRITE.html" title="WRITE">WRITE</a> for later use. In fact, the data can be read and displayed by QBasic programs later using special <a href="LOADFONT.html" title="LOADFONT">fonts</a> or <a href="Unicode.html" title="Unicode">Unicode</a>! Wider characters will require larger values than <a href="BYTE.html" title="BYTE">_BYTE</a>.</dd></dl>
+<p style="text-align: center">(<a href="#toc">Return to Top</a>)</p>
+<h2><span class="mw-headline" id="Displaying_Text_Characters">Displaying Text Characters</span></h2>
+<p>Once the data is saved, we need something to convert the data back into text characters. There are several ways to do this simply by using <a href="PSET.html" title="PSET">PSET</a> for normal sizes or <a href="CIRCLE.html" title="CIRCLE">CIRCLE</a> or <a href="LINE.html" title="LINE">LINE</a> to amplify the displayed character sizes. Use a normal <a href="FOR...html" title="FOR...NEXT">FOR</a> 0 TO 7 loop to read:
+</p><p><br />
+</p>
+<center><b><a href="ASCII.html" title="ASCII">ASCII</a> 8 X 16 Text character size increased using <a href="CIRCLE.html" title="CIRCLE">CIRCLE</a></b></center>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: Courier, monospace; background-color: darkblue; color: lightgrey; word-wrap: break-word;"> <i> </i>
+<a href="SCREEN.html" title="SCREEN"><span style="color:#87cefa;">SCREEN</span></a> 12 'text characters are 8 X 16 pixel blocks
+<a href="DIM.html" title="DIM"><span style="color:#87cefa;">DIM</span></a> <a href="SHARED.html" title="SHARED"><span style="color:#87cefa;">SHARED</span></a> Char(0 <a href="TO.html" title="TO"><span style="color:#87cefa;">TO</span></a> 255, 0 <a href="TO.html" title="TO"><span style="color:#87cefa;">TO</span></a> 15) <a href="AS.html" title="AS"><span style="color:#87cefa;">AS</span></a> <a href="STRING.html" title="STRING"><span style="color:#87cefa;">STRING</span></a> * 1 'store data by character row byte values
+TextSave 'call to <a href="SUB.html" title="SUB"><span style="color:#87cefa;">SUB</span></a> at start of program
+
+ch = 1 'character 1
+DO: rowy = 0
+  <a href="COLOR.html" title="COLOR"><span style="color:#87cefa;">COLOR</span></a> 14: <a href="LOCATE.html" title="LOCATE"><span style="color:#87cefa;">LOCATE</span></a> 26, 5
+  <a href="FOR...html" title="FOR...NEXT"><span style="color:#87cefa;">FOR</span></a> yy = 100 <a href="TO.html" title="TO"><span style="color:#87cefa;">TO</span></a> 220 <a href="STEP.html" title="STEP"><span style="color:#87cefa;">STEP</span></a> 8
+    rowval = <a href="ASC.html" title="ASC"><span style="color:#87cefa;">ASC</span></a>(Char$(ch, rowy)) 'pixel row value
+    <a href="SELECT_CASE.html" title="SELECT CASE"><span style="color:#87cefa;">SELECT CASE</span></a> ch
+      <a href="CASE.html" class="mw-redirect" title="CASE"><span style="color:#87cefa;">CASE</span></a> 8, 10, 178, 182, 185, 186, 199, 204, 206, 215, 219, 222
+        <a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> <a href="STR%24.html" title="STR$"><span style="color:#87cefa;">STR$</span></a>(rowval); 'compact the values
+      <a href="CASE_ELSE.html" class="mw-redirect" title="CASE ELSE"><span style="color:#87cefa;">CASE ELSE</span></a>: <a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> rowval;
+    <a href="END_SELECT.html" title="END SELECT"><span style="color:#87cefa;">END SELECT</span></a>
+    SetCHR 25, <a href="POS.html" title="POS"><span style="color:#87cefa;">POS</span></a>(0) - 2, 11, rowval
+    colx = 0
+    <a href="FOR...html" title="FOR...NEXT"><span style="color:#87cefa;">FOR</span></a> xx = 300 <a href="TO.html" title="TO"><span style="color:#87cefa;">TO</span></a> 356 <a href="STEP.html" title="STEP"><span style="color:#87cefa;">STEP</span></a> 8   
+      <a href="IF...html" title="IF...THEN"><span style="color:#87cefa;">IF</span></a> (rowval <a href="AND_(boolean).html" title="AND (boolean)"><span style="color:#87cefa;">AND</span></a> 2 ^ colx) &gt; 0 <a href="THEN.html" title="THEN"><span style="color:#87cefa;">THEN</span></a>
+        <a href="CIRCLE.html" title="CIRCLE"><span style="color:#87cefa;">CIRCLE</span></a> (xx, yy), 4, 7   'display text character as full white circles
+        <a href="PAINT.html" title="PAINT"><span style="color:#87cefa;">PAINT</span></a> <a href="STEP.html" title="STEP"><span style="color:#87cefa;">STEP</span></a>(0, 0), 15, 7
+        ' <a href="LINE.html" title="LINE"><span style="color:#87cefa;">LINE</span></a> (xx - 4, yy - 4)-(xx + 3, yy + 3), 15, BF
+      <a href="ELSE.html" title="ELSE"><span style="color:#87cefa;">ELSE</span></a>:
+        <a href="CIRCLE.html" title="CIRCLE"><span style="color:#87cefa;">CIRCLE</span></a> (xx, yy), 4, 1   'display background as full blue circles
+        <a href="PAINT.html" title="PAINT"><span style="color:#87cefa;">PAINT</span></a> <a href="STEP.html" title="STEP"><span style="color:#87cefa;">STEP</span></a>(0, 0), 1
+        '  <a href="LINE.html" title="LINE"><span style="color:#87cefa;">LINE</span></a> (xx - 4, yy - 4)-(xx + 3, yy + 3), 1, BF
+      <a href="END_IF.html" class="mw-redirect" title="END IF"><span style="color:#87cefa;">END IF</span></a>
+      colx = colx + 1
+    <a href="NEXT.html" title="NEXT"><span style="color:#87cefa;">NEXT</span></a>
+    <a href="DELAY.html" title="DELAY"><span style="color:#87cefa;">_DELAY</span></a> .2
+    rowy = rowy + 1
+  <a href="NEXT.html" title="NEXT"><span style="color:#87cefa;">NEXT</span></a>
+  <a href="LOCATE.html" title="LOCATE"><span style="color:#87cefa;">LOCATE</span></a> 22, 40: <a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> <a href="SPACE%24.html" title="SPACE$"><span style="color:#87cefa;">SPACE$</span></a>(39)
+  <a href="LOCATE.html" title="LOCATE"><span style="color:#87cefa;">LOCATE</span></a> 22, 5: <a href="COLOR.html" title="COLOR"><span style="color:#87cefa;">COLOR</span></a> 13: <a href="LINE_INPUT.html" title="LINE INPUT"><span style="color:#87cefa;">LINE INPUT</span></a> "Enter ASCII code(1 to 255) or press key character (Enter quits): ", ch$
+  <a href="LOCATE.html" title="LOCATE"><span style="color:#87cefa;">LOCATE</span></a> 23, 2: <a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> <a href="SPACE%24.html" title="SPACE$"><span style="color:#87cefa;">SPACE$</span></a>(78)
+  <a href="LOCATE.html" title="LOCATE"><span style="color:#87cefa;">LOCATE</span></a> 25, 4: <a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> <a href="SPACE%24.html" title="SPACE$"><span style="color:#87cefa;">SPACE$</span></a>(75)
+  <a href="LOCATE.html" title="LOCATE"><span style="color:#87cefa;">LOCATE</span></a> 26, 4: <a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> <a href="SPACE%24.html" title="SPACE$"><span style="color:#87cefa;">SPACE$</span></a>(75)
+  ch = <a href="VAL.html" title="VAL"><span style="color:#87cefa;">VAL</span></a>(ch$)
+  <a href="IF...html" title="IF...THEN"><span style="color:#87cefa;">IF</span></a> ch = 0 <a href="AND_(boolean).html" title="AND (boolean)"><span style="color:#87cefa;">AND</span></a> <a href="LEN.html" title="LEN"><span style="color:#87cefa;">LEN</span></a>(ch$) <a href="THEN.html" title="THEN"><span style="color:#87cefa;">THEN</span></a> ch = <a href="ASC.html" title="ASC"><span style="color:#87cefa;">ASC</span></a>(ch$)
+<a href="LOOP.html" title="LOOP"><span style="color:#87cefa;">LOOP</span></a> <a href="UNTIL.html" title="UNTIL"><span style="color:#87cefa;">UNTIL</span></a> ch = 0 <a href="OR_(boolean).html" title="OR (boolean)"><span style="color:#87cefa;">OR</span></a> ch &gt; 255
+<a href="END.html" title="END"><span style="color:#87cefa;">END</span></a>
+
+<a href="SUB.html" title="SUB"><span style="color:#87cefa;">SUB</span></a> SetCHR (Trow, Tcol, FG, ASCode)    'displays ASCII character value from array
+Srow = 16 * (Trow - 1): Scol = 8 * (Tcol - 1) 'convert text to graphic coordinates
+<a href="FOR...html" title="FOR...NEXT"><span style="color:#87cefa;">FOR</span></a> y = 0 <a href="TO.html" title="TO"><span style="color:#87cefa;">TO</span></a> 15
+  ybyte$ = Char$(ASCode, y): yval = <a href="ASC.html" title="ASC"><span style="color:#87cefa;">ASC</span></a>(ybyte$)
+  <a href="FOR...html" title="FOR...NEXT"><span style="color:#87cefa;">FOR</span></a> x = 0 <a href="TO.html" title="TO"><span style="color:#87cefa;">TO</span></a> 7
+    <a href="IF...html" title="IF...THEN"><span style="color:#87cefa;">IF</span></a> (yval <a href="AND.html" title="AND"><span style="color:#87cefa;">AND</span></a> 2 ^ x) &gt; 0 <a href="THEN.html" title="THEN"><span style="color:#87cefa;">THEN</span></a> <a href="PSET.html" title="PSET"><span style="color:#87cefa;">PSET</span></a> (Scol + x, Srow + y), FG
+  <a href="NEXT.html" title="NEXT"><span style="color:#87cefa;">NEXT</span></a>
+<a href="NEXT.html" title="NEXT"><span style="color:#87cefa;">NEXT</span></a>
+<a href="END_SUB.html" class="mw-redirect" title="END SUB"><span style="color:#87cefa;">END SUB</span></a>
+
+<a href="SUB.html" title="SUB"><span style="color:#87cefa;">SUB</span></a> TextSave
+<a href="OUT.html" title="OUT"><span style="color:#87cefa;">OUT</span></a> <a href="%26H.html" title="&amp;H"><span style="color:#87cefa;">&amp;H</span></a>3C8, 1: <a href="OUT.html" title="OUT"><span style="color:#87cefa;">OUT</span></a> <a href="%26H.html" title="&amp;H"><span style="color:#87cefa;">&amp;H</span></a>3C9, 0: <a href="OUT.html" title="OUT"><span style="color:#87cefa;">OUT</span></a> <a href="%26H.html" title="&amp;H"><span style="color:#87cefa;">&amp;H</span></a>3C9, 0: <a href="OUT.html" title="OUT"><span style="color:#87cefa;">OUT</span></a> <a href="%26H.html" title="&amp;H"><span style="color:#87cefa;">&amp;H</span></a>3C9, 0 'print text as background color
+<a href="COLOR.html" title="COLOR"><span style="color:#87cefa;">COLOR</span></a> 1 'hide the character printing
+<a href="FOR...html" title="FOR...NEXT"><span style="color:#87cefa;">FOR</span></a> ascii% = 0 <a href="TO.html" title="TO"><span style="color:#87cefa;">TO</span></a> 255 'Draw map of each character
+  <a href="PRINTSTRING.html" title="PRINTSTRING"><span style="color:#87cefa;">_PRINTSTRING</span></a> (0, 0), <a href="CHR%24.html" title="CHR$"><span style="color:#87cefa;">CHR$</span></a>(ascii%) '<a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> ASCII characters to top left corner
+  <a href="FOR...html" title="FOR...NEXT"><span style="color:#87cefa;">FOR</span></a> row% = 0 <a href="TO.html" title="TO"><span style="color:#87cefa;">TO</span></a> 15 'read 16 row byte values
+    byte = 0 'reset value every row
+    <a href="FOR...html" title="FOR...NEXT"><span style="color:#87cefa;">FOR</span></a> col% = 7 <a href="TO.html" title="TO"><span style="color:#87cefa;">TO</span></a> 0 <a href="STEP.html" title="STEP"><span style="color:#87cefa;">STEP</span></a> -1 'read 8 pixels from right to left
+      byte = byte * 2 - (<a href="POINT.html" title="POINT"><span style="color:#87cefa;">POINT</span></a>(col%, row%) &gt; 0) 'bit-packing with 2 ^ bit
+    <a href="NEXT.html" title="NEXT"><span style="color:#87cefa;">NEXT</span></a>
+    Char(ascii%, row%) = <a href="CHR%24.html" title="CHR$"><span style="color:#87cefa;">CHR$</span></a>(byte) 'convert row byte value to ASCII character
+  <a href="NEXT.html" title="NEXT"><span style="color:#87cefa;">NEXT</span></a>
+<a href="NEXT.html" title="NEXT"><span style="color:#87cefa;">NEXT</span></a>
+<a href="PALETTE.html" title="PALETTE"><span style="color:#87cefa;">PALETTE</span></a> 'restore all palette colors
+<a href="END_SUB.html" class="mw-redirect" title="END SUB"><span style="color:#87cefa;">END SUB</span></a> <i> </i>
+</p>
+<center><span style="font-family: Courier New, Courier, monospace; font-size: 0.80em; line-height: 50%;">Code by Ted Weissgerber</span></center>
+<dl><dd>The program above shows each array <a href="BYTE.html" title="BYTE">byte</a> character value and character. <a href="PRINT.html" title="PRINT">PRINT</a> will not print some characters in QB64 or QB.</dd></dl>
+<center>Use <b><a href="CONTROLCHR.html" title="CONTROLCHR">_CONTROLCHR</a> OFF</b> to <a href="PRINT.html" title="PRINT">PRINT</a> control characters in QB64!</center>
+<p><br />
+</p>
+<center><b><a href="ASCII.html" title="ASCII">ASCII</a> 8 X 16 Text Character size increased using <a href="LINE.html" title="LINE">LINE</a></b></center>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: Courier, monospace; background-color: darkblue; color: lightgrey; word-wrap: break-word;"> <i> </i>
+<a href="SUB.html" title="SUB"><span style="color:#87cefa;">SUB</span></a> DisplayText (Xpos, Ypos, FG, BG, Xsize, Ysize, text$)
+x = Xpos: y = Ypos: Xoff = (8 * Xsize): L = <a href="LEN.html" title="LEN"><span style="color:#87cefa;">LEN</span></a>(text$)
+<a href="IF...html" title="IF...THEN"><span style="color:#87cefa;">IF</span></a> BG <a href="THEN.html" title="THEN"><span style="color:#87cefa;">THEN</span></a>                                 'set BackGround if not 0
+<a href="LINE.html" title="LINE"><span style="color:#87cefa;">LINE</span></a> (x - (2 * Xsize), y - Ysize)-(x + (L * Xoff), y + (16 * Ysize)), BG, BF
+<a href="END_IF.html" class="mw-redirect" title="END IF"><span style="color:#87cefa;">END IF</span></a>
+<a href="FOR...html" title="FOR...NEXT"><span style="color:#87cefa;">FOR</span></a> character = 1 <a href="TO.html" title="TO"><span style="color:#87cefa;">TO</span></a> L                     'go through text chars
+  tx = <a href="ASC.html" title="ASC"><span style="color:#87cefa;">ASC</span></a>(<a href="MID%24.html" title="MID$"><span style="color:#87cefa;">MID$</span></a>(text$, character, 1))      'get ASCII value
+  <a href="FOR...html" title="FOR...NEXT"><span style="color:#87cefa;">FOR</span></a> r = 0 <a href="TO.html" title="TO"><span style="color:#87cefa;">TO</span></a> 15                          'current row of 16
+    <a href="FOR...html" title="FOR...NEXT"><span style="color:#87cefa;">FOR</span></a> c = 0 <a href="TO.html" title="TO"><span style="color:#87cefa;">TO</span></a> 7 '                       'cycle through 8 bit values
+      <a href="IF...html" title="IF...THEN"><span style="color:#87cefa;">IF</span></a> <a href="ASC.html" title="ASC"><span style="color:#87cefa;">ASC</span></a>(Char(tx, r)) <a href="AND.html" title="AND"><span style="color:#87cefa;">AND</span></a> 2 ^ c <a href="THEN.html" title="THEN"><span style="color:#87cefa;">THEN</span></a>      'if bit is on
+        <a href="LINE.html" title="LINE"><span style="color:#87cefa;">LINE</span></a> (x, y)-(x + Xsize - 1, y + Ysize - 1), FG, BF
+      <a href="END_IF.html" class="mw-redirect" title="END IF"><span style="color:#87cefa;">END IF</span></a>  'adapted from code by TerryRitchie @ www.QB64.net
+      x = x + Xsize                        'move x position
+    <a href="NEXT.html" title="NEXT"><span style="color:#87cefa;">NEXT</span></a> c                                 'next bit
+    y = y + Ysize                          'move y position
+    x = Xpos                               'reset column position
+  <a href="NEXT.html" title="NEXT"><span style="color:#87cefa;">NEXT</span></a> r
+  y = Ypos                                 'reset y position
+  Xpos = Xpos + Xoff                       'set to next character column
+<a href="NEXT.html" title="NEXT"><span style="color:#87cefa;">NEXT</span></a> character                             'next character
+<a href="END_SUB.html" class="mw-redirect" title="END SUB"><span style="color:#87cefa;">END SUB</span></a> <i> </i>
+</p>
+<center><span style="font-family: Courier New, Courier, monospace; font-size: 0.80em; line-height: 50%;">Adapted from code by Terry Ritchie</span></center>
+<dl><dd><b>NOTE: This procedure requires Char <a href="STRING.html" title="STRING">STRING</a> array data created by the TextSave <a href="SUB.html" title="SUB">SUB</a> from above to be run first!</b>
+<ul><li><i>Xpos</i> and <i>Ypos</i> parameters set the top left graphic start position coordinate of the text string. <a href="LOCATE.html" title="LOCATE">LOCATE</a> cannot be used.</li>
+<li><i>FG</i> and <i>BG</i> determine the text foreground and background colors respectively. If BG is 0, then no background color is used.</li>
+<li><i>Xsize</i> and <i>Ysize</i> determines the size multiple increase of the letters. One is normal size, two is double size etc.</li>
+<li><i>text$</i> is the text <a href="STRING.html" title="STRING">STRING</a> that is to be printed. There will not be an error or screen roll if text goes out of the screen area!</li></ul></dd></dl>
+<p><br />
+</p>
+<p style="text-align: center">(<a href="#toc">Return to Top</a>)</p>
+<h2><span class="mw-headline" id="Font_and_Unicode_Conversion">Font and Unicode Conversion</span></h2>
+<p>To convert different sized <a href="FONT.html" title="FONT">fonts</a> or <a href="Unicode.html" title="Unicode">Unicode</a> characters, first determine the text block size to find how much data is required:
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: Courier, monospace; background-color: darkblue; color: lightgrey; word-wrap: break-word;">                           'Code must be run in QB64 ONLY! <i> </i>
+<a href="DEFINT.html" title="DEFINT"><span style="color:#87cefa;">DEFINT</span></a> A-Z
+<a href="DIM.html" title="DIM"><span style="color:#87cefa;">DIM</span></a> <a href="SHARED.html" title="SHARED"><span style="color:#87cefa;">SHARED</span></a> high%  'value is shared with both SUB procedures!
+DO
+  <a href="INPUT.html" title="INPUT"><span style="color:#87cefa;">INPUT</span></a> "Enter Screen mode 1, 2 or 7 to 13 or 256 for <a href="NEWIMAGE.html" title="NEWIMAGE"><span style="color:#87cefa;">_NEWIMAGE</span></a>: ", scr$
+  mode% = <a href="VAL.html" title="VAL"><span style="color:#87cefa;">VAL</span></a>(scr$)
+<a href="LOOP.html" title="LOOP"><span style="color:#87cefa;">LOOP</span></a> <a href="UNTIL.html" title="UNTIL"><span style="color:#87cefa;">UNTIL</span></a> mode% &gt; 0
+<a href="SELECT_CASE.html" title="SELECT CASE"><span style="color:#87cefa;">SELECT CASE</span></a> mode%
+  <a href="CASE.html" class="mw-redirect" title="CASE"><span style="color:#87cefa;">CASE</span></a> 1, 2, 7 <a href="TO.html" title="TO"><span style="color:#87cefa;">TO</span></a> 13: <a href="SCREEN.html" title="SCREEN"><span style="color:#87cefa;">SCREEN</span></a> mode%
+  <a href="CASE.html" class="mw-redirect" title="CASE"><span style="color:#87cefa;">CASE</span></a> 256: <a href="SCREEN.html" title="SCREEN"><span style="color:#87cefa;">SCREEN</span></a> <a href="NEWIMAGE.html" title="NEWIMAGE"><span style="color:#87cefa;">_NEWIMAGE</span></a>(800, 600, mode%)
+  <a href="CASE_ELSE.html" class="mw-redirect" title="CASE ELSE"><span style="color:#87cefa;">CASE ELSE</span></a>: <a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> "Invalid screen mode selected!": <a href="END.html" title="END"><span style="color:#87cefa;">END</span></a>
+<a href="END_SELECT.html" title="END SELECT"><span style="color:#87cefa;">END SELECT</span></a>
+
+<a href="INPUT.html" title="INPUT"><span style="color:#87cefa;">INPUT</span></a> "Enter first name of TTF font to use or hit Enter for block size: ", TTFont$
+<a href="IF...html" title="IF...THEN"><span style="color:#87cefa;">IF</span></a> <a href="LEN.html" title="LEN"><span style="color:#87cefa;">LEN</span></a>(TTFont$) <a href="THEN.html" title="THEN"><span style="color:#87cefa;">THEN</span></a> <a href="INPUT.html" title="INPUT"><span style="color:#87cefa;">INPUT</span></a> "Enter font height: ", hi$
+height% = <a href="VAL.html" title="VAL"><span style="color:#87cefa;">VAL</span></a>(hi$)
+<a href="IF...html" title="IF...THEN"><span style="color:#87cefa;">IF</span></a> height% &gt; 0 <a href="THEN.html" title="THEN"><span style="color:#87cefa;">THEN</span></a>
+  fnt&amp; = <a href="LOADFONT.html" title="LOADFONT"><span style="color:#87cefa;">_LOADFONT</span></a>("C:\Windows\Fonts\" + TTFont$ + ".ttf", height%, style$)
+  <a href="IF...html" title="IF...THEN"><span style="color:#87cefa;">IF</span></a> fnt&amp; &lt;= 0 <a href="THEN.html" title="THEN"><span style="color:#87cefa;">THEN</span></a> <a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> "Invalid Font handle!": <a href="END.html" title="END"><span style="color:#87cefa;">END</span></a>
+  <a href="FONT.html" title="FONT"><span style="color:#87cefa;">_FONT</span></a> fnt&amp;
+<a href="END_IF.html" class="mw-redirect" title="END IF"><span style="color:#87cefa;">END IF</span></a>
+
+  'add <a href="Unicode.html" title="Unicode"><span style="color:#87cefa;">Unicode</span></a> <a href="Code_Pages.html" title="Code Pages"><span style="color:#87cefa;">Code Page</span></a> data using <a href="MAPUNICODE.html" title="MAPUNICODE"><span style="color:#87cefa;">_MAPUNICODE</span></a> here:
+
+high% = <a href="FONTHEIGHT.html" title="FONTHEIGHT"><span style="color:#87cefa;">_FONTHEIGHT</span></a>: wid% = <a href="PRINTWIDTH.html" title="PRINTWIDTH"><span style="color:#87cefa;">_PRINTWIDTH</span></a>("W")
+<a href="DIM.html" title="DIM"><span style="color:#87cefa;">DIM</span></a> <a href="SHARED.html" title="SHARED"><span style="color:#87cefa;">SHARED</span></a> Char(0 <a href="TO.html" title="TO"><span style="color:#87cefa;">TO</span></a> 255, 0 <a href="TO.html" title="TO"><span style="color:#87cefa;">TO</span></a> high%) <a href="AS.html" title="AS"><span style="color:#87cefa;">AS</span></a> <a href="INTEGER.html" title="INTEGER"><span style="color:#87cefa;">INTEGER</span></a> 'size for integer <a href="MKI%24.html" title="MKI$"><span style="color:#87cefa;">MKI$</span></a> strings up to 16 wide
+TextSave 'create character pixel data
+
+DisplayText 10, 20, 15, 2, 2, "This is a graphic test of font!"
+
+<a href="PRINTSTRING.html" title="PRINTSTRING"><span style="color:#87cefa;">_PRINTSTRING</span></a> (10, 120), "Actual text or font size =" + <a href="STR%24.html" title="STR$"><span style="color:#87cefa;">STR$</span></a>(wid%) + " X" + <a href="STR%24.html" title="STR$"><span style="color:#87cefa;">STR$</span></a>(high%)
+
+Char(0, 0) = high%  'place font height at start of array and file. Other dimension always 255
+ff = <a href="FREEFILE.html" title="FREEFILE"><span style="color:#87cefa;">FREEFILE</span></a>
+<a href="OPEN.html" title="OPEN"><span style="color:#87cefa;">OPEN</span></a> "FontText.bin" <a href="FOR.html" class="mw-redirect" title="FOR"><span style="color:#87cefa;">FOR</span></a> <a href="OUTPUT.html" class="mw-redirect" title="OUTPUT"><span style="color:#87cefa;">OUTPUT</span></a> <a href="AS.html" title="AS"><span style="color:#87cefa;">AS</span></a> #ff 'erase previous data
+<a href="CLOSE.html" title="CLOSE"><span style="color:#87cefa;">CLOSE</span></a> #ff
+<a href="OPEN.html" title="OPEN"><span style="color:#87cefa;">OPEN</span></a> "FontText.bin" <a href="FOR.html" class="mw-redirect" title="FOR"><span style="color:#87cefa;">FOR</span></a> <a href="BINARY-2.html" class="mw-redirect" title="BINARY"><span style="color:#87cefa;">BINARY</span></a> <a href="AS.html" title="AS"><span style="color:#87cefa;">AS</span></a> #ff
+<a href="PUT.html" title="PUT"><span style="color:#87cefa;">PUT</span></a> #ff, , Char()                'PUT the entire array into a BINARY file
+<a href="CLOSE.html" title="CLOSE"><span style="color:#87cefa;">CLOSE</span></a> #ff
+
+<a href="END.html" title="END"><span style="color:#87cefa;">END</span></a>
+
+<a href="SUB.html" title="SUB"><span style="color:#87cefa;">SUB</span></a> DisplayText (Xpos, Ypos, FG, Xsize, Ysize, text$)
+x = Xpos: y = Ypos: L = <a href="LEN.html" title="LEN"><span style="color:#87cefa;">LEN</span></a>(text$)
+<a href="FOR...html" title="FOR...NEXT"><span style="color:#87cefa;">FOR</span></a> character = 1 <a href="TO.html" title="TO"><span style="color:#87cefa;">TO</span></a> L 'go through text chars
+  tx = <a href="ASC.html" title="ASC"><span style="color:#87cefa;">ASC</span></a>(<a href="MID%24.html" title="MID$"><span style="color:#87cefa;">MID$</span></a>(text$, character, 1))               'get each letter's ASCII value
+  wide% = Char(tx, high%): Xoff = wide% * Xsize     'get font width from high row
+  <a href="FOR...html" title="FOR...NEXT"><span style="color:#87cefa;">FOR</span></a> r% = 0 <a href="TO.html" title="TO"><span style="color:#87cefa;">TO</span></a> high% - 1                           'current row value
+    value% = Char(tx, r%)                           'row byte value
+    <a href="FOR...html" title="FOR...NEXT"><span style="color:#87cefa;">FOR</span></a> c% = 0 <a href="TO.html" title="TO"><span style="color:#87cefa;">TO</span></a> wide% - 1                         'cycle through bit values
+      <a href="IF...html" title="IF...THEN"><span style="color:#87cefa;">IF</span></a> value% <a href="AND.html" title="AND"><span style="color:#87cefa;">AND</span></a> 2 ^ c% <a href="THEN.html" title="THEN"><span style="color:#87cefa;">THEN</span></a> 'if bit is on
+        <a href="LINE.html" title="LINE"><span style="color:#87cefa;">LINE</span></a> (x, y)-(x + Xsize - 1, y + Ysize - 1), FG, BF
+      <a href="END_IF.html" class="mw-redirect" title="END IF"><span style="color:#87cefa;">END IF</span></a>               'adapted from code by TerryRitchie @ www.QB64.net
+      x = x + Xsize                      'move x position
+    <a href="NEXT.html" title="NEXT"><span style="color:#87cefa;">NEXT</span></a> c%                              'next column bit
+    y = y + Ysize                        'move y position
+    x = Xpos                             'reset column position
+  <a href="NEXT.html" title="NEXT"><span style="color:#87cefa;">NEXT</span></a> r%
+  y = Ypos                               'reset y position
+  Xpos = Xpos + Xoff                     'set to next character column
+<a href="NEXT.html" title="NEXT"><span style="color:#87cefa;">NEXT</span></a> character
+<a href="END_SUB.html" class="mw-redirect" title="END SUB"><span style="color:#87cefa;">END SUB</span></a>
+
+<a href="SUB.html" title="SUB"><span style="color:#87cefa;">SUB</span></a> TextSave
+<a href="OUT.html" title="OUT"><span style="color:#87cefa;">OUT</span></a> <a href="%26H.html" title="&amp;H"><span style="color:#87cefa;">&amp;H</span></a>3C8, 15: <a href="OUT.html" title="OUT"><span style="color:#87cefa;">OUT</span></a> <a href="%26H.html" title="&amp;H"><span style="color:#87cefa;">&amp;H</span></a>3C9, 0: <a href="OUT.html" title="OUT"><span style="color:#87cefa;">OUT</span></a> <a href="%26H.html" title="&amp;H"><span style="color:#87cefa;">&amp;H</span></a>3C9, 0: <a href="OUT.html" title="OUT"><span style="color:#87cefa;">OUT</span></a> <a href="%26H.html" title="&amp;H"><span style="color:#87cefa;">&amp;H</span></a>3C9, 0 'print text as background color
+<a href="FOR...html" title="FOR...NEXT"><span style="color:#87cefa;">FOR</span></a> ascii% = 0 <a href="TO.html" title="TO"><span style="color:#87cefa;">TO</span></a> 255 'Draw map of each character
+  <a href="CLS.html" title="CLS"><span style="color:#87cefa;">CLS</span></a>
+  <a href="PRINTSTRING.html" title="PRINTSTRING"><span style="color:#87cefa;">_PRINTSTRING</span></a> (0, 0), <a href="CHR%24.html" title="CHR$"><span style="color:#87cefa;">CHR$</span></a>(ascii%) '<a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> ASCII characters to top left corner
+  wide% = <a href="PRINTWIDTH.html" title="PRINTWIDTH"><span style="color:#87cefa;">_PRINTWIDTH</span></a>(<a href="CHR%24.html" title="CHR$"><span style="color:#87cefa;">CHR$</span></a>(ascii%))
+  <a href="FOR...html" title="FOR...NEXT"><span style="color:#87cefa;">FOR</span></a> row% = 0 <a href="TO.html" title="TO"><span style="color:#87cefa;">TO</span></a> high% - 1 'read row byte values
+    byte% = 0 'reset value every row
+    <a href="FOR...html" title="FOR...NEXT"><span style="color:#87cefa;">FOR</span></a> col% = wide% - 1 <a href="TO.html" title="TO"><span style="color:#87cefa;">TO</span></a> 0 <a href="STEP.html" title="STEP"><span style="color:#87cefa;">STEP</span></a> -1 'read pixels from right to left
+      byte% = byte% * 2 - (<a href="POINT.html" title="POINT"><span style="color:#87cefa;">POINT</span></a>(col%, row%) &gt; 0) 'bit-packing with 2 ^ bit
+    <a href="NEXT.html" title="NEXT"><span style="color:#87cefa;">NEXT</span></a>
+    Char(ascii%, row%) = byte% 'convert row byte value to 2 byte <a href="MKI%24.html" title="MKI$"><span style="color:#87cefa;">MKI$</span></a> character
+  <a href="NEXT.html" title="NEXT"><span style="color:#87cefa;">NEXT</span></a>
+  Char(ascii%, high%) = wide%  'place individual font widths into array high row
+<a href="NEXT.html" title="NEXT"><span style="color:#87cefa;">NEXT</span></a>
+<a href="PALETTE.html" title="PALETTE"><span style="color:#87cefa;">PALETTE</span></a> 'restore all palette colors
+<a href="END_SUB.html" class="mw-redirect" title="END SUB"><span style="color:#87cefa;">END SUB</span></a> <i> </i>
+</p>
+<center><span style="font-family: Courier New, Courier, monospace; font-size: 0.80em; line-height: 50%;">Code by Ted Weissgerber</span></center>
+<dl><dd><i>Explanation:</i> <a href="PRINTWIDTH.html" title="PRINTWIDTH">_PRINTWIDTH</a> can read the pixel width of one character and can be used to measure non-monospace fonts.</dd>
+<dd>If the character width is wider than 8 pixels, we can no longer store the exponent of two values in one <a href="BYTE.html" title="BYTE">byte</a> or represent that byte as an <a href="ASCII.html" title="ASCII">ASCII</a> character so we can use an <a href="INTEGER.html" title="INTEGER">INTEGER</a> or <a href="LONG.html" title="LONG">LONG</a> array to hold the values, which can be saved to file with <a href="PUT.html" title="PUT">PUT</a>.</dd></dl>
+<center><b>Variable font widths</b></center>
+<dl><dd>Some fonts vary in width for every character so we can store <i>wide&amp;</i> as a <a href="HEX%24.html" title="HEX$">HEX$</a> value in the <i>high&amp;</i> array row value as we use 0 through <i>high&amp;</i> - 1 to store the bit totals. Save the  <i>high&amp;</i> <a href="FONTHEIGHT.html" title="FONTHEIGHT">_FONTHEIGHT</a> value for the sub-procedures and to dimension an array!</dd>
+<dd><b>This allows the use of DisplayText <a href="SUB.html" title="SUB">SUB</a> in a QBasic program to read the data when you save the array data to a file.</b></dd></dl>
+<p style="text-align: center">(<a href="#toc">Return to Top</a>)</p>
+<h2><span class="mw-headline" id="Reading_the_Data_File">Reading the Data File</span></h2>
+<center><b>Reading the file data in a QB64 program only</b></center>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: Courier, monospace; background-color: darkblue; color: lightgrey; word-wrap: break-word;"> <i> </i>
+<a href="DEFINT.html" title="DEFINT"><span style="color:#87cefa;">DEFINT</span></a> A-Z
+<a href="DIM.html" title="DIM"><span style="color:#87cefa;">DIM</span></a> <a href="SHARED.html" title="SHARED"><span style="color:#87cefa;">SHARED</span></a> high% 'must share with DisplayText SUB!
+<a href="SCREEN.html" title="SCREEN"><span style="color:#87cefa;">SCREEN</span></a> <a href="NEWIMAGE.html" title="NEWIMAGE"><span style="color:#87cefa;">_NEWIMAGE</span></a>(800, 600, 256)
+
+f = <a href="FREEFILE.html" title="FREEFILE"><span style="color:#87cefa;">FREEFILE</span></a>
+<a href="OPEN.html" title="OPEN"><span style="color:#87cefa;">OPEN</span></a> "FontText.bin" <a href="FOR...html" title="FOR...NEXT"><span style="color:#87cefa;">FOR</span></a> <a href="BINARY-2.html" class="mw-redirect" title="BINARY"><span style="color:#87cefa;">BINARY</span></a> <a href="AS.html" title="AS"><span style="color:#87cefa;">AS</span></a> #f
+<a href="GET.html" title="GET"><span style="color:#87cefa;">GET</span></a> #f, , high%   'GET the first integer value as the second array dimension
+<a href="SEEK.html" title="SEEK"><span style="color:#87cefa;">SEEK</span></a> #f, 1        'SEEK moves back to the beginning of the file
+<a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> high%
+<a href="REDIM.html" title="REDIM"><span style="color:#87cefa;">REDIM</span></a> <a href="SHARED.html" title="SHARED"><span style="color:#87cefa;">SHARED</span></a> Char(0 <a href="TO.html" title="TO"><span style="color:#87cefa;">TO</span></a> 255, 0 <a href="TO.html" title="TO"><span style="color:#87cefa;">TO</span></a> high%) <a href="AS.html" title="AS"><span style="color:#87cefa;">AS</span></a> <a href="INTEGER.html" title="INTEGER"><span style="color:#87cefa;">INTEGER</span></a>  'Dynamic array
+<a href="GET.html" title="GET"><span style="color:#87cefa;">GET</span></a> #f, , Char()  'one GET moves all of the data back to the array once it is sized correctly
+<a href="CLOSE.html" title="CLOSE"><span style="color:#87cefa;">CLOSE</span></a> #f
+Char(0, 0) = 0
+
+DisplayText 10, 100, 12, 4, 4, "This is the font from the BIN file!"
+
+<a href="END.html" title="END"><span style="color:#87cefa;">END</span></a>
+
+<a href="SUB.html" title="SUB"><span style="color:#87cefa;">SUB</span></a> DisplayText (Xpos, Ypos, FG, Xsize, Ysize, text$)
+x = Xpos: y = Ypos: L = <a href="LEN.html" title="LEN"><span style="color:#87cefa;">LEN</span></a>(text$)
+<a href="FOR...html" title="FOR...NEXT"><span style="color:#87cefa;">FOR</span></a> character = 1 <a href="TO.html" title="TO"><span style="color:#87cefa;">TO</span></a> L                              'go through text chars
+  tx = <a href="ASC.html" title="ASC"><span style="color:#87cefa;">ASC</span></a>(<a href="MID%24.html" title="MID$"><span style="color:#87cefa;">MID$</span></a>(text$, character, 1))               'get ASCII value
+  wide% = Char(tx, high%): Xoff = wide% * Xsize     'read variable font widths
+  <a href="FOR...html" title="FOR...NEXT"><span style="color:#87cefa;">FOR</span></a> r% = 0 <a href="TO.html" title="TO"><span style="color:#87cefa;">TO</span></a> high% - 1           'current row value
+    value% = Char(tx, r%)
+    <a href="FOR...html" title="FOR...NEXT"><span style="color:#87cefa;">FOR</span></a> c% = 0 <a href="TO.html" title="TO"><span style="color:#87cefa;">TO</span></a> wide% - 1        'cycle through bit values
+      <a href="IF...html" title="IF...THEN"><span style="color:#87cefa;">IF</span></a> value% <a href="AND.html" title="AND"><span style="color:#87cefa;">AND</span></a> 2 ^ c% <a href="THEN.html" title="THEN"><span style="color:#87cefa;">THEN</span></a> 'if bit is on
+        <a href="LINE.html" title="LINE"><span style="color:#87cefa;">LINE</span></a> (x, y)-(x + Xsize - 1, y + Ysize - 1), FG, BF
+      <a href="END_IF.html" class="mw-redirect" title="END IF"><span style="color:#87cefa;">END IF</span></a>                'adapted from code by TerryRitchie @ www.QB64.net
+      x = x + Xsize                'move x position
+    <a href="NEXT.html" title="NEXT"><span style="color:#87cefa;">NEXT</span></a> c%                        'next bit
+    y = y + Ysize                  'move y position
+    x = Xpos                       'reset column position
+  <a href="NEXT.html" title="NEXT"><span style="color:#87cefa;">NEXT</span></a> r%
+  y = Ypos                         'reset y position
+  Xpos = Xpos + Xoff               'set to next character column
+<a href="NEXT.html" title="NEXT"><span style="color:#87cefa;">NEXT</span></a> character
+<a href="END_SUB.html" class="mw-redirect" title="END SUB"><span style="color:#87cefa;">END SUB</span></a> <i> </i>
+</p>
+<center><i>Note:</i> Use empty parenthesis after the <a href="Arrays.html" title="Arrays">array</a> name to <a href="PUT.html" title="PUT">PUT</a> # or <a href="GET.html" title="GET">GET</a> # the entire array, even multi-dimensional ones.</center>
+<p><br />
+</p>
+<center><b>Reading the file data in a QBasic or QB64 program</b></center>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: Courier, monospace; background-color: darkblue; color: lightgrey; word-wrap: break-word;"> <i> </i>
+<a href="DEFINT.html" title="DEFINT"><span style="color:#87cefa;">DEFINT</span></a> A-Z
+<a href="SCREEN.html" title="SCREEN"><span style="color:#87cefa;">SCREEN</span></a> 12
+<a href="DIM.html" title="DIM"><span style="color:#87cefa;">DIM</span></a> <a href="SHARED.html" title="SHARED"><span style="color:#87cefa;">SHARED</span></a> high% 'must share with DisplayText SUB!
+
+f = <a href="FREEFILE.html" title="FREEFILE"><span style="color:#87cefa;">FREEFILE</span></a>
+<a href="OPEN.html" title="OPEN"><span style="color:#87cefa;">OPEN</span></a> "FontText.bin" <a href="FOR...html" title="FOR...NEXT"><span style="color:#87cefa;">FOR</span></a> <a href="BINARY-2.html" class="mw-redirect" title="BINARY"><span style="color:#87cefa;">BINARY</span></a> <a href="AS.html" title="AS"><span style="color:#87cefa;">AS</span></a> #f
+<a href="GET.html" title="GET"><span style="color:#87cefa;">GET</span></a> #f, , high% '<a href="GET_(graphics_statement).html" title="GET (graphics statement)"><span style="color:#87cefa;">GET</span></a> the first integer value as the second array dimension
+
+<a href="REDIM.html" title="REDIM"><span style="color:#87cefa;">REDIM</span></a> <a href="SHARED.html" title="SHARED"><span style="color:#87cefa;">SHARED</span></a> Char(0 <a href="TO.html" title="TO"><span style="color:#87cefa;">TO</span></a> 255, 0 <a href="TO.html" title="TO"><span style="color:#87cefa;">TO</span></a> high%) <a href="AS.html" title="AS"><span style="color:#87cefa;">AS</span></a> <a href="INTEGER.html" title="INTEGER"><span style="color:#87cefa;">INTEGER</span></a>  'Dynamic array
+ReadData (f)
+
+DisplayText 10, 100, 12, 4, 4, "This is the font from the BIN file!"
+
+<a href="END.html" title="END"><span style="color:#87cefa;">END</span></a>
+
+<a href="SUB.html" title="SUB"><span style="color:#87cefa;">SUB</span></a> ReadData (f)
+<a href="SEEK.html" title="SEEK"><span style="color:#87cefa;">SEEK</span></a> #f, 1                'SEEK moves back to the beginning of the file
+<a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> high%
+DO
+  <a href="FOR...html" title="FOR...NEXT"><span style="color:#87cefa;">FOR</span></a> row = 0 <a href="TO.html" title="TO"><span style="color:#87cefa;">TO</span></a> high%    'read each row as a group of 256 values
+    <a href="FOR...html" title="FOR...NEXT"><span style="color:#87cefa;">FOR</span></a> code = 0 <a href="TO.html" title="TO"><span style="color:#87cefa;">TO</span></a> 255   'read the row value for each character
+      <a href="GET.html" title="GET"><span style="color:#87cefa;">GET</span></a> #f, , valu%
+      <a href="IF...html" title="IF...THEN"><span style="color:#87cefa;">IF</span></a> <a href="EOF.html" title="EOF"><span style="color:#87cefa;">EOF</span></a>(f) <a href="THEN.html" title="THEN"><span style="color:#87cefa;">THEN</span></a> <a href="EXIT_DO.html" title="EXIT DO"><span style="color:#87cefa;">EXIT DO</span></a> 'prevents bad data
+      Char(code, row) = valu%
+  <a href="NEXT.html" title="NEXT"><span style="color:#87cefa;">NEXT</span></a>: <a href="NEXT.html" title="NEXT"><span style="color:#87cefa;">NEXT</span></a>
+<a href="LOOP.html" title="LOOP"><span style="color:#87cefa;">LOOP</span></a> <a href="UNTIL.html" title="UNTIL"><span style="color:#87cefa;">UNTIL</span></a> 1 = 1 'one time <a href="DO...html" title="DO...LOOP"><span style="color:#87cefa;">DO</span></a> loop if End Of File
+<a href="CLOSE.html" title="CLOSE"><span style="color:#87cefa;">CLOSE</span></a> #f
+Char(0, 0) = 0          'remove the high% value from CHR$(0) array data
+<a href="END_SUB.html" class="mw-redirect" title="END SUB"><span style="color:#87cefa;">END SUB</span></a>
+
+<a href="SUB.html" title="SUB"><span style="color:#87cefa;">SUB</span></a> DisplayText (Xpos, Ypos, FG, Xsize, Ysize, text$)
+x = Xpos: y = Ypos: L = <a href="LEN.html" title="LEN"><span style="color:#87cefa;">LEN</span></a>(text$)
+<a href="FOR...html" title="FOR...NEXT"><span style="color:#87cefa;">FOR</span></a> character = 1 <a href="TO.html" title="TO"><span style="color:#87cefa;">TO</span></a> L                                    'go through text chars
+  tx = <a href="ASC.html" title="ASC"><span style="color:#87cefa;">ASC</span></a>(<a href="MID%24.html" title="MID$"><span style="color:#87cefa;">MID$</span></a>(text$, character, 1))                     'get ASCII value
+  wide% = Char(tx, high%): Xoff = wide% * Xsize           'read variable font widths
+  <a href="FOR...html" title="FOR...NEXT"><span style="color:#87cefa;">FOR</span></a> r% = 0 <a href="TO.html" title="TO"><span style="color:#87cefa;">TO</span></a> high% - 1                                 'current row value
+    value% = Char(tx, r%)
+    <a href="FOR...html" title="FOR...NEXT"><span style="color:#87cefa;">FOR</span></a> c% = 0 <a href="TO.html" title="TO"><span style="color:#87cefa;">TO</span></a> wide% - 1 'cycle through bit values
+      <a href="IF...html" title="IF...THEN"><span style="color:#87cefa;">IF</span></a> value% <a href="AND_(boolean).html" title="AND (boolean)"><span style="color:#87cefa;">AND</span></a> 2 ^ c% <a href="THEN.html" title="THEN"><span style="color:#87cefa;">THEN</span></a> 'if bit is on
+        <a href="LINE.html" title="LINE"><span style="color:#87cefa;">LINE</span></a> (x, y)-(x + Xsize - 1, y + Ysize - 1), FG, BF
+      <a href="END_IF.html" class="mw-redirect" title="END IF"><span style="color:#87cefa;">END IF</span></a>               'adapted from code by TerryRitchie @ www.QB64.net
+      x = x + Xsize               'move x position
+    <a href="NEXT.html" title="NEXT"><span style="color:#87cefa;">NEXT</span></a> 'next bit
+    y = y + Ysize 'move y position
+    x = Xpos 'reset column position
+  <a href="NEXT.html" title="NEXT"><span style="color:#87cefa;">NEXT</span></a> r%
+  y = Ypos 'reset y position
+  Xpos = Xpos + Xoff              'set to next character column
+<a href="NEXT.html" title="NEXT"><span style="color:#87cefa;">NEXT</span></a> character
+<a href="END_SUB.html" class="mw-redirect" title="END SUB"><span style="color:#87cefa;">END SUB</span></a> <i> </i>
+</p>
+<center>The QB64 <a href="PUT.html" title="PUT">PUT</a> <a href="BINARY-2.html" class="mw-redirect" title="BINARY">BINARY</a> file can be read to the array by reading the row values for all of the characters as above.</center>
+<center><b>The average font file with 256 characters is less than 20 KB in size!</b></center>
+<p><br />
+</p>
+<p style="text-align: center">(<a href="#toc">Return to Top</a>)</p>
+<h2><span class="mw-headline" id="References">References</span></h2>
+<p><i>See also:</i>
+</p>
+<ul><li><a href="PRINTSTRING.html" title="PRINTSTRING">_PRINTSTRING</a>, <a href="PRINTWIDTH.html" title="PRINTWIDTH">_PRINTWIDTH</a></li>
+<li><a href="LOADFONT.html" title="LOADFONT">_LOADFONT</a>, <a href="FONTHEIGHT.html" title="FONTHEIGHT">_FONTHEIGHT</a></li>
+<li><a href="MAPUNICODE.html" title="MAPUNICODE">_MAPUNICODE</a>, <a href="CONTROLCHR.html" title="CONTROLCHR">_CONTROLCHR</a></li>
+<li><a href="Boolean.html" title="Boolean">Boolean</a>, <a href="AND.html" title="AND">AND</a> <span style="color:gray">(logic operator)</span></li>
+<li><a href="ASCII.html" title="ASCII">ASCII</a>, <a href="Unicode.html" title="Unicode">Unicode</a>, <a href="Code_Pages.html" title="Code Pages">Code Pages</a></li></ul>
+<p><br />
+</p>
+<hr />
+<center><i>Navigation:</i>
+<dl><dd><a href="Keyword_Reference_-_Alphabetical.html" title="Keyword Reference - Alphabetical">Keyword Reference - Alphabetical</a></dd>
+<dd><a href="Keyword_Reference_-_By_usage.html" title="Keyword Reference - By usage">Keyword Reference - By Usage</a></dd>
+<dd><a href="Main_Page.html" title="Main Page">Main Wiki Page</a></dd></dl></center>
+<!-- 
+NewPP limit report
+Cached time: 20210707102823
+Cache expiry: 86400
+Dynamic content: false
+Complications: []
+CPU time usage: 0.274 seconds
+Real time usage: 0.294 seconds
+Preprocessor visited node count: 4188/1000000
+Post‐expand include size: 25222/2097152 bytes
+Template argument size: 4250/2097152 bytes
+Highest expansion depth: 3/40
+Expensive parser function count: 0/100
+Unstrip recursion depth: 0/20
+Unstrip post‐expand size: 0/5000000 bytes
+-->
+<!--
+Transclusion expansion time report (%,ms,calls,template)
+100.00%  103.217      1 -total
+ 28.88%   29.804    398 Template:Cl
+  7.19%    7.416     46 Template:Cb
+  4.96%    5.120      4 Template:Small
+  4.08%    4.211      1 Template:Text
+  4.06%    4.191      1 Template:TextEnd
+  3.39%    3.503      7 Template:CodeEnd
+  3.24%    3.341      3 Template:WhiteStart
+  3.20%    3.306      6 Template:CodeStart
+  3.06%    3.163      1 Template:TextStart
+-->
+
+<!-- Saved in parser cache with key i4224360_mw2-mw_:pcache:idhash:713-0!canonical and timestamp 20210707102823 and revision id 23234
+ -->
+</div></div><div class="printfooter">Retrieved from "<a dir="ltr" href="index6a3b.html?title=Text_Using_Graphics&amp;oldid=23234">http://www.qb64.org/wiki/index.php?title=Text_Using_Graphics&amp;oldid=23234</a>"</div>
+		<div id="catlinks" class="catlinks catlinks-allhidden" data-mw="interface"></div>
+	</div>
+</div>
+
+<div id="mw-navigation">
+	<h2>Navigation menu</h2>
+	<div id="mw-head">
+		<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-personal" class="vector-menu" aria-labelledby="p-personal-label" role="navigation" 
+	 >
+	<h3 id="p-personal-label">
+		<span>Personal tools</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="pt-login"><a href="index5f65.html?title=Special:UserLogin&amp;returnto=Text+Using+Graphics" title="You are encouraged to log in; however, it is not mandatory [o]" accesskey="o">Log in</a></li></ul>
+		
+	</div>
+</nav>
+
+
+		<div id="left-navigation">
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-namespaces" class="vector-menu vector-menu-tabs vectorTabs" aria-labelledby="p-namespaces-label" role="navigation" 
+	 >
+	<h3 id="p-namespaces-label">
+		<span>Namespaces</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="ca-nstab-main" class="selected"><a href="Text_Using_Graphics.html" title="View the content page [c]" accesskey="c">Page</a></li><li id="ca-talk" class="new"><a href="Talk_Text_Using_Graphics.html?title=Talk:Text_Using_Graphics&amp;action=edit&amp;redlink=1" rel="discussion" title="Discussion about the content page (page does not exist) [t]" accesskey="t">Discussion</a></li></ul>
+		
+	</div>
+</nav>
+
+
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-variants" class="vector-menu-empty emptyPortlet vector-menu vector-menu-dropdown vectorMenu" aria-labelledby="p-variants-label" role="navigation" 
+	 >
+	<input type="checkbox" class="vector-menu-checkbox vectorMenuCheckbox" aria-labelledby="p-variants-label" />
+	<h3 id="p-variants-label">
+		<span>Variants</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="menu vector-menu-content-list"></ul>
+		
+	</div>
+</nav>
+
+
+		</div>
+		<div id="right-navigation">
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-views" class="vector-menu vector-menu-tabs vectorTabs" aria-labelledby="p-views-label" role="navigation" 
+	 >
+	<h3 id="p-views-label">
+		<span>Views</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="ca-view" class="collapsible selected"><a href="Text_Using_Graphics.html">Read</a></li><li id="ca-viewsource" class="collapsible"><a href="index6d05.html?title=Text_Using_Graphics&amp;action=edit" title="This page is protected.&#10;You can view its source [e]" accesskey="e">View source</a></li><li id="ca-history" class="collapsible"><a href="index8e64.html?title=Text_Using_Graphics&amp;action=history" title="Past revisions of this page [h]" accesskey="h">View history</a></li></ul>
+		
+	</div>
+</nav>
+
+
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-cactions" class="vector-menu-empty emptyPortlet vector-menu vector-menu-dropdown vectorMenu" aria-labelledby="p-cactions-label" role="navigation" 
+	 >
+	<input type="checkbox" class="vector-menu-checkbox vectorMenuCheckbox" aria-labelledby="p-cactions-label" />
+	<h3 id="p-cactions-label">
+		<span>More</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="menu vector-menu-content-list"></ul>
+		
+	</div>
+</nav>
+
+
+			<div id="p-search" role="search">
+	<h3 >
+		<label for="searchInput">Search</label>
+	</h3>
+	<form action="https://www.qb64.org/wiki/index.php" id="searchform">
+		<div id="simpleSearch">
+			<input type="search" name="search" placeholder="Search QB64 Wiki" title="Search QB64 Wiki [f]" accesskey="f" id="searchInput"/>
+			<input type="hidden" name="title" value="Special:Search">
+			<input type="submit" name="fulltext" value="Search" title="Search the pages for this text" id="mw-searchButton" class="searchButton mw-fallbackSearchButton"/>
+			<input type="submit" name="go" value="Go" title="Go to a page with this exact name if it exists" id="searchButton" class="searchButton"/>
+		</div>
+	</form>
+</div>
+
+		</div>
+	</div>
+	
+<div id="mw-panel">
+	<div id="p-logo" role="banner">
+		<a  title="Visit the main page" class="mw-wiki-logo" href="Main_Page.html"></a>
+	</div>
+	<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-navigation" class="vector-menu vector-menu-portal portal portal-first" aria-labelledby="p-navigation-label" role="navigation" 
+	 >
+	<h3 id="p-navigation-label">
+		<span>Navigation</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="n-mainpage-description"><a href="Main_Page.html" title="Visit the main page [z]" accesskey="z">Main page</a></li><li id="n-recentchanges"><a href="Special_RecentChanges.html" title="A list of recent changes in the wiki [r]" accesskey="r">Recent changes</a></li><li id="n-randompage"><a href="SNDCOPY.html" title="Load a random page [x]" accesskey="x">Random page</a></li><li id="n-help-mediawiki"><a href="https://www.mediawiki.org/wiki/Special:MyLanguage/Help:Contents">Help about MediaWiki</a></li></ul>
+		
+	</div>
+</nav>
+
+
+	<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-tb" class="vector-menu vector-menu-portal portal" aria-labelledby="p-tb-label" role="navigation" 
+	 >
+	<h3 id="p-tb-label">
+		<span>Tools</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="t-whatlinkshere"><a href="Special_WhatLinksHere/Text_Using_Graphics.html" title="A list of all wiki pages that link here [j]" accesskey="j">What links here</a></li><li id="t-recentchangeslinked"><a href="Special_RecentChangesLinked/Text_Using_Graphics.html" rel="nofollow" title="Recent changes in pages linked from this page [k]" accesskey="k">Related changes</a></li><li id="t-specialpages"><a href="Special_SpecialPages.html" title="A list of all special pages [q]" accesskey="q">Special pages</a></li><li id="t-print"><a href="javascript:print();" rel="alternate" title="Printable version of this page [p]" accesskey="p">Printable version</a></li><li id="t-permalink"><a href="index6a3b.html?title=Text_Using_Graphics&amp;oldid=23234" title="Permanent link to this revision of the page">Permanent link</a></li><li id="t-info"><a href="index06ae.html?title=Text_Using_Graphics&amp;action=info" title="More information about this page">Page information</a></li></ul>
+		
+	</div>
+</nav>
+
+
+	
+</div>
+
+</div>
+
+<footer id="footer" class="mw-footer" role="contentinfo" >
+	<ul id="footer-info" >
+		<li id="footer-info-lastmod"> This page was last edited on 10 February 2021, at 13:10.</li>
+	</ul>
+	<ul id="footer-places" >
+		<li id="footer-places-privacy"><a href="My_wiki_Privacy_policy.html" title="My wiki:Privacy policy">Privacy policy</a></li>
+		<li id="footer-places-about"><a href="My_wiki_About.html" title="My wiki:About">About QB64 Wiki</a></li>
+		<li id="footer-places-disclaimer"><a href="My_wiki_General_disclaimer.html" title="My wiki:General disclaimer">Disclaimers</a></li>
+	</ul>
+	<ul id="footer-icons" class="noprint">
+		<li id="footer-poweredbyico"><a href="https://www.mediawiki.org/"><img src="resources/assets/poweredby_mediawiki_88x31.png" alt="Powered by MediaWiki" srcset="/wiki/resources/assets/poweredby_mediawiki_132x47.png 1.5x, /wiki/resources/assets/poweredby_mediawiki_176x62.png 2x" width="88" height="31" loading="lazy"/></a></li>
+	</ul>
+	<div style="clear: both;"></div>
+</footer>
+
+
+
+<script>(RLQ=window.RLQ||[]).push(function(){mw.config.set({"wgPageParseReport":{"limitreport":{"cputime":"0.274","walltime":"0.294","ppvisitednodes":{"value":4188,"limit":1000000},"postexpandincludesize":{"value":25222,"limit":2097152},"templateargumentsize":{"value":4250,"limit":2097152},"expansiondepth":{"value":3,"limit":40},"expensivefunctioncount":{"value":0,"limit":100},"unstrip-depth":{"value":0,"limit":20},"unstrip-size":{"value":0,"limit":5000000},"timingprofile":["100.00%  103.217      1 -total"," 28.88%   29.804    398 Template:Cl","  7.19%    7.416     46 Template:Cb","  4.96%    5.120      4 Template:Small","  4.08%    4.211      1 Template:Text","  4.06%    4.191      1 Template:TextEnd","  3.39%    3.503      7 Template:CodeEnd","  3.24%    3.341      3 Template:WhiteStart","  3.20%    3.306      6 Template:CodeStart","  3.06%    3.163      1 Template:TextStart"]},"cachereport":{"timestamp":"20210707102823","ttl":86400,"transientcontent":false}}});mw.config.set({"wgBackendResponseTime":1054});});</script></body>
+<!-- Mirrored from www.qb64.org/wiki/Text_Using_Graphics by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 07 Aug 2021 12:44:22 GMT -->
+</html>

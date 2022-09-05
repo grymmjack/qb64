@@ -1,0 +1,356 @@
+
+<!DOCTYPE html>
+<html class="client-nojs" lang="en" dir="ltr">
+
+<!-- Mirrored from www.qb64.org/wiki/DIM by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 07 Aug 2021 13:03:26 GMT -->
+<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=UTF-8" /><!-- /Added by HTTrack -->
+<head>
+<meta charset="UTF-8"/>
+<title>DIM - QB64 Wiki</title>
+<script>document.documentElement.className="client-js";RLCONF={"wgBreakFrames":!1,"wgSeparatorTransformTable":["",""],"wgDigitTransformTable":["",""],"wgDefaultDateFormat":"dmy","wgMonthNames":["","January","February","March","April","May","June","July","August","September","October","November","December"],"wgRequestId":"YQ58RRfRH1qEVj9okg8QywAAAJo","wgCSPNonce":!1,"wgCanonicalNamespace":"","wgCanonicalSpecialPageName":!1,"wgNamespaceNumber":0,"wgPageName":"DIM","wgTitle":"DIM","wgCurRevisionId":23189,"wgRevisionId":23189,"wgArticleId":171,"wgIsArticle":!0,"wgIsRedirect":!1,"wgAction":"view","wgUserName":null,"wgUserGroups":["*"],"wgCategories":[],"wgPageContentLanguage":"en","wgPageContentModel":"wikitext","wgRelevantPageName":"DIM","wgRelevantArticleId":171,"wgIsProbablyEditable":!1,"wgRelevantPageIsProbablyEditable":!1,"wgRestrictionEdit":[],"wgRestrictionMove":[]};RLSTATE={"site.styles":"ready","noscript":"ready","user.styles":"ready","user":"ready","user.options":
+"loading","skins.vector.styles.legacy":"ready","mediawiki.toc.styles":"ready"};RLPAGEMODULES=["site","mediawiki.page.startup","mediawiki.page.ready","mediawiki.toc","skins.vector.legacy.js"];</script>
+<script>(RLQ=window.RLQ||[]).push(function(){mw.loader.implement("user.options@1hzgi",function($,jQuery,require,module){/*@nomin*/mw.user.tokens.set({"patrolToken":"+\\","watchToken":"+\\","csrfToken":"+\\"});
+});});</script>
+<link rel="stylesheet" href="loadd8b0.css?lang=en&amp;modules=mediawiki.toc.styles%7Cskins.vector.styles.legacy&amp;only=styles&amp;skin=vector"/>
+<script async="" src="load52c0.php?lang=en&amp;modules=startup&amp;only=scripts&amp;raw=1&amp;skin=vector"></script>
+<meta name="generator" content="MediaWiki 1.35.2"/>
+<link rel="shortcut icon" href="https://www.qb64.org/favicon.ico"/>
+<link rel="search" type="application/opensearchdescription+xml" href="opensearch_desc.php" title="QB64 Wiki (en)"/>
+<link rel="EditURI" type="application/rsd+xml" href="api-result251f.xml?action=rsd"/>
+<link rel="alternate" type="application/atom+xml" title="QB64 Wiki Atom feed" href="feeda295.xml?title=Special:RecentChanges&amp;feed=atom"/>
+<!--[if lt IE 9]><script src="/wiki/resources/lib/html5shiv/html5shiv.js"></script><![endif]-->
+</head>
+<body class="mediawiki ltr sitedir-ltr mw-hide-empty-elt ns-0 ns-subject page-DIM rootpage-DIM skin-vector action-view skin-vector-legacy">
+<div id="mw-page-base" class="noprint"></div>
+<div id="mw-head-base" class="noprint"></div>
+<div id="content" class="mw-body" role="main">
+	<a id="top"></a>
+	<div id="siteNotice" class="mw-body-content"></div>
+	<div class="mw-indicators mw-body-content">
+	</div>
+	<h1 id="firstHeading" class="firstHeading" lang="en">DIM</h1>
+	<div id="bodyContent" class="mw-body-content">
+		<div id="siteSub" class="noprint">From QB64 Wiki</div>
+		<div id="contentSub"></div>
+		<div id="contentSub2"></div>
+		
+		<div id="jump-to-nav"></div>
+		<a class="mw-jump-link" href="#mw-head">Jump to navigation</a>
+		<a class="mw-jump-link" href="#searchInput">Jump to search</a>
+		<div id="mw-content-text" lang="en" dir="ltr" class="mw-content-ltr"><div class="mw-parser-output"><p>The <a class="mw-selflink selflink">DIM</a> statement is used to declare a variable or a list of variables as a specified data type or to dimension <a href="%24STATIC.html" title="$STATIC">$STATIC</a> or <a href="%24DYNAMIC.html" title="$DYNAMIC">$DYNAMIC</a> <a href="Arrays.html" title="Arrays">arrays</a>.
+</p><p><br />
+</p>
+<div id="toc" class="toc" role="navigation" aria-labelledby="mw-toc-heading"><input type="checkbox" role="button" id="toctogglecheckbox" class="toctogglecheckbox" style="display:none" /><div class="toctitle" lang="en" dir="ltr"><h2 id="mw-toc-heading">Contents</h2><span class="toctogglespan"><label class="toctogglelabel" for="toctogglecheckbox"></label></span></div>
+<ul>
+<li class="toclevel-1"><a href="#Syntax"><span class="tocnumber">1</span> <span class="toctext">Syntax</span></a></li>
+<li class="toclevel-1"><a href="#Description"><span class="tocnumber">2</span> <span class="toctext">Description</span></a></li>
+<li class="toclevel-1"><a href="#Examples"><span class="tocnumber">3</span> <span class="toctext">Examples</span></a></li>
+<li class="toclevel-1"><a href="#See_also"><span class="tocnumber">4</span> <span class="toctext">See also</span></a></li>
+</ul>
+</div>
+
+<h2><span class="mw-headline" id="Syntax">Syntax</span></h2>
+<dl><dd><dl><dd><i>To declare variables:</i>
+<dl><dd><a class="mw-selflink selflink">DIM</a> [<span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="SHARED.html" title="SHARED">SHARED</a></span>] <i>variable</i>[{suffix| <span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="AS.html" title="AS">AS</a></span> [<span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="UNSIGNED.html" title="UNSIGNED">_UNSIGNED</a></span>] <i>type</i>}] [, <i>variable2</i>...]]</dd></dl></dd></dl></dd></dl>
+<dl><dd><dl><dd><i>To declare arrays:</i>
+<dl><dd><a class="mw-selflink selflink">DIM</a> [<span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="SHARED.html" title="SHARED">SHARED</a></span>] <i>array([lowest% <span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="TO.html" title="TO">TO</a></span>] highest%])</i>[{suffix| <span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="AS.html" title="AS">AS</a></span> [<span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="UNSIGNED.html" title="UNSIGNED">_UNSIGNED</a></span>] <i>type</i>}] [, <i>variable2</i>...]</dd></dl></dd></dl></dd></dl>
+<dl><dd><dl><dd><i> <b>QB64</b> Alternative Syntax:</i>
+<dl><dd><a class="mw-selflink selflink">DIM</a> [<span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="SHARED.html" title="SHARED">SHARED</a></span>] <span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="AS.html" title="AS">AS</a></span> [<span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="UNSIGNED.html" title="UNSIGNED">_UNSIGNED</a></span>] <i>type</i> <i>variable</i>  [, <i>variable2</i>...]</dd>
+<dd><a class="mw-selflink selflink">DIM</a> [<span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="SHARED.html" title="SHARED">SHARED</a></span>] <span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="AS.html" title="AS">AS</a></span> [<span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="UNSIGNED.html" title="UNSIGNED">_UNSIGNED</a></span>] <i>type</i> <i>array([lowest% <span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="TO.html" title="TO">TO</a></span>] highest%])</i> [, <i>array2(elements)</i>...]</dd></dl></dd></dl></dd></dl>
+<p><br />
+</p>
+<h2><span class="mw-headline" id="Description">Description</span></h2>
+<ul><li>Sets the <a href="INTEGER.html" title="INTEGER">INTEGER</a> range of elements (indices) of a <a href="STATIC.html" title="STATIC">STATIC</a> array. If only one number is used, the <a href="LBOUND.html" title="LBOUND">lowest boundary</a> is 0 by default.</li>
+<li>When used before an array is dimensioned, <b><a href="OPTION_BASE.html" title="OPTION BASE">OPTION BASE</a> 1</b> can set the default <a href="LBOUND.html" title="LBOUND">lower boundary</a> of arrays to 1.</li>
+<li>DIM <a href="SHARED.html" title="SHARED">SHARED</a> shares variable values with sub-procedures without passing the value in a parameter.</li>
+<li>Use the <a href="AS.html" title="AS">AS</a> keyword to define a variable or array <i>type</i> <a href="AS.html" title="AS">AS</a>...
+<ul><li><a href="INTEGER.html" title="INTEGER">INTEGER</a> (or use variable suffix <b>%</b>)</li>
+<li><a href="LONG.html" title="LONG">LONG</a> (or use variable suffix <b>&amp;</b>)</li>
+<li><a href="SINGLE.html" title="SINGLE">SINGLE</a> (or use variable suffix <b>!</b> or no suffix by default)</li>
+<li><a href="DOUBLE.html" title="DOUBLE">DOUBLE</a> (or use variable suffix <b>#</b>)</li>
+<li><a href="STRING.html" title="STRING">STRING</a> (or use variable suffix <b>$</b>). An AS multiplier can set the string <a href="LEN.html" title="LEN">length</a>. Ex: <span style="font-family: Courier New, monospace, Courier; background: #dddddd">DIM <i>variable</i> AS STRING * 8</span></li></ul></li>
+<li><b>QB64</b> variable types:
+<ul><li><a href="BIT.html" title="BIT">_BIT</a> (or use variable suffix <b>`</b>). An AS multiplier can be used for multiple bits. Ex: <span style="font-family: Courier New, monospace, Courier; background: #dddddd">DIM <i>variable</i> AS _BIT * 8</span></li>
+<li><a href="BYTE.html" title="BYTE">_BYTE</a> (or use variable suffix <b>%%</b>)</li>
+<li><a href="INTEGER64.html" title="INTEGER64">_INTEGER64</a> (or use variable suffix <b>&amp;&amp;</b>)</li>
+<li><a href="FLOAT.html" title="FLOAT">_FLOAT</a> (or use variable suffix <b>##</b>)</li>
+<li><a href="OFFSET.html" title="OFFSET">_OFFSET</a> (or use variable suffix <b>%&amp;</b>)</li>
+<li>DIM AS <a href="MEM.html" title="MEM">_MEM</a> (the _MEM type has no type suffix).</li></ul></li>
+<li><b>Note: When a variable has not been defined or has no type suffix, the type defaults to <a href="SINGLE.html" title="SINGLE">SINGLE</a>.</b></li>
+<li>When using the <b>AS type variable-list</b> syntax, type symbols cannot be used.</li>
+<li>When the <a href="%24DYNAMIC.html" title="$DYNAMIC">$DYNAMIC</a> metacommand or <a href="REDIM.html" title="REDIM">REDIM</a> is used, array element sizes are changeable (not <a href="%24STATIC.html" title="$STATIC">$STATIC</a>).</li>
+<li>Use <a href="REDIM.html" title="REDIM">REDIM</a> instead of DIM to dimension arrays as dynamic without the <span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="%24DYNAMIC.html" title="$DYNAMIC">$DYNAMIC</a></span> metacommand.</li>
+<li>Use <a href="REDIM.html" title="REDIM">REDIM</a> <a href="PRESERVE.html" title="PRESERVE">_PRESERVE</a> in <b>QB64</b> to retain previous array values when changing the size of an array.</li>
+<li><a href="REDIM.html" title="REDIM">REDIM</a> <a href="PRESERVE.html" title="PRESERVE">_PRESERVE</a> cannot change the number of array dimensions. An <a href="ERROR_Codes.html" title="ERROR Codes">error</a> will occur.</li>
+<li><a href="%24DYNAMIC.html" title="$DYNAMIC">Dynamic</a> arrays MUST be <a href="REDIM.html" title="REDIM">REDIMensioned</a> if <a href="ERASE.html" title="ERASE">ERASE</a> or <a href="CLEAR.html" title="CLEAR">CLEAR</a> are used, as the arrays are completely removed.</li>
+<li>All numerical variable types <b>except</b> <span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="SINGLE.html" title="SINGLE">SINGLE</a></span>, <span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="DOUBLE.html" title="DOUBLE">DOUBLE</a></span> and <span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="FLOAT.html" title="FLOAT">_FLOAT</a></span> can be dimensioned as <a href="UNSIGNED.html" title="UNSIGNED">_UNSIGNED</a> (suffix ~) or positive only.</li>
+<li><b>NOTE:</b> Many QBasic keyword variable names can be used with a <a href="STRING.html" title="STRING">STRING</a> suffix ($). You cannot use them without the suffix, use a numerical suffix or use <i>DIM, <a href="REDIM.html" title="REDIM">REDIM</a>, <a href="DEFINE.html" title="DEFINE">_DEFINE</a>, <a href="BYVAL.html" class="mw-redirect" title="BYVAL">BYVAL</a> or <a href="TYPE.html" title="TYPE">TYPE</a> variable <a href="AS.html" title="AS">AS</a></i> statements. <b>Although possible, it's recommended to avoid using reserved names.</b></li>
+<li><b>Warning: Do not use negative array upper bound index values, or OS access or "Out of Memory" <a href="ERROR_Codes.html" title="ERROR Codes">errors</a> will occur.</b></li></ul>
+<p><br />
+</p>
+<h2><span class="mw-headline" id="Examples">Examples</span></h2>
+<p><i>Example 1:</i> Defines Qt variable as a one byte fixed length string.
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: Courier, monospace; background-color: darkblue; color: lightgrey; word-wrap: break-word;">
+ <a class="mw-selflink selflink"><span style="color:#87cefa;">DIM</span></a> Qt <a href="AS.html" title="AS"><span style="color:#87cefa;">AS</span></a> <a href="STRING.html" title="STRING"><span style="color:#87cefa;">STRING</span></a> * 1 
+</p>
+<p><i>Example 2:</i> Dimensions and types an array. 
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: Courier, monospace; background-color: darkblue; color: lightgrey; word-wrap: break-word;">
+ <a class="mw-selflink selflink"><span style="color:#87cefa;">DIM</span></a> Image(2000) <a href="AS.html" title="AS"><span style="color:#87cefa;">AS</span></a> <a href="INTEGER.html" title="INTEGER"><span style="color:#87cefa;">INTEGER</span></a>
+</p>
+<p><i>Example 3:</i> Dimensions array with an <a href="INTEGER.html" title="INTEGER">INTEGER</a> type suffix.
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: Courier, monospace; background-color: darkblue; color: lightgrey; word-wrap: break-word;">
+ <a class="mw-selflink selflink"><span style="color:#87cefa;">DIM</span></a> Image%(2000)  
+</p>
+<p><i>Example 4:</i> Dimensions a range of <a href="Arrays.html" title="Arrays">array</a> elements as <a href="SHARED.html" title="SHARED">SHARED</a> integers.
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: Courier, monospace; background-color: darkblue; color: lightgrey; word-wrap: break-word;">
+ <a class="mw-selflink selflink"><span style="color:#87cefa;">DIM</span></a> <a href="SHARED.html" title="SHARED"><span style="color:#87cefa;">SHARED</span></a> Image(1 <a href="TO.html" title="TO"><span style="color:#87cefa;">TO</span></a> 1000) <a href="AS.html" title="AS"><span style="color:#87cefa;">AS</span></a> <a href="INTEGER.html" title="INTEGER"><span style="color:#87cefa;">INTEGER</span></a> 
+</p>
+<p><i>Example 5:</i> Dimensions variable as an <a href="Arrays.html" title="Arrays">array</a> of 8 elements of the type <a href="UNSIGNED.html" title="UNSIGNED">UNSIGNED</a> BIT.
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: Courier, monospace; background-color: darkblue; color: lightgrey; word-wrap: break-word;">
+ <a class="mw-selflink selflink"><span style="color:#87cefa;">DIM</span></a> bit(8) <a href="AS.html" title="AS"><span style="color:#87cefa;">AS</span></a> <a href="UNSIGNED.html" title="UNSIGNED"><span style="color:#87cefa;">_UNSIGNED</span></a> <a href="BIT.html" title="BIT"><span style="color:#87cefa;">_BIT</span></a> 
+</p>
+<p><br />
+<i>Example 6:</i> QB64 is more flexible than QBasic when it comes to "Duplicate Definition" errors. The following code does not error:
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: Courier, monospace; background-color: darkblue; color: lightgrey; word-wrap: break-word;"> <i> </i>
+x = 1 'x is a <a href="SINGLE.html" title="SINGLE"><span style="color:#87cefa;">SINGLE</span></a> variable
+<a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> x
+<a class="mw-selflink selflink"><span style="color:#87cefa;">DIM</span></a> x <a href="AS.html" title="AS"><span style="color:#87cefa;">AS</span></a> <a href="LONG.html" title="LONG"><span style="color:#87cefa;">LONG</span></a>
+<a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> x <i> </i>
+</p>
+<dl><dd><i>Explanation:</i> The <a href="SINGLE.html" title="SINGLE">SINGLE</a> variable can be differentiated from the <a href="LONG.html" title="LONG">LONG</a> x variable by using suffixes like x! or x&amp; in later code.</dd></dl>
+<p><br />
+<i>Example 7:</i> The following code will create a "Name already in use" <b>status error</b> in QB64 when the variable types are the same.
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: Courier, monospace; background-color: darkblue; color: lightgrey; word-wrap: break-word;"> <i> </i>
+x = 1 'x is a <a href="SINGLE.html" title="SINGLE"><span style="color:#87cefa;">SINGLE</span></a> variable
+<a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> x
+<a class="mw-selflink selflink"><span style="color:#87cefa;">DIM</span></a> x <a href="AS.html" title="AS"><span style="color:#87cefa;">AS</span></a> <a href="SINGLE.html" title="SINGLE"><span style="color:#87cefa;">SINGLE</span></a>
+<a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> x <i> </i>
+</p>
+<dl><dd><i>Explanation:</i> QB64 gives an error because the creation of the new variable would make referring to the existing one impossible.</dd></dl>
+<p><br />
+<i>Example 8:</i> Using QB64's alternative syntax to declare multiple variables/arrays of the same type.
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: Courier, monospace; background-color: darkblue; color: lightgrey; word-wrap: break-word;"> <i> </i>
+<a class="mw-selflink selflink"><span style="color:#87cefa;">DIM</span></a> <a href="AS.html" title="AS"><span style="color:#87cefa;">AS</span></a> <a href="LONG.html" title="LONG"><span style="color:#87cefa;">LONG</span></a> w, h, id, weight, index 'all of these variables are created as type LONG
+<a class="mw-selflink selflink"><span style="color:#87cefa;">DIM</span></a> <a href="AS.html" title="AS"><span style="color:#87cefa;">AS</span></a> <a href="SINGLE.html" title="SINGLE"><span style="color:#87cefa;">SINGLE</span></a> x, y, z               'all of these variables are created as type SINGLE
+</p> <p><i> </i>
+</p><p><br />
+</p>
+<h2><span class="mw-headline" id="See_also">See also</span></h2>
+<ul><li><a href="DEFINE.html" title="DEFINE">_DEFINE</a>, <a href="PRESERVE.html" title="PRESERVE">_PRESERVE</a></li>
+<li><a href="REDIM.html" title="REDIM">REDIM</a>, <a href="TYPE.html" title="TYPE">TYPE</a></li>
+<li><a href="ERASE.html" title="ERASE">ERASE</a>, <a href="CLEAR.html" title="CLEAR">CLEAR</a></li>
+<li><a href="DEFINT.html" title="DEFINT">DEFINT</a>, <a href="DEFSNG.html" title="DEFSNG">DEFSNG</a>, <a href="DEFLNG.html" title="DEFLNG">DEFLNG</a>, <a href="DEFDBL.html" title="DEFDBL">DEFDBL</a>, <a href="DEFSTR.html" title="DEFSTR">DEFSTR</a></li>
+<li><a href="Mathematical_Operations.html" title="Mathematical Operations">Mathematical Operations</a>, <a href="Arrays.html" title="Arrays">Arrays</a></li>
+<li><a href="Variable_Types.html" title="Variable Types">Variable Types</a></li>
+<li><a href="OPTION_EXPLICIT.html" title="OPTION EXPLICIT">OPTION _EXPLICIT</a></li></ul>
+<p><br />
+</p>
+<hr />
+<center><i>Navigation:</i>
+<dl><dd><a href="Keyword_Reference_-_Alphabetical.html" title="Keyword Reference - Alphabetical">Keyword Reference - Alphabetical</a></dd>
+<dd><a href="Keyword_Reference_-_By_usage.html" title="Keyword Reference - By usage">Keyword Reference - By Usage</a></dd>
+<dd><a href="Main_Page.html" title="Main Page">Main Wiki Page</a></dd></dl></center>
+<!-- 
+NewPP limit report
+Cached time: 20210807122750
+Cache expiry: 86400
+Dynamic content: false
+Complications: []
+CPU time usage: 0.112 seconds
+Real time usage: 0.567 seconds
+Preprocessor visited node count: 413/1000000
+Post‐expand include size: 5890/2097152 bytes
+Template argument size: 468/2097152 bytes
+Highest expansion depth: 3/40
+Expensive parser function count: 0/100
+Unstrip recursion depth: 0/20
+Unstrip post‐expand size: 0/5000000 bytes
+-->
+<!--
+Transclusion expansion time report (%,ms,calls,template)
+100.00%  251.077      1 -total
+ 14.75%   37.022      2 Template:InlineCode
+ 10.72%   26.924      8 Template:CodeEnd
+ 10.26%   25.771      2 Template:InlineCodeEnd
+ 10.17%   25.527      1 Template:PageSeeAlso
+  9.92%   24.916      1 Template:PageDescription
+  9.63%   24.189     34 Template:Cl
+  8.06%   20.242      8 Template:CodeStart
+  7.39%   18.565      1 Template:PageSyntax
+  6.26%   15.726     18 Template:KW
+-->
+
+<!-- Saved in parser cache with key i4224360_mw2-mw_:pcache:idhash:171-0!canonical and timestamp 20210807122750 and revision id 23189
+ -->
+</div></div><div class="printfooter">Retrieved from "<a dir="ltr" href="indexbb64.html?title=DIM&amp;oldid=23189">http://www.qb64.org/wiki/index.php?title=DIM&amp;oldid=23189</a>"</div>
+		<div id="catlinks" class="catlinks catlinks-allhidden" data-mw="interface"></div>
+	</div>
+</div>
+
+<div id="mw-navigation">
+	<h2>Navigation menu</h2>
+	<div id="mw-head">
+		<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-personal" class="vector-menu" aria-labelledby="p-personal-label" role="navigation" 
+	 >
+	<h3 id="p-personal-label">
+		<span>Personal tools</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="pt-login"><a href="index6f01.html?title=Special:UserLogin&amp;returnto=DIM" title="You are encouraged to log in; however, it is not mandatory [o]" accesskey="o">Log in</a></li></ul>
+		
+	</div>
+</nav>
+
+
+		<div id="left-navigation">
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-namespaces" class="vector-menu vector-menu-tabs vectorTabs" aria-labelledby="p-namespaces-label" role="navigation" 
+	 >
+	<h3 id="p-namespaces-label">
+		<span>Namespaces</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="ca-nstab-main" class="selected"><a href="DIM.html" title="View the content page [c]" accesskey="c">Page</a></li><li id="ca-talk" class="new"><a href="Talk_DIM.html?title=Talk:DIM&amp;action=edit&amp;redlink=1" rel="discussion" title="Discussion about the content page (page does not exist) [t]" accesskey="t">Discussion</a></li></ul>
+		
+	</div>
+</nav>
+
+
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-variants" class="vector-menu-empty emptyPortlet vector-menu vector-menu-dropdown vectorMenu" aria-labelledby="p-variants-label" role="navigation" 
+	 >
+	<input type="checkbox" class="vector-menu-checkbox vectorMenuCheckbox" aria-labelledby="p-variants-label" />
+	<h3 id="p-variants-label">
+		<span>Variants</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="menu vector-menu-content-list"></ul>
+		
+	</div>
+</nav>
+
+
+		</div>
+		<div id="right-navigation">
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-views" class="vector-menu vector-menu-tabs vectorTabs" aria-labelledby="p-views-label" role="navigation" 
+	 >
+	<h3 id="p-views-label">
+		<span>Views</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="ca-view" class="collapsible selected"><a href="DIM.html">Read</a></li><li id="ca-viewsource" class="collapsible"><a href="index3570.html?title=DIM&amp;action=edit" title="This page is protected.&#10;You can view its source [e]" accesskey="e">View source</a></li><li id="ca-history" class="collapsible"><a href="index6d9c.html?title=DIM&amp;action=history" title="Past revisions of this page [h]" accesskey="h">View history</a></li></ul>
+		
+	</div>
+</nav>
+
+
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-cactions" class="vector-menu-empty emptyPortlet vector-menu vector-menu-dropdown vectorMenu" aria-labelledby="p-cactions-label" role="navigation" 
+	 >
+	<input type="checkbox" class="vector-menu-checkbox vectorMenuCheckbox" aria-labelledby="p-cactions-label" />
+	<h3 id="p-cactions-label">
+		<span>More</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="menu vector-menu-content-list"></ul>
+		
+	</div>
+</nav>
+
+
+			<div id="p-search" role="search">
+	<h3 >
+		<label for="searchInput">Search</label>
+	</h3>
+	<form action="https://www.qb64.org/wiki/index.php" id="searchform">
+		<div id="simpleSearch">
+			<input type="search" name="search" placeholder="Search QB64 Wiki" title="Search QB64 Wiki [f]" accesskey="f" id="searchInput"/>
+			<input type="hidden" name="title" value="Special:Search">
+			<input type="submit" name="fulltext" value="Search" title="Search the pages for this text" id="mw-searchButton" class="searchButton mw-fallbackSearchButton"/>
+			<input type="submit" name="go" value="Go" title="Go to a page with this exact name if it exists" id="searchButton" class="searchButton"/>
+		</div>
+	</form>
+</div>
+
+		</div>
+	</div>
+	
+<div id="mw-panel">
+	<div id="p-logo" role="banner">
+		<a  title="Visit the main page" class="mw-wiki-logo" href="Main_Page.html"></a>
+	</div>
+	<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-navigation" class="vector-menu vector-menu-portal portal portal-first" aria-labelledby="p-navigation-label" role="navigation" 
+	 >
+	<h3 id="p-navigation-label">
+		<span>Navigation</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="n-mainpage-description"><a href="Main_Page.html" title="Visit the main page [z]" accesskey="z">Main page</a></li><li id="n-recentchanges"><a href="Special_RecentChanges.html" title="A list of recent changes in the wiki [r]" accesskey="r">Recent changes</a></li><li id="n-randompage"><a href="SNDCOPY.html" title="Load a random page [x]" accesskey="x">Random page</a></li><li id="n-help-mediawiki"><a href="https://www.mediawiki.org/wiki/Special:MyLanguage/Help:Contents">Help about MediaWiki</a></li></ul>
+		
+	</div>
+</nav>
+
+
+	<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-tb" class="vector-menu vector-menu-portal portal" aria-labelledby="p-tb-label" role="navigation" 
+	 >
+	<h3 id="p-tb-label">
+		<span>Tools</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="t-whatlinkshere"><a href="Special_WhatLinksHere/DIM.html" title="A list of all wiki pages that link here [j]" accesskey="j">What links here</a></li><li id="t-recentchangeslinked"><a href="Special_RecentChangesLinked/DIM.html" rel="nofollow" title="Recent changes in pages linked from this page [k]" accesskey="k">Related changes</a></li><li id="t-specialpages"><a href="Special_SpecialPages.html" title="A list of all special pages [q]" accesskey="q">Special pages</a></li><li id="t-print"><a href="javascript:print();" rel="alternate" title="Printable version of this page [p]" accesskey="p">Printable version</a></li><li id="t-permalink"><a href="indexbb64.html?title=DIM&amp;oldid=23189" title="Permanent link to this revision of the page">Permanent link</a></li><li id="t-info"><a href="index64ab.html?title=DIM&amp;action=info" title="More information about this page">Page information</a></li></ul>
+		
+	</div>
+</nav>
+
+
+	
+</div>
+
+</div>
+
+<footer id="footer" class="mw-footer" role="contentinfo" >
+	<ul id="footer-info" >
+		<li id="footer-info-lastmod"> This page was last edited on 7 February 2021, at 16:12.</li>
+	</ul>
+	<ul id="footer-places" >
+		<li id="footer-places-privacy"><a href="My_wiki_Privacy_policy.html" title="My wiki:Privacy policy">Privacy policy</a></li>
+		<li id="footer-places-about"><a href="My_wiki_About.html" title="My wiki:About">About QB64 Wiki</a></li>
+		<li id="footer-places-disclaimer"><a href="My_wiki_General_disclaimer.html" title="My wiki:General disclaimer">Disclaimers</a></li>
+	</ul>
+	<ul id="footer-icons" class="noprint">
+		<li id="footer-poweredbyico"><a href="https://www.mediawiki.org/"><img src="resources/assets/poweredby_mediawiki_88x31.png" alt="Powered by MediaWiki" srcset="/wiki/resources/assets/poweredby_mediawiki_132x47.png 1.5x, /wiki/resources/assets/poweredby_mediawiki_176x62.png 2x" width="88" height="31" loading="lazy"/></a></li>
+	</ul>
+	<div style="clear: both;"></div>
+</footer>
+
+
+
+<script>(RLQ=window.RLQ||[]).push(function(){mw.config.set({"wgPageParseReport":{"limitreport":{"cputime":"0.112","walltime":"0.567","ppvisitednodes":{"value":413,"limit":1000000},"postexpandincludesize":{"value":5890,"limit":2097152},"templateargumentsize":{"value":468,"limit":2097152},"expansiondepth":{"value":3,"limit":40},"expensivefunctioncount":{"value":0,"limit":100},"unstrip-depth":{"value":0,"limit":20},"unstrip-size":{"value":0,"limit":5000000},"timingprofile":["100.00%  251.077      1 -total"," 14.75%   37.022      2 Template:InlineCode"," 10.72%   26.924      8 Template:CodeEnd"," 10.26%   25.771      2 Template:InlineCodeEnd"," 10.17%   25.527      1 Template:PageSeeAlso","  9.92%   24.916      1 Template:PageDescription","  9.63%   24.189     34 Template:Cl","  8.06%   20.242      8 Template:CodeStart","  7.39%   18.565      1 Template:PageSyntax","  6.26%   15.726     18 Template:KW"]},"cachereport":{"timestamp":"20210807122750","ttl":86400,"transientcontent":false}}});mw.config.set({"wgBackendResponseTime":2079});});</script></body>
+<!-- Mirrored from www.qb64.org/wiki/DIM by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 07 Aug 2021 13:03:33 GMT -->
+</html>

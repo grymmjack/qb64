@@ -1,0 +1,403 @@
+
+<!DOCTYPE html>
+<html class="client-nojs" lang="en" dir="ltr">
+
+<!-- Mirrored from www.qb64.org/wiki/SCREEN by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 07 Aug 2021 12:51:19 GMT -->
+<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=UTF-8" /><!-- /Added by HTTrack -->
+<head>
+<meta charset="UTF-8"/>
+<title>SCREEN - QB64 Wiki</title>
+<script>document.documentElement.className="client-js";RLCONF={"wgBreakFrames":!1,"wgSeparatorTransformTable":["",""],"wgDigitTransformTable":["",""],"wgDefaultDateFormat":"dmy","wgMonthNames":["","January","February","March","April","May","June","July","August","September","October","November","December"],"wgRequestId":"YOWkog0lOz7XOc3uS6UrVAAAASA","wgCSPNonce":!1,"wgCanonicalNamespace":"","wgCanonicalSpecialPageName":!1,"wgNamespaceNumber":0,"wgPageName":"SCREEN","wgTitle":"SCREEN","wgCurRevisionId":23394,"wgRevisionId":23394,"wgArticleId":602,"wgIsArticle":!0,"wgIsRedirect":!1,"wgAction":"view","wgUserName":null,"wgUserGroups":["*"],"wgCategories":[],"wgPageContentLanguage":"en","wgPageContentModel":"wikitext","wgRelevantPageName":"SCREEN","wgRelevantArticleId":602,"wgIsProbablyEditable":!1,"wgRelevantPageIsProbablyEditable":!1,"wgRestrictionEdit":[],"wgRestrictionMove":[]};RLSTATE={"site.styles":"ready","noscript":"ready","user.styles":"ready","user":"ready",
+"user.options":"loading","skins.vector.styles.legacy":"ready","mediawiki.toc.styles":"ready"};RLPAGEMODULES=["site","mediawiki.page.startup","mediawiki.page.ready","mediawiki.toc","skins.vector.legacy.js"];</script>
+<script>(RLQ=window.RLQ||[]).push(function(){mw.loader.implement("user.options@1hzgi",function($,jQuery,require,module){/*@nomin*/mw.user.tokens.set({"patrolToken":"+\\","watchToken":"+\\","csrfToken":"+\\"});
+});});</script>
+<link rel="stylesheet" href="loadd8b0.css?lang=en&amp;modules=mediawiki.toc.styles%7Cskins.vector.styles.legacy&amp;only=styles&amp;skin=vector"/>
+<script async="" src="load52c0.php?lang=en&amp;modules=startup&amp;only=scripts&amp;raw=1&amp;skin=vector"></script>
+<meta name="generator" content="MediaWiki 1.35.2"/>
+<link rel="shortcut icon" href="https://www.qb64.org/favicon.ico"/>
+<link rel="search" type="application/opensearchdescription+xml" href="opensearch_desc.php" title="QB64 Wiki (en)"/>
+<link rel="EditURI" type="application/rsd+xml" href="api-result251f.xml?action=rsd"/>
+<link rel="alternate" type="application/atom+xml" title="QB64 Wiki Atom feed" href="feeda295.xml?title=Special:RecentChanges&amp;feed=atom"/>
+<!--[if lt IE 9]><script src="/wiki/resources/lib/html5shiv/html5shiv.js"></script><![endif]-->
+</head>
+<body class="mediawiki ltr sitedir-ltr mw-hide-empty-elt ns-0 ns-subject page-SCREEN rootpage-SCREEN skin-vector action-view skin-vector-legacy">
+<div id="mw-page-base" class="noprint"></div>
+<div id="mw-head-base" class="noprint"></div>
+<div id="content" class="mw-body" role="main">
+	<a id="top"></a>
+	<div id="siteNotice" class="mw-body-content"></div>
+	<div class="mw-indicators mw-body-content">
+	</div>
+	<h1 id="firstHeading" class="firstHeading" lang="en">SCREEN</h1>
+	<div id="bodyContent" class="mw-body-content">
+		<div id="siteSub" class="noprint">From QB64 Wiki</div>
+		<div id="contentSub"></div>
+		<div id="contentSub2"></div>
+		
+		<div id="jump-to-nav"></div>
+		<a class="mw-jump-link" href="#mw-head">Jump to navigation</a>
+		<a class="mw-jump-link" href="#searchInput">Jump to search</a>
+		<div id="mw-content-text" lang="en" dir="ltr" class="mw-content-ltr"><div class="mw-parser-output"><table align="Right">
+<tbody><tr>
+<td><div id="toc" class="toc" role="navigation" aria-labelledby="mw-toc-heading"><input type="checkbox" role="button" id="toctogglecheckbox" class="toctogglecheckbox" style="display:none" /><div class="toctitle" lang="en" dir="ltr"><h2 id="mw-toc-heading">Contents</h2><span class="toctogglespan"><label class="toctogglelabel" for="toctogglecheckbox"></label></span></div>
+<ul>
+<li class="toclevel-1"><a href="#Syntax"><span class="tocnumber">1</span> <span class="toctext">Syntax</span></a></li>
+<li class="toclevel-1"><a href="#Parameters"><span class="tocnumber">2</span> <span class="toctext">Parameters</span></a></li>
+<li class="toclevel-1 tocsection-1"><a href="#Legacy_Screen_Modes"><span class="tocnumber">3</span> <span class="toctext">Legacy Screen Modes</span></a></li>
+<li class="toclevel-1 tocsection-2"><a href="#Text_and_Graphics"><span class="tocnumber">4</span> <span class="toctext">Text and Graphics</span></a></li>
+<li class="toclevel-1 tocsection-3"><a href="#Examples"><span class="tocnumber">5</span> <span class="toctext">Examples</span></a></li>
+<li class="toclevel-1 tocsection-4"><a href="#References"><span class="tocnumber">6</span> <span class="toctext">References</span></a></li>
+<li class="toclevel-1"><a href="#See_also"><span class="tocnumber">7</span> <span class="toctext">See also</span></a></li>
+</ul>
+</div>
+
+</td></tr></tbody></table>
+<p>The <a class="mw-selflink selflink">SCREEN</a> statement sets the video display mode and size of the program window's workspace. 
+</p><p><br />
+</p>
+<h2><span class="mw-headline" id="Syntax">Syntax</span></h2>
+<dl><dd><dl><dd><dl><dd><b>SCREEN</b> {<i>mode%</i>|<i>imagehandle&amp;</i>} [, , active_page, visual_page]</dd></dl></dd></dl></dd></dl>
+<p><br />
+</p>
+<h2><span class="mw-headline" id="Parameters">Parameters</span></h2>
+<ul><li>The SCREEN <i>mode</i> <a href="INTEGER.html" title="INTEGER">INTEGER</a> values available today are 0 to 2 and 7 to 13 listed below.</li>
+<li><b>QB64</b> can use a <a href="LONG.html" title="LONG">LONG</a> <a href="NEWIMAGE.html" title="NEWIMAGE">_NEWIMAGE</a> page or <a href="LOADIMAGE.html" title="LOADIMAGE">_LOADIMAGE</a> file <i>image handle</i> value instead.</li>
+<li>The empty comma disables color when any value is used. <b>DO NOT USE!</b> Include the comma ONLY when using page flipping.</li>
+<li>If the SCREEN mode supports pages, the <i>active page</i> is the page to be worked on while <i>visual page</i> is the one displayed.</li></ul>
+<p><br />
+<i>Usage:</i> 
+</p>
+<ul><li>No SCREEN statement in a program defaults to <a class="mw-selflink selflink">SCREEN</a> 0 text ONLY mode.</li>
+<li>A SCREEN statement that changes screen modes also clears the screen like <a href="CLS.html" title="CLS">CLS</a>. Nothing on the screen is retained.</li>
+<li>Some screen mode text sizes are adjustable with <a href="WIDTH.html" title="WIDTH">WIDTH</a> and all <b>QB64</b> screens support <a href="PCOPY.html" title="PCOPY">PCOPY</a> and page flipping.</li></ul>
+<p style="padding: 1em; line-height:100%; margin-left:10px; white-space: pre; font-family: courier; background-color: white; color: darkgreen;">                       <b>LEGACY SCREEN MODES AT A GLANCE</b>
+
+ <b>Screen      Text           Graphics          Colors      Video    Text      Default</b> 
+  <b>Mode   Rows   Columns   Width   Height  Attrib.   BPP   Pages    Block    QB64 Font</b>
+
+   0   25/43/50  80/40    No graphics     16/16 DAC  4     0-7     -----    _FONT 16
+   1      25      40      320     200     16/4 BG    4     none    8 X 8    _FONT 8 
+   2      25      80      640     200      2/mono    1     none    8 X 8    _FONT 8 
+   ................................................................................. 
+   7      25      40      320     200     16/16 DAC  4     0-7     8 X 8    _FONT 8 
+   8      25      80      640     200     16/16      4     0-3     8 X 8    _FONT 8 
+   9      25      80      640     350     16/64 DAC  4     0-1     8 X 14   _FONT 14
+  10      25      80      640     350     4/2 GScale 2     none    8 X 14   _FONT 14
+  11     30/60    80      640     480      2/mono    1     none    8 X 16   _FONT 16
+  12     30/60    80      640     480     16/262K    4     none    8 X 16   _FONT 16
+  13      25      40      320     200     256/65K    8     none    8 X 8    _FONT 8 
+
+              <b>QB64 allows video paging and <a href="PCOPY.html" title="PCOPY">PCOPY</a> in ALL screen modes!</b> <i> </i>
+</p>
+<dl><dd><dl><dd><dl><dd><dl><dd><dl><dd><dl><dd><dl><dd><dl><dd><dl><dd><b>QB64 Custom Screen Modes</b></dd></dl></dd></dl></dd></dl></dd></dl></dd></dl></dd></dl></dd></dl></dd></dl></dd>
+<dd><b>QB64</b> == Syntax == &#160;</dd></dl>
+<dl><dd><dl><dd><dl><dd><dl><dd><dl><dd><dl><dd><a class="mw-selflink selflink">SCREEN</a> <i>imagehandle&amp;</i> [, , <i>active_page</i>, <i>visual_page</i>]</dd></dl></dd></dl></dd></dl></dd></dl></dd></dl></dd></dl>
+<dl><dd><dl><dd><dl><dd><dl><dd><dl><dd><dl><dd><a class="mw-selflink selflink">SCREEN</a> <a href="NEWIMAGE.html" title="NEWIMAGE">_NEWIMAGE</a>(<i>wide&amp;</i>, <i>high&amp;</i>[, {<i>mode</i>|<i>256</i>|<i>32</i>}]) [, , <i>active_page</i>, <i>visual_page</i>]</dd></dl></dd></dl></dd></dl></dd></dl></dd></dl></dd></dl>
+<dl><dd><dl><dd><dl><dd><dl><dd><dl><dd><dl><dd><a class="mw-selflink selflink">SCREEN</a> <a href="LOADIMAGE.html" title="LOADIMAGE">_LOADIMAGE</a>(<i>file$</i>[, {<i>mode</i>|<i>256</i>|<i>32</i>}]) [, , <i>active_page</i>, <i>visual_page</i>]</dd></dl></dd></dl></dd></dl></dd></dl></dd></dl></dd></dl>
+<p><br />
+</p>
+<ul><li>Custom screen modes can be created using a <a href="NEWIMAGE.html" title="NEWIMAGE">_NEWIMAGE</a> or <a href="LOADIMAGE.html" title="LOADIMAGE">_LOADIMAGE</a> function <i>imagehandle</i> return value.</li>
+<li><b>QB64</b> screen modes 0 to 2 and 7 to 13 can be emulated with the same color depth and text block size and different dimensions.</li>
+<li><a href="NEWIMAGE.html" title="NEWIMAGE">_NEWIMAGE</a> screens can be any set size. A screen mode can be emulated or 256 or 32 bit colors can be designated.</li>
+<li>The <a href="LOADIMAGE.html" title="LOADIMAGE">_LOADIMAGE</a> screen size will be the size of the image loaded. Can designate a <i>mode</i> or 256 or 32 bit colors.</li>
+<li><b>QB64</b> allows page flipping or a <a href="PCOPY.html" title="PCOPY">PCOPY</a> in ANY SCREEN mode. <a href="DISPLAY.html" title="DISPLAY">_DISPLAY</a> can also be used to reduce flickering in animations.</li>
+<li>All SCREEN modes are Windows in QB64. Use <a href="FULLSCREEN.html" title="FULLSCREEN">_FULLSCREEN</a> to set the window area to full screen.</li>
+<li><a href="SCREENMOVE.html" title="SCREENMOVE">_SCREENMOVE</a> can position a window or the _MIDDLE option can center it on the desktop.</li></ul>
+<p style="text-align: center">(<a href="#toc">Return to Table of Contents</a>)</p>
+<h2><span class="mw-headline" id="Legacy_Screen_Modes">Legacy Screen Modes</span></h2>
+<ul><li><b><a class="mw-selflink selflink">SCREEN</a> 0</b> (default mode) is a <b>text only</b> screen mode. 64 (VGA) colors with hi-intensity(blinking) colors 16 to 31. (<a href="DAC.html" title="DAC">DAC</a> attrib 6, 8 to 15). 8 Background colors intensities only(0 - 7). No graphics are possible! Normally runs in a window. ALT-Enter switches from a window to fullscreen. To automatically run in <b>QBasic</b> fullscreen, use another Screen mode before using <span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="SCREEN_(statement).html" title="SCREEN (statement)">SCREEN</a></span> 0.  Can use <span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="PCOPY.html" title="PCOPY">PCOPY</a></span> with video pages 0 to 7. Text is 25, 43 or 50 rows by 40 or 80 columns. Default is 25 by 80. See <span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="WIDTH.html" title="WIDTH">WIDTH</a></span>.</li></ul>
+<dl><dd><b>Note:</b> Use <a href="OUT.html" title="OUT">OUT</a> or <a href="PALETTECOLOR.html" title="PALETTECOLOR">_PALETTECOLOR</a> to create higher intensity color backgrounds than <a href="COLOR.html" title="COLOR">COLOR</a> , 7.</dd></dl>
+<dl><dd><dl><dd><dl><dd><b>All other available <a class="mw-selflink selflink">SCREEN</a> modes can use text and graphics and are fullscreen in QBasic ONLY.</b></dd></dl></dd></dl></dd></dl>
+<ul><li><b><a class="mw-selflink selflink">SCREEN</a> 1</b> has 4 background color attributes. 0 = black, 1 = blue, 2 = green, 3 = grey. White foreground only. Text is 25 by 40. White graphics is 320 by 200.</li></ul>
+<ul><li><b><a class="mw-selflink selflink">SCREEN</a> 2</b> is <b>monochrome</b> with black background and white foreground. Text is 25 by 80. White graphics 640 by 200. &#160;&#160;&#160;&#160;&#160;&#160;&#160; &#160;NO <a href="COLOR.html" title="COLOR">COLOR</a> keyword allowed.</li></ul>
+<ul><li><b><a class="mw-selflink selflink">SCREEN</a> 3 to 6 are no longer supported</b> on most computers! Using them will cause a video <a href="ERROR_Codes.html" title="ERROR Codes">error</a>!</li></ul>
+<ul><li><b><a class="mw-selflink selflink">SCREEN</a> 7</b> has 16 color attributes (<a href="DAC.html" title="DAC">DAC</a> attrib. 8 to 15) with background colors. Text 25 rows by 40 columns. Graphics 320 columns by 200 rows. Video  pages 0 to 7 for flipping or <span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="PCOPY.html" title="PCOPY">PCOPY</a></span>.</li></ul>
+<ul><li><b><a class="mw-selflink selflink">SCREEN</a> 8</b> has 16 color attributes with background. Text is 25 by 80. Graphics is 640 by 200. Video pages 0 to 3.</li></ul>
+<ul><li><b><a class="mw-selflink selflink">SCREEN</a> 9</b> has 64 DAC color hues for (<a href="DAC.html" title="DAC">DAC</a> attrib. 6, 8 to 15) with background colors. Text is 25 by 80. Graphics is 640 by 350. Video pages 0 and 1 for flipping or <span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="PCOPY.html" title="PCOPY">PCOPY</a></span>.</li></ul>
+<ul><li><b><a class="mw-selflink selflink">SCREEN</a> 10</b> has 4 gray scale color attributes with black background. 1 = normal white, 2 = blinking white and 3 = bright white. Text is 25 by 80. Graphics is 640 by 350.</li></ul>
+<ul><li><b><a class="mw-selflink selflink">SCREEN</a> 11</b> is <b>monochrome</b> with black background and white foreground. Text is 30 or 60 by 80 columns(see <span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="WIDTH.html" title="WIDTH">WIDTH</a></span>). White graphics is 640 by 480. NO <a href="COLOR.html" title="COLOR">COLOR</a> keyword allowed.</li></ul>
+<ul><li><b><a class="mw-selflink selflink">SCREEN</a> 12</b> has 16 color attributes, black background. 256K possible color hues. Text is 30 or 60 by 80 columns(see <span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="WIDTH.html" title="WIDTH">WIDTH</a></span>). Graphics 640 by 480.</li></ul>
+<ul><li><b><a class="mw-selflink selflink">SCREEN</a> 13</b> has 256 color attributes, black background. 256K possible color hues. Text is 25 by 40. Graphics is 320 by 200.</li></ul>
+<ul><li><b><a class="mw-selflink selflink">SCREEN</a> <a href="NEWIMAGE.html" title="NEWIMAGE">_NEWIMAGE</a></b>(wide&amp;, deep&amp;, mode%) can imitate any size screen mode or use 32 bit or 256 color modes in <b>QB64</b>.</li></ul>
+<ul><li><b><a class="mw-selflink selflink">SCREEN</a> <a href="LOADIMAGE.html" title="LOADIMAGE">_LOADIMAGE</a></b>(imagehandle&amp;, colors) can load a program screen of an image file handle in <b>QB64</b> using 256 or 32 bit.</li></ul>
+<center><b>QB64 can use page flipping with any number of pages in any screen mode!</b></center>
+<p style="text-align: center">(<a href="#toc">Return to Table of Contents</a>)</p>
+<h2><span class="mw-headline" id="Text_and_Graphics">Text and Graphics</span></h2>
+<dl><dd><dl><dd><dl><dd><dl><dd><dl><dd><dl><dd><dl><dd><dl><dd><dl><dd><b>Text Coordinates:</b></dd></dl></dd></dl></dd></dl></dd></dl></dd></dl></dd></dl></dd></dl></dd></dl></dd></dl>
+<ul><li>Are a minimum of 1 and the values given above are the maximums. <a href="LOCATE.html" title="LOCATE">LOCATE</a> 1, 1 is the top left <a class="mw-selflink selflink">SCREEN</a> text position.</li>
+<li>Text characters occupy a certain sized pixel box adjusted by <a href="WIDTH.html" title="WIDTH">WIDTH</a> in some screen modes.</li>
+<li>Text <a href="PRINT.html" title="PRINT">PRINT</a> cursor positions can be read by <span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="CSRLIN.html" title="CSRLIN">CSRLIN</a></span> and <span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="POS.html" title="POS">POS(0)</a></span> to <a href="LOCATE.html" title="LOCATE">LOCATE</a> text <a href="PRINT.html" title="PRINT">PRINTs</a>.</li>
+<li><a href="VIEW_PRINT.html" title="VIEW PRINT">VIEW PRINT</a> can be used to designate a text view port area.</li>
+<li>In <b>QB64</b> the <a href="WIDTH_(function).html" title="WIDTH (function)">_WIDTH</a> and <a href="HEIGHT.html" title="HEIGHT">_HEIGHT</a> functions will return the text dimensions in SCREEN 0 only.</li></ul>
+<p><br />
+</p>
+<dl><dd><dl><dd><dl><dd><dl><dd><dl><dd><dl><dd><dl><dd><dl><dd><dl><dd><b>Graphic Coordinates:</b></dd></dl></dd></dl></dd></dl></dd></dl></dd></dl></dd></dl></dd></dl></dd></dl></dd></dl>
+<ul><li>The minimum on screen graphics pixel coordinates are 0 for columns and rows in the top left corner.</li>
+<li>Maximum pixel coordinates are one less than the maximum dimensions above because the pixel count starts at 0.</li>
+<li>Graphic objects such as <a href="PSET.html" title="PSET">PSET</a>, <a href="PRESET.html" title="PRESET">PRESET</a>, <a href="LINE.html" title="LINE">LINE</a>, <a href="CIRCLE.html" title="CIRCLE">CIRCLE</a> and <a href="DRAW.html" title="DRAW">DRAW</a> can be placed partially off of the screen.</li>
+<li><a href="GET_(graphics_statement).html" title="GET (graphics statement)">GET</a> and <a href="PUT_(graphics_statement).html" title="PUT (graphics statement)">PUT</a> screen image operations MUST be located completely on the screen in QBasic!</li>
+<li><a href="VIEW.html" title="VIEW">VIEW</a> can be used to designate a graphic view port area of the screen.</li>
+<li><a href="WINDOW.html" title="WINDOW">WINDOW</a> can be used to set the graphics SCREEN coordinates to almost any size needed. Use the SCREEN option for normal row coordinate values. Row coordinates are Cartesian(decrease in value going down the screen) otherwise.</li>
+<li>In <b>QB64</b> the <a href="WIDTH_(function).html" title="WIDTH (function)">_WIDTH</a> and <a href="HEIGHT.html" title="HEIGHT">_HEIGHT</a> functions will return the graphic pixel dimensions in SCREENs other than 0.</li></ul>
+<p><br />
+</p>
+<dl><dd><dl><dd><dl><dd><dl><dd><dl><dd><dl><dd><dl><dd><b>QB64 Screen Statements and Functions:</b></dd></dl></dd></dl></dd></dl></dd></dl></dd></dl></dd></dl></dd></dl>
+<ul><li>For file image screens that adopt the image dimensions and image color settings use: <a href="LOADIMAGE.html" title="LOADIMAGE">_LOADIMAGE</a></li>
+<li>To create custom sized screen modes or pages and 256 or 32 bit colors use: <a href="NEWIMAGE.html" title="NEWIMAGE">_NEWIMAGE</a></li>
+<li><a href="PUTIMAGE.html" title="PUTIMAGE">_PUTIMAGE</a> can stretch or reduce the size of images to fit the SCREEN size.</li>
+<li><a href="PUT_(graphics_statement).html" title="PUT (graphics statement)">PUT</a> can use <a href="CLIP.html" title="CLIP">_CLIP</a> to set objects partially off screen. <a href="GET_(graphics_statement).html" title="GET (graphics statement)">GET</a> can read objects off screen as a color in QB64 ONLY.</li>
+<li>A <a href="DISPLAY.html" title="DISPLAY">_DISPLAY</a> statement can be used to only display an image after changes instead of using page flipping or <a href="PCOPY.html" title="PCOPY">PCOPY</a>.</li>
+<li>The current desktop screen resolution can be found using the <a href="SCREENIMAGE.html" title="SCREENIMAGE">_SCREENIMAGE</a> handle value with <a href="WIDTH_(function).html" title="WIDTH (function)">_WIDTH</a> and <a href="HEIGHT.html" title="HEIGHT">_HEIGHT</a>.</li>
+<li><b>NOTE: Default 32 bit backgrounds are clear black or <a href="RGBA.html" title="RGBA">_RGBA</a>(0, 0, 0, 0)! Use <a href="CLS.html" title="CLS">CLS</a> to make the black opaque!</b></li></ul>
+<p style="text-align: center">(<a href="#toc">Return to Table of Contents</a>)</p>
+<h2><span class="mw-headline" id="Examples">Examples</span></h2>
+<dl><dd><i>Example 1:</i> Shows an example of each legacy screen mode available to QBasic and QB64.</dd></dl>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: Courier, monospace; background-color: darkblue; color: lightgrey; word-wrap: break-word;"> <i> </i>
+<a class="mw-selflink selflink"><span style="color:#87cefa;">SCREEN</span></a> 0
+<a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> "This is <a class="mw-selflink selflink"><span style="color:#87cefa;">SCREEN</span></a> 0 - only text is allowed!"
+<a href="FOR.html" class="mw-redirect" title="FOR"><span style="color:#87cefa;">FOR</span></a> S = 1 <a href="TO.html" title="TO"><span style="color:#87cefa;">TO</span></a> 13
+   <a href="IF.html" class="mw-redirect" title="IF"><span style="color:#87cefa;">IF</span></a> S &lt; 3 <a href="OR.html" title="OR"><span style="color:#87cefa;">OR</span></a> S &gt; 6 <a href="THEN.html" title="THEN"><span style="color:#87cefa;">THEN</span></a> 
+     <a href="DO.html" class="mw-redirect" title="DO"><span style="color:#87cefa;">DO</span></a>: <a href="SLEEP.html" title="SLEEP"><span style="color:#87cefa;">SLEEP</span></a>: <a href="LOOP.html" title="LOOP"><span style="color:#87cefa;">LOOP</span></a> <a href="UNTIL.html" title="UNTIL"><span style="color:#87cefa;">UNTIL</span></a> <a href="INKEY%24.html" title="INKEY$"><span style="color:#87cefa;">INKEY$</span></a> &lt;&gt; ""
+     <a class="mw-selflink selflink"><span style="color:#87cefa;">SCREEN</span></a> S
+     <a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> "This is <a class="mw-selflink selflink"><span style="color:#87cefa;">SCREEN</span></a>"; S; " - can use text and graphics!"
+       <a href="IF.html" class="mw-redirect" title="IF"><span style="color:#87cefa;">IF</span></a> S = 2 <a href="OR.html" title="OR"><span style="color:#87cefa;">OR</span></a> S = 11 <a href="THEN.html" title="THEN"><span style="color:#87cefa;">THEN</span></a> <a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> "Monochrome - no <a href="COLOR.html" title="COLOR"><span style="color:#87cefa;">COLOR</span></a> statements!"
+       <a href="IF.html" class="mw-redirect" title="IF"><span style="color:#87cefa;">IF</span></a> S = 10 <a href="THEN.html" title="THEN"><span style="color:#87cefa;">THEN</span></a> 
+         <a href="COLOR.html" title="COLOR"><span style="color:#87cefa;">COLOR</span></a> 2: <a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> "This <a class="mw-selflink selflink"><span style="color:#87cefa;">SCREEN</span></a> has only 4 colors. Black and 3 white: 2 blinks.
+         <a href="CIRCLE.html" title="CIRCLE"><span style="color:#87cefa;">CIRCLE</span></a> (100,100), 50, 2
+       <a href="ELSE.html" title="ELSE"><span style="color:#87cefa;">ELSE</span></a>&#160;: <a href="CIRCLE.html" title="CIRCLE"><span style="color:#87cefa;">CIRCLE</span></a> (100,100), 100, S
+       <a href="END_IF.html" class="mw-redirect" title="END IF"><span style="color:#87cefa;">END IF</span></a>
+   <a href="END_IF.html" class="mw-redirect" title="END IF"><span style="color:#87cefa;">END IF</span></a>
+<a href="NEXT.html" title="NEXT"><span style="color:#87cefa;">NEXT</span></a> 
+<a href="SLEEP.html" title="SLEEP"><span style="color:#87cefa;">SLEEP</span></a>
+<a href="SYSTEM.html" title="SYSTEM"><span style="color:#87cefa;">SYSTEM</span></a> <i> </i>
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: Courier; background-color: black; color: white;">
+This is SCREEN 0 - only text is allowed!
+</p>
+<dl><dd>Displays each <span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="SCREEN_(statement).html" title="SCREEN (statement)">SCREEN</a></span> mode one at a time with a <span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="CIRCLE.html" title="CIRCLE">CIRCLE</a></span> (except for <span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="SCREEN_(statement).html" title="SCREEN (statement)">SCREEN</a></span> 0)</dd></dl>
+<p style="text-align: center">(<a href="#toc">Return to Table of Contents</a>)</p>
+<h2><span class="mw-headline" id="References">References</span></h2>
+<p><i>See Examples:</i>
+</p>
+<ul><li><a href="SAVEIMAGE.html" title="SAVEIMAGE">SAVEIMAGE</a> <span style="color:gray">(QB64 Image to Bitmap SUB by Galleon)</span></li></ul>
+<ul><li><a href="Program_ScreenShots.html" title="Program ScreenShots">Program ScreenShots</a> <span style="color:gray">(Member program for legacy screen modes)</span></li></ul>
+<ul><li><a href="ThirtyTwoBit_SUB.html" title="ThirtyTwoBit SUB">ThirtyTwoBit SUB</a> <span style="color:gray">(QB64 Image area to bitmap)</span></li></ul>
+<ul><li><a href="SelectScreen.html" title="SelectScreen">SelectScreen</a> <span style="color:gray">(Member Screen mode selection function)</span></li></ul>
+<ul><li><a href="ScreenMode.html" title="ScreenMode">ScreenMode</a> <span style="color:gray">(Member function to find current Screen mode)</span></li></ul>
+<p><br />
+</p>
+<h2><span class="mw-headline" id="See_also">See also</span></h2>
+<ul><li><a href="COLOR.html" title="COLOR">COLOR</a>, <a href="CLS.html" title="CLS">CLS</a>, <a href="WIDTH.html" title="WIDTH">WIDTH</a></li>
+<li><a href="NEWIMAGE.html" title="NEWIMAGE">_NEWIMAGE</a>, <a href="LOADIMAGE.html" title="LOADIMAGE">_LOADIMAGE</a>, <a href="SCREENIMAGE.html" title="SCREENIMAGE">_SCREENIMAGE</a></li>
+<li><a href="LOADFONT.html" title="LOADFONT">_LOADFONT</a>, <a href="FONT.html" title="FONT">_FONT</a></li>
+<li><a href="DISPLAY.html" title="DISPLAY">_DISPLAY</a>, <a href="COPYIMAGE.html" title="COPYIMAGE">_COPYIMAGE</a>, <a href="SCREENMOVE.html" title="SCREENMOVE">_SCREENMOVE</a></li>
+<li><a href="SCREENHIDE.html" title="SCREENHIDE">_SCREENHIDE</a>, <a href="SCREENSHOW.html" title="SCREENSHOW">_SCREENSHOW</a>, <a href="SCREENICON.html" title="SCREENICON">_SCREENICON</a></li>
+<li><a href="PALETTE.html" title="PALETTE">PALETTE</a>, <a href="OUT.html" title="OUT">OUT</a>, <a href="PCOPY.html" title="PCOPY">PCOPY</a>,</li>
+<li><a href="GET_(graphics_statement).html" title="GET (graphics statement)">GET</a>, <a href="PUT_(graphics_statement).html" title="PUT (graphics statement)">PUT</a> <span style="color:gray">(graphics)</span></li>
+<li><a href="VIEW.html" title="VIEW">VIEW</a>, <a href="WINDOW.html" title="WINDOW">WINDOW</a> <span style="color:gray">(graphic viewport)</span>, <a href="VIEW_PRINT.html" title="VIEW PRINT">VIEW PRINT</a> <span style="color:gray">(text view port)</span></li>
+<li><a href="SCREEN_(function).html" title="SCREEN (function)">SCREEN (function)</a> <span style="color:gray">(text only)</span>, <a href="POINT.html" title="POINT">POINT</a> <span style="color:gray">(graphic pixel colors)</span></li>
+<li><a href="Screen_Memory.html" title="Screen Memory">Screen Memory</a>, <a href="Screen_Saver_Programs.html" title="Screen Saver Programs">Screen Saver Programs</a></li>
+<li><a href="CONSOLE.html" title="CONSOLE">_CONSOLE</a></li></ul>
+<p><br />
+</p>
+<hr />
+<center><i>Navigation:</i>
+<dl><dd><a href="Keyword_Reference_-_Alphabetical.html" title="Keyword Reference - Alphabetical">Keyword Reference - Alphabetical</a></dd>
+<dd><a href="Keyword_Reference_-_By_usage.html" title="Keyword Reference - By usage">Keyword Reference - By Usage</a></dd>
+<dd><a href="Main_Page.html" title="Main Page">Main Wiki Page</a></dd></dl></center>
+<!-- 
+NewPP limit report
+Cached time: 20210707062331
+Cache expiry: 86400
+Dynamic content: false
+Complications: []
+CPU time usage: 0.120 seconds
+Real time usage: 0.231 seconds
+Preprocessor visited node count: 620/1000000
+Post‐expand include size: 4504/2097152 bytes
+Template argument size: 734/2097152 bytes
+Highest expansion depth: 3/40
+Expensive parser function count: 0/100
+Unstrip recursion depth: 0/20
+Unstrip post‐expand size: 0/5000000 bytes
+-->
+<!--
+Transclusion expansion time report (%,ms,calls,template)
+100.00%   63.833      1 -total
+ 19.16%   12.228     34 Template:Cl
+ 12.23%    7.809      1 Template:OutputEnd
+  6.84%    4.367      2 Template:PageSyntax
+  6.68%    4.266     10 Template:Text
+  6.51%    4.158     12 Template:KW
+  5.18%    3.304      1 Template:PageNavigation
+  5.08%    3.241      1 Template:CodeStart
+  5.07%    3.235      1 Template:PageParameters
+  5.04%    3.215      1 Template:OutputStart
+-->
+
+<!-- Saved in parser cache with key i4224360_mw2-mw_:pcache:idhash:602-0!canonical and timestamp 20210707062331 and revision id 23394
+ -->
+</div></div><div class="printfooter">Retrieved from "<a dir="ltr" href="indexfc8a.html?title=SCREEN&amp;oldid=23394">http://www.qb64.org/wiki/index.php?title=SCREEN&amp;oldid=23394</a>"</div>
+		<div id="catlinks" class="catlinks catlinks-allhidden" data-mw="interface"></div>
+	</div>
+</div>
+
+<div id="mw-navigation">
+	<h2>Navigation menu</h2>
+	<div id="mw-head">
+		<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-personal" class="vector-menu" aria-labelledby="p-personal-label" role="navigation" 
+	 >
+	<h3 id="p-personal-label">
+		<span>Personal tools</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="pt-login"><a href="index3909.html?title=Special:UserLogin&amp;returnto=SCREEN" title="You are encouraged to log in; however, it is not mandatory [o]" accesskey="o">Log in</a></li></ul>
+		
+	</div>
+</nav>
+
+
+		<div id="left-navigation">
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-namespaces" class="vector-menu vector-menu-tabs vectorTabs" aria-labelledby="p-namespaces-label" role="navigation" 
+	 >
+	<h3 id="p-namespaces-label">
+		<span>Namespaces</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="ca-nstab-main" class="selected"><a href="SCREEN.html" title="View the content page [c]" accesskey="c">Page</a></li><li id="ca-talk" class="new"><a href="Talk_SCREEN.html?title=Talk:SCREEN&amp;action=edit&amp;redlink=1" rel="discussion" title="Discussion about the content page (page does not exist) [t]" accesskey="t">Discussion</a></li></ul>
+		
+	</div>
+</nav>
+
+
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-variants" class="vector-menu-empty emptyPortlet vector-menu vector-menu-dropdown vectorMenu" aria-labelledby="p-variants-label" role="navigation" 
+	 >
+	<input type="checkbox" class="vector-menu-checkbox vectorMenuCheckbox" aria-labelledby="p-variants-label" />
+	<h3 id="p-variants-label">
+		<span>Variants</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="menu vector-menu-content-list"></ul>
+		
+	</div>
+</nav>
+
+
+		</div>
+		<div id="right-navigation">
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-views" class="vector-menu vector-menu-tabs vectorTabs" aria-labelledby="p-views-label" role="navigation" 
+	 >
+	<h3 id="p-views-label">
+		<span>Views</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="ca-view" class="collapsible selected"><a href="SCREEN.html">Read</a></li><li id="ca-viewsource" class="collapsible"><a href="index887b.html?title=SCREEN&amp;action=edit" title="This page is protected.&#10;You can view its source [e]" accesskey="e">View source</a></li><li id="ca-history" class="collapsible"><a href="index0d03.html?title=SCREEN&amp;action=history" title="Past revisions of this page [h]" accesskey="h">View history</a></li></ul>
+		
+	</div>
+</nav>
+
+
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-cactions" class="vector-menu-empty emptyPortlet vector-menu vector-menu-dropdown vectorMenu" aria-labelledby="p-cactions-label" role="navigation" 
+	 >
+	<input type="checkbox" class="vector-menu-checkbox vectorMenuCheckbox" aria-labelledby="p-cactions-label" />
+	<h3 id="p-cactions-label">
+		<span>More</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="menu vector-menu-content-list"></ul>
+		
+	</div>
+</nav>
+
+
+			<div id="p-search" role="search">
+	<h3 >
+		<label for="searchInput">Search</label>
+	</h3>
+	<form action="https://www.qb64.org/wiki/index.php" id="searchform">
+		<div id="simpleSearch">
+			<input type="search" name="search" placeholder="Search QB64 Wiki" title="Search QB64 Wiki [f]" accesskey="f" id="searchInput"/>
+			<input type="hidden" name="title" value="Special:Search">
+			<input type="submit" name="fulltext" value="Search" title="Search the pages for this text" id="mw-searchButton" class="searchButton mw-fallbackSearchButton"/>
+			<input type="submit" name="go" value="Go" title="Go to a page with this exact name if it exists" id="searchButton" class="searchButton"/>
+		</div>
+	</form>
+</div>
+
+		</div>
+	</div>
+	
+<div id="mw-panel">
+	<div id="p-logo" role="banner">
+		<a  title="Visit the main page" class="mw-wiki-logo" href="Main_Page.html"></a>
+	</div>
+	<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-navigation" class="vector-menu vector-menu-portal portal portal-first" aria-labelledby="p-navigation-label" role="navigation" 
+	 >
+	<h3 id="p-navigation-label">
+		<span>Navigation</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="n-mainpage-description"><a href="Main_Page.html" title="Visit the main page [z]" accesskey="z">Main page</a></li><li id="n-recentchanges"><a href="Special_RecentChanges.html" title="A list of recent changes in the wiki [r]" accesskey="r">Recent changes</a></li><li id="n-randompage"><a href="SNDCOPY.html" title="Load a random page [x]" accesskey="x">Random page</a></li><li id="n-help-mediawiki"><a href="https://www.mediawiki.org/wiki/Special:MyLanguage/Help:Contents">Help about MediaWiki</a></li></ul>
+		
+	</div>
+</nav>
+
+
+	<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-tb" class="vector-menu vector-menu-portal portal" aria-labelledby="p-tb-label" role="navigation" 
+	 >
+	<h3 id="p-tb-label">
+		<span>Tools</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="t-whatlinkshere"><a href="Special_WhatLinksHere/SCREEN.html" title="A list of all wiki pages that link here [j]" accesskey="j">What links here</a></li><li id="t-recentchangeslinked"><a href="Special_RecentChangesLinked/SCREEN.html" rel="nofollow" title="Recent changes in pages linked from this page [k]" accesskey="k">Related changes</a></li><li id="t-specialpages"><a href="Special_SpecialPages.html" title="A list of all special pages [q]" accesskey="q">Special pages</a></li><li id="t-print"><a href="javascript:print();" rel="alternate" title="Printable version of this page [p]" accesskey="p">Printable version</a></li><li id="t-permalink"><a href="indexfc8a.html?title=SCREEN&amp;oldid=23394" title="Permanent link to this revision of the page">Permanent link</a></li><li id="t-info"><a href="index3ddc.html?title=SCREEN&amp;action=info" title="More information about this page">Page information</a></li></ul>
+		
+	</div>
+</nav>
+
+
+	
+</div>
+
+</div>
+
+<footer id="footer" class="mw-footer" role="contentinfo" >
+	<ul id="footer-info" >
+		<li id="footer-info-lastmod"> This page was last edited on 17 February 2021, at 12:42.</li>
+	</ul>
+	<ul id="footer-places" >
+		<li id="footer-places-privacy"><a href="My_wiki_Privacy_policy.html" title="My wiki:Privacy policy">Privacy policy</a></li>
+		<li id="footer-places-about"><a href="My_wiki_About.html" title="My wiki:About">About QB64 Wiki</a></li>
+		<li id="footer-places-disclaimer"><a href="My_wiki_General_disclaimer.html" title="My wiki:General disclaimer">Disclaimers</a></li>
+	</ul>
+	<ul id="footer-icons" class="noprint">
+		<li id="footer-poweredbyico"><a href="https://www.mediawiki.org/"><img src="resources/assets/poweredby_mediawiki_88x31.png" alt="Powered by MediaWiki" srcset="/wiki/resources/assets/poweredby_mediawiki_132x47.png 1.5x, /wiki/resources/assets/poweredby_mediawiki_176x62.png 2x" width="88" height="31" loading="lazy"/></a></li>
+	</ul>
+	<div style="clear: both;"></div>
+</footer>
+
+
+
+<script>(RLQ=window.RLQ||[]).push(function(){mw.config.set({"wgPageParseReport":{"limitreport":{"cputime":"0.120","walltime":"0.231","ppvisitednodes":{"value":620,"limit":1000000},"postexpandincludesize":{"value":4504,"limit":2097152},"templateargumentsize":{"value":734,"limit":2097152},"expansiondepth":{"value":3,"limit":40},"expensivefunctioncount":{"value":0,"limit":100},"unstrip-depth":{"value":0,"limit":20},"unstrip-size":{"value":0,"limit":5000000},"timingprofile":["100.00%   63.833      1 -total"," 19.16%   12.228     34 Template:Cl"," 12.23%    7.809      1 Template:OutputEnd","  6.84%    4.367      2 Template:PageSyntax","  6.68%    4.266     10 Template:Text","  6.51%    4.158     12 Template:KW","  5.18%    3.304      1 Template:PageNavigation","  5.08%    3.241      1 Template:CodeStart","  5.07%    3.235      1 Template:PageParameters","  5.04%    3.215      1 Template:OutputStart"]},"cachereport":{"timestamp":"20210707062331","ttl":86400,"transientcontent":false}}});mw.config.set({"wgBackendResponseTime":1805});});</script></body>
+<!-- Mirrored from www.qb64.org/wiki/SCREEN by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 07 Aug 2021 12:51:24 GMT -->
+</html>

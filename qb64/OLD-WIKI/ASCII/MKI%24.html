@@ -1,0 +1,295 @@
+
+<!DOCTYPE html>
+<html class="client-nojs" lang="en" dir="ltr">
+
+<!-- Mirrored from www.qb64.org/wiki/MKI$ by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 07 Aug 2021 13:13:28 GMT -->
+<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=UTF-8" /><!-- /Added by HTTrack -->
+<head>
+<meta charset="UTF-8"/>
+<title>MKI$ - QB64 Wiki</title>
+<script>document.documentElement.className="client-js";RLCONF={"wgBreakFrames":!1,"wgSeparatorTransformTable":["",""],"wgDigitTransformTable":["",""],"wgDefaultDateFormat":"dmy","wgMonthNames":["","January","February","March","April","May","June","July","August","September","October","November","December"],"wgRequestId":"YOWlXadTx2XheSMCc3957wAAAAI","wgCSPNonce":!1,"wgCanonicalNamespace":"","wgCanonicalSpecialPageName":!1,"wgNamespaceNumber":0,"wgPageName":"MKI$","wgTitle":"MKI$","wgCurRevisionId":12875,"wgRevisionId":12875,"wgArticleId":453,"wgIsArticle":!0,"wgIsRedirect":!1,"wgAction":"view","wgUserName":null,"wgUserGroups":["*"],"wgCategories":[],"wgPageContentLanguage":"en","wgPageContentModel":"wikitext","wgRelevantPageName":"MKI$","wgRelevantArticleId":453,"wgIsProbablyEditable":!1,"wgRelevantPageIsProbablyEditable":!1,"wgRestrictionEdit":[],"wgRestrictionMove":[]};RLSTATE={"site.styles":"ready","noscript":"ready","user.styles":"ready","user":"ready","user.options":
+"loading","skins.vector.styles.legacy":"ready","mediawiki.toc.styles":"ready"};RLPAGEMODULES=["site","mediawiki.page.startup","mediawiki.page.ready","mediawiki.toc","skins.vector.legacy.js"];</script>
+<script>(RLQ=window.RLQ||[]).push(function(){mw.loader.implement("user.options@1hzgi",function($,jQuery,require,module){/*@nomin*/mw.user.tokens.set({"patrolToken":"+\\","watchToken":"+\\","csrfToken":"+\\"});
+});});</script>
+<link rel="stylesheet" href="loadd8b0.css?lang=en&amp;modules=mediawiki.toc.styles%7Cskins.vector.styles.legacy&amp;only=styles&amp;skin=vector"/>
+<script async="" src="load52c0.php?lang=en&amp;modules=startup&amp;only=scripts&amp;raw=1&amp;skin=vector"></script>
+<meta name="generator" content="MediaWiki 1.35.2"/>
+<link rel="shortcut icon" href="https://www.qb64.org/favicon.ico"/>
+<link rel="search" type="application/opensearchdescription+xml" href="opensearch_desc.php" title="QB64 Wiki (en)"/>
+<link rel="EditURI" type="application/rsd+xml" href="api-result251f.xml?action=rsd"/>
+<link rel="alternate" type="application/atom+xml" title="QB64 Wiki Atom feed" href="feeda295.xml?title=Special:RecentChanges&amp;feed=atom"/>
+<!--[if lt IE 9]><script src="/wiki/resources/lib/html5shiv/html5shiv.js"></script><![endif]-->
+</head>
+<body class="mediawiki ltr sitedir-ltr mw-hide-empty-elt ns-0 ns-subject page-MKI rootpage-MKI skin-vector action-view skin-vector-legacy">
+<div id="mw-page-base" class="noprint"></div>
+<div id="mw-head-base" class="noprint"></div>
+<div id="content" class="mw-body" role="main">
+	<a id="top"></a>
+	<div id="siteNotice" class="mw-body-content"></div>
+	<div class="mw-indicators mw-body-content">
+	</div>
+	<h1 id="firstHeading" class="firstHeading" lang="en">MKI$</h1>
+	<div id="bodyContent" class="mw-body-content">
+		<div id="siteSub" class="noprint">From QB64 Wiki</div>
+		<div id="contentSub"></div>
+		<div id="contentSub2"></div>
+		
+		<div id="jump-to-nav"></div>
+		<a class="mw-jump-link" href="#mw-head">Jump to navigation</a>
+		<a class="mw-jump-link" href="#searchInput">Jump to search</a>
+		<div id="mw-content-text" lang="en" dir="ltr" class="mw-content-ltr"><div class="mw-parser-output"><p>The <a class="mw-selflink selflink">MKI$</a> function encodes an <a href="INTEGER.html" title="INTEGER">INTEGER</a> numerical value into a 2-byte <a href="ASCII.html" title="ASCII">ASCII</a> <a href="STRING.html" title="STRING">STRING</a> value.
+</p><p><br />
+</p>
+<div id="toc" class="toc" role="navigation" aria-labelledby="mw-toc-heading"><input type="checkbox" role="button" id="toctogglecheckbox" class="toctogglecheckbox" style="display:none" /><div class="toctitle" lang="en" dir="ltr"><h2 id="mw-toc-heading">Contents</h2><span class="toctogglespan"><label class="toctogglelabel" for="toctogglecheckbox"></label></span></div>
+<ul>
+<li class="toclevel-1"><a href="#Syntax"><span class="tocnumber">1</span> <span class="toctext">Syntax</span></a></li>
+<li class="toclevel-1"><a href="#Description"><span class="tocnumber">2</span> <span class="toctext">Description</span></a></li>
+<li class="toclevel-1"><a href="#Examples"><span class="tocnumber">3</span> <span class="toctext">Examples</span></a></li>
+<li class="toclevel-1"><a href="#See_also"><span class="tocnumber">4</span> <span class="toctext">See also</span></a></li>
+</ul>
+</div>
+
+<h2><span class="mw-headline" id="Syntax">Syntax</span></h2>
+<dl><dd><i>result$</i> = <a class="mw-selflink selflink">MKI$</a>(<i>integerVariableOrLiteral%</i>)</dd></dl>
+<p><br />
+</p>
+<h2><span class="mw-headline" id="Description">Description</span></h2>
+<ul><li><i>integerVariableOrLiteral%</i> is converted to two ASCII characters.</li>
+<li><a href="INTEGER.html" title="INTEGER">INTEGER</a> values can range from -32768 to 32767.</li>
+<li>MKI$ string values can be converted back to numerical INTEGER values using <a href="CVI.html" title="CVI">CVI</a>.</li>
+<li>The function takes up less byte space in a file than using the text numerical value when the value is over 2 digits.</li>
+<li>When a variable value is used with <a href="PUT.html" title="PUT">PUT</a> a numerical value is converted automatically in <a href="RANDOM.html" title="RANDOM">RANDOM</a> and <a href="BINARY-2.html" class="mw-redirect" title="BINARY">BINARY</a> files.</li></ul>
+<p><br />
+</p>
+<h2><span class="mw-headline" id="Examples">Examples</span></h2>
+<p><i>Example:</i> How MKI$ creates a two byte string integer value to save file space.
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: Courier, monospace; background-color: darkblue; color: lightgrey; word-wrap: break-word;"> <i> </i>
+<a href="SCREEN_(statement).html" title="SCREEN (statement)"><span style="color:#87cefa;">SCREEN</span></a> 12    '_PRINTSTRING requires a graphic screen mode
+DO
+  <a href="COLOR.html" title="COLOR"><span style="color:#87cefa;">COLOR</span></a> 14: <a href="LOCATE.html" title="LOCATE"><span style="color:#87cefa;">LOCATE</span></a> 13, 20: <a href="INPUT.html" title="INPUT"><span style="color:#87cefa;">INPUT</span></a> "Enter an Integer from 1 to 32767(0 quits): ", number%
+  <a href="IF...html" title="IF...THEN"><span style="color:#87cefa;">IF</span></a> number% &lt; 1 <a href="THEN.html" title="THEN"><span style="color:#87cefa;">THEN</span></a> <a href="EXIT_DO.html" title="EXIT DO"><span style="color:#87cefa;">EXIT DO</span></a>
+  <a href="CLS.html" title="CLS"><span style="color:#87cefa;">CLS</span></a>
+  A$ = <a href="CHR%24.html" title="CHR$"><span style="color:#87cefa;">CHR$</span></a>(number% <a href="MOD.html" title="MOD"><span style="color:#87cefa;">MOD</span></a> 256)   'first digit(0 to 255)
+  B$ = <a href="CHR%24.html" title="CHR$"><span style="color:#87cefa;">CHR$</span></a>(number% \ 256)     'second digit(0 to 127)
+
+  MKIvalue$ = A$ + B$
+  Q$ = <a href="CHR%24.html" title="CHR$"><span style="color:#87cefa;">CHR$</span></a>(34)
+  strng$ = "<a href="CHR%24.html" title="CHR$"><span style="color:#87cefa;">CHR$</span></a>(" + <a href="LTRIM%24.html" title="LTRIM$"><span style="color:#87cefa;">LTRIM$</span></a>(<a href="STR%24.html" title="STR$"><span style="color:#87cefa;">STR$</span></a>(number% <a href="MOD.html" title="MOD"><span style="color:#87cefa;">MOD</span></a> 256)) + ") + <a href="CHR%24.html" title="CHR$"><span style="color:#87cefa;">CHR$</span></a>(" + <a href="LTRIM%24.html" title="LTRIM$"><span style="color:#87cefa;">LTRIM$</span></a>(<a href="STR%24.html" title="STR$"><span style="color:#87cefa;">STR$</span></a>(number% \ 256)) + ")"
+  <a href="COLOR.html" title="COLOR"><span style="color:#87cefa;">COLOR</span></a> 11
+  <a href="PRINTSTRING.html" title="PRINTSTRING"><span style="color:#87cefa;">_PRINTSTRING</span></a> (222, 252), <a href="STR%24.html" title="STR$"><span style="color:#87cefa;">STR$</span></a>(number%) + " = " + strng$
+  <a href="PRINTSTRING.html" title="PRINTSTRING"><span style="color:#87cefa;">_PRINTSTRING</span></a> (252, 300), "<a class="mw-selflink selflink"><span style="color:#87cefa;">MKI$</span></a> value = " + Q$ + MKIvalue$ + Q$ 'print ASCII characters
+<a href="LOOP.html" title="LOOP"><span style="color:#87cefa;">LOOP</span></a>
+<a href="END.html" title="END"><span style="color:#87cefa;">END</span></a> <i> </i>
+</p>
+<center><span style="font-family: Courier New, Courier, monospace; font-size: 0.80em; line-height: 50%;">Code by Ted Weissgerber</span></center>
+<dl><dd><i>Explanation:</i> INPUT in QB64 limits integer entries to 32767 maximum. MOD 256 finds the part of a value from 0 to 255 while the second value is the number of times that 256 can go into the value. <a href="PRINTSTRING.html" title="PRINTSTRING">_PRINTSTRING</a> can print all of the <a href="ASCII.html" title="ASCII">ASCII</a> characters.</dd></dl>
+<p><br />
+</p>
+<h2><span class="mw-headline" id="See_also">See also</span></h2>
+<ul><li><a href="MKD%24.html" title="MKD$">MKD$</a>, <a href="MKS%24.html" title="MKS$">MKS$</a>, <a href="MKL%24.html" title="MKL$">MKL$</a></li>
+<li><a href="CVD.html" title="CVD">CVD</a>, <a href="CVI.html" title="CVI">CVI</a>, <a href="CVS.html" title="CVS">CVS</a>, <a href="CVL.html" title="CVL">CVL</a></li>
+<li><a href="MK%24.html" title="MK$">_MK$</a>, <a href="CV.html" title="CV">_CV</a></li></ul>
+<p><br />
+</p>
+<hr />
+<center><i>Navigation:</i>
+<dl><dd><a href="Keyword_Reference_-_Alphabetical.html" title="Keyword Reference - Alphabetical">Keyword Reference - Alphabetical</a></dd>
+<dd><a href="Keyword_Reference_-_By_usage.html" title="Keyword Reference - By usage">Keyword Reference - By Usage</a></dd>
+<dd><a href="Main_Page.html" title="Main Page">Main Wiki Page</a></dd></dl></center>
+<!-- 
+NewPP limit report
+Cached time: 20210707100115
+Cache expiry: 86400
+Dynamic content: false
+Complications: []
+CPU time usage: 0.066 seconds
+Real time usage: 0.131 seconds
+Preprocessor visited node count: 219/1000000
+Post‐expand include size: 2150/2097152 bytes
+Template argument size: 355/2097152 bytes
+Highest expansion depth: 3/40
+Expensive parser function count: 0/100
+Unstrip recursion depth: 0/20
+Unstrip post‐expand size: 0/5000000 bytes
+-->
+<!--
+Transclusion expansion time report (%,ms,calls,template)
+100.00%   52.546      1 -total
+ 27.37%   14.384      1 Template:PageDescription
+  9.92%    5.211      1 Template:PageSyntax
+  9.46%    4.970     26 Template:Cl
+  7.78%    4.089      1 Template:PageNavigation
+  7.08%    3.718      1 Template:PageSeeAlso
+  6.91%    3.631      3 Template:Parameter
+  6.88%    3.616      1 Template:Small
+  6.73%    3.538      1 Template:CodeEnd
+  6.35%    3.337      1 Template:PageExamples
+-->
+
+<!-- Saved in parser cache with key i4224360_mw2-mw_:pcache:idhash:453-0!canonical and timestamp 20210707100115 and revision id 12875
+ -->
+</div></div><div class="printfooter">Retrieved from "<a dir="ltr" href="index9603.html?title=MKI$&amp;oldid=12875">http://www.qb64.org/wiki/index.php?title=MKI$&amp;oldid=12875</a>"</div>
+		<div id="catlinks" class="catlinks catlinks-allhidden" data-mw="interface"></div>
+	</div>
+</div>
+
+<div id="mw-navigation">
+	<h2>Navigation menu</h2>
+	<div id="mw-head">
+		<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-personal" class="vector-menu" aria-labelledby="p-personal-label" role="navigation" 
+	 >
+	<h3 id="p-personal-label">
+		<span>Personal tools</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="pt-login"><a href="indexaa96.html?title=Special:UserLogin&amp;returnto=MKI%24" title="You are encouraged to log in; however, it is not mandatory [o]" accesskey="o">Log in</a></li></ul>
+		
+	</div>
+</nav>
+
+
+		<div id="left-navigation">
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-namespaces" class="vector-menu vector-menu-tabs vectorTabs" aria-labelledby="p-namespaces-label" role="navigation" 
+	 >
+	<h3 id="p-namespaces-label">
+		<span>Namespaces</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="ca-nstab-main" class="selected"><a href="MKI%24.html" title="View the content page [c]" accesskey="c">Page</a></li><li id="ca-talk" class="new"><a href="Talk_MKI%24.html?title=Talk:MKI$&amp;action=edit&amp;redlink=1" rel="discussion" title="Discussion about the content page (page does not exist) [t]" accesskey="t">Discussion</a></li></ul>
+		
+	</div>
+</nav>
+
+
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-variants" class="vector-menu-empty emptyPortlet vector-menu vector-menu-dropdown vectorMenu" aria-labelledby="p-variants-label" role="navigation" 
+	 >
+	<input type="checkbox" class="vector-menu-checkbox vectorMenuCheckbox" aria-labelledby="p-variants-label" />
+	<h3 id="p-variants-label">
+		<span>Variants</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="menu vector-menu-content-list"></ul>
+		
+	</div>
+</nav>
+
+
+		</div>
+		<div id="right-navigation">
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-views" class="vector-menu vector-menu-tabs vectorTabs" aria-labelledby="p-views-label" role="navigation" 
+	 >
+	<h3 id="p-views-label">
+		<span>Views</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="ca-view" class="collapsible selected"><a href="MKI%24.html">Read</a></li><li id="ca-viewsource" class="collapsible"><a href="indexb7b2.html?title=MKI$&amp;action=edit" title="This page is protected.&#10;You can view its source [e]" accesskey="e">View source</a></li><li id="ca-history" class="collapsible"><a href="indexff91.html?title=MKI$&amp;action=history" title="Past revisions of this page [h]" accesskey="h">View history</a></li></ul>
+		
+	</div>
+</nav>
+
+
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-cactions" class="vector-menu-empty emptyPortlet vector-menu vector-menu-dropdown vectorMenu" aria-labelledby="p-cactions-label" role="navigation" 
+	 >
+	<input type="checkbox" class="vector-menu-checkbox vectorMenuCheckbox" aria-labelledby="p-cactions-label" />
+	<h3 id="p-cactions-label">
+		<span>More</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="menu vector-menu-content-list"></ul>
+		
+	</div>
+</nav>
+
+
+			<div id="p-search" role="search">
+	<h3 >
+		<label for="searchInput">Search</label>
+	</h3>
+	<form action="https://www.qb64.org/wiki/index.php" id="searchform">
+		<div id="simpleSearch">
+			<input type="search" name="search" placeholder="Search QB64 Wiki" title="Search QB64 Wiki [f]" accesskey="f" id="searchInput"/>
+			<input type="hidden" name="title" value="Special:Search">
+			<input type="submit" name="fulltext" value="Search" title="Search the pages for this text" id="mw-searchButton" class="searchButton mw-fallbackSearchButton"/>
+			<input type="submit" name="go" value="Go" title="Go to a page with this exact name if it exists" id="searchButton" class="searchButton"/>
+		</div>
+	</form>
+</div>
+
+		</div>
+	</div>
+	
+<div id="mw-panel">
+	<div id="p-logo" role="banner">
+		<a  title="Visit the main page" class="mw-wiki-logo" href="Main_Page.html"></a>
+	</div>
+	<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-navigation" class="vector-menu vector-menu-portal portal portal-first" aria-labelledby="p-navigation-label" role="navigation" 
+	 >
+	<h3 id="p-navigation-label">
+		<span>Navigation</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="n-mainpage-description"><a href="Main_Page.html" title="Visit the main page [z]" accesskey="z">Main page</a></li><li id="n-recentchanges"><a href="Special_RecentChanges.html" title="A list of recent changes in the wiki [r]" accesskey="r">Recent changes</a></li><li id="n-randompage"><a href="SNDCOPY.html" title="Load a random page [x]" accesskey="x">Random page</a></li><li id="n-help-mediawiki"><a href="https://www.mediawiki.org/wiki/Special:MyLanguage/Help:Contents">Help about MediaWiki</a></li></ul>
+		
+	</div>
+</nav>
+
+
+	<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-tb" class="vector-menu vector-menu-portal portal" aria-labelledby="p-tb-label" role="navigation" 
+	 >
+	<h3 id="p-tb-label">
+		<span>Tools</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="t-whatlinkshere"><a href="Special_WhatLinksHere/MKI%24.html" title="A list of all wiki pages that link here [j]" accesskey="j">What links here</a></li><li id="t-recentchangeslinked"><a href="Special_RecentChangesLinked/MKI%24.html" rel="nofollow" title="Recent changes in pages linked from this page [k]" accesskey="k">Related changes</a></li><li id="t-specialpages"><a href="Special_SpecialPages.html" title="A list of all special pages [q]" accesskey="q">Special pages</a></li><li id="t-print"><a href="javascript:print();" rel="alternate" title="Printable version of this page [p]" accesskey="p">Printable version</a></li><li id="t-permalink"><a href="index9603.html?title=MKI$&amp;oldid=12875" title="Permanent link to this revision of the page">Permanent link</a></li><li id="t-info"><a href="indexe74d.html?title=MKI$&amp;action=info" title="More information about this page">Page information</a></li></ul>
+		
+	</div>
+</nav>
+
+
+	
+</div>
+
+</div>
+
+<footer id="footer" class="mw-footer" role="contentinfo" >
+	<ul id="footer-info" >
+		<li id="footer-info-lastmod"> This page was last edited on 12 October 2017, at 13:01.</li>
+	</ul>
+	<ul id="footer-places" >
+		<li id="footer-places-privacy"><a href="My_wiki_Privacy_policy.html" title="My wiki:Privacy policy">Privacy policy</a></li>
+		<li id="footer-places-about"><a href="My_wiki_About.html" title="My wiki:About">About QB64 Wiki</a></li>
+		<li id="footer-places-disclaimer"><a href="My_wiki_General_disclaimer.html" title="My wiki:General disclaimer">Disclaimers</a></li>
+	</ul>
+	<ul id="footer-icons" class="noprint">
+		<li id="footer-poweredbyico"><a href="https://www.mediawiki.org/"><img src="resources/assets/poweredby_mediawiki_88x31.png" alt="Powered by MediaWiki" srcset="/wiki/resources/assets/poweredby_mediawiki_132x47.png 1.5x, /wiki/resources/assets/poweredby_mediawiki_176x62.png 2x" width="88" height="31" loading="lazy"/></a></li>
+	</ul>
+	<div style="clear: both;"></div>
+</footer>
+
+
+
+<script>(RLQ=window.RLQ||[]).push(function(){mw.config.set({"wgPageParseReport":{"limitreport":{"cputime":"0.066","walltime":"0.131","ppvisitednodes":{"value":219,"limit":1000000},"postexpandincludesize":{"value":2150,"limit":2097152},"templateargumentsize":{"value":355,"limit":2097152},"expansiondepth":{"value":3,"limit":40},"expensivefunctioncount":{"value":0,"limit":100},"unstrip-depth":{"value":0,"limit":20},"unstrip-size":{"value":0,"limit":5000000},"timingprofile":["100.00%   52.546      1 -total"," 27.37%   14.384      1 Template:PageDescription","  9.92%    5.211      1 Template:PageSyntax","  9.46%    4.970     26 Template:Cl","  7.78%    4.089      1 Template:PageNavigation","  7.08%    3.718      1 Template:PageSeeAlso","  6.91%    3.631      3 Template:Parameter","  6.88%    3.616      1 Template:Small","  6.73%    3.538      1 Template:CodeEnd","  6.35%    3.337      1 Template:PageExamples"]},"cachereport":{"timestamp":"20210707100115","ttl":86400,"transientcontent":false}}});mw.config.set({"wgBackendResponseTime":2678});});</script></body>
+<!-- Mirrored from www.qb64.org/wiki/MKI$ by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 07 Aug 2021 13:13:32 GMT -->
+</html>

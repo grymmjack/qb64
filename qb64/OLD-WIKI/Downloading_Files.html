@@ -1,0 +1,447 @@
+
+<!DOCTYPE html>
+<html class="client-nojs" lang="en" dir="ltr">
+
+<!-- Mirrored from www.qb64.org/wiki/Downloading_Files by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 07 Aug 2021 12:42:14 GMT -->
+<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=UTF-8" /><!-- /Added by HTTrack -->
+<head>
+<meta charset="UTF-8"/>
+<title>Downloading Files - QB64 Wiki</title>
+<script>document.documentElement.className="client-js";RLCONF={"wgBreakFrames":!1,"wgSeparatorTransformTable":["",""],"wgDigitTransformTable":["",""],"wgDefaultDateFormat":"dmy","wgMonthNames":["","January","February","March","April","May","June","July","August","September","October","November","December"],"wgRequestId":"YOWkTekbkwEB08KNhNehmwAAAGY","wgCSPNonce":!1,"wgCanonicalNamespace":"","wgCanonicalSpecialPageName":!1,"wgNamespaceNumber":0,"wgPageName":"Downloading_Files","wgTitle":"Downloading Files","wgCurRevisionId":22945,"wgRevisionId":22945,"wgArticleId":188,"wgIsArticle":!0,"wgIsRedirect":!1,"wgAction":"view","wgUserName":null,"wgUserGroups":["*"],"wgCategories":[],"wgPageContentLanguage":"en","wgPageContentModel":"wikitext","wgRelevantPageName":"Downloading_Files","wgRelevantArticleId":188,"wgIsProbablyEditable":!1,"wgRelevantPageIsProbablyEditable":!1,"wgRestrictionEdit":[],"wgRestrictionMove":[]};RLSTATE={"site.styles":"ready","noscript":"ready","user.styles":
+"ready","user":"ready","user.options":"loading","skins.vector.styles.legacy":"ready"};RLPAGEMODULES=["site","mediawiki.page.startup","mediawiki.page.ready","skins.vector.legacy.js"];</script>
+<script>(RLQ=window.RLQ||[]).push(function(){mw.loader.implement("user.options@1hzgi",function($,jQuery,require,module){/*@nomin*/mw.user.tokens.set({"patrolToken":"+\\","watchToken":"+\\","csrfToken":"+\\"});
+});});</script>
+<link rel="stylesheet" href="load5c90.css?lang=en&amp;modules=skins.vector.styles.legacy&amp;only=styles&amp;skin=vector"/>
+<script async="" src="load52c0.php?lang=en&amp;modules=startup&amp;only=scripts&amp;raw=1&amp;skin=vector"></script>
+<meta name="generator" content="MediaWiki 1.35.2"/>
+<link rel="shortcut icon" href="https://www.qb64.org/favicon.ico"/>
+<link rel="search" type="application/opensearchdescription+xml" href="opensearch_desc.php" title="QB64 Wiki (en)"/>
+<link rel="EditURI" type="application/rsd+xml" href="api-result251f.xml?action=rsd"/>
+<link rel="alternate" type="application/atom+xml" title="QB64 Wiki Atom feed" href="feeda295.xml?title=Special:RecentChanges&amp;feed=atom"/>
+<!--[if lt IE 9]><script src="/wiki/resources/lib/html5shiv/html5shiv.js"></script><![endif]-->
+</head>
+<body class="mediawiki ltr sitedir-ltr mw-hide-empty-elt ns-0 ns-subject page-Downloading_Files rootpage-Downloading_Files skin-vector action-view skin-vector-legacy">
+<div id="mw-page-base" class="noprint"></div>
+<div id="mw-head-base" class="noprint"></div>
+<div id="content" class="mw-body" role="main">
+	<a id="top"></a>
+	<div id="siteNotice" class="mw-body-content"></div>
+	<div class="mw-indicators mw-body-content">
+	</div>
+	<h1 id="firstHeading" class="firstHeading" lang="en">Downloading Files</h1>
+	<div id="bodyContent" class="mw-body-content">
+		<div id="siteSub" class="noprint">From QB64 Wiki</div>
+		<div id="contentSub"></div>
+		<div id="contentSub2"></div>
+		
+		<div id="jump-to-nav"></div>
+		<a class="mw-jump-link" href="#mw-head">Jump to navigation</a>
+		<a class="mw-jump-link" href="#searchInput">Jump to search</a>
+		<div id="mw-content-text" lang="en" dir="ltr" class="mw-content-ltr"><div class="mw-parser-output"><dl><dd><b>HTTP/1.1</b> protocol downloads can be done using a <b>GET</b> request using the following format without HTTP:// in the url:</dd></dl>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: courier; background-color: lightgrey; color: black;">CRLF$ = CHR$(13) + CHR$(10)
+Request$ = "GET " + File_Path + " HTTP/1.1" + CRLF$ + "Host:" + Web_Address + CRLF$ + CRLF$
+</p>
+<dl><dd>Two carriage returns end the request to the <a href="OPENCLIENT.html" title="OPENCLIENT">client</a> URL. The header that is returned from the site also ends with two carriage returns when there are no errors. The header will also include the requested file's byte size after "content-length:" as below:</dd></dl>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: courier; background-color: lightgrey; color: black;">HTTP/1.1 200 OK
+Server: dbws
+Date: Tue, 25 Oct 2011 04:41:03 GMT
+Content-Type: text/plain; charset=ascii
+Connection: keep-alive
+<span style="color:blue">content-length: 4087</span>
+x-robots-tag: noindex,nofollow
+accept-ranges: bytes
+etag: 365n
+pragma: public
+cache-control: max-age=0 <i> </i>
+</p>
+<dl><dd>Each row of text response sent is ended with a carriage return with the end of header having two. After that comes the file data.</dd>
+<dd>It is recommended that data be loaded immediately by using a <a href="GET_(TCP/IP_statement).html" title="GET (TCP/IP statement)">GET</a> loop so that connections are not dropped during a <a href="DELAY.html" title="DELAY">delay</a>.</dd></dl>
+<p><br />
+</p>
+<dl><dd><b>A "raw" Download function that downloads an image directly off of a web page using the image name on that page.</b></dd></dl>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: Courier, monospace; background-color: darkblue; color: lightgrey; word-wrap: break-word;">
+<i> </i>
+<a href="IF.html" class="mw-redirect" title="IF"><span style="color:#87cefa;">IF</span></a> Download("www.qb64.org/portal/wp-content/uploads/2020/02/TAGLINE-QB64-1-3-logo-transparency.png", "qb64logo.png", 10) <a href="THEN.html" title="THEN"><span style="color:#87cefa;">THEN</span></a> ' timelimit = 10 seconds
+    img&amp; = <a href="LOADIMAGE.html" title="LOADIMAGE"><span style="color:#87cefa;">_LOADIMAGE</span></a>("qb64logo.png", 32)
+    <a href="IF.html" class="mw-redirect" title="IF"><span style="color:#87cefa;">IF</span></a> img&amp; &lt; -1 <a href="THEN.html" title="THEN"><span style="color:#87cefa;">THEN</span></a>
+        <a href="SCREEN.html" title="SCREEN"><span style="color:#87cefa;">SCREEN</span></a> <a href="NEWIMAGE.html" title="NEWIMAGE"><span style="color:#87cefa;">_NEWIMAGE</span></a>(<a href="WIDTH.html" title="WIDTH"><span style="color:#87cefa;">_WIDTH</span></a>(img&amp;), <a href="HEIGHT.html" title="HEIGHT"><span style="color:#87cefa;">_HEIGHT</span></a>(img&amp;), 32)
+        <a href="PUTIMAGE.html" title="PUTIMAGE"><span style="color:#87cefa;">_PUTIMAGE</span></a> (0, 0), img&amp;
+    <a href="END_IF.html" class="mw-redirect" title="END IF"><span style="color:#87cefa;">END IF</span></a>
+<a href="ELSE.html" title="ELSE"><span style="color:#87cefa;">ELSE</span></a>: <a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> "Couldn't download QB64 logo."
+<a href="END_IF.html" class="mw-redirect" title="END IF"><span style="color:#87cefa;">END IF</span></a>
+<a href="SLEEP.html" title="SLEEP"><span style="color:#87cefa;">SLEEP</span></a>
+<a href="SYSTEM.html" title="SYSTEM"><span style="color:#87cefa;">SYSTEM</span></a>
+' ---------- program end -----------
+
+<a href="FUNCTION.html" title="FUNCTION"><span style="color:#87cefa;">FUNCTION</span></a> Download (url$, file$, timelimit) ' returns -1 if successful, 0 if not
+url2$ = url$
+x = <a href="INSTR.html" title="INSTR"><span style="color:#87cefa;">INSTR</span></a>(url2$, "/")
+<a href="IF...html" title="IF...THEN"><span style="color:#87cefa;">IF</span></a> x <a href="THEN.html" title="THEN"><span style="color:#87cefa;">THEN</span></a> url2$ = <a href="LEFT%24.html" title="LEFT$"><span style="color:#87cefa;">LEFT$</span></a>(url$, x - 1)
+client = <a href="OPENCLIENT.html" title="OPENCLIENT"><span style="color:#87cefa;">_OPENCLIENT</span></a>("TCP/IP:80:" + url2$)
+<a href="IF...html" title="IF...THEN"><span style="color:#87cefa;">IF</span></a> client = 0 <a href="THEN.html" title="THEN"><span style="color:#87cefa;">THEN</span></a> <a href="EXIT_FUNCTION.html" title="EXIT FUNCTION"><span style="color:#87cefa;">EXIT FUNCTION</span></a>
+e$ = <a href="CHR%24.html" title="CHR$"><span style="color:#87cefa;">CHR$</span></a>(13) + <a href="CHR%24.html" title="CHR$"><span style="color:#87cefa;">CHR$</span></a>(10) ' end of line characters
+url3$ = <a href="RIGHT%24.html" title="RIGHT$"><span style="color:#87cefa;">RIGHT$</span></a>(url$, <a href="LEN.html" title="LEN"><span style="color:#87cefa;">LEN</span></a>(url$) - x + 1)
+x$ = "GET " + url3$ + " HTTP/1.1" + e$
+x$ = x$ + "Host: " + url2$ + e$ + e$
+<a href="PUT_(TCP/IP_statement).html" title="PUT (TCP/IP statement)"><span style="color:#87cefa;">PUT</span></a> #client, , x$
+t! = <a href="TIMER.html" title="TIMER"><span style="color:#87cefa;">TIMER</span></a> ' start time
+<a href="DO.html" class="mw-redirect" title="DO"><span style="color:#87cefa;">DO</span></a>
+    <a href="DELAY.html" title="DELAY"><span style="color:#87cefa;">_DELAY</span></a> 0.05 ' 50ms delay (20 checks per second)
+    <a href="GET_(TCP/IP_statement).html" title="GET (TCP/IP statement)"><span style="color:#87cefa;">GET</span></a> #client, , a2$
+    a$ = a$ + a2$
+    i = <a href="INSTR.html" title="INSTR"><span style="color:#87cefa;">INSTR</span></a>(a$, "Content-Length:")
+    <a href="IF...html" title="IF...THEN"><span style="color:#87cefa;">IF</span></a> i <a href="THEN.html" title="THEN"><span style="color:#87cefa;">THEN</span></a>
+      i2 = <a href="INSTR.html" title="INSTR"><span style="color:#87cefa;">INSTR</span></a>(i, a$, e$)
+      <a href="IF...html" title="IF...THEN"><span style="color:#87cefa;">IF</span></a> i2 <a href="THEN.html" title="THEN"><span style="color:#87cefa;">THEN</span></a>
+      l = <a href="VAL.html" title="VAL"><span style="color:#87cefa;">VAL</span></a>(<a href="MID%24.html" title="MID$"><span style="color:#87cefa;">MID$</span></a>(a$, i + 15, i2 - i -14))
+      i3 = <a href="INSTR.html" title="INSTR"><span style="color:#87cefa;">INSTR</span></a>(i2, a$, e$ + e$)
+        <a href="IF...html" title="IF...THEN"><span style="color:#87cefa;">IF</span></a> i3 <a href="THEN.html" title="THEN"><span style="color:#87cefa;">THEN</span></a>
+          i3 = i3 + 4 'move i3 to start of data
+          <a href="IF...html" title="IF...THEN"><span style="color:#87cefa;">IF</span></a> (<a href="LEN.html" title="LEN"><span style="color:#87cefa;">LEN</span></a>(a$) - i3 + 1) = l <a href="THEN.html" title="THEN"><span style="color:#87cefa;">THEN</span></a>
+            <a href="CLOSE.html" title="CLOSE"><span style="color:#87cefa;">CLOSE</span></a> client ' CLOSE CLIENT
+            d$ = <a href="MID%24.html" title="MID$"><span style="color:#87cefa;">MID$</span></a>(a$, i3, l)
+            fh = <a href="FREEFILE.html" title="FREEFILE"><span style="color:#87cefa;">FREEFILE</span></a>
+            <a href="OPEN.html" title="OPEN"><span style="color:#87cefa;">OPEN</span></a> file$ <a href="FOR.html" class="mw-redirect" title="FOR"><span style="color:#87cefa;">FOR</span></a> <a href="OUTPUT.html" class="mw-redirect" title="OUTPUT"><span style="color:#87cefa;">OUTPUT</span></a> <a href="AS.html" title="AS"><span style="color:#87cefa;">AS</span></a> #fh: <a href="CLOSE.html" title="CLOSE"><span style="color:#87cefa;">CLOSE</span></a> #fh 'Warning! Clears data from existing file
+            <a href="OPEN.html" title="OPEN"><span style="color:#87cefa;">OPEN</span></a> file$ <a href="FOR.html" class="mw-redirect" title="FOR"><span style="color:#87cefa;">FOR</span></a> <a href="BINARY-2.html" class="mw-redirect" title="BINARY"><span style="color:#87cefa;">BINARY</span></a> <a href="AS.html" title="AS"><span style="color:#87cefa;">AS</span></a> #fh
+            <a href="PUT.html" title="PUT"><span style="color:#87cefa;">PUT</span></a> #fh, , d$
+            <a href="CLOSE.html" title="CLOSE"><span style="color:#87cefa;">CLOSE</span></a> #fh
+            Download = -1 'indicates download was successfull
+            <a href="EXIT_FUNCTION.html" title="EXIT FUNCTION"><span style="color:#87cefa;">EXIT FUNCTION</span></a>
+          <a href="END_IF.html" class="mw-redirect" title="END IF"><span style="color:#87cefa;">END IF</span></a> ' availabledata = l
+        <a href="END_IF.html" class="mw-redirect" title="END IF"><span style="color:#87cefa;">END IF</span></a> ' i3
+      <a href="END_IF.html" class="mw-redirect" title="END IF"><span style="color:#87cefa;">END IF</span></a> ' i2
+    <a href="END_IF.html" class="mw-redirect" title="END IF"><span style="color:#87cefa;">END IF</span></a> ' i
+<a href="LOOP.html" title="LOOP"><span style="color:#87cefa;">LOOP</span></a> <a href="UNTIL.html" title="UNTIL"><span style="color:#87cefa;">UNTIL</span></a> <a href="TIMER.html" title="TIMER"><span style="color:#87cefa;">TIMER</span></a> &gt; t! + timelimit ' (in seconds)
+<a href="CLOSE.html" title="CLOSE"><span style="color:#87cefa;">CLOSE</span></a> client
+<a href="END_FUNCTION.html" title="END FUNCTION"><span style="color:#87cefa;">END FUNCTION</span></a> <i> </i>
+</p> 
+<center><span style="font-family: Courier New, Courier, monospace; font-size: 0.80em; line-height: 50%;">Code by Galleon</span></center>
+<p><br />
+</p>
+<dl><dd><b>Downloading a <a href="BINARY-2.html" class="mw-redirect" title="BINARY">BINARY</a> image file from a download link using <a href="GET.html" title="GET">GET #</a> which requires the "content-length" in header.</b></dd></dl>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: Courier, monospace; background-color: darkblue; color: lightgrey; word-wrap: break-word;"> <i> </i>
+<a href="DEFINT.html" title="DEFINT"><span style="color:#87cefa;">DEFINT</span></a> A-Z
+
+CR$ = <a href="CHR%24.html" title="CHR$"><span style="color:#87cefa;">CHR$</span></a>(13) + <a href="CHR%24.html" title="CHR$"><span style="color:#87cefa;">CHR$</span></a>(10) 'crlf carriage return line feed characters
+' Change this to the file's public link
+DownFile$ = "http://a5.sphotos.ak.fbcdn.net/hphotos-ak-snc7/293944_10150358253659788_151813304787_8043392_486717139_n.jpg?dl=1"
+
+' Get base URL
+BaseURL$ = DownFile$
+<a href="IF...html" title="IF...THEN"><span style="color:#87cefa;">IF</span></a> <a href="INSTR.html" title="INSTR"><span style="color:#87cefa;">INSTR</span></a>(BaseURL$, "http://") <a href="THEN.html" title="THEN"><span style="color:#87cefa;">THEN</span></a> BaseURL$ = <a href="RIGHT%24.html" title="RIGHT$"><span style="color:#87cefa;">RIGHT$</span></a>(BaseURL$, <a href="LEN.html" title="LEN"><span style="color:#87cefa;">LEN</span></a>(BaseURL$) - 7) 'trim http://
+Path$ = <a href="MID%24.html" title="MID$"><span style="color:#87cefa;">MID$</span></a>(BaseURL$, <a href="INSTR.html" title="INSTR"><span style="color:#87cefa;">INSTR</span></a>(BaseURL$, "/")) 'path to file
+BaseURL$ = <a href="LEFT%24.html" title="LEFT$"><span style="color:#87cefa;">LEFT$</span></a>(BaseURL$, <a href="INSTR.html" title="INSTR"><span style="color:#87cefa;">INSTR</span></a>(BaseURL$, "/") - 1) 'site URL
+
+
+' Connect to base URL
+<a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> "Connecting to "; BaseURL$; "...";
+Client&amp; = <a href="OPENCLIENT.html" title="OPENCLIENT"><span style="color:#87cefa;">_OPENCLIENT</span></a>("TCP/IP:80:" + BaseURL$)
+<a href="IF...html" title="IF...THEN"><span style="color:#87cefa;">IF</span></a> Client&amp; = 0 <a href="THEN.html" title="THEN"><span style="color:#87cefa;">THEN</span></a> <a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> "Failed to connect...": <a href="END.html" title="END"><span style="color:#87cefa;">END</span></a>
+<a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> "Done."
+
+' Send download request
+<a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> "Sending download request...";
+Request$ = "GET " + Path$ + " HTTP/1.1" + CR$ + "Host:" + BaseURL$ + CR$ + CR$
+<a href="PUT.html" title="PUT"><span style="color:#87cefa;">PUT</span></a> #Client&amp;, , Request$
+<a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> "Done."
+
+' Download the header
+<a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> "Getting HTML header...";
+Dat$ = ""
+DO
+   <a href="LIMIT.html" title="LIMIT"><span style="color:#87cefa;">_LIMIT</span></a> 20
+   <a href="GET.html" title="GET"><span style="color:#87cefa;">GET</span></a> #Client&amp;, , gDat$
+   Dat$ = Dat$ + gDat$
+<a href="LOOP.html" title="LOOP"><span style="color:#87cefa;">LOOP</span></a> <a href="UNTIL.html" title="UNTIL"><span style="color:#87cefa;">UNTIL</span></a> <a href="INSTR.html" title="INSTR"><span style="color:#87cefa;">INSTR</span></a>(Dat$, CR$ + CR$) ' Loop until 2 CRLFs (end of HTML header) are found
+<a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> "Done."
+
+' Get file size
+FileSizePos = <a href="INSTR.html" title="INSTR"><span style="color:#87cefa;">INSTR</span></a>(<a href="UCASE%24.html" title="UCASE$"><span style="color:#87cefa;">UCASE$</span></a>(Dat$), "CONTENT-LENGTH: ") + 16
+FileSizeEnd = <a href="INSTR.html" title="INSTR"><span style="color:#87cefa;">INSTR</span></a>(FileSizePos, Dat$, CR$)
+FileSize&amp; = <a href="VAL.html" title="VAL"><span style="color:#87cefa;">VAL</span></a>(<a href="MID%24.html" title="MID$"><span style="color:#87cefa;">MID$</span></a>(Dat$, FileSizePos, (FileSizeEnd - FileSizePos) + 1))
+
+<a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> "File size:"; FileSize&amp;
+<a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> "Downloading file...";
+
+' Trim off HTML header
+EndHeaderPos = <a href="INSTR.html" title="INSTR"><span style="color:#87cefa;">INSTR</span></a>(Dat$, CR$ + CR$) + 4
+Dat$ = <a href="RIGHT%24.html" title="RIGHT$"><span style="color:#87cefa;">RIGHT$</span></a>(Dat$, (<a href="LEN.html" title="LEN"><span style="color:#87cefa;">LEN</span></a>(Dat$) - EndHeaderPos) + 1)
+
+' Get the file name tucked at the end of the URL if necessary
+<a href="FOR...html" title="FOR...NEXT"><span style="color:#87cefa;">FOR</span></a> S = <a href="LEN.html" title="LEN"><span style="color:#87cefa;">LEN</span></a>(DownFile$) <a href="TO.html" title="TO"><span style="color:#87cefa;">TO</span></a> 1 <a href="STEP.html" title="STEP"><span style="color:#87cefa;">STEP</span></a> -1
+   <a href="IF...html" title="IF...THEN"><span style="color:#87cefa;">IF</span></a> <a href="MID%24.html" title="MID$"><span style="color:#87cefa;">MID$</span></a>(DownFile$, S, 1) = "/" <a href="THEN.html" title="THEN"><span style="color:#87cefa;">THEN</span></a>
+      OutFile$ = <a href="RIGHT%24.html" title="RIGHT$"><span style="color:#87cefa;">RIGHT$</span></a>(DownFile$, (<a href="LEN.html" title="LEN"><span style="color:#87cefa;">LEN</span></a>(DownFile$) - S))
+      <a href="EXIT.html" title="EXIT"><span style="color:#87cefa;">EXIT</span></a> <a href="FOR...html" title="FOR...NEXT"><span style="color:#87cefa;">FOR</span></a>
+   <a href="END_IF.html" class="mw-redirect" title="END IF"><span style="color:#87cefa;">END IF</span></a>
+<a href="NEXT.html" title="NEXT"><span style="color:#87cefa;">NEXT</span></a> S
+' Remove some kind of tag at the end of the file name in some URLs
+<a href="IF...html" title="IF...THEN"><span style="color:#87cefa;">IF</span></a> <a href="INSTR.html" title="INSTR"><span style="color:#87cefa;">INSTR</span></a>(OutFile$, "?") <a href="THEN.html" title="THEN"><span style="color:#87cefa;">THEN</span></a> OutFile$ = <a href="LEFT%24.html" title="LEFT$"><span style="color:#87cefa;">LEFT$</span></a>(OutFile$, <a href="INSTR.html" title="INSTR"><span style="color:#87cefa;">INSTR</span></a>(OutFile$, "?") - 1)
+
+' Download the rest of the data
+<a href="OPEN.html" title="OPEN"><span style="color:#87cefa;">OPEN</span></a> OutFile$ <a href="FOR.html" class="mw-redirect" title="FOR"><span style="color:#87cefa;">FOR</span></a> <a href="OUTPUT.html" class="mw-redirect" title="OUTPUT"><span style="color:#87cefa;">OUTPUT</span></a> <a href="AS.html" title="AS"><span style="color:#87cefa;">AS</span></a> #1: <a href="CLOSE.html" title="CLOSE"><span style="color:#87cefa;">CLOSE</span></a> #1 'Warning! Clears data from an existing file
+<a href="OPEN.html" title="OPEN"><span style="color:#87cefa;">OPEN</span></a> OutFile$ <a href="FOR.html" class="mw-redirect" title="FOR"><span style="color:#87cefa;">FOR</span></a> <a href="BINARY-2.html" class="mw-redirect" title="BINARY"><span style="color:#87cefa;">BINARY</span></a> <a href="AS.html" title="AS"><span style="color:#87cefa;">AS</span></a> #1 'write data to binary image file
+DO
+   <a href="LIMIT.html" title="LIMIT"><span style="color:#87cefa;">_LIMIT</span></a> 20
+   <a href="PUT.html" title="PUT"><span style="color:#87cefa;">PUT</span></a> #1, , Dat$
+   <a href="GET.html" title="GET"><span style="color:#87cefa;">GET</span></a> #Client&amp;, , Dat$
+<a href="LOOP.html" title="LOOP"><span style="color:#87cefa;">LOOP</span></a> <a href="UNTIL.html" title="UNTIL"><span style="color:#87cefa;">UNTIL</span></a> <a href="LOF.html" title="LOF"><span style="color:#87cefa;">LOF</span></a>(1) &gt;= FileSize&amp;
+<a href="CLOSE.html" title="CLOSE"><span style="color:#87cefa;">CLOSE</span></a> #1, #Client&amp;
+<a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> "Done!" <i> </i>
+</p>
+<center><span style="font-family: Courier New, Courier, monospace; font-size: 0.80em; line-height: 50%;">Adapted from code by Jobert14</span></center>
+<dl><dd><b>Note:</b> Some download links require that a <b>tag</b> be added after the file name. Remove that tag if it will be used as the file name.</dd></dl>
+<p><br />
+</p>
+<dl><dd><b>Downloading a sequencial text file from a Drop Box download link using HTTP GET and the  <a href="GET_(TCP/IP_statement).html" title="GET (TCP/IP statement)">TCP/IP GET</a> statement.</b></dd></dl>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: Courier, monospace; background-color: darkblue; color: lightgrey; word-wrap: break-word;"> <i> </i>
+CrLf$ = <a href="CHR%24.html" title="CHR$"><span style="color:#87cefa;">CHR$</span></a>(13) + <a href="CHR%24.html" title="CHR$"><span style="color:#87cefa;">CHR$</span></a>(10) ' carriage return + line feed ASCII characters
+
+Host = <a href="OPENHOST.html" title="OPENHOST"><span style="color:#87cefa;">_OPENHOST</span></a>("TCP/IP:319")
+<a href="IF...html" title="IF...THEN"><span style="color:#87cefa;">IF</span></a> Host <a href="THEN.html" title="THEN"><span style="color:#87cefa;">THEN</span></a>
+  <a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> "&gt; Server started succesfully."
+
+  '// Change this to the file's public link
+  IP_File$ = "dl.dropbox.com/u/8440706/QB64.INI" 'a Drop Box link
+  URL$ = <a href="LEFT%24.html" title="LEFT$"><span style="color:#87cefa;">LEFT$</span></a>(IP_File$, <a href="INSTR.html" title="INSTR"><span style="color:#87cefa;">INSTR</span></a>(IP_File$, "/") - 1)
+  Path$ = <a href="MID%24.html" title="MID$"><span style="color:#87cefa;">MID$</span></a>(IP_File$, <a href="INSTR.html" title="INSTR"><span style="color:#87cefa;">INSTR</span></a>(IP_File$, "/"))
+  Client&amp; = <a href="OPENCLIENT.html" title="OPENCLIENT"><span style="color:#87cefa;">_OPENCLIENT</span></a>("TCP/IP:80:" + URL$)
+  <a href="IF...html" title="IF...THEN"><span style="color:#87cefa;">IF</span></a> Client&amp; <a href="THEN.html" title="THEN"><span style="color:#87cefa;">THEN</span></a>
+    Request$ = "GET " + Path$ + " HTTP/1.1" + CrLf$ + "Host:" + URL$ + CrLf$ + CrLf$
+    <a href="PUT.html" title="PUT"><span style="color:#87cefa;">PUT</span></a> #Client&amp;, , Request$
+    DO: <a href="LIMIT.html" title="LIMIT"><span style="color:#87cefa;">_LIMIT</span></a> 20 '              load response header
+      <a href="GET.html" title="GET"><span style="color:#87cefa;">GET</span></a> #Client&amp;, , Dat$
+      Header$ = Header$ + Dat$
+    <a href="LOOP.html" title="LOOP"><span style="color:#87cefa;">LOOP</span></a> <a href="UNTIL.html" title="UNTIL"><span style="color:#87cefa;">UNTIL</span></a> <a href="INSTR.html" title="INSTR"><span style="color:#87cefa;">INSTR</span></a>(Header$, CrLf$ + CrLf$) ' Loop until 2 CRLFs (end of HTML header) are found
+    <a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> "Header Done."
+
+    ' Get file size from header
+    SizePos = <a href="INSTR.html" title="INSTR"><span style="color:#87cefa;">INSTR</span></a>(<a href="UCASE%24.html" title="UCASE$"><span style="color:#87cefa;">UCASE$</span></a>(Header$), "CONTENT-LENGTH:") + 16
+    SizeEnd = <a href="INSTR.html" title="INSTR"><span style="color:#87cefa;">INSTR</span></a>(SizePos, Header$, CrLf$)
+    FileSize&amp; = <a href="VAL.html" title="VAL"><span style="color:#87cefa;">VAL</span></a>(<a href="MID%24.html" title="MID$"><span style="color:#87cefa;">MID$</span></a>(Header$, SizePos, (SizeEnd - SizePos) + 1))
+    <a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> "File size is"; FileSize&amp;; "bytes"
+    EndPos = <a href="INSTR.html" title="INSTR"><span style="color:#87cefa;">INSTR</span></a>(Header$, CrLf$ + CrLf$) + 4
+    Response$ = <a href="MID%24.html" title="MID$"><span style="color:#87cefa;">MID$</span></a>(Header$, EndPos) ' get data after header already downloaded
+
+    start = 1  '// Get file name from original URL path if necessary
+    <a href="DO...html" title="DO...LOOP"><span style="color:#87cefa;">DO</span></a> '// Change this to destination local file name and path...
+      posit = <a href="INSTR.html" title="INSTR"><span style="color:#87cefa;">INSTR</span></a>(start, IP_File$, "/")
+      <a href="IF...html" title="IF...THEN"><span style="color:#87cefa;">IF</span></a> posit <a href="THEN.html" title="THEN"><span style="color:#87cefa;">THEN</span></a> lastpos = posit: start = posit + 1
+    <a href="LOOP.html" title="LOOP"><span style="color:#87cefa;">LOOP</span></a> <a href="UNTIL.html" title="UNTIL"><span style="color:#87cefa;">UNTIL</span></a> posit = 0
+    File$ = <a href="MID%24.html" title="MID$"><span style="color:#87cefa;">MID$</span></a>(IP_File$, lastpos + 1) 'beware of tag suffixes
+    <a href="OPEN.html" title="OPEN"><span style="color:#87cefa;">OPEN</span></a> File$ <a href="FOR...html" title="FOR...NEXT"><span style="color:#87cefa;">FOR</span></a> <a href="BINARY-2.html" class="mw-redirect" title="BINARY"><span style="color:#87cefa;">BINARY</span></a> <a href="AS.html" title="AS"><span style="color:#87cefa;">AS</span></a> #1
+    DO: <a href="LIMIT.html" title="LIMIT"><span style="color:#87cefa;">_LIMIT</span></a> 20
+      <a href="PUT.html" title="PUT"><span style="color:#87cefa;">PUT</span></a> #1, , Response$
+      <a href="GET.html" title="GET"><span style="color:#87cefa;">GET</span></a> #Client&amp;, , Response$
+    <a href="LOOP.html" title="LOOP"><span style="color:#87cefa;">LOOP</span></a> <a href="UNTIL.html" title="UNTIL"><span style="color:#87cefa;">UNTIL</span></a> <a href="LOF.html" title="LOF"><span style="color:#87cefa;">LOF</span></a>(1) &gt;= FileSize&amp;
+    <a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> "File download completed!"
+    <a href="CLOSE.html" title="CLOSE"><span style="color:#87cefa;">CLOSE</span></a> #1
+  <a href="ELSE.html" title="ELSE"><span style="color:#87cefa;">ELSE</span></a>
+    <a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> "Failed to connect."
+  <a href="END_IF.html" class="mw-redirect" title="END IF"><span style="color:#87cefa;">END IF</span></a>
+<a href="ELSE.html" title="ELSE"><span style="color:#87cefa;">ELSE</span></a>
+  <a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> "Failed to create server connection..."
+<a href="END_IF.html" class="mw-redirect" title="END IF"><span style="color:#87cefa;">END IF</span></a> <i> </i>
+</p>
+<center><span style="font-family: Courier New, Courier, monospace; font-size: 0.80em; line-height: 50%;">Code suggested by Matt Kilgore</span></center>
+<p><br />
+</p>
+<hr />
+<center><i>Navigation:</i>
+<dl><dd><a href="Keyword_Reference_-_Alphabetical.html" title="Keyword Reference - Alphabetical">Keyword Reference - Alphabetical</a></dd>
+<dd><a href="Keyword_Reference_-_By_usage.html" title="Keyword Reference - By usage">Keyword Reference - By Usage</a></dd>
+<dd><a href="Main_Page.html" title="Main Page">Main Wiki Page</a></dd></dl></center>
+<!-- 
+NewPP limit report
+Cached time: 20210707054611
+Cache expiry: 86400
+Dynamic content: false
+Complications: []
+CPU time usage: 0.132 seconds
+Real time usage: 0.153 seconds
+Preprocessor visited node count: 1440/1000000
+Post‐expand include size: 11936/2097152 bytes
+Template argument size: 2083/2097152 bytes
+Highest expansion depth: 3/40
+Expensive parser function count: 0/100
+Unstrip recursion depth: 0/20
+Unstrip post‐expand size: 127/5000000 bytes
+-->
+<!--
+Transclusion expansion time report (%,ms,calls,template)
+100.00%   59.723      1 -total
+ 28.96%   17.299    199 Template:Cl
+  7.87%    4.701      2 Template:TextStart
+  6.82%    4.072      1 Template:PageNavigation
+  6.45%    3.854      3 Template:CodeEnd
+  6.43%    3.840      1 Template:Text
+  6.41%    3.828      3 Template:Small
+  6.26%    3.741      3 Template:CodeStart
+  6.24%    3.726      2 Template:TextEnd
+-->
+
+<!-- Saved in parser cache with key i4224360_mw2-mw_:pcache:idhash:188-0!canonical and timestamp 20210707054611 and revision id 22945
+ -->
+</div></div><div class="printfooter">Retrieved from "<a dir="ltr" href="index3a51.html?title=Downloading_Files&amp;oldid=22945">http://www.qb64.org/wiki/index.php?title=Downloading_Files&amp;oldid=22945</a>"</div>
+		<div id="catlinks" class="catlinks catlinks-allhidden" data-mw="interface"></div>
+	</div>
+</div>
+
+<div id="mw-navigation">
+	<h2>Navigation menu</h2>
+	<div id="mw-head">
+		<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-personal" class="vector-menu" aria-labelledby="p-personal-label" role="navigation" 
+	 >
+	<h3 id="p-personal-label">
+		<span>Personal tools</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="pt-login"><a href="index2a7e.html?title=Special:UserLogin&amp;returnto=Downloading+Files" title="You are encouraged to log in; however, it is not mandatory [o]" accesskey="o">Log in</a></li></ul>
+		
+	</div>
+</nav>
+
+
+		<div id="left-navigation">
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-namespaces" class="vector-menu vector-menu-tabs vectorTabs" aria-labelledby="p-namespaces-label" role="navigation" 
+	 >
+	<h3 id="p-namespaces-label">
+		<span>Namespaces</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="ca-nstab-main" class="selected"><a href="Downloading_Files.html" title="View the content page [c]" accesskey="c">Page</a></li><li id="ca-talk" class="new"><a href="Talk_Downloading_Files.html?title=Talk:Downloading_Files&amp;action=edit&amp;redlink=1" rel="discussion" title="Discussion about the content page (page does not exist) [t]" accesskey="t">Discussion</a></li></ul>
+		
+	</div>
+</nav>
+
+
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-variants" class="vector-menu-empty emptyPortlet vector-menu vector-menu-dropdown vectorMenu" aria-labelledby="p-variants-label" role="navigation" 
+	 >
+	<input type="checkbox" class="vector-menu-checkbox vectorMenuCheckbox" aria-labelledby="p-variants-label" />
+	<h3 id="p-variants-label">
+		<span>Variants</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="menu vector-menu-content-list"></ul>
+		
+	</div>
+</nav>
+
+
+		</div>
+		<div id="right-navigation">
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-views" class="vector-menu vector-menu-tabs vectorTabs" aria-labelledby="p-views-label" role="navigation" 
+	 >
+	<h3 id="p-views-label">
+		<span>Views</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="ca-view" class="collapsible selected"><a href="Downloading_Files.html">Read</a></li><li id="ca-viewsource" class="collapsible"><a href="indexb233.html?title=Downloading_Files&amp;action=edit" title="This page is protected.&#10;You can view its source [e]" accesskey="e">View source</a></li><li id="ca-history" class="collapsible"><a href="index3a7a.html?title=Downloading_Files&amp;action=history" title="Past revisions of this page [h]" accesskey="h">View history</a></li></ul>
+		
+	</div>
+</nav>
+
+
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-cactions" class="vector-menu-empty emptyPortlet vector-menu vector-menu-dropdown vectorMenu" aria-labelledby="p-cactions-label" role="navigation" 
+	 >
+	<input type="checkbox" class="vector-menu-checkbox vectorMenuCheckbox" aria-labelledby="p-cactions-label" />
+	<h3 id="p-cactions-label">
+		<span>More</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="menu vector-menu-content-list"></ul>
+		
+	</div>
+</nav>
+
+
+			<div id="p-search" role="search">
+	<h3 >
+		<label for="searchInput">Search</label>
+	</h3>
+	<form action="https://www.qb64.org/wiki/index.php" id="searchform">
+		<div id="simpleSearch">
+			<input type="search" name="search" placeholder="Search QB64 Wiki" title="Search QB64 Wiki [f]" accesskey="f" id="searchInput"/>
+			<input type="hidden" name="title" value="Special:Search">
+			<input type="submit" name="fulltext" value="Search" title="Search the pages for this text" id="mw-searchButton" class="searchButton mw-fallbackSearchButton"/>
+			<input type="submit" name="go" value="Go" title="Go to a page with this exact name if it exists" id="searchButton" class="searchButton"/>
+		</div>
+	</form>
+</div>
+
+		</div>
+	</div>
+	
+<div id="mw-panel">
+	<div id="p-logo" role="banner">
+		<a  title="Visit the main page" class="mw-wiki-logo" href="Main_Page.html"></a>
+	</div>
+	<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-navigation" class="vector-menu vector-menu-portal portal portal-first" aria-labelledby="p-navigation-label" role="navigation" 
+	 >
+	<h3 id="p-navigation-label">
+		<span>Navigation</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="n-mainpage-description"><a href="Main_Page.html" title="Visit the main page [z]" accesskey="z">Main page</a></li><li id="n-recentchanges"><a href="Special_RecentChanges.html" title="A list of recent changes in the wiki [r]" accesskey="r">Recent changes</a></li><li id="n-randompage"><a href="SNDCOPY.html" title="Load a random page [x]" accesskey="x">Random page</a></li><li id="n-help-mediawiki"><a href="https://www.mediawiki.org/wiki/Special:MyLanguage/Help:Contents">Help about MediaWiki</a></li></ul>
+		
+	</div>
+</nav>
+
+
+	<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-tb" class="vector-menu vector-menu-portal portal" aria-labelledby="p-tb-label" role="navigation" 
+	 >
+	<h3 id="p-tb-label">
+		<span>Tools</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="t-whatlinkshere"><a href="Special_WhatLinksHere/Downloading_Files.html" title="A list of all wiki pages that link here [j]" accesskey="j">What links here</a></li><li id="t-recentchangeslinked"><a href="Special_RecentChangesLinked/Downloading_Files.html" rel="nofollow" title="Recent changes in pages linked from this page [k]" accesskey="k">Related changes</a></li><li id="t-specialpages"><a href="Special_SpecialPages.html" title="A list of all special pages [q]" accesskey="q">Special pages</a></li><li id="t-print"><a href="javascript:print();" rel="alternate" title="Printable version of this page [p]" accesskey="p">Printable version</a></li><li id="t-permalink"><a href="index3a51.html?title=Downloading_Files&amp;oldid=22945" title="Permanent link to this revision of the page">Permanent link</a></li><li id="t-info"><a href="index7827.html?title=Downloading_Files&amp;action=info" title="More information about this page">Page information</a></li></ul>
+		
+	</div>
+</nav>
+
+
+	
+</div>
+
+</div>
+
+<footer id="footer" class="mw-footer" role="contentinfo" >
+	<ul id="footer-info" >
+		<li id="footer-info-lastmod"> This page was last edited on 3 November 2020, at 00:54.</li>
+	</ul>
+	<ul id="footer-places" >
+		<li id="footer-places-privacy"><a href="My_wiki_Privacy_policy.html" title="My wiki:Privacy policy">Privacy policy</a></li>
+		<li id="footer-places-about"><a href="My_wiki_About.html" title="My wiki:About">About QB64 Wiki</a></li>
+		<li id="footer-places-disclaimer"><a href="My_wiki_General_disclaimer.html" title="My wiki:General disclaimer">Disclaimers</a></li>
+	</ul>
+	<ul id="footer-icons" class="noprint">
+		<li id="footer-poweredbyico"><a href="https://www.mediawiki.org/"><img src="resources/assets/poweredby_mediawiki_88x31.png" alt="Powered by MediaWiki" srcset="/wiki/resources/assets/poweredby_mediawiki_132x47.png 1.5x, /wiki/resources/assets/poweredby_mediawiki_176x62.png 2x" width="88" height="31" loading="lazy"/></a></li>
+	</ul>
+	<div style="clear: both;"></div>
+</footer>
+
+
+
+<script>(RLQ=window.RLQ||[]).push(function(){mw.config.set({"wgPageParseReport":{"limitreport":{"cputime":"0.132","walltime":"0.153","ppvisitednodes":{"value":1440,"limit":1000000},"postexpandincludesize":{"value":11936,"limit":2097152},"templateargumentsize":{"value":2083,"limit":2097152},"expansiondepth":{"value":3,"limit":40},"expensivefunctioncount":{"value":0,"limit":100},"unstrip-depth":{"value":0,"limit":20},"unstrip-size":{"value":127,"limit":5000000},"timingprofile":["100.00%   59.723      1 -total"," 28.96%   17.299    199 Template:Cl","  7.87%    4.701      2 Template:TextStart","  6.82%    4.072      1 Template:PageNavigation","  6.45%    3.854      3 Template:CodeEnd","  6.43%    3.840      1 Template:Text","  6.41%    3.828      3 Template:Small","  6.26%    3.741      3 Template:CodeStart","  6.24%    3.726      2 Template:TextEnd"]},"cachereport":{"timestamp":"20210707054611","ttl":86400,"transientcontent":false}}});mw.config.set({"wgBackendResponseTime":1207});});</script></body>
+<!-- Mirrored from www.qb64.org/wiki/Downloading_Files by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 07 Aug 2021 12:42:20 GMT -->
+</html>

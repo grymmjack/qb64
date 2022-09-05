@@ -1,0 +1,319 @@
+
+<!DOCTYPE html>
+<html class="client-nojs" lang="en" dir="ltr">
+
+<!-- Mirrored from www.qb64.org/wiki/Screen_Memory by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 07 Aug 2021 12:44:09 GMT -->
+<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=UTF-8" /><!-- /Added by HTTrack -->
+<head>
+<meta charset="UTF-8"/>
+<title>Screen Memory - QB64 Wiki</title>
+<script>document.documentElement.className="client-js";RLCONF={"wgBreakFrames":!1,"wgSeparatorTransformTable":["",""],"wgDigitTransformTable":["",""],"wgDefaultDateFormat":"dmy","wgMonthNames":["","January","February","March","April","May","June","July","August","September","October","November","December"],"wgRequestId":"YOWkV1pP-65vp3So6Lul3AAAANg","wgCSPNonce":!1,"wgCanonicalNamespace":"","wgCanonicalSpecialPageName":!1,"wgNamespaceNumber":0,"wgPageName":"Screen_Memory","wgTitle":"Screen Memory","wgCurRevisionId":23217,"wgRevisionId":23217,"wgArticleId":687,"wgIsArticle":!0,"wgIsRedirect":!1,"wgAction":"view","wgUserName":null,"wgUserGroups":["*"],"wgCategories":[],"wgPageContentLanguage":"en","wgPageContentModel":"wikitext","wgRelevantPageName":"Screen_Memory","wgRelevantArticleId":687,"wgIsProbablyEditable":!1,"wgRelevantPageIsProbablyEditable":!1,"wgRestrictionEdit":[],"wgRestrictionMove":[]};RLSTATE={"site.styles":"ready","noscript":"ready","user.styles":"ready",
+"user":"ready","user.options":"loading","skins.vector.styles.legacy":"ready"};RLPAGEMODULES=["site","mediawiki.page.startup","mediawiki.page.ready","skins.vector.legacy.js"];</script>
+<script>(RLQ=window.RLQ||[]).push(function(){mw.loader.implement("user.options@1hzgi",function($,jQuery,require,module){/*@nomin*/mw.user.tokens.set({"patrolToken":"+\\","watchToken":"+\\","csrfToken":"+\\"});
+});});</script>
+<link rel="stylesheet" href="load5c90.css?lang=en&amp;modules=skins.vector.styles.legacy&amp;only=styles&amp;skin=vector"/>
+<script async="" src="load52c0.php?lang=en&amp;modules=startup&amp;only=scripts&amp;raw=1&amp;skin=vector"></script>
+<meta name="generator" content="MediaWiki 1.35.2"/>
+<link rel="shortcut icon" href="https://www.qb64.org/favicon.ico"/>
+<link rel="search" type="application/opensearchdescription+xml" href="opensearch_desc.php" title="QB64 Wiki (en)"/>
+<link rel="EditURI" type="application/rsd+xml" href="api-result251f.xml?action=rsd"/>
+<link rel="alternate" type="application/atom+xml" title="QB64 Wiki Atom feed" href="feeda295.xml?title=Special:RecentChanges&amp;feed=atom"/>
+<!--[if lt IE 9]><script src="/wiki/resources/lib/html5shiv/html5shiv.js"></script><![endif]-->
+</head>
+<body class="mediawiki ltr sitedir-ltr mw-hide-empty-elt ns-0 ns-subject page-Screen_Memory rootpage-Screen_Memory skin-vector action-view skin-vector-legacy">
+<div id="mw-page-base" class="noprint"></div>
+<div id="mw-head-base" class="noprint"></div>
+<div id="content" class="mw-body" role="main">
+	<a id="top"></a>
+	<div id="siteNotice" class="mw-body-content"></div>
+	<div class="mw-indicators mw-body-content">
+	</div>
+	<h1 id="firstHeading" class="firstHeading" lang="en">Screen Memory</h1>
+	<div id="bodyContent" class="mw-body-content">
+		<div id="siteSub" class="noprint">From QB64 Wiki</div>
+		<div id="contentSub"></div>
+		<div id="contentSub2"></div>
+		
+		<div id="jump-to-nav"></div>
+		<a class="mw-jump-link" href="#mw-head">Jump to navigation</a>
+		<a class="mw-jump-link" href="#searchInput">Jump to search</a>
+		<div id="mw-content-text" lang="en" dir="ltr" class="mw-content-ltr"><div class="mw-parser-output"><center><b>SCREEN Memory Segments</b></center>
+<p><br />
+</p>
+<center><b>Screen 0 Text Segment &amp;HB800</b></center>
+<ul><li>The text video memory segment is located at hexadecimal memory address B800 or 47104 decimal.</li>
+<li>The normal <a href="SCREEN.html" title="SCREEN">SCREEN</a> 0 <a href="WIDTH.html" title="WIDTH">WIDTH</a> is 25 rows by 80 columns wide capable of up to 2000 text characters.</li>
+<li>Each text block memory offset consists of a text character byte followed by a color byte.</li>
+<li>Each <a href="UNSIGNED.html" title="UNSIGNED">unsigned</a> <a href="BYTE.html" title="BYTE">byte</a> can hold values from 0 to 255 only. <a href="PEEK.html" title="PEEK">PEEK</a> can read and <a href="POKE.html" title="POKE">POKE</a> can write positive values to those bytes.</li>
+<li>Text ASCII code values range from 0 to 127 with the extended codes ranging from 128 to 255.</li>
+<li>Color values from 0 to 127 are the normal 16 text colors with background color attributes ranging from 0 to 7.</li>
+<li>Color values from 128 to 255 are the high intensity blinking color values with background color attributes ranging from 0 to 7.</li></ul>
+<p><br />
+<i>Example 1:</i> Printing text with blinking colors in <a href="SCREEN.html" title="SCREEN">SCREEN</a> 0 only.
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: Courier, monospace; background-color: darkblue; color: lightgrey; word-wrap: break-word;"> <i> </i>
+<a href="DIM.html" title="DIM"><span style="color:#87cefa;">DIM</span></a> s <a href="AS.html" title="AS"><span style="color:#87cefa;">AS</span></a> <a href="STRING.html" title="STRING"><span style="color:#87cefa;">STRING</span></a>
+<a href="DIM.html" title="DIM"><span style="color:#87cefa;">DIM</span></a> i <a href="AS.html" title="AS"><span style="color:#87cefa;">AS</span></a> <a href="LONG.html" title="LONG"><span style="color:#87cefa;">LONG</span></a>
+<a href="DIM.html" title="DIM"><span style="color:#87cefa;">DIM</span></a> j <a href="AS.html" title="AS"><span style="color:#87cefa;">AS</span></a> <a href="LONG.html" title="LONG"><span style="color:#87cefa;">LONG</span></a>
+<a href="CLS.html" title="CLS"><span style="color:#87cefa;">CLS</span></a>
+s = "Hello, World!"
+<a href="DEF_SEG.html" title="DEF SEG"><span style="color:#87cefa;">DEF SEG</span></a> = <a href="%26H.html" title="&amp;H"><span style="color:#87cefa;">&amp;H</span></a>B800
+<a href="FOR...html" title="FOR...NEXT"><span style="color:#87cefa;">FOR</span></a> j = 1 <a href="TO.html" title="TO"><span style="color:#87cefa;">TO</span></a> 15
+ <a href="FOR...html" title="FOR...NEXT"><span style="color:#87cefa;">FOR</span></a> i = 1 <a href="TO.html" title="TO"><span style="color:#87cefa;">TO</span></a> <a href="LEN.html" title="LEN"><span style="color:#87cefa;">LEN</span></a>(s)
+  <a href="POKE.html" title="POKE"><span style="color:#87cefa;">POKE</span></a> (j * 80 + (i - 1)) * 2, <a href="ASC.html" title="ASC"><span style="color:#87cefa;">ASC</span></a>(<a href="MID%24.html" title="MID$"><span style="color:#87cefa;">MID$</span></a>(s$, i, 1))        'text characters
+  <a href="POKE.html" title="POKE"><span style="color:#87cefa;">POKE</span></a> (j * 80 + (i - 1)) * 2 + 1, <a href="%26H.html" title="&amp;H"><span style="color:#87cefa;">&amp;H</span></a>80 <a href="OR_(boolean).html" title="OR (boolean)"><span style="color:#87cefa;">OR</span></a> j 'blinking color
+ <a href="NEXT.html" title="NEXT"><span style="color:#87cefa;">NEXT</span></a>
+<a href="NEXT.html" title="NEXT"><span style="color:#87cefa;">NEXT</span></a>
+<a href="DEF_SEG.html" title="DEF SEG"><span style="color:#87cefa;">DEF SEG</span></a> 'restore to default segment
+<a href="END.html" title="END"><span style="color:#87cefa;">END</span></a> <i> </i>
+</p>
+<p><br />
+<i>Example 2:</i> Displaying and coloring the 256 <a href="ASCII.html" title="ASCII">ASCII</a> characters using <a href="POKE.html" title="POKE">POKE</a> in <a href="SCREEN.html" title="SCREEN">SCREEN</a> 0. 
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: Courier, monospace; background-color: darkblue; color: lightgrey; word-wrap: break-word;"> <i> </i>
+<a href="SCREEN.html" title="SCREEN"><span style="color:#87cefa;">SCREEN</span></a> 12 'set full screen in QBasic only for flashing colors
+<a href="SCREEN.html" title="SCREEN"><span style="color:#87cefa;">SCREEN</span></a> 0
+<a href="OUT.html" title="OUT"><span style="color:#87cefa;">OUT</span></a> <a href="%26H.html" title="&amp;H"><span style="color:#87cefa;">&amp;H</span></a>3C8, 0: <a href="OUT.html" title="OUT"><span style="color:#87cefa;">OUT</span></a> <a href="%26H.html" title="&amp;H"><span style="color:#87cefa;">&amp;H</span></a>3C9, 0: <a href="OUT.html" title="OUT"><span style="color:#87cefa;">OUT</span></a> <a href="%26H.html" title="&amp;H"><span style="color:#87cefa;">&amp;H</span></a>3C9, 0: <a href="OUT.html" title="OUT"><span style="color:#87cefa;">OUT</span></a> <a href="%26H.html" title="&amp;H"><span style="color:#87cefa;">&amp;H</span></a>3C9, 20
+
+<a href="FONT.html" title="FONT"><span style="color:#87cefa;">_FONT</span></a> <a href="LOADFONT.html" title="LOADFONT"><span style="color:#87cefa;">_LOADFONT</span></a>("C:\Windows\Fonts\Cour.ttf", 20, "MONOSPACE") 'select monospace font. QB64 only!
+
+<a href="DEF_SEG.html" title="DEF SEG"><span style="color:#87cefa;">DEF SEG</span></a> = <a href="%26H.html" title="&amp;H"><span style="color:#87cefa;">&amp;H</span></a>B800                        'SCREEN 0 text ONLY!
+<a href="FOR...html" title="FOR...NEXT"><span style="color:#87cefa;">FOR</span></a> code = 0 <a href="TO.html" title="TO"><span style="color:#87cefa;">TO</span></a> 255
+  <a href="POKE.html" title="POKE"><span style="color:#87cefa;">POKE</span></a> 640 + code * 4, code             'poke the even text offsets with space between
+<a href="NEXT.html" title="NEXT"><span style="color:#87cefa;">NEXT</span></a>
+<a href="COLOR.html" title="COLOR"><span style="color:#87cefa;">COLOR</span></a> 11: <a href="LOCATE.html" title="LOCATE"><span style="color:#87cefa;">LOCATE</span></a> 20, 27: <a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> "Press a key to add color!"
+K$ = <a href="INPUT%24.html" title="INPUT$"><span style="color:#87cefa;">INPUT$</span></a>(1)
+<a href="FOR...html" title="FOR...NEXT"><span style="color:#87cefa;">FOR</span></a> colr = 0 <a href="TO.html" title="TO"><span style="color:#87cefa;">TO</span></a> 255
+  <a href="POKE.html" title="POKE"><span style="color:#87cefa;">POKE</span></a> 641 + colr * 4, colr             'poke the ODD color offsets(second byte)
+<a href="NEXT.html" title="NEXT"><span style="color:#87cefa;">NEXT</span></a>
+<a href="DEF_SEG.html" title="DEF SEG"><span style="color:#87cefa;">DEF SEG</span></a>                                 'reset to default segment
+<a href="END.html" title="END"><span style="color:#87cefa;">END</span></a> <i> </i>
+</p>
+<center><span style="font-family: Courier New, Courier, monospace; font-size: 0.80em; line-height: 50%;">Code by Ted Weissgerber</span></center>
+<dl><dd><i>Explanation:</i> To <a href="POKE.html" title="POKE">POKE</a> text characters to the screen in SCREEN 0, DEF SEG sets the memory segment to &amp;HB800. Text values are poked at the even segment offsets starting 640 bytes(4 rows * 80 columns wide * 2 bytes) from the upper left corner 0 offset of the screen memory segment. To space the text it skips an even offset by multiplying by 4 instead of 2. The odd offsets can be written to to set the color. Using the same 4 byte offsets, the text and background are colored using values up to 128. Values over 128 cause the text to flash and the background colors 0 to 7 are repeated. The background color is incremented every 16 values.</dd></dl>
+<p style="padding: 1em; line-height:100%; margin-left:10px; white-space: pre; font-family: courier; background-color: white; color: darkgreen;">                                <b>4000 byte Video Memory Segment</b>
+
+Text block #:   1                  321     322     323     324     325     326     327             
+Text position:  1, 1                5, 1    5, 2    5, 3    5, 4    5, 5    5, 6    5, 7
+Byte offset:    0, 1               640     642     644     646     648     650     652
+<b>Segment: (CHR$(0), COLOR 0),.......(0, 0), (0, 0), (1, 1), (0, 0), (2, 2), (0, 0), (3, 3),...</b>
+
+            Row% = Offset% \ 160 + 1          Column% = (Offset% MOD 160) \ 2 + 1
+
+                         Offset% = (160 * (Row% - 1)) + (2 * (Column% - 1))
+</p>
+<center><b>Graphic Screen Segment &amp;HA000</b></center>
+<ul><li>The graphic video memory segment is located at hexadecimal memory address A000 or 40960 decimal.</li>
+<li>Legacy graphic screen modes include 1, 2, 7, 8, 9, 10, 11, 12 and 13 with varying pixel widths, heights and color attributes.</li>
+<li><b>QB64</b> <a href="NEWIMAGE.html" title="NEWIMAGE">_NEWIMAGE</a> or <a href="LOADIMAGE.html" title="LOADIMAGE">_LOADIMAGE</a> screen modes can use the legacy modes above, 256 color or 32 bit color modes.</li></ul>
+<p><br />
+<i>See also:</i>
+</p>
+<ul><li><a href="PEEK.html" title="PEEK">PEEK</a>, <a href="POKE.html" title="POKE">POKE</a></li>
+<li><a href="DEF_SEG_%3d_0.html" title="DEF SEG = 0">DEF SEG = 0</a></li>
+<li><a href="SCREEN.html" title="SCREEN">SCREEN</a></li>
+<li><a href="SCREEN_(function).html" title="SCREEN (function)">SCREEN (function)</a></li>
+<li><a href="NEWIMAGE.html" title="NEWIMAGE">_NEWIMAGE</a> <span style="color:gray">(screen pages)</span></li>
+<li><a href="LOADIMAGE.html" title="LOADIMAGE">_LOADIMAGE</a> <span style="color:gray">(image files)</span></li></ul>
+<p><br />
+</p>
+<hr />
+<center><i>Navigation:</i>
+<dl><dd><a href="Keyword_Reference_-_Alphabetical.html" title="Keyword Reference - Alphabetical">Keyword Reference - Alphabetical</a></dd>
+<dd><a href="Keyword_Reference_-_By_usage.html" title="Keyword Reference - By usage">Keyword Reference - By Usage</a></dd>
+<dd><a href="Main_Page.html" title="Main Page">Main Wiki Page</a></dd></dl></center>
+<!-- 
+NewPP limit report
+Cached time: 20210706193700
+Cache expiry: 86400
+Dynamic content: false
+Complications: []
+CPU time usage: 0.077 seconds
+Real time usage: 0.094 seconds
+Preprocessor visited node count: 418/1000000
+Post‐expand include size: 3815/2097152 bytes
+Template argument size: 496/2097152 bytes
+Highest expansion depth: 3/40
+Expensive parser function count: 0/100
+Unstrip recursion depth: 0/20
+Unstrip post‐expand size: 0/5000000 bytes
+-->
+<!--
+Transclusion expansion time report (%,ms,calls,template)
+100.00%   39.460      1 -total
+ 19.77%    7.799     55 Template:Cl
+ 14.24%    5.618      1 Template:Small
+ 12.18%    4.808      2 Template:CodeStart
+  8.35%    3.293      2 Template:CodeEnd
+  8.32%    3.284      1 Template:WhiteStart
+  8.05%    3.175      2 Template:Text
+  7.92%    3.125      1 Template:PageNavigation
+  7.63%    3.012      1 Template:WhiteEnd
+-->
+
+<!-- Saved in parser cache with key i4224360_mw2-mw_:pcache:idhash:687-0!canonical and timestamp 20210706193700 and revision id 23217
+ -->
+</div></div><div class="printfooter">Retrieved from "<a dir="ltr" href="index8104.html?title=Screen_Memory&amp;oldid=23217">http://www.qb64.org/wiki/index.php?title=Screen_Memory&amp;oldid=23217</a>"</div>
+		<div id="catlinks" class="catlinks catlinks-allhidden" data-mw="interface"></div>
+	</div>
+</div>
+
+<div id="mw-navigation">
+	<h2>Navigation menu</h2>
+	<div id="mw-head">
+		<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-personal" class="vector-menu" aria-labelledby="p-personal-label" role="navigation" 
+	 >
+	<h3 id="p-personal-label">
+		<span>Personal tools</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="pt-login"><a href="indexae72.html?title=Special:UserLogin&amp;returnto=Screen+Memory" title="You are encouraged to log in; however, it is not mandatory [o]" accesskey="o">Log in</a></li></ul>
+		
+	</div>
+</nav>
+
+
+		<div id="left-navigation">
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-namespaces" class="vector-menu vector-menu-tabs vectorTabs" aria-labelledby="p-namespaces-label" role="navigation" 
+	 >
+	<h3 id="p-namespaces-label">
+		<span>Namespaces</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="ca-nstab-main" class="selected"><a href="Screen_Memory.html" title="View the content page [c]" accesskey="c">Page</a></li><li id="ca-talk" class="new"><a href="Talk_Screen_Memory.html?title=Talk:Screen_Memory&amp;action=edit&amp;redlink=1" rel="discussion" title="Discussion about the content page (page does not exist) [t]" accesskey="t">Discussion</a></li></ul>
+		
+	</div>
+</nav>
+
+
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-variants" class="vector-menu-empty emptyPortlet vector-menu vector-menu-dropdown vectorMenu" aria-labelledby="p-variants-label" role="navigation" 
+	 >
+	<input type="checkbox" class="vector-menu-checkbox vectorMenuCheckbox" aria-labelledby="p-variants-label" />
+	<h3 id="p-variants-label">
+		<span>Variants</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="menu vector-menu-content-list"></ul>
+		
+	</div>
+</nav>
+
+
+		</div>
+		<div id="right-navigation">
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-views" class="vector-menu vector-menu-tabs vectorTabs" aria-labelledby="p-views-label" role="navigation" 
+	 >
+	<h3 id="p-views-label">
+		<span>Views</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="ca-view" class="collapsible selected"><a href="Screen_Memory.html">Read</a></li><li id="ca-viewsource" class="collapsible"><a href="indexf457.html?title=Screen_Memory&amp;action=edit" title="This page is protected.&#10;You can view its source [e]" accesskey="e">View source</a></li><li id="ca-history" class="collapsible"><a href="index1422.html?title=Screen_Memory&amp;action=history" title="Past revisions of this page [h]" accesskey="h">View history</a></li></ul>
+		
+	</div>
+</nav>
+
+
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-cactions" class="vector-menu-empty emptyPortlet vector-menu vector-menu-dropdown vectorMenu" aria-labelledby="p-cactions-label" role="navigation" 
+	 >
+	<input type="checkbox" class="vector-menu-checkbox vectorMenuCheckbox" aria-labelledby="p-cactions-label" />
+	<h3 id="p-cactions-label">
+		<span>More</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="menu vector-menu-content-list"></ul>
+		
+	</div>
+</nav>
+
+
+			<div id="p-search" role="search">
+	<h3 >
+		<label for="searchInput">Search</label>
+	</h3>
+	<form action="https://www.qb64.org/wiki/index.php" id="searchform">
+		<div id="simpleSearch">
+			<input type="search" name="search" placeholder="Search QB64 Wiki" title="Search QB64 Wiki [f]" accesskey="f" id="searchInput"/>
+			<input type="hidden" name="title" value="Special:Search">
+			<input type="submit" name="fulltext" value="Search" title="Search the pages for this text" id="mw-searchButton" class="searchButton mw-fallbackSearchButton"/>
+			<input type="submit" name="go" value="Go" title="Go to a page with this exact name if it exists" id="searchButton" class="searchButton"/>
+		</div>
+	</form>
+</div>
+
+		</div>
+	</div>
+	
+<div id="mw-panel">
+	<div id="p-logo" role="banner">
+		<a  title="Visit the main page" class="mw-wiki-logo" href="Main_Page.html"></a>
+	</div>
+	<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-navigation" class="vector-menu vector-menu-portal portal portal-first" aria-labelledby="p-navigation-label" role="navigation" 
+	 >
+	<h3 id="p-navigation-label">
+		<span>Navigation</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="n-mainpage-description"><a href="Main_Page.html" title="Visit the main page [z]" accesskey="z">Main page</a></li><li id="n-recentchanges"><a href="Special_RecentChanges.html" title="A list of recent changes in the wiki [r]" accesskey="r">Recent changes</a></li><li id="n-randompage"><a href="SNDCOPY.html" title="Load a random page [x]" accesskey="x">Random page</a></li><li id="n-help-mediawiki"><a href="https://www.mediawiki.org/wiki/Special:MyLanguage/Help:Contents">Help about MediaWiki</a></li></ul>
+		
+	</div>
+</nav>
+
+
+	<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-tb" class="vector-menu vector-menu-portal portal" aria-labelledby="p-tb-label" role="navigation" 
+	 >
+	<h3 id="p-tb-label">
+		<span>Tools</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="t-whatlinkshere"><a href="Special_WhatLinksHere/Screen_Memory.html" title="A list of all wiki pages that link here [j]" accesskey="j">What links here</a></li><li id="t-recentchangeslinked"><a href="Special_RecentChangesLinked/Screen_Memory.html" rel="nofollow" title="Recent changes in pages linked from this page [k]" accesskey="k">Related changes</a></li><li id="t-specialpages"><a href="Special_SpecialPages.html" title="A list of all special pages [q]" accesskey="q">Special pages</a></li><li id="t-print"><a href="javascript:print();" rel="alternate" title="Printable version of this page [p]" accesskey="p">Printable version</a></li><li id="t-permalink"><a href="index8104.html?title=Screen_Memory&amp;oldid=23217" title="Permanent link to this revision of the page">Permanent link</a></li><li id="t-info"><a href="indexc5eb.html?title=Screen_Memory&amp;action=info" title="More information about this page">Page information</a></li></ul>
+		
+	</div>
+</nav>
+
+
+	
+</div>
+
+</div>
+
+<footer id="footer" class="mw-footer" role="contentinfo" >
+	<ul id="footer-info" >
+		<li id="footer-info-lastmod"> This page was last edited on 10 February 2021, at 13:09.</li>
+	</ul>
+	<ul id="footer-places" >
+		<li id="footer-places-privacy"><a href="My_wiki_Privacy_policy.html" title="My wiki:Privacy policy">Privacy policy</a></li>
+		<li id="footer-places-about"><a href="My_wiki_About.html" title="My wiki:About">About QB64 Wiki</a></li>
+		<li id="footer-places-disclaimer"><a href="My_wiki_General_disclaimer.html" title="My wiki:General disclaimer">Disclaimers</a></li>
+	</ul>
+	<ul id="footer-icons" class="noprint">
+		<li id="footer-poweredbyico"><a href="https://www.mediawiki.org/"><img src="resources/assets/poweredby_mediawiki_88x31.png" alt="Powered by MediaWiki" srcset="/wiki/resources/assets/poweredby_mediawiki_132x47.png 1.5x, /wiki/resources/assets/poweredby_mediawiki_176x62.png 2x" width="88" height="31" loading="lazy"/></a></li>
+	</ul>
+	<div style="clear: both;"></div>
+</footer>
+
+
+
+<script>(RLQ=window.RLQ||[]).push(function(){mw.config.set({"wgPageParseReport":{"limitreport":{"cputime":"0.077","walltime":"0.094","ppvisitednodes":{"value":418,"limit":1000000},"postexpandincludesize":{"value":3815,"limit":2097152},"templateargumentsize":{"value":496,"limit":2097152},"expansiondepth":{"value":3,"limit":40},"expensivefunctioncount":{"value":0,"limit":100},"unstrip-depth":{"value":0,"limit":20},"unstrip-size":{"value":0,"limit":5000000},"timingprofile":["100.00%   39.460      1 -total"," 19.77%    7.799     55 Template:Cl"," 14.24%    5.618      1 Template:Small"," 12.18%    4.808      2 Template:CodeStart","  8.35%    3.293      2 Template:CodeEnd","  8.32%    3.284      1 Template:WhiteStart","  8.05%    3.175      2 Template:Text","  7.92%    3.125      1 Template:PageNavigation","  7.63%    3.012      1 Template:WhiteEnd"]},"cachereport":{"timestamp":"20210706193700","ttl":86400,"transientcontent":false}}});mw.config.set({"wgBackendResponseTime":1494});});</script></body>
+<!-- Mirrored from www.qb64.org/wiki/Screen_Memory by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 07 Aug 2021 12:44:16 GMT -->
+</html>

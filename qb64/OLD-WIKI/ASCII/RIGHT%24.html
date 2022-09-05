@@ -1,0 +1,297 @@
+
+<!DOCTYPE html>
+<html class="client-nojs" lang="en" dir="ltr">
+
+<!-- Mirrored from www.qb64.org/wiki/RIGHT$ by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 07 Aug 2021 13:23:33 GMT -->
+<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=UTF-8" /><!-- /Added by HTTrack -->
+<head>
+<meta charset="UTF-8"/>
+<title>RIGHT$ - QB64 Wiki</title>
+<script>document.documentElement.className="client-js";RLCONF={"wgBreakFrames":!1,"wgSeparatorTransformTable":["",""],"wgDigitTransformTable":["",""],"wgDefaultDateFormat":"dmy","wgMonthNames":["","January","February","March","April","May","June","July","August","September","October","November","December"],"wgRequestId":"YOWls6dTx2XheSMCc397WAAAADA","wgCSPNonce":!1,"wgCanonicalNamespace":"","wgCanonicalSpecialPageName":!1,"wgNamespaceNumber":0,"wgPageName":"RIGHT$","wgTitle":"RIGHT$","wgCurRevisionId":23352,"wgRevisionId":23352,"wgArticleId":590,"wgIsArticle":!0,"wgIsRedirect":!1,"wgAction":"view","wgUserName":null,"wgUserGroups":["*"],"wgCategories":[],"wgPageContentLanguage":"en","wgPageContentModel":"wikitext","wgRelevantPageName":"RIGHT$","wgRelevantArticleId":590,"wgIsProbablyEditable":!1,"wgRelevantPageIsProbablyEditable":!1,"wgRestrictionEdit":[],"wgRestrictionMove":[]};RLSTATE={"site.styles":"ready","noscript":"ready","user.styles":"ready","user":"ready",
+"user.options":"loading","skins.vector.styles.legacy":"ready"};RLPAGEMODULES=["site","mediawiki.page.startup","mediawiki.page.ready","skins.vector.legacy.js"];</script>
+<script>(RLQ=window.RLQ||[]).push(function(){mw.loader.implement("user.options@1hzgi",function($,jQuery,require,module){/*@nomin*/mw.user.tokens.set({"patrolToken":"+\\","watchToken":"+\\","csrfToken":"+\\"});
+});});</script>
+<link rel="stylesheet" href="load5c90.css?lang=en&amp;modules=skins.vector.styles.legacy&amp;only=styles&amp;skin=vector"/>
+<script async="" src="load52c0.php?lang=en&amp;modules=startup&amp;only=scripts&amp;raw=1&amp;skin=vector"></script>
+<meta name="generator" content="MediaWiki 1.35.2"/>
+<link rel="shortcut icon" href="https://www.qb64.org/favicon.ico"/>
+<link rel="search" type="application/opensearchdescription+xml" href="opensearch_desc.php" title="QB64 Wiki (en)"/>
+<link rel="EditURI" type="application/rsd+xml" href="api-result251f.xml?action=rsd"/>
+<link rel="alternate" type="application/atom+xml" title="QB64 Wiki Atom feed" href="feeda295.xml?title=Special:RecentChanges&amp;feed=atom"/>
+<!--[if lt IE 9]><script src="/wiki/resources/lib/html5shiv/html5shiv.js"></script><![endif]-->
+</head>
+<body class="mediawiki ltr sitedir-ltr mw-hide-empty-elt ns-0 ns-subject page-RIGHT rootpage-RIGHT skin-vector action-view skin-vector-legacy">
+<div id="mw-page-base" class="noprint"></div>
+<div id="mw-head-base" class="noprint"></div>
+<div id="content" class="mw-body" role="main">
+	<a id="top"></a>
+	<div id="siteNotice" class="mw-body-content"></div>
+	<div class="mw-indicators mw-body-content">
+	</div>
+	<h1 id="firstHeading" class="firstHeading" lang="en">RIGHT$</h1>
+	<div id="bodyContent" class="mw-body-content">
+		<div id="siteSub" class="noprint">From QB64 Wiki</div>
+		<div id="contentSub"></div>
+		<div id="contentSub2"></div>
+		
+		<div id="jump-to-nav"></div>
+		<a class="mw-jump-link" href="#mw-head">Jump to navigation</a>
+		<a class="mw-jump-link" href="#searchInput">Jump to search</a>
+		<div id="mw-content-text" lang="en" dir="ltr" class="mw-content-ltr"><div class="mw-parser-output"><p>The <b>RIGHT$</b> function returns a set number of characters in a <a href="STRING.html" title="STRING">STRING</a> variable starting from the end and counting backwards.
+</p><p><br />
+</p>
+<h2><span class="mw-headline" id="Syntax">Syntax</span></h2>
+<dl><dd><dl><dd><b>RIGHT$(</b><i>stringvalue$, numberofcharacters%</i><b>)</b></dd></dl></dd></dl>
+<p><br />
+</p>
+<h2><span class="mw-headline" id="Parameters">Parameters</span></h2>
+<ul><li>The <i>stringvalue$</i> can be any string of <a href="ASCII.html" title="ASCII">ASCII</a> characters as a <a href="STRING.html" title="STRING">STRING</a> variable.</li>
+<li>The <i>numberofcharacters</i> <a href="INTEGER.html" title="INTEGER">INTEGER</a> value determines the number of characters to return from the right end of the string.</li></ul>
+<p><br />
+</p>
+<h2><span class="mw-headline" id="Description">Description</span></h2>
+<ul><li>If the number of characters exceeds the string length(<a href="LEN.html" title="LEN">LEN</a>) the entire string is returned.</li>
+<li>RIGHT$ returns always start at the last character of the string, even if a space. <a href="RTRIM%24.html" title="RTRIM$">RTRIM$</a> can remove ending spaces.</li>
+<li><b>Number of characters cannot be a negative value.</b></li></ul>
+<p><br />
+<i>Example 1:</i> Getting the right portion of a string value such as a person's last name. 
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: Courier, monospace; background-color: darkblue; color: lightgrey; word-wrap: break-word;"> <i> </i>
+name$ = "Tom Williams"
+
+Last$ = <a class="mw-selflink selflink"><span style="color:#87cefa;">RIGHT$</span></a>(name$, <a href="LEN.html" title="LEN"><span style="color:#87cefa;">LEN</span></a>(name$) - <a href="INSTR.html" title="INSTR"><span style="color:#87cefa;">INSTR</span></a>(name$, " ")) 'subtract space position from string length
+
+<a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> Last$ <i> </i>
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: Courier; background-color: black; color: white;">Williams </p>
+<p><br />
+<i>Example 2:</i> Adding the leading zero in single digit <a href="HEX%24.html" title="HEX$">HEX$</a> values using RIGHT to take the right two hexadecimal string digits.
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: Courier, monospace; background-color: darkblue; color: lightgrey; word-wrap: break-word;"> <i> </i>
+<a href="SCREEN.html" title="SCREEN"><span style="color:#87cefa;">SCREEN</span></a> <a href="NEWIMAGE.html" title="NEWIMAGE"><span style="color:#87cefa;">_NEWIMAGE</span></a>(640, 480, 32) '32 bit screen modes ONLY!
+red = 255
+green = 0
+blue = 128
+
+Color32 red, green, blue
+<a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> "Colored text"
+
+<a href="SUB.html" title="SUB"><span style="color:#87cefa;">SUB</span></a> Color32 (R, G, B)
+R = R <a href="AND_(boolean).html" title="AND (boolean)"><span style="color:#87cefa;">AND</span></a> <a href="%26H.html" title="&amp;H"><span style="color:#87cefa;">&amp;H</span></a>FF: G = G <a href="AND_(boolean).html" title="AND (boolean)"><span style="color:#87cefa;">AND</span></a> <a href="%26H.html" title="&amp;H"><span style="color:#87cefa;">&amp;H</span></a>FF: B = B <a href="AND_(boolean).html" title="AND (boolean)"><span style="color:#87cefa;">AND</span></a> <a href="%26H.html" title="&amp;H"><span style="color:#87cefa;">&amp;H</span></a>FF '    limit values to 0 to 255
+hexadecimal$ = "<a href="%26H.html" title="&amp;H"><span style="color:#87cefa;">&amp;H</span></a>FF" + <a class="mw-selflink selflink"><span style="color:#87cefa;">RIGHT$</span></a>("0" + <a href="HEX%24.html" title="HEX$"><span style="color:#87cefa;">HEX$</span></a>(R), 2) + <a class="mw-selflink selflink"><span style="color:#87cefa;">RIGHT$</span></a>("0" + <a href="HEX%24.html" title="HEX$"><span style="color:#87cefa;">HEX$</span></a>(G), 2) + <a class="mw-selflink selflink"><span style="color:#87cefa;">RIGHT$</span></a>("0" + <a href="HEX%24.html" title="HEX$"><span style="color:#87cefa;">HEX$</span></a>(B), 2)
+<a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> hexadecimal$
+<a href="COLOR.html" title="COLOR"><span style="color:#87cefa;">COLOR</span></a> <a href="VAL.html" title="VAL"><span style="color:#87cefa;">VAL</span></a>(hexadecimal$)
+<a href="END_SUB.html" class="mw-redirect" title="END SUB"><span style="color:#87cefa;">END SUB</span></a> <i> </i>
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: Courier; background-color: black; color: white;"><b><span style="color:white">&amp;HFFFF0080</span></b>
+<b><span style="color:#FF0080">Colored text</span></b></p>
+<dl><dd><i>Note:</i> When a single hexadecimal digit is returned the resulting value will need the leading zero added. Otherwise the hexa- decimal value created will have a byte missing from the value. EX: Color &amp;HFF000000 is valid while &amp;HFF000 is not.</dd></dl>
+<p><br />
+<i>See also:</i> 
+</p>
+<ul><li><a href="LEFT%24.html" title="LEFT$">LEFT$</a>, <a href="MID%24.html" title="MID$">MID$</a></li>
+<li><a href="LTRIM%24.html" title="LTRIM$">LTRIM$</a>, <a href="RTRIM%24.html" title="RTRIM$">RTRIM$</a></li>
+<li><a href="INSTR.html" title="INSTR">INSTR</a>, <a href="HEX%24.html" title="HEX$">HEX$</a></li></ul>
+<p><br />
+</p>
+<hr />
+<center><i>Navigation:</i>
+<dl><dd><a href="Keyword_Reference_-_Alphabetical.html" title="Keyword Reference - Alphabetical">Keyword Reference - Alphabetical</a></dd>
+<dd><a href="Keyword_Reference_-_By_usage.html" title="Keyword Reference - By usage">Keyword Reference - By Usage</a></dd>
+<dd><a href="Main_Page.html" title="Main Page">Main Wiki Page</a></dd></dl></center>
+<!-- 
+NewPP limit report
+Cached time: 20210707130141
+Cache expiry: 86400
+Dynamic content: false
+Complications: []
+CPU time usage: 0.071 seconds
+Real time usage: 0.209 seconds
+Preprocessor visited node count: 217/1000000
+Post‐expand include size: 2536/2097152 bytes
+Template argument size: 282/2097152 bytes
+Highest expansion depth: 3/40
+Expensive parser function count: 0/100
+Unstrip recursion depth: 0/20
+Unstrip post‐expand size: 0/5000000 bytes
+-->
+<!--
+Transclusion expansion time report (%,ms,calls,template)
+100.00%   87.455      1 -total
+ 23.57%   20.609      2 Template:CodeStart
+ 14.65%   12.815      2 Template:CodeEnd
+ 12.66%   11.069      2 Template:Text
+  9.63%    8.422      1 Template:PageNavigation
+  9.09%    7.946      1 Template:PageDescription
+  6.42%    5.618     25 Template:Cl
+  6.10%    5.332      1 Template:PageSyntax
+  5.58%    4.884      1 Template:PageParameters
+  4.58%    4.006      2 Template:OutputStart
+-->
+
+<!-- Saved in parser cache with key i4224360_mw2-mw_:pcache:idhash:590-0!canonical and timestamp 20210707130140 and revision id 23352
+ -->
+</div></div><div class="printfooter">Retrieved from "<a dir="ltr" href="index79c6.html?title=RIGHT$&amp;oldid=23352">http://www.qb64.org/wiki/index.php?title=RIGHT$&amp;oldid=23352</a>"</div>
+		<div id="catlinks" class="catlinks catlinks-allhidden" data-mw="interface"></div>
+	</div>
+</div>
+
+<div id="mw-navigation">
+	<h2>Navigation menu</h2>
+	<div id="mw-head">
+		<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-personal" class="vector-menu" aria-labelledby="p-personal-label" role="navigation" 
+	 >
+	<h3 id="p-personal-label">
+		<span>Personal tools</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="pt-login"><a href="index41e5.html?title=Special:UserLogin&amp;returnto=RIGHT%24" title="You are encouraged to log in; however, it is not mandatory [o]" accesskey="o">Log in</a></li></ul>
+		
+	</div>
+</nav>
+
+
+		<div id="left-navigation">
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-namespaces" class="vector-menu vector-menu-tabs vectorTabs" aria-labelledby="p-namespaces-label" role="navigation" 
+	 >
+	<h3 id="p-namespaces-label">
+		<span>Namespaces</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="ca-nstab-main" class="selected"><a href="RIGHT%24.html" title="View the content page [c]" accesskey="c">Page</a></li><li id="ca-talk" class="new"><a href="Talk_RIGHT%24.html?title=Talk:RIGHT$&amp;action=edit&amp;redlink=1" rel="discussion" title="Discussion about the content page (page does not exist) [t]" accesskey="t">Discussion</a></li></ul>
+		
+	</div>
+</nav>
+
+
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-variants" class="vector-menu-empty emptyPortlet vector-menu vector-menu-dropdown vectorMenu" aria-labelledby="p-variants-label" role="navigation" 
+	 >
+	<input type="checkbox" class="vector-menu-checkbox vectorMenuCheckbox" aria-labelledby="p-variants-label" />
+	<h3 id="p-variants-label">
+		<span>Variants</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="menu vector-menu-content-list"></ul>
+		
+	</div>
+</nav>
+
+
+		</div>
+		<div id="right-navigation">
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-views" class="vector-menu vector-menu-tabs vectorTabs" aria-labelledby="p-views-label" role="navigation" 
+	 >
+	<h3 id="p-views-label">
+		<span>Views</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="ca-view" class="collapsible selected"><a href="RIGHT%24.html">Read</a></li><li id="ca-viewsource" class="collapsible"><a href="index44aa.html?title=RIGHT$&amp;action=edit" title="This page is protected.&#10;You can view its source [e]" accesskey="e">View source</a></li><li id="ca-history" class="collapsible"><a href="indexad16.html?title=RIGHT$&amp;action=history" title="Past revisions of this page [h]" accesskey="h">View history</a></li></ul>
+		
+	</div>
+</nav>
+
+
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-cactions" class="vector-menu-empty emptyPortlet vector-menu vector-menu-dropdown vectorMenu" aria-labelledby="p-cactions-label" role="navigation" 
+	 >
+	<input type="checkbox" class="vector-menu-checkbox vectorMenuCheckbox" aria-labelledby="p-cactions-label" />
+	<h3 id="p-cactions-label">
+		<span>More</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="menu vector-menu-content-list"></ul>
+		
+	</div>
+</nav>
+
+
+			<div id="p-search" role="search">
+	<h3 >
+		<label for="searchInput">Search</label>
+	</h3>
+	<form action="https://www.qb64.org/wiki/index.php" id="searchform">
+		<div id="simpleSearch">
+			<input type="search" name="search" placeholder="Search QB64 Wiki" title="Search QB64 Wiki [f]" accesskey="f" id="searchInput"/>
+			<input type="hidden" name="title" value="Special:Search">
+			<input type="submit" name="fulltext" value="Search" title="Search the pages for this text" id="mw-searchButton" class="searchButton mw-fallbackSearchButton"/>
+			<input type="submit" name="go" value="Go" title="Go to a page with this exact name if it exists" id="searchButton" class="searchButton"/>
+		</div>
+	</form>
+</div>
+
+		</div>
+	</div>
+	
+<div id="mw-panel">
+	<div id="p-logo" role="banner">
+		<a  title="Visit the main page" class="mw-wiki-logo" href="Main_Page.html"></a>
+	</div>
+	<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-navigation" class="vector-menu vector-menu-portal portal portal-first" aria-labelledby="p-navigation-label" role="navigation" 
+	 >
+	<h3 id="p-navigation-label">
+		<span>Navigation</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="n-mainpage-description"><a href="Main_Page.html" title="Visit the main page [z]" accesskey="z">Main page</a></li><li id="n-recentchanges"><a href="Special_RecentChanges.html" title="A list of recent changes in the wiki [r]" accesskey="r">Recent changes</a></li><li id="n-randompage"><a href="SNDCOPY.html" title="Load a random page [x]" accesskey="x">Random page</a></li><li id="n-help-mediawiki"><a href="https://www.mediawiki.org/wiki/Special:MyLanguage/Help:Contents">Help about MediaWiki</a></li></ul>
+		
+	</div>
+</nav>
+
+
+	<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-tb" class="vector-menu vector-menu-portal portal" aria-labelledby="p-tb-label" role="navigation" 
+	 >
+	<h3 id="p-tb-label">
+		<span>Tools</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="t-whatlinkshere"><a href="Special_WhatLinksHere/RIGHT%24.html" title="A list of all wiki pages that link here [j]" accesskey="j">What links here</a></li><li id="t-recentchangeslinked"><a href="Special_RecentChangesLinked/RIGHT%24.html" rel="nofollow" title="Recent changes in pages linked from this page [k]" accesskey="k">Related changes</a></li><li id="t-specialpages"><a href="Special_SpecialPages.html" title="A list of all special pages [q]" accesskey="q">Special pages</a></li><li id="t-print"><a href="javascript:print();" rel="alternate" title="Printable version of this page [p]" accesskey="p">Printable version</a></li><li id="t-permalink"><a href="index79c6.html?title=RIGHT$&amp;oldid=23352" title="Permanent link to this revision of the page">Permanent link</a></li><li id="t-info"><a href="index24fe.html?title=RIGHT$&amp;action=info" title="More information about this page">Page information</a></li></ul>
+		
+	</div>
+</nav>
+
+
+	
+</div>
+
+</div>
+
+<footer id="footer" class="mw-footer" role="contentinfo" >
+	<ul id="footer-info" >
+		<li id="footer-info-lastmod"> This page was last edited on 17 February 2021, at 12:40.</li>
+	</ul>
+	<ul id="footer-places" >
+		<li id="footer-places-privacy"><a href="My_wiki_Privacy_policy.html" title="My wiki:Privacy policy">Privacy policy</a></li>
+		<li id="footer-places-about"><a href="My_wiki_About.html" title="My wiki:About">About QB64 Wiki</a></li>
+		<li id="footer-places-disclaimer"><a href="My_wiki_General_disclaimer.html" title="My wiki:General disclaimer">Disclaimers</a></li>
+	</ul>
+	<ul id="footer-icons" class="noprint">
+		<li id="footer-poweredbyico"><a href="https://www.mediawiki.org/"><img src="resources/assets/poweredby_mediawiki_88x31.png" alt="Powered by MediaWiki" srcset="/wiki/resources/assets/poweredby_mediawiki_132x47.png 1.5x, /wiki/resources/assets/poweredby_mediawiki_176x62.png 2x" width="88" height="31" loading="lazy"/></a></li>
+	</ul>
+	<div style="clear: both;"></div>
+</footer>
+
+
+
+<script>(RLQ=window.RLQ||[]).push(function(){mw.config.set({"wgPageParseReport":{"limitreport":{"cputime":"0.071","walltime":"0.209","ppvisitednodes":{"value":217,"limit":1000000},"postexpandincludesize":{"value":2536,"limit":2097152},"templateargumentsize":{"value":282,"limit":2097152},"expansiondepth":{"value":3,"limit":40},"expensivefunctioncount":{"value":0,"limit":100},"unstrip-depth":{"value":0,"limit":20},"unstrip-size":{"value":0,"limit":5000000},"timingprofile":["100.00%   87.455      1 -total"," 23.57%   20.609      2 Template:CodeStart"," 14.65%   12.815      2 Template:CodeEnd"," 12.66%   11.069      2 Template:Text","  9.63%    8.422      1 Template:PageNavigation","  9.09%    7.946      1 Template:PageDescription","  6.42%    5.618     25 Template:Cl","  6.10%    5.332      1 Template:PageSyntax","  5.58%    4.884      1 Template:PageParameters","  4.58%    4.006      2 Template:OutputStart"]},"cachereport":{"timestamp":"20210707130141","ttl":86400,"transientcontent":false}}});mw.config.set({"wgBackendResponseTime":1659});});</script></body>
+<!-- Mirrored from www.qb64.org/wiki/RIGHT$ by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 07 Aug 2021 13:23:39 GMT -->
+</html>

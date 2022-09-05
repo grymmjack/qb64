@@ -1,0 +1,612 @@
+
+<!DOCTYPE html>
+<html class="client-nojs" lang="en" dir="ltr">
+
+<!-- Mirrored from www.qb64.org/wiki/Port_Access_Libraries by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 07 Aug 2021 12:43:33 GMT -->
+<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=UTF-8" /><!-- /Added by HTTrack -->
+<head>
+<meta charset="UTF-8"/>
+<title>Port Access Libraries - QB64 Wiki</title>
+<script>document.documentElement.className="client-js";RLCONF={"wgBreakFrames":!1,"wgSeparatorTransformTable":["",""],"wgDigitTransformTable":["",""],"wgDefaultDateFormat":"dmy","wgMonthNames":["","January","February","March","April","May","June","July","August","September","October","November","December"],"wgRequestId":"YOWkU1pP-65vp3So6LulyAAAANg","wgCSPNonce":!1,"wgCanonicalNamespace":"","wgCanonicalSpecialPageName":!1,"wgNamespaceNumber":0,"wgPageName":"Port_Access_Libraries","wgTitle":"Port Access Libraries","wgCurRevisionId":16556,"wgRevisionId":16556,"wgArticleId":553,"wgIsArticle":!0,"wgIsRedirect":!1,"wgAction":"view","wgUserName":null,"wgUserGroups":["*"],"wgCategories":[],"wgPageContentLanguage":"en","wgPageContentModel":"wikitext","wgRelevantPageName":"Port_Access_Libraries","wgRelevantArticleId":553,"wgIsProbablyEditable":!1,"wgRelevantPageIsProbablyEditable":!1,"wgRestrictionEdit":[],"wgRestrictionMove":[]};RLSTATE={"site.styles":"ready","noscript":"ready",
+"user.styles":"ready","user":"ready","user.options":"loading","skins.vector.styles.legacy":"ready","mediawiki.toc.styles":"ready"};RLPAGEMODULES=["site","mediawiki.page.startup","mediawiki.page.ready","mediawiki.toc","skins.vector.legacy.js"];</script>
+<script>(RLQ=window.RLQ||[]).push(function(){mw.loader.implement("user.options@1hzgi",function($,jQuery,require,module){/*@nomin*/mw.user.tokens.set({"patrolToken":"+\\","watchToken":"+\\","csrfToken":"+\\"});
+});});</script>
+<link rel="stylesheet" href="loadd8b0.css?lang=en&amp;modules=mediawiki.toc.styles%7Cskins.vector.styles.legacy&amp;only=styles&amp;skin=vector"/>
+<script async="" src="load52c0.php?lang=en&amp;modules=startup&amp;only=scripts&amp;raw=1&amp;skin=vector"></script>
+<meta name="generator" content="MediaWiki 1.35.2"/>
+<link rel="shortcut icon" href="https://www.qb64.org/favicon.ico"/>
+<link rel="search" type="application/opensearchdescription+xml" href="opensearch_desc.php" title="QB64 Wiki (en)"/>
+<link rel="EditURI" type="application/rsd+xml" href="api-result251f.xml?action=rsd"/>
+<link rel="alternate" type="application/atom+xml" title="QB64 Wiki Atom feed" href="feeda295.xml?title=Special:RecentChanges&amp;feed=atom"/>
+<!--[if lt IE 9]><script src="/wiki/resources/lib/html5shiv/html5shiv.js"></script><![endif]-->
+</head>
+<body class="mediawiki ltr sitedir-ltr mw-hide-empty-elt ns-0 ns-subject page-Port_Access_Libraries rootpage-Port_Access_Libraries skin-vector action-view skin-vector-legacy">
+<div id="mw-page-base" class="noprint"></div>
+<div id="mw-head-base" class="noprint"></div>
+<div id="content" class="mw-body" role="main">
+	<a id="top"></a>
+	<div id="siteNotice" class="mw-body-content"></div>
+	<div class="mw-indicators mw-body-content">
+	</div>
+	<h1 id="firstHeading" class="firstHeading" lang="en">Port Access Libraries</h1>
+	<div id="bodyContent" class="mw-body-content">
+		<div id="siteSub" class="noprint">From QB64 Wiki</div>
+		<div id="contentSub"></div>
+		<div id="contentSub2"></div>
+		
+		<div id="jump-to-nav"></div>
+		<a class="mw-jump-link" href="#mw-head">Jump to navigation</a>
+		<a class="mw-jump-link" href="#searchInput">Jump to search</a>
+		<div id="mw-content-text" lang="en" dir="ltr" class="mw-content-ltr"><div class="mw-parser-output"><p><a href="INP.html" title="INP">INP</a> and <a href="OUT.html" title="OUT">OUT</a> are often used to access port registers, but in QB64 this capability is limited so here are some DLL Libraries:
+</p><p><br />
+</p>
+<center><b>INPOUT32.DLL</b></center>
+<dl><dd>The following download links have the DLL and sample BAS file to show how it works with an LPT (parallel) port at &amp;H378(888):</dd></dl>
+<center><b><a rel="nofollow" class="external text" href="http://dl.dropbox.com/u/8440706/inpout32.zip">Download InpOut32.DLL and example program</a></b></center>
+<center><b><a rel="nofollow" class="external text" href="http://www.highrez.co.uk/scripts/download.asp?package=InpOutBinaries">Download of 32 and 64 bit versions of INPOUT</a></b></center>
+<center><b>Note: QB64 requires all DLL files to either be with the program or in the C:\WINDOWS\SYSTEM32 or WOW folder!</b></center>
+<p><br />
+</p>
+<div id="toc" class="toc" role="navigation" aria-labelledby="mw-toc-heading"><input type="checkbox" role="button" id="toctogglecheckbox" class="toctogglecheckbox" style="display:none" /><div class="toctitle" lang="en" dir="ltr"><h2 id="mw-toc-heading">Contents</h2><span class="toctogglespan"><label class="toctogglelabel" for="toctogglecheckbox"></label></span></div>
+<ul>
+<li class="toclevel-1 tocsection-1"><a href="#LPT_Ports"><span class="tocnumber">1</span> <span class="toctext">LPT Ports</span></a></li>
+<li class="toclevel-1 tocsection-2"><a href="#Parallel_Port_Registers"><span class="tocnumber">2</span> <span class="toctext">Parallel Port Registers</span></a></li>
+<li class="toclevel-1 tocsection-3"><a href="#COM_Ports"><span class="tocnumber">3</span> <span class="toctext">COM Ports</span></a></li>
+<li class="toclevel-1 tocsection-4"><a href="#Serial_Communication_Registers"><span class="tocnumber">4</span> <span class="toctext">Serial Communication Registers</span></a></li>
+<li class="toclevel-1 tocsection-5"><a href="#Reference"><span class="tocnumber">5</span> <span class="toctext">Reference</span></a></li>
+</ul>
+</div>
+
+<h2><span class="mw-headline" id="LPT_Ports">LPT Ports</span></h2>
+<center><b>Parallel Ports do Not Require an External LPT Device Connection to Function.</b></center>
+<p><br />
+</p>
+<dl><dd><i>Example 1:</i> Reading the Parallel Port Data, Status and Control register settings before and after reversing it.</dd></dl>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: Courier, monospace; background-color: darkblue; color: lightgrey; word-wrap: break-word;"> <i> </i>
+<a href="DECLARE_DYNAMIC_LIBRARY.html" title="DECLARE DYNAMIC LIBRARY"><span style="color:#87cefa;">DECLARE DYNAMIC LIBRARY</span></a> "inpout32"
+    <a href="FUNCTION.html" title="FUNCTION"><span style="color:#87cefa;">FUNCTION</span></a> Inp32% (<a href="BYVAL.html" class="mw-redirect" title="BYVAL"><span style="color:#87cefa;">BYVAL</span></a> PortAddress <a href="AS.html" title="AS"><span style="color:#87cefa;">AS</span></a> <a href="INTEGER.html" title="INTEGER"><span style="color:#87cefa;">INTEGER</span></a>)
+    <a href="SUB.html" title="SUB"><span style="color:#87cefa;">SUB</span></a> Out32 (<a href="BYVAL.html" class="mw-redirect" title="BYVAL"><span style="color:#87cefa;">BYVAL</span></a> PortAddress <a href="AS.html" title="AS"><span style="color:#87cefa;">AS</span></a> <a href="INTEGER.html" title="INTEGER"><span style="color:#87cefa;">INTEGER</span></a>, <a href="BYVAL.html" class="mw-redirect" title="BYVAL"><span style="color:#87cefa;">BYVAL</span></a> Value <a href="AS.html" title="AS"><span style="color:#87cefa;">AS</span></a> <a href="INTEGER.html" title="INTEGER"><span style="color:#87cefa;">INTEGER</span></a>)
+<a href="DECLARE_LIBRARY.html" title="DECLARE LIBRARY"><span style="color:#87cefa;">END DECLARE</span></a>
+
+baseadd = 888 'base address for most LPT printers is <a href="%26H.html" title="&amp;H"><span style="color:#87cefa;">&amp;H</span></a>378
+
+LPTport (baseadd)
+<a href="DELAY.html" title="DELAY"><span style="color:#87cefa;">_DELAY</span></a> 2
+
+Out32 baseadd + 2, 32 'set control bit 6(C5) high to reverse port to read incoming data
+<a href="DELAY.html" title="DELAY"><span style="color:#87cefa;">_DELAY</span></a> 2 'sets Data port to 0. may not work on all parallel ports
+LPTport (baseadd)
+
+<a href="DELAY.html" title="DELAY"><span style="color:#87cefa;">_DELAY</span></a> 2
+
+Out32 baseadd + 2, 12 'control port is normally set to 12
+Out32 baseadd, 227 'any ASCII code value from 0 to 255. Code 227 prints p character
+
+LPTport (baseadd)
+
+<a href="SUB.html" title="SUB"><span style="color:#87cefa;">SUB</span></a> LPTport (address)
+basedata% = Inp32(address)
+<a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> "Data:"; basedata%; <a href="CHR%24.html" title="CHR$"><span style="color:#87cefa;">CHR$</span></a>(basedata%) 'read or write
+<a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> "Status:"; Inp32(address + 1) 'base + 1 read only status from device!
+<a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> "Control:"; Inp32(address + 2) 'base + 2 read or write. 32 or over reverses port
+<a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a>
+<a href="END_SUB.html" class="mw-redirect" title="END SUB"><span style="color:#87cefa;">END SUB</span></a> <i> </i>
+</p>
+<center><span style="font-family: Courier New, Courier, monospace; font-size: 0.80em; line-height: 50%;">Contributed by Ted Weissgerber</span></center>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: Courier; background-color: black; color: white;">Data: 255
+Status: 120
+Control: 12
+
+Data: 0
+Status: 120
+Control: 32
+
+Data: 227 π
+Status: 120
+Control: 12
+</p>
+<center><a rel="nofollow" class="external text" href="../../i301.photobucket.com/albums/nn53/burger2227/Inpout32.html">Screenshot of demo without a printer on the port</a></center>
+<p><br />
+</p>
+<h2><span class="mw-headline" id="Parallel_Port_Registers">Parallel Port Registers</span></h2>
+<center><i>Note:</i> The normal LPT1 base port is <b>&amp;H378</b>(888), but it could also be <b>&amp;H278</b>(632) or <b>&amp;H3BC</b>(956).</center>
+<p style="padding: 1em; line-height:100%; margin-left:10px; white-space: pre; font-family: courier; background-color: white; color: darkgreen;">              __________________________________________________________   
+              \                                                        /
+               \  <b>13  12  11  10   9   8   7   6   5   4   3   2   1 </b> /
+                \ <b><span style="color:orange">S4  S5  S7  S6</span>  <span style="color:blue">D7  D6  D5  D4  D3  D2  D1  D0</span>  <span style="color:red">C0</span></b> /
+                 \  <b>25  24  23  22  21  20  19  18  17  16  15  14 </b> /
+                  \ <b><span style="color:lime">G7  G6  G5  G4  G3  G2  G1  G0</span>  <span style="color:red">C3  C2</span>  <span style="color:orange">S3</span>  <span style="color:red">C1</span></b> /
+                   \______________________________________________/
+ 
+                                    <b> DB-25 Female </b>
+             10 Ack, 11 Busy, 12 PaperOut, 13 Select, 14 LFeed, 15 Error
+</p>
+<center><b><a rel="nofollow" class="external text" href="https://www.google.com/search?q=LPT+pinout&amp;biw=1209&amp;bih=569&amp;tbm=isch&amp;imgil=NfwoAN_aS0iIbM%253A%253B_8oZPMerY-hDtM%253Bhttp%25253A%25252F%25252Fwww.firewall.cx%25252Fnetworking-topics%25252Fcabling-utp-fibre%25252F120-network-parallel-cable.html&amp;source=iu&amp;pf=m&amp;fir=NfwoAN_aS0iIbM%253A%252C_8oZPMerY-hDtM%252C_&amp;usg=__9NooKAtd0Kyj3aYOxNGvzhfYryk%3D&amp;ved=0ahUKEwjYjY6JyrPLAhXMdT4KHfhNBo4QyjcIJw&amp;ei=eRPgVpjtCczr-QH4m5nwCA#imgrc=xZhuzmkJ7DEvbM%3A">Parallel Port Pinout</a></b></center>
+<dl><dd><b>DO NOT RUN HIGH CURRENT DEVICES with the 5 volt DC output! Use <a rel="nofollow" class="external text" href="http://en.wikipedia.org/wiki/Opto-isolator">opto-isolators!</a> with a separate power supply.</b>
+<dl><dd><b>Use appropriate grounding between devices with the 8 ground pins(green in Pinout diagram) provided!</b></dd></dl></dd></dl>
+<p><br />
+</p>
+<center><b>Data Register (BaseAddress)</b></center>
+<dl><dd><b>Read or Write</b> in normal operation.  D0 to D7 data byte values from 0 to 255 can be converted to <a href="ASCII.html" title="ASCII">ASCII</a> characters in a device. Setting the byte value can turn certain pins on or off to control switching devices. <b>Read only</b> to read input in reverse mode set by C5 bit on.</dd></dl>
+<center><b>Software control in normal output mode. <span style="color:red">Data pin voltages can be set to 0 or 5 volts DC in Reverse mode only!</span></b></center>
+<p><br />
+</p>
+<dl><dd><dl><dd><ul><li>Pin <a href="BIT.html" title="BIT">Bit</a> values on: <b>D0</b>(+ 1), <b>D1</b>(+ 2), <b>D2</b>(+ 4), <b>D3</b>(+ 8), <b>D4</b>(+ 16), <b>D5</b>(+ 32), <b>D6</b>(+ 64), <b>D7</b>(+ 128)</li></ul></dd></dl></dd></dl>
+<center><b>Note:</b> The Data port will be in normal output mode and set to 255 with all pins on at startup or reboot!</center>
+<center>Reverse read only mode may set all byte values to 0 or 255 if all pins are held high by the port for pull down input.</center>
+<p><br />
+</p>
+<center><b>Status Register (BaseAddress + 1)</b></center>
+<dl><dd><b>Read only!</b> Register normally used to <b>monitor the status of a printer or other device that is connected to the parallel port</b>. Pins S3 to S6 are held high by resistors so that it will read 120(or 127) when nothing is connected to the pins. A device can manipulate the read only status port value by grounding certain pins. When 5 volts is fed to a pin, bit will stay on. S7 is inverted so that it adds 128 to the port value when it is grounded. Otherwise S7 is 0 by default. S0, the timeout bit, can be reset off by software when set by EPP mode. Bits S1 and S2 are not used. <b>If the port reads 255 the parallel port is not installed.</b></dd></dl>
+<center><b>Pin voltages can be set to 0 or 5 volts DC by chip devices or grounding switches to turn bits 3 to 6 off or bit 7 on.</b></center>
+<dl><dd><dl><dd><ul><li><b><span style="color:green">S0</span></b> Low can be set in EPP mode timeout only(normally off). <b>INP32</b>(889) <a href="AND.html" title="AND">AND</a> 1 = 1 when bit is on <b>(no pin)</b></li>
+<li><b>S3</b> Low for error, offline or paper end(normally on). <b>INP32</b>(889) <a href="AND.html" title="AND">AND</a> 8 = 8 when bit is on, pin is high</li>
+<li><b>S4</b> High for printer selected(normally on). <b>INP32</b>(889) <a href="AND.html" title="AND">AND</a> 16 = 16 when bit is on, pin is high</li>
+<li><b>S5</b> High for out of paper(normally on). <b>INP32</b>(889) <a href="AND.html" title="AND">AND</a> 32 = 32 when bit is on, pin is high</li>
+<li><b>S6</b> Low for Acknowledge(normally on). <b>INP32</b>(889) <a href="AND.html" title="AND">AND</a> 64 = 64 when bit is on, pin is high</li>
+<li><b><span style="color:red">S7</span></b> High for busy, offline, error.(normally off) <b>INP32</b>(889) <a href="AND.html" title="AND">AND</a> 128 = 128 when bit is on, pin is pulled low</li></ul></dd></dl></dd></dl>
+<center><b><span style="color:green">Bit S0 has no pin and can be set at a timeout or reset to 0 by software in EPP mode only.</span></b></center>
+<center><b><span style="color:red">Pin S7 is inverted so that a low pin signal turns the bit on.</span></b></center>
+<p><br />
+</p>
+<center>4 bit binary data can be read using pins S3 to S6. The port byte value can be divided by 8 to get the decimal values 0 to 15.</center>
+<p><br />
+</p>
+<center><b>Control Register (BaseAddress + 2)</b></center>
+<dl><dd><b>Read or Write.</b> Register is used to send messages to a printer or other device that is connected to the port. Usually the port sets itself to read 12(C2 and C3 on) after about 30 seconds. The C0, C1, and C3 pins are inverted while C2 is not. Inverted pins are set on when a bit is set low(off). C4 and C5 have no pins, but can be set internally by a program. Setting C4(16) can turn off the IRQ interrupt. When C5 is on(32) the Data port is reversed to read data sent from a device.</dd></dl>
+<center><b>WARNING! Software or port hardware controls the port. <span style="color:red">Do NOT attempt to change pin voltages!</span></b></center>
+<dl><dd><dl><dd><ul><li><b><span style="color:red">C0</span></b> Low(bit on) pulse strobe data sent.(normally off) <b>OUT32</b> 890, <b>INP32</b>(890) <a href="OR.html" title="OR">OR</a> 1 turns bit on, pin low</li>
+<li><b><span style="color:red">C1</span></b> Low(bit on) linefeed or auto feed.(normally off) <b>OUT32</b> 890, <b>INP32</b>(890) <a href="OR.html" title="OR">OR</a> 2 turns bit on, pin low</li>
+<li><b>C2</b> Low(bit off) pulse Initiate.(normally on) <b>OUT32</b> 890, <b>INP32</b>(890) <a href="OR.html" title="OR">OR</a> 4 turns bit on, pin high</li>
+<li><b><span style="color:red">C3</span></b> Low(bit on) printer select in.(normally on) <b>OUT32</b> 890, <b>INP32</b>(890) <a href="OR.html" title="OR">OR</a> 8 turns bit on, pin low</li>
+<li><b><span style="color:green">C4</span></b> High(bit on) IRQ interrupt off(normally off). <b>OUT32</b> 890, <b>INP32</b>(890) <a href="OR.html" title="OR">OR</a> 16 turns bit on <b>(no pin)</b></li>
+<li><b><span style="color:green">C5</span></b> High(bit on) reverse data port for input read only(normally off). <b>OUT32</b> 890, <b>INP32</b>(890) <a href="OR.html" title="OR">OR</a> 32 turns bit on <b>(no pin)</b></li></ul></dd></dl></dd></dl>
+<center><b><span style="color:red">Red pin numbers are inverted so that bits on set corresponding output pins low and bits off set pins high.</span></b></center>
+<center><b><span style="color:green">Bits C4 and C5 designate internal(no pin) software enabled control port register bits</span></b></center>
+<p><br />
+</p>
+<dl><dd>Use OUT32 with <a href="OR.html" title="OR">OR</a> to turn a bit on or <a href="XOR.html" class="mw-redirect" title="XOR">XOR</a> to change the current bit status. INP32 with <a href="AND.html" title="AND">AND</a> can determine if a bit is on or off(0).</dd></dl>
+<p style="text-align: center">(<a href="#toc">Return to Table of Contents</a>)</p>
+<h2><span class="mw-headline" id="COM_Ports">COM Ports</span></h2>
+<center><b>Serial Communication Ports Require an External Serial Device or PC COM Port Connection to function!</b></center>
+<p><br />
+</p>
+<dl><dd><i>Example 2:</i> A 3 wire Teletype program that allows two computers to serially communicate through each keyboard:</dd></dl>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: Courier, monospace; background-color: darkblue; color: lightgrey; word-wrap: break-word;"> <i> </i>
+<a href="DECLARE_DYNAMIC_LIBRARY.html" title="DECLARE DYNAMIC LIBRARY"><span style="color:#87cefa;">DECLARE DYNAMIC LIBRARY</span></a> "inpout32"
+  <a href="FUNCTION.html" title="FUNCTION"><span style="color:#87cefa;">FUNCTION</span></a> Inp32% (<a href="BYVAL.html" class="mw-redirect" title="BYVAL"><span style="color:#87cefa;">BYVAL</span></a> PortAddress <a href="AS.html" title="AS"><span style="color:#87cefa;">AS</span></a> <a href="INTEGER.html" title="INTEGER"><span style="color:#87cefa;">INTEGER</span></a>)
+  <a href="SUB.html" title="SUB"><span style="color:#87cefa;">SUB</span></a> Out32 (<a href="BYVAL.html" class="mw-redirect" title="BYVAL"><span style="color:#87cefa;">BYVAL</span></a> PortAddress <a href="AS.html" title="AS"><span style="color:#87cefa;">AS</span></a> <a href="INTEGER.html" title="INTEGER"><span style="color:#87cefa;">INTEGER</span></a>, <a href="BYVAL.html" class="mw-redirect" title="BYVAL"><span style="color:#87cefa;">BYVAL</span></a> Value <a href="AS.html" title="AS"><span style="color:#87cefa;">AS</span></a> <a href="INTEGER.html" title="INTEGER"><span style="color:#87cefa;">INTEGER</span></a>)
+<a href="DECLARE_LIBRARY.html" title="DECLARE LIBRARY"><span style="color:#87cefa;">END DECLARE</span></a>
+
+Baseadd% = <a href="%26H.html" title="&amp;H"><span style="color:#87cefa;">&amp;H</span></a>3F8 'any valid COM port address (see the Windows Hardware COM port Properties)
+Out32 Baseadd% + 3, <a href="%26H.html" title="&amp;H"><span style="color:#87cefa;">&amp;H</span></a>80 'set Divisor Latch Access Bit using 128 Hex (LCR)
+  'Out32 Baseadd%, <a href="%26H.html" title="&amp;H"><span style="color:#87cefa;">&amp;H</span></a>60 '  1200 baud    96   Write DL Low Byte
+  'Out32 Baseadd%, <a href="%26H.html" title="&amp;H"><span style="color:#87cefa;">&amp;H</span></a>30 '  2400         48
+  'Out32 Baseadd%, <a href="%26H.html" title="&amp;H"><span style="color:#87cefa;">&amp;H</span></a>18 '  4800         24
+Out32 Baseadd%, <a href="%26H.html" title="&amp;H"><span style="color:#87cefa;">&amp;H</span></a>C '      9600         12  Maximum baud rate in QB!
+Out32 Baseadd% + 1, <a href="%26H.html" title="&amp;H"><span style="color:#87cefa;">&amp;H</span></a>0   'Write DL High Byte 
+  'Set Base and IER back to normal registers, and set Data requirements
+Out32 Baseadd% + 3, <a href="%26H.html" title="&amp;H"><span style="color:#87cefa;">&amp;H</span></a>3 'set 8 bit word(bit0 + bit1=3), 1 Stop Bit(0ff), No Parity(0ff)
+  'COM should now be set as N, 8, 1 by the LCR. Like an <a href="OPEN.html" title="OPEN"><span style="color:#87cefa;">OPEN</span></a> statement.
+Out32 Baseadd% + 2, <a href="%26H.html" title="&amp;H"><span style="color:#87cefa;">&amp;H</span></a>3   'Flush receiver FIFO buffer, enable FIFO (FCR)
+<a href="DO...html" title="DO...LOOP"><span style="color:#87cefa;">DO</span></a>: x$ = <a href="INKEY%24.html" title="INKEY$"><span style="color:#87cefa;">INKEY$</span></a>
+  <a href="IF...html" title="IF...THEN"><span style="color:#87cefa;">IF</span></a> x$ = <a href="CHR%24.html" title="CHR$"><span style="color:#87cefa;">CHR$</span></a>(27) <a href="THEN.html" title="THEN"><span style="color:#87cefa;">THEN</span></a> <a href="EXIT_DO.html" title="EXIT DO"><span style="color:#87cefa;">EXIT DO</span></a>          'Escape key quits
+  <a href="IF...html" title="IF...THEN"><span style="color:#87cefa;">IF</span></a> x$ &gt; "" <a href="THEN.html" title="THEN"><span style="color:#87cefa;">THEN</span></a> Out32 Baseadd%, <a href="ASC.html" title="ASC"><span style="color:#87cefa;">ASC</span></a>(x$)     'Write Transmit buffer data
+  <a href="IF...html" title="IF...THEN"><span style="color:#87cefa;">IF</span></a> (Inp32(Baseadd% + 5) <a href="AND_(boolean).html" title="AND (boolean)"><span style="color:#87cefa;">AND</span></a> 1) <a href="THEN.html" title="THEN"><span style="color:#87cefa;">THEN</span></a>         'Data ready = 1 (LSR)
+    <a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> <a href="CHR%24.html" title="CHR$"><span style="color:#87cefa;">CHR$</span></a>(Inp32(Baseadd%));              'Display Receive buffer data"
+  <a href="END_IF.html" class="mw-redirect" title="END IF"><span style="color:#87cefa;">END IF</span></a>                                  
+<a href="LOOP.html" title="LOOP"><span style="color:#87cefa;">LOOP</span></a> <i> </i>
+</p>
+<center><span style="font-family: Courier New, Courier, monospace; font-size: 0.80em; line-height: 50%;">Adapted from code by T3SL4</span></center>
+<dl><dd>Possible port addresses are &amp;H3F8(1016) = COM1, &amp;H2F8(760) = COM2, &amp;H3E8(1000) = COM3 and &amp;H2E8(744) = COM 4.</dd>
+<dd>Connect each COM port transmit line to the opposing receive line on the other PC. Connect both COM grounds together.</dd></dl>
+<center><span style="color:red"><b>Serial Communication Ports Require an External Serial Device or PC COM Port Connection to function!</b></span></center>
+<p><br />
+</p>
+<p style="text-align: center">(<a href="#toc">Return to Table of Contents</a>)</p>
+<h2><span class="mw-headline" id="Serial_Communication_Registers">Serial Communication Registers</span></h2>
+<center>Two PC's can communicate between the COM ports using a <a rel="nofollow" class="external text" href="http://www.lammertbies.nl/comm/info/RS-232_null_modem.html">Null modem cable</a>.</center>
+<p style="padding: 1em; line-height:100%; margin-left:10px; white-space: pre; font-family: courier; background-color: white; color: darkgreen;">
+                            _______________________________
+                            \                             /
+                             \  <b> 5    4    3    2    1</b>   /
+                              \ <b>GND  DTR  TXD  RXD  DCD</b> / 
+                               \<b>   9    8    7    6   </b> /
+                                \<b> RI   CTS  RTS  DSR </b> /
+                                 \___________________/ 
+
+                                 <b> RS-232 Female (DB-9)</b>
+</p>
+<center><b><a rel="nofollow" class="external text" href="https://www.google.com/search?q=com+port+pinout&amp;hl=en&amp;prmd=imvns&amp;tbm=isch&amp;tbo=u&amp;source=univ&amp;sa=X&amp;ei=6OivT5arEcjq0gG87riHDA&amp;sqi=2&amp;ved=0CHwQsAQ&amp;biw=970&amp;bih=610">Serial Communication Port Pinouts</a></b></center>
+<center> DCD = Data Carrier Detect, RXD = Receive Data, TXD = Transmit Data, DTR = Data Terminal Ready, GND = Signal Ground</center>
+<center> DSR = Data Set Ready, RTS = Request to Send, CTS = Clear to Send, RI = Ring Indicator</center>
+<p><br />
+</p>
+<center><b>Serial Communication Ports Require an External Serial Device or PC COM Port Connection to function!</b></center>
+<p>A Serial port can use extra Registers due to the use of a UART chip. When the Base Address is Read, the chip supplies the data from the FIFO(First In First Out) Receive Buffer. When Written to, it sends data to the FIFO Transmit Buffer. If the DLA Bit is On in the LCR register, then the UART base register accepts the Divisor Latch Low Byte data.
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:10px; white-space: pre; font-family: courier; background-color: white; color: darkgreen;">         <b>Address       DLAB   INP/OUT      Abb.     Register Name</b>
+
+	 Base + 0      Off     Write        -     Transmitter Hold Buffer
+	               Off     Read         -     Receiver Buffer
+		       On    Read/Write     -     Divisor Latch Low Byte
+	 Base + 1      Off   Read/Write    IER    Interrupt Enable Register
+		       On    Read/Write     -     Divisor Latch High Byte
+	 Base + 2      --    Read Only     IIR    Interrupt ID Register
+		       --    Write Only    FCR    FIFO Control Register
+	 Base + 3      <i>Set</i>   Read/Write    LCR    Line Control Register(<i>DLAB On/Off</i>)
+	 Base + 4      --    Read/Write    MCR    Modem Control Register
+	 Base + 5      --    Read Only     LSR    Line Status Register
+	 Base + 6      --    Read Only     MSR    Modem Status Register"
+	 Base + 7      --    Read/Write     -     Scratch Register (Unused)"
+</p>
+<p>Also there are two Base + 1 Registers. The IER and the DL High Byte. The two Base + 2 Registers (IIR &amp; FCR) act similar to the Base Buffers. The UART chips also use FIFO buffers to receive and send data at the same time. The most common UARTS used today are the 16550 series chips. You can add the bit values to determine the bits you want Written or Read in each register!
+</p>
+<center><b>The COM Data Register (BaseAddress)</b></center>
+<p>Like the bi-directional Parallel port, the COM Base Address can send data to a device and also can receive data at the same time. It accomplishes this by using two FIFO (First In First Out) buffers. To send Data you can use <a href="PRINT_(file_statement).html" title="PRINT (file statement)">PRINT #</a> or <a href="OUT.html" title="OUT">OUT</a> a value to the Base Address. To read data you can use <a href="INP.html" title="INP">INP</a>(baseaddress) or use <a href="OPEN_COM.html" title="OPEN COM">OPEN COM</a> with <a href="INPUT%24.html" title="INPUT$">INPUT$</a> (bytes, <a href="OPEN_COM.html" title="OPEN COM">COMnumber</a>) while <a href="LOC.html" title="LOC">LOC</a>(<a href="OPEN_COM.html" title="OPEN COM">COMnumber</a>) checks for data in the receive buffer. The Base can also set the <b>Divisor Latch Low Byte</b>, which can also help set the baud rate of the port.
+</p><p><br />
+</p>
+<center><b>Interrupt Enable Register (BaseAddress + 1)</b></center>
+<p>This register is fairly simple to use. The only bits used are 0 to 3. You simply set a bit high to enable the appropriate Interrupt.
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:10px; white-space: pre; font-family: courier; background-color: white; color: darkgreen;">            <b>Bit #      Bit Value         Interrupt Description</b>
+	       3           8         Enable Modem Status Interrupt
+	       2           4         Enable Receiver Line Status Interrupt
+	       1           2         Enable Transmit Hold Register Empty Interrupt
+	       0           1         Enable Received Data Available Interrupt
+</p>
+<p>Once the Interrupts are set, you can monitor the port Interrupts in the Read only <b>IIR</b> Interrupt Identification Register in a COM program routine. You just add the bit on values to use more than one Interrupt Enable and use OUT BaseAdd + 1, bitstotal. The IIR will tell if an Interrupt occurs! The IER register also can be read to find the present settings with INP. Like the Base, the IER is used in DLAB Mode for the Divisor High Byte."
+</p><p><br />
+</p>
+<center><b>Interrupt Identification Register (BaseAddress + 2)</b></center>
+<p>This register is a <b>Read Only</b> Register! It monitors the FIFO status and Interrupts sent to the CPU. The Interrupts are enabled in the IER. You can use INP to read it using INP(BaseAddress + 2) AND 2 ^ bitnumber to see if a bit is on or off. The FIFO and Interrupt Status read 2 bits as below:
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:10px; white-space: pre; font-family: courier; background-color: white; color: darkgreen;">               <b>Bit #          INP Value       Description</b> 
+	      7 and 6                     FIFO status
+	      1     1           192         FIFO Enabled
+	      0     1            64         FIFO Enabled but Unusable  
+	      0     0          &lt; 64         No FIFO Available 
+	         5               32       64 Byte Fifo Enabled (16750 UART)
+	         4                0       Reserved (not used)
+	         3                0       Reserved on 8250 and 16450 UART's
+	                          8       16550 UART(or higher) Time-out Pending
+	      2 and 1                     Interrupt Status (Bit value Priority)
+	      1     1             6         Receiver Line Status Interrupt (Highest)
+	      1     0             4         Received Data Available Interrupt
+	      0     1             2         Transmitter Hold Register Empty Inter.
+              0     0             0         Modem Status Interrupt (Lowest)
+	         0                1       1 = No Interrupt Pending. 0 = Interrupt Pending
+	
+                      &lt; denotes a byte value less than designated INP value
+</p>
+<p>For FIFO status, just compare the INP status with 192 using AND as below:
+</p>
+<center><span style="color:green">IF (Inp32(BaseAdd% + 2) AND 192) THEN PRINT "FIFO Enabled"</span></center>
+<p><br />
+</p>
+<center><b>First In / First Out Control Register (BaseAddress + 2)</b></center>
+<p>This Register also uses the BaseAddress + 2 address, but it is <b>Write Only</b>! You can NOT try to Read it! That just returns data from the <b>IIR</b> Register ONLY! The <b>FCR</b> register is just used to set Interrupt triggers and clear the data from the Recieve or Transmit buffers of 16550 or higher UARTS.
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:10px; white-space: pre; font-family: courier; background-color: white; color: darkgreen;">	       <b>Bit #            OUT Value     Description </b>
+	      7 and 6                       Interrupt Trigger Level  
+	      1     1             192         14 Byte Trigger 
+	      1     0             128         8 Byte Trigger 
+              0     1              64         4 Byte Trigger  
+	      0     0            &lt; 64         1 Byte Trigger
+	         5                 32       Enable 64 Byte FIFO (16750 UART only)
+                 4                  0       Reserved (not used) 
+	         3                  8       DMA Mode Select (mode 1 or 2)
+	         2                  4       Clear Transmit FIFO 
+	         1                  2       Clear Receive FIFO 
+	         0                  1       Enable FIFO's. 0 = Disabled FIFO"
+			    
+                     &lt; denotes a byte value less than designated OUT value
+</p>
+<p>If the trigger bytes are found in the FIFO buffer, then the Data Receive Available Interrupt in the IIR will trigger. Bits 1 and 2 clear the buffer when set hi. They will automatically reset to 0 when done. Data is lost when cleared or if bit 0 is set to 0. Be aware of this and use carefully! This register is only normally used to clear the buffers and enable them. The 0 bit must be set to 1 or both FIFO buffers are disabled! Reset it!
+</p><p><br />
+</p>
+<center><b>Line Control Register (BaseAddress + 3)</b></center>
+<p>This Register can determine the Word Length, Stop Bits, Parity and help set the Baud Rate of the Serial Port. For instance, OUT (BaseAddress + 3), 3 will set the Word Length to 8 with 1 Stop Bit and No Parity. Similar to OPEN COM, but you can also open COM ports other than COM1 or COM2 in this register. <b>Be sure to Write a Register value less than 128 after the DLAB baud is set!</b>
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:10px; white-space: pre; font-family: courier; background-color: white; color: darkgreen;">                <b>Bit #         Bit Value      Description</b>
+	         7              128        Divisor Latch Access Bit (set baud rate)
+	                      &lt; 128        Access Receive &amp; Transmit buffers &amp; IER
+	         6                0        Set Break Enable. 64 = Break in Receiver TD"
+	      5, 4, 3                      Parity Select 
+              X  X  0             0          No Parity (bit 3 off only)"
+	      0  0  1             8          Odd Parity  
+	      0  1  1            24          Even Parity  
+	      1  0  1            40          High Parity (Sticky) 
+	      1  1  1            56          Low Parity (Sticky) 
+	         2                0        One Stop Bit (normal)
+	                          4        2 Stop bits(wordlength 6,7,8) or 1.5 (5)"
+	      1 and 0                      Set Word Length 
+	      1     1             3          8 Bit Word (normal)
+	      1     0             2          7 Bit Word  
+	      0     1             1          6 Bit Word
+	      0     0             0          5 Bit Word  
+
+                     &lt; denotes a byte value less than designated OUT value
+</p>
+<p><br />
+</p>
+<center><b>The Divisor Latch Access Bit and Setting the Baud Rate</b></center>
+<p>You can set the Baud Rate first by sending 128 to the LCR with OUT. This forces the <b>Base</b> and <b>IER</b> Registers to accept the Divisor Latch Low and High Byte values respectively. In DLAB mode both registers can be written to or read to find the current Divisor byte settings! The Divisor value is the number that 115200 must be divided by to attain the baud rate:
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:10px; white-space: pre; font-family: courier; background-color: white; color: darkgreen;">        <b>Speed (BPS)      Divisor    High Byte(to Base + 1)  Low Byte(to Base)</b>
+	       50         2304             &amp;H9  (2304)            &amp;H0    (0) 
+	      300          384             &amp;H1  (256)             &amp;H80   (128)
+              600          192             &amp;H0                    &amp;HC0   (192) 
+	     1200           96             &amp;H0                    &amp;H60   (96) 
+	     2400           48             &amp;H0                    &amp;H30   (48)
+	     4800           24             &amp;H0                    &amp;H18   (24)
+	     9600           12             &amp;H0                    &amp;HC    (12)
+	    19200            6             &amp;H0                    &amp;H6    (6)
+	   115200            1             &amp;H0                    &amp;H1    (1)
+</p>
+<p>The divisor is based on 115,200 as the maximum Baud Rate. Speeds above 300 just send 0 to the IER, but it must be sent too! Below is a routine to set up any COM port without an OPEN statement. Simply use OUT to set it up:
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: courier; background-color: lightgrey; color: black;">        BaseAdd% = <a href="%26H.html" title="&amp;H"><span style="color:blue;">&amp;H</span></a>3F8         'use any valid COM base address on your PC
+	Out32 BaseAdd% + 3, <a href="%26H.html" title="&amp;H"><span style="color:blue;">&amp;H</span></a>80 'set DLAB baud rate divisor bit 7 on with 128 (LCR)
+	Out32 BaseAdd% + 1, <a href="%26H.html" title="&amp;H"><span style="color:blue;">&amp;H</span></a>0  'set DL High Byte on IE Register
+	Out32 BaseAdd%, <a href="%26H.html" title="&amp;H"><span style="color:blue;">&amp;H</span></a>60     'set DL Low Byte to 1200 baud (96) on Base Register
+	Out32 BaseAdd% + 3, <a href="%26H.html" title="&amp;H"><span style="color:blue;">&amp;H</span></a>3  'sets 8 bit Word, 1 Stop Bit, and No Parity (LCR) *	 
+</p>
+<dl><dd><i>Explanation:</i> Setting the LCR register's value below 128 resets it from DLAB mode to normal Base Buffer and <b>IER</b> operations</dd></dl>
+<p><br />		    
+</p>
+<center><b>Modem Control Register (BaseAddress + 4)</b></center>
+<p>Like the LCR Register, it is Read and Write! Bit 4 sets Loopback Mode that sends TD data back to RD buffer. Bits 1 and 0 force RTS and DTR signals. The Auxiliary Outputs are seldom used anymore! Just set those bits to 0.
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:10px; white-space: pre; font-family: courier; background-color: white; color: darkgreen;">             <b>Bit #         Bit Value         Description</b>
+	       4              16          LoopBack Mode (Test UART operation)
+	       3               8          Aux Output 2(control by other circuitry)
+	       2               4          Aux Output 1(MIDI, normally disconnected)
+	       1               2          Force Request to Send (RTS) 
+	       0               1          Force Data Terminal Ready (DTR)
+</p>
+<p><br />
+</p>
+<center><b>Line Status Register (BaseAddress + 5)</b></center>
+<p><b>Read Only</b> status register used to detect data buffer activity and errors. If ANY data error occurs, bit 7 will be turned on. Specific errors are also listed. Normally only Bit 0 is read, as these errors do not stop the port! Use this register to check for transfer errors.
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:10px; white-space: pre; font-family: courier; background-color: white; color: darkgreen;">             <b>Bit #         INP Value         Description</b>
+               7              128         Error in Received FIFO 
+	       6               64         Empty Data Hold Registers(TD and RD Idle)
+	       5               32         Empty Transmitter Hold Register(TD empty)
+	       4               16         Break Interrupt (RD Word Time Out)
+	       3                8         Framing Error (last bit not a Stop Bit)
+	       2                4         Parity Error
+	       1                2         Overrun Error (cannot read fast enough)
+	       0                1         Data Ready (Receiver ready to be read)
+</p>
+<p><br />				 
+</p>
+<center><b>Modem Status Register (BaseAddress + 6)</b></center>
+<p>This <b>Read Only</b> register monitors each bit each time read. Delta type bits denote any changes since the last time read. Bit 2 On indicates that there was a change from low to high on the RI line since the last read. Often used in modem data transfers!
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:10px; white-space: pre; font-family: courier; background-color: white; color: darkgreen;">              <b>Bit #         INP Value         Description</b>
+                7              128         Carrier Detect (CD) 
+                6               64         Ring Indicator (RI) 
+                5               32         Data Set Ready (DSR)
+                4               16         Clear To Send (CTS) 
+                3                8         Delta Data Carrier Detect 
+                2                4         Trailing Edge Ring Indicator 
+                1                2         Delta Data Set Ready 
+                0                1         Delta Clear to Send 
+</p>
+<p><br />
+</p>
+<center><b>The Scratch Register (BaseAddress + 7)</b></center>
+<p>This unused register can be Read and Written to. You can use it to hold data for later use. It can also be used to test for a valid COM port with a device or loopback plug on it. To test a port, Read this register and try to change it. Then Read it again. If the second reading has changed, then the COM port is accessible and ready to use with a device. Normally a Scratch Register will always read 255 if there is no device connected! <b>COM port registers will not work if the port is not connected to a serial device!</b>
+</p>
+<p style="text-align: center">(<a href="#toc">Return to Table of Contents</a>)</p>
+<h2><span class="mw-headline" id="Reference">Reference</span></h2>
+<p><i>See also:</i>
+</p>
+<ul><li><a href="DECLARE_DYNAMIC_LIBRARY.html" title="DECLARE DYNAMIC LIBRARY">DECLARE DYNAMIC LIBRARY</a></li>
+<li><a href="INP.html" title="INP">INP</a>, <a href="OUT.html" title="OUT">OUT</a></li>
+<li><a href="Windows_Libraries.html#Windows_Ports" title="Windows Libraries">Enumerating Windows Ports</a></li></ul>
+<p><br />
+</p>
+<hr />
+<center><i>Navigation:</i>
+<dl><dd><a href="Keyword_Reference_-_Alphabetical.html" title="Keyword Reference - Alphabetical">Keyword Reference - Alphabetical</a></dd>
+<dd><a href="Keyword_Reference_-_By_usage.html" title="Keyword Reference - By usage">Keyword Reference - By Usage</a></dd>
+<dd><a href="Main_Page.html" title="Main Page">Main Wiki Page</a></dd></dl></center>
+<!-- 
+NewPP limit report
+Cached time: 20210706173921
+Cache expiry: 86400
+Dynamic content: false
+Complications: []
+CPU time usage: 0.137 seconds
+Real time usage: 0.263 seconds
+Preprocessor visited node count: 986/1000000
+Post‐expand include size: 8351/2097152 bytes
+Template argument size: 1543/2097152 bytes
+Highest expansion depth: 3/40
+Expensive parser function count: 0/100
+Unstrip recursion depth: 0/20
+Unstrip post‐expand size: 0/5000000 bytes
+-->
+<!--
+Transclusion expansion time report (%,ms,calls,template)
+100.00%   88.197      1 -total
+ 19.50%   17.197      2 Template:CodeEnd
+ 12.76%   11.253      1 Template:TextStart
+ 10.11%    8.913     63 Template:Cl
+  8.33%    7.350      1 Template:PageNavigation
+  5.87%    5.179      2 Template:CodeStart
+  5.30%    4.673     22 Template:Text
+  4.85%    4.274      1 Template:TextEnd
+  4.09%    3.604      5 Template:Cb
+  3.88%    3.426     11 Template:WhiteStart
+-->
+
+<!-- Saved in parser cache with key i4224360_mw2-mw_:pcache:idhash:553-0!canonical and timestamp 20210706173921 and revision id 16556
+ -->
+</div></div><div class="printfooter">Retrieved from "<a dir="ltr" href="index9b47.html?title=Port_Access_Libraries&amp;oldid=16556">http://www.qb64.org/wiki/index.php?title=Port_Access_Libraries&amp;oldid=16556</a>"</div>
+		<div id="catlinks" class="catlinks catlinks-allhidden" data-mw="interface"></div>
+	</div>
+</div>
+
+<div id="mw-navigation">
+	<h2>Navigation menu</h2>
+	<div id="mw-head">
+		<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-personal" class="vector-menu" aria-labelledby="p-personal-label" role="navigation" 
+	 >
+	<h3 id="p-personal-label">
+		<span>Personal tools</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="pt-login"><a href="index7fa7.html?title=Special:UserLogin&amp;returnto=Port+Access+Libraries" title="You are encouraged to log in; however, it is not mandatory [o]" accesskey="o">Log in</a></li></ul>
+		
+	</div>
+</nav>
+
+
+		<div id="left-navigation">
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-namespaces" class="vector-menu vector-menu-tabs vectorTabs" aria-labelledby="p-namespaces-label" role="navigation" 
+	 >
+	<h3 id="p-namespaces-label">
+		<span>Namespaces</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="ca-nstab-main" class="selected"><a href="Port_Access_Libraries.html" title="View the content page [c]" accesskey="c">Page</a></li><li id="ca-talk" class="new"><a href="Talk_Port_Access_Libraries.html?title=Talk:Port_Access_Libraries&amp;action=edit&amp;redlink=1" rel="discussion" title="Discussion about the content page (page does not exist) [t]" accesskey="t">Discussion</a></li></ul>
+		
+	</div>
+</nav>
+
+
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-variants" class="vector-menu-empty emptyPortlet vector-menu vector-menu-dropdown vectorMenu" aria-labelledby="p-variants-label" role="navigation" 
+	 >
+	<input type="checkbox" class="vector-menu-checkbox vectorMenuCheckbox" aria-labelledby="p-variants-label" />
+	<h3 id="p-variants-label">
+		<span>Variants</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="menu vector-menu-content-list"></ul>
+		
+	</div>
+</nav>
+
+
+		</div>
+		<div id="right-navigation">
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-views" class="vector-menu vector-menu-tabs vectorTabs" aria-labelledby="p-views-label" role="navigation" 
+	 >
+	<h3 id="p-views-label">
+		<span>Views</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="ca-view" class="collapsible selected"><a href="Port_Access_Libraries.html">Read</a></li><li id="ca-viewsource" class="collapsible"><a href="index27f5.html?title=Port_Access_Libraries&amp;action=edit" title="This page is protected.&#10;You can view its source [e]" accesskey="e">View source</a></li><li id="ca-history" class="collapsible"><a href="indexcd61.html?title=Port_Access_Libraries&amp;action=history" title="Past revisions of this page [h]" accesskey="h">View history</a></li></ul>
+		
+	</div>
+</nav>
+
+
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-cactions" class="vector-menu-empty emptyPortlet vector-menu vector-menu-dropdown vectorMenu" aria-labelledby="p-cactions-label" role="navigation" 
+	 >
+	<input type="checkbox" class="vector-menu-checkbox vectorMenuCheckbox" aria-labelledby="p-cactions-label" />
+	<h3 id="p-cactions-label">
+		<span>More</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="menu vector-menu-content-list"></ul>
+		
+	</div>
+</nav>
+
+
+			<div id="p-search" role="search">
+	<h3 >
+		<label for="searchInput">Search</label>
+	</h3>
+	<form action="https://www.qb64.org/wiki/index.php" id="searchform">
+		<div id="simpleSearch">
+			<input type="search" name="search" placeholder="Search QB64 Wiki" title="Search QB64 Wiki [f]" accesskey="f" id="searchInput"/>
+			<input type="hidden" name="title" value="Special:Search">
+			<input type="submit" name="fulltext" value="Search" title="Search the pages for this text" id="mw-searchButton" class="searchButton mw-fallbackSearchButton"/>
+			<input type="submit" name="go" value="Go" title="Go to a page with this exact name if it exists" id="searchButton" class="searchButton"/>
+		</div>
+	</form>
+</div>
+
+		</div>
+	</div>
+	
+<div id="mw-panel">
+	<div id="p-logo" role="banner">
+		<a  title="Visit the main page" class="mw-wiki-logo" href="Main_Page.html"></a>
+	</div>
+	<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-navigation" class="vector-menu vector-menu-portal portal portal-first" aria-labelledby="p-navigation-label" role="navigation" 
+	 >
+	<h3 id="p-navigation-label">
+		<span>Navigation</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="n-mainpage-description"><a href="Main_Page.html" title="Visit the main page [z]" accesskey="z">Main page</a></li><li id="n-recentchanges"><a href="Special_RecentChanges.html" title="A list of recent changes in the wiki [r]" accesskey="r">Recent changes</a></li><li id="n-randompage"><a href="SNDCOPY.html" title="Load a random page [x]" accesskey="x">Random page</a></li><li id="n-help-mediawiki"><a href="https://www.mediawiki.org/wiki/Special:MyLanguage/Help:Contents">Help about MediaWiki</a></li></ul>
+		
+	</div>
+</nav>
+
+
+	<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-tb" class="vector-menu vector-menu-portal portal" aria-labelledby="p-tb-label" role="navigation" 
+	 >
+	<h3 id="p-tb-label">
+		<span>Tools</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="t-whatlinkshere"><a href="Special_WhatLinksHere/Port_Access_Libraries.html" title="A list of all wiki pages that link here [j]" accesskey="j">What links here</a></li><li id="t-recentchangeslinked"><a href="Special_RecentChangesLinked/Port_Access_Libraries.html" rel="nofollow" title="Recent changes in pages linked from this page [k]" accesskey="k">Related changes</a></li><li id="t-specialpages"><a href="Special_SpecialPages.html" title="A list of all special pages [q]" accesskey="q">Special pages</a></li><li id="t-print"><a href="javascript:print();" rel="alternate" title="Printable version of this page [p]" accesskey="p">Printable version</a></li><li id="t-permalink"><a href="index9b47.html?title=Port_Access_Libraries&amp;oldid=16556" title="Permanent link to this revision of the page">Permanent link</a></li><li id="t-info"><a href="index6da3.html?title=Port_Access_Libraries&amp;action=info" title="More information about this page">Page information</a></li></ul>
+		
+	</div>
+</nav>
+
+
+	
+</div>
+
+</div>
+
+<footer id="footer" class="mw-footer" role="contentinfo" >
+	<ul id="footer-info" >
+		<li id="footer-info-lastmod"> This page was last edited on 29 August 2017, at 04:58.</li>
+	</ul>
+	<ul id="footer-places" >
+		<li id="footer-places-privacy"><a href="My_wiki_Privacy_policy.html" title="My wiki:Privacy policy">Privacy policy</a></li>
+		<li id="footer-places-about"><a href="My_wiki_About.html" title="My wiki:About">About QB64 Wiki</a></li>
+		<li id="footer-places-disclaimer"><a href="My_wiki_General_disclaimer.html" title="My wiki:General disclaimer">Disclaimers</a></li>
+	</ul>
+	<ul id="footer-icons" class="noprint">
+		<li id="footer-poweredbyico"><a href="https://www.mediawiki.org/"><img src="resources/assets/poweredby_mediawiki_88x31.png" alt="Powered by MediaWiki" srcset="/wiki/resources/assets/poweredby_mediawiki_132x47.png 1.5x, /wiki/resources/assets/poweredby_mediawiki_176x62.png 2x" width="88" height="31" loading="lazy"/></a></li>
+	</ul>
+	<div style="clear: both;"></div>
+</footer>
+
+
+
+<script>(RLQ=window.RLQ||[]).push(function(){mw.config.set({"wgPageParseReport":{"limitreport":{"cputime":"0.137","walltime":"0.263","ppvisitednodes":{"value":986,"limit":1000000},"postexpandincludesize":{"value":8351,"limit":2097152},"templateargumentsize":{"value":1543,"limit":2097152},"expansiondepth":{"value":3,"limit":40},"expensivefunctioncount":{"value":0,"limit":100},"unstrip-depth":{"value":0,"limit":20},"unstrip-size":{"value":0,"limit":5000000},"timingprofile":["100.00%   88.197      1 -total"," 19.50%   17.197      2 Template:CodeEnd"," 12.76%   11.253      1 Template:TextStart"," 10.11%    8.913     63 Template:Cl","  8.33%    7.350      1 Template:PageNavigation","  5.87%    5.179      2 Template:CodeStart","  5.30%    4.673     22 Template:Text","  4.85%    4.274      1 Template:TextEnd","  4.09%    3.604      5 Template:Cb","  3.88%    3.426     11 Template:WhiteStart"]},"cachereport":{"timestamp":"20210706173921","ttl":86400,"transientcontent":false}}});mw.config.set({"wgBackendResponseTime":1783});});</script></body>
+<!-- Mirrored from www.qb64.org/wiki/Port_Access_Libraries by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 07 Aug 2021 12:43:39 GMT -->
+</html>

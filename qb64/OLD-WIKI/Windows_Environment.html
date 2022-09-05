@@ -1,0 +1,410 @@
+
+<!DOCTYPE html>
+<html class="client-nojs" lang="en" dir="ltr">
+
+<!-- Mirrored from www.qb64.org/wiki/Windows_Environment by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 07 Aug 2021 12:42:20 GMT -->
+<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=UTF-8" /><!-- /Added by HTTrack -->
+<head>
+<meta charset="UTF-8"/>
+<title>Windows Environment - QB64 Wiki</title>
+<script>document.documentElement.className="client-js";RLCONF={"wgBreakFrames":!1,"wgSeparatorTransformTable":["",""],"wgDigitTransformTable":["",""],"wgDefaultDateFormat":"dmy","wgMonthNames":["","January","February","March","April","May","June","July","August","September","October","November","December"],"wgRequestId":"YOWkTukbkwEB08KNhNehnwAAAFU","wgCSPNonce":!1,"wgCanonicalNamespace":"","wgCanonicalSpecialPageName":!1,"wgNamespaceNumber":0,"wgPageName":"Windows_Environment","wgTitle":"Windows Environment","wgCurRevisionId":22755,"wgRevisionId":22755,"wgArticleId":755,"wgIsArticle":!0,"wgIsRedirect":!1,"wgAction":"view","wgUserName":null,"wgUserGroups":["*"],"wgCategories":[],"wgPageContentLanguage":"en","wgPageContentModel":"wikitext","wgRelevantPageName":"Windows_Environment","wgRelevantArticleId":755,"wgIsProbablyEditable":!1,"wgRelevantPageIsProbablyEditable":!1,"wgRestrictionEdit":[],"wgRestrictionMove":[]};RLSTATE={"site.styles":"ready","noscript":"ready",
+"user.styles":"ready","user":"ready","user.options":"loading","skins.vector.styles.legacy":"ready"};RLPAGEMODULES=["site","mediawiki.page.startup","mediawiki.page.ready","skins.vector.legacy.js"];</script>
+<script>(RLQ=window.RLQ||[]).push(function(){mw.loader.implement("user.options@1hzgi",function($,jQuery,require,module){/*@nomin*/mw.user.tokens.set({"patrolToken":"+\\","watchToken":"+\\","csrfToken":"+\\"});
+});});</script>
+<link rel="stylesheet" href="load5c90.css?lang=en&amp;modules=skins.vector.styles.legacy&amp;only=styles&amp;skin=vector"/>
+<script async="" src="load52c0.php?lang=en&amp;modules=startup&amp;only=scripts&amp;raw=1&amp;skin=vector"></script>
+<meta name="generator" content="MediaWiki 1.35.2"/>
+<link rel="shortcut icon" href="https://www.qb64.org/favicon.ico"/>
+<link rel="search" type="application/opensearchdescription+xml" href="opensearch_desc.php" title="QB64 Wiki (en)"/>
+<link rel="EditURI" type="application/rsd+xml" href="api-result251f.xml?action=rsd"/>
+<link rel="alternate" type="application/atom+xml" title="QB64 Wiki Atom feed" href="feeda295.xml?title=Special:RecentChanges&amp;feed=atom"/>
+<!--[if lt IE 9]><script src="/wiki/resources/lib/html5shiv/html5shiv.js"></script><![endif]-->
+</head>
+<body class="mediawiki ltr sitedir-ltr mw-hide-empty-elt ns-0 ns-subject page-Windows_Environment rootpage-Windows_Environment skin-vector action-view skin-vector-legacy">
+<div id="mw-page-base" class="noprint"></div>
+<div id="mw-head-base" class="noprint"></div>
+<div id="content" class="mw-body" role="main">
+	<a id="top"></a>
+	<div id="siteNotice" class="mw-body-content"></div>
+	<div class="mw-indicators mw-body-content">
+	</div>
+	<h1 id="firstHeading" class="firstHeading" lang="en">Windows Environment</h1>
+	<div id="bodyContent" class="mw-body-content">
+		<div id="siteSub" class="noprint">From QB64 Wiki</div>
+		<div id="contentSub"></div>
+		<div id="contentSub2"></div>
+		
+		<div id="jump-to-nav"></div>
+		<a class="mw-jump-link" href="#mw-head">Jump to navigation</a>
+		<a class="mw-jump-link" href="#searchInput">Jump to search</a>
+		<div id="mw-content-text" lang="en" dir="ltr" class="mw-content-ltr"><div class="mw-parser-output"><p>You can try to set environmental values for a program. The program doesn't affect anything other than itself and its child processes.
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: Courier, monospace; background-color: darkblue; color: lightgrey; word-wrap: break-word;"> <i> </i>
+<a href="DECLARE_DYNAMIC_LIBRARY.html" title="DECLARE DYNAMIC LIBRARY"><span style="color:#87cefa;">DECLARE DYNAMIC LIBRARY</span></a> "kernel32"
+ <a href="FUNCTION.html" title="FUNCTION"><span style="color:#87cefa;">FUNCTION</span></a> SetEnvironmentVariableA&amp; (<a href="BYVAL.html" class="mw-redirect" title="BYVAL"><span style="color:#87cefa;">BYVAL</span></a> lpName <a href="AS.html" title="AS"><span style="color:#87cefa;">AS</span></a> <a href="OFFSET.html" title="OFFSET"><span style="color:#87cefa;">_OFFSET</span></a>, <a href="BYVAL.html" class="mw-redirect" title="BYVAL"><span style="color:#87cefa;">BYVAL</span></a> lpValue <a href="AS.html" title="AS"><span style="color:#87cefa;">AS</span></a> <a href="OFFSET.html" title="OFFSET"><span style="color:#87cefa;">_OFFSET</span></a>)
+ <a href="FUNCTION.html" title="FUNCTION"><span style="color:#87cefa;">FUNCTION</span></a> GetLastError~&amp; ()
+<a href="DECLARE_LIBRARY.html" title="DECLARE LIBRARY"><span style="color:#87cefa;">END DECLARE</span></a>
+
+<a href="DIM.html" title="DIM"><span style="color:#87cefa;">DIM</span></a> Nam <a href="AS.html" title="AS"><span style="color:#87cefa;">AS</span></a> <a href="STRING.html" title="STRING"><span style="color:#87cefa;">STRING</span></a>
+<a href="DIM.html" title="DIM"><span style="color:#87cefa;">DIM</span></a> Value <a href="AS.html" title="AS"><span style="color:#87cefa;">AS</span></a> <a href="STRING.html" title="STRING"><span style="color:#87cefa;">STRING</span></a>
+
+Nam = "CalkinsDeleteMe" + <a href="CHR%24.html" title="CHR$"><span style="color:#87cefa;">CHR$</span></a>(0)
+Value = "CalkinsDeleteMe1" + <a href="CHR%24.html" title="CHR$"><span style="color:#87cefa;">CHR$</span></a>(0)
+
+<a href="IF...html" title="IF...THEN"><span style="color:#87cefa;">IF</span></a> 0 = SetEnvironmentVariableA(<a href="OFFSET_(function).html" title="OFFSET (function)"><span style="color:#87cefa;">_OFFSET</span></a>(Nam), <a href="OFFSET_(function).html" title="OFFSET (function)"><span style="color:#87cefa;">_OFFSET</span></a>(Value)) <a href="THEN.html" title="THEN"><span style="color:#87cefa;">THEN</span></a>
+ <a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> "SetEnvironmentVariableA failed. Error: 0x" + <a href="LCASE%24.html" title="LCASE$"><span style="color:#87cefa;">LCASE$</span></a>(<a href="HEX%24.html" title="HEX$"><span style="color:#87cefa;">HEX$</span></a>(GetLastError))
+ <a href="END.html" title="END"><span style="color:#87cefa;">END</span></a>
+<a href="END_IF.html" class="mw-redirect" title="END IF"><span style="color:#87cefa;">END IF</span></a>
+
+<a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> "Type 'set|more' into the console then 'exit' to close it"
+<a href="SLEEP.html" title="SLEEP"><span style="color:#87cefa;">SLEEP</span></a> 1
+<a href="SHELL.html" title="SHELL"><span style="color:#87cefa;">SHELL</span></a> "cmd.exe"
+<a href="CLS.html" title="CLS"><span style="color:#87cefa;">CLS</span></a>
+<a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> "open another cmd.exe, and use 'set|more' to verify that the change was local."
+<a href="END.html" title="END"><span style="color:#87cefa;">END</span></a> <i> </i>
+</p>
+<center><span style="font-family: Courier New, Courier, monospace; font-size: 0.80em; line-height: 50%;">Public domain, Feb 2012, Michael Calkins</span></center>
+<dl><dd><i>Note:</i> The current user's account and related processes will only be affected by the environmental changes until program ends!</dd>
+<dd>To verify that the values are reset, Run... 'cmd.exe' and type command 'set|more' to see the values after the program is done.</dd></dl>
+<p><br />
+This program sets environment variables in the registry, for both the system, and the current user, then removes them:
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: Courier, monospace; background-color: darkblue; color: lightgrey; word-wrap: break-word;"> <i> </i>
+'public domain, feb 2012, michael calkins
+
+<a href="CONST.html" title="CONST"><span style="color:#87cefa;">CONST</span></a> milliseconds = 5000
+
+<a href="CONST.html" title="CONST"><span style="color:#87cefa;">CONST</span></a> HKEY_CURRENT_USER = <a href="%26H.html" title="&amp;H"><span style="color:#87cefa;">&amp;H</span></a>80000001~&amp;
+<a href="CONST.html" title="CONST"><span style="color:#87cefa;">CONST</span></a> HKEY_<a href="LOCAL.html" class="mw-redirect" title="LOCAL"><span style="color:#87cefa;">LOCAL</span></a>_MACHINE = <a href="%26H.html" title="&amp;H"><span style="color:#87cefa;">&amp;H</span></a>80000002~&amp;
+<a href="CONST.html" title="CONST"><span style="color:#87cefa;">CONST</span></a> REG_SZ = 1
+<a href="CONST.html" title="CONST"><span style="color:#87cefa;">CONST</span></a> KEY_ALL_<a href="ACCESS.html" class="mw-redirect" title="ACCESS"><span style="color:#87cefa;">ACCESS</span></a> = <a href="%26H.html" title="&amp;H"><span style="color:#87cefa;">&amp;H</span></a>F003F&amp;
+
+<a href="CONST.html" title="CONST"><span style="color:#87cefa;">CONST</span></a> <a href="ERROR.html" title="ERROR"><span style="color:#87cefa;">ERROR</span></a>_SUCCESS = 0
+<a href="CONST.html" title="CONST"><span style="color:#87cefa;">CONST</span></a> <a href="ERROR.html" title="ERROR"><span style="color:#87cefa;">ERROR</span></a>_<a href="ACCESS.html" class="mw-redirect" title="ACCESS"><span style="color:#87cefa;">ACCESS</span></a>_DENIED = 5
+<a href="CONST.html" title="CONST"><span style="color:#87cefa;">CONST</span></a> <a href="ERROR.html" title="ERROR"><span style="color:#87cefa;">ERROR</span></a>_TIMEOUT = <a href="%26H.html" title="&amp;H"><span style="color:#87cefa;">&amp;H</span></a>5B4
+
+<a href="CONST.html" title="CONST"><span style="color:#87cefa;">CONST</span></a> WM_SETTINGCHANGE = <a href="%26H.html" title="&amp;H"><span style="color:#87cefa;">&amp;H</span></a>1A
+<a href="CONST.html" title="CONST"><span style="color:#87cefa;">CONST</span></a> HWND_BROADCAST = <a href="%26H.html" title="&amp;H"><span style="color:#87cefa;">&amp;H</span></a>FFFF&amp;
+
+<a href="DECLARE_DYNAMIC_LIBRARY.html" title="DECLARE DYNAMIC LIBRARY"><span style="color:#87cefa;">DECLARE DYNAMIC LIBRARY</span></a> "advapi32"
+ <a href="FUNCTION.html" title="FUNCTION"><span style="color:#87cefa;">FUNCTION</span></a> RegOpenKeyExA&amp; (<a href="BYVAL.html" class="mw-redirect" title="BYVAL"><span style="color:#87cefa;">BYVAL</span></a> hKey <a href="AS.html" title="AS"><span style="color:#87cefa;">AS</span></a> <a href="OFFSET.html" title="OFFSET"><span style="color:#87cefa;">_OFFSET</span></a>, <a href="BYVAL.html" class="mw-redirect" title="BYVAL"><span style="color:#87cefa;">BYVAL</span></a> lpSubKey <a href="AS.html" title="AS"><span style="color:#87cefa;">AS</span></a> <a href="OFFSET.html" title="OFFSET"><span style="color:#87cefa;">_OFFSET</span></a>, <a href="BYVAL.html" class="mw-redirect" title="BYVAL"><span style="color:#87cefa;">BYVAL</span></a> ulOptions <a href="AS.html" title="AS"><span style="color:#87cefa;">AS</span></a> <a href="UNSIGNED.html" title="UNSIGNED"><span style="color:#87cefa;">_UNSIGNED</span></a> <a href="LONG.html" title="LONG"><span style="color:#87cefa;">LONG</span></a>, <a href="BYVAL.html" class="mw-redirect" title="BYVAL"><span style="color:#87cefa;">BYVAL</span></a> samDesired <a href="AS.html" title="AS"><span style="color:#87cefa;">AS</span></a> <a href="UNSIGNED.html" title="UNSIGNED"><span style="color:#87cefa;">_UNSIGNED</span></a> <a href="LONG.html" title="LONG"><span style="color:#87cefa;">LONG</span></a>, <a href="BYVAL.html" class="mw-redirect" title="BYVAL"><span style="color:#87cefa;">BYVAL</span></a> phkResult <a href="AS.html" title="AS"><span style="color:#87cefa;">AS</span></a> <a href="OFFSET.html" title="OFFSET"><span style="color:#87cefa;">_OFFSET</span></a>)
+ <a href="FUNCTION.html" title="FUNCTION"><span style="color:#87cefa;">FUNCTION</span></a> RegCloseKey&amp; (<a href="BYVAL.html" class="mw-redirect" title="BYVAL"><span style="color:#87cefa;">BYVAL</span></a> hKey <a href="AS.html" title="AS"><span style="color:#87cefa;">AS</span></a> <a href="OFFSET.html" title="OFFSET"><span style="color:#87cefa;">_OFFSET</span></a>)
+ <a href="FUNCTION.html" title="FUNCTION"><span style="color:#87cefa;">FUNCTION</span></a> RegSetValueExA&amp; (<a href="BYVAL.html" class="mw-redirect" title="BYVAL"><span style="color:#87cefa;">BYVAL</span></a> hKey <a href="AS.html" title="AS"><span style="color:#87cefa;">AS</span></a> <a href="OFFSET.html" title="OFFSET"><span style="color:#87cefa;">_OFFSET</span></a>, <a href="BYVAL.html" class="mw-redirect" title="BYVAL"><span style="color:#87cefa;">BYVAL</span></a> lpValueName <a href="AS.html" title="AS"><span style="color:#87cefa;">AS</span></a> <a href="OFFSET.html" title="OFFSET"><span style="color:#87cefa;">_OFFSET</span></a>, <a href="BYVAL.html" class="mw-redirect" title="BYVAL"><span style="color:#87cefa;">BYVAL</span></a> Reserved <a href="AS.html" title="AS"><span style="color:#87cefa;">AS</span></a> <a href="UNSIGNED.html" title="UNSIGNED"><span style="color:#87cefa;">_UNSIGNED</span></a> <a href="LONG.html" title="LONG"><span style="color:#87cefa;">LONG</span></a>, <a href="BYVAL.html" class="mw-redirect" title="BYVAL"><span style="color:#87cefa;">BYVAL</span></a> dwType <a href="AS.html" title="AS"><span style="color:#87cefa;">AS</span></a> <a href="UNSIGNED.html" title="UNSIGNED"><span style="color:#87cefa;">_UNSIGNED</span></a> <a href="LONG.html" title="LONG"><span style="color:#87cefa;">LONG</span></a>, <a href="BYVAL.html" class="mw-redirect" title="BYVAL"><span style="color:#87cefa;">BYVAL</span></a> lpData <a href="AS.html" title="AS"><span style="color:#87cefa;">AS</span></a> <a href="OFFSET.html" title="OFFSET"><span style="color:#87cefa;">_OFFSET</span></a>, <a href="BYVAL.html" class="mw-redirect" title="BYVAL"><span style="color:#87cefa;">BYVAL</span></a> cbData <a href="AS.html" title="AS"><span style="color:#87cefa;">AS</span></a> <a href="UNSIGNED.html" title="UNSIGNED"><span style="color:#87cefa;">_UNSIGNED</span></a> <a href="LONG.html" title="LONG"><span style="color:#87cefa;">LONG</span></a>)
+ <a href="FUNCTION.html" title="FUNCTION"><span style="color:#87cefa;">FUNCTION</span></a> RegDeleteValueA&amp; (<a href="BYVAL.html" class="mw-redirect" title="BYVAL"><span style="color:#87cefa;">BYVAL</span></a> hKey <a href="AS.html" title="AS"><span style="color:#87cefa;">AS</span></a> <a href="OFFSET.html" title="OFFSET"><span style="color:#87cefa;">_OFFSET</span></a>, <a href="BYVAL.html" class="mw-redirect" title="BYVAL"><span style="color:#87cefa;">BYVAL</span></a> lpValueName <a href="AS.html" title="AS"><span style="color:#87cefa;">AS</span></a> <a href="OFFSET.html" title="OFFSET"><span style="color:#87cefa;">_OFFSET</span></a>)
+<a href="DECLARE_LIBRARY.html" title="DECLARE LIBRARY"><span style="color:#87cefa;">END DECLARE</span></a>
+
+<a href="DECLARE_DYNAMIC_LIBRARY.html" title="DECLARE DYNAMIC LIBRARY"><span style="color:#87cefa;">DECLARE DYNAMIC LIBRARY</span></a> "user32"
+'lParem is actually a <a href="LONG.html" title="LONG"><span style="color:#87cefa;">LONG</span></a>_PTR, but qb64 complains if I make it a <a href="LONG.html" title="LONG"><span style="color:#87cefa;">LONG</span></a>.
+ <a href="FUNCTION.html" title="FUNCTION"><span style="color:#87cefa;">FUNCTION</span></a> SendMessageTimeoutA&amp; (<a href="BYVAL.html" class="mw-redirect" title="BYVAL"><span style="color:#87cefa;">BYVAL</span></a> hWnd <a href="AS.html" title="AS"><span style="color:#87cefa;">AS</span></a> <a href="OFFSET.html" title="OFFSET"><span style="color:#87cefa;">_OFFSET</span></a>, <a href="BYVAL.html" class="mw-redirect" title="BYVAL"><span style="color:#87cefa;">BYVAL</span></a> Msg <a href="AS.html" title="AS"><span style="color:#87cefa;">AS</span></a> <a href="UNSIGNED.html" title="UNSIGNED"><span style="color:#87cefa;">_UNSIGNED</span></a> <a href="LONG.html" title="LONG"><span style="color:#87cefa;">LONG</span></a>, <a href="BYVAL.html" class="mw-redirect" title="BYVAL"><span style="color:#87cefa;">BYVAL</span></a> wParam <a href="AS.html" title="AS"><span style="color:#87cefa;">AS</span></a> <a href="UNSIGNED.html" title="UNSIGNED"><span style="color:#87cefa;">_UNSIGNED</span></a> <a href="LONG.html" title="LONG"><span style="color:#87cefa;">LONG</span></a>, <a href="BYVAL.html" class="mw-redirect" title="BYVAL"><span style="color:#87cefa;">BYVAL</span></a> lParam <a href="AS.html" title="AS"><span style="color:#87cefa;">AS</span></a> <a href="OFFSET.html" title="OFFSET"><span style="color:#87cefa;">_OFFSET</span></a>, <a href="BYVAL.html" class="mw-redirect" title="BYVAL"><span style="color:#87cefa;">BYVAL</span></a> fuFlags <a href="AS.html" title="AS"><span style="color:#87cefa;">AS</span></a> <a href="UNSIGNED.html" title="UNSIGNED"><span style="color:#87cefa;">_UNSIGNED</span></a> <a href="LONG.html" title="LONG"><span style="color:#87cefa;">LONG</span></a>, <a href="BYVAL.html" class="mw-redirect" title="BYVAL"><span style="color:#87cefa;">BYVAL</span></a> uTimeout <a href="AS.html" title="AS"><span style="color:#87cefa;">AS</span></a> <a href="UNSIGNED.html" title="UNSIGNED"><span style="color:#87cefa;">_UNSIGNED</span></a> <a href="LONG.html" title="LONG"><span style="color:#87cefa;">LONG</span></a>, <a href="BYVAL.html" class="mw-redirect" title="BYVAL"><span style="color:#87cefa;">BYVAL</span></a> lpdwResult <a href="AS.html" title="AS"><span style="color:#87cefa;">AS</span></a> <a href="OFFSET.html" title="OFFSET"><span style="color:#87cefa;">_OFFSET</span></a>)
+<a href="DECLARE_LIBRARY.html" title="DECLARE LIBRARY"><span style="color:#87cefa;">END DECLARE</span></a>
+
+<a href="DECLARE_DYNAMIC_LIBRARY.html" title="DECLARE DYNAMIC LIBRARY"><span style="color:#87cefa;">DECLARE DYNAMIC LIBRARY</span></a> "kernel32"
+ <a href="FUNCTION.html" title="FUNCTION"><span style="color:#87cefa;">FUNCTION</span></a> GetLastError~&amp; ()
+<a href="DECLARE_LIBRARY.html" title="DECLARE LIBRARY"><span style="color:#87cefa;">END DECLARE</span></a>
+
+<a href="DIM.html" title="DIM"><span style="color:#87cefa;">DIM</span></a> hKeySys <a href="AS.html" title="AS"><span style="color:#87cefa;">AS</span></a> <a href="OFFSET.html" title="OFFSET"><span style="color:#87cefa;">_OFFSET</span></a>
+<a href="DIM.html" title="DIM"><span style="color:#87cefa;">DIM</span></a> hKeyUsr <a href="AS.html" title="AS"><span style="color:#87cefa;">AS</span></a> <a href="OFFSET.html" title="OFFSET"><span style="color:#87cefa;">_OFFSET</span></a>
+<a href="DIM.html" title="DIM"><span style="color:#87cefa;">DIM</span></a> SubKey <a href="AS.html" title="AS"><span style="color:#87cefa;">AS</span></a> <a href="STRING.html" title="STRING"><span style="color:#87cefa;">STRING</span></a>
+<a href="DIM.html" title="DIM"><span style="color:#87cefa;">DIM</span></a> Value <a href="AS.html" title="AS"><span style="color:#87cefa;">AS</span></a> <a href="STRING.html" title="STRING"><span style="color:#87cefa;">STRING</span></a>
+<a href="DIM.html" title="DIM"><span style="color:#87cefa;">DIM</span></a> bData <a href="AS.html" title="AS"><span style="color:#87cefa;">AS</span></a> <a href="STRING.html" title="STRING"><span style="color:#87cefa;">STRING</span></a>
+<a href="DIM.html" title="DIM"><span style="color:#87cefa;">DIM</span></a> l <a href="AS.html" title="AS"><span style="color:#87cefa;">AS</span></a> <a href="LONG.html" title="LONG"><span style="color:#87cefa;">LONG</span></a>
+
+<a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> "Please open 'System Properties', click 'Advanced', and click 'Environment"
+<a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> "Variables'."
+<a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a>
+<a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> "Press any key to add them."
+<a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> "Expect to get an error message if you aren't admin, but the user variable should"
+<a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> "still change."
+<a href="SLEEP.html" title="SLEEP"><span style="color:#87cefa;">SLEEP</span></a>: <a href="DO...html" title="DO...LOOP"><span style="color:#87cefa;">DO</span></a> <a href="WHILE.html" title="WHILE"><span style="color:#87cefa;">WHILE</span></a> <a href="LEN.html" title="LEN"><span style="color:#87cefa;">LEN</span></a>(<a href="INKEY%24.html" title="INKEY$"><span style="color:#87cefa;">INKEY$</span></a>): <a href="LOOP.html" title="LOOP"><span style="color:#87cefa;">LOOP</span></a>
+
+SubKey = "System\CurrentControlSet\Control\Session Manager\Environment" + <a href="CHR%24.html" title="CHR$"><span style="color:#87cefa;">CHR$</span></a>(0)
+l = RegOpenKeyExA(HKEY_LOCAL_MACHINE, <a href="OFFSET_(function).html" title="OFFSET (function)"><span style="color:#87cefa;">_OFFSET</span></a>(SubKey), 0, KEY_ALL_ACCESS, <a href="OFFSET_(function).html" title="OFFSET (function)"><span style="color:#87cefa;">_OFFSET</span></a>(hKeySys))
+<a href="IF...html" title="IF...THEN"><span style="color:#87cefa;">IF</span></a> l <a href="THEN.html" title="THEN"><span style="color:#87cefa;">THEN</span></a>
+ <a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> "(hKeySys) RegOpenKeyExA failed. Error: 0x" + <a href="LCASE%24.html" title="LCASE$"><span style="color:#87cefa;">LCASE$</span></a>(<a href="HEX%24.html" title="HEX$"><span style="color:#87cefa;">HEX$</span></a>(l))
+ hKeySys = 0
+<a href="ELSE.html" title="ELSE"><span style="color:#87cefa;">ELSE</span></a>
+ Value = "CalkinsDeleteMeSys" + <a href="CHR%24.html" title="CHR$"><span style="color:#87cefa;">CHR$</span></a>(0)
+ bData = "DeleteMe2" + <a href="CHR%24.html" title="CHR$"><span style="color:#87cefa;">CHR$</span></a>(0)
+ l = RegSetValueExA(hKeySys, <a href="OFFSET_(function).html" title="OFFSET (function)"><span style="color:#87cefa;">_OFFSET</span></a>(Value), 0, REG_SZ, <a href="OFFSET_(function).html" title="OFFSET (function)"><span style="color:#87cefa;">_OFFSET</span></a>(bData), <a href="LEN.html" title="LEN"><span style="color:#87cefa;">LEN</span></a>(bData))
+ <a href="IF...html" title="IF...THEN"><span style="color:#87cefa;">IF</span></a> l <a href="THEN.html" title="THEN"><span style="color:#87cefa;">THEN</span></a>
+  <a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> "RegSetValueExA failed. Error: 0x" + <a href="LCASE%24.html" title="LCASE$"><span style="color:#87cefa;">LCASE$</span></a>(<a href="HEX%24.html" title="HEX$"><span style="color:#87cefa;">HEX$</span></a>(l))
+  <a href="END.html" title="END"><span style="color:#87cefa;">END</span></a>
+ <a href="END_IF.html" class="mw-redirect" title="END IF"><span style="color:#87cefa;">END IF</span></a>
+<a href="END_IF.html" class="mw-redirect" title="END IF"><span style="color:#87cefa;">END IF</span></a>
+
+SubKey = "Environment" + <a href="CHR%24.html" title="CHR$"><span style="color:#87cefa;">CHR$</span></a>(0)
+l = RegOpenKeyExA(HKEY_CURRENT_USER, <a href="OFFSET_(function).html" title="OFFSET (function)"><span style="color:#87cefa;">_OFFSET</span></a>(SubKey), 0, KEY_ALL_ACCESS, <a href="OFFSET_(function).html" title="OFFSET (function)"><span style="color:#87cefa;">_OFFSET</span></a>(hKeyUsr))
+<a href="IF...html" title="IF...THEN"><span style="color:#87cefa;">IF</span></a> l <a href="THEN.html" title="THEN"><span style="color:#87cefa;">THEN</span></a>
+ <a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> "(hKeyUsr) RegOpenKeyExA failed. Error: 0x" + <a href="LCASE%24.html" title="LCASE$"><span style="color:#87cefa;">LCASE$</span></a>(<a href="HEX%24.html" title="HEX$"><span style="color:#87cefa;">HEX$</span></a>(l))
+ <a href="END.html" title="END"><span style="color:#87cefa;">END</span></a>
+<a href="END_IF.html" class="mw-redirect" title="END IF"><span style="color:#87cefa;">END IF</span></a>
+
+Value = "CalkinsDeleteMeUsr" + <a href="CHR%24.html" title="CHR$"><span style="color:#87cefa;">CHR$</span></a>(0)
+bData = "DeleteMe3" + <a href="CHR%24.html" title="CHR$"><span style="color:#87cefa;">CHR$</span></a>(0)
+l = RegSetValueExA(hKeyUsr, <a href="OFFSET_(function).html" title="OFFSET (function)"><span style="color:#87cefa;">_OFFSET</span></a>(Value), 0, REG_SZ, <a href="OFFSET_(function).html" title="OFFSET (function)"><span style="color:#87cefa;">_OFFSET</span></a>(bData), <a href="LEN.html" title="LEN"><span style="color:#87cefa;">LEN</span></a>(bData))
+<a href="IF...html" title="IF...THEN"><span style="color:#87cefa;">IF</span></a> l <a href="THEN.html" title="THEN"><span style="color:#87cefa;">THEN</span></a>
+ <a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> "RegSetValueExA failed. Error: 0x" + <a href="LCASE%24.html" title="LCASE$"><span style="color:#87cefa;">LCASE$</span></a>(<a href="HEX%24.html" title="HEX$"><span style="color:#87cefa;">HEX$</span></a>(l))
+ <a href="END.html" title="END"><span style="color:#87cefa;">END</span></a>
+<a href="END_IF.html" class="mw-redirect" title="END IF"><span style="color:#87cefa;">END IF</span></a>
+
+<a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a>
+<a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> "Please wait while broadcasting the change."
+
+'SubKey still contains "Environment"+chr$(0)
+<a href="IF...html" title="IF...THEN"><span style="color:#87cefa;">IF</span></a> 0 = SendMessageTimeoutA(HWND_BROADCAST, WM_SETTINGCHANGE, 0, <a href="OFFSET_(function).html" title="OFFSET (function)"><span style="color:#87cefa;">_OFFSET</span></a>(SubKey), 0, milliseconds, <a href="OFFSET_(function).html" title="OFFSET (function)"><span style="color:#87cefa;">_OFFSET</span></a>(l)) <a href="THEN.html" title="THEN"><span style="color:#87cefa;">THEN</span></a>
+ <a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> "SendMessageTimeoutA failed. Error: 0x" + <a href="LCASE%24.html" title="LCASE$"><span style="color:#87cefa;">LCASE$</span></a>(<a href="HEX%24.html" title="HEX$"><span style="color:#87cefa;">HEX$</span></a>(GetLastError))
+<a href="END_IF.html" class="mw-redirect" title="END IF"><span style="color:#87cefa;">END IF</span></a>
+
+<a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a>
+<a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> "You might need to exit and reopen the 'Environment Variables' window."
+<a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> "Press any key to delete them."
+<a href="SLEEP.html" title="SLEEP"><span style="color:#87cefa;">SLEEP</span></a>: <a href="DO...html" title="DO...LOOP"><span style="color:#87cefa;">DO</span></a> <a href="WHILE.html" title="WHILE"><span style="color:#87cefa;">WHILE</span></a> <a href="LEN.html" title="LEN"><span style="color:#87cefa;">LEN</span></a>(<a href="INKEY%24.html" title="INKEY$"><span style="color:#87cefa;">INKEY$</span></a>): <a href="LOOP.html" title="LOOP"><span style="color:#87cefa;">LOOP</span></a>
+
+'Value still contains "CalkinsDeleteMeUsr"+chr$(0)
+l = RegDeleteValueA(hKeyUsr, <a href="OFFSET_(function).html" title="OFFSET (function)"><span style="color:#87cefa;">_OFFSET</span></a>(Value))
+<a href="IF...html" title="IF...THEN"><span style="color:#87cefa;">IF</span></a> l <a href="THEN.html" title="THEN"><span style="color:#87cefa;">THEN</span></a>
+ <a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> "RegDeleteValueA failed. Error: 0x" + <a href="LCASE%24.html" title="LCASE$"><span style="color:#87cefa;">LCASE$</span></a>(<a href="HEX%24.html" title="HEX$"><span style="color:#87cefa;">HEX$</span></a>(l))
+<a href="END_IF.html" class="mw-redirect" title="END IF"><span style="color:#87cefa;">END IF</span></a>
+
+l = RegCloseKey(hKeyUsr)
+<a href="IF...html" title="IF...THEN"><span style="color:#87cefa;">IF</span></a> l <a href="THEN.html" title="THEN"><span style="color:#87cefa;">THEN</span></a>
+ <a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> "RegCloseKey failed. Error: 0x" + <a href="LCASE%24.html" title="LCASE$"><span style="color:#87cefa;">LCASE$</span></a>(<a href="HEX%24.html" title="HEX$"><span style="color:#87cefa;">HEX$</span></a>(l))
+ <a href="END.html" title="END"><span style="color:#87cefa;">END</span></a>
+<a href="END_IF.html" class="mw-redirect" title="END IF"><span style="color:#87cefa;">END IF</span></a>
+
+<a href="IF...html" title="IF...THEN"><span style="color:#87cefa;">IF</span></a> hKeySys <a href="THEN.html" title="THEN"><span style="color:#87cefa;">THEN</span></a>
+ Value = "CalkinsDeleteMeSys" + <a href="CHR%24.html" title="CHR$"><span style="color:#87cefa;">CHR$</span></a>(0)
+ l = RegDeleteValueA(hKeySys, <a href="OFFSET_(function).html" title="OFFSET (function)"><span style="color:#87cefa;">_OFFSET</span></a>(Value))
+ <a href="IF...html" title="IF...THEN"><span style="color:#87cefa;">IF</span></a> l <a href="THEN.html" title="THEN"><span style="color:#87cefa;">THEN</span></a>
+  <a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> "RegDeleteValueA failed. Error: 0x" + <a href="LCASE%24.html" title="LCASE$"><span style="color:#87cefa;">LCASE$</span></a>(<a href="HEX%24.html" title="HEX$"><span style="color:#87cefa;">HEX$</span></a>(l))
+ <a href="END_IF.html" class="mw-redirect" title="END IF"><span style="color:#87cefa;">END IF</span></a>
+
+ l = RegCloseKey(hKeySys)
+ <a href="IF...html" title="IF...THEN"><span style="color:#87cefa;">IF</span></a> l <a href="THEN.html" title="THEN"><span style="color:#87cefa;">THEN</span></a>
+  <a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> "RegCloseKey failed. Error: 0x" + <a href="LCASE%24.html" title="LCASE$"><span style="color:#87cefa;">LCASE$</span></a>(<a href="HEX%24.html" title="HEX$"><span style="color:#87cefa;">HEX$</span></a>(l))
+  <a href="END.html" title="END"><span style="color:#87cefa;">END</span></a>
+ <a href="END_IF.html" class="mw-redirect" title="END IF"><span style="color:#87cefa;">END IF</span></a>
+<a href="END_IF.html" class="mw-redirect" title="END IF"><span style="color:#87cefa;">END IF</span></a>
+
+<a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a>
+<a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> "Please wait while broadcasting the change."
+
+'SubKey still contains "Environment"+chr$(0)
+<a href="IF...html" title="IF...THEN"><span style="color:#87cefa;">IF</span></a> 0 = SendMessageTimeoutA(HWND_BROADCAST, WM_SETTINGCHANGE, 0, <a href="OFFSET_(function).html" title="OFFSET (function)"><span style="color:#87cefa;">_OFFSET</span></a>(SubKey), 0, milliseconds, <a href="OFFSET_(function).html" title="OFFSET (function)"><span style="color:#87cefa;">_OFFSET</span></a>(l)) <a href="THEN.html" title="THEN"><span style="color:#87cefa;">THEN</span></a>
+ <a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> "SendMessageTimeoutA failed. Error: 0x" + <a href="LCASE%24.html" title="LCASE$"><span style="color:#87cefa;">LCASE$</span></a>(<a href="HEX%24.html" title="HEX$"><span style="color:#87cefa;">HEX$</span></a>(GetLastError))
+<a href="END_IF.html" class="mw-redirect" title="END IF"><span style="color:#87cefa;">END IF</span></a>
+
+<a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a>
+<a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> "You might need to exit and reopen the 'Environment Variables' window."
+<a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> "Please verify that they are deleted."
+<a href="END.html" title="END"><span style="color:#87cefa;">END</span></a> <i> </i>
+</p>
+<center><b><a rel="nofollow" class="external text" href="../../i301.photobucket.com/albums/nn53/burger2227/RegistryCalkins.html">Screenshot of Windows Environmental variables when program is run.</a></b></center>
+<dl><dd>When prompted, open the "Environment Variables" window within System Properties(Control Panel - Performance and Maintenance - System - Advanced - Environment Variables) to see the changes or open a new <i>cmd.exe</i> console to see it.</dd></dl>
+<center><b>Administrator privileges are required to change System-wide environmental values, but not current user account values.</b></center> 
+<p><i>See also:</i>
+</p>
+<ul><li><a href="DECLARE_LIBRARY.html" title="DECLARE LIBRARY">DECLARE LIBRARY</a></li>
+<li><a href="Libraries.html" title="Libraries">Libraries</a></li>
+<li><a href="Windows_Libraries.html" title="Windows Libraries">Windows Libraries</a></li>
+<li><a href="Windows_Registry_Access.html" title="Windows Registry Access">Windows Registry Access</a></li>
+<li><a href="Windows_Libraries.html#Windows_User" title="Windows Libraries">Windows User Paths</a></li></ul>
+<p><br />
+</p>
+<hr />
+<center><i>Navigation:</i>
+<dl><dd><a href="Keyword_Reference_-_Alphabetical.html" title="Keyword Reference - Alphabetical">Keyword Reference - Alphabetical</a></dd>
+<dd><a href="Keyword_Reference_-_By_usage.html" title="Keyword Reference - By usage">Keyword Reference - By Usage</a></dd>
+<dd><a href="Main_Page.html" title="Main Page">Main Wiki Page</a></dd></dl></center>
+<!-- 
+NewPP limit report
+Cached time: 20210706193648
+Cache expiry: 86400
+Dynamic content: false
+Complications: []
+CPU time usage: 0.162 seconds
+Real time usage: 0.172 seconds
+Preprocessor visited node count: 1976/1000000
+Post‐expand include size: 15438/2097152 bytes
+Template argument size: 3150/2097152 bytes
+Highest expansion depth: 3/40
+Expensive parser function count: 0/100
+Unstrip recursion depth: 0/20
+Unstrip post‐expand size: 0/5000000 bytes
+-->
+<!--
+Transclusion expansion time report (%,ms,calls,template)
+100.00%   55.988      1 -total
+ 40.23%   22.522    280 Template:Cl
+  7.75%    4.341      2 Template:CodeStart
+  6.41%    3.589      1 Template:Small
+  5.55%    3.108      1 Template:PageNavigation
+  5.38%    3.010      2 Template:CodeEnd
+-->
+
+<!-- Saved in parser cache with key i4224360_mw2-mw_:pcache:idhash:755-0!canonical and timestamp 20210706193648 and revision id 22755
+ -->
+</div></div><div class="printfooter">Retrieved from "<a dir="ltr" href="index2377.html?title=Windows_Environment&amp;oldid=22755">http://www.qb64.org/wiki/index.php?title=Windows_Environment&amp;oldid=22755</a>"</div>
+		<div id="catlinks" class="catlinks catlinks-allhidden" data-mw="interface"></div>
+	</div>
+</div>
+
+<div id="mw-navigation">
+	<h2>Navigation menu</h2>
+	<div id="mw-head">
+		<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-personal" class="vector-menu" aria-labelledby="p-personal-label" role="navigation" 
+	 >
+	<h3 id="p-personal-label">
+		<span>Personal tools</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="pt-login"><a href="indexa94e.html?title=Special:UserLogin&amp;returnto=Windows+Environment" title="You are encouraged to log in; however, it is not mandatory [o]" accesskey="o">Log in</a></li></ul>
+		
+	</div>
+</nav>
+
+
+		<div id="left-navigation">
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-namespaces" class="vector-menu vector-menu-tabs vectorTabs" aria-labelledby="p-namespaces-label" role="navigation" 
+	 >
+	<h3 id="p-namespaces-label">
+		<span>Namespaces</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="ca-nstab-main" class="selected"><a href="Windows_Environment.html" title="View the content page [c]" accesskey="c">Page</a></li><li id="ca-talk" class="new"><a href="Talk_Windows_Environment.html?title=Talk:Windows_Environment&amp;action=edit&amp;redlink=1" rel="discussion" title="Discussion about the content page (page does not exist) [t]" accesskey="t">Discussion</a></li></ul>
+		
+	</div>
+</nav>
+
+
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-variants" class="vector-menu-empty emptyPortlet vector-menu vector-menu-dropdown vectorMenu" aria-labelledby="p-variants-label" role="navigation" 
+	 >
+	<input type="checkbox" class="vector-menu-checkbox vectorMenuCheckbox" aria-labelledby="p-variants-label" />
+	<h3 id="p-variants-label">
+		<span>Variants</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="menu vector-menu-content-list"></ul>
+		
+	</div>
+</nav>
+
+
+		</div>
+		<div id="right-navigation">
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-views" class="vector-menu vector-menu-tabs vectorTabs" aria-labelledby="p-views-label" role="navigation" 
+	 >
+	<h3 id="p-views-label">
+		<span>Views</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="ca-view" class="collapsible selected"><a href="Windows_Environment.html">Read</a></li><li id="ca-viewsource" class="collapsible"><a href="indexd077.html?title=Windows_Environment&amp;action=edit" title="This page is protected.&#10;You can view its source [e]" accesskey="e">View source</a></li><li id="ca-history" class="collapsible"><a href="indexb06f.html?title=Windows_Environment&amp;action=history" title="Past revisions of this page [h]" accesskey="h">View history</a></li></ul>
+		
+	</div>
+</nav>
+
+
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-cactions" class="vector-menu-empty emptyPortlet vector-menu vector-menu-dropdown vectorMenu" aria-labelledby="p-cactions-label" role="navigation" 
+	 >
+	<input type="checkbox" class="vector-menu-checkbox vectorMenuCheckbox" aria-labelledby="p-cactions-label" />
+	<h3 id="p-cactions-label">
+		<span>More</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="menu vector-menu-content-list"></ul>
+		
+	</div>
+</nav>
+
+
+			<div id="p-search" role="search">
+	<h3 >
+		<label for="searchInput">Search</label>
+	</h3>
+	<form action="https://www.qb64.org/wiki/index.php" id="searchform">
+		<div id="simpleSearch">
+			<input type="search" name="search" placeholder="Search QB64 Wiki" title="Search QB64 Wiki [f]" accesskey="f" id="searchInput"/>
+			<input type="hidden" name="title" value="Special:Search">
+			<input type="submit" name="fulltext" value="Search" title="Search the pages for this text" id="mw-searchButton" class="searchButton mw-fallbackSearchButton"/>
+			<input type="submit" name="go" value="Go" title="Go to a page with this exact name if it exists" id="searchButton" class="searchButton"/>
+		</div>
+	</form>
+</div>
+
+		</div>
+	</div>
+	
+<div id="mw-panel">
+	<div id="p-logo" role="banner">
+		<a  title="Visit the main page" class="mw-wiki-logo" href="Main_Page.html"></a>
+	</div>
+	<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-navigation" class="vector-menu vector-menu-portal portal portal-first" aria-labelledby="p-navigation-label" role="navigation" 
+	 >
+	<h3 id="p-navigation-label">
+		<span>Navigation</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="n-mainpage-description"><a href="Main_Page.html" title="Visit the main page [z]" accesskey="z">Main page</a></li><li id="n-recentchanges"><a href="Special_RecentChanges.html" title="A list of recent changes in the wiki [r]" accesskey="r">Recent changes</a></li><li id="n-randompage"><a href="SNDCOPY.html" title="Load a random page [x]" accesskey="x">Random page</a></li><li id="n-help-mediawiki"><a href="https://www.mediawiki.org/wiki/Special:MyLanguage/Help:Contents">Help about MediaWiki</a></li></ul>
+		
+	</div>
+</nav>
+
+
+	<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-tb" class="vector-menu vector-menu-portal portal" aria-labelledby="p-tb-label" role="navigation" 
+	 >
+	<h3 id="p-tb-label">
+		<span>Tools</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="t-whatlinkshere"><a href="Special_WhatLinksHere/Windows_Environment.html" title="A list of all wiki pages that link here [j]" accesskey="j">What links here</a></li><li id="t-recentchangeslinked"><a href="Special_RecentChangesLinked/Windows_Environment.html" rel="nofollow" title="Recent changes in pages linked from this page [k]" accesskey="k">Related changes</a></li><li id="t-specialpages"><a href="Special_SpecialPages.html" title="A list of all special pages [q]" accesskey="q">Special pages</a></li><li id="t-print"><a href="javascript:print();" rel="alternate" title="Printable version of this page [p]" accesskey="p">Printable version</a></li><li id="t-permalink"><a href="index2377.html?title=Windows_Environment&amp;oldid=22755" title="Permanent link to this revision of the page">Permanent link</a></li><li id="t-info"><a href="indexca97.html?title=Windows_Environment&amp;action=info" title="More information about this page">Page information</a></li></ul>
+		
+	</div>
+</nav>
+
+
+	
+</div>
+
+</div>
+
+<footer id="footer" class="mw-footer" role="contentinfo" >
+	<ul id="footer-info" >
+		<li id="footer-info-lastmod"> This page was last edited on 20 April 2020, at 01:49.</li>
+	</ul>
+	<ul id="footer-places" >
+		<li id="footer-places-privacy"><a href="My_wiki_Privacy_policy.html" title="My wiki:Privacy policy">Privacy policy</a></li>
+		<li id="footer-places-about"><a href="My_wiki_About.html" title="My wiki:About">About QB64 Wiki</a></li>
+		<li id="footer-places-disclaimer"><a href="My_wiki_General_disclaimer.html" title="My wiki:General disclaimer">Disclaimers</a></li>
+	</ul>
+	<ul id="footer-icons" class="noprint">
+		<li id="footer-poweredbyico"><a href="https://www.mediawiki.org/"><img src="resources/assets/poweredby_mediawiki_88x31.png" alt="Powered by MediaWiki" srcset="/wiki/resources/assets/poweredby_mediawiki_132x47.png 1.5x, /wiki/resources/assets/poweredby_mediawiki_176x62.png 2x" width="88" height="31" loading="lazy"/></a></li>
+	</ul>
+	<div style="clear: both;"></div>
+</footer>
+
+
+
+<script>(RLQ=window.RLQ||[]).push(function(){mw.config.set({"wgPageParseReport":{"limitreport":{"cputime":"0.162","walltime":"0.172","ppvisitednodes":{"value":1976,"limit":1000000},"postexpandincludesize":{"value":15438,"limit":2097152},"templateargumentsize":{"value":3150,"limit":2097152},"expansiondepth":{"value":3,"limit":40},"expensivefunctioncount":{"value":0,"limit":100},"unstrip-depth":{"value":0,"limit":20},"unstrip-size":{"value":0,"limit":5000000},"timingprofile":["100.00%   55.988      1 -total"," 40.23%   22.522    280 Template:Cl","  7.75%    4.341      2 Template:CodeStart","  6.41%    3.589      1 Template:Small","  5.55%    3.108      1 Template:PageNavigation","  5.38%    3.010      2 Template:CodeEnd"]},"cachereport":{"timestamp":"20210706193648","ttl":86400,"transientcontent":false}}});mw.config.set({"wgBackendResponseTime":1080});});</script></body>
+<!-- Mirrored from www.qb64.org/wiki/Windows_Environment by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 07 Aug 2021 12:42:26 GMT -->
+</html>

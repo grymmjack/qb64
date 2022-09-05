@@ -1,0 +1,876 @@
+
+<!DOCTYPE html>
+<html class="client-nojs" lang="en" dir="ltr">
+
+<!-- Mirrored from www.qb64.org/wiki/Code_Pages by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 07 Aug 2021 13:46:02 GMT -->
+<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=UTF-8" /><!-- /Added by HTTrack -->
+<head>
+<meta charset="UTF-8"/>
+<title>Code Pages - QB64 Wiki</title>
+<script>document.documentElement.className="client-js";RLCONF={"wgBreakFrames":!1,"wgSeparatorTransformTable":["",""],"wgDigitTransformTable":["",""],"wgDefaultDateFormat":"dmy","wgMonthNames":["","January","February","March","April","May","June","July","August","September","October","November","December"],"wgRequestId":"YOWnfOkbkwEB08KNhNevpQAAAE8","wgCSPNonce":!1,"wgCanonicalNamespace":"","wgCanonicalSpecialPageName":!1,"wgNamespaceNumber":0,"wgPageName":"Code_Pages","wgTitle":"Code Pages","wgCurRevisionId":22769,"wgRevisionId":22769,"wgArticleId":135,"wgIsArticle":!0,"wgIsRedirect":!1,"wgAction":"view","wgUserName":null,"wgUserGroups":["*"],"wgCategories":[],"wgPageContentLanguage":"en","wgPageContentModel":"wikitext","wgRelevantPageName":"Code_Pages","wgRelevantArticleId":135,"wgIsProbablyEditable":!1,"wgRelevantPageIsProbablyEditable":!1,"wgRestrictionEdit":[],"wgRestrictionMove":[]};RLSTATE={"site.styles":"ready","noscript":"ready","user.styles":"ready","user":"ready"
+,"user.options":"loading","skins.vector.styles.legacy":"ready"};RLPAGEMODULES=["site","mediawiki.page.startup","mediawiki.page.ready","skins.vector.legacy.js"];</script>
+<script>(RLQ=window.RLQ||[]).push(function(){mw.loader.implement("user.options@1hzgi",function($,jQuery,require,module){/*@nomin*/mw.user.tokens.set({"patrolToken":"+\\","watchToken":"+\\","csrfToken":"+\\"});
+});});</script>
+<link rel="stylesheet" href="load5c90.css?lang=en&amp;modules=skins.vector.styles.legacy&amp;only=styles&amp;skin=vector"/>
+<script async="" src="load52c0.php?lang=en&amp;modules=startup&amp;only=scripts&amp;raw=1&amp;skin=vector"></script>
+<meta name="generator" content="MediaWiki 1.35.2"/>
+<link rel="shortcut icon" href="https://www.qb64.org/favicon.ico"/>
+<link rel="search" type="application/opensearchdescription+xml" href="opensearch_desc.php" title="QB64 Wiki (en)"/>
+<link rel="EditURI" type="application/rsd+xml" href="api-result251f.xml?action=rsd"/>
+<link rel="alternate" type="application/atom+xml" title="QB64 Wiki Atom feed" href="feeda295.xml?title=Special:RecentChanges&amp;feed=atom"/>
+<!--[if lt IE 9]><script src="/wiki/resources/lib/html5shiv/html5shiv.js"></script><![endif]-->
+</head>
+<body class="mediawiki ltr sitedir-ltr mw-hide-empty-elt ns-0 ns-subject page-Code_Pages rootpage-Code_Pages skin-vector action-view skin-vector-legacy">
+<div id="mw-page-base" class="noprint"></div>
+<div id="mw-head-base" class="noprint"></div>
+<div id="content" class="mw-body" role="main">
+	<a id="top"></a>
+	<div id="siteNotice" class="mw-body-content"></div>
+	<div class="mw-indicators mw-body-content">
+	</div>
+	<h1 id="firstHeading" class="firstHeading" lang="en">Code Pages</h1>
+	<div id="bodyContent" class="mw-body-content">
+		<div id="siteSub" class="noprint">From QB64 Wiki</div>
+		<div id="contentSub"></div>
+		<div id="contentSub2"></div>
+		
+		<div id="jump-to-nav"></div>
+		<a class="mw-jump-link" href="#mw-head">Jump to navigation</a>
+		<a class="mw-jump-link" href="#searchInput">Jump to search</a>
+		<div id="mw-content-text" lang="en" dir="ltr" class="mw-content-ltr"><div class="mw-parser-output"><center><b>UNICODE CODE PAGES</b></center>
+<p>This is a list of the current Code Pages supported by the <b>QB64 IDE</b>. The data can be copied to a file or made into a <a href="DATA.html" title="DATA">DATA</a> field. Each section has a description of the Code Page, the data required for <b>characters 128 TO 255</b>, and a LINK to the Code Table.
+</p>
+<dl><dd><dl><dd><dl><dd><b>NOTE: When copying data to create a CSV file, make sure the cursor ends up below last line at home!</b></dd></dl></dd></dl></dd></dl>
+<center><b>See: <a href="Code_Pages.html#Unicode_Mapping" title="Code Pages">Unicode Mapping</a></b></center>
+<p>Unicode characters can be inserted in Windows by holding down the <b>Alt key</b> and entering a <b>zero</b> followed by the character's <b>three-digit decimal code on the number pad</b>. By omitting the zero, characters from older code pages can be entered like code page 437 in the US and England or code page 850 in Western Europe. In some versions of Windows it is necessary to change the regional settings to another language before entering that region's page codes.
+</p><p><br />
+</p>
+<center><b>Setting up a typing language in the QB64 IDE:</b></center>
+<dl><dd><dl><dd><dl><dd>Step 1: In the OPTIONS menu select <b>DISPLAY</b>, then check the CUSTOM FONT check-box.</dd>
+<dd>Step 2: In the OPTIONS menu select <b>LANGUAGE</b>, then select a Code Page (CP850 for example) and click OK.</dd></dl></dd></dl></dd></dl>
+<h2><span class="mw-headline" id="Code_Page_Listings:">Code Page Listings:</span></h2>
+<p style="padding: 1em; line-height:100%; margin-left:10px; white-space: pre; font-family: courier; background-color: white; color: darkgreen;">                                  <a href="Code_Pages.html#CP_437" title="Code Pages">Code Page 437</a>
+
+       <a href="Code_Pages.html#CP_737" title="Code Pages">Code Page 737</a>     <a href="Code_Pages.html#CP_860" title="Code Pages">Code Page 860</a>     <a href="Code_Pages.html#CP_866" title="Code Pages">Code Page 866</a>     <a href="Code_Pages.html#CP_1253" title="Code Pages">Code Page 1253</a>
+
+       <a href="Code_Pages.html#CP_775" title="Code Pages">Code Page 775</a>     <a href="Code_Pages.html#CP_861" title="Code Pages">Code Page 861</a>     <a href="Code_Pages.html#CP_869" title="Code Pages">Code Page 869</a>     <a href="Code_Pages.html#CP_1254" title="Code Pages">Code Page 1254</a>
+
+       <a href="Code_Pages.html#CP_850" title="Code Pages">Code Page 850</a>     <a href="Code_Pages.html#CP_862" title="Code Pages">Code Page 862</a>     <a href="Code_Pages.html#CP_874" title="Code Pages">Code Page 874</a>     <a href="Code_Pages.html#CP_1255" title="Code Pages">Code Page 1255</a>
+
+       <a href="Code_Pages.html#CP_852" title="Code Pages">Code Page 852</a>     <a href="Code_Pages.html#CP_863" title="Code Pages">Code Page 863</a>     <a href="Code_Pages.html#CP_1250" title="Code Pages">Code Page 1250</a>    <a href="Code_Pages.html#CP_1256" title="Code Pages">Code Page 1256</a>
+
+       <a href="Code_Pages.html#CP_855" title="Code Pages">Code Page 855</a>     <a href="Code_Pages.html#CP_864" title="Code Pages">Code Page 864</a>     <a href="Code_Pages.html#CP_1251" title="Code Pages">Code Page 1251</a>    <a href="Code_Pages.html#CP_1257" title="Code Pages">Code Page 1257</a>
+
+       <a href="Code_Pages.html#CP_857" title="Code Pages">Code Page 857</a>     <a href="Code_Pages.html#CP_865" title="Code Pages">Code Page 865</a>     <a href="Code_Pages.html#CP_1252" title="Code Pages">Code Page 1252</a>    <a href="Code_Pages.html#CP_1258" title="Code Pages">Code Page 1258</a>
+
+                                  <a href="Code_Pages.html#CP_MIK" title="Code Pages">Code Page MIK</a>
+
+                       <a href="Code_Pages.html#Unicode_Mapping" title="Code Pages">Unicode Mapping DATA and CSV File Examples</a>
+</p>
+<center><b>See the <a href="Unicode.html" title="Unicode">Unicode</a> and <a href="MAPUNICODE.html" title="MAPUNICODE">_MAPUNICODE</a> pages to setup a program language using the data below:</b></center>
+<h2><span class="mw-headline" id="CP_437">CP 437</span></h2>
+<p>United States MS DOS
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: courier; background-color: lightgrey; color: black;"> <i> </i>
+'Microsoft_pc_cp437
+199,252,233,226,228,224,229,231,234,235,232,239,238,236,196,197
+201,230,198,244,246,242,251,249,255,214,220,162,163,165,8359,402
+225,237,243,250,241,209,170,186,191,8976,172,189,188,161,171,187
+9617,9618,9619,9474,9508,9569,9570,9558,9557,9571,9553,9559,9565,9564,9563,9488
+9492,9524,9516,9500,9472,9532,9566,9567,9562,9556,9577,9574,9568,9552,9580,9575
+9576,9572,9573,9561,9560,9554,9555,9579,9578,9496,9484,9608,9604,9612,9616,9600
+945,223,915,960,931,963,181,964,934,920,937,948,8734,966,949,8745
+8801,177,8805,8804,8992,8993,247,8776,176,8729,183,8730,8319,178,9632,160
+
+</p>
+<p><br />
+</p>
+<center><a rel="nofollow" class="external text" href="http://en.wikipedia.org/wiki/Code_page_437">Code Table 437</a></center>
+<p><br />
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:10px; white-space: pre; font-family: courier; background-color: white; color: darkgreen;">                               <b>Western <a href="ASC.html" title="ASC">ASC</a> code page differences</b>
+
+                  "<b>ä</b>" is &amp;H84 in <b>CP437</b>, &amp;HE4 in Windows-<b>1252</b>, &amp;HE4 in Unicode.
+                  "<b>ö</b>" is &amp;H94 in <b>CP437</b>, &amp;HF6 in Windows-<b>1252</b>, &amp;HF6 in Unicode.
+
+                  "<b>÷</b>" is &amp;HF6 in <b>CP437</b>, &amp;HF7 in Windows-<b>1252</b>, &amp;HF7 in Unicode.
+                  "<b>Σ</b>" is &amp;HE4 in <b>CP437</b>,                     , &amp;H3A3 in Unicode. <i> </i>
+</p>
+<h2><span class="mw-headline" id="CP_737">CP 737</span></h2>
+<p>Greek MS DOS displays Greek alphabet for algebraic formulas.
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: courier; background-color: lightgrey; color: black;">
+'Microsoft_pc_cp737
+913,914,915,916,917,918,919,920,921,922,923,924,925,926,927,928
+929,931,932,933,934,935,936,937,945,946,947,948,949,950,951,952
+953,954,955,956,957,958,959,960,961,963,962,964,965,966,967,968
+9617,9618,9619,9474,9508,9569,9570,9558,9557,9571,9553,9559,9565,9564,9563,9488
+9492,9524,9516,9500,9472,9532,9566,9567,9562,9556,9577,9574,9568,9552,9580,9575
+9576,9572,9573,9561,9560,9554,9555,9579,9578,9496,9484,9608,9604,9612,9616,9600
+969,940,941,942,970,943,972,973,971,974,902,904,905,906,908,910
+911,177,8805,8804,938,939,247,8776,176,8729,183,8730,8319,178,9632,160
+
+</p>
+<p><br />
+</p>
+<center><a rel="nofollow" class="external text" href="http://en.wikipedia.org/wiki/Code_page_737">Code Table 737</a></center>
+<p><br />
+</p>
+<center><a href="Code_Pages.html#Code_Page_Listings:" title="Code Pages">(Code Page Listings)</a></center>
+<h2><span class="mw-headline" id="CP_775">CP 775</span></h2>
+<p>Estonian, Lithuanian and Latvian languages.
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: courier; background-color: lightgrey; color: black;">
+'Microsoft_pc_cp775
+262,252,233,257,228,291,229,263,322,275,342,343,299,377,196,197
+201,230,198,333,246,290,162,346,347,214,220,248,163,216,215,164
+256,298,243,379,380,378,8221,166,169,174,172,189,188,321,171,187
+9617,9618,9619,9474,9508,260,268,280,278,9571,9553,9559,9565,302,352,9488
+9492,9524,9516,9500,9472,9532,370,362,9562,9556,9577,9574,9568,9552,9580,381
+261,269,281,279,303,353,371,363,382,9496,9484,9608,9604,9612,9616,9600
+211,223,332,323,245,213,181,324,310,311,315,316,326,274,325,8217
+173,177,8220,190,182,167,247,8222,176,8729,183,185,179,178,9632,160
+
+</p>
+<p><br />
+</p>
+<center><a rel="nofollow" class="external text" href="http://en.wikipedia.org/wiki/Code_page_775">Code Table 775</a></center>
+<h2><span class="mw-headline" id="CP_850">CP 850</span></h2>
+<p>Western Europe, Spain, England
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: courier; background-color: lightgrey; color: black;">
+'Microsoft_pc_cp850
+199,252,233,226,228,224,229,231,234,235,232,239,238,236,196,197
+201,230,198,244,246,242,251,249,255,214,220,248,163,216,215,402
+225,237,243,250,241,209,170,186,191,174,172,189,188,161,171,187
+9617,9618,9619,9474,9508,193,194,192,169,9571,9553,9559,9565,162,165,9488
+9492,9524,9516,9500,9472,9532,227,195,9562,9556,9577,9574,9568,9552,9580,164
+240,208,202,203,200,<b>305</b>,205,206,207,9496,9484,9608,9604,166,204,9600
+211,223,212,210,245,213,181,254,222,218,219,217,253,221,175,180
+173,177,8215,190,182,167,247,184,176,168,183,185,179,178,9632,160
+
+</p>
+<p><br />
+</p>
+<center><a rel="nofollow" class="external text" href="http://en.wikipedia.org/wiki/Code_page_850">Western European Unicode CP850</a> .......... <a rel="nofollow" class="external text" href="http://en.wikipedia.org/wiki/CP858">Western European CP858</a> (with Euro)</center>
+<center>Euro currency sign: ASCII code = 213 Unicode value = 8364 (replaces 305)</center>
+<center><a href="Code_Pages.html#Code_Page_Listings:" title="Code Pages">(Code Page Listings)</a></center>
+<h2><span class="mw-headline" id="CP_852">CP 852</span></h2>
+<p>Central European languages that use Latin script such as Bosnian, Croatian, Czech, Hungarian, Polish, Romanian, Serbian or Slovak.
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: courier; background-color: lightgrey; color: black;">
+'Microsoft_pc_cp852
+199,252,233,226,228,367,263,231,322,235,336,337,238,377,196,262
+201,313,314,244,246,317,318,346,347,214,220,356,357,321,215,269
+225,237,243,250,260,261,381,382,280,281,172,378,268,351,171,187
+9617,9618,9619,9474,9508,193,194,282,350,9571,9553,9559,9565,379,380,9488
+9492,9524,9516,9500,9472,9532,258,259,9562,9556,9577,9574,9568,9552,9580,164
+273,272,270,203,271,327,205,206,283,9496,9484,9608,9604,354,366,9600
+211,223,212,323,324,328,352,353,340,218,341,368,253,221,355,180
+173,733,731,711,728,167,247,184,176,168,729,369,344,345,9632,160
+
+</p>
+<p><br />
+</p>
+<center><a rel="nofollow" class="external text" href="http://en.wikipedia.org/wiki/Code_page_852">Code Table 852</a></center>
+<h2><span class="mw-headline" id="CP_855">CP 855</span></h2>
+<p>Cyrillic code page to be used under MS-DOS
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: courier; background-color: lightgrey; color: black;">
+'Microsoft_pc_cp855
+1106,1026,1107,1027,1105,1025,1108,1028,1109,1029,1110,1030,1111,1031,1112,1032
+1113,1033,1114,1034,1115,1035,1116,1036,1118,1038,1119,1039,1102,1070,1098,1066
+1072,1040,1073,1041,1094,1062,1076,1044,1077,1045,1092,1060,1075,1043,171,187
+9617,9618,9619,9474,9508,1093,1061,1080,1048,9571,9553,9559,9565,1081,1049,9488
+9492,9524,9516,9500,9472,9532,1082,1050,9562,9556,9577,9574,9568,9552,9580,164
+1083,1051,1084,1052,1085,1053,1086,1054,1087,9496,9484,9608,9604,1055,1103,9600
+1071,1088,1056,1089,1057,1090,1058,1091,1059,1078,1046,1074,1042,1100,1068,8470
+173,1099,1067,1079,1047,1096,1064,1101,1069,1097,1065,1095,1063,167,9632,160
+
+</p>
+<p><br />
+</p>
+<center><a rel="nofollow" class="external text" href="http://en.wikipedia.org/wiki/Code_page_855">Code Table 855</a></center>
+<p><br />
+</p>
+<center><a href="Code_Pages.html#Code_Page_Listings:" title="Code Pages">(Code Page Listings)</a></center>
+<h2><span class="mw-headline" id="CP_857">CP 857</span></h2>
+<p>Turkish MS DOS
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: courier; background-color: lightgrey; color: black;">
+'Microsoft_pc_cp857
+199,252,233,226,228,224,229,231,234,235,232,239,238,305,196,197
+201,230,198,244,246,242,251,249,304,214,220,248,163,216,350,351
+225,237,243,250,241,209,286,287,191,174,172,189,188,161,171,187
+9617,9618,9619,9474,9508,193,194,192,169,9571,9553,9559,9565,162,165,9488
+9492,9524,9516,9500,9472,9532,227,195,9562,9556,9577,9574,9568,9552,9580,164
+186,170,202,203,200,0,205,206,207,9496,9484,9608,9604,166,204,9600
+211,223,212,210,245,213,181,0,215,218,219,217,236,255,175,180
+173,177,0,190,182,167,247,184,176,168,183,185,179,178,9632,160
+
+</p>
+<p><br />
+</p>
+<center><a rel="nofollow" class="external text" href="http://en.wikipedia.org/wiki/Code_page_857">Code Table</a></center>
+<h2><span class="mw-headline" id="CP_860">CP 860</span></h2>
+<p>Portuguese language. MS DOS
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: courier; background-color: lightgrey; color: black;">
+'Microsoft_pc_cp860
+199,252,233,226,227,224,193,231,234,202,232,205,212,236,195,194
+201,192,200,244,245,242,218,249,204,213,220,162,163,217,8359,211
+225,237,243,250,241,209,170,186,191,210,172,189,188,161,171,187
+9617,9618,9619,9474,9508,9569,9570,9558,9557,9571,9553,9559,9565,9564,9563,9488
+9492,9524,9516,9500,9472,9532,9566,9567,9562,9556,9577,9574,9568,9552,9580,9575
+9576,9572,9573,9561,9560,9554,9555,9579,9578,9496,9484,9608,9604,9612,9616,9600
+945,223,915,960,931,963,181,964,934,920,937,948,8734,966,949,8745
+8801,177,8805,8804,8992,8993,247,8776,176,8729,183,8730,8319,178,9632,160
+
+</p>
+<p><br />
+</p>
+<center><a rel="nofollow" class="external text" href="http://en.wikipedia.org/wiki/Code_page_860">Code Table 860</a></center>
+<p><br />
+</p>
+<center><a href="Code_Pages.html#Code_Page_Listings:" title="Code Pages">(Code Page Listings)</a></center>
+<h2><span class="mw-headline" id="CP_861">CP 861</span></h2>
+<p>Icelandic language (as well as other Nordic languages). MS DOS
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: courier; background-color: lightgrey; color: black;">
+'Microsoft_pc_cp861
+199,252,233,226,228,224,229,231,234,235,232,208,240,222,196,197
+201,230,198,244,246,254,251,221,253,214,220,248,163,216,8359,402
+225,237,243,250,193,205,211,218,191,8976,172,189,188,161,171,187
+9617,9618,9619,9474,9508,9569,9570,9558,9557,9571,9553,9559,9565,9564,9563,9488
+9492,9524,9516,9500,9472,9532,9566,9567,9562,9556,9577,9574,9568,9552,9580,9575
+9576,9572,9573,9561,9560,9554,9555,9579,9578,9496,9484,9608,9604,9612,9616,9600
+945,223,915,960,931,963,181,964,934,920,937,948,8734,966,949,8745
+8801,177,8805,8804,8992,8993,247,8776,176,8729,183,8730,8319,178,9632,160
+
+</p>
+<p><br />
+</p>
+<center><a rel="nofollow" class="external text" href="http://en.wikipedia.org/wiki/Code_page_861">Code Table 861</a></center>
+<h2><span class="mw-headline" id="CP_862">CP 862</span></h2>
+<p>Hebrew letters in positions 80–9A hex, but otherwise it is identical to <a href="Code_Pages.html#CP_437" title="Code Pages">CP437</a>. Now obsolete, see <a href="Code_Pages.html#CP_1255" title="Code Pages">CP1255</a>
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: courier; background-color: lightgrey; color: black;">
+'Microsoft_pc_cp862
+1488,1489,1490,1491,1492,1493,1494,1495,1496,1497,1498,1499,1500,1501,1502,1503
+1504,1505,1506,1507,1508,1509,1510,1511,1512,1513,1514,162,163,165,8359,402
+225,237,243,250,241,209,170,186,191,8976,172,189,188,161,171,187
+9617,9618,9619,9474,9508,9569,9570,9558,9557,9571,9553,9559,9565,9564,9563,9488
+9492,9524,9516,9500,9472,9532,9566,9567,9562,9556,9577,9574,9568,9552,9580,9575
+9576,9572,9573,9561,9560,9554,9555,9579,9578,9496,9484,9608,9604,9612,9616,9600
+945,223,915,960,931,963,181,964,934,920,937,948,8734,966,949,8745
+8801,177,8805,8804,8992,8993,247,8776,176,8729,183,8730,8319,178,9632,160
+
+</p>
+<p><br />
+</p>
+<center><a rel="nofollow" class="external text" href="http://en.wikipedia.org/wiki/Code_page_862">Code Table 862</a></center>
+<p><br />
+</p>
+<center><a href="Code_Pages.html#Code_Page_Listings:" title="Code Pages">(Code Page Listings)</a></center>
+<h2><span class="mw-headline" id="CP_863">CP 863</span></h2>
+<p>French language (mainly in Canada). MS DOS
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: courier; background-color: lightgrey; color: black;">
+'Microsoft_pc_cp863
+199,252,233,226,194,224,182,231,234,235,232,239,238,8215,192,167
+201,200,202,244,203,207,251,249,164,212,220,162,163,217,219,402
+166,180,243,250,168,184,179,175,206,8976,172,189,188,190,171,187
+9617,9618,9619,9474,9508,9569,9570,9558,9557,9571,9553,9559,9565,9564,9563,9488
+9492,9524,9516,9500,9472,9532,9566,9567,9562,9556,9577,9574,9568,9552,9580,9575
+9576,9572,9573,9561,9560,9554,9555,9579,9578,9496,9484,9608,9604,9612,9616,9600
+945,223,915,960,931,963,181,964,934,920,937,948,8734,966,949,8745
+8801,177,8805,8804,8992,8993,247,8776,176,8729,183,8730,8319,178,9632,160
+
+</p>
+<p><br />
+</p>
+<center><a rel="nofollow" class="external text" href="http://en.wikipedia.org/wiki/Code_page_863">Code Table 863</a></center>
+<h2><span class="mw-headline" id="CP_864">CP 864</span></h2>
+<p>Arabic MS DOS
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: courier; background-color: lightgrey; color: black;">
+'Microsoft_pc_cp864
+176,183,8729,8730,9618,9472,9474,9532,9508,9516,9500,9524,9488,9484,9492,9496
+946,8734,966,177,189,188,8776,171,187,65271,65272,0,0,65275,65276,0
+160,173,65154,163,164,65156,0,0,65166,65167,65173,65177,1548,65181,65185,65189
+1632,1633,1634,1635,1636,1637,1638,1639,1640,1641,65233,1563,65201,65205,65209,1567
+162,65152,65153,65155,65157,65226,65163,65165,65169,65171,65175,65179,65183,65187,65191,65193
+65195,65197,65199,65203,65207,65211,65215,65217,65221,65227,65231,166,172,247,215,65225
+1600,65235,65239,65243,65247,65251,65255,65259,65261,65263,65267,65213,65228,65230,65229,65249
+65149,1617,65253,65257,65260,65264,65266,65232,65237,65269,65270,65245,65241,65265,9632,0
+
+</p>
+<p><br />
+</p>
+<center><a rel="nofollow" class="external text" href="http://ascii-table.com/codepage.php?864">Code Table 864</a></center>
+<p><br />
+</p>
+<center><a href="Code_Pages.html#Code_Page_Listings:" title="Code Pages">(Code Page Listings)</a></center>
+<h2><span class="mw-headline" id="CP_865">CP 865</span></h2>
+<p>Nordic languages (except Icelandic, for which CP861 is used). MS DOS
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: courier; background-color: lightgrey; color: black;">
+'Microsoft_pc_cp865
+199,252,233,226,228,224,229,231,234,235,232,239,238,236,196,197
+201,230,198,244,246,242,251,249,255,214,220,248,163,216,8359,402
+225,237,243,250,241,209,170,186,191,8976,172,189,188,161,171,164
+9617,9618,9619,9474,9508,9569,9570,9558,9557,9571,9553,9559,9565,9564,9563,9488
+9492,9524,9516,9500,9472,9532,9566,9567,9562,9556,9577,9574,9568,9552,9580,9575
+9576,9572,9573,9561,9560,9554,9555,9579,9578,9496,9484,9608,9604,9612,9616,9600
+945,223,915,960,931,963,181,964,934,920,937,948,8734,966,949,8745
+8801,177,8805,8804,8992,8993,247,8776,176,8729,183,8730,8319,178,9632,160
+
+</p>
+<p><br />
+</p>
+<center><a rel="nofollow" class="external text" href="http://en.wikipedia.org/wiki/Code_page_865">Code Table 865</a></center>
+<h2><span class="mw-headline" id="CP_866">CP 866</span></h2>
+<p>Cyrillic alphabetical order code page to be used with MS-DOS
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: courier; background-color: lightgrey; color: black;">
+'Microsoft_pc_cp866
+1040,1041,1042,1043,1044,1045,1046,1047,1048,1049,1050,1051,1052,1053,1054,1055
+1056,1057,1058,1059,1060,1061,1062,1063,1064,1065,1066,1067,1068,1069,1070,1071
+1072,1073,1074,1075,1076,1077,1078,1079,1080,1081,1082,1083,1084,1085,1086,1087
+9617,9618,9619,9474,9508,9569,9570,9558,9557,9571,9553,9559,9565,9564,9563,9488
+9492,9524,9516,9500,9472,9532,9566,9567,9562,9556,9577,9574,9568,9552,9580,9575
+9576,9572,9573,9561,9560,9554,9555,9579,9578,9496,9484,9608,9604,9612,9616,9600
+1088,1089,1090,1091,1092,1093,1094,1095,1096,1097,1098,1099,1100,1101,1102,1103
+1025,1105,1028,1108,1031,1111,1038,1118,176,8729,183,8730,8470,164,9632,160 <i> </i>
+</p>
+<center>See <a href="Code_Pages.html#CP_MIK" title="Code Pages">CP MIK</a> and <a href="Code_Pages.html#CP_1251" title="Code Pages">CP 1251</a> below</center>
+<center><a rel="nofollow" class="external text" href="http://en.wikipedia.org/wiki/Code_page_866">Code Table 866</a></center>
+<p><br />
+</p>
+<center><a href="Code_Pages.html#Code_Page_Listings:" title="Code Pages">(Code Page Listings)</a></center>
+<h2><span class="mw-headline" id="CP_MIK">CP MIK</span></h2>
+<p>Cyrillic Bulgarian Pravetz 16 for MS-DOS 
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: courier; background-color: lightgrey; color: black;"> <i> </i>
+'Microsoft_pc_cpMIK
+1040,1041,1042,1043,1044,1045,1046,1047,1048,1049,1050,1051,1052,1053,1054,1055  
+1056,1057,1058,1059,1060,1061,1062,1063,1064,1065,1066,1067,1068,1069,1070,1071  
+1072,1073,1074,1075,1076,1077,1078,1079,1080,1081,1082,1083,1084,1085,1086,1087  
+1088,1089,1090,1091,1092,1093,1094,1095,1096,1097,1098,1099,1100,1101,1102,1103 
+9492,9524,9516,9500,9472,9532,9571,9553,9562,9566,9577,9574,9568,9552,9580,9488  
+9617,9618,9619,9474,9508,8470,167,9559,9565,9496,9484,9608,9604,9612,9616,9600  
+945,223,915,960,931,963,181,964,934,920,937,948,8734,966,949,8745                
+8801,177,8805,8804,8992,8993,247,8776,176,8729,183,8730,8319,178,9632,160 <i> </i>
+</p>
+<center>See <a href="Code_Pages.html#CP_866" title="Code Pages">CP 866</a> above and <a href="Code_Pages.html#CP_1251" title="Code Pages">CP 1251</a> below</center>
+<center><a rel="nofollow" class="external text" href="http://en.wikipedia.org/wiki/MIK_Code_page#Code_page_layout">Code Table MIK</a></center>
+<h2><span class="mw-headline" id="CP_869">CP 869</span></h2>
+<p>Greek MS DOS. Less popular than <a href="Code_Pages.html#CP_737" title="Code Pages">Code page 737</a>
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: courier; background-color: lightgrey; color: black;">
+'Microsoft_pc_cp869
+0,0,0,0,0,0,902,0,183,172,166,8216,8217,904,8213,905
+906,938,908,0,0,910,939,169,911,178,179,940,163,941,942,943
+970,912,972,973,913,914,915,916,917,918,919,189,920,921,171,187
+9617,9618,9619,9474,9508,922,923,924,925,9571,9553,9559,9565,926,927,9488
+9492,9524,9516,9500,9472,9532,928,929,9562,9556,9577,9574,9568,9552,9580,931
+932,933,934,935,936,937,945,946,947,9496,9484,9608,9604,948,949,9600
+950,951,952,953,954,955,956,957,958,959,960,961,963,962,964,900
+173,177,965,966,967,167,968,901,176,168,969,971,944,974,9632,160
+
+</p>
+<p><br />
+</p>
+<center><a rel="nofollow" class="external text" href="http://en.wikipedia.org/wiki/Code_page_869">Code Table 869</a></center>
+<p><br />
+</p>
+<center><a href="Code_Pages.html#Code_Page_Listings:" title="Code Pages">(Code Page Listings)</a></center>
+<h2><span class="mw-headline" id="CP_874">CP 874</span></h2>
+<p>Thai MS DOS and Windows
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: courier; background-color: lightgrey; color: black;">
+'Microsoft_pc_cp874
+8364,0,0,0,0,8230,0,0,0,0,0,0,0,0,0,0
+0,8216,8217,8220,8221,8226,8211,8212,0,0,0,0,0,0,0,0
+160,3585,3586,3587,3588,3589,3590,3591,3592,3593,3594,3595,3596,3597,3598,3599
+3600,3601,3602,3603,3604,3605,3606,3607,3608,3609,3610,3611,3612,3613,3614,3615
+3616,3617,3618,3619,3620,3621,3622,3623,3624,3625,3626,3627,3628,3629,3630,3631
+3632,3633,3634,3635,3636,3637,3638,3639,3640,3641,3642,0,0,0,0,3647
+3648,3649,3650,3651,3652,3653,3654,3655,3656,3657,3658,3659,3660,3661,3662,3663
+3664,3665,3666,3667,3668,3669,3670,3671,3672,3673,3674,3675,0,0,0,0
+
+</p>
+<p><br />
+</p>
+<center><a rel="nofollow" class="external text" href="http://en.wikipedia.org/wiki/Windows-874">Code Table 874</a></center>
+<h2><span class="mw-headline" id="CP_1250">CP 1250</span></h2>
+<p>WINDOWS in Central European and Eastern European languages that use Latin script, such as Polish, Czech, Slovak, Hungarian, Slovene, Bosnian, Croatian, Serbian (Latin script), Romanian and Albanian. It may also be used with the German language.
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: courier; background-color: lightgrey; color: black;">
+'Microsoft_windows_cp1250
+8364,0,8218,0,8222,8230,8224,8225,0,8240,352,8249,346,356,381,377
+0,8216,8217,8220,8221,8226,8211,8212,0,8482,353,8250,347,357,382,378
+160,711,728,321,164,260,166,167,168,169,350,171,172,173,174,379
+176,177,731,322,180,181,182,183,184,261,351,187,317,733,318,380
+340,193,194,258,196,313,262,199,268,201,280,203,282,205,206,270
+272,323,327,211,212,336,214,215,344,366,218,368,220,221,354,223
+341,225,226,259,228,314,263,231,269,233,281,235,283,237,238,271
+273,324,328,243,244,337,246,247,345,367,250,369,252,253,355,729
+
+</p>
+<p><br />
+</p>
+<center><a rel="nofollow" class="external text" href="http://en.wikipedia.org/wiki/Windows-1250">Code Table 1250</a></center>
+<p><br />
+</p>
+<center><a href="Code_Pages.html#Code_Page_Listings:" title="Code Pages">(Code Page Listings)</a></center>
+<h2><span class="mw-headline" id="CP_1251">CP 1251</span></h2>
+<p>Cyrillic alphabet such as Russian, Bulgarian, Serbian Cyrillic and other languages. It is the most widely used for encoding the Bulgarian, Serbian and Macedonian languages.
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: courier; background-color: lightgrey; color: black;">
+'Microsoft_windows_cp1251
+1026,1027,8218,1107,8222,8230,8224,8225,8364,8240,1033,8249,1034,1036,1035,1039
+1106,8216,8217,8220,8221,8226,8211,8212,0,8482,1113,8250,1114,1116,1115,1119
+160,1038,1118,1032,164,1168,166,167,1025,169,1028,171,172,173,174,1031
+176,177,1030,1110,1169,181,182,183,1105,8470,1108,187,1112,1029,1109,1111
+1040,1041,1042,1043,1044,1045,1046,1047,1048,1049,1050,1051,1052,1053,1054,1055
+1056,1057,1058,1059,1060,1061,1062,1063,1064,1065,1066,1067,1068,1069,1070,1071
+1072,1073,1074,1075,1076,1077,1078,1079,1080,1081,1082,1083,1084,1085,1086,1087
+1088,1089,1090,1091,1092,1093,1094,1095,1096,1097,1098,1099,1100,1101,1102,1103 <i> </i>
+</p>
+<center>See <a href="Code_Pages.html#CP_MIK" title="Code Pages">CP MIK</a> and <a href="Code_Pages.html#CP_866" title="Code Pages">CP 866</a> above</center>
+<center><a rel="nofollow" class="external text" href="http://en.wikipedia.org/wiki/Windows-1251">Code Table 1251</a></center>
+<h2><span class="mw-headline" id="CP_1252">CP 1252</span></h2>
+<p>Windows Western languages with Latin alphabet, used by default in the legacy components of Microsoft Windows in English.
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: courier; background-color: lightgrey; color: black;">
+'Microsoft_windows_cp1252
+8364,0,8218,402,8222,8230,8224,8225,710,8240,352,8249,338,0,381,0
+0,8216,8217,8220,8221,8226,8211,8212,732,8482,353,8250,339,0,382,376
+160,161,162,163,164,165,166,167,168,169,170,171,172,173,174,175
+176,177,178,179,180,181,182,183,184,185,186,187,188,189,190,191
+192,193,194,195,196,197,198,199,200,201,202,203,204,205,206,207
+208,209,210,211,212,213,214,215,216,217,218,219,220,221,222,223
+224,225,226,227,228,229,230,231,232,233,234,235,236,237,238,239
+240,241,242,243,244,245,246,247,248,249,250,251,252,253,254,255
+
+</p>
+<p><br />
+</p>
+<center><a rel="nofollow" class="external text" href="http://en.wikipedia.org/wiki/Windows-1252">Code Table 1252</a></center>
+<p><br />
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:10px; white-space: pre; font-family: courier; background-color: white; color: darkgreen;">                               <b>MS DOS <a href="ASC.html" title="ASC">ASC</a> code page differences</b>
+
+                  "<b>ä</b>" is &amp;H84 in <b>CP437</b>, &amp;HE4 in Windows-<b>1252</b>, &amp;HE4 in Unicode.
+                  "<b>ö</b>" is &amp;H94 in <b>CP437</b>, &amp;HF6 in Windows-<b>1252</b>, &amp;HF6 in Unicode.
+
+                  "<b>÷</b>" is &amp;HF6 in <b>CP437</b>, &amp;HF7 in Windows-<b>1252</b>, &amp;HF7 in Unicode.
+                  "<b>Σ</b>" is &amp;HE4 in <b>CP437</b>,                     , &amp;H3A3 in Unicode. <i> </i>
+</p>
+<p><br />
+</p>
+<center><a href="Code_Pages.html#Code_Page_Listings:" title="Code Pages">(Code Page Listings)</a></center>
+<h2><span class="mw-headline" id="CP_1253">CP 1253</span></h2>
+<p>Greek (but not polytonic Greek) Not fully compatible with ISO 8859-7 (Ά is located differently).
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: courier; background-color: lightgrey; color: black;">
+'Microsoft_windows_cp1253
+8364,0,8218,402,8222,8230,8224,8225,0,8240,0,8249,0,0,0,0
+0,8216,8217,8220,8221,8226,8211,8212,0,8482,0,8250,0,0,0,0
+160,901,902,163,164,165,166,167,168,169,0,171,172,173,174,8213
+176,177,178,179,900,181,182,183,904,905,906,187,908,189,910,911
+912,913,914,915,916,917,918,919,920,921,922,923,924,925,926,927
+928,929,0,931,932,933,934,935,936,937,938,939,940,941,942,943
+944,945,946,947,948,949,950,951,952,953,954,955,956,957,958,959
+960,961,962,963,964,965,966,967,968,969,970,971,972,973,974,0
+
+</p>
+<p><br />
+</p>
+<center><a rel="nofollow" class="external text" href="http://en.wikipedia.org/wiki/Windows-1253">Code Table 1253</a></center>
+<h2><span class="mw-headline" id="CP_1254">CP 1254</span></h2>
+<p>Turkish
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: courier; background-color: lightgrey; color: black;">
+'Microsoft_windows_cp1254
+8364,0,8218,402,8222,8230,8224,8225,710,8240,352,8249,338,0,0,0
+0,8216,8217,8220,8221,8226,8211,8212,732,8482,353,8250,339,0,0,376
+160,161,162,163,164,165,166,167,168,169,170,171,172,173,174,175
+176,177,178,179,180,181,182,183,184,185,186,187,188,189,190,191
+192,193,194,195,196,197,198,199,200,201,202,203,204,205,206,207
+286,209,210,211,212,213,214,215,216,217,218,219,220,304,350,223
+224,225,226,227,228,229,230,231,232,233,234,235,236,237,238,239
+287,241,242,243,244,245,246,247,248,249,250,251,252,305,351,255
+
+</p>
+<p><br />
+</p>
+<center><a rel="nofollow" class="external text" href="http://en.wikipedia.org/wiki/Windows-1254">Code Table 1254</a></center>
+<p><br />
+</p>
+<center><a href="Code_Pages.html#Code_Page_Listings:" title="Code Pages">(Code Page Listings)</a></center>
+<h2><span class="mw-headline" id="CP_1255">CP 1255</span></h2>
+<p>Hebrew Windows. Modern applications prefer <a rel="nofollow" class="external text" href="https://en.wikipedia.org/wiki/UTF-8">UTF-8</a> or <a rel="nofollow" class="external text" href="http://www.fileformat.info/info/charset/UTF-16/list.htm">UTF-16</a> to Windows 1255.
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: courier; background-color: lightgrey; color: black;">
+'Microsoft_windows_cp1255
+8364,0,8218,402,8222,8230,8224,8225,710,8240,0,8249,0,0,0,0
+0,8216,8217,8220,8221,8226,8211,8212,732,8482,0,8250,0,0,0,0
+160,161,162,163,8362,165,166,167,168,169,215,171,172,173,174,175
+176,177,178,179,180,181,182,183,184,185,247,187,188,189,190,191
+1456,1457,1458,1459,1460,1461,1462,1463,1464,1465,0,1467,1468,1469,1470,1471
+1472,1473,1474,1475,1520,1521,1522,1523,1524,0,0,0,0,0,0,0
+1488,1489,1490,1491,1492,1493,1494,1495,1496,1497,1498,1499,1500,1501,1502,1503
+1504,1505,1506,1507,1508,1509,1510,1511,1512,1513,1514,0,0,8206,8207,0
+
+</p>
+<p><br />
+</p>
+<center><a rel="nofollow" class="external text" href="http://en.wikipedia.org/wiki/Windows-1255">Code Table 1255</a></center>
+<h2><span class="mw-headline" id="CP_1256">CP 1256</span></h2>
+<p>Arabic Latin Windows
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: courier; background-color: lightgrey; color: black;">
+'Microsoft_windows_cp1256
+8364,1662,8218,402,8222,8230,8224,8225,710,8240,1657,8249,338,1670,1688,1672
+1711,8216,8217,8220,8221,8226,8211,8212,1705,8482,1681,8250,339,8204,8205,1722
+160,1548,162,163,164,165,166,167,168,169,1726,171,172,173,174,175
+176,177,178,179,180,181,182,183,184,185,1563,187,188,189,190,1567
+1729,1569,1570,1571,1572,1573,1574,1575,1576,1577,1578,1579,1580,1581,1582,1583
+1584,1585,1586,1587,1588,1589,1590,215,1591,1592,1593,1594,1600,1601,1602,1603
+224,1604,226,1605,1606,1607,1608,231,232,233,234,235,1609,1610,238,239
+1611,1612,1613,1614,244,1615,1616,247,1617,249,1618,251,252,8206,8207,1746
+
+</p>
+<p><br />
+</p>
+<center><a rel="nofollow" class="external text" href="http://msdn.microsoft.com/en-us/goglobal/cc305149.aspx">Code Table 1256</a></center>
+<p><br />
+</p>
+<center><a href="Code_Pages.html#Code_Page_Listings:" title="Code Pages">(Code Page Listings)</a></center>
+<h2><span class="mw-headline" id="CP_1257">CP 1257</span></h2>
+<p>Estonian (although that can also be written with Windows-1252), Latvian and Lithuanian languages under Microsoft Windows. It is also possible to write Polish and German.
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: courier; background-color: lightgrey; color: black;">
+'Microsoft_windows_cp1257
+8364,0,8218,0,8222,8230,8224,8225,0,8240,0,8249,0,168,711,184
+0,8216,8217,8220,8221,8226,8211,8212,0,8482,0,8250,0,175,731,0
+160,0,162,163,164,0,166,167,216,169,342,171,172,173,174,198
+176,177,178,179,180,181,182,183,248,185,343,187,188,189,190,230
+260,302,256,262,196,197,280,274,268,201,377,278,290,310,298,315
+352,323,325,211,332,213,214,215,370,321,346,362,220,379,381,223
+261,303,257,263,228,229,281,275,269,233,378,279,291,311,299,316
+353,324,326,243,333,245,246,247,371,322,347,363,252,380,382,729
+
+</p>
+<p><br />
+</p>
+<center><a rel="nofollow" class="external text" href="http://en.wikipedia.org/wiki/Windows-1257">Code Table 1257</a></center>
+<h2><span class="mw-headline" id="CP_1258">CP 1258</span></h2>
+<p>Vietnamese. <a rel="nofollow" class="external text" href="https://en.wikipedia.org/wiki/UTF-8">UTF-8</a> is the preferred encoding for Vietnamese in modern applications.
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: courier; background-color: lightgrey; color: black;">
+'Microsoft_windows_cp1258
+8364,0,8218,402,8222,8230,8224,8225,710,8240,0,8249,338,0,0,0
+0,8216,8217,8220,8221,8226,8211,8212,732,8482,0,8250,339,0,0,376
+160,161,162,163,164,165,166,167,168,169,170,171,172,173,174,175
+176,177,178,179,180,181,182,183,184,185,186,187,188,189,190,191
+192,193,194,258,196,197,198,199,200,201,202,203,768,205,206,207
+272,209,777,211,212,416,214,215,216,217,218,219,220,431,771,223
+224,225,226,259,228,229,230,231,232,233,234,235,769,237,238,239
+273,241,803,243,244,417,246,247,248,249,250,251,252,432,8363,255
+
+</p>
+<p><br />
+</p>
+<center><a rel="nofollow" class="external text" href="http://en.wikipedia.org/wiki/Windows-1258">Code Table 1258</a></center>
+<p><br />
+</p>
+<center><a href="Code_Pages.html#Code_Page_Listings:" title="Code Pages">(Code Page Listings)</a></center>
+<h2><span class="mw-headline" id="Unicode_Mapping">Unicode Mapping</span></h2>
+<center><b><a href="MAPUNICODE.html" title="MAPUNICODE">_MAPUNICODE</a> can place the Unicode characters TO any <a href="ASCII.html" title="ASCII">ASCII</a> code space you desire (0 to 255)</b>.</center>
+<p>Reading CSV data file: Comma separated values are read using <a href="INPUT_(file_statement).html" title="INPUT (file statement)">INPUT #</a>. Code Page data is pasted directly into a file as CSV.
+</p>
+<center><b>File named CP863.CSV </b></center>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: courier; background-color: lightgrey; color: black;">Microsoft_pc_cp863
+199,252,233,226,194,224,182,231,234,235,232,239,238,8215,192,167
+201,200,202,244,203,207,251,249,164,212,220,162,163,217,219,402
+166,180,243,250,168,184,179,175,206,8976,172,189,188,190,171,187
+9617,9618,9619,9474,9508,9569,9570,9558,9557,9571,9553,9559,9565,9564,9563,9488
+9492,9524,9516,9500,9472,9532,9566,9567,9562,9556,9577,9574,9568,9552,9580,9575
+9576,9572,9573,9561,9560,9554,9555,9579,9578,9496,9484,9608,9604,9612,9616,9600
+945,223,915,960,931,963,181,964,934,920,937,948,8734,966,949,8745
+8801,177,8805,8804,8992,8993,247,8776,176,8729,183,8730,8319,178,9632,160 <i> </i>
+</p>
+<center><b>QB64 BAS module:</b></center>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: Courier, monospace; background-color: darkblue; color: lightgrey; word-wrap: break-word;"> <i> </i>
+<a href="SCREEN.html" title="SCREEN"><span style="color:#87cefa;">SCREEN</span></a> 0
+<a href="FONT.html" title="FONT"><span style="color:#87cefa;">_FONT</span></a> <a href="LOADFONT.html" title="LOADFONT"><span style="color:#87cefa;">_LOADFONT</span></a>("C:\Windows\Fonts\Cour.ttf", 20, "MONOSPACE")  'select monospace font
+FileName$ = "CP863.CSV"   '<b>&lt;&lt;&lt;&lt;&lt;&lt;&lt; Enter Unicode CSV data text file name you created here!</b>
+f = <a href="FREEFILE.html" title="FREEFILE"><span style="color:#87cefa;">FREEFILE</span></a>
+<a href="OPEN.html" title="OPEN"><span style="color:#87cefa;">OPEN</span></a> FileName$ <a href="FOR_(file_statement).html" class="mw-redirect" title="FOR (file statement)"><span style="color:#87cefa;">FOR</span></a> <a href="INPUT_(file_mode).html" class="mw-redirect" title="INPUT (file mode)"><span style="color:#87cefa;">INPUT</span></a> <a href="AS.html" title="AS"><span style="color:#87cefa;">AS</span></a> #f         
+<a href="INPUT_(file_statement).html" title="INPUT (file statement)"><span style="color:#87cefa;">INPUT #f</span></a>, CodePage$                     'read code page ID on first line of file
+IF <a href="NOT.html" title="NOT"><span style="color:#87cefa;">NOT</span></a> <a href="EOF.html" title="EOF"><span style="color:#87cefa;">EOF</span></a>(f) THEN <a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> CodePage$      'display code page number
+
+<a href="FOR...html" title="FOR...NEXT"><span style="color:#87cefa;">FOR</span></a> ascii = 128 <a href="TO.html" title="TO"><span style="color:#87cefa;">TO</span></a> 255       'assign unicode values to ascii 128 to 255 only
+  IF <a href="EOF.html" title="EOF"><span style="color:#87cefa;">EOF</span></a>(f) THEN <a href="EXIT_FOR.html" title="EXIT FOR"><span style="color:#87cefa;">EXIT FOR</span></a>
+  <a href="INPUT_(file_statement).html" title="INPUT (file statement)"><span style="color:#87cefa;">INPUT #f</span></a>, unicode&amp;
+  <a href="IF.html" class="mw-redirect" title="IF"><span style="color:#87cefa;">IF</span></a> unicode&amp; = 0 <a href="THEN.html" title="THEN"><span style="color:#87cefa;">THEN</span></a> unicode&amp; = 9744  'make undefined characters look like a box
+  <a href="MAPUNICODE.html" title="MAPUNICODE"><span style="color:#87cefa;">_MAPUNICODE</span></a> unicode&amp; <a href="TO.html" title="TO"><span style="color:#87cefa;">TO</span></a> ascii         'replace ascii with unicode value
+<a href="NEXT.html" title="NEXT"><span style="color:#87cefa;">NEXT</span></a>
+<a href="CLOSE.html" title="CLOSE"><span style="color:#87cefa;">CLOSE</span></a> #f
+
+<a href="FOR...html" title="FOR...NEXT"><span style="color:#87cefa;">FOR</span></a> code = 128 <a href="TO.html" title="TO"><span style="color:#87cefa;">TO</span></a> 255
+  <a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> code; <a href="CHR%24.html" title="CHR$"><span style="color:#87cefa;">CHR$</span></a>(code);               'display unicode characters
+<a href="NEXT.html" title="NEXT"><span style="color:#87cefa;">NEXT</span></a> 
+
+<a href="END.html" title="END"><span style="color:#87cefa;">END</span></a> <i> </i>
+</p>
+<dl><dd>Simply copy the code page data after the page name into a text file, commas and all, and read the file with <a href="INPUT_(file_statement).html" title="INPUT (file statement)">INPUT</a> #.</dd>
+<dd><a href="MAPUNICODE.html" title="MAPUNICODE">_MAPUNICODE</a> can place the Unicode characters TO any <a href="ASCII.html" title="ASCII">ASCII</a> code space you desire (0 to 255).</dd></dl>
+<p><br />
+Reading code page as program <a href="DATA.html" title="DATA">DATA</a>: Simply place DATA before each CSV Code Page data line pasted into a program. 
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: Courier, monospace; background-color: darkblue; color: lightgrey; word-wrap: break-word;"> <i> </i>
+<a href="SCREEN.html" title="SCREEN"><span style="color:#87cefa;">SCREEN</span></a> 0
+<a href="FONT.html" title="FONT"><span style="color:#87cefa;">_FONT</span></a> <a href="LOADFONT.html" title="LOADFONT"><span style="color:#87cefa;">_LOADFONT</span></a>("C:\Windows\Fonts\Cour.ttf", 20, "MONOSPACE")  'select monospace font
+
+<a href="RESTORE.html" title="RESTORE"><span style="color:#87cefa;">RESTORE</span></a> <b>Microsoft_pc_cp863</b>   'or restore single DATA field w/o field name
+<a href="FOR...html" title="FOR...NEXT"><span style="color:#87cefa;">FOR</span></a> ascii = 128 <a href="TO.html" title="TO"><span style="color:#87cefa;">TO</span></a> 255       'assign unicode values to ascii 128 to 255 only
+  <a href="READ.html" title="READ"><span style="color:#87cefa;">READ</span></a> unicode&amp;
+  <a href="IF.html" class="mw-redirect" title="IF"><span style="color:#87cefa;">IF</span></a> unicode&amp; = 0 <a href="THEN.html" title="THEN"><span style="color:#87cefa;">THEN</span></a> unicode&amp; = 9744   'make undefined characters look like a box
+  <a href="MAPUNICODE.html" title="MAPUNICODE"><span style="color:#87cefa;">_MAPUNICODE</span></a> unicode&amp; <a href="TO.html" title="TO"><span style="color:#87cefa;">TO</span></a> ascii          'replace ascii with unicode value 
+<a href="NEXT.html" title="NEXT"><span style="color:#87cefa;">NEXT</span></a>
+
+<a href="FOR...html" title="FOR...NEXT"><span style="color:#87cefa;">FOR</span></a> code = 128 <a href="TO.html" title="TO"><span style="color:#87cefa;">TO</span></a> 255
+  <a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> code; <a href="CHR%24.html" title="CHR$"><span style="color:#87cefa;">CHR$</span></a>(code);                'display unicode characters
+<a href="NEXT.html" title="NEXT"><span style="color:#87cefa;">NEXT</span></a> 
+
+<a href="END.html" title="END"><span style="color:#87cefa;">END</span></a> <i> </i>
+
+Microsoft_pc_cp863:         'use as data field line label or comment out code page name
+<a href="DATA.html" title="DATA"><span style="color:#87cefa;">DATA</span></a> 199,252,233,226,194,224,182,231,234,235,232,239,238,8215,192,167
+<a href="DATA.html" title="DATA"><span style="color:#87cefa;">DATA</span></a> 201,200,202,244,203,207,251,249,164,212,220,162,163,217,219,402
+<a href="DATA.html" title="DATA"><span style="color:#87cefa;">DATA</span></a> 166,180,243,250,168,184,179,175,206,8976,172,189,188,190,171,187
+<a href="DATA.html" title="DATA"><span style="color:#87cefa;">DATA</span></a> 9617,9618,9619,9474,9508,9569,9570,9558,9557,9571,9553,9559,9565,9564,9563,9488
+<a href="DATA.html" title="DATA"><span style="color:#87cefa;">DATA</span></a> 9492,9524,9516,9500,9472,9532,9566,9567,9562,9556,9577,9574,9568,9552,9580,9575
+<a href="DATA.html" title="DATA"><span style="color:#87cefa;">DATA</span></a> 9576,9572,9573,9561,9560,9554,9555,9579,9578,9496,9484,9608,9604,9612,9616,9600
+<a href="DATA.html" title="DATA"><span style="color:#87cefa;">DATA</span></a> 945,223,915,960,931,963,181,964,934,920,937,948,8734,966,949,8745
+<a href="DATA.html" title="DATA"><span style="color:#87cefa;">DATA</span></a> 8801,177,8805,8804,8992,8993,247,8776,176,8729,183,8730,8319,178,9632,160 <i> </i>
+</p>
+<dl><dd>Simply copy the code page data and paste it into your program then type DATA before each line following the page name.</dd>
+<dd>Uncomment the code page name to use it as a <a href="DATA.html" title="DATA">DATA</a> field name followed by a colon to <a href="RESTORE.html" title="RESTORE">RESTORE</a> when necessary.</dd></dl>
+<dl><dd>Unicode values can be taken from any of the above code page data to make custom extended code characters for a program.</dd></dl>
+<p><br />
+</p>
+<center><a href="Code_Pages.html#Code_Page_Listings:" title="Code Pages">(Code Page Listings)</a></center>
+<h2><span class="mw-headline" id="Reference:">Reference:</span></h2>
+<p><i>See also:</i>
+</p>
+<ul><li><a href="MAPUNICODE.html" title="MAPUNICODE">_MAPUNICODE</a>, <a href="MAPUNICODE_(function).html" title="MAPUNICODE (function)">_MAPUNICODE (function)</a></li>
+<li><a href="Unicode.html" title="Unicode">Unicode</a>, <a href="ASCII.html" title="ASCII">ASCII</a>, <a href="CHR%24.html" title="CHR$">CHR$</a>, <a href="ASC.html" title="ASC">ASC</a></li>
+<li><a href="KEYHIT.html" title="KEYHIT">_KEYHIT</a>, <a href="KEYDOWN.html" title="KEYDOWN">_KEYDOWN</a></li>
+<li><a href="Text_Using_Graphics.html" title="Text Using Graphics">Text Using Graphics</a></li></ul>
+<p><br />
+</p>
+<hr />
+<center><i>Navigation:</i>
+<dl><dd><a href="Keyword_Reference_-_Alphabetical.html" title="Keyword Reference - Alphabetical">Keyword Reference - Alphabetical</a></dd>
+<dd><a href="Keyword_Reference_-_By_usage.html" title="Keyword Reference - By usage">Keyword Reference - By Usage</a></dd>
+<dd><a href="Main_Page.html" title="Main Page">Main Wiki Page</a></dd></dl></center>
+<!-- 
+NewPP limit report
+Cached time: 20210706213452
+Cache expiry: 86400
+Dynamic content: false
+Complications: []
+CPU time usage: 0.132 seconds
+Real time usage: 0.229 seconds
+Preprocessor visited node count: 879/1000000
+Post‐expand include size: 9252/2097152 bytes
+Template argument size: 577/2097152 bytes
+Highest expansion depth: 3/40
+Expensive parser function count: 0/100
+Unstrip recursion depth: 0/20
+Unstrip post‐expand size: 0/5000000 bytes
+-->
+<!--
+Transclusion expansion time report (%,ms,calls,template)
+100.00%   62.119      1 -total
+ 22.36%   13.887      3 Template:CodeEnd
+ 15.69%    9.745      3 Template:WhiteStart
+ 11.23%    6.978     55 Template:Cl
+ 10.24%    6.361      3 Template:WhiteEnd
+  8.82%    5.480      1 Template:PageNavigation
+  5.95%    3.695     27 Template:TextStart
+  5.88%    3.653     26 Template:TextEnd
+  5.32%    3.304      2 Template:CodeStart
+-->
+
+<!-- Saved in parser cache with key i4224360_mw2-mw_:pcache:idhash:135-0!canonical and timestamp 20210706213452 and revision id 22769
+ -->
+</div></div><div class="printfooter">Retrieved from "<a dir="ltr" href="index32a6.html?title=Code_Pages&amp;oldid=22769">http://www.qb64.org/wiki/index.php?title=Code_Pages&amp;oldid=22769</a>"</div>
+		<div id="catlinks" class="catlinks catlinks-allhidden" data-mw="interface"></div>
+	</div>
+</div>
+
+<div id="mw-navigation">
+	<h2>Navigation menu</h2>
+	<div id="mw-head">
+		<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-personal" class="vector-menu" aria-labelledby="p-personal-label" role="navigation" 
+	 >
+	<h3 id="p-personal-label">
+		<span>Personal tools</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="pt-login"><a href="index329d.html?title=Special:UserLogin&amp;returnto=Code+Pages" title="You are encouraged to log in; however, it is not mandatory [o]" accesskey="o">Log in</a></li></ul>
+		
+	</div>
+</nav>
+
+
+		<div id="left-navigation">
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-namespaces" class="vector-menu vector-menu-tabs vectorTabs" aria-labelledby="p-namespaces-label" role="navigation" 
+	 >
+	<h3 id="p-namespaces-label">
+		<span>Namespaces</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="ca-nstab-main" class="selected"><a href="Code_Pages.html" title="View the content page [c]" accesskey="c">Page</a></li><li id="ca-talk" class="new"><a href="Talk_Code_Pages.html?title=Talk:Code_Pages&amp;action=edit&amp;redlink=1" rel="discussion" title="Discussion about the content page (page does not exist) [t]" accesskey="t">Discussion</a></li></ul>
+		
+	</div>
+</nav>
+
+
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-variants" class="vector-menu-empty emptyPortlet vector-menu vector-menu-dropdown vectorMenu" aria-labelledby="p-variants-label" role="navigation" 
+	 >
+	<input type="checkbox" class="vector-menu-checkbox vectorMenuCheckbox" aria-labelledby="p-variants-label" />
+	<h3 id="p-variants-label">
+		<span>Variants</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="menu vector-menu-content-list"></ul>
+		
+	</div>
+</nav>
+
+
+		</div>
+		<div id="right-navigation">
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-views" class="vector-menu vector-menu-tabs vectorTabs" aria-labelledby="p-views-label" role="navigation" 
+	 >
+	<h3 id="p-views-label">
+		<span>Views</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="ca-view" class="collapsible selected"><a href="Code_Pages.html">Read</a></li><li id="ca-viewsource" class="collapsible"><a href="index0c52.html?title=Code_Pages&amp;action=edit" title="This page is protected.&#10;You can view its source [e]" accesskey="e">View source</a></li><li id="ca-history" class="collapsible"><a href="index16a0.html?title=Code_Pages&amp;action=history" title="Past revisions of this page [h]" accesskey="h">View history</a></li></ul>
+		
+	</div>
+</nav>
+
+
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-cactions" class="vector-menu-empty emptyPortlet vector-menu vector-menu-dropdown vectorMenu" aria-labelledby="p-cactions-label" role="navigation" 
+	 >
+	<input type="checkbox" class="vector-menu-checkbox vectorMenuCheckbox" aria-labelledby="p-cactions-label" />
+	<h3 id="p-cactions-label">
+		<span>More</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="menu vector-menu-content-list"></ul>
+		
+	</div>
+</nav>
+
+
+			<div id="p-search" role="search">
+	<h3 >
+		<label for="searchInput">Search</label>
+	</h3>
+	<form action="https://www.qb64.org/wiki/index.php" id="searchform">
+		<div id="simpleSearch">
+			<input type="search" name="search" placeholder="Search QB64 Wiki" title="Search QB64 Wiki [f]" accesskey="f" id="searchInput"/>
+			<input type="hidden" name="title" value="Special:Search">
+			<input type="submit" name="fulltext" value="Search" title="Search the pages for this text" id="mw-searchButton" class="searchButton mw-fallbackSearchButton"/>
+			<input type="submit" name="go" value="Go" title="Go to a page with this exact name if it exists" id="searchButton" class="searchButton"/>
+		</div>
+	</form>
+</div>
+
+		</div>
+	</div>
+	
+<div id="mw-panel">
+	<div id="p-logo" role="banner">
+		<a  title="Visit the main page" class="mw-wiki-logo" href="Main_Page.html"></a>
+	</div>
+	<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-navigation" class="vector-menu vector-menu-portal portal portal-first" aria-labelledby="p-navigation-label" role="navigation" 
+	 >
+	<h3 id="p-navigation-label">
+		<span>Navigation</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="n-mainpage-description"><a href="Main_Page.html" title="Visit the main page [z]" accesskey="z">Main page</a></li><li id="n-recentchanges"><a href="Special_RecentChanges.html" title="A list of recent changes in the wiki [r]" accesskey="r">Recent changes</a></li><li id="n-randompage"><a href="SNDCOPY.html" title="Load a random page [x]" accesskey="x">Random page</a></li><li id="n-help-mediawiki"><a href="https://www.mediawiki.org/wiki/Special:MyLanguage/Help:Contents">Help about MediaWiki</a></li></ul>
+		
+	</div>
+</nav>
+
+
+	<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-tb" class="vector-menu vector-menu-portal portal" aria-labelledby="p-tb-label" role="navigation" 
+	 >
+	<h3 id="p-tb-label">
+		<span>Tools</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="t-whatlinkshere"><a href="Special_WhatLinksHere/Code_Pages.html" title="A list of all wiki pages that link here [j]" accesskey="j">What links here</a></li><li id="t-recentchangeslinked"><a href="Special_RecentChangesLinked/Code_Pages.html" rel="nofollow" title="Recent changes in pages linked from this page [k]" accesskey="k">Related changes</a></li><li id="t-specialpages"><a href="Special_SpecialPages.html" title="A list of all special pages [q]" accesskey="q">Special pages</a></li><li id="t-print"><a href="javascript:print();" rel="alternate" title="Printable version of this page [p]" accesskey="p">Printable version</a></li><li id="t-permalink"><a href="index32a6.html?title=Code_Pages&amp;oldid=22769" title="Permanent link to this revision of the page">Permanent link</a></li><li id="t-info"><a href="indexb5a9.html?title=Code_Pages&amp;action=info" title="More information about this page">Page information</a></li></ul>
+		
+	</div>
+</nav>
+
+
+	
+</div>
+
+</div>
+
+<footer id="footer" class="mw-footer" role="contentinfo" >
+	<ul id="footer-info" >
+		<li id="footer-info-lastmod"> This page was last edited on 20 April 2020, at 02:06.</li>
+	</ul>
+	<ul id="footer-places" >
+		<li id="footer-places-privacy"><a href="My_wiki_Privacy_policy.html" title="My wiki:Privacy policy">Privacy policy</a></li>
+		<li id="footer-places-about"><a href="My_wiki_About.html" title="My wiki:About">About QB64 Wiki</a></li>
+		<li id="footer-places-disclaimer"><a href="My_wiki_General_disclaimer.html" title="My wiki:General disclaimer">Disclaimers</a></li>
+	</ul>
+	<ul id="footer-icons" class="noprint">
+		<li id="footer-poweredbyico"><a href="https://www.mediawiki.org/"><img src="resources/assets/poweredby_mediawiki_88x31.png" alt="Powered by MediaWiki" srcset="/wiki/resources/assets/poweredby_mediawiki_132x47.png 1.5x, /wiki/resources/assets/poweredby_mediawiki_176x62.png 2x" width="88" height="31" loading="lazy"/></a></li>
+	</ul>
+	<div style="clear: both;"></div>
+</footer>
+
+
+
+<script>(RLQ=window.RLQ||[]).push(function(){mw.config.set({"wgPageParseReport":{"limitreport":{"cputime":"0.132","walltime":"0.229","ppvisitednodes":{"value":879,"limit":1000000},"postexpandincludesize":{"value":9252,"limit":2097152},"templateargumentsize":{"value":577,"limit":2097152},"expansiondepth":{"value":3,"limit":40},"expensivefunctioncount":{"value":0,"limit":100},"unstrip-depth":{"value":0,"limit":20},"unstrip-size":{"value":0,"limit":5000000},"timingprofile":["100.00%   62.119      1 -total"," 22.36%   13.887      3 Template:CodeEnd"," 15.69%    9.745      3 Template:WhiteStart"," 11.23%    6.978     55 Template:Cl"," 10.24%    6.361      3 Template:WhiteEnd","  8.82%    5.480      1 Template:PageNavigation","  5.95%    3.695     27 Template:TextStart","  5.88%    3.653     26 Template:TextEnd","  5.32%    3.304      2 Template:CodeStart"]},"cachereport":{"timestamp":"20210706213452","ttl":86400,"transientcontent":false}}});mw.config.set({"wgBackendResponseTime":1279});});</script></body>
+<!-- Mirrored from www.qb64.org/wiki/Code_Pages by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 07 Aug 2021 13:46:07 GMT -->
+</html>

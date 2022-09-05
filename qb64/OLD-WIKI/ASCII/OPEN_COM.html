@@ -1,0 +1,379 @@
+
+<!DOCTYPE html>
+<html class="client-nojs" lang="en" dir="ltr">
+
+<!-- Mirrored from www.qb64.org/wiki/OPEN_COM by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 07 Aug 2021 13:19:13 GMT -->
+<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=UTF-8" /><!-- /Added by HTTrack -->
+<head>
+<meta charset="UTF-8"/>
+<title>OPEN COM - QB64 Wiki</title>
+<script>document.documentElement.className="client-js";RLCONF={"wgBreakFrames":!1,"wgSeparatorTransformTable":["",""],"wgDigitTransformTable":["",""],"wgDefaultDateFormat":"dmy","wgMonthNames":["","January","February","March","April","May","June","July","August","September","October","November","December"],"wgRequestId":"YOWlk3Rlrus40@nKpqjrOwAAAJk","wgCSPNonce":!1,"wgCanonicalNamespace":"","wgCanonicalSpecialPageName":!1,"wgNamespaceNumber":0,"wgPageName":"OPEN_COM","wgTitle":"OPEN COM","wgCurRevisionId":23441,"wgRevisionId":23441,"wgArticleId":504,"wgIsArticle":!0,"wgIsRedirect":!1,"wgAction":"view","wgUserName":null,"wgUserGroups":["*"],"wgCategories":[],"wgPageContentLanguage":"en","wgPageContentModel":"wikitext","wgRelevantPageName":"OPEN_COM","wgRelevantArticleId":504,"wgIsProbablyEditable":!1,"wgRelevantPageIsProbablyEditable":!1,"wgRestrictionEdit":[],"wgRestrictionMove":[]};RLSTATE={"site.styles":"ready","noscript":"ready","user.styles":"ready","user":"ready",
+"user.options":"loading","skins.vector.styles.legacy":"ready","mediawiki.toc.styles":"ready"};RLPAGEMODULES=["site","mediawiki.page.startup","mediawiki.page.ready","mediawiki.toc","skins.vector.legacy.js"];</script>
+<script>(RLQ=window.RLQ||[]).push(function(){mw.loader.implement("user.options@1hzgi",function($,jQuery,require,module){/*@nomin*/mw.user.tokens.set({"patrolToken":"+\\","watchToken":"+\\","csrfToken":"+\\"});
+});});</script>
+<link rel="stylesheet" href="loadd8b0.css?lang=en&amp;modules=mediawiki.toc.styles%7Cskins.vector.styles.legacy&amp;only=styles&amp;skin=vector"/>
+<script async="" src="load52c0.php?lang=en&amp;modules=startup&amp;only=scripts&amp;raw=1&amp;skin=vector"></script>
+<meta name="generator" content="MediaWiki 1.35.2"/>
+<link rel="shortcut icon" href="https://www.qb64.org/favicon.ico"/>
+<link rel="search" type="application/opensearchdescription+xml" href="opensearch_desc.php" title="QB64 Wiki (en)"/>
+<link rel="EditURI" type="application/rsd+xml" href="api-result251f.xml?action=rsd"/>
+<link rel="alternate" type="application/atom+xml" title="QB64 Wiki Atom feed" href="feeda295.xml?title=Special:RecentChanges&amp;feed=atom"/>
+<!--[if lt IE 9]><script src="/wiki/resources/lib/html5shiv/html5shiv.js"></script><![endif]-->
+</head>
+<body class="mediawiki ltr sitedir-ltr mw-hide-empty-elt ns-0 ns-subject page-OPEN_COM rootpage-OPEN_COM skin-vector action-view skin-vector-legacy">
+<div id="mw-page-base" class="noprint"></div>
+<div id="mw-head-base" class="noprint"></div>
+<div id="content" class="mw-body" role="main">
+	<a id="top"></a>
+	<div id="siteNotice" class="mw-body-content"></div>
+	<div class="mw-indicators mw-body-content">
+	</div>
+	<h1 id="firstHeading" class="firstHeading" lang="en">OPEN COM</h1>
+	<div id="bodyContent" class="mw-body-content">
+		<div id="siteSub" class="noprint">From QB64 Wiki</div>
+		<div id="contentSub"></div>
+		<div id="contentSub2"></div>
+		
+		<div id="jump-to-nav"></div>
+		<a class="mw-jump-link" href="#mw-head">Jump to navigation</a>
+		<a class="mw-jump-link" href="#searchInput">Jump to search</a>
+		<div id="mw-content-text" lang="en" dir="ltr" class="mw-content-ltr"><div class="mw-parser-output"><p>The <a class="mw-selflink selflink">OPEN COM</a> statement is used to access a computer's serial port COM.
+</p><p><br />
+</p>
+<div id="toc" class="toc" role="navigation" aria-labelledby="mw-toc-heading"><input type="checkbox" role="button" id="toctogglecheckbox" class="toctogglecheckbox" style="display:none" /><div class="toctitle" lang="en" dir="ltr"><h2 id="mw-toc-heading">Contents</h2><span class="toctogglespan"><label class="toctogglelabel" for="toctogglecheckbox"></label></span></div>
+<ul>
+<li class="toclevel-1"><a href="#Syntax"><span class="tocnumber">1</span> <span class="toctext">Syntax</span></a></li>
+<li class="toclevel-1"><a href="#Parameters"><span class="tocnumber">2</span> <span class="toctext">Parameters</span></a></li>
+<li class="toclevel-1"><a href="#Description"><span class="tocnumber">3</span> <span class="toctext">Description</span></a></li>
+<li class="toclevel-1"><a href="#Examples"><span class="tocnumber">4</span> <span class="toctext">Examples</span></a></li>
+<li class="toclevel-1"><a href="#See_also"><span class="tocnumber">5</span> <span class="toctext">See also</span></a></li>
+</ul>
+</div>
+
+<h2><span class="mw-headline" id="Syntax">Syntax</span></h2>
+<dl><dd><b>OPEN</b> "COMn: <i>Speed</i>, <i>Parity</i>, <i>Bits</i>, <i>Stopbit</i>, [<i>Options</i>]" [FOR {<a href="RANDOM.html" title="RANDOM">RANDOM</a>|<a href="BINARY-2.html" class="mw-redirect" title="BINARY">BINARY</a>|<a href="OUTPUT.html" class="mw-redirect" title="OUTPUT">OUTPUT</a>|<a href="INPUT_(file_mode).html" class="mw-redirect" title="INPUT (file mode)">INPUT</a>}] AS #<i>P</i> [LEN = <i>byteSize</i>]</dd></dl>
+<p><br />
+</p>
+<h2><span class="mw-headline" id="Parameters">Parameters</span></h2>
+<ul><li><i>Speed</i> (baud rate): 50, 150, 300, 600, 1200, 1800, 2400, <b>9600</b> (QBasic's maximum), 19200 or <b>115200</b> (<b>QB64'</b>s maximum).</li>
+<li><i>Parity</i>: <b>N</b> (none), E (even), O (odd), S (space) or M (mark). Note: If 8 bits, use parity N for numerical data.</li>
+<li><i>Bits</i> = number of bits/byte: Valid numbers: 5, 6, 7 or <b>8</b></li>
+<li><i>Stopbit</i> = number of stop bits: Valid numbers: <b>1</b>, 1.5 or 2</li>
+<li>Optional COM port <i>Options</i> (separated by commas):</li></ul>
+<dl><dd><dl><dd><ul><li>ASC&#160;: <a href="ASCII.html" title="ASCII">ASCII</a> byte mode. End of line = <a href="CHR%24.html" title="CHR$">CHR$</a>(13). End of file = CHR$(26)</li>
+<li>BIN&#160;: <a href="Binary.html" title="Binary">Binary</a> byte mode. Default mode if ASC is not used(option not required).</li></ul></dd>
+<dd><i>Below ms is the timeout in milliseconds 1 to 65535. Zero ignores a timeout. Default without ms = 1000&#160;:</i>
+<ul><li>CD[ms]&#160;: Time until timeout of DCD (Carrier Detect) line in. CD0 ignores timeouts.</li>
+<li>CS[ms]&#160;: Time until timeout of CTS (Clear to Send) line in. CS0 ignores timeouts.</li>
+<li>DS[ms]&#160;: Time until timeout of DSR (Data Set Ready) line in. DS0 ignores timeouts.</li>
+<li>OP[ms]&#160;: Time until data lines become active. If timeout then OPEN fails, OP0 ignores timeouts.</li>
+<li>RB[b]&#160;: Size of receive buffer in bytes when used. Default when not used = 512 bytes</li>
+<li>TB[b]&#160;: Size of transmit buffer in bytes when used. Default when not used = 512 bytes</li>
+<li>RS  : Supress detection of Request to Send (RTS) line.</li></ul></dd></dl></dd></dl>
+<p><br />
+</p>
+<h2><span class="mw-headline" id="Description">Description</span></h2>
+<ul><li><b>If any optional CD, CS, DS or OP timeouts occur the OPEN will fail or port access will stop. Try 0 to ignore.</b></li>
+<li><b>QB64</b> can open any COM<i>n</i> port number from 1 to 9.</li>
+<li>See Windows System <b>Device Manager</b> for COM port numbers and port addresses &amp;H3F8, &amp;H2F8, &amp;H3E8 and &amp;H2E8.</li>
+<li>Four commas are required after the Speed, Parity, Bits, and Stopbit, even if none of the Options are used.</li>
+<li>Other <a href="OPEN.html" title="OPEN">OPEN</a> <i>options</i> are optional and in any order separated by commas within the OPEN command <a href="STRING.html" title="STRING">string</a>.(See list below)</li>
+<li>The optional FOR access <i>mode</i> can be <a href="OUTPUT.html" class="mw-redirect" title="OUTPUT">OUTPUT</a>, <a href="INPUT_(file_mode).html" class="mw-redirect" title="INPUT (file mode)">INPUT</a> or <a href="RANDOM.html" title="RANDOM">RANDOM</a> (default mode when no FOR statement is used).</li>
+<li><b>Currently, QB64 only supports <a href="OPEN.html" title="OPEN">OPEN</a> FOR <a href="RANDOM.html" title="RANDOM">RANDOM</a> access using the <a href="GET.html" title="GET">GET</a>/<a href="PUT.html" title="PUT">PUT</a> commands in <a href="BINARY-2.html" class="mw-redirect" title="BINARY">BIN</a> mode.</b></li>
+<li><b>Use the BIN option listed below for <a href="BINARY-2.html" class="mw-redirect" title="BINARY">BINARY</a> byte mode port access.</b></li>
+<li>The <a href="LEN.html" title="LEN">LEN</a> statement is also optional. The default record size is 512 bytes when not used.</li>
+<li>Use the <a href="LOC.html" title="LOC">LOC</a>(portnumber) function to determine that there is data in the receive buffer when the value is greater than 0.</li>
+<li>OPEN AS number can use a <a href="FREEFILE.html" title="FREEFILE">FREEFILE</a> value. Numbers used by files already open <b>cannot</b> be used by OPEN COM.</li>
+<li><a href="Keywords_currently_not_supported_by_QB64.html#Keywords_Not_Supported_in_Linux_or_MAC_OSX_versions" title="Keywords currently not supported by QB64">Keyword Not Supported in Linux or MAC versions</a></li></ul>
+<p><br />
+</p>
+<h2><span class="mw-headline" id="Examples">Examples</span></h2>
+<p><i>Example 1:</i> Checking to see if a COM port exists. If the port does not exist QBasic will cause a Windows access error. 
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: Courier, monospace; background-color: darkblue; color: lightgrey; word-wrap: break-word;"> <i> </i>
+<a href="ON_ERROR.html" title="ON ERROR"><span style="color:#87cefa;">ON ERROR</span></a> <a href="GOTO.html" title="GOTO"><span style="color:#87cefa;">GOTO</span></a> Handler 
+FF = <a href="FREEFILE.html" title="FREEFILE"><span style="color:#87cefa;">FREEFILE</span></a>
+comPort$ = "COM1:"                         'try a COM port number that does not exist
+<a href="CONST.html" title="CONST"><span style="color:#87cefa;">CONST</span></a> comMode$ = "9600,N,8,1,CS0,DS0"      'Use 0 to avoid timeouts 
+<a href="OPEN.html" title="OPEN"><span style="color:#87cefa;">OPEN</span></a> comPort$ + comMode$ <a href="FOR...html" title="FOR...NEXT"><span style="color:#87cefa;">FOR</span></a> <a href="RANDOM.html" title="RANDOM"><span style="color:#87cefa;">RANDOM</span></a> <a href="AS.html" title="AS"><span style="color:#87cefa;">AS</span></a> FF 
+<a href="IF...html" title="IF...THEN"><span style="color:#87cefa;">IF</span></a> errnum = 0 <a href="THEN.html" title="THEN"><span style="color:#87cefa;">THEN</span></a> <a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> "COM exists!
+
+K$ = <a href="INPUT%24.html" title="INPUT$"><span style="color:#87cefa;">INPUT$</span></a>(1) 
+<a href="END.html" title="END"><span style="color:#87cefa;">END</span></a> 
+
+Handler: 
+errnum = <a href="ERR.html" title="ERR"><span style="color:#87cefa;">ERR</span></a> 
+<a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> "Error:"; errnum
+<a href="RESUME.html" title="RESUME"><span style="color:#87cefa;">RESUME</span></a> <a href="NEXT.html" title="NEXT"><span style="color:#87cefa;">NEXT</span></a> 
+</p>
+<dl><dd><i>Explanation:</i> QB64 may create error 68 if COM is not found. Use a zero CD, CS, DS or OP timeout value to avoid COM timeouts.</dd></dl>
+<p><br />
+<i>Example 2:</i> Opening a COM port with the BIN, CS0 and DS0 options in <b>QB64</b>.
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: Courier, monospace; background-color: darkblue; color: lightgrey; word-wrap: break-word;"> <i> </i>
+<a href="DIM.html" title="DIM"><span style="color:#87cefa;">DIM</span></a> bytestr <a href="AS.html" title="AS"><span style="color:#87cefa;">AS</span></a> <a href="STRING.html" title="STRING"><span style="color:#87cefa;">STRING</span></a> * 1  'one byte transfers
+<a href="INPUT.html" title="INPUT"><span style="color:#87cefa;">INPUT</span></a> "<a href="COM.html?title=COM&amp;action=edit&amp;redlink=1" class="new" title="COM (page does not exist)"><span style="color:#87cefa;">COM</span></a> port number #", port$  'any COM port number available
+
+<a href="OPEN.html" title="OPEN"><span style="color:#87cefa;">OPEN</span></a> "<a href="COM.html?title=COM&amp;action=edit&amp;redlink=1" class="new" title="COM (page does not exist)"><span style="color:#87cefa;">COM</span></a>" + port$ + ":9600,N,8,1,BIN,CS0,DS0" <a href="FOR_(file_statement).html" class="mw-redirect" title="FOR (file statement)"><span style="color:#87cefa;">FOR</span></a> <a href="RANDOM.html" title="RANDOM"><span style="color:#87cefa;">RANDOM</span></a> <a href="AS.html" title="AS"><span style="color:#87cefa;">AS</span></a> #1
+<a href="DO.html" class="mw-redirect" title="DO"><span style="color:#87cefa;">DO</span></a> 'main loop
+    'receive data in buffer when LOC &gt; 0
+    <a href="IF.html" class="mw-redirect" title="IF"><span style="color:#87cefa;">IF</span></a> <a href="LOC.html" title="LOC"><span style="color:#87cefa;">LOC</span></a>(1) <a href="THEN.html" title="THEN"><span style="color:#87cefa;">THEN</span></a> 
+       <a href="GET.html" title="GET"><span style="color:#87cefa;">GET</span></a> #1, , bytestr
+       <a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> "[" + bytestr + "]";
+    <a href="END_IF.html" class="mw-redirect" title="END IF"><span style="color:#87cefa;">END IF</span></a>
+    'transmit (send)
+    k$ = <a href="INKEY%24.html" title="INKEY$"><span style="color:#87cefa;">INKEY$</span></a>  
+    <a href="IF.html" class="mw-redirect" title="IF"><span style="color:#87cefa;">IF</span></a> <a href="LEN.html" title="LEN"><span style="color:#87cefa;">LEN</span></a>(k$) = 1 <a href="THEN.html" title="THEN"><span style="color:#87cefa;">THEN</span></a>
+       k = <a href="ASC.html" title="ASC"><span style="color:#87cefa;">ASC</span></a>(k$)
+       <a href="IF.html" class="mw-redirect" title="IF"><span style="color:#87cefa;">IF</span></a> k &gt;= 32 <a href="THEN.html" title="THEN"><span style="color:#87cefa;">THEN</span></a>     'ignore control key codes
+           <a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> "&gt;" + k$ + "&lt;";
+           bytestr = k$: <a href="PUT.html" title="PUT"><span style="color:#87cefa;">PUT</span></a> #1, , bytestr
+       <a href="END_IF.html" class="mw-redirect" title="END IF"><span style="color:#87cefa;">END IF</span></a>
+    <a href="END_IF.html" class="mw-redirect" title="END IF"><span style="color:#87cefa;">END IF</span></a>
+<a href="LOOP.html" title="LOOP"><span style="color:#87cefa;">LOOP</span></a> <a href="UNTIL.html" title="UNTIL"><span style="color:#87cefa;">UNTIL</span></a> k$ = <a href="CHR%24.html" title="CHR$"><span style="color:#87cefa;">CHR$</span></a>(27)
+<a href="CLOSE.html" title="CLOSE"><span style="color:#87cefa;">CLOSE</span></a> #1: <a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> "Finished!" <i> </i>
+</p>
+<p><br />
+<i>Example 3:</i> Sending string data from one COM port to another requires predefined length strings:
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: Courier, monospace; background-color: darkblue; color: lightgrey; word-wrap: break-word;"> <i> </i>
+<a href="DIM.html" title="DIM"><span style="color:#87cefa;">DIM</span></a> <a href="SHARED.html" title="SHARED"><span style="color:#87cefa;">SHARED</span></a> ByteIn <a href="AS.html" title="AS"><span style="color:#87cefa;">AS</span></a> <a href="STRING.html" title="STRING"><span style="color:#87cefa;">STRING</span></a> * 1 'One byte transfers
+<a href="DIM.html" title="DIM"><span style="color:#87cefa;">DIM</span></a> <a href="SHARED.html" title="SHARED"><span style="color:#87cefa;">SHARED</span></a> Byte4 <a href="AS.html" title="AS"><span style="color:#87cefa;">AS</span></a> <a href="STRING.html" title="STRING"><span style="color:#87cefa;">STRING</span></a> * 4 'Four byte transfers
+
+Byte4 = <a href="CHR%24.html" title="CHR$"><span style="color:#87cefa;">CHR$</span></a>(254) + <a href="CHR%24.html" title="CHR$"><span style="color:#87cefa;">CHR$</span></a>(175) + <a href="CHR%24.html" title="CHR$"><span style="color:#87cefa;">CHR$</span></a>(0) + <a href="CHR%24.html" title="CHR$"><span style="color:#87cefa;">CHR$</span></a>(3) 'Command code to query all 4 banks of switch input board.
+
+<a href="OPEN.html" title="OPEN"><span style="color:#87cefa;">OPEN</span></a> "COM1:115200,N,8,1,BIN,CS0,DS0" <a href="FOR...html" title="FOR...NEXT"><span style="color:#87cefa;">FOR</span></a> <a href="RANDOM.html" title="RANDOM"><span style="color:#87cefa;">RANDOM</span></a> <a href="AS.html" title="AS"><span style="color:#87cefa;">AS</span></a> #1 'Open port used to send commands.
+<a href="OPEN.html" title="OPEN"><span style="color:#87cefa;">OPEN</span></a> "COM2:115200,N,8,1,BIN,CS0,DS0" <a href="FOR...html" title="FOR...NEXT"><span style="color:#87cefa;">FOR</span></a> <a href="RANDOM.html" title="RANDOM"><span style="color:#87cefa;">RANDOM</span></a> <a href="AS.html" title="AS"><span style="color:#87cefa;">AS</span></a> #2 'Open port used to receive commands.
+
+<a href="PUT.html" title="PUT"><span style="color:#87cefa;">PUT</span></a> #1, , Byte4 'Send the 4 byte command.
+
+Start# = <a href="TIMER.html" title="TIMER"><span style="color:#87cefa;">TIMER</span></a>
+<a href="DO...html" title="DO...LOOP"><span style="color:#87cefa;">DO</span></a> <a href="UNTIL.html" title="UNTIL"><span style="color:#87cefa;">UNTIL</span></a> <a href="LOC.html" title="LOC"><span style="color:#87cefa;">LOC</span></a>(2) &lt;&gt; 0 'Check if there is data received at com2
+    <a href="IF...html" title="IF...THEN"><span style="color:#87cefa;">IF</span></a> <a href="TIMER.html" title="TIMER"><span style="color:#87cefa;">TIMER</span></a> - Start# &gt; .5 <a href="THEN.html" title="THEN"><span style="color:#87cefa;">THEN</span></a> <a href="EXIT_DO.html" title="EXIT DO"><span style="color:#87cefa;">EXIT DO</span></a> 'Exit loop if no data arrives within .5 seconds.
+<a href="LOOP.html" title="LOOP"><span style="color:#87cefa;">LOOP</span></a>
+
+<a href="IF...html" title="IF...THEN"><span style="color:#87cefa;">IF</span></a> <a href="LOC.html" title="LOC"><span style="color:#87cefa;">LOC</span></a>(2) = 0 <a href="THEN.html" title="THEN"><span style="color:#87cefa;">THEN</span></a> 'If no data was received.....
+    <a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> "No data received from COM port."
+    <a href="END.html" title="END"><span style="color:#87cefa;">END</span></a>
+<a href="END_IF.html" class="mw-redirect" title="END IF"><span style="color:#87cefa;">END IF</span></a>
+
+<a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> "Received from COM2:";
+
+<a href="DO...html" title="DO...LOOP"><span style="color:#87cefa;">DO</span></a> <a href="UNTIL.html" title="UNTIL"><span style="color:#87cefa;">UNTIL</span></a> <a href="LOC.html" title="LOC"><span style="color:#87cefa;">LOC</span></a>(2) = 0 'Read data from COM2 until there is no more data.
+    <a href="GET.html" title="GET"><span style="color:#87cefa;">GET</span></a> #2, , ByteIn
+    <a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> <a href="ASC.html" title="ASC"><span style="color:#87cefa;">ASC</span></a>(ByteIn);
+<a href="LOOP.html" title="LOOP"><span style="color:#87cefa;">LOOP</span></a>
+<a href="END.html" title="END"><span style="color:#87cefa;">END</span></a> <i> </i>
+</p><center><span style="font-family: Courier New, Courier, monospace; font-size: 0.80em; line-height: 50%;">Code courtesy of forum member Hydrofoiler</span></center>
+<p><br />
+</p>
+<h2><span class="mw-headline" id="See_also">See also</span></h2>
+<ul><li><a href="BINARY-2.html" class="mw-redirect" title="BINARY">BINARY</a>, <a href="RANDOM.html" title="RANDOM">RANDOM</a></li>
+<li><a href="INPUT%24.html" title="INPUT$">INPUT$</a>, <a href="PRINT_(file_statement).html" title="PRINT (file statement)">PRINT #</a></li>
+<li><a href="LOC.html" title="LOC">LOC</a>, <a href="INKEY%24.html" title="INKEY$">INKEY$</a>, <a href="OPEN.html" title="OPEN">OPEN</a></li>
+<li><a href="GET.html" title="GET">GET #</a>, <a href="PUT.html" title="PUT">PUT #</a></li>
+<li><a href="Port_Access_Libraries.html" title="Port Access Libraries">Port Access Libraries</a> <span style="color:gray">(Includes full LPT and COM port descriptions with downloadable DLL library)</span></li>
+<li><a href="Windows_Libraries.html#Windows_Ports" title="Windows Libraries">Enumerating Windows Ports</a></li></ul>
+<p><br />
+</p>
+<hr />
+<center><i>Navigation:</i>
+<dl><dd><a href="Keyword_Reference_-_Alphabetical.html" title="Keyword Reference - Alphabetical">Keyword Reference - Alphabetical</a></dd>
+<dd><a href="Keyword_Reference_-_By_usage.html" title="Keyword Reference - By usage">Keyword Reference - By Usage</a></dd>
+<dd><a href="Main_Page.html" title="Main Page">Main Wiki Page</a></dd></dl></center>
+<!-- 
+NewPP limit report
+Cached time: 20210706194225
+Cache expiry: 86400
+Dynamic content: false
+Complications: []
+CPU time usage: 0.112 seconds
+Real time usage: 0.226 seconds
+Preprocessor visited node count: 709/1000000
+Post‐expand include size: 6118/2097152 bytes
+Template argument size: 963/2097152 bytes
+Highest expansion depth: 3/40
+Expensive parser function count: 0/100
+Unstrip recursion depth: 0/20
+Unstrip post‐expand size: 0/5000000 bytes
+-->
+<!--
+Transclusion expansion time report (%,ms,calls,template)
+100.00%   77.485      1 -total
+ 18.87%   14.619      1 Template:PageNavigation
+ 12.34%    9.564     95 Template:Cl
+ 10.56%    8.185      1 Template:Small
+  8.60%    6.667      3 Template:CodeEnd
+  5.89%    4.566      1 Template:PageSeeAlso
+  5.73%    4.442      1 Template:PageSyntax
+  5.15%    3.992      1 Template:Parameter
+  4.93%    3.822      1 Template:Text
+  4.92%    3.812      1 Template:PageParameters
+-->
+
+<!-- Saved in parser cache with key i4224360_mw2-mw_:pcache:idhash:504-0!canonical and timestamp 20210706194224 and revision id 23441
+ -->
+</div></div><div class="printfooter">Retrieved from "<a dir="ltr" href="index82a1.html?title=OPEN_COM&amp;oldid=23441">http://www.qb64.org/wiki/index.php?title=OPEN_COM&amp;oldid=23441</a>"</div>
+		<div id="catlinks" class="catlinks catlinks-allhidden" data-mw="interface"></div>
+	</div>
+</div>
+
+<div id="mw-navigation">
+	<h2>Navigation menu</h2>
+	<div id="mw-head">
+		<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-personal" class="vector-menu" aria-labelledby="p-personal-label" role="navigation" 
+	 >
+	<h3 id="p-personal-label">
+		<span>Personal tools</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="pt-login"><a href="index31f9.html?title=Special:UserLogin&amp;returnto=OPEN+COM" title="You are encouraged to log in; however, it is not mandatory [o]" accesskey="o">Log in</a></li></ul>
+		
+	</div>
+</nav>
+
+
+		<div id="left-navigation">
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-namespaces" class="vector-menu vector-menu-tabs vectorTabs" aria-labelledby="p-namespaces-label" role="navigation" 
+	 >
+	<h3 id="p-namespaces-label">
+		<span>Namespaces</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="ca-nstab-main" class="selected"><a href="OPEN_COM.html" title="View the content page [c]" accesskey="c">Page</a></li><li id="ca-talk" class="new"><a href="Talk_OPEN_COM.html?title=Talk:OPEN_COM&amp;action=edit&amp;redlink=1" rel="discussion" title="Discussion about the content page (page does not exist) [t]" accesskey="t">Discussion</a></li></ul>
+		
+	</div>
+</nav>
+
+
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-variants" class="vector-menu-empty emptyPortlet vector-menu vector-menu-dropdown vectorMenu" aria-labelledby="p-variants-label" role="navigation" 
+	 >
+	<input type="checkbox" class="vector-menu-checkbox vectorMenuCheckbox" aria-labelledby="p-variants-label" />
+	<h3 id="p-variants-label">
+		<span>Variants</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="menu vector-menu-content-list"></ul>
+		
+	</div>
+</nav>
+
+
+		</div>
+		<div id="right-navigation">
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-views" class="vector-menu vector-menu-tabs vectorTabs" aria-labelledby="p-views-label" role="navigation" 
+	 >
+	<h3 id="p-views-label">
+		<span>Views</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="ca-view" class="collapsible selected"><a href="OPEN_COM.html">Read</a></li><li id="ca-viewsource" class="collapsible"><a href="indexe337.html?title=OPEN_COM&amp;action=edit" title="This page is protected.&#10;You can view its source [e]" accesskey="e">View source</a></li><li id="ca-history" class="collapsible"><a href="index7122.html?title=OPEN_COM&amp;action=history" title="Past revisions of this page [h]" accesskey="h">View history</a></li></ul>
+		
+	</div>
+</nav>
+
+
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-cactions" class="vector-menu-empty emptyPortlet vector-menu vector-menu-dropdown vectorMenu" aria-labelledby="p-cactions-label" role="navigation" 
+	 >
+	<input type="checkbox" class="vector-menu-checkbox vectorMenuCheckbox" aria-labelledby="p-cactions-label" />
+	<h3 id="p-cactions-label">
+		<span>More</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="menu vector-menu-content-list"></ul>
+		
+	</div>
+</nav>
+
+
+			<div id="p-search" role="search">
+	<h3 >
+		<label for="searchInput">Search</label>
+	</h3>
+	<form action="https://www.qb64.org/wiki/index.php" id="searchform">
+		<div id="simpleSearch">
+			<input type="search" name="search" placeholder="Search QB64 Wiki" title="Search QB64 Wiki [f]" accesskey="f" id="searchInput"/>
+			<input type="hidden" name="title" value="Special:Search">
+			<input type="submit" name="fulltext" value="Search" title="Search the pages for this text" id="mw-searchButton" class="searchButton mw-fallbackSearchButton"/>
+			<input type="submit" name="go" value="Go" title="Go to a page with this exact name if it exists" id="searchButton" class="searchButton"/>
+		</div>
+	</form>
+</div>
+
+		</div>
+	</div>
+	
+<div id="mw-panel">
+	<div id="p-logo" role="banner">
+		<a  title="Visit the main page" class="mw-wiki-logo" href="Main_Page.html"></a>
+	</div>
+	<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-navigation" class="vector-menu vector-menu-portal portal portal-first" aria-labelledby="p-navigation-label" role="navigation" 
+	 >
+	<h3 id="p-navigation-label">
+		<span>Navigation</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="n-mainpage-description"><a href="Main_Page.html" title="Visit the main page [z]" accesskey="z">Main page</a></li><li id="n-recentchanges"><a href="Special_RecentChanges.html" title="A list of recent changes in the wiki [r]" accesskey="r">Recent changes</a></li><li id="n-randompage"><a href="SNDCOPY.html" title="Load a random page [x]" accesskey="x">Random page</a></li><li id="n-help-mediawiki"><a href="https://www.mediawiki.org/wiki/Special:MyLanguage/Help:Contents">Help about MediaWiki</a></li></ul>
+		
+	</div>
+</nav>
+
+
+	<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-tb" class="vector-menu vector-menu-portal portal" aria-labelledby="p-tb-label" role="navigation" 
+	 >
+	<h3 id="p-tb-label">
+		<span>Tools</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="t-whatlinkshere"><a href="Special_WhatLinksHere/OPEN_COM.html" title="A list of all wiki pages that link here [j]" accesskey="j">What links here</a></li><li id="t-recentchangeslinked"><a href="Special_RecentChangesLinked/OPEN_COM.html" rel="nofollow" title="Recent changes in pages linked from this page [k]" accesskey="k">Related changes</a></li><li id="t-specialpages"><a href="Special_SpecialPages.html" title="A list of all special pages [q]" accesskey="q">Special pages</a></li><li id="t-print"><a href="javascript:print();" rel="alternate" title="Printable version of this page [p]" accesskey="p">Printable version</a></li><li id="t-permalink"><a href="index82a1.html?title=OPEN_COM&amp;oldid=23441" title="Permanent link to this revision of the page">Permanent link</a></li><li id="t-info"><a href="index1c57.html?title=OPEN_COM&amp;action=info" title="More information about this page">Page information</a></li></ul>
+		
+	</div>
+</nav>
+
+
+	
+</div>
+
+</div>
+
+<footer id="footer" class="mw-footer" role="contentinfo" >
+	<ul id="footer-info" >
+		<li id="footer-info-lastmod"> This page was last edited on 17 February 2021, at 12:44.</li>
+	</ul>
+	<ul id="footer-places" >
+		<li id="footer-places-privacy"><a href="My_wiki_Privacy_policy.html" title="My wiki:Privacy policy">Privacy policy</a></li>
+		<li id="footer-places-about"><a href="My_wiki_About.html" title="My wiki:About">About QB64 Wiki</a></li>
+		<li id="footer-places-disclaimer"><a href="My_wiki_General_disclaimer.html" title="My wiki:General disclaimer">Disclaimers</a></li>
+	</ul>
+	<ul id="footer-icons" class="noprint">
+		<li id="footer-poweredbyico"><a href="https://www.mediawiki.org/"><img src="resources/assets/poweredby_mediawiki_88x31.png" alt="Powered by MediaWiki" srcset="/wiki/resources/assets/poweredby_mediawiki_132x47.png 1.5x, /wiki/resources/assets/poweredby_mediawiki_176x62.png 2x" width="88" height="31" loading="lazy"/></a></li>
+	</ul>
+	<div style="clear: both;"></div>
+</footer>
+
+
+
+<script>(RLQ=window.RLQ||[]).push(function(){mw.config.set({"wgPageParseReport":{"limitreport":{"cputime":"0.112","walltime":"0.226","ppvisitednodes":{"value":709,"limit":1000000},"postexpandincludesize":{"value":6118,"limit":2097152},"templateargumentsize":{"value":963,"limit":2097152},"expansiondepth":{"value":3,"limit":40},"expensivefunctioncount":{"value":0,"limit":100},"unstrip-depth":{"value":0,"limit":20},"unstrip-size":{"value":0,"limit":5000000},"timingprofile":["100.00%   77.485      1 -total"," 18.87%   14.619      1 Template:PageNavigation"," 12.34%    9.564     95 Template:Cl"," 10.56%    8.185      1 Template:Small","  8.60%    6.667      3 Template:CodeEnd","  5.89%    4.566      1 Template:PageSeeAlso","  5.73%    4.442      1 Template:PageSyntax","  5.15%    3.992      1 Template:Parameter","  4.93%    3.822      1 Template:Text","  4.92%    3.812      1 Template:PageParameters"]},"cachereport":{"timestamp":"20210706194225","ttl":86400,"transientcontent":false}}});mw.config.set({"wgBackendResponseTime":2028});});</script></body>
+<!-- Mirrored from www.qb64.org/wiki/OPEN_COM by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 07 Aug 2021 13:19:18 GMT -->
+</html>

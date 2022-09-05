@@ -1,0 +1,483 @@
+
+<!DOCTYPE html>
+<html class="client-nojs" lang="en" dir="ltr">
+
+<!-- Mirrored from www.qb64.org/wiki/QB64_FAQ by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 07 Aug 2021 12:26:19 GMT -->
+<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=UTF-8" /><!-- /Added by HTTrack -->
+<head>
+<meta charset="UTF-8"/>
+<title>QB64 FAQ - QB64 Wiki</title>
+<script>document.documentElement.className="client-js";RLCONF={"wgBreakFrames":!1,"wgSeparatorTransformTable":["",""],"wgDigitTransformTable":["",""],"wgDefaultDateFormat":"dmy","wgMonthNames":["","January","February","March","April","May","June","July","August","September","October","November","December"],"wgRequestId":"YOWkRekbkwEB08KNhNehdAAAAFU","wgCSPNonce":!1,"wgCanonicalNamespace":"","wgCanonicalSpecialPageName":!1,"wgNamespaceNumber":0,"wgPageName":"QB64_FAQ","wgTitle":"QB64 FAQ","wgCurRevisionId":23503,"wgRevisionId":23503,"wgArticleId":558,"wgIsArticle":!0,"wgIsRedirect":!1,"wgAction":"view","wgUserName":null,"wgUserGroups":["*"],"wgCategories":[],"wgPageContentLanguage":"en","wgPageContentModel":"wikitext","wgRelevantPageName":"QB64_FAQ","wgRelevantArticleId":558,"wgIsProbablyEditable":!1,"wgRelevantPageIsProbablyEditable":!1,"wgRestrictionEdit":[],"wgRestrictionMove":[]};RLSTATE={"site.styles":"ready","noscript":"ready","user.styles":"ready","user":"ready",
+"user.options":"loading","skins.vector.styles.legacy":"ready","mediawiki.toc.styles":"ready"};RLPAGEMODULES=["site","mediawiki.page.startup","mediawiki.page.ready","mediawiki.toc","skins.vector.legacy.js"];</script>
+<script>(RLQ=window.RLQ||[]).push(function(){mw.loader.implement("user.options@1hzgi",function($,jQuery,require,module){/*@nomin*/mw.user.tokens.set({"patrolToken":"+\\","watchToken":"+\\","csrfToken":"+\\"});
+});});</script>
+<link rel="stylesheet" href="loadd8b0.css?lang=en&amp;modules=mediawiki.toc.styles%7Cskins.vector.styles.legacy&amp;only=styles&amp;skin=vector"/>
+<script async="" src="load52c0.php?lang=en&amp;modules=startup&amp;only=scripts&amp;raw=1&amp;skin=vector"></script>
+<meta name="generator" content="MediaWiki 1.35.2"/>
+<link rel="shortcut icon" href="https://www.qb64.org/favicon.ico"/>
+<link rel="search" type="application/opensearchdescription+xml" href="opensearch_desc.php" title="QB64 Wiki (en)"/>
+<link rel="EditURI" type="application/rsd+xml" href="api-result251f.xml?action=rsd"/>
+<link rel="alternate" type="application/atom+xml" title="QB64 Wiki Atom feed" href="feeda295.xml?title=Special:RecentChanges&amp;feed=atom"/>
+<!--[if lt IE 9]><script src="/wiki/resources/lib/html5shiv/html5shiv.js"></script><![endif]-->
+</head>
+<body class="mediawiki ltr sitedir-ltr mw-hide-empty-elt ns-0 ns-subject page-QB64_FAQ rootpage-QB64_FAQ skin-vector action-view skin-vector-legacy">
+<div id="mw-page-base" class="noprint"></div>
+<div id="mw-head-base" class="noprint"></div>
+<div id="content" class="mw-body" role="main">
+	<a id="top"></a>
+	<div id="siteNotice" class="mw-body-content"></div>
+	<div class="mw-indicators mw-body-content">
+	</div>
+	<h1 id="firstHeading" class="firstHeading" lang="en">QB64 FAQ</h1>
+	<div id="bodyContent" class="mw-body-content">
+		<div id="siteSub" class="noprint">From QB64 Wiki</div>
+		<div id="contentSub"></div>
+		<div id="contentSub2"></div>
+		
+		<div id="jump-to-nav"></div>
+		<a class="mw-jump-link" href="#mw-head">Jump to navigation</a>
+		<a class="mw-jump-link" href="#searchInput">Jump to search</a>
+		<div id="mw-content-text" lang="en" dir="ltr" class="mw-content-ltr"><div class="mw-parser-output"><table align="center">
+<tbody><tr>
+<td><div id="toc" class="toc" role="navigation" aria-labelledby="mw-toc-heading"><input type="checkbox" role="button" id="toctogglecheckbox" class="toctogglecheckbox" style="display:none" /><div class="toctitle" lang="en" dir="ltr"><h2 id="mw-toc-heading">Contents</h2><span class="toctogglespan"><label class="toctogglelabel" for="toctogglecheckbox"></label></span></div>
+<ul>
+<li class="toclevel-1 tocsection-1"><a href="#Q:_What_is_QB64.3F"><span class="tocnumber">1</span> <span class="toctext">Q: What is QB64?</span></a></li>
+<li class="toclevel-1 tocsection-2"><a href="#Q:_Does_it_have_modern_features.3F_Do_they_HAVE_to_be_used.3F"><span class="tocnumber">2</span> <span class="toctext">Q: Does it have modern features? Do they HAVE to be used?</span></a></li>
+<li class="toclevel-1 tocsection-3"><a href="#Q:_How_do_I_install_QB64_on_Windows.2C_Linux.2C_macOS.3F"><span class="tocnumber">3</span> <span class="toctext">Q: How do I install QB64 on Windows, Linux, macOS?</span></a></li>
+<li class="toclevel-1 tocsection-4"><a href="#Q:_Why_won.27t_QB64_work_on_my_computer.3F"><span class="tocnumber">4</span> <span class="toctext">Q: Why won't QB64 work on my computer?</span></a></li>
+<li class="toclevel-1 tocsection-5"><a href="#Q:_Are_there_any_known_incompatibilities.3F"><span class="tocnumber">5</span> <span class="toctext">Q: Are there any known incompatibilities?</span></a></li>
+<li class="toclevel-1 tocsection-6"><a href="#Q:_How_do_I_update_the_information_in_QB64.27s_help_system.3F"><span class="tocnumber">6</span> <span class="toctext">Q: How do I update the information in QB64's help system?</span></a></li>
+<li class="toclevel-1 tocsection-7"><a href="#Q:_Can_I_use_the_same_libraries_with_QB64_that_I_used_with_QB_4.5.3F"><span class="tocnumber">7</span> <span class="toctext">Q: Can I use the same libraries with QB64 that I used with QB 4.5?</span></a></li>
+<li class="toclevel-1 tocsection-8"><a href="#Q:_I_can.27t_get_my_QB_4.5_source_code_to_work_in_QB64.21_Why.3F"><span class="tocnumber">8</span> <span class="toctext">Q: I can't get my QB 4.5 source code to work in QB64! Why?</span></a></li>
+<li class="toclevel-1 tocsection-9"><a href="#Q:_What_files_are_required_to_run_my_QB64_compiled_program_in_my_Operating_System.3F"><span class="tocnumber">9</span> <span class="toctext">Q: What files are required to run my QB64 compiled program in my Operating System?</span></a></li>
+<li class="toclevel-1 tocsection-10"><a href="#Q:_Is_there_a_way_to_use_the_compiler_without_running_my_program_or_using_the_IDE.3F"><span class="tocnumber">10</span> <span class="toctext">Q: Is there a way to use the compiler without running my program or using the IDE?</span></a></li>
+<li class="toclevel-1 tocsection-11"><a href="#Q:_How_do_I_link_modules_or_include_SUB_procedures_in_QB64.3F"><span class="tocnumber">11</span> <span class="toctext">Q: How do I link modules or include SUB procedures in QB64?</span></a></li>
+<li class="toclevel-1 tocsection-12"><a href="#Q:_Some_screens_look_small._Can_I_enlarge_them_or_make_them_fullscreen.3F"><span class="tocnumber">12</span> <span class="toctext">Q: Some screens look small. Can I enlarge them or make them fullscreen?</span></a></li>
+<li class="toclevel-1 tocsection-13"><a href="#Q:_Can_I_have_background_music_as_well_as_SOUND.2C_PLAY_and_BEEP.3F"><span class="tocnumber">13</span> <span class="toctext">Q: Can I have background music as well as SOUND, PLAY and BEEP?</span></a></li>
+<li class="toclevel-1 tocsection-14"><a href="#Q:_If_QB64_creates_Basic_programs_why_is_there_no_Immediate_Window.3F"><span class="tocnumber">14</span> <span class="toctext">Q: If QB64 creates Basic programs why is there no Immediate Window?</span></a></li>
+<li class="toclevel-1 tocsection-15"><a href="#Q:_Does_it_work_on_Windows_98_or_any_OS_older_than_Windows_2000.3F"><span class="tocnumber">15</span> <span class="toctext">Q: Does it work on Windows 98 or any OS older than Windows 2000?</span></a></li>
+<li class="toclevel-1 tocsection-16"><a href="#Q:_Does_QB64_support_CURRENCY_values_from_PDS_or_VB_programs.3F"><span class="tocnumber">16</span> <span class="toctext">Q: Does QB64 support CURRENCY values from PDS or VB programs?</span></a></li>
+<li class="toclevel-1 tocsection-17"><a href="#Q:_Do_you_provide_changelogs.3F"><span class="tocnumber">17</span> <span class="toctext">Q: Do you provide changelogs?</span></a></li>
+<li class="toclevel-1 tocsection-18"><a href="#Q:_Where_I_can_view_the_C.2B.2B_code_before_it_gets_compiled.3F"><span class="tocnumber">18</span> <span class="toctext">Q: Where I can view the C++ code before it gets compiled?</span></a></li>
+</ul>
+</div>
+
+</td></tr></tbody></table>
+<p><br />
+As with everything else, this list will be updated to correspond to new progress of QB64 so make sure that you are using the latest version of <b>QB64</b>. Please note that it may take a short time to update this list.
+</p><p><br />
+</p>
+<center><b><span style="color:red">It's recommended to exclude (whitelist) "qb64.exe" (also the <i>internal</i> folder) from any real-time anti-virus scanning to prevent IDE Module Errors.</span></b></center>
+<p><br />
+</p>
+<h2><span id="Q:_What_is_QB64?"></span><span class="mw-headline" id="Q:_What_is_QB64.3F">Q: What is QB64?</span></h2>
+<p>A: <b>QB64</b> is a BASIC compatible Editor and C++ emitter that creates working Executable files from QBasic BAS files that can be run on 32 or 64 bit PC's using <b>Windows</b> (XP to 10), <b>Linux</b> or <b>macOS</b>. The goal is to be 100% compatible with QuickBASIC 4.5 plus add hundreds of new abilities such as program icons and custom sized windows and a great retro Editor with builtin help. 
+</p><p><br />
+The <b>new keywords</b> add some <b>new features</b> such as playing <b>music or sound</b> files and instant access to <b>32 bit graphics</b> file images. Also <b>TCP/IP</b> internet communication is available to <b>download</b> files, <b>email</b> messages over the web or play <b>internet games</b>. <b>DLL Libraries</b> can add more programming options and QB64 can access all of the new USB gaming <b>controllers</b> and <b>printers</b>.
+</p><p><br />
+QB is an abbreviation for <b>QBasic</b> or <b>QuickBASIC</b> which is an easy to learn language that grew very popular in the 90's. It uses simple syntax but holds great potential as there are methods to achieve nearly anything. <b>QBasic is more alive than ever with QB64!</b>
+</p><p><br />
+</p>
+<p style="text-align: center"><a href="Keywords_currently_not_supported_by_QB64.html" title="Keywords currently not supported by QB64">Keywords currently not supported by QB64</a></p>
+<p><br />
+</p>
+<h2><span id="Q:_Does_it_have_modern_features?_Do_they_HAVE_to_be_used?"></span><span class="mw-headline" id="Q:_Does_it_have_modern_features.3F_Do_they_HAVE_to_be_used.3F">Q: Does it have modern features? Do they HAVE to be used?</span></h2>
+<p>A: QB64 has plenty of modern features, but they do not have to be used. You may just want to run some of your old favorites.
+</p>
+<center><b>QB64 was created to run your old QBasic 4.5 (or less) programs on newer Operating Systems without any changes.</b></center>
+<p>You could code using the original QuickBASIC syntax all the way through and it should work as you expect it to or even better. QB64 is often faster and has none of the memory limitations that plagued QBasic in the past.
+</p><p>QB64 is not meant to run PDS (7.1) QBX code. Most GW Basic code will run with minor changes.
+</p><p>The modern statements are designed to go along with the BASIC philosophy and expand QBasic into the future!
+</p><p><br />
+</p>
+<center><b>QB64 FEATURES INCLUDE:</b></center>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: courier; background-color: lightgrey; color: black;">
+
+  1) Full graphic functions for <a href="NEWIMAGE.html" title="NEWIMAGE">images</a> up to 32 bit color. <a href="ALPHA.html" title="ALPHA">Alpha</a> transparency supported.
+
+  2) Instant <a href="LOADIMAGE.html" title="LOADIMAGE">loading</a> of image files including BMP, PNG, JPEG, GIF and more...
+
+  3) Supports <a href="SNDOPEN.html" title="SNDOPEN">stereo sound</a> files like WAV, OGG, MP3, speaker and volume control and more...
+
+  4) Animation is easy to do using <a href="DISPLAY.html" title="DISPLAY">_DISPLAY</a> instead of page flipping, to achieve flicker-free graphics.
+
+  5) <a href="CLIPBOARD%24.html" title="CLIPBOARD$">Clipboard</a> reading and writing support.
+
+  6) Networking over TCP/IP and Email.
+
+  7) True type <a href="FONT.html" title="FONT">font</a> and <a href="Unicode.html" title="Unicode">Unicode</a> support for many Languages.
+
+  8) Integrated <a href="MOUSEINPUT.html" title="MOUSEINPUT">mouse</a> and <a href="DEVICES.html" title="DEVICES">game controller</a> input including <a href="MOUSEWHEEL.html" title="MOUSEWHEEL">scroll wheel</a> support.
+
+  9) Support for C++, OpenGL, Windows API and other custom Dynamic Link <a href="Libraries.html" title="Libraries">Libraries</a>.
+</p>
+<p style="text-align: center">(<a href="#toc">Return to FAQ topics</a>)</p>
+<h2><span id="Q:_How_do_I_install_QB64_on_Windows,_Linux,_macOS?"></span><span class="mw-headline" id="Q:_How_do_I_install_QB64_on_Windows.2C_Linux.2C_macOS.3F">Q: How do I install QB64 on Windows, Linux, macOS?</span></h2>
+<p>A: QB64 supports the following Operating Systems:
+</p>
+<center><b>Windows NT (XP), Windows Vista, Windows 7, 8 or 10:</b></center>
+<dl><dd><b>1)</b> Download the appropriate package according to your system from <a rel="nofollow" class="external text" href="http://www.qb64.org/">QB64.org</a></dd>
+<dd><b>2)</b> Unpack the contents to any location on your computer. Avoid unpacking to Program Files or other system folders that may require administrative privileges. QB64 needs to have full write permissions to its own folder.</dd></dl>
+<dl><dd><ul><li>Executable programs are portable between like systems by copying the stand-alone executable file.</li></ul></dd></dl>
+<p><br />
+</p>
+<hr />
+<center><b>Most distributions of Linux, both 32 and 64 bit</b></center>
+<dl><dd><b>1)</b> Download the appropriate package according to your system from <a rel="nofollow" class="external text" href="http://www.qb64.org/">QB64.org</a></dd>
+<dd><b>2)</b> After extracting the downloaded package, run the installation batch/script called <i>./setup_lnx.sh</i> in the main <i>qb64</i> folder to setup QB64.</dd>
+<dd><b>3)</b>  Most dependencies should be automatically downloaded by the setup script, but these are the ones you should look for if compilation fails: OpenGL developement libraries, ALSA development libraries, GNU C++ Compiler (g++)</dd></dl>
+<p><br />
+</p>
+<center>Executable programs are portable between like systems by copying the executable file.</center>
+<center><b>Note: Some QB64 keywords and procedures are not available for Linux.</b></center>               
+<p><br />
+</p>
+<p style="text-align: center">(<a href="#toc">Return to FAQ topics</a>)</p>
+<hr />
+<center><b>macOS</b></center>
+<dl><dd><b>1)</b> You must install Apple's <b>Xcode command line tools</b> for C++ compilation from their website. The simplest way to do so is opening a terminal window and typing the following command: <b>xcode-select --install</b> (more info here: <a rel="nofollow" class="external text" href="http://developer.apple.com/technologies/tools/xcode.html">Xcode download</a>)</dd>
+<dd>&#160;&#160;&#160;&#160;(you won't be using the Xcode interface, QB64 just needs to have access to the C++ compiler and libraries it installs)</dd>
+<dd><b>3)</b> Download the appropriate package according to your system from <a rel="nofollow" class="external text" href="http://www.qb64.org/">QB64.org</a></dd>
+<dd>&#160;&#160;&#160;&#160;Extract the downloaded package and run <i>./setup_osx.command</i>, found within the QB64 folder to install the QB64 compiler.</dd></dl>
+<center><b>After installation you should run </b>./qb64<b> or </b>./qb64_start_osx.command<b> to run qb64.</b></center>
+<dl><dd><ul><li>Executable programs are portable between macOS systems by copying the executable file.</li>
+<li>To help launch executables without a console, a file called <i>programname_start.command</i> is created along with the program.</li></ul></dd></dl>
+<center><b>Note: Some QB64 keywords and procedures are not available for macOS.</b></center>
+<p><br />
+</p>
+<center><a href="Keywords_currently_not_supported_by_QB64.html#Keywords_Not_Supported_in_Linux_or_macOS_versions" title="Keywords currently not supported by QB64">Keywords Not Supported in Linux or macOS versions</a></center>
+<p><br />
+</p>
+<hr />
+<p style="text-align: center">(<a href="#toc">Return to FAQ topics</a>)</p>
+<p><br />
+</p>
+<h2><span id="Q:_Why_won't_QB64_work_on_my_computer?"></span><span class="mw-headline" id="Q:_Why_won.27t_QB64_work_on_my_computer.3F">Q: Why won't QB64 work on my computer?</span></h2>
+<p>QB64 currently supports Windows versions from XP to the latest version. Most Linux and macOS versions are also supported.
+</p>
+<dl><dd><b>Don't move QB64 executable out of the QB64 folder. The various sub-folders hold the C++ compiler files and libraries.</b></dd></dl>
+<dl><dd><b>QB64 does not change any settings on your machine. All required files are in the QB64 folder.</b></dd></dl>
+<p><br />
+</p>
+<p style="text-align: center">(<a href="#toc">Return to FAQ topics</a>)</p>
+<h2><span id="Q:_Are_there_any_known_incompatibilities?"></span><span class="mw-headline" id="Q:_Are_there_any_known_incompatibilities.3F">Q: Are there any known incompatibilities?</span></h2>
+<p>A: There are some things that QB64 cannot do, like direct hardware access, which makes older more advanced programs that make use of <a href="ABSOLUTE.html" class="mw-redirect" title="ABSOLUTE">ABSOLUTE</a>, <a href="INTERRUPT.html" title="INTERRUPT">INTERRUPT</a>, <a href="PEEK.html" title="PEEK">PEEK</a>, <a href="POKE.html" title="POKE">POKE</a> and <a href="OUT.html" title="OUT">OUT</a> not work properly. Although some older functionality is emulated, if your program doesn't use such statements you probably won't notice any difference between QB 4.5 and QB64 (and if you do, report it as a bug in the forums). You can expect the most common addresses for interrupts, etc. to be functioning. 
+</p><p><br />
+See: <a href="Keywords_currently_not_supported_by_QB64.html" title="Keywords currently not supported by QB64">Keywords currently not supported by QB64</a>
+</p><p><br />
+You should be careful with <b>CPU usage</b>. QB64 is a lot faster than QBasic was and it does not have many of the size limitations that confined QBasic programming abilities. Having said that, <b>care must be taken to assure that programs do not hog resources.</b> To do that, use speed limits when possible to keep the resources used to a minimum. Also, <b>Monitor Task Manager</b> when your programs are running, as it can tell you how much or system resources are being used in different parts of a program. The following keywords can lower the impact of your programs on those resources by releasing them to other programs:
+</p>
+<dl><dd><dl><dd><dl><dd><dl><dd><dl><dd><ul><li><a href="LIMIT.html" title="LIMIT">_LIMIT</a>: Limits the loops per second in any loop and thus lowers the overall CPU usage.</li></ul></dd></dl></dd></dl></dd></dl></dd></dl></dd></dl>
+<dl><dd><dl><dd><dl><dd><dl><dd><dl><dd><ul><li><a href="DELAY.html" title="DELAY">_DELAY</a>: Pauses a procedure and releases unused resources for other programs.</li></ul></dd></dl></dd></dl></dd></dl></dd></dl></dd></dl>
+<dl><dd><dl><dd><dl><dd><dl><dd><dl><dd><ul><li><a href="SLEEP.html" title="SLEEP">SLEEP</a>: Stops or delays program procedures and shares resources.</li></ul></dd></dl></dd></dl></dd></dl></dd></dl></dd></dl>
+<dl><dd><dl><dd><dl><dd><dl><dd><dl><dd><ul><li><a href="INPUT.html" title="INPUT">INPUT</a> and <a href="INPUT%24.html" title="INPUT$">INPUT$</a> stop program procedures until an entry or key press is given.</li></ul></dd></dl></dd></dl></dd></dl></dd></dl></dd></dl>
+<p><br />
+QB64 can be fast when you need it to be, but take the time to consider the impact of your program on other programs as people seldom have only one program running and the OS has tasks it must do too. 
+</p>
+<p style="text-align: center">(<a href="#toc">Return to FAQ topics</a>)</p>
+<p><br />
+</p>
+<h2><span id="Q:_How_do_I_update_the_information_in_QB64's_help_system?"></span><span class="mw-headline" id="Q:_How_do_I_update_the_information_in_QB64.27s_help_system.3F">Q: How do I update the information in QB64's help system?</span></h2>
+<p>A: The help provided in the QB64 IDE Help System fetches the pages from this wiki. Use the <b>Update current page</b> in the IDE Help menu selection to update a page. Use the <b>Update all pages</b> choice to update them all, but this may take longer. 
+</p><p><br />
+</p>
+<h2><span id="Q:_Can_I_use_the_same_libraries_with_QB64_that_I_used_with_QB_4.5?"></span><span class="mw-headline" id="Q:_Can_I_use_the_same_libraries_with_QB64_that_I_used_with_QB_4.5.3F">Q: Can I use the same libraries with QB64 that I used with QB 4.5?</span></h2>
+<p>A: If the libraries are pure QB 4.5 code then yes, otherwise no. QLB files are not supported but you can easily copy your favorite SUBs or FUNCTIONs to a text BI file and <a href="%24INCLUDE.html" title="$INCLUDE">$INCLUDE</a> them at the end of any program. Include them after all SUB and FUNCTION code in the BAS file.
+</p><p><a href="DECLARE_LIBRARY.html" title="DECLARE LIBRARY">DECLARE LIBRARY</a> allows users to reference C, Windows, OpenGL and other DLL libraries. If you find some functions that you like please share them with us at the forum! The following pages list working functions our members have found and tested:
+</p>
+<center><a href="C_Libraries.html" title="C Libraries">C Libraries</a>, <a href="DLL_Libraries.html" title="DLL Libraries">DLL Libraries</a>, <a href="Windows_Libraries.html" title="Windows Libraries">Windows Libraries</a></center>
+<p><br />
+</p>
+<p style="text-align: center">(<a href="#toc">Return to FAQ topics</a>)</p>
+<h2><span id="Q:_I_can't_get_my_QB_4.5_source_code_to_work_in_QB64!_Why?"></span><span class="mw-headline" id="Q:_I_can.27t_get_my_QB_4.5_source_code_to_work_in_QB64.21_Why.3F">Q: I can't get my QB 4.5 source code to work in QB64! Why?</span></h2>
+<p>A: QB64 is 99% compatible with QB4.5 programs. The commands that haven't been implemented are either obsolete or are too obscure and have been replaced by modern functionality. 
+</p><p>See: <a href="Keywords_currently_not_supported_by_QB64.html" title="Keywords currently not supported by QB64">Keywords currently not supported by QB64</a>
+</p>
+<p style="text-align: center">(<a href="#toc">Return to FAQ topics</a>)</p>
+<h2><span id="Q:_What_files_are_required_to_run_my_QB64_compiled_program_in_my_Operating_System?"></span><span class="mw-headline" id="Q:_What_files_are_required_to_run_my_QB64_compiled_program_in_my_Operating_System.3F">Q: What files are required to run my QB64 compiled program in my Operating System?</span></h2>
+<p>A: Programs compiled by QB64 (version 1.000 and up) are stand-alone so no external files are required to be with your program's EXE file. 
+</p><p><br />
+</p>
+<p style="text-align: center">(<a href="#toc">Return to FAQ topics</a>)</p>
+<p><br />
+</p>
+<h2><span id="Q:_Is_there_a_way_to_use_the_compiler_without_running_my_program_or_using_the_IDE?"></span><span class="mw-headline" id="Q:_Is_there_a_way_to_use_the_compiler_without_running_my_program_or_using_the_IDE.3F">Q: Is there a way to use the compiler without running my program or using the IDE?</span></h2>
+<p>A: Yes! No other program files besides the BAS file are required. Use the following command to compile a program without running it: 
+</p>
+<ul><li><b>QB64 -c yourfile.BAS</b></li>
+<li><b>QB64 -x yourfile.BAS</b> <i>(compiles using the console only)</i></li>
+<li><b>QB64 -c yourfile.BAS -o destination_path\destination executable_name.exe</b> <i>(compiles the .BAS file and outputs the executable to a separate folder)</i></li></ul>
+<p><br />
+</p>
+<p style="text-align: center">(<a href="#toc">Return to FAQ topics</a>)</p>
+<p><br />
+</p>
+<h2><span id="Q:_How_do_I_link_modules_or_include_SUB_procedures_in_QB64?"></span><span class="mw-headline" id="Q:_How_do_I_link_modules_or_include_SUB_procedures_in_QB64.3F">Q: How do I link modules or include SUB procedures in QB64?</span></h2>
+<p>A: QB64 allows you to <a href="%24INCLUDE.html" title="$INCLUDE">$INCLUDE</a> code or BAS modules into one module when it is compiled. Text .BI files containing SUB or FUNCTION code or entire BAS modules can be included in one module that will be compiled. 
+</p><p>After the EXE is compiled, you do not have to even use the added code anymore. The EXE will contain ALL of the program code as ONE stand-alone program. This also allows you to add SUB code to any program that you desire. 
+</p><p><br />
+See: <a href="%24INCLUDE.html" title="$INCLUDE">$INCLUDE</a>
+</p>
+<p style="text-align: center">(<a href="#toc">Return to FAQ topics</a>)</p>
+<p><br />
+</p>
+<h2><span id="Q:_Some_screens_look_small._Can_I_enlarge_them_or_make_them_fullscreen?"></span><span class="mw-headline" id="Q:_Some_screens_look_small._Can_I_enlarge_them_or_make_them_fullscreen.3F">Q: Some screens look small. Can I enlarge them or make them fullscreen?</span></h2>
+<ul><li>You can use the <a href="FULLSCREEN.html" title="FULLSCREEN">_FULLSCREEN</a> statement to make your programs run fullscreen.</li>
+<li><a href="%24RESIZE.html" title="$RESIZE">$RESIZE</a> can be added to a program so you can track window resize events.</li>
+<li>You can also create custom sized screens with page flipping and up to 32 bit colors using <a href="NEWIMAGE.html" title="NEWIMAGE">_NEWIMAGE</a>.</li>
+<li>Page flipping is available in most screens and the new <a href="DISPLAY.html" title="DISPLAY">_DISPLAY</a> feature allows the images to be displayed when YOU desire.</li>
+<li>Picture or image files such as BMP, PNG, JPEG and GIF are EASY to load using <a href="LOADIMAGE.html" title="LOADIMAGE">_LOADIMAGE</a>.</li>
+<li>Once images are loaded, all you have to do is use the image handle with any of the new statements and functions.</li>
+<li><a href="PUTIMAGE.html" title="PUTIMAGE">_PUTIMAGE</a> GETs and PUTs images fast in ONE call. It can even stretch or compress the image sizes.</li></ul>
+<p><br />
+</p>
+<p style="text-align: center">(<a href="#toc">Return to FAQ topics</a>)</p>
+<p><br />
+</p>
+<h2><span id="Q:_Can_I_have_background_music_as_well_as_SOUND,_PLAY_and_BEEP?"></span><span class="mw-headline" id="Q:_Can_I_have_background_music_as_well_as_SOUND.2C_PLAY_and_BEEP.3F">Q: Can I have background music as well as <a href="SOUND.html" title="SOUND">SOUND</a>, <a href="PLAY.html" title="PLAY">PLAY</a> and <a href="BEEP.html" title="BEEP">BEEP</a>?</span></h2>
+<p>A: Yes, they are emulated to use the soundcard.
+</p><p><b>There also are a bunch of new sound capabilities that allow the use of WAV, OGG, MP3 files and more.</b>
+</p><p>Capabilities include:
+</p>
+<ol><li>Multiple sound tracks</li>
+<li>Volume and speaker control</li>
+<li>Background music</li></ol>
+<p><br />
+<b>Get started with <a href="SNDOPEN.html" title="SNDOPEN">music</a>:</b>
+</p>
+<dl><dd><a href="SNDCLOSE.html" title="SNDCLOSE">_SNDCLOSE</a> (statement), <a href="SNDCOPY.html" title="SNDCOPY">_SNDCOPY</a> (function), <a href="SNDGETPOS.html" title="SNDGETPOS">_SNDGETPOS</a> (function), <a href="SNDLEN.html" title="SNDLEN">_SNDLEN</a> (function), <a href="SNDLIMIT.html" title="SNDLIMIT">_SNDLIMIT</a> (statement)</dd></dl>
+<dl><dd><a href="SNDLOOP.html" title="SNDLOOP">_SNDLOOP</a> (statement), <a href="SNDOPEN.html" title="SNDOPEN">_SNDOPEN</a> (function), <a href="SNDPAUSE.html" title="SNDPAUSE">_SNDPAUSE</a> (statement), <a href="SNDPAUSED.html" title="SNDPAUSED">_SNDPAUSED</a> (function), <a href="SNDPLAY.html" title="SNDPLAY">_SNDPLAY</a> (statement)</dd></dl>
+<dl><dd><a href="SNDPLAYCOPY.html" title="SNDPLAYCOPY">_SNDPLAYCOPY</a> (statement), <a href="SNDPLAYFILE.html" title="SNDPLAYFILE">_SNDPLAYFILE</a> (statement), <a href="SNDPLAYING.html" title="SNDPLAYING">_SNDPLAYING</a> (function), <a href="SNDSETPOS.html" title="SNDSETPOS">_SNDSETPOS</a> (statement)</dd></dl>
+<dl><dd><a href="SNDRAW.html" title="SNDRAW">_SNDRAW</a> (statement), <a href="SNDSTOP.html" title="SNDSTOP">_SNDSTOP</a> (statement), <a href="SNDVOL.html" title="SNDVOL">_SNDVOL</a> (statement)</dd></dl>
+<p><br />
+</p>
+<p style="text-align: center">(<a href="#toc">Return to FAQ topics</a>)</p>
+<p><br />
+</p>
+<h2><span id="Q:_If_QB64_creates_Basic_programs_why_is_there_no_Immediate_Window?"></span><span class="mw-headline" id="Q:_If_QB64_creates_Basic_programs_why_is_there_no_Immediate_Window.3F">Q: If QB64 creates Basic programs why is there no Immediate Window?</span></h2>
+<p>A: Because there is no <b>QB64</b> interpreter. All C code has to be compiled before it can be run.
+</p><p><b>QB64</b> uses the Immediate window area to suggest syntax for keyword entries and give the compiler status when compiling.
+</p>
+<p style="text-align: center">(<a href="#toc">Return to FAQ topics</a>)</p>
+<p><br />
+</p>
+<h2><span id="Q:_Does_it_work_on_Windows_98_or_any_OS_older_than_Windows_2000?"></span><span class="mw-headline" id="Q:_Does_it_work_on_Windows_98_or_any_OS_older_than_Windows_2000.3F">Q: Does it work on Windows 98 or any OS older than Windows 2000?</span></h2>
+<p>A: No, it doesn't. QB64 is made to run on new systems (Windows XP and up, Linux and macOS).
+</p><p><br />
+</p>
+<h2><span id="Q:_Does_QB64_support_CURRENCY_values_from_PDS_or_VB_programs?"></span><span class="mw-headline" id="Q:_Does_QB64_support_CURRENCY_values_from_PDS_or_VB_programs.3F">Q: Does QB64 support CURRENCY values from PDS or VB programs?</span></h2>
+<p>A: Not directly, but <a href="FLOAT.html" title="FLOAT">_FLOAT</a> currency values up to 4 decimal places can be multiplied by 10000(10 ^ 4) and converted to MKC$ string values using <a href="MK%24.html" title="MK$">_MK$</a> with an <a href="INTEGER64.html" title="INTEGER64">_INTEGER64</a> value. <a href="CV.html" title="CV">_CV</a> with an <a href="INTEGER64.html" title="INTEGER64">_INTEGER64</a> value divided by 10000 converts it back to <a href="FLOAT.html" title="FLOAT">_FLOAT</a> values.
+</p><p><br />
+<a href="PUT.html" title="PUT">PUT</a> can write a PDS or VB, 8 byte currency string by multiplying the currency amount by 10000 and using an <a href="INTEGER64.html" title="INTEGER64">_INTEGER64</a> variable.
+</p><p><a href="GET.html" title="GET">GET</a> can read a <a href="FLOAT.html" title="FLOAT">_FLOAT</a> CURRENCY value as an <a href="INTEGER64.html" title="INTEGER64">INTEGER64</a> variable value divided by 10000.
+</p><p><br />
+</p>
+<p style="text-align: center">(<a href="#toc">Return to FAQ topics</a>)</p>
+<p><br />
+</p>
+<h2><span id="Q:_Do_you_provide_changelogs?"></span><span class="mw-headline" id="Q:_Do_you_provide_changelogs.3F">Q: Do you provide changelogs?</span></h2>
+<p>A: We do.  For all recent changelogs, check <a rel="nofollow" class="external text" href="http://www.qb64.org/">QB64.org</a>
+</p>
+<p style="text-align: center">(<a href="#toc">Return to FAQ topics</a>)</p>
+<p><br />
+</p>
+<h2><span id="Q:_Where_I_can_view_the_C++_code_before_it_gets_compiled?"></span><span class="mw-headline" id="Q:_Where_I_can_view_the_C.2B.2B_code_before_it_gets_compiled.3F">Q: Where I can view the C++ code before it gets compiled?</span></h2>
+<p>A: Look in the QB64 <b>internal\temp</b> folder for <b>main.txt</b> to get the C code used to compile the latest program.
+</p><p><br />
+</p>
+<hr />
+<center><i>Navigation:</i>
+<dl><dd><a href="Keyword_Reference_-_Alphabetical.html" title="Keyword Reference - Alphabetical">Keyword Reference - Alphabetical</a></dd>
+<dd><a href="Keyword_Reference_-_By_usage.html" title="Keyword Reference - By usage">Keyword Reference - By Usage</a></dd>
+<dd><a href="Main_Page.html" title="Main Page">Main Wiki Page</a></dd></dl></center>
+<!-- 
+NewPP limit report
+Cached time: 20210707073827
+Cache expiry: 86400
+Dynamic content: false
+Complications: []
+CPU time usage: 0.060 seconds
+Real time usage: 0.069 seconds
+Preprocessor visited node count: 173/1000000
+Post‐expand include size: 591/2097152 bytes
+Template argument size: 153/2097152 bytes
+Highest expansion depth: 3/40
+Expensive parser function count: 0/100
+Unstrip recursion depth: 0/20
+Unstrip post‐expand size: 0/5000000 bytes
+-->
+<!--
+Transclusion expansion time report (%,ms,calls,template)
+100.00%   13.714      1 -total
+ 29.28%    4.015      1 Template:Text
+ 22.37%    3.068      1 Template:PageNavigation
+ 22.28%    3.056      1 Template:TextStart
+ 22.09%    3.029      1 Template:TextEnd
+-->
+
+<!-- Saved in parser cache with key i4224360_mw2-mw_:pcache:idhash:558-0!canonical and timestamp 20210707073827 and revision id 23503
+ -->
+</div></div><div class="printfooter">Retrieved from "<a dir="ltr" href="indexc5e9.html?title=QB64_FAQ&amp;oldid=23503">http://www.qb64.org/wiki/index.php?title=QB64_FAQ&amp;oldid=23503</a>"</div>
+		<div id="catlinks" class="catlinks catlinks-allhidden" data-mw="interface"></div>
+	</div>
+</div>
+
+<div id="mw-navigation">
+	<h2>Navigation menu</h2>
+	<div id="mw-head">
+		<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-personal" class="vector-menu" aria-labelledby="p-personal-label" role="navigation" 
+	 >
+	<h3 id="p-personal-label">
+		<span>Personal tools</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="pt-login"><a href="index9dcd.html?title=Special:UserLogin&amp;returnto=QB64+FAQ" title="You are encouraged to log in; however, it is not mandatory [o]" accesskey="o">Log in</a></li></ul>
+		
+	</div>
+</nav>
+
+
+		<div id="left-navigation">
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-namespaces" class="vector-menu vector-menu-tabs vectorTabs" aria-labelledby="p-namespaces-label" role="navigation" 
+	 >
+	<h3 id="p-namespaces-label">
+		<span>Namespaces</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="ca-nstab-main" class="selected"><a href="QB64_FAQ.html" title="View the content page [c]" accesskey="c">Page</a></li><li id="ca-talk" class="new"><a href="Talk_QB64_FAQ.html?title=Talk:QB64_FAQ&amp;action=edit&amp;redlink=1" rel="discussion" title="Discussion about the content page (page does not exist) [t]" accesskey="t">Discussion</a></li></ul>
+		
+	</div>
+</nav>
+
+
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-variants" class="vector-menu-empty emptyPortlet vector-menu vector-menu-dropdown vectorMenu" aria-labelledby="p-variants-label" role="navigation" 
+	 >
+	<input type="checkbox" class="vector-menu-checkbox vectorMenuCheckbox" aria-labelledby="p-variants-label" />
+	<h3 id="p-variants-label">
+		<span>Variants</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="menu vector-menu-content-list"></ul>
+		
+	</div>
+</nav>
+
+
+		</div>
+		<div id="right-navigation">
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-views" class="vector-menu vector-menu-tabs vectorTabs" aria-labelledby="p-views-label" role="navigation" 
+	 >
+	<h3 id="p-views-label">
+		<span>Views</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="ca-view" class="collapsible selected"><a href="QB64_FAQ.html">Read</a></li><li id="ca-viewsource" class="collapsible"><a href="index6e96.html?title=QB64_FAQ&amp;action=edit" title="This page is protected.&#10;You can view its source [e]" accesskey="e">View source</a></li><li id="ca-history" class="collapsible"><a href="index7724.html?title=QB64_FAQ&amp;action=history" title="Past revisions of this page [h]" accesskey="h">View history</a></li></ul>
+		
+	</div>
+</nav>
+
+
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-cactions" class="vector-menu-empty emptyPortlet vector-menu vector-menu-dropdown vectorMenu" aria-labelledby="p-cactions-label" role="navigation" 
+	 >
+	<input type="checkbox" class="vector-menu-checkbox vectorMenuCheckbox" aria-labelledby="p-cactions-label" />
+	<h3 id="p-cactions-label">
+		<span>More</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="menu vector-menu-content-list"></ul>
+		
+	</div>
+</nav>
+
+
+			<div id="p-search" role="search">
+	<h3 >
+		<label for="searchInput">Search</label>
+	</h3>
+	<form action="https://www.qb64.org/wiki/index.php" id="searchform">
+		<div id="simpleSearch">
+			<input type="search" name="search" placeholder="Search QB64 Wiki" title="Search QB64 Wiki [f]" accesskey="f" id="searchInput"/>
+			<input type="hidden" name="title" value="Special:Search">
+			<input type="submit" name="fulltext" value="Search" title="Search the pages for this text" id="mw-searchButton" class="searchButton mw-fallbackSearchButton"/>
+			<input type="submit" name="go" value="Go" title="Go to a page with this exact name if it exists" id="searchButton" class="searchButton"/>
+		</div>
+	</form>
+</div>
+
+		</div>
+	</div>
+	
+<div id="mw-panel">
+	<div id="p-logo" role="banner">
+		<a  title="Visit the main page" class="mw-wiki-logo" href="Main_Page.html"></a>
+	</div>
+	<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-navigation" class="vector-menu vector-menu-portal portal portal-first" aria-labelledby="p-navigation-label" role="navigation" 
+	 >
+	<h3 id="p-navigation-label">
+		<span>Navigation</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="n-mainpage-description"><a href="Main_Page.html" title="Visit the main page [z]" accesskey="z">Main page</a></li><li id="n-recentchanges"><a href="Special_RecentChanges.html" title="A list of recent changes in the wiki [r]" accesskey="r">Recent changes</a></li><li id="n-randompage"><a href="SNDCOPY.html" title="Load a random page [x]" accesskey="x">Random page</a></li><li id="n-help-mediawiki"><a href="https://www.mediawiki.org/wiki/Special:MyLanguage/Help:Contents">Help about MediaWiki</a></li></ul>
+		
+	</div>
+</nav>
+
+
+	<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-tb" class="vector-menu vector-menu-portal portal" aria-labelledby="p-tb-label" role="navigation" 
+	 >
+	<h3 id="p-tb-label">
+		<span>Tools</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="t-whatlinkshere"><a href="Special_WhatLinksHere/QB64_FAQ.html" title="A list of all wiki pages that link here [j]" accesskey="j">What links here</a></li><li id="t-recentchangeslinked"><a href="Special_RecentChangesLinked/QB64_FAQ.html" rel="nofollow" title="Recent changes in pages linked from this page [k]" accesskey="k">Related changes</a></li><li id="t-specialpages"><a href="Special_SpecialPages.html" title="A list of all special pages [q]" accesskey="q">Special pages</a></li><li id="t-print"><a href="javascript:print();" rel="alternate" title="Printable version of this page [p]" accesskey="p">Printable version</a></li><li id="t-permalink"><a href="indexc5e9.html?title=QB64_FAQ&amp;oldid=23503" title="Permanent link to this revision of the page">Permanent link</a></li><li id="t-info"><a href="indexe013.html?title=QB64_FAQ&amp;action=info" title="More information about this page">Page information</a></li></ul>
+		
+	</div>
+</nav>
+
+
+	
+</div>
+
+</div>
+
+<footer id="footer" class="mw-footer" role="contentinfo" >
+	<ul id="footer-info" >
+		<li id="footer-info-lastmod"> This page was last edited on 24 February 2021, at 08:43.</li>
+	</ul>
+	<ul id="footer-places" >
+		<li id="footer-places-privacy"><a href="My_wiki_Privacy_policy.html" title="My wiki:Privacy policy">Privacy policy</a></li>
+		<li id="footer-places-about"><a href="My_wiki_About.html" title="My wiki:About">About QB64 Wiki</a></li>
+		<li id="footer-places-disclaimer"><a href="My_wiki_General_disclaimer.html" title="My wiki:General disclaimer">Disclaimers</a></li>
+	</ul>
+	<ul id="footer-icons" class="noprint">
+		<li id="footer-poweredbyico"><a href="https://www.mediawiki.org/"><img src="resources/assets/poweredby_mediawiki_88x31.png" alt="Powered by MediaWiki" srcset="/wiki/resources/assets/poweredby_mediawiki_132x47.png 1.5x, /wiki/resources/assets/poweredby_mediawiki_176x62.png 2x" width="88" height="31" loading="lazy"/></a></li>
+	</ul>
+	<div style="clear: both;"></div>
+</footer>
+
+
+
+<script>(RLQ=window.RLQ||[]).push(function(){mw.config.set({"wgPageParseReport":{"limitreport":{"cputime":"0.060","walltime":"0.069","ppvisitednodes":{"value":173,"limit":1000000},"postexpandincludesize":{"value":591,"limit":2097152},"templateargumentsize":{"value":153,"limit":2097152},"expansiondepth":{"value":3,"limit":40},"expensivefunctioncount":{"value":0,"limit":100},"unstrip-depth":{"value":0,"limit":20},"unstrip-size":{"value":0,"limit":5000000},"timingprofile":["100.00%   13.714      1 -total"," 29.28%    4.015      1 Template:Text"," 22.37%    3.068      1 Template:PageNavigation"," 22.28%    3.056      1 Template:TextStart"," 22.09%    3.029      1 Template:TextEnd"]},"cachereport":{"timestamp":"20210707073827","ttl":86400,"transientcontent":false}}});mw.config.set({"wgBackendResponseTime":1105});});</script></body>
+<!-- Mirrored from www.qb64.org/wiki/QB64_FAQ by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 07 Aug 2021 12:26:43 GMT -->
+</html>

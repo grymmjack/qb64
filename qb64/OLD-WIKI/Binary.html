@@ -1,0 +1,394 @@
+
+<!DOCTYPE html>
+<html class="client-nojs" lang="en" dir="ltr">
+
+<!-- Mirrored from www.qb64.org/wiki/Binary by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 07 Aug 2021 12:41:33 GMT -->
+<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=UTF-8" /><!-- /Added by HTTrack -->
+<head>
+<meta charset="UTF-8"/>
+<title>Binary - QB64 Wiki</title>
+<script>document.documentElement.className="client-js";RLCONF={"wgBreakFrames":!1,"wgSeparatorTransformTable":["",""],"wgDigitTransformTable":["",""],"wgDefaultDateFormat":"dmy","wgMonthNames":["","January","February","March","April","May","June","July","August","September","October","November","December"],"wgRequestId":"YOWkS1pP-65vp3So6LulnwAAAM0","wgCSPNonce":!1,"wgCanonicalNamespace":"","wgCanonicalSpecialPageName":!1,"wgNamespaceNumber":0,"wgPageName":"Binary","wgTitle":"Binary","wgCurRevisionId":23263,"wgRevisionId":23263,"wgArticleId":76,"wgIsArticle":!0,"wgIsRedirect":!1,"wgAction":"view","wgUserName":null,"wgUserGroups":["*"],"wgCategories":[],"wgPageContentLanguage":"en","wgPageContentModel":"wikitext","wgRelevantPageName":"Binary","wgRelevantArticleId":76,"wgIsProbablyEditable":!1,"wgRelevantPageIsProbablyEditable":!1,"wgRestrictionEdit":[],"wgRestrictionMove":[]};RLSTATE={"site.styles":"ready","noscript":"ready","user.styles":"ready","user":"ready",
+"user.options":"loading","skins.vector.styles.legacy":"ready"};RLPAGEMODULES=["site","mediawiki.page.startup","mediawiki.page.ready","skins.vector.legacy.js"];</script>
+<script>(RLQ=window.RLQ||[]).push(function(){mw.loader.implement("user.options@1hzgi",function($,jQuery,require,module){/*@nomin*/mw.user.tokens.set({"patrolToken":"+\\","watchToken":"+\\","csrfToken":"+\\"});
+});});</script>
+<link rel="stylesheet" href="load5c90.css?lang=en&amp;modules=skins.vector.styles.legacy&amp;only=styles&amp;skin=vector"/>
+<script async="" src="load52c0.php?lang=en&amp;modules=startup&amp;only=scripts&amp;raw=1&amp;skin=vector"></script>
+<meta name="generator" content="MediaWiki 1.35.2"/>
+<link rel="shortcut icon" href="https://www.qb64.org/favicon.ico"/>
+<link rel="search" type="application/opensearchdescription+xml" href="opensearch_desc.php" title="QB64 Wiki (en)"/>
+<link rel="EditURI" type="application/rsd+xml" href="api-result251f.xml?action=rsd"/>
+<link rel="alternate" type="application/atom+xml" title="QB64 Wiki Atom feed" href="feeda295.xml?title=Special:RecentChanges&amp;feed=atom"/>
+<!--[if lt IE 9]><script src="/wiki/resources/lib/html5shiv/html5shiv.js"></script><![endif]-->
+</head>
+<body class="mediawiki ltr sitedir-ltr mw-hide-empty-elt ns-0 ns-subject page-Binary rootpage-Binary skin-vector action-view skin-vector-legacy">
+<div id="mw-page-base" class="noprint"></div>
+<div id="mw-head-base" class="noprint"></div>
+<div id="content" class="mw-body" role="main">
+	<a id="top"></a>
+	<div id="siteNotice" class="mw-body-content"></div>
+	<div class="mw-indicators mw-body-content">
+	</div>
+	<h1 id="firstHeading" class="firstHeading" lang="en">Binary</h1>
+	<div id="bodyContent" class="mw-body-content">
+		<div id="siteSub" class="noprint">From QB64 Wiki</div>
+		<div id="contentSub"></div>
+		<div id="contentSub2"></div>
+		
+		<div id="jump-to-nav"></div>
+		<a class="mw-jump-link" href="#mw-head">Jump to navigation</a>
+		<a class="mw-jump-link" href="#searchInput">Jump to search</a>
+		<div id="mw-content-text" lang="en" dir="ltr" class="mw-content-ltr"><div class="mw-parser-output"><p><b>Binary</b> is the base 2 numbering system. It is used by computers because the computer consists of switches that are either on or off. The primary purpose of reading bit values is to translate what was sent by a port or register read.
+</p><p><br />
+</p>
+<ul><li>Base 2 has numerical values of 0 for off or 1 for on. There is no QBasic function to return the binary values.</li>
+<li>A computer register has 8 bit switches for one byte of data. Each register can return values from 0 to 255 just like <a href="ASCII.html" title="ASCII">ASCII</a>.</li>
+<li>Each bit can be read by using an exponent of 2 from 0 to 128(2 ^ 0 to 2 ^ 7) utilizing the AND numerical operator.</li>
+<li>Bit numbers and parallel port pins are designated as exponents of 2 also for clarity.</li>
+<li>The first bit(2 ^ 0) of one byte is called the least significant bit(LSB).</li>
+<li>The highest bit(2 ^ 7) of one byte is called the most significant bit(MSB).</li>
+<li>A four bit reading or writing mode is called a nibble mode.</li></ul>
+<p><br />
+</p>
+<center><i>Decimal Bit values returned when a bit is on:</i></center>
+<p style="padding: 1em; line-height:100%; margin-left:10px; white-space: pre; font-family: courier; background-color: white; color: darkgreen;">                                    <b>Exponent of 2 and Bit #  7 6 5 4 3 2 1 0 </b>
+
+                       Bit 0 = 2 ^ 0 = 1 decimal    binary = 0 0 0 0 0 0 0 1
+                       Bit 1 = 2 ^ 1 = 2 decimal    binary = 0 0 0 0 0 0 1 0
+                       Bit 2 = 2 ^ 2 = 4 decimal    binary = 0 0 0 0 0 1 0 0
+                       Bit 3 = 2 ^ 3 = 8 decimal    binary = 0 0 0 0 1 0 0 0
+                       Bit 4 = 2 ^ 4 = 16 decimal  &#160;binary = 0 0 0 1 0 0 0 0
+                       Bit 5 = 2 ^ 5 = 32 decimal   binary = 0 0 1 0 0 0 0 0
+                       Bit 6 = 2 ^ 6 = 64 decimal  &#160;binary = 0 1 0 0 0 0 0 0
+                       Bit 7 = 2 ^ 7 = 128 decimal  binary = 1 0 0 0 0 0 0 0
+
+                       All_Bits_On = 1 + 2 + 4 + 8 + 16 + 32 + 64 + 128 = 255
+</p>
+<dl><dd><i>Explanation:</i> The table above only displays the binary value of each bit when on. If a value of 255 was read, the binary number = 11111111 (all bits on). If only bits 2, 3 and 4 are on then the value would be 4 + 8 + 16 = 28 or 00011100.</dd></dl>
+<p><br />
+</p>
+<center><b> Truth table of the BASIC Logical Operators:</b></center>
+<center>The results of the bitwise logical operations, where <i>A</i> and <i>B</i> are operands, and <i>T</i> and <i>F</i> indicate that a bit is set or not set:</center>
+<dl><dd><table border="1" cellpadding="2" align="center">
+
+<tbody><tr>
+<th colspan="2">Operands</th>
+<th colspan="6">Operations
+</th></tr>
+<tr>
+<td align="center">A</td>
+<td align="center">B</td>
+<td align="center"><tt><a href="NOT.html" title="NOT">NOT</a> B</tt></td>
+<td align="center"><tt>A <a href="AND.html" title="AND">AND</a> B</tt></td>
+<td align="center"><tt>A <a href="OR.html" title="OR">OR</a> B</tt></td>
+<td align="center"><tt>A <a href="XOR.html" class="mw-redirect" title="XOR">XOR</a> B</tt></td>
+<td align="center"><tt>A <a href="EQV.html" title="EQV">EQV</a> B</tt></td>
+<td align="center"><tt>A <a href="IMP.html" title="IMP">IMP</a> B</tt>
+</td></tr>
+<tr>
+<td align="center">T</td>
+<td align="center">T</td>
+<td align="center">F</td>
+<td align="center">T</td>
+<td align="center">T</td>
+<td align="center">F</td>
+<td align="center">T</td>
+<td align="center">T
+</td></tr>
+<tr>
+<td align="center">T</td>
+<td align="center">F</td>
+<td align="center">T</td>
+<td align="center">F</td>
+<td align="center">T</td>
+<td align="center">T</td>
+<td align="center">F</td>
+<td align="center">F
+</td></tr>
+<tr>
+<td align="center">F</td>
+<td align="center">T</td>
+<td align="center">F</td>
+<td align="center">F</td>
+<td align="center">T</td>
+<td align="center">T</td>
+<td align="center">F</td>
+<td align="center">T
+</td></tr>
+<tr>
+<td align="center">F</td>
+<td align="center">F</td>
+<td align="center">T</td>
+<td align="center">F</td>
+<td align="center">F</td>
+<td align="center">F</td>
+<td align="center">T</td>
+<td align="center">T
+</td></tr></tbody></table></dd></dl>
+<center><b><a href="Relational_Operations.html" title="Relational Operations">Relational Operations</a> return negative one (-1, all bits set) and zero (0, no bits set) for <i>true</i> and <i>false</i>, respectively.</b></center>
+<center> This allows relational tests to be inverted and combined using the bitwise logical operations.<b></b></center>
+<p><br />
+</p><p><br />
+</p>
+<dl><dd><i>Explanation:</i> The Logical Operators can be used to change bit values of a byte when comparing them to another byte value. <a href="AND.html" title="AND">AND</a> can determine if each bit is on using a comparison with exponents of 2 from 0 to 7. <a href="OR.html" title="OR">OR</a> can turn on a bit only when at least one bit is on in a comparison. It cannot turn off a bit! <a href="XOR.html" class="mw-redirect" title="XOR">XOR</a> can switch bits on if only ONE of the values has a bit on. Not both! These 3 logical operators are often used to work with register or port readings to turn bits on or off.</dd></dl>
+<p><br />
+</p>
+<dl><dd><i>Example 1:</i> Converting decimal values to a string binary value. Use <a href="LOCATE.html" title="LOCATE">LOCATE</a> before the SUB call to locate the <a href="PRINT.html" title="PRINT">PRINT</a>.</dd></dl>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: Courier, monospace; background-color: darkblue; color: lightgrey; word-wrap: break-word;"> <i> </i>
+<a href="DO...html" title="DO...LOOP"><span style="color:#87cefa;">DO</span></a>
+  <a href="LOCATE.html" title="LOCATE"><span style="color:#87cefa;">LOCATE</span></a> 2, 10
+  <a href="INPUT.html" title="INPUT"><span style="color:#87cefa;">INPUT</span></a> "Enter a numerical value to convert to binary(0 quits): ", decimal&amp;
+  <a href="CLS.html" title="CLS"><span style="color:#87cefa;">CLS</span></a>: <a href="LOCATE.html" title="LOCATE"><span style="color:#87cefa;">LOCATE</span></a> 10, 10 
+  Decimal2Binary (decimal&amp;)       'pass number by value using <a href="Parenthesis.html" title="Parenthesis"><span style="color:#87cefa;">parenthesis</span></a>
+<a href="LOOP.html" title="LOOP"><span style="color:#87cefa;">LOOP</span></a> <a href="UNTIL.html" title="UNTIL"><span style="color:#87cefa;">UNTIL</span></a> decimal&amp; = 0
+<a href="END.html" title="END"><span style="color:#87cefa;">END</span></a>
+
+<a href="SUB.html" title="SUB"><span style="color:#87cefa;">SUB</span></a> Decimal2Binary(number&amp;)
+ IF number&amp; = 0 THEN <a href="EXIT.html" title="EXIT"><span style="color:#87cefa;">EXIT</span></a> SUB
+ DO
+   remain% = <a href="ABS.html" title="ABS"><span style="color:#87cefa;">ABS</span></a>(number&amp; <a href="MOD.html" title="MOD"><span style="color:#87cefa;">MOD</span></a> 2)   ' remainder is used to create binary number
+   number&amp; = number&amp; \ 2          ' move up one exponent of 2 with integer division
+   Bin$ = <a href="LTRIM%24.html" title="LTRIM$"><span style="color:#87cefa;">LTRIM$</span></a>(<a href="STR%24.html" title="STR$"><span style="color:#87cefa;">STR$</span></a>(remain%))   ' make remainder a string number
+   Binary$ = Bin$ + Binary$       ' add remainder to binary number
+ LOOP UNTIL number&amp; = 0
+ PRINT "Binary number = " + Binary$    'binary result
+<a href="END_SUB.html" class="mw-redirect" title="END SUB"><span style="color:#87cefa;">END SUB</span></a> <i> </i>
+</p>
+<dl><dd><i>Explanation:</i> Displays Binary bits on as 1. Remainder can only be 1 or 0 in each loop. Can return all positive values correctly. The decimal parameter could come from a register return value read by <a href="INP.html" title="INP">INP</a>(address) and 1 would indicate the pins or bits on.</dd></dl>
+<p><br />
+</p>
+<dl><dd><i>Example 2:</i> Turning flip-flop <a href="BIT.html" title="BIT">BIT</a> flags on or off and determining the bits on in a <a href="BYTE.html" title="BYTE">BYTE</a> of program data.</dd></dl>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: Courier, monospace; background-color: darkblue; color: lightgrey; word-wrap: break-word;"> <i> </i>
+<a href="DEFINE.html" title="DEFINE"><span style="color:#87cefa;">_DEFINE</span></a> B <a href="AS.html" title="AS"><span style="color:#87cefa;">AS</span></a> <a href="UNSIGNED.html" title="UNSIGNED"><span style="color:#87cefa;">_UNSIGNED</span></a> <a href="BYTE.html" title="BYTE"><span style="color:#87cefa;">_BYTE</span></a>   'unsigned allows byte values from 128 to 255
+
+<a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> "Hit number keys 1 to 8 to turn flags ON or OFF"
+
+DO
+  a$ = <a href="INKEY%24.html" title="INKEY$"><span style="color:#87cefa;">INKEY$</span></a> 'get bit numbers 1 through 8 only
+  k = <a href="VAL.html" title="VAL"><span style="color:#87cefa;">VAL</span></a>(a$)
+  <a href="IF...html" title="IF...THEN"><span style="color:#87cefa;">IF</span></a> k &gt; 0 <a href="AND_(boolean).html" title="AND (boolean)"><span style="color:#87cefa;">AND</span></a> k &lt; 9 <a href="THEN.html" title="THEN"><span style="color:#87cefa;">THEN</span></a> 'test for switch on or off
+    bitval = 2 ^ (k - 1) 
+    <a href="IF...html" title="IF...THEN"><span style="color:#87cefa;">IF</span></a> (byte <a href="AND.html" title="AND"><span style="color:#87cefa;">AND</span></a> bitval) = 0 <a href="THEN.html" title="THEN"><span style="color:#87cefa;">THEN</span></a> byte = byte + bitval <a href="ELSE.html" title="ELSE"><span style="color:#87cefa;">ELSE</span></a> byte = byte - bitval                  
+    <a href="LOCATE.html" title="LOCATE"><span style="color:#87cefa;">LOCATE</span></a> 10, 10: <a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> "Switches on:";
+    <a href="FOR...html" title="FOR...NEXT"><span style="color:#87cefa;">FOR</span></a> i = 0 <a href="TO.html" title="TO"><span style="color:#87cefa;">TO</span></a> 7                      'maximum byte value is 255
+      <a href="IF...html" title="IF...THEN"><span style="color:#87cefa;">IF</span></a> (byte <a href="AND.html" title="AND"><span style="color:#87cefa;">AND</span></a> 2 ^ i) <a href="THEN.html" title="THEN"><span style="color:#87cefa;">THEN</span></a> <a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> i + 1;
+    <a href="NEXT.html" title="NEXT"><span style="color:#87cefa;">NEXT</span></a>
+    <a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> "Byte ="; byte; <a href="SPACE%24.html" title="SPACE$"><span style="color:#87cefa;">SPACE$</span></a>(4)
+  <a href="END_IF.html" class="mw-redirect" title="END IF"><span style="color:#87cefa;">END IF</span></a>
+<a href="LOOP.html" title="LOOP"><span style="color:#87cefa;">LOOP</span></a> <a href="UNTIL.html" title="UNTIL"><span style="color:#87cefa;">UNTIL</span></a> <a href="KEYDOWN.html" title="KEYDOWN"><span style="color:#87cefa;">_KEYDOWN</span></a>(27)
+<a href="SLEEP.html" title="SLEEP"><span style="color:#87cefa;">SLEEP</span></a>
+<a href="SYSTEM.html" title="SYSTEM"><span style="color:#87cefa;">SYSTEM</span></a> <i> </i>
+</p>
+<center><span style="font-family: Courier New, Courier, monospace; font-size: 0.80em; line-height: 50%;">Code by Ted Weissgerber</span></center>
+<dl><dd><i>Explanation:</i> The byte value is checked to see if the switch is already on. If it is not on, then the bit value is turned on by adding that value to the byte value. If it is on, that value is subtracted. The <a href="FOR...html" title="FOR...NEXT">FOR...NEXT</a> loop reads each bit and displays the switches on.</dd></dl>
+<p><br />
+</p><p><i>See also:</i> 
+</p>
+<ul><li><a href="BIT.html" title="BIT">_BIT</a>, <a href="%26B.html" title="&amp;B">&amp;B</a>, <a href="BYTE.html" title="BYTE">_BYTE</a></li>
+<li><a href="SHL.html" title="SHL">_SHL</a>, <a href="SHR.html" title="SHR">_SHR</a></li>
+<li><a href="AND.html" title="AND">AND</a>, <a href="OR.html" title="OR">OR</a>, <a href="XOR.html" class="mw-redirect" title="XOR">XOR</a>, <a href="EQV.html" title="EQV">EQV</a>, <a href="IMP.html" title="IMP">IMP</a></li>
+<li><a href="BINARY-2.html" class="mw-redirect" title="BINARY">BINARY</a>(file mode), <a href="DO...html" title="DO...LOOP">DO...LOOP</a></li>
+<li><a href="FOR...html" title="FOR...NEXT">FOR...NEXT</a>, <a href="Boolean.html" title="Boolean">Boolean</a></li>
+<li><a href="Mathematical_Operations.html" title="Mathematical Operations">Mathematical Operations</a></li></ul>
+<p><br />
+</p><p><br />
+</p>
+<hr />
+<center><i>Navigation:</i>
+<dl><dd><a href="Keyword_Reference_-_Alphabetical.html" title="Keyword Reference - Alphabetical">Keyword Reference - Alphabetical</a></dd>
+<dd><a href="Keyword_Reference_-_By_usage.html" title="Keyword Reference - By usage">Keyword Reference - By Usage</a></dd>
+<dd><a href="Main_Page.html" title="Main Page">Main Wiki Page</a></dd></dl></center>
+<!-- 
+NewPP limit report
+Cached time: 20210706125941
+Cache expiry: 86400
+Dynamic content: false
+Complications: []
+CPU time usage: 0.058 seconds
+Real time usage: 0.072 seconds
+Preprocessor visited node count: 352/1000000
+Post‐expand include size: 4864/2097152 bytes
+Template argument size: 494/2097152 bytes
+Highest expansion depth: 3/40
+Expensive parser function count: 0/100
+Unstrip recursion depth: 0/20
+Unstrip post‐expand size: 0/5000000 bytes
+-->
+<!--
+Transclusion expansion time report (%,ms,calls,template)
+100.00%   32.972      1 -total
+ 19.21%    6.335     47 Template:Cl
+ 11.97%    3.946      1 Template:WhiteStart
+  9.84%    3.244      1 Template:LogicalTruthTable
+  9.54%    3.147      1 Template:WhiteEnd
+  9.27%    3.055      1 Template:Small
+  9.14%    3.013      1 Template:PageNavigation
+  9.11%    3.005      2 Template:CodeStart
+  9.08%    2.995      2 Template:CodeEnd
+-->
+
+<!-- Saved in parser cache with key i4224360_mw2-mw_:pcache:idhash:76-0!canonical and timestamp 20210706125940 and revision id 23263
+ -->
+</div></div><div class="printfooter">Retrieved from "<a dir="ltr" href="index203d.html?title=Binary&amp;oldid=23263">http://www.qb64.org/wiki/index.php?title=Binary&amp;oldid=23263</a>"</div>
+		<div id="catlinks" class="catlinks catlinks-allhidden" data-mw="interface"></div>
+	</div>
+</div>
+
+<div id="mw-navigation">
+	<h2>Navigation menu</h2>
+	<div id="mw-head">
+		<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-personal" class="vector-menu" aria-labelledby="p-personal-label" role="navigation" 
+	 >
+	<h3 id="p-personal-label">
+		<span>Personal tools</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="pt-login"><a href="index9f16.html?title=Special:UserLogin&amp;returnto=Binary" title="You are encouraged to log in; however, it is not mandatory [o]" accesskey="o">Log in</a></li></ul>
+		
+	</div>
+</nav>
+
+
+		<div id="left-navigation">
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-namespaces" class="vector-menu vector-menu-tabs vectorTabs" aria-labelledby="p-namespaces-label" role="navigation" 
+	 >
+	<h3 id="p-namespaces-label">
+		<span>Namespaces</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="ca-nstab-main" class="selected"><a href="Binary.html" title="View the content page [c]" accesskey="c">Page</a></li><li id="ca-talk" class="new"><a href="Talk_Binary.html?title=Talk:Binary&amp;action=edit&amp;redlink=1" rel="discussion" title="Discussion about the content page (page does not exist) [t]" accesskey="t">Discussion</a></li></ul>
+		
+	</div>
+</nav>
+
+
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-variants" class="vector-menu-empty emptyPortlet vector-menu vector-menu-dropdown vectorMenu" aria-labelledby="p-variants-label" role="navigation" 
+	 >
+	<input type="checkbox" class="vector-menu-checkbox vectorMenuCheckbox" aria-labelledby="p-variants-label" />
+	<h3 id="p-variants-label">
+		<span>Variants</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="menu vector-menu-content-list"></ul>
+		
+	</div>
+</nav>
+
+
+		</div>
+		<div id="right-navigation">
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-views" class="vector-menu vector-menu-tabs vectorTabs" aria-labelledby="p-views-label" role="navigation" 
+	 >
+	<h3 id="p-views-label">
+		<span>Views</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="ca-view" class="collapsible selected"><a href="Binary.html">Read</a></li><li id="ca-viewsource" class="collapsible"><a href="index7380.html?title=Binary&amp;action=edit" title="This page is protected.&#10;You can view its source [e]" accesskey="e">View source</a></li><li id="ca-history" class="collapsible"><a href="index78d4.html?title=Binary&amp;action=history" title="Past revisions of this page [h]" accesskey="h">View history</a></li></ul>
+		
+	</div>
+</nav>
+
+
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-cactions" class="vector-menu-empty emptyPortlet vector-menu vector-menu-dropdown vectorMenu" aria-labelledby="p-cactions-label" role="navigation" 
+	 >
+	<input type="checkbox" class="vector-menu-checkbox vectorMenuCheckbox" aria-labelledby="p-cactions-label" />
+	<h3 id="p-cactions-label">
+		<span>More</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="menu vector-menu-content-list"></ul>
+		
+	</div>
+</nav>
+
+
+			<div id="p-search" role="search">
+	<h3 >
+		<label for="searchInput">Search</label>
+	</h3>
+	<form action="https://www.qb64.org/wiki/index.php" id="searchform">
+		<div id="simpleSearch">
+			<input type="search" name="search" placeholder="Search QB64 Wiki" title="Search QB64 Wiki [f]" accesskey="f" id="searchInput"/>
+			<input type="hidden" name="title" value="Special:Search">
+			<input type="submit" name="fulltext" value="Search" title="Search the pages for this text" id="mw-searchButton" class="searchButton mw-fallbackSearchButton"/>
+			<input type="submit" name="go" value="Go" title="Go to a page with this exact name if it exists" id="searchButton" class="searchButton"/>
+		</div>
+	</form>
+</div>
+
+		</div>
+	</div>
+	
+<div id="mw-panel">
+	<div id="p-logo" role="banner">
+		<a  title="Visit the main page" class="mw-wiki-logo" href="Main_Page.html"></a>
+	</div>
+	<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-navigation" class="vector-menu vector-menu-portal portal portal-first" aria-labelledby="p-navigation-label" role="navigation" 
+	 >
+	<h3 id="p-navigation-label">
+		<span>Navigation</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="n-mainpage-description"><a href="Main_Page.html" title="Visit the main page [z]" accesskey="z">Main page</a></li><li id="n-recentchanges"><a href="Special_RecentChanges.html" title="A list of recent changes in the wiki [r]" accesskey="r">Recent changes</a></li><li id="n-randompage"><a href="SNDCOPY.html" title="Load a random page [x]" accesskey="x">Random page</a></li><li id="n-help-mediawiki"><a href="https://www.mediawiki.org/wiki/Special:MyLanguage/Help:Contents">Help about MediaWiki</a></li></ul>
+		
+	</div>
+</nav>
+
+
+	<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-tb" class="vector-menu vector-menu-portal portal" aria-labelledby="p-tb-label" role="navigation" 
+	 >
+	<h3 id="p-tb-label">
+		<span>Tools</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="t-whatlinkshere"><a href="Special_WhatLinksHere/Binary.html" title="A list of all wiki pages that link here [j]" accesskey="j">What links here</a></li><li id="t-recentchangeslinked"><a href="Special_RecentChangesLinked/Binary.html" rel="nofollow" title="Recent changes in pages linked from this page [k]" accesskey="k">Related changes</a></li><li id="t-specialpages"><a href="Special_SpecialPages.html" title="A list of all special pages [q]" accesskey="q">Special pages</a></li><li id="t-print"><a href="javascript:print();" rel="alternate" title="Printable version of this page [p]" accesskey="p">Printable version</a></li><li id="t-permalink"><a href="index203d.html?title=Binary&amp;oldid=23263" title="Permanent link to this revision of the page">Permanent link</a></li><li id="t-info"><a href="index46c9.html?title=Binary&amp;action=info" title="More information about this page">Page information</a></li></ul>
+		
+	</div>
+</nav>
+
+
+	
+</div>
+
+</div>
+
+<footer id="footer" class="mw-footer" role="contentinfo" >
+	<ul id="footer-info" >
+		<li id="footer-info-lastmod"> This page was last edited on 10 February 2021, at 13:11.</li>
+	</ul>
+	<ul id="footer-places" >
+		<li id="footer-places-privacy"><a href="My_wiki_Privacy_policy.html" title="My wiki:Privacy policy">Privacy policy</a></li>
+		<li id="footer-places-about"><a href="My_wiki_About.html" title="My wiki:About">About QB64 Wiki</a></li>
+		<li id="footer-places-disclaimer"><a href="My_wiki_General_disclaimer.html" title="My wiki:General disclaimer">Disclaimers</a></li>
+	</ul>
+	<ul id="footer-icons" class="noprint">
+		<li id="footer-poweredbyico"><a href="https://www.mediawiki.org/"><img src="resources/assets/poweredby_mediawiki_88x31.png" alt="Powered by MediaWiki" srcset="/wiki/resources/assets/poweredby_mediawiki_132x47.png 1.5x, /wiki/resources/assets/poweredby_mediawiki_176x62.png 2x" width="88" height="31" loading="lazy"/></a></li>
+	</ul>
+	<div style="clear: both;"></div>
+</footer>
+
+
+
+<script>(RLQ=window.RLQ||[]).push(function(){mw.config.set({"wgPageParseReport":{"limitreport":{"cputime":"0.058","walltime":"0.072","ppvisitednodes":{"value":352,"limit":1000000},"postexpandincludesize":{"value":4864,"limit":2097152},"templateargumentsize":{"value":494,"limit":2097152},"expansiondepth":{"value":3,"limit":40},"expensivefunctioncount":{"value":0,"limit":100},"unstrip-depth":{"value":0,"limit":20},"unstrip-size":{"value":0,"limit":5000000},"timingprofile":["100.00%   32.972      1 -total"," 19.21%    6.335     47 Template:Cl"," 11.97%    3.946      1 Template:WhiteStart","  9.84%    3.244      1 Template:LogicalTruthTable","  9.54%    3.147      1 Template:WhiteEnd","  9.27%    3.055      1 Template:Small","  9.14%    3.013      1 Template:PageNavigation","  9.11%    3.005      2 Template:CodeStart","  9.08%    2.995      2 Template:CodeEnd"]},"cachereport":{"timestamp":"20210706125941","ttl":86400,"transientcontent":false}}});mw.config.set({"wgBackendResponseTime":1032});});</script></body>
+<!-- Mirrored from www.qb64.org/wiki/Binary by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 07 Aug 2021 12:41:39 GMT -->
+</html>

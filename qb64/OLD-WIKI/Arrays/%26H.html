@@ -1,0 +1,326 @@
+
+<!DOCTYPE html>
+<html class="client-nojs" lang="en" dir="ltr">
+
+<!-- Mirrored from www.qb64.org/wiki/%26H by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 07 Aug 2021 13:43:20 GMT -->
+<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=UTF-8" /><!-- /Added by HTTrack -->
+<head>
+<meta charset="UTF-8"/>
+<title>&amp;H - QB64 Wiki</title>
+<script>document.documentElement.className="client-js";RLCONF={"wgBreakFrames":!1,"wgSeparatorTransformTable":["",""],"wgDigitTransformTable":["",""],"wgDefaultDateFormat":"dmy","wgMonthNames":["","January","February","March","April","May","June","July","August","September","October","November","December"],"wgRequestId":"YOWnTFpP-65vp3So6LuyZgAAANE","wgCSPNonce":!1,"wgCanonicalNamespace":"","wgCanonicalSpecialPageName":!1,"wgNamespaceNumber":0,"wgPageName":"\u0026H","wgTitle":"\u0026H","wgCurRevisionId":23182,"wgRevisionId":23182,"wgArticleId":19,"wgIsArticle":!0,"wgIsRedirect":!1,"wgAction":"view","wgUserName":null,"wgUserGroups":["*"],"wgCategories":[],"wgPageContentLanguage":"en","wgPageContentModel":"wikitext","wgRelevantPageName":"\u0026H","wgRelevantArticleId":19,"wgIsProbablyEditable":!1,"wgRelevantPageIsProbablyEditable":!1,"wgRestrictionEdit":[],"wgRestrictionMove":[]};RLSTATE={"site.styles":"ready","noscript":"ready","user.styles":"ready","user":"ready",
+"user.options":"loading","skins.vector.styles.legacy":"ready"};RLPAGEMODULES=["site","mediawiki.page.startup","mediawiki.page.ready","skins.vector.legacy.js"];</script>
+<script>(RLQ=window.RLQ||[]).push(function(){mw.loader.implement("user.options@1hzgi",function($,jQuery,require,module){/*@nomin*/mw.user.tokens.set({"patrolToken":"+\\","watchToken":"+\\","csrfToken":"+\\"});
+});});</script>
+<link rel="stylesheet" href="load5c90.css?lang=en&amp;modules=skins.vector.styles.legacy&amp;only=styles&amp;skin=vector"/>
+<script async="" src="load52c0.php?lang=en&amp;modules=startup&amp;only=scripts&amp;raw=1&amp;skin=vector"></script>
+<meta name="generator" content="MediaWiki 1.35.2"/>
+<link rel="shortcut icon" href="https://www.qb64.org/favicon.ico"/>
+<link rel="search" type="application/opensearchdescription+xml" href="opensearch_desc.php" title="QB64 Wiki (en)"/>
+<link rel="EditURI" type="application/rsd+xml" href="api-result251f.xml?action=rsd"/>
+<link rel="alternate" type="application/atom+xml" title="QB64 Wiki Atom feed" href="feeda295.xml?title=Special:RecentChanges&amp;feed=atom"/>
+<!--[if lt IE 9]><script src="/wiki/resources/lib/html5shiv/html5shiv.js"></script><![endif]-->
+</head>
+<body class="mediawiki ltr sitedir-ltr mw-hide-empty-elt ns-0 ns-subject page-_H rootpage-_H skin-vector action-view skin-vector-legacy">
+<div id="mw-page-base" class="noprint"></div>
+<div id="mw-head-base" class="noprint"></div>
+<div id="content" class="mw-body" role="main">
+	<a id="top"></a>
+	<div id="siteNotice" class="mw-body-content"></div>
+	<div class="mw-indicators mw-body-content">
+	</div>
+	<h1 id="firstHeading" class="firstHeading" lang="en">&amp;H</h1>
+	<div id="bodyContent" class="mw-body-content">
+		<div id="siteSub" class="noprint">From QB64 Wiki</div>
+		<div id="contentSub"></div>
+		<div id="contentSub2"></div>
+		
+		<div id="jump-to-nav"></div>
+		<a class="mw-jump-link" href="#mw-head">Jump to navigation</a>
+		<a class="mw-jump-link" href="#searchInput">Jump to search</a>
+		<div id="mw-content-text" lang="en" dir="ltr" class="mw-content-ltr"><div class="mw-parser-output"><p>The <b>&amp;H</b> prefix denotes that an integer value is expressed in a Hexadecimal base 16 format. Every 2 digits represent a <a href="BYTE.html" title="BYTE">_BYTE</a>.
+</p><p><br />
+</p>
+<h2><span class="mw-headline" id="Syntax">Syntax</span></h2>
+<dl><dd><dl><dd><dl><dd><dl><dd>a&amp; = &amp;HFACE</dd></dl></dd></dl></dd></dl></dd></dl>
+<p><br />
+</p>
+<ul><li>The base 16 numbering system uses hexadecimal digit values of 0 to F. A = 10, B = 11, C = 12, D = 13, E = 14 and F = 15.</li>
+<li>Leading zero values can be omitted just like in decimal values as they add nothing to the return value.</li>
+<li>Decimal values returned can be any <b>signed</b> <a href="INTEGER.html" title="INTEGER">INTEGER</a>, <a href="LONG.html" title="LONG">LONG</a> integer, or <a href="INTEGER64.html" title="INTEGER64">_INTEGER64</a> value so use those type of variables when converting directly as shown above in the Syntax. The program <a href="ERROR_Codes.html" title="ERROR Codes">"overflow"</a> error limits are listed as:</li></ul>
+<dl><dd><dl><dd><ul><li><a href="BYTE.html" title="BYTE">_BYTE</a>: 2 hex digits or a decimal value range from -128 to 127. <a href="UNSIGNED.html" title="UNSIGNED">_UNSIGNED</a>: 0 to 255.</li>
+<li><a href="INTEGER.html" title="INTEGER">INTEGER</a>: 4 hex digits or a decimal value range from -32,768 to 32,767. <a href="UNSIGNED.html" title="UNSIGNED">_UNSIGNED</a>: 0 to 65535.</li>
+<li><a href="LONG.html" title="LONG">LONG</a>: 8 hex digits or a decimal value range from -2,147,483,648 to 2,147,483,647. <a href="UNSIGNED.html" title="UNSIGNED">_UNSIGNED</a>: 0 to 4294967295.</li>
+<li><a href="INTEGER64.html" title="INTEGER64">_INTEGER64</a>: 16 hex digits or decimal values from -9,223,372,036,854,775,808 to 9,223,372,036,854,775,807.</li>
+<li><a href="UNSIGNED.html" title="UNSIGNED">_UNSIGNED</a> <a href="INTEGER64.html" title="INTEGER64">_INTEGER64</a>: 0 to 18446744073709551615.</li></ul></dd></dl></dd></dl>
+<ul><li>The maximum hexadecimal value for each numerical type is the maximum number of digits listed above, each valued at F.</li>
+<li>Convert hexadecimal to <a href="LONG.html" title="LONG">LONG</a> values by appending the values with &amp;. Example: &amp;H8000 = -32768: &amp;H8000&amp; = 32768</li>
+<li><a href="LONG.html" title="LONG">LONG</a> 32 bit <a href="RGB.html" title="RGB">_RGB</a> values can be made using hexadecimal values from <b>&amp;HFF<span style="color:red">00</span><span style="color:green">00</span><span style="color:blue">00</span></b> to <b>&amp;HFF<span style="color:red">FF</span><span style="color:green">FF</span><span style="color:blue">FF</span></b> with full <a href="ALPHA.html" title="ALPHA">_ALPHA</a> only.</li>
+<li><a href="LONG.html" title="LONG">LONG</a> 32 bit <a href="RGBA.html" title="RGBA">_RGBA</a> values can be made using hexadecimal values from <b>&amp;H00<span style="color:red">00</span><span style="color:green">00</span><span style="color:blue">00</span></b> to <b>&amp;HFF<span style="color:red">FF</span><span style="color:green">FF</span><span style="color:blue">FF</span></b> with any <a href="ALPHA.html" title="ALPHA">_ALPHA</a>.</li>
+<li>Hexadecimal <b>0x</b> is often used to prefix <a href="HEX%24.html" title="HEX$">HEX$</a> port addresses in documentation. Replace 0x with <a class="mw-selflink selflink">&amp;H</a> in QB64 or QBasic.</li>
+<li>To convert hex strings returned from <a href="HEX%24.html" title="HEX$">HEX$</a> with <a href="VAL.html" title="VAL">VAL</a> you need to prefix the string with &amp;H (for example; if the string is "FF" you should do VAL("&amp;HFF") or VAL("&amp;H" + hexvalue$).</li></ul>
+<p><br />
+<i>Example 1:</i> The maximum octal values of decimal value -1 in each numerical type are:
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: Courier, monospace; background-color: darkblue; color: lightgrey; word-wrap: break-word;"> <i> </i>
+c&amp;&amp; = -1: d&amp; = -1: e% = -1: f%% = -1
+hx$ = <a href="HEX%24.html" title="HEX$"><span style="color:#87cefa;">HEX$</span></a>(f%%)
+<a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> "Max hex <a href="BYTE.html" title="BYTE"><span style="color:#87cefa;">_BYTE</span></a> = "; hx$; " with"; <a href="LEN.html" title="LEN"><span style="color:#87cefa;">LEN</span></a>(hx$); "digits ="; <a href="VAL.html" title="VAL"><span style="color:#87cefa;">VAL</span></a>("<a class="mw-selflink selflink"><span style="color:#87cefa;">&amp;H</span></a>" + hx$)
+hx$ = <a href="HEX%24.html" title="HEX$"><span style="color:#87cefa;">HEX$</span></a>(e%)
+<a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> "Max hex <a href="INTEGER.html" title="INTEGER"><span style="color:#87cefa;">INTEGER</span></a> = "; hx$; " with"; <a href="LEN.html" title="LEN"><span style="color:#87cefa;">LEN</span></a>(hx$); "digits ="; <a href="VAL.html" title="VAL"><span style="color:#87cefa;">VAL</span></a>("<a class="mw-selflink selflink"><span style="color:#87cefa;">&amp;H</span></a>" + hx$)
+hx$ = <a href="HEX%24.html" title="HEX$"><span style="color:#87cefa;">HEX$</span></a>(d&amp;)
+<a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> "Max hex <a href="LONG.html" title="LONG"><span style="color:#87cefa;">LONG</span></a> = "; hx$; " with"; <a href="LEN.html" title="LEN"><span style="color:#87cefa;">LEN</span></a>(hx$); "digits ="; <a href="VAL.html" title="VAL"><span style="color:#87cefa;">VAL</span></a>("<a class="mw-selflink selflink"><span style="color:#87cefa;">&amp;H</span></a>" + hx$)
+hx$ = <a href="HEX%24.html" title="HEX$"><span style="color:#87cefa;">HEX$</span></a>(c&amp;&amp;)
+<a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> "Max hex <a href="INTEGER64.html" title="INTEGER64"><span style="color:#87cefa;">_INTEGER64</span></a> = "; hx$; " with"; <a href="LEN.html" title="LEN"><span style="color:#87cefa;">LEN</span></a>(hx$); "digits ="; <a href="VAL.html" title="VAL"><span style="color:#87cefa;">VAL</span></a>("<a class="mw-selflink selflink"><span style="color:#87cefa;">&amp;H</span></a>" + hx$)
+hx$ = <a href="HEX%24.html" title="HEX$"><span style="color:#87cefa;">HEX$</span></a>(9223372036854775807)
+<a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> "Max <a href="INTEGER64.html" title="INTEGER64"><span style="color:#87cefa;">_INTEGER64</span></a> value = "; hx$; " with"; <a href="LEN.html" title="LEN"><span style="color:#87cefa;">LEN</span></a>(hx$); "digits"
+hx$ = <a href="HEX%24.html" title="HEX$"><span style="color:#87cefa;">HEX$</span></a>(-9223372036854775808)
+<a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> "Min <a href="INTEGER64.html" title="INTEGER64"><span style="color:#87cefa;">_INTEGER64</span></a> value = "; hx$; " with"; <a href="LEN.html" title="LEN"><span style="color:#87cefa;">LEN</span></a>(hx$); "digits" <i> </i>
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: Courier; background-color: black; color: white;">Max hex _BYTE = FF with 2 digits = 255
+Max hex INTEGER = FFFF with 4 digits = 65535
+Max hex LONG = FFFFFFFF with 8 digits = 4294967295
+Max hex _INTEGER64 = FFFFFFFFFFFFFFFF with 16 digits =-1
+Max _INTEGER64 value = 7FFFFFFFFFFFFFFF with 16 digits
+Min _INTEGER64 value = 8000000000000000 with 16 digits
+</p>
+<p><br />
+<i>Example 2:</i> Converting a decimal number to a binary string value using <a href="HEX%24.html" title="HEX$">HEX$</a>.
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: Courier, monospace; background-color: darkblue; color: lightgrey; word-wrap: break-word;"> <i> </i>
+<a href="FUNCTION.html" title="FUNCTION"><span style="color:#87cefa;">FUNCTION</span></a> BIN$ (n&amp;)
+  h$ = <a href="HEX%24.html" title="HEX$"><span style="color:#87cefa;">HEX$</span></a>(n&amp;)                     'get hexadecimal string value
+  <a href="FOR.html" class="mw-redirect" title="FOR"><span style="color:#87cefa;">FOR</span></a> i = 1 <a href="TO.html" title="TO"><span style="color:#87cefa;">TO</span></a> <a href="LEN.html" title="LEN"><span style="color:#87cefa;">LEN</span></a>(h$)              'scan the HEX$ digits
+    <a href="SELECT_CASE.html" title="SELECT CASE"><span style="color:#87cefa;">SELECT CASE</span></a> <a href="MID%24.html" title="MID$"><span style="color:#87cefa;">MID$</span></a>(h$, i, 1)      'read each HEX$ digit
+        <a href="CASE.html" class="mw-redirect" title="CASE"><span style="color:#87cefa;">CASE</span></a> "0": b$ = b$ + "0000"
+        <a href="CASE.html" class="mw-redirect" title="CASE"><span style="color:#87cefa;">CASE</span></a> "1": b$ = b$ + "0001"
+        <a href="CASE.html" class="mw-redirect" title="CASE"><span style="color:#87cefa;">CASE</span></a> "2": b$ = b$ + "0010"
+        <a href="CASE.html" class="mw-redirect" title="CASE"><span style="color:#87cefa;">CASE</span></a> "3": b$ = b$ + "0011"
+        <a href="CASE.html" class="mw-redirect" title="CASE"><span style="color:#87cefa;">CASE</span></a> "4": b$ = b$ + "0100"
+        <a href="CASE.html" class="mw-redirect" title="CASE"><span style="color:#87cefa;">CASE</span></a> "5": b$ = b$ + "0101"
+        <a href="CASE.html" class="mw-redirect" title="CASE"><span style="color:#87cefa;">CASE</span></a> "6": b$ = b$ + "0110"
+        <a href="CASE.html" class="mw-redirect" title="CASE"><span style="color:#87cefa;">CASE</span></a> "7": b$ = b$ + "0111"
+        <a href="CASE.html" class="mw-redirect" title="CASE"><span style="color:#87cefa;">CASE</span></a> "8": b$ = b$ + "1000"
+        <a href="CASE.html" class="mw-redirect" title="CASE"><span style="color:#87cefa;">CASE</span></a> "9": b$ = b$ + "1001"
+        <a href="CASE.html" class="mw-redirect" title="CASE"><span style="color:#87cefa;">CASE</span></a> "A": b$ = b$ + "1010"
+        <a href="CASE.html" class="mw-redirect" title="CASE"><span style="color:#87cefa;">CASE</span></a> "B": b$ = b$ + "1011"
+        <a href="CASE.html" class="mw-redirect" title="CASE"><span style="color:#87cefa;">CASE</span></a> "C": b$ = b$ + "1100"
+        <a href="CASE.html" class="mw-redirect" title="CASE"><span style="color:#87cefa;">CASE</span></a> "D": b$ = b$ + "1101"
+        <a href="CASE.html" class="mw-redirect" title="CASE"><span style="color:#87cefa;">CASE</span></a> "E": b$ = b$ + "1110"
+        <a href="CASE.html" class="mw-redirect" title="CASE"><span style="color:#87cefa;">CASE</span></a> "F": b$ = b$ + "1111"
+    <a href="END_SELECT.html" title="END SELECT"><span style="color:#87cefa;">END SELECT</span></a>
+  <a href="NEXT.html" title="NEXT"><span style="color:#87cefa;">NEXT</span></a> i
+  b$ = <a href="RIGHT%24.html" title="RIGHT$"><span style="color:#87cefa;">RIGHT$</span></a>(b$, <a href="LEN.html" title="LEN"><span style="color:#87cefa;">LEN</span></a>(b$) - <a href="INSTR.html" title="INSTR"><span style="color:#87cefa;">INSTR</span></a>(b$, "1") + 1)   'eliminate leading zeroes
+  <a href="IF.html" class="mw-redirect" title="IF"><span style="color:#87cefa;">IF</span></a> <a href="VAL.html" title="VAL"><span style="color:#87cefa;">VAL</span></a>(b$) <a href="THEN.html" title="THEN"><span style="color:#87cefa;">THEN</span></a> BIN$ = b$ <a href="ELSE.html" title="ELSE"><span style="color:#87cefa;">ELSE</span></a> BIN$ = "0"       'return zero if n&amp; = 0
+<a href="END_FUNCTION.html" title="END FUNCTION"><span style="color:#87cefa;">END FUNCTION</span></a> <i> </i>
+</p>
+<center><span style="font-family: Courier New, Courier, monospace; font-size: 0.80em; line-height: 50%;">Code by CodeGuy</span></center>
+<dl><dd><i>Explanation:</i> Hexadecimal digits can be any value up to 15 which also corresponds to all four bits on in binary. The function above just adds every four bit binary string value together to return the binary value. After they are concatenated, the leading bit on is found by <a href="INSTR.html" title="INSTR">INSTR</a> and everything from that point is kept removing the leading "0"'s.</dd></dl>
+<p><br />
+<i>See also:</i>
+</p>
+<ul><li><a href="HEX%24.html" title="HEX$">HEX$</a>, <a href="OCT%24.html" title="OCT$">OCT$</a></li>
+<li><a href="%26B.html" title="&amp;B">&amp;B</a> <span style="color:gray">(binary)</span>, <a href="%26O.html" title="&amp;O">&amp;O</a> <span style="color:gray">(octal)</span></li>
+<li><a href="Base_Comparisons.html" title="Base Comparisons">Base Comparisons</a></li></ul>
+<p><br />
+</p>
+<hr />
+<center><i>Navigation:</i>
+<dl><dd><a href="Keyword_Reference_-_Alphabetical.html" title="Keyword Reference - Alphabetical">Keyword Reference - Alphabetical</a></dd>
+<dd><a href="Keyword_Reference_-_By_usage.html" title="Keyword Reference - By usage">Keyword Reference - By Usage</a></dd>
+<dd><a href="Main_Page.html" title="Main Page">Main Wiki Page</a></dd></dl></center>
+<!-- 
+NewPP limit report
+Cached time: 20210707070621
+Cache expiry: 86400
+Dynamic content: false
+Complications: []
+CPU time usage: 0.084 seconds
+Real time usage: 0.102 seconds
+Preprocessor visited node count: 575/1000000
+Post‐expand include size: 4777/2097152 bytes
+Template argument size: 682/2097152 bytes
+Highest expansion depth: 3/40
+Expensive parser function count: 0/100
+Unstrip recursion depth: 0/20
+Unstrip post‐expand size: 0/5000000 bytes
+-->
+<!--
+Transclusion expansion time report (%,ms,calls,template)
+100.00%   41.523      1 -total
+ 18.40%    7.640     65 Template:Cl
+  9.83%    4.081     14 Template:Text
+  9.79%    4.067      1 Template:PageSyntax
+  9.25%    3.841      1 Template:Small
+  8.06%    3.345      1 Template:PageNavigation
+  7.35%    3.052      2 Template:CodeStart
+  7.27%    3.018      2 Template:CodeEnd
+  7.23%    3.002      1 Template:OutputStart
+  6.88%    2.857      1 Template:OutputEnd
+-->
+
+<!-- Saved in parser cache with key i4224360_mw2-mw_:pcache:idhash:19-0!canonical and timestamp 20210707070621 and revision id 23182
+ -->
+</div></div><div class="printfooter">Retrieved from "<a dir="ltr" href="indexf644.html?title=%26H&amp;oldid=23182">http://www.qb64.org/wiki/index.php?title=%26H&amp;oldid=23182</a>"</div>
+		<div id="catlinks" class="catlinks catlinks-allhidden" data-mw="interface"></div>
+	</div>
+</div>
+
+<div id="mw-navigation">
+	<h2>Navigation menu</h2>
+	<div id="mw-head">
+		<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-personal" class="vector-menu" aria-labelledby="p-personal-label" role="navigation" 
+	 >
+	<h3 id="p-personal-label">
+		<span>Personal tools</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="pt-login"><a href="index3ce4.html?title=Special:UserLogin&amp;returnto=%26H" title="You are encouraged to log in; however, it is not mandatory [o]" accesskey="o">Log in</a></li></ul>
+		
+	</div>
+</nav>
+
+
+		<div id="left-navigation">
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-namespaces" class="vector-menu vector-menu-tabs vectorTabs" aria-labelledby="p-namespaces-label" role="navigation" 
+	 >
+	<h3 id="p-namespaces-label">
+		<span>Namespaces</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="ca-nstab-main" class="selected"><a href="%26H.html" title="View the content page [c]" accesskey="c">Page</a></li><li id="ca-talk" class="new"><a href="Talk_%26H.html?title=Talk:%26H&amp;action=edit&amp;redlink=1" rel="discussion" title="Discussion about the content page (page does not exist) [t]" accesskey="t">Discussion</a></li></ul>
+		
+	</div>
+</nav>
+
+
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-variants" class="vector-menu-empty emptyPortlet vector-menu vector-menu-dropdown vectorMenu" aria-labelledby="p-variants-label" role="navigation" 
+	 >
+	<input type="checkbox" class="vector-menu-checkbox vectorMenuCheckbox" aria-labelledby="p-variants-label" />
+	<h3 id="p-variants-label">
+		<span>Variants</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="menu vector-menu-content-list"></ul>
+		
+	</div>
+</nav>
+
+
+		</div>
+		<div id="right-navigation">
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-views" class="vector-menu vector-menu-tabs vectorTabs" aria-labelledby="p-views-label" role="navigation" 
+	 >
+	<h3 id="p-views-label">
+		<span>Views</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="ca-view" class="collapsible selected"><a href="%26H.html">Read</a></li><li id="ca-viewsource" class="collapsible"><a href="indexdd06-2.html?title=%26H&amp;action=edit" title="This page is protected.&#10;You can view its source [e]" accesskey="e">View source</a></li><li id="ca-history" class="collapsible"><a href="index39fb.html?title=%26H&amp;action=history" title="Past revisions of this page [h]" accesskey="h">View history</a></li></ul>
+		
+	</div>
+</nav>
+
+
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-cactions" class="vector-menu-empty emptyPortlet vector-menu vector-menu-dropdown vectorMenu" aria-labelledby="p-cactions-label" role="navigation" 
+	 >
+	<input type="checkbox" class="vector-menu-checkbox vectorMenuCheckbox" aria-labelledby="p-cactions-label" />
+	<h3 id="p-cactions-label">
+		<span>More</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="menu vector-menu-content-list"></ul>
+		
+	</div>
+</nav>
+
+
+			<div id="p-search" role="search">
+	<h3 >
+		<label for="searchInput">Search</label>
+	</h3>
+	<form action="https://www.qb64.org/wiki/index.php" id="searchform">
+		<div id="simpleSearch">
+			<input type="search" name="search" placeholder="Search QB64 Wiki" title="Search QB64 Wiki [f]" accesskey="f" id="searchInput"/>
+			<input type="hidden" name="title" value="Special:Search">
+			<input type="submit" name="fulltext" value="Search" title="Search the pages for this text" id="mw-searchButton" class="searchButton mw-fallbackSearchButton"/>
+			<input type="submit" name="go" value="Go" title="Go to a page with this exact name if it exists" id="searchButton" class="searchButton"/>
+		</div>
+	</form>
+</div>
+
+		</div>
+	</div>
+	
+<div id="mw-panel">
+	<div id="p-logo" role="banner">
+		<a  title="Visit the main page" class="mw-wiki-logo" href="Main_Page.html"></a>
+	</div>
+	<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-navigation" class="vector-menu vector-menu-portal portal portal-first" aria-labelledby="p-navigation-label" role="navigation" 
+	 >
+	<h3 id="p-navigation-label">
+		<span>Navigation</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="n-mainpage-description"><a href="Main_Page.html" title="Visit the main page [z]" accesskey="z">Main page</a></li><li id="n-recentchanges"><a href="Special_RecentChanges.html" title="A list of recent changes in the wiki [r]" accesskey="r">Recent changes</a></li><li id="n-randompage"><a href="SNDCOPY.html" title="Load a random page [x]" accesskey="x">Random page</a></li><li id="n-help-mediawiki"><a href="https://www.mediawiki.org/wiki/Special:MyLanguage/Help:Contents">Help about MediaWiki</a></li></ul>
+		
+	</div>
+</nav>
+
+
+	<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-tb" class="vector-menu vector-menu-portal portal" aria-labelledby="p-tb-label" role="navigation" 
+	 >
+	<h3 id="p-tb-label">
+		<span>Tools</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="t-whatlinkshere"><a href="Special_WhatLinksHere/%26H.html" title="A list of all wiki pages that link here [j]" accesskey="j">What links here</a></li><li id="t-recentchangeslinked"><a href="Special_RecentChangesLinked/%26H.html" rel="nofollow" title="Recent changes in pages linked from this page [k]" accesskey="k">Related changes</a></li><li id="t-specialpages"><a href="Special_SpecialPages.html" title="A list of all special pages [q]" accesskey="q">Special pages</a></li><li id="t-print"><a href="javascript:print();" rel="alternate" title="Printable version of this page [p]" accesskey="p">Printable version</a></li><li id="t-permalink"><a href="indexf644.html?title=%26H&amp;oldid=23182" title="Permanent link to this revision of the page">Permanent link</a></li><li id="t-info"><a href="index9969.html?title=%26H&amp;action=info" title="More information about this page">Page information</a></li></ul>
+		
+	</div>
+</nav>
+
+
+	
+</div>
+
+</div>
+
+<footer id="footer" class="mw-footer" role="contentinfo" >
+	<ul id="footer-info" >
+		<li id="footer-info-lastmod"> This page was last edited on 7 February 2021, at 14:13.</li>
+	</ul>
+	<ul id="footer-places" >
+		<li id="footer-places-privacy"><a href="My_wiki_Privacy_policy.html" title="My wiki:Privacy policy">Privacy policy</a></li>
+		<li id="footer-places-about"><a href="My_wiki_About.html" title="My wiki:About">About QB64 Wiki</a></li>
+		<li id="footer-places-disclaimer"><a href="My_wiki_General_disclaimer.html" title="My wiki:General disclaimer">Disclaimers</a></li>
+	</ul>
+	<ul id="footer-icons" class="noprint">
+		<li id="footer-poweredbyico"><a href="https://www.mediawiki.org/"><img src="resources/assets/poweredby_mediawiki_88x31.png" alt="Powered by MediaWiki" srcset="/wiki/resources/assets/poweredby_mediawiki_132x47.png 1.5x, /wiki/resources/assets/poweredby_mediawiki_176x62.png 2x" width="88" height="31" loading="lazy"/></a></li>
+	</ul>
+	<div style="clear: both;"></div>
+</footer>
+
+
+
+<script>(RLQ=window.RLQ||[]).push(function(){mw.config.set({"wgPageParseReport":{"limitreport":{"cputime":"0.084","walltime":"0.102","ppvisitednodes":{"value":575,"limit":1000000},"postexpandincludesize":{"value":4777,"limit":2097152},"templateargumentsize":{"value":682,"limit":2097152},"expansiondepth":{"value":3,"limit":40},"expensivefunctioncount":{"value":0,"limit":100},"unstrip-depth":{"value":0,"limit":20},"unstrip-size":{"value":0,"limit":5000000},"timingprofile":["100.00%   41.523      1 -total"," 18.40%    7.640     65 Template:Cl","  9.83%    4.081     14 Template:Text","  9.79%    4.067      1 Template:PageSyntax","  9.25%    3.841      1 Template:Small","  8.06%    3.345      1 Template:PageNavigation","  7.35%    3.052      2 Template:CodeStart","  7.27%    3.018      2 Template:CodeEnd","  7.23%    3.002      1 Template:OutputStart","  6.88%    2.857      1 Template:OutputEnd"]},"cachereport":{"timestamp":"20210707070621","ttl":86400,"transientcontent":false}}});mw.config.set({"wgBackendResponseTime":1578});});</script></body>
+<!-- Mirrored from www.qb64.org/wiki/%26H by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 07 Aug 2021 13:43:25 GMT -->
+</html>

@@ -1,0 +1,420 @@
+
+<!DOCTYPE html>
+<html class="client-nojs" lang="en" dir="ltr">
+
+<!-- Mirrored from www.qb64.org/wiki/Variable_Types by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 07 Aug 2021 12:44:22 GMT -->
+<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=UTF-8" /><!-- /Added by HTTrack -->
+<head>
+<meta charset="UTF-8"/>
+<title>Variable Types - QB64 Wiki</title>
+<script>document.documentElement.className="client-js";RLCONF={"wgBreakFrames":!1,"wgSeparatorTransformTable":["",""],"wgDigitTransformTable":["",""],"wgDefaultDateFormat":"dmy","wgMonthNames":["","January","February","March","April","May","June","July","August","September","October","November","December"],"wgRequestId":"YOWkWekbkwEB08KNhNeisAAAAFU","wgCSPNonce":!1,"wgCanonicalNamespace":"","wgCanonicalSpecialPageName":!1,"wgNamespaceNumber":0,"wgPageName":"Variable_Types","wgTitle":"Variable Types","wgCurRevisionId":23236,"wgRevisionId":23236,"wgArticleId":738,"wgIsArticle":!0,"wgIsRedirect":!1,"wgAction":"view","wgUserName":null,"wgUserGroups":["*"],"wgCategories":[],"wgPageContentLanguage":"en","wgPageContentModel":"wikitext","wgRelevantPageName":"Variable_Types","wgRelevantArticleId":738,"wgIsProbablyEditable":!1,"wgRelevantPageIsProbablyEditable":!1,"wgRestrictionEdit":[],"wgRestrictionMove":[]};RLSTATE={"site.styles":"ready","noscript":"ready","user.styles":"ready",
+"user":"ready","user.options":"loading","skins.vector.styles.legacy":"ready"};RLPAGEMODULES=["site","mediawiki.page.startup","mediawiki.page.ready","skins.vector.legacy.js"];</script>
+<script>(RLQ=window.RLQ||[]).push(function(){mw.loader.implement("user.options@1hzgi",function($,jQuery,require,module){/*@nomin*/mw.user.tokens.set({"patrolToken":"+\\","watchToken":"+\\","csrfToken":"+\\"});
+});});</script>
+<link rel="stylesheet" href="load5c90.css?lang=en&amp;modules=skins.vector.styles.legacy&amp;only=styles&amp;skin=vector"/>
+<script async="" src="load52c0.php?lang=en&amp;modules=startup&amp;only=scripts&amp;raw=1&amp;skin=vector"></script>
+<meta name="generator" content="MediaWiki 1.35.2"/>
+<link rel="shortcut icon" href="https://www.qb64.org/favicon.ico"/>
+<link rel="search" type="application/opensearchdescription+xml" href="opensearch_desc.php" title="QB64 Wiki (en)"/>
+<link rel="EditURI" type="application/rsd+xml" href="api-result251f.xml?action=rsd"/>
+<link rel="alternate" type="application/atom+xml" title="QB64 Wiki Atom feed" href="feeda295.xml?title=Special:RecentChanges&amp;feed=atom"/>
+<!--[if lt IE 9]><script src="/wiki/resources/lib/html5shiv/html5shiv.js"></script><![endif]-->
+</head>
+<body class="mediawiki ltr sitedir-ltr mw-hide-empty-elt ns-0 ns-subject page-Variable_Types rootpage-Variable_Types skin-vector action-view skin-vector-legacy">
+<div id="mw-page-base" class="noprint"></div>
+<div id="mw-head-base" class="noprint"></div>
+<div id="content" class="mw-body" role="main">
+	<a id="top"></a>
+	<div id="siteNotice" class="mw-body-content"></div>
+	<div class="mw-indicators mw-body-content">
+	</div>
+	<h1 id="firstHeading" class="firstHeading" lang="en">Variable Types</h1>
+	<div id="bodyContent" class="mw-body-content">
+		<div id="siteSub" class="noprint">From QB64 Wiki</div>
+		<div id="contentSub"></div>
+		<div id="contentSub2"></div>
+		
+		<div id="jump-to-nav"></div>
+		<a class="mw-jump-link" href="#mw-head">Jump to navigation</a>
+		<a class="mw-jump-link" href="#searchInput">Jump to search</a>
+		<div id="mw-content-text" lang="en" dir="ltr" class="mw-content-ltr"><div class="mw-parser-output"><p><b>QB64 uses more variable types than QBasic ever did. The variable type determines the size of values that numerical variables can hold.</b>
+</p><p><br />
+</p><p><br />
+<b>Numerical types</b>
+</p>
+<table class="wikitable">
+<tbody><tr>
+<th>&#160;Type Name</th>
+<th>Type suffix symbol</th>
+<th>Minimum value</th>
+<th>Maximum value</th>
+<th>Size in Bytes
+</th></tr>
+<tr>
+<td>_BIT</td>
+<td>`</td>
+<td>-1</td>
+<td>0</td>
+<td>1/8
+</td></tr>
+<tr>
+<td>_BIT * n</td>
+<td>`n</td>
+<td>-128</td>
+<td>127</td>
+<td>n/8
+</td></tr>
+<tr>
+<td>_UNSIGNED _BIT</td>
+<td>~`</td>
+<td>0</td>
+<td>1</td>
+<td>1/8
+</td></tr>
+<tr>
+<td>_BYTE</td>
+<td>%%</td>
+<td>-128</td>
+<td>127</td>
+<td>1
+</td></tr>
+<tr>
+<td>_UNSIGNED _BYTE</td>
+<td>~%%</td>
+<td>0</td>
+<td>255</td>
+<td>1
+</td></tr>
+<tr>
+<td>INTEGER</td>
+<td>%</td>
+<td>-32,768</td>
+<td>32,767</td>
+<td>2
+</td></tr>
+<tr>
+<td>_UNSIGNED INTEGER</td>
+<td>~%</td>
+<td>0</td>
+<td>65,535</td>
+<td>2
+</td></tr>
+<tr>
+<td>LONG</td>
+<td>&amp;</td>
+<td>-2,147,483,648</td>
+<td>2,147,483,647</td>
+<td>4
+</td></tr>
+<tr>
+<td>_UNSIGNED LONG</td>
+<td>~&amp;</td>
+<td>0</td>
+<td>4,294,967,295</td>
+<td>4
+</td></tr>
+<tr>
+<td>_INTEGER64</td>
+<td>&amp;&amp;</td>
+<td>-9,223,372,036,854,775,808</td>
+<td>9,223,372,036,854,775,807</td>
+<td>8
+</td></tr>
+<tr>
+<td>_UNSIGNED _INTEGER64</td>
+<td>~&amp;&amp;</td>
+<td>0</td>
+<td>18,446,744,073,709,551,615</td>
+<td>8
+</td></tr>
+<tr>
+<td>SINGLE</td>
+<td>! or none</td>
+<td>-2.802597E-45</td>
+<td>+3.402823E+38</td>
+<td>4
+</td></tr>
+<tr>
+<td>DOUBLE</td>
+<td>#</td>
+<td>-4.490656458412465E-324</td>
+<td>+1.797693134862310E+308</td>
+<td>8
+</td></tr>
+<tr>
+<td>_FLOAT</td>
+<td>##</td>
+<td>-1.18E−4932</td>
+<td>+1.18E+4932</td>
+<td>32(10 used)
+</td></tr>
+<tr>
+<td>_OFFSET</td>
+<td>%&amp;</td>
+<td>-9,223,372,036,854,775,808</td>
+<td>9,223,372,036,854,775,807</td>
+<td>Use LEN
+</td></tr>
+<tr>
+<td>_UNSIGNED _OFFSET</td>
+<td>~%&amp;</td>
+<td>0</td>
+<td>18,446,744,073,709,551,615</td>
+<td>Use LEN
+</td></tr>
+<tr>
+<td>_MEM</td>
+<td>none</td>
+<td>combined memory variable type</td>
+<td>N/A</td>
+<td>Use LEN
+</td></tr></tbody></table>
+<p><br />
+</p>
+<dl><dd><i>Note: For the floating-point numeric types <a href="SINGLE.html" title="SINGLE">SINGLE</a> (default when not assigned), <a href="DOUBLE.html" title="DOUBLE">DOUBLE</a> and <a href="FLOAT.html" title="FLOAT">_FLOAT</a>, the minimum values represent the smallest values closest to zero, while the maximum values represent the largest values closest to ±infinity. OFFSET dot values are used as a part of the <a href="MEM.html" title="MEM">_MEM</a> variable type in QB64 to return or set the position in memory.</i></dd></dl>
+<p><br />
+<b>String text type</b>
+</p>
+<table class="wikitable">
+<tbody><tr>
+<th>&#160;&#160;&#160;&#160;&#160;&#160;Type Name &#160;&#160;&#160;&#160;&#160;</th>
+<th>Type suffix symbol</th>
+<th>Minimum length</th>
+<th>Maximum length</th>
+<th>Size in Bytes
+</th></tr>
+<tr>
+<td>STRING</td>
+<td>$</td>
+<td>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;0</td>
+<td>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;2,147,483,647</td>
+<td>Use LEN
+</td></tr>
+<tr>
+<td>STRING * <i>n</i></td>
+<td>$<i>n</i></td>
+<td>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;1</td>
+<td>&#160;&#160;&#160;&#160;&#160;&#160;2,147,483,647</td>
+<td>n
+</td></tr></tbody></table>
+<p><br />
+</p>
+<center><i>Note: For the fixed-length string type <a href="STRING.html" title="STRING">STRING * <i>n</i></a>, where </i>n<i> is an integer length value from 1 (one) to 2,147,483,647.</i></center>
+<p>If no suffix is used and no DEFxxx or _DEFINE command has been used and the variable hasn't been <a href="DIM.html" title="DIM">DIMmed</a> the <b>default variable type is <a href="SINGLE.html" title="SINGLE">SINGLE</a></b>. <b><a href="MEM.html" title="MEM">_MEM</a> and <a href="OFFSET.html" title="OFFSET">_OFFSET</a> variable types cannot be cast to other variable types!</b>
+</p><p><br />
+All types dealing with number values are signed as a default. The symbol to define unsigned variables is ~ and is used just before the type suffix (~` is <a href="UNSIGNED.html" title="UNSIGNED">_UNSIGNED</a> _BIT, ~%% is <a href="UNSIGNED.html" title="UNSIGNED">_UNSIGNED</a> _BYTE, etc.).
+</p><p><br />
+</p>
+<center><b><a href="SINGLE.html" title="SINGLE">SINGLE</a>, <a href="DOUBLE.html" title="DOUBLE">DOUBLE</a> and <a href="FLOAT.html" title="FLOAT">_FLOAT</a> floating decimal point values cannot be <a href="UNSIGNED.html" title="UNSIGNED">_UNSIGNED</a>!</b></center>
+<p><br />
+<b>Defining variable types:</b>
+</p>
+<dl><dd><a href="DIM.html" title="DIM">DIM</a> <i>variable</i> <a href="AS.html" title="AS">AS</a> <i>type</i></dd>
+<dd><a href="DEFINE.html" title="DEFINE">_DEFINE</a> <i>range1-range2</i> <a href="AS.html" title="AS">AS</a> <i>value_type</i></dd>
+<dd><a href="DEFINT.html" title="DEFINT">DEFINT</a> <i>range1-range2</i></dd>
+<dd><a href="DEFLNG.html" title="DEFLNG">DEFLNG</a> <i>range1-range2</i></dd>
+<dd><a href="DEFSNG.html" title="DEFSNG">DEFSNG</a> <i>range1-range2</i></dd>
+<dd><a href="DEFDBL.html" title="DEFDBL">DEFDBL</a> <i>range1-range2</i></dd></dl>
+<p>Where <i>range1</i> and <i>range2</i> are the range of first letters to be defined as the default <i>type</i> when the variable is having no suffix and are not otherwise defined, the starting letter of the variable then defines the <i>type</i> as specified by the DEFxxx and _DEFINE statements. The QB64 types can only be defaulted using <a href="DEFINE.html" title="DEFINE">_DEFINE</a>.
+</p><p><i>type</i> can be any of the types listed at the top and can also be preceeded with <a href="UNSIGNED.html" title="UNSIGNED">_UNSIGNED</a> for the unsigned version of the type.
+</p><p><i>variable</i> is the name of the variable to be defined in the DIM statement.
+</p><p><br />
+<b>More information:</b>
+</p><p>More information on this page: <a href="Data_types.html" title="Data types">Data types</a>
+</p><p><br />
+</p><p><br />
+</p>
+<hr />
+<center><i>Navigation:</i>
+<dl><dd><a href="Keyword_Reference_-_Alphabetical.html" title="Keyword Reference - Alphabetical">Keyword Reference - Alphabetical</a></dd>
+<dd><a href="Keyword_Reference_-_By_usage.html" title="Keyword Reference - By usage">Keyword Reference - By Usage</a></dd>
+<dd><a href="Main_Page.html" title="Main Page">Main Wiki Page</a></dd></dl></center>
+<!-- 
+NewPP limit report
+Cached time: 20210706142132
+Cache expiry: 86400
+Dynamic content: false
+Complications: []
+CPU time usage: 0.044 seconds
+Real time usage: 0.048 seconds
+Preprocessor visited node count: 5/1000000
+Post‐expand include size: 3070/2097152 bytes
+Template argument size: 0/2097152 bytes
+Highest expansion depth: 2/40
+Expensive parser function count: 0/100
+Unstrip recursion depth: 0/20
+Unstrip post‐expand size: 0/5000000 bytes
+-->
+<!--
+Transclusion expansion time report (%,ms,calls,template)
+100.00%    7.213      1 -total
+ 56.12%    4.048      1 Template:DataTypeTable
+ 42.39%    3.058      1 Template:PageNavigation
+-->
+
+<!-- Saved in parser cache with key i4224360_mw2-mw_:pcache:idhash:738-0!canonical and timestamp 20210706142132 and revision id 23236
+ -->
+</div></div><div class="printfooter">Retrieved from "<a dir="ltr" href="index175b.html?title=Variable_Types&amp;oldid=23236">http://www.qb64.org/wiki/index.php?title=Variable_Types&amp;oldid=23236</a>"</div>
+		<div id="catlinks" class="catlinks catlinks-allhidden" data-mw="interface"></div>
+	</div>
+</div>
+
+<div id="mw-navigation">
+	<h2>Navigation menu</h2>
+	<div id="mw-head">
+		<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-personal" class="vector-menu" aria-labelledby="p-personal-label" role="navigation" 
+	 >
+	<h3 id="p-personal-label">
+		<span>Personal tools</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="pt-login"><a href="index0850.html?title=Special:UserLogin&amp;returnto=Variable+Types" title="You are encouraged to log in; however, it is not mandatory [o]" accesskey="o">Log in</a></li></ul>
+		
+	</div>
+</nav>
+
+
+		<div id="left-navigation">
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-namespaces" class="vector-menu vector-menu-tabs vectorTabs" aria-labelledby="p-namespaces-label" role="navigation" 
+	 >
+	<h3 id="p-namespaces-label">
+		<span>Namespaces</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="ca-nstab-main" class="selected"><a href="Variable_Types.html" title="View the content page [c]" accesskey="c">Page</a></li><li id="ca-talk" class="new"><a href="Talk_Variable_Types.html?title=Talk:Variable_Types&amp;action=edit&amp;redlink=1" rel="discussion" title="Discussion about the content page (page does not exist) [t]" accesskey="t">Discussion</a></li></ul>
+		
+	</div>
+</nav>
+
+
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-variants" class="vector-menu-empty emptyPortlet vector-menu vector-menu-dropdown vectorMenu" aria-labelledby="p-variants-label" role="navigation" 
+	 >
+	<input type="checkbox" class="vector-menu-checkbox vectorMenuCheckbox" aria-labelledby="p-variants-label" />
+	<h3 id="p-variants-label">
+		<span>Variants</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="menu vector-menu-content-list"></ul>
+		
+	</div>
+</nav>
+
+
+		</div>
+		<div id="right-navigation">
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-views" class="vector-menu vector-menu-tabs vectorTabs" aria-labelledby="p-views-label" role="navigation" 
+	 >
+	<h3 id="p-views-label">
+		<span>Views</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="ca-view" class="collapsible selected"><a href="Variable_Types.html">Read</a></li><li id="ca-viewsource" class="collapsible"><a href="index96bf.html?title=Variable_Types&amp;action=edit" title="This page is protected.&#10;You can view its source [e]" accesskey="e">View source</a></li><li id="ca-history" class="collapsible"><a href="index9338.html?title=Variable_Types&amp;action=history" title="Past revisions of this page [h]" accesskey="h">View history</a></li></ul>
+		
+	</div>
+</nav>
+
+
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-cactions" class="vector-menu-empty emptyPortlet vector-menu vector-menu-dropdown vectorMenu" aria-labelledby="p-cactions-label" role="navigation" 
+	 >
+	<input type="checkbox" class="vector-menu-checkbox vectorMenuCheckbox" aria-labelledby="p-cactions-label" />
+	<h3 id="p-cactions-label">
+		<span>More</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="menu vector-menu-content-list"></ul>
+		
+	</div>
+</nav>
+
+
+			<div id="p-search" role="search">
+	<h3 >
+		<label for="searchInput">Search</label>
+	</h3>
+	<form action="https://www.qb64.org/wiki/index.php" id="searchform">
+		<div id="simpleSearch">
+			<input type="search" name="search" placeholder="Search QB64 Wiki" title="Search QB64 Wiki [f]" accesskey="f" id="searchInput"/>
+			<input type="hidden" name="title" value="Special:Search">
+			<input type="submit" name="fulltext" value="Search" title="Search the pages for this text" id="mw-searchButton" class="searchButton mw-fallbackSearchButton"/>
+			<input type="submit" name="go" value="Go" title="Go to a page with this exact name if it exists" id="searchButton" class="searchButton"/>
+		</div>
+	</form>
+</div>
+
+		</div>
+	</div>
+	
+<div id="mw-panel">
+	<div id="p-logo" role="banner">
+		<a  title="Visit the main page" class="mw-wiki-logo" href="Main_Page.html"></a>
+	</div>
+	<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-navigation" class="vector-menu vector-menu-portal portal portal-first" aria-labelledby="p-navigation-label" role="navigation" 
+	 >
+	<h3 id="p-navigation-label">
+		<span>Navigation</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="n-mainpage-description"><a href="Main_Page.html" title="Visit the main page [z]" accesskey="z">Main page</a></li><li id="n-recentchanges"><a href="Special_RecentChanges.html" title="A list of recent changes in the wiki [r]" accesskey="r">Recent changes</a></li><li id="n-randompage"><a href="SNDCOPY.html" title="Load a random page [x]" accesskey="x">Random page</a></li><li id="n-help-mediawiki"><a href="https://www.mediawiki.org/wiki/Special:MyLanguage/Help:Contents">Help about MediaWiki</a></li></ul>
+		
+	</div>
+</nav>
+
+
+	<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-tb" class="vector-menu vector-menu-portal portal" aria-labelledby="p-tb-label" role="navigation" 
+	 >
+	<h3 id="p-tb-label">
+		<span>Tools</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="t-whatlinkshere"><a href="Special_WhatLinksHere/Variable_Types.html" title="A list of all wiki pages that link here [j]" accesskey="j">What links here</a></li><li id="t-recentchangeslinked"><a href="Special_RecentChangesLinked/Variable_Types.html" rel="nofollow" title="Recent changes in pages linked from this page [k]" accesskey="k">Related changes</a></li><li id="t-specialpages"><a href="Special_SpecialPages.html" title="A list of all special pages [q]" accesskey="q">Special pages</a></li><li id="t-print"><a href="javascript:print();" rel="alternate" title="Printable version of this page [p]" accesskey="p">Printable version</a></li><li id="t-permalink"><a href="index175b.html?title=Variable_Types&amp;oldid=23236" title="Permanent link to this revision of the page">Permanent link</a></li><li id="t-info"><a href="indexaced.html?title=Variable_Types&amp;action=info" title="More information about this page">Page information</a></li></ul>
+		
+	</div>
+</nav>
+
+
+	
+</div>
+
+</div>
+
+<footer id="footer" class="mw-footer" role="contentinfo" >
+	<ul id="footer-info" >
+		<li id="footer-info-lastmod"> This page was last edited on 10 February 2021, at 13:10.</li>
+	</ul>
+	<ul id="footer-places" >
+		<li id="footer-places-privacy"><a href="My_wiki_Privacy_policy.html" title="My wiki:Privacy policy">Privacy policy</a></li>
+		<li id="footer-places-about"><a href="My_wiki_About.html" title="My wiki:About">About QB64 Wiki</a></li>
+		<li id="footer-places-disclaimer"><a href="My_wiki_General_disclaimer.html" title="My wiki:General disclaimer">Disclaimers</a></li>
+	</ul>
+	<ul id="footer-icons" class="noprint">
+		<li id="footer-poweredbyico"><a href="https://www.mediawiki.org/"><img src="resources/assets/poweredby_mediawiki_88x31.png" alt="Powered by MediaWiki" srcset="/wiki/resources/assets/poweredby_mediawiki_132x47.png 1.5x, /wiki/resources/assets/poweredby_mediawiki_176x62.png 2x" width="88" height="31" loading="lazy"/></a></li>
+	</ul>
+	<div style="clear: both;"></div>
+</footer>
+
+
+
+<script>(RLQ=window.RLQ||[]).push(function(){mw.config.set({"wgPageParseReport":{"limitreport":{"cputime":"0.044","walltime":"0.048","ppvisitednodes":{"value":5,"limit":1000000},"postexpandincludesize":{"value":3070,"limit":2097152},"templateargumentsize":{"value":0,"limit":2097152},"expansiondepth":{"value":2,"limit":40},"expensivefunctioncount":{"value":0,"limit":100},"unstrip-depth":{"value":0,"limit":20},"unstrip-size":{"value":0,"limit":5000000},"timingprofile":["100.00%    7.213      1 -total"," 56.12%    4.048      1 Template:DataTypeTable"," 42.39%    3.058      1 Template:PageNavigation"]},"cachereport":{"timestamp":"20210706142132","ttl":86400,"transientcontent":false}}});mw.config.set({"wgBackendResponseTime":1115});});</script></body>
+<!-- Mirrored from www.qb64.org/wiki/Variable_Types by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 07 Aug 2021 12:44:28 GMT -->
+</html>

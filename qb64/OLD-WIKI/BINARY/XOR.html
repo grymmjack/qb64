@@ -1,0 +1,389 @@
+
+<!DOCTYPE html>
+<html class="client-nojs" lang="en" dir="ltr">
+
+<!-- Mirrored from www.qb64.org/wiki/XOR by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 07 Aug 2021 13:27:12 GMT -->
+<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=UTF-8" /><!-- /Added by HTTrack -->
+<head>
+<meta charset="UTF-8"/>
+<title>Bitwise Operators - QB64 Wiki</title>
+<script>document.documentElement.className="client-js";RLCONF={"wgBreakFrames":!1,"wgSeparatorTransformTable":["",""],"wgDigitTransformTable":["",""],"wgDefaultDateFormat":"dmy","wgMonthNames":["","January","February","March","April","May","June","July","August","September","October","November","December"],"wgRequestId":"YOWl0adTx2XheSMCc398IAAAAAg","wgCSPNonce":!1,"wgCanonicalNamespace":"","wgCanonicalSpecialPageName":!1,"wgNamespaceNumber":0,"wgPageName":"Bitwise_Operators","wgTitle":"Bitwise Operators","wgCurRevisionId":10193,"wgRevisionId":10193,"wgArticleId":382,"wgIsArticle":!0,"wgIsRedirect":!1,"wgAction":"view","wgUserName":null,"wgUserGroups":["*"],"wgCategories":[],"wgPageContentLanguage":"en","wgPageContentModel":"wikitext","wgRelevantPageName":"Bitwise_Operators","wgRelevantArticleId":382,"wgIsProbablyEditable":!1,"wgRelevantPageIsProbablyEditable":!1,"wgRestrictionEdit":[],"wgRestrictionMove":[],"wgRedirectedFrom":"XOR","wgInternalRedirectTargetUrl":
+"/wiki/Bitwise_Operators"};RLSTATE={"site.styles":"ready","noscript":"ready","user.styles":"ready","user":"ready","user.options":"loading","skins.vector.styles.legacy":"ready","mediawiki.toc.styles":"ready"};RLPAGEMODULES=["mediawiki.action.view.redirect","site","mediawiki.page.startup","mediawiki.page.ready","mediawiki.toc","skins.vector.legacy.js"];</script>
+<script>(RLQ=window.RLQ||[]).push(function(){mw.loader.implement("user.options@1hzgi",function($,jQuery,require,module){/*@nomin*/mw.user.tokens.set({"patrolToken":"+\\","watchToken":"+\\","csrfToken":"+\\"});
+});});</script>
+<link rel="stylesheet" href="loadd8b0.css?lang=en&amp;modules=mediawiki.toc.styles%7Cskins.vector.styles.legacy&amp;only=styles&amp;skin=vector"/>
+<script async="" src="load52c0.php?lang=en&amp;modules=startup&amp;only=scripts&amp;raw=1&amp;skin=vector"></script>
+<meta name="generator" content="MediaWiki 1.35.2"/>
+<link rel="shortcut icon" href="https://www.qb64.org/favicon.ico"/>
+<link rel="search" type="application/opensearchdescription+xml" href="opensearch_desc.php" title="QB64 Wiki (en)"/>
+<link rel="EditURI" type="application/rsd+xml" href="api-result251f.xml?action=rsd"/>
+<link rel="alternate" type="application/atom+xml" title="QB64 Wiki Atom feed" href="feeda295.xml?title=Special:RecentChanges&amp;feed=atom"/>
+<link rel="canonical" href="Bitwise_Operators.html"/>
+<!--[if lt IE 9]><script src="/wiki/resources/lib/html5shiv/html5shiv.js"></script><![endif]-->
+</head>
+<body class="mediawiki ltr sitedir-ltr mw-hide-empty-elt ns-0 ns-subject page-Bitwise_Operators rootpage-Bitwise_Operators skin-vector action-view skin-vector-legacy">
+<div id="mw-page-base" class="noprint"></div>
+<div id="mw-head-base" class="noprint"></div>
+<div id="content" class="mw-body" role="main">
+	<a id="top"></a>
+	<div id="siteNotice" class="mw-body-content"></div>
+	<div class="mw-indicators mw-body-content">
+	</div>
+	<h1 id="firstHeading" class="firstHeading" lang="en">Bitwise Operators</h1>
+	<div id="bodyContent" class="mw-body-content">
+		<div id="siteSub" class="noprint">From QB64 Wiki</div>
+		<div id="contentSub"><span class="mw-redirectedfrom">(Redirected from <a href="indexbc0b.html?title=XOR&amp;redirect=no" class="mw-redirect" title="XOR">XOR</a>)</span></div>
+		<div id="contentSub2"></div>
+		
+		<div id="jump-to-nav"></div>
+		<a class="mw-jump-link" href="#mw-head">Jump to navigation</a>
+		<a class="mw-jump-link" href="#searchInput">Jump to search</a>
+		<div id="mw-content-text" lang="en" dir="ltr" class="mw-content-ltr"><div class="mw-parser-output"><p>Bitwise operators are much like the regular mathematics operators (+, * etc.) but are defined in terms of the individual bits of their operands. The full list of bitwise operators, with a brief summary of its operation:
+</p>
+<ul><li><b>AND</b>: True if both inputs are true</li>
+<li><b>OR</b>: True if one or both inputs are true</li>
+<li><b>NOT</b>: Invert all bits</li>
+<li><b>XOR</b>: True if exactly one input is true</li>
+<li><b>IMP</b>: True if both inputs are the same</li>
+<li><b>EQV</b>: True unless first input is true and second is false</li></ul>
+<div id="toc" class="toc" role="navigation" aria-labelledby="mw-toc-heading"><input type="checkbox" role="button" id="toctogglecheckbox" class="toctogglecheckbox" style="display:none" /><div class="toctitle" lang="en" dir="ltr"><h2 id="mw-toc-heading">Contents</h2><span class="toctogglespan"><label class="toctogglelabel" for="toctogglecheckbox"></label></span></div>
+<ul>
+<li class="toclevel-1 tocsection-1"><a href="#Syntax"><span class="tocnumber">1</span> <span class="toctext">Syntax</span></a></li>
+<li class="toclevel-1 tocsection-2"><a href="#Details"><span class="tocnumber">2</span> <span class="toctext">Details</span></a>
+<ul>
+<li class="toclevel-2 tocsection-3"><a href="#Use_as_logical_operators"><span class="tocnumber">2.1</span> <span class="toctext">Use as logical operators</span></a></li>
+</ul>
+</li>
+<li class="toclevel-1 tocsection-4"><a href="#Examples"><span class="tocnumber">3</span> <span class="toctext">Examples</span></a></li>
+</ul>
+</div>
+
+<h2><span class="mw-headline" id="Syntax">Syntax</span></h2>
+<p>With the exception of NOT, all the bitwise operators take two operands:
+</p>
+<dl><dd><dl><dd><dl><dd><i>result</i> = <i>value1</i> <b>AND</b> <i>value2</i></dd></dl></dd></dl></dd></dl>
+<p>NOT goes before the value it operates on:
+</p>
+<dl><dd><dl><dd><dl><dd><i>result</i> = <b>NOT</b> <i>value1</i></dd></dl></dd></dl></dd></dl>
+<p>If <i>value1</i> or <i>value2</i> are non-integer numeric types, they are rounded to the nearest integer.
+</p>
+<h2><span class="mw-headline" id="Details">Details</span></h2>
+<p>Bitwise operators work by comparing the corresponding bits in each of the input values to generate a single bit in the output value. The operators differ in how they do the comparison. The table below shows the output bit for each pair of input bits:
+</p>
+<table class="wikitable">
+<tbody><tr>
+<th colspan="2"><b>Operands</b>
+</th>
+<th colspan="6"><b>Operations</b>
+</th></tr>
+<tr>
+<th>A</th>
+<th>B</th>
+<th>A AND B</th>
+<th>A OR B</th>
+<th>NOT A</th>
+<th>A XOR B</th>
+<th>A IMP B</th>
+<th>A EQV B
+</th></tr>
+<tr>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>1
+</td></tr>
+<tr>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>0
+</td></tr>
+<tr>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+<td>0
+</td></tr>
+<tr>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>1
+</td></tr></tbody></table>
+<p>Again, note that the NOT operator only has one operand. It is shown in the same table for convenience.
+</p><p>If one input has more bits than the other (say, an INTEGER vs a LONG) the shorter will be considered to have 0's in the missing bit positions if it is positive, or 1's if it is negative. This scheme comes about because of the <a href="https://en.wikipedia.org/wiki/Two%27s_complement" class="extiw" title="wikipedia:Two&#39;s complement">Two's Complement</a> system for representing negative numbers. As a general rule, there should not be any surprises.
+</p>
+<h3><span class="mw-headline" id="Use_as_logical_operators">Use as logical operators</span></h3>
+<p>QB64 does not have AND/OR/NOT operators dedicated to operating on the overall truth of values. A numeric value is defined to be <i>false</i> if it is equal to 0, and <i>true</i> for any other value, though -1 is the standard <i>true</i> value,  returned by the &lt;, &lt;= etc. operators. One can use the bitwise operators mostly like regular logical operators, but with caution. For instance, 3 is a true value, so as a logical operator NOT 3 would be 0 (false). Because it is in fact a bitwise operator, it evaluates to -4.
+</p>
+<h2><span class="mw-headline" id="Examples">Examples</span></h2>
+<p>Use <b>AND</b> to mask certain bits in a value. In this example, the 1's in the mask (y&amp;) specify which bits in (x&amp;) we are interested in, forcing all others to 0.
+&lt;source lang="qbasic"&gt;
+x&amp; = VAL("&amp;B101010") 'Arbitrary collection of bits
+y&amp; = VAL("&amp;B001100") 'A bit mask
+PRINT "Input 1: "; BIN$(x&amp;, 6) '6 indicates we want 6 bits of output
+PRINT "Input 2: "; BIN$(y&amp;, 6)
+PRINT "Output:  "; BIN$(x&amp; AND y&amp;, 6)
+</p><p>'Converts the number n&amp; to a string of binary digits, digits&amp; long (padding or truncating as necessary).
+FUNCTION BIN$ (n&amp;, digits&amp;)
+</p>
+<pre>   FOR i&amp; = digits&amp; - 1 TO 0 STEP -1
+       IF (n&amp; AND 2 ^ i&amp;) THEN B$ = B$ + "1" ELSE B$ = B$ + "0"
+   NEXT
+   BIN$ = B$
+</pre>
+<p>END FUNCTION
+&lt;/source&gt;
+Output:
+</p>
+<pre>Input 1: 101010
+Input 2: 001100
+Output:  001000</pre>
+<p>Use <b>OR</b> to combine bit flags into a single value. The presence of a flag can then be tested by using the flag as a mask with <b>AND</b>:
+&lt;source lang="qbasic"&gt;
+'The trick here is to give each flag a value corresponding to a different bit being 1
+FLAG_A&amp; = VAL("&amp;B0001")
+FLAG_B&amp; = VAL("&amp;B0010")
+FLAG_C&amp; = VAL("&amp;B0100")
+FLAG_D&amp; = VAL("&amp;B1000")
+</p><p>flags&amp; = FLAG_A&amp; OR FLAG_C&amp; 'Set flags A, C
+</p><p>'Use each flag as a bitmask to test for its presence:
+IF flags&amp; AND FLAG_A&amp; THEN PRINT "Flag A is set"
+IF flags&amp; AND FLAG_B&amp; THEN PRINT "Flag B is set"
+IF flags&amp; AND FLAG_C&amp; THEN PRINT "Flag C is set"
+IF flags&amp; AND FLAG_D&amp; THEN PRINT "Flag D is set"
+&lt;/source&gt;
+Output:
+</p>
+<pre>Flag A is set
+Flag C is set</pre>
+<p>Use <b>XOR</b> to toggle a bit flag (that is, change its state to the opposite of what it was). This example is the same as the <b>OR</b> example above, but with one extra line added. This time we enable flags A &amp; C, then toggle flags A &amp; B. This will disable flag A and enable B.
+&lt;source lang="qbasic"&gt;
+'The trick here is to give each flag a value corresponding to a different bit being 1
+FLAG_A&amp; = VAL("&amp;B0001")
+FLAG_B&amp; = VAL("&amp;B0010")
+FLAG_C&amp; = VAL("&amp;B0100")
+FLAG_D&amp; = VAL("&amp;B1000")
+</p><p>flags&amp; = FLAG_A&amp; OR FLAG_C&amp; 'Set flags A, C
+flags&amp; = flags&amp; XOR FLAG_A&amp; XOR FLAG_B&amp; 'Toggle flags A, B
+</p><p>'Use each flag as a bitmask to test for its presence:
+IF flags&amp; AND FLAG_A&amp; THEN PRINT "Flag A is set"
+IF flags&amp; AND FLAG_B&amp; THEN PRINT "Flag B is set"
+IF flags&amp; AND FLAG_C&amp; THEN PRINT "Flag C is set"
+IF flags&amp; AND FLAG_D&amp; THEN PRINT "Flag D is set"
+&lt;/source&gt;
+Output:
+</p>
+<pre>Flag B is set
+Flag C is set</pre>
+<p><br />
+</p>
+<hr />
+<center><i>Navigation:</i>
+<dl><dd><a href="Keyword_Reference_-_Alphabetical.html" title="Keyword Reference - Alphabetical">Keyword Reference - Alphabetical</a></dd>
+<dd><a href="Keyword_Reference_-_By_usage.html" title="Keyword Reference - By usage">Keyword Reference - By Usage</a></dd>
+<dd><a href="Main_Page.html" title="Main Page">Main Wiki Page</a></dd></dl></center>
+<!-- 
+NewPP limit report
+Cached time: 20210706194325
+Cache expiry: 86400
+Dynamic content: false
+Complications: []
+CPU time usage: 0.028 seconds
+Real time usage: 0.055 seconds
+Preprocessor visited node count: 24/1000000
+Post‐expand include size: 219/2097152 bytes
+Template argument size: 0/2097152 bytes
+Highest expansion depth: 2/40
+Expensive parser function count: 0/100
+Unstrip recursion depth: 0/20
+Unstrip post‐expand size: 134/5000000 bytes
+-->
+<!--
+Transclusion expansion time report (%,ms,calls,template)
+100.00%    5.716      1 Template:PageNavigation
+100.00%    5.716      1 -total
+-->
+
+<!-- Saved in parser cache with key i4224360_mw2-mw_:pcache:idhash:382-0!canonical and timestamp 20210706194325 and revision id 10193
+ -->
+</div></div><div class="printfooter">Retrieved from "<a dir="ltr" href="index856c.html?title=Bitwise_Operators&amp;oldid=10193">http://www.qb64.org/wiki/index.php?title=Bitwise_Operators&amp;oldid=10193</a>"</div>
+		<div id="catlinks" class="catlinks catlinks-allhidden" data-mw="interface"></div>
+	</div>
+</div>
+
+<div id="mw-navigation">
+	<h2>Navigation menu</h2>
+	<div id="mw-head">
+		<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-personal" class="vector-menu" aria-labelledby="p-personal-label" role="navigation" 
+	 >
+	<h3 id="p-personal-label">
+		<span>Personal tools</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="pt-login"><a href="index972d.html?title=Special:UserLogin&amp;returnto=Bitwise+Operators" title="You are encouraged to log in; however, it is not mandatory [o]" accesskey="o">Log in</a></li></ul>
+		
+	</div>
+</nav>
+
+
+		<div id="left-navigation">
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-namespaces" class="vector-menu vector-menu-tabs vectorTabs" aria-labelledby="p-namespaces-label" role="navigation" 
+	 >
+	<h3 id="p-namespaces-label">
+		<span>Namespaces</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="ca-nstab-main" class="selected"><a href="Bitwise_Operators.html" title="View the content page [c]" accesskey="c">Page</a></li><li id="ca-talk" class="new"><a href="Talk_Bitwise_Operators.html?title=Talk:Bitwise_Operators&amp;action=edit&amp;redlink=1" rel="discussion" title="Discussion about the content page (page does not exist) [t]" accesskey="t">Discussion</a></li></ul>
+		
+	</div>
+</nav>
+
+
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-variants" class="vector-menu-empty emptyPortlet vector-menu vector-menu-dropdown vectorMenu" aria-labelledby="p-variants-label" role="navigation" 
+	 >
+	<input type="checkbox" class="vector-menu-checkbox vectorMenuCheckbox" aria-labelledby="p-variants-label" />
+	<h3 id="p-variants-label">
+		<span>Variants</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="menu vector-menu-content-list"></ul>
+		
+	</div>
+</nav>
+
+
+		</div>
+		<div id="right-navigation">
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-views" class="vector-menu vector-menu-tabs vectorTabs" aria-labelledby="p-views-label" role="navigation" 
+	 >
+	<h3 id="p-views-label">
+		<span>Views</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="ca-view" class="collapsible selected"><a href="Bitwise_Operators.html">Read</a></li><li id="ca-viewsource" class="collapsible"><a href="index4d2c.html?title=Bitwise_Operators&amp;action=edit" title="This page is protected.&#10;You can view its source [e]" accesskey="e">View source</a></li><li id="ca-history" class="collapsible"><a href="index3fd3.html?title=Bitwise_Operators&amp;action=history" title="Past revisions of this page [h]" accesskey="h">View history</a></li></ul>
+		
+	</div>
+</nav>
+
+
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-cactions" class="vector-menu-empty emptyPortlet vector-menu vector-menu-dropdown vectorMenu" aria-labelledby="p-cactions-label" role="navigation" 
+	 >
+	<input type="checkbox" class="vector-menu-checkbox vectorMenuCheckbox" aria-labelledby="p-cactions-label" />
+	<h3 id="p-cactions-label">
+		<span>More</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="menu vector-menu-content-list"></ul>
+		
+	</div>
+</nav>
+
+
+			<div id="p-search" role="search">
+	<h3 >
+		<label for="searchInput">Search</label>
+	</h3>
+	<form action="https://www.qb64.org/wiki/index.php" id="searchform">
+		<div id="simpleSearch">
+			<input type="search" name="search" placeholder="Search QB64 Wiki" title="Search QB64 Wiki [f]" accesskey="f" id="searchInput"/>
+			<input type="hidden" name="title" value="Special:Search">
+			<input type="submit" name="fulltext" value="Search" title="Search the pages for this text" id="mw-searchButton" class="searchButton mw-fallbackSearchButton"/>
+			<input type="submit" name="go" value="Go" title="Go to a page with this exact name if it exists" id="searchButton" class="searchButton"/>
+		</div>
+	</form>
+</div>
+
+		</div>
+	</div>
+	
+<div id="mw-panel">
+	<div id="p-logo" role="banner">
+		<a  title="Visit the main page" class="mw-wiki-logo" href="Main_Page.html"></a>
+	</div>
+	<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-navigation" class="vector-menu vector-menu-portal portal portal-first" aria-labelledby="p-navigation-label" role="navigation" 
+	 >
+	<h3 id="p-navigation-label">
+		<span>Navigation</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="n-mainpage-description"><a href="Main_Page.html" title="Visit the main page [z]" accesskey="z">Main page</a></li><li id="n-recentchanges"><a href="Special_RecentChanges.html" title="A list of recent changes in the wiki [r]" accesskey="r">Recent changes</a></li><li id="n-randompage"><a href="SNDCOPY.html" title="Load a random page [x]" accesskey="x">Random page</a></li><li id="n-help-mediawiki"><a href="https://www.mediawiki.org/wiki/Special:MyLanguage/Help:Contents">Help about MediaWiki</a></li></ul>
+		
+	</div>
+</nav>
+
+
+	<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-tb" class="vector-menu vector-menu-portal portal" aria-labelledby="p-tb-label" role="navigation" 
+	 >
+	<h3 id="p-tb-label">
+		<span>Tools</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="t-whatlinkshere"><a href="Special_WhatLinksHere/Bitwise_Operators.html" title="A list of all wiki pages that link here [j]" accesskey="j">What links here</a></li><li id="t-recentchangeslinked"><a href="Special_RecentChangesLinked/Bitwise_Operators.html" rel="nofollow" title="Recent changes in pages linked from this page [k]" accesskey="k">Related changes</a></li><li id="t-specialpages"><a href="Special_SpecialPages.html" title="A list of all special pages [q]" accesskey="q">Special pages</a></li><li id="t-print"><a href="javascript:print();" rel="alternate" title="Printable version of this page [p]" accesskey="p">Printable version</a></li><li id="t-permalink"><a href="index856c.html?title=Bitwise_Operators&amp;oldid=10193" title="Permanent link to this revision of the page">Permanent link</a></li><li id="t-info"><a href="index261b.html?title=Bitwise_Operators&amp;action=info" title="More information about this page">Page information</a></li></ul>
+		
+	</div>
+</nav>
+
+
+	
+</div>
+
+</div>
+
+<footer id="footer" class="mw-footer" role="contentinfo" >
+	<ul id="footer-info" >
+		<li id="footer-info-lastmod"> This page was last edited on 20 January 2020, at 16:13.</li>
+	</ul>
+	<ul id="footer-places" >
+		<li id="footer-places-privacy"><a href="My_wiki_Privacy_policy.html" title="My wiki:Privacy policy">Privacy policy</a></li>
+		<li id="footer-places-about"><a href="My_wiki_About.html" title="My wiki:About">About QB64 Wiki</a></li>
+		<li id="footer-places-disclaimer"><a href="My_wiki_General_disclaimer.html" title="My wiki:General disclaimer">Disclaimers</a></li>
+	</ul>
+	<ul id="footer-icons" class="noprint">
+		<li id="footer-poweredbyico"><a href="https://www.mediawiki.org/"><img src="resources/assets/poweredby_mediawiki_88x31.png" alt="Powered by MediaWiki" srcset="/wiki/resources/assets/poweredby_mediawiki_132x47.png 1.5x, /wiki/resources/assets/poweredby_mediawiki_176x62.png 2x" width="88" height="31" loading="lazy"/></a></li>
+	</ul>
+	<div style="clear: both;"></div>
+</footer>
+
+
+
+<script>(RLQ=window.RLQ||[]).push(function(){mw.config.set({"wgPageParseReport":{"limitreport":{"cputime":"0.028","walltime":"0.055","ppvisitednodes":{"value":24,"limit":1000000},"postexpandincludesize":{"value":219,"limit":2097152},"templateargumentsize":{"value":0,"limit":2097152},"expansiondepth":{"value":2,"limit":40},"expensivefunctioncount":{"value":0,"limit":100},"unstrip-depth":{"value":0,"limit":20},"unstrip-size":{"value":134,"limit":5000000},"timingprofile":["100.00%    5.716      1 Template:PageNavigation","100.00%    5.716      1 -total"]},"cachereport":{"timestamp":"20210706194325","ttl":86400,"transientcontent":false}}});mw.config.set({"wgBackendResponseTime":1344});});</script></body>
+<!-- Mirrored from www.qb64.org/wiki/XOR by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 07 Aug 2021 13:27:17 GMT -->
+</html>

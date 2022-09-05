@@ -1,0 +1,374 @@
+
+<!DOCTYPE html>
+<html class="client-nojs" lang="en" dir="ltr">
+
+<!-- Mirrored from www.qb64.org/wiki/%26B by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 07 Aug 2021 13:43:08 GMT -->
+<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=UTF-8" /><!-- /Added by HTTrack -->
+<head>
+<meta charset="UTF-8"/>
+<title>&amp;B - QB64 Wiki</title>
+<script>document.documentElement.className="client-js";RLCONF={"wgBreakFrames":!1,"wgSeparatorTransformTable":["",""],"wgDigitTransformTable":["",""],"wgDefaultDateFormat":"dmy","wgMonthNames":["","January","February","March","April","May","June","July","August","September","October","November","December"],"wgRequestId":"YOWnS1pP-65vp3So6LuyZQAAAMA","wgCSPNonce":!1,"wgCanonicalNamespace":"","wgCanonicalSpecialPageName":!1,"wgNamespaceNumber":0,"wgPageName":"\u0026B","wgTitle":"\u0026B","wgCurRevisionId":463,"wgRevisionId":463,"wgArticleId":18,"wgIsArticle":!0,"wgIsRedirect":!1,"wgAction":"view","wgUserName":null,"wgUserGroups":["*"],"wgCategories":[],"wgPageContentLanguage":"en","wgPageContentModel":"wikitext","wgRelevantPageName":"\u0026B","wgRelevantArticleId":18,"wgIsProbablyEditable":!1,"wgRelevantPageIsProbablyEditable":!1,"wgRestrictionEdit":[],"wgRestrictionMove":[]};RLSTATE={"site.styles":"ready","noscript":"ready","user.styles":"ready","user":"ready","user.options"
+:"loading","skins.vector.styles.legacy":"ready"};RLPAGEMODULES=["site","mediawiki.page.startup","mediawiki.page.ready","skins.vector.legacy.js"];</script>
+<script>(RLQ=window.RLQ||[]).push(function(){mw.loader.implement("user.options@1hzgi",function($,jQuery,require,module){/*@nomin*/mw.user.tokens.set({"patrolToken":"+\\","watchToken":"+\\","csrfToken":"+\\"});
+});});</script>
+<link rel="stylesheet" href="load5c90.css?lang=en&amp;modules=skins.vector.styles.legacy&amp;only=styles&amp;skin=vector"/>
+<script async="" src="load52c0.php?lang=en&amp;modules=startup&amp;only=scripts&amp;raw=1&amp;skin=vector"></script>
+<meta name="generator" content="MediaWiki 1.35.2"/>
+<link rel="shortcut icon" href="https://www.qb64.org/favicon.ico"/>
+<link rel="search" type="application/opensearchdescription+xml" href="opensearch_desc.php" title="QB64 Wiki (en)"/>
+<link rel="EditURI" type="application/rsd+xml" href="api-result251f.xml?action=rsd"/>
+<link rel="alternate" type="application/atom+xml" title="QB64 Wiki Atom feed" href="feeda295.xml?title=Special:RecentChanges&amp;feed=atom"/>
+<!--[if lt IE 9]><script src="/wiki/resources/lib/html5shiv/html5shiv.js"></script><![endif]-->
+</head>
+<body class="mediawiki ltr sitedir-ltr mw-hide-empty-elt ns-0 ns-subject page-_B rootpage-_B skin-vector action-view skin-vector-legacy">
+<div id="mw-page-base" class="noprint"></div>
+<div id="mw-head-base" class="noprint"></div>
+<div id="content" class="mw-body" role="main">
+	<a id="top"></a>
+	<div id="siteNotice" class="mw-body-content"></div>
+	<div class="mw-indicators mw-body-content">
+	</div>
+	<h1 id="firstHeading" class="firstHeading" lang="en">&amp;B</h1>
+	<div id="bodyContent" class="mw-body-content">
+		<div id="siteSub" class="noprint">From QB64 Wiki</div>
+		<div id="contentSub"></div>
+		<div id="contentSub2"></div>
+		
+		<div id="jump-to-nav"></div>
+		<a class="mw-jump-link" href="#mw-head">Jump to navigation</a>
+		<a class="mw-jump-link" href="#searchInput">Jump to search</a>
+		<div id="mw-content-text" lang="en" dir="ltr" class="mw-content-ltr"><div class="mw-parser-output"><p>The <b>&amp;B</b> prefix denotes that an integer value is expressed in a binary base 2 format using <b>QB64</b> only.
+</p><p><br />
+</p>
+<h2><span class="mw-headline" id="Syntax">Syntax</span></h2>
+<dl><dd><dl><dd><dl><dd><dl><dd>a&amp; = <b>&amp;B1110110000111111</b></dd></dl></dd></dl></dd></dl></dd></dl>
+<p><br />
+</p>
+<ul><li>The base 2 numbering system uses binary digit values of 1 or 0, or bits on or bits off in computer register switches or memory.</li>
+<li>Leading zero values <b>can</b> be omitted as they add nothing to the byte return value.</li>
+<li>Eight binary digits would represent a one byte value ranging from 0 to 255. Four digit values("nibbles") range from 0 to 15.</li>
+<li>Decimal values returned can be any <b>signed</b> <a href="INTEGER.html" title="INTEGER">INTEGER</a>, <a href="LONG.html" title="LONG">LONG</a> integer, or <a href="INTEGER64.html" title="INTEGER64">_INTEGER64</a> value so use those type of variables when converting directly as shown in the Syntax. The program <a href="ERROR_Codes.html" title="ERROR Codes">"overflow"</a> error limits are listed as:
+<ul><li><a href="INTEGER.html" title="INTEGER">INTEGER</a>: 16 binary digits or a decimal value range from -32,768 to 32,767</li>
+<li><a href="LONG.html" title="LONG">LONG</a>: 32 binary digits or a decimal value range from -2,147,483,648 to 2,147,483,647</li>
+<li><a href="INTEGER64.html" title="INTEGER64">_INTEGER64</a>: 64 binary digits or decimal values from -9,223,372,036,854,775,808 to 9,223,372,036,854,775,807.</li></ul></li>
+<li><a href="LONG.html" title="LONG">LONG</a> values can be returned by appending the &amp; or ~%(<a href="UNSIGNED.html" title="UNSIGNED">_UNSIGNED</a> <a href="INTEGER.html" title="INTEGER">INTEGER</a>) symbols after the binary number.</li>
+<li><a href="VAL.html" title="VAL">VAL</a> can be used to convert "&amp;B" prefixed string values to decimal.</li></ul>
+<center><b><a href="BIT.html" title="BIT">BITS</a></b></center>
+<ul><li>The <b>MSB</b> is the most significant(largest) bit value and <b>LSB</b> is the least significant bit of a binary or register memory address value. The order in which the bits are read determines the binary or decimal byte value. There are two common ways to read a byte:</li></ul>
+<dl><dd><ul><li><b>"Big-endian"</b>: MSB is the first bit encountered, decreasing to the LSB as the last bit by position, memory address or time.</li>
+<li><b>"Little-endian"</b>: LSB is the first bit encountered, increasing to the MSB as the last bit by position, memory address or time.</li></ul></dd></dl>
+<p style="padding: 1em; line-height:100%; margin-left:10px; white-space: pre; font-family: courier; background-color: white; color: darkgreen;">
+         <b>Offset or Position:    0    1   2   3   4   5   6   7      Example: 11110000</b>
+                              ----------------------------------             --------
+    <b>Big-Endian Bit On Value:</b>   128  64  32  16   8   4   2   1                 240
+ <b>Little-Endian Bit On Value:</b>    1    2   4   8  16  32  64  128                 15
+</p>
+<dl><dd><dl><dd>The big-endian method compares exponents of 2 <sup>7</sup> down to 2 <sup>0</sup> while the little-endian method does the opposite.</dd></dl></dd></dl>
+<center><b><a href="BYTE.html" title="BYTE">BYTES</a></b></center>
+<ul><li><a href="INTEGER.html" title="INTEGER">INTEGER</a> values consist of 2 bytes called the <b>HI</b> and <b>LO</b> bytes. Anytime that the number of binary digits is a multiple of 16 (2bytes, 4 bytes, etc.) and the HI byte's MSB is on(1), the value returned will be negative. Even with <a href="SINGLE.html" title="SINGLE">SINGLE</a> or <a href="DOUBLE.html" title="DOUBLE">DOUBLE</a> values!</li></ul>
+<p style="padding: 1em; line-height:100%; margin-left:10px; white-space: pre; font-family: courier; background-color: white; color: darkgreen;">                                 <b>16 BIT INTEGER OR REGISTER</b>
+              <b>AH (High Byte Bits)                         AL (Low Byte Bits)</b>
+   BIT:    15    14   13   12   11   10   9   8  |   7   6    5   4    3    2   1    0
+          ---------------------------------------|--------------------------------------
+   HEX:   8000  4000 2000 1000  800 400  200 100 |  80   40  20   10   8    4   2    1
+                                                 |
+   DEC: -32768 16384 8192 4096 2048 1024 512 256 | 128   64  32   16   8    4   2    1
+</p>
+<dl><dd><dl><dd>The HI byte's <b>MSB</b> is often called the <b>sign</b> bit! When all 16 of the integer binary bits are on, the decimal return is -1.</dd></dl></dd></dl>
+<p><br />
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: courier; background-color: lightgrey; color: black;">                      <b>Comparing the Base Numbering Systems</b>
+
+     <b>Decimal (base 10)    Binary (base 2)    Hexadecimal (base 16)    Octal (base 8)</b>
+
+          0                  0000                  0                     0
+          1                  0001                  1                     1
+          2                  0010                  2                     2
+          3                  0011                  3                     3
+          4                  0100                  4                     4
+          5                  0101                  5                     5
+          6                  0110                  6                     6
+          7                  0111                  7                     7 -- maxed
+          8                  1000                  8                    10
+  maxed-- 9                  1001                  9                    11
+         10                  1010                  A                    12
+         11                  1011                  B                    13
+         12                  1100                  C                    14
+         13                  1101                  D                    15
+         14                  1110                  E                    16
+         15  -------------   1111 &lt;--- Match ---&gt;  F  ----------------  17 -- max 2
+         16                 10000                 10                    20
+        
+      When the Decimal value is 15, the other 2 base systems are all maxed out!
+      The Binary values can be compared to all of the HEX value digit values so
+      it is possible to convert between the two quite easily. To convert a HEX
+      value to Binary just add the 4 binary digits for each HEX digit place so:
+
+                        F      A      C      E 
+              &amp;HFACE = 1111 + 1010 + 1100 + 1101 = &amp;B1111101011001101
+
+      To convert a Binary value to HEX you just need to divide the number into
+      sections of four digits starting from the right(LSB) end. If one has less
+      than 4 digits on the left end you could add the leading zeros like below:
+ 
+             &amp;B101011100010001001 = 0010 1011 1000 1000 1001  
+                       hexadecimal =  2  + B  + 8 +  8  + 9 = &amp;H2B889 
+
+    See the Decimal to Binary conversion function that uses <b><a href="HEX%24.html" title="HEX$">HEX$</a></b> on the <b><a href="%26H.html" title="&amp;H">&amp;H</a></b> page.
+ 
+</p>
+<p><br />
+<i>Example 1:</i> A Decimal to Binary <a href="STRING.html" title="STRING">STRING</a> function that does not return leading zeroes.
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: Courier, monospace; background-color: darkblue; color: lightgrey; word-wrap: break-word;"> <i> </i>
+<a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> BIN$(255)      '1 byte(8 bits) maximum
+<a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> BIN$(32767)    'integer(2 byte, 15 bits) maximum
+<a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> BIN$(-32768)   'integer(2 byte, 16 bits) minimum
+<a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> BIN$(-1)       'all 16 bits on 
+
+<a href="FUNCTION.html" title="FUNCTION"><span style="color:#87cefa;">FUNCTION</span></a> BIN$ (n%)
+  max% = 8 * <a href="LEN.html" title="LEN"><span style="color:#87cefa;">LEN</span></a>(n%) ': MSB% = 1   'uncomment for 16 (32 or 64) bit returns
+  <a href="FOR...html" title="FOR...NEXT"><span style="color:#87cefa;">FOR</span></a> i = max% - 1 <a href="TO.html" title="TO"><span style="color:#87cefa;">TO</span></a> 0 <a href="STEP.html" title="STEP"><span style="color:#87cefa;">STEP</span></a> -1    'read as big-endian MSB to LSB
+    <a href="IF...html" title="IF...THEN"><span style="color:#87cefa;">IF</span></a> (n% <a href="AND_(boolean).html" title="AND (boolean)"><span style="color:#87cefa;">AND</span></a> 2 ^ i) <a href="THEN.html" title="THEN"><span style="color:#87cefa;">THEN</span></a> MSB% = 1: B$ = B$ + "1" <a href="ELSE.html" title="ELSE"><span style="color:#87cefa;">ELSE</span></a> <a href="IF...html" title="IF...THEN"><span style="color:#87cefa;">IF</span></a> MSB% <a href="THEN.html" title="THEN"><span style="color:#87cefa;">THEN</span></a> B$ = B$ + "0"
+  <a href="NEXT.html" title="NEXT"><span style="color:#87cefa;">NEXT</span></a>
+<a href="IF...html" title="IF...THEN"><span style="color:#87cefa;">IF</span></a> B$ = "" <a href="THEN.html" title="THEN"><span style="color:#87cefa;">THEN</span></a> BIN$ = "0" <a href="ELSE.html" title="ELSE"><span style="color:#87cefa;">ELSE</span></a> BIN$ = B$    'check for empty string
+<a href="END_FUNCTION.html" title="END FUNCTION"><span style="color:#87cefa;">END FUNCTION</span></a> <i> </i>
+</p>
+<center><span style="font-family: Courier New, Courier, monospace; font-size: 0.80em; line-height: 50%;">Code by Ted Weissgerber</span></center>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: Courier; background-color: black; color: white;">
+11111111
+111111111111111
+1000000000000000
+1111111111111111
+</p>
+<p><i>Note:</i> The The MSB% flag allows zeroes to be added. Uncomment the MSB% = 1 statement for returns with leading zeroes.
+</p><p><br />
+<i>Example 2:</i> QB64 converts the binary values from the example above to <a href="INTEGER.html" title="INTEGER">INTEGER</a> decimal values automatically.
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: Courier, monospace; background-color: darkblue; color: lightgrey; word-wrap: break-word;"> <i> </i>
+<a href="DEFLNG.html" title="DEFLNG"><span style="color:#87cefa;">DEFLNG</span></a> A-Z
+a = &amp;B11111111
+b = &amp;B111111111111111
+c = &amp;B1000000000000000 '&amp; 'or ~%
+d = &amp;B1111111111111111 '&amp; 'or ~%
+
+<a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> a, b, c, d <i> </i>
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: Courier; background-color: black; color: white;">
+255               32767              -32768              -1
+</p>
+<dl><dd><i>Bonus example:</i> Add an <b>&amp;</b> symbol after the negative binary numbers to see the <a href="LONG.html" title="LONG">LONG</a> decimal values below.</dd></dl>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: Courier; background-color: black; color: white;">
+255               32767               32768               65535
+</p>
+<dl><dd><i>Note:</i> The <a href="LONG.html" title="LONG">LONG</a> values returned are the same as the values you can get using <a href="UNSIGNED.html" title="UNSIGNED">_UNSIGNED</a> <a href="INTEGER.html" title="INTEGER">INTEGER</a> (~%).</dd></dl>
+<p><br />
+</p>
+<h2><span class="mw-headline" id="See_also">See also</span></h2>
+<ul><li><a href="BIT.html" title="BIT">_BIT</a>, <a href="BYTE.html" title="BYTE">_BYTE</a></li>
+<li><a href="SHL.html" title="SHL">_SHL</a>, <a href="SHR.html" title="SHR">_SHR</a></li>
+<li><a href="OCT%24.html" title="OCT$">OCT$</a>, <a href="%26O.html" title="&amp;O">&amp;O</a> <span style="color:gray">(octal)</span></li>
+<li><a href="HEX%24.html" title="HEX$">HEX$</a>, <a href="%26H.html" title="&amp;H">&amp;H</a> <span style="color:gray">(hexadecimal)</span></li></ul>
+<p><br />
+</p>
+<hr />
+<center><i>Navigation:</i>
+<dl><dd><a href="Keyword_Reference_-_Alphabetical.html" title="Keyword Reference - Alphabetical">Keyword Reference - Alphabetical</a></dd>
+<dd><a href="Keyword_Reference_-_By_usage.html" title="Keyword Reference - By usage">Keyword Reference - By Usage</a></dd>
+<dd><a href="Main_Page.html" title="Main Page">Main Wiki Page</a></dd></dl></center>
+<!-- 
+NewPP limit report
+Cached time: 20210706174423
+Cache expiry: 86400
+Dynamic content: false
+Complications: []
+CPU time usage: 0.076 seconds
+Real time usage: 0.098 seconds
+Preprocessor visited node count: 212/1000000
+Post‐expand include size: 3253/2097152 bytes
+Template argument size: 273/2097152 bytes
+Highest expansion depth: 3/40
+Expensive parser function count: 0/100
+Unstrip recursion depth: 0/20
+Unstrip post‐expand size: 0/5000000 bytes
+-->
+<!--
+Transclusion expansion time report (%,ms,calls,template)
+100.00%   46.997      1 -total
+  9.46%    4.448     22 Template:Cl
+  8.04%    3.778      1 Template:PageSyntax
+  6.50%    3.056      2 Template:Text
+  6.45%    3.033      2 Template:WhiteStart
+  6.33%    2.973      1 Template:PageNavigation
+  6.29%    2.954      2 Template:CodeEnd
+  6.27%    2.947      1 Template:PageSeeAlso
+  6.26%    2.944      1 Template:Small
+  6.23%    2.926      2 Template:WhiteEnd
+-->
+
+<!-- Saved in parser cache with key i4224360_mw2-mw_:pcache:idhash:18-0!canonical and timestamp 20210706174423 and revision id 463
+ -->
+</div></div><div class="printfooter">Retrieved from "<a dir="ltr" href="index58c1.html?title=%26B&amp;oldid=463">http://www.qb64.org/wiki/index.php?title=%26B&amp;oldid=463</a>"</div>
+		<div id="catlinks" class="catlinks catlinks-allhidden" data-mw="interface"></div>
+	</div>
+</div>
+
+<div id="mw-navigation">
+	<h2>Navigation menu</h2>
+	<div id="mw-head">
+		<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-personal" class="vector-menu" aria-labelledby="p-personal-label" role="navigation" 
+	 >
+	<h3 id="p-personal-label">
+		<span>Personal tools</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="pt-login"><a href="indexd49a.html?title=Special:UserLogin&amp;returnto=%26B" title="You are encouraged to log in; however, it is not mandatory [o]" accesskey="o">Log in</a></li></ul>
+		
+	</div>
+</nav>
+
+
+		<div id="left-navigation">
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-namespaces" class="vector-menu vector-menu-tabs vectorTabs" aria-labelledby="p-namespaces-label" role="navigation" 
+	 >
+	<h3 id="p-namespaces-label">
+		<span>Namespaces</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="ca-nstab-main" class="selected"><a href="%26B.html" title="View the content page [c]" accesskey="c">Page</a></li><li id="ca-talk" class="new"><a href="Talk_%26B.html?title=Talk:%26B&amp;action=edit&amp;redlink=1" rel="discussion" title="Discussion about the content page (page does not exist) [t]" accesskey="t">Discussion</a></li></ul>
+		
+	</div>
+</nav>
+
+
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-variants" class="vector-menu-empty emptyPortlet vector-menu vector-menu-dropdown vectorMenu" aria-labelledby="p-variants-label" role="navigation" 
+	 >
+	<input type="checkbox" class="vector-menu-checkbox vectorMenuCheckbox" aria-labelledby="p-variants-label" />
+	<h3 id="p-variants-label">
+		<span>Variants</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="menu vector-menu-content-list"></ul>
+		
+	</div>
+</nav>
+
+
+		</div>
+		<div id="right-navigation">
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-views" class="vector-menu vector-menu-tabs vectorTabs" aria-labelledby="p-views-label" role="navigation" 
+	 >
+	<h3 id="p-views-label">
+		<span>Views</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="ca-view" class="collapsible selected"><a href="%26B.html">Read</a></li><li id="ca-viewsource" class="collapsible"><a href="indexf69a.html?title=%26B&amp;action=edit" title="This page is protected.&#10;You can view its source [e]" accesskey="e">View source</a></li><li id="ca-history" class="collapsible"><a href="index5b12.html?title=%26B&amp;action=history" title="Past revisions of this page [h]" accesskey="h">View history</a></li></ul>
+		
+	</div>
+</nav>
+
+
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-cactions" class="vector-menu-empty emptyPortlet vector-menu vector-menu-dropdown vectorMenu" aria-labelledby="p-cactions-label" role="navigation" 
+	 >
+	<input type="checkbox" class="vector-menu-checkbox vectorMenuCheckbox" aria-labelledby="p-cactions-label" />
+	<h3 id="p-cactions-label">
+		<span>More</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="menu vector-menu-content-list"></ul>
+		
+	</div>
+</nav>
+
+
+			<div id="p-search" role="search">
+	<h3 >
+		<label for="searchInput">Search</label>
+	</h3>
+	<form action="https://www.qb64.org/wiki/index.php" id="searchform">
+		<div id="simpleSearch">
+			<input type="search" name="search" placeholder="Search QB64 Wiki" title="Search QB64 Wiki [f]" accesskey="f" id="searchInput"/>
+			<input type="hidden" name="title" value="Special:Search">
+			<input type="submit" name="fulltext" value="Search" title="Search the pages for this text" id="mw-searchButton" class="searchButton mw-fallbackSearchButton"/>
+			<input type="submit" name="go" value="Go" title="Go to a page with this exact name if it exists" id="searchButton" class="searchButton"/>
+		</div>
+	</form>
+</div>
+
+		</div>
+	</div>
+	
+<div id="mw-panel">
+	<div id="p-logo" role="banner">
+		<a  title="Visit the main page" class="mw-wiki-logo" href="Main_Page.html"></a>
+	</div>
+	<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-navigation" class="vector-menu vector-menu-portal portal portal-first" aria-labelledby="p-navigation-label" role="navigation" 
+	 >
+	<h3 id="p-navigation-label">
+		<span>Navigation</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="n-mainpage-description"><a href="Main_Page.html" title="Visit the main page [z]" accesskey="z">Main page</a></li><li id="n-recentchanges"><a href="Special_RecentChanges.html" title="A list of recent changes in the wiki [r]" accesskey="r">Recent changes</a></li><li id="n-randompage"><a href="SNDCOPY.html" title="Load a random page [x]" accesskey="x">Random page</a></li><li id="n-help-mediawiki"><a href="https://www.mediawiki.org/wiki/Special:MyLanguage/Help:Contents">Help about MediaWiki</a></li></ul>
+		
+	</div>
+</nav>
+
+
+	<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-tb" class="vector-menu vector-menu-portal portal" aria-labelledby="p-tb-label" role="navigation" 
+	 >
+	<h3 id="p-tb-label">
+		<span>Tools</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="t-whatlinkshere"><a href="Special_WhatLinksHere/%26B.html" title="A list of all wiki pages that link here [j]" accesskey="j">What links here</a></li><li id="t-recentchangeslinked"><a href="Special_RecentChangesLinked/%26B.html" rel="nofollow" title="Recent changes in pages linked from this page [k]" accesskey="k">Related changes</a></li><li id="t-specialpages"><a href="Special_SpecialPages.html" title="A list of all special pages [q]" accesskey="q">Special pages</a></li><li id="t-print"><a href="javascript:print();" rel="alternate" title="Printable version of this page [p]" accesskey="p">Printable version</a></li><li id="t-permalink"><a href="index58c1.html?title=%26B&amp;oldid=463" title="Permanent link to this revision of the page">Permanent link</a></li><li id="t-info"><a href="index2c9b.html?title=%26B&amp;action=info" title="More information about this page">Page information</a></li></ul>
+		
+	</div>
+</nav>
+
+
+	
+</div>
+
+</div>
+
+<footer id="footer" class="mw-footer" role="contentinfo" >
+	<ul id="footer-info" >
+		<li id="footer-info-lastmod"> This page was last edited on 11 April 2019, at 14:40.</li>
+	</ul>
+	<ul id="footer-places" >
+		<li id="footer-places-privacy"><a href="My_wiki_Privacy_policy.html" title="My wiki:Privacy policy">Privacy policy</a></li>
+		<li id="footer-places-about"><a href="My_wiki_About.html" title="My wiki:About">About QB64 Wiki</a></li>
+		<li id="footer-places-disclaimer"><a href="My_wiki_General_disclaimer.html" title="My wiki:General disclaimer">Disclaimers</a></li>
+	</ul>
+	<ul id="footer-icons" class="noprint">
+		<li id="footer-poweredbyico"><a href="https://www.mediawiki.org/"><img src="resources/assets/poweredby_mediawiki_88x31.png" alt="Powered by MediaWiki" srcset="/wiki/resources/assets/poweredby_mediawiki_132x47.png 1.5x, /wiki/resources/assets/poweredby_mediawiki_176x62.png 2x" width="88" height="31" loading="lazy"/></a></li>
+	</ul>
+	<div style="clear: both;"></div>
+</footer>
+
+
+
+<script>(RLQ=window.RLQ||[]).push(function(){mw.config.set({"wgPageParseReport":{"limitreport":{"cputime":"0.076","walltime":"0.098","ppvisitednodes":{"value":212,"limit":1000000},"postexpandincludesize":{"value":3253,"limit":2097152},"templateargumentsize":{"value":273,"limit":2097152},"expansiondepth":{"value":3,"limit":40},"expensivefunctioncount":{"value":0,"limit":100},"unstrip-depth":{"value":0,"limit":20},"unstrip-size":{"value":0,"limit":5000000},"timingprofile":["100.00%   46.997      1 -total","  9.46%    4.448     22 Template:Cl","  8.04%    3.778      1 Template:PageSyntax","  6.50%    3.056      2 Template:Text","  6.45%    3.033      2 Template:WhiteStart","  6.33%    2.973      1 Template:PageNavigation","  6.29%    2.954      2 Template:CodeEnd","  6.27%    2.947      1 Template:PageSeeAlso","  6.26%    2.944      1 Template:Small","  6.23%    2.926      2 Template:WhiteEnd"]},"cachereport":{"timestamp":"20210706174423","ttl":86400,"transientcontent":false}}});mw.config.set({"wgBackendResponseTime":1144});});</script></body>
+<!-- Mirrored from www.qb64.org/wiki/%26B by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 07 Aug 2021 13:43:13 GMT -->
+</html>

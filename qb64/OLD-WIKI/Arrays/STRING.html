@@ -1,0 +1,346 @@
+
+<!DOCTYPE html>
+<html class="client-nojs" lang="en" dir="ltr">
+
+<!-- Mirrored from www.qb64.org/wiki/STRING by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 07 Aug 2021 12:53:10 GMT -->
+<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=UTF-8" /><!-- /Added by HTTrack -->
+<head>
+<meta charset="UTF-8"/>
+<title>STRING - QB64 Wiki</title>
+<script>document.documentElement.className="client-js";RLCONF={"wgBreakFrames":!1,"wgSeparatorTransformTable":["",""],"wgDigitTransformTable":["",""],"wgDefaultDateFormat":"dmy","wgMonthNames":["","January","February","March","April","May","June","July","August","September","October","November","December"],"wgRequestId":"YQ58FTQ4jW24rMRpIRVyCgAAAAw","wgCSPNonce":!1,"wgCanonicalNamespace":"","wgCanonicalSpecialPageName":!1,"wgNamespaceNumber":0,"wgPageName":"STRING","wgTitle":"STRING","wgCurRevisionId":23700,"wgRevisionId":23700,"wgArticleId":678,"wgIsArticle":!0,"wgIsRedirect":!1,"wgAction":"view","wgUserName":null,"wgUserGroups":["*"],"wgCategories":[],"wgPageContentLanguage":"en","wgPageContentModel":"wikitext","wgRelevantPageName":"STRING","wgRelevantArticleId":678,"wgIsProbablyEditable":!1,"wgRelevantPageIsProbablyEditable":!1,"wgRestrictionEdit":[],"wgRestrictionMove":[]};RLSTATE={"site.styles":"ready","noscript":"ready","user.styles":"ready","user":"ready",
+"user.options":"loading","skins.vector.styles.legacy":"ready"};RLPAGEMODULES=["site","mediawiki.page.startup","mediawiki.page.ready","skins.vector.legacy.js"];</script>
+<script>(RLQ=window.RLQ||[]).push(function(){mw.loader.implement("user.options@1hzgi",function($,jQuery,require,module){/*@nomin*/mw.user.tokens.set({"patrolToken":"+\\","watchToken":"+\\","csrfToken":"+\\"});
+});});</script>
+<link rel="stylesheet" href="load5c90.css?lang=en&amp;modules=skins.vector.styles.legacy&amp;only=styles&amp;skin=vector"/>
+<script async="" src="load52c0.php?lang=en&amp;modules=startup&amp;only=scripts&amp;raw=1&amp;skin=vector"></script>
+<meta name="generator" content="MediaWiki 1.35.2"/>
+<link rel="shortcut icon" href="https://www.qb64.org/favicon.ico"/>
+<link rel="search" type="application/opensearchdescription+xml" href="opensearch_desc.php" title="QB64 Wiki (en)"/>
+<link rel="EditURI" type="application/rsd+xml" href="api-result251f.xml?action=rsd"/>
+<link rel="alternate" type="application/atom+xml" title="QB64 Wiki Atom feed" href="feeda295.xml?title=Special:RecentChanges&amp;feed=atom"/>
+<!--[if lt IE 9]><script src="/wiki/resources/lib/html5shiv/html5shiv.js"></script><![endif]-->
+</head>
+<body class="mediawiki ltr sitedir-ltr mw-hide-empty-elt ns-0 ns-subject page-STRING rootpage-STRING skin-vector action-view skin-vector-legacy">
+<div id="mw-page-base" class="noprint"></div>
+<div id="mw-head-base" class="noprint"></div>
+<div id="content" class="mw-body" role="main">
+	<a id="top"></a>
+	<div id="siteNotice" class="mw-body-content"></div>
+	<div class="mw-indicators mw-body-content">
+	</div>
+	<h1 id="firstHeading" class="firstHeading" lang="en">STRING</h1>
+	<div id="bodyContent" class="mw-body-content">
+		<div id="siteSub" class="noprint">From QB64 Wiki</div>
+		<div id="contentSub"></div>
+		<div id="contentSub2"></div>
+		
+		<div id="jump-to-nav"></div>
+		<a class="mw-jump-link" href="#mw-head">Jump to navigation</a>
+		<a class="mw-jump-link" href="#searchInput">Jump to search</a>
+		<div id="mw-content-text" lang="en" dir="ltr" class="mw-content-ltr"><div class="mw-parser-output"><p><b>STRING</b> variables or literal values are one byte per character length text or <a href="ASCII.html" title="ASCII">ASCII</a> characters.
+</p><p><br />
+</p>
+<h2><span class="mw-headline" id="Syntax">Syntax</span></h2>
+<dl><dd><dl><dd>DIM variable AS STRING [* byte_length]</dd></dl></dd></dl>
+<p><br />
+</p>
+<ul><li><i>Byte length</i> is optional in <a href="DIM.html" title="DIM">DIM</a> statements, but is required in <a href="TYPE.html" title="TYPE">TYPE</a> definitions as a literal or <a href="CONST.html" title="CONST">constant</a> <a href="INTEGER.html" title="INTEGER">INTEGER</a> value.</li>
+<li>Literal strings are defined by quotation marks on each end. The quotes will not <a href="PRINT.html" title="PRINT">PRINT</a> to the screen.</li>
+<li>Quotation marks cannot be placed inside of literal string values! Use <a href="CHR%24.html" title="CHR$">CHR$</a>(34) to display " quotes.</li>
+<li>Semicolons and commas outside of the string can be used to combine strings in a <a href="PRINT.html" title="PRINT">PRINT</a> statement only.</li>
+<li><a href="LEN.html" title="LEN">LEN</a> determines the number of bytes and number of string characters that are in a particular string.</li>
+<li>Literal string ends are designated by quotation marks such as: "text". Use <a href="CHR%24.html" title="CHR$">CHR$</a>(34) to add quotes to string values.</li>
+<li>Variable suffix type definition is $ such as: text$.</li>
+<li>STRING values are compared according to the <a href="ASCII.html" title="ASCII">ASCII</a> code values from left to right until one string code value exceeds the other.</li></ul>
+<p><br />
+</p>
+<dl><dd><dl><dd><dl><dd><dl><dd><dl><dd><b>Creating a fixed length STRING variable</b></dd></dl></dd></dl></dd></dl></dd></dl></dd></dl>
+<dl><dd><ul><li>Variable$ = " " ' 1 space creates a one <a href="BYTE.html" title="BYTE">byte</a> string length in a procedure(not fixed)</li>
+<li>Variable$ = SPACE$(n%) ' defined as a n% length string in a procedure(not fixed)</li>
+<li><a href="DIM.html" title="DIM">DIM</a> variable AS STRING * n% ' fixed string length cannot be changed later</li>
+<li>Variable AS STRING * n% ' fixed string length in a <a href="SUB.html" title="SUB">SUB</a> parameter or <a href="TYPE.html" title="TYPE">TYPE</a> definition.</li>
+<li><a href="CONST.html" title="CONST">CONST</a> variables can also be used after the constant value is defined.</li>
+<li>Fixed length strings may not be initialized with spaces and may contain only a series of CHR$(0) at program start.</li></ul></dd></dl>
+<p><br />
+</p>
+<dl><dd><dl><dd><dl><dd><dl><dd><dl><dd><b>QB64 fixed length string type suffixes</b></dd></dl></dd></dl></dd></dl></dd></dl></dd></dl>
+<ul><li>A number after the string variable name $ suffix denotes the fixed string length: <b>X$2</b> denotes a 2 byte string.</li></ul>
+<p><br />
+</p>
+<dl><dd><dl><dd><dl><dd><dl><dd><dl><dd><dl><dd><b>String <a href="Concatenation.html" title="Concatenation">Concatenation</a> (addition)</b></dd></dl></dd></dl></dd>
+<dd><i>Must be used when defining a string variable's literal value!</i></dd></dl></dd></dl></dd></dl></dd></dl>
+<ul><li>Concatenation uses the + addition symbol to add literal or variable parts to a string variable value.</li>
+<li>Quotation marks cannot be added. Use <a href="CHR%24.html" title="CHR$">CHR$</a>(34) as quotes are used to define the ends of strings.</li>
+<li>Numerical values added must be converted to strings in string variable definitions. See the <a href="STR%24.html" title="STR$">STR$</a> function.</li>
+<li>Concatenation can be used in PRINT statements along with semicolons and commas used by <span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="PRINT.html" title="PRINT">PRINT</a></span> ONLY.</li>
+<li>Semicolons or commas outside of quotes cannot be used to make a string variable's literal string value!</li></ul>
+<p><br />
+<i>Example 1:</i> Using a string type suffix with a fixed length byte size in QB64 only. The number designates the fixed string length.
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: Courier, monospace; background-color: darkblue; color: lightgrey; word-wrap: break-word;"> <i> </i>
+var$5 = "1234567"
+
+PRINT var$5 <i> </i>
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: Courier; background-color: black; color: white;">12345</p>
+<dl><dd><i>Note:</i> The suffix must keep the same byte length or it is considered a different string variable with a different value!</dd></dl>
+<p><br />
+<i>Example 2:</i> Creating a string variable value by adding variable and literal string values. This procedure is called string <a href="Concatenation.html" title="Concatenation">concatenation</a>.
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: Courier, monospace; background-color: darkblue; color: lightgrey; word-wrap: break-word;"> <i> </i>
+age% = 10
+a$ = "I am " + <a href="CHR%24.html" title="CHR$"><span style="color:#87cefa;">CHR$</span></a>(34) + <a href="LTRIM%24.html" title="LTRIM$"><span style="color:#87cefa;">LTRIM$</span></a>(<a href="STR%24.html" title="STR$"><span style="color:#87cefa;">STR$</span></a>(age%)) + <a href="CHR%24.html" title="CHR$"><span style="color:#87cefa;">CHR$</span></a>(34) + " years old."
+b$ = "How old are you?"
+question$ = a$ + <a href="SPACE%24.html" title="SPACE$"><span style="color:#87cefa;">SPACE$</span></a>(1) + b$
+<a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> question$
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: Courier; background-color: black; color: white;">
+I am "10" years old. How old are you? <i> </i>
+</p>
+<dl><dd><i>Note:</i> Since quotation marks are used to denote the ends of literal strings, <a href="CHR%24.html" title="CHR$">CHR$</a>(34) must be used to place quotes inside them.</dd></dl>
+<p><br />
+<i>Example 3:</i> How QB64 string type suffixes can fix the length by adding a number of bytes after it.
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: Courier, monospace; background-color: darkblue; color: lightgrey; word-wrap: break-word;"> <i> </i>
+strings$5 = "Hello world"
+
+PRINT strings$5 <i> </i>
+</p><p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: Courier; background-color: black; color: white;">Hello</p>
+<p><br />
+<i>Example 4:</i> STRING values can be compared by the <a href="ASC.html" title="ASC">ASC</a> code value according to <a href="ASCII.html" title="ASCII">ASCII</a>.
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: Courier, monospace; background-color: darkblue; color: lightgrey; word-wrap: break-word;"> <i> </i>
+<a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> "Enter a letter, number or punctuation mark from the keyboard: ";
+valu$ = <a href="INPUT%24.html" title="INPUT$"><span style="color:#87cefa;">INPUT$</span></a>(1)
+<a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> value$
+value1$ = "A"
+value2$ = "m"
+value3$ = "z"
+
+<a href="SELECT_CASE.html" title="SELECT CASE"><span style="color:#87cefa;">SELECT CASE</span></a> value$
+  <a href="CASE.html" class="mw-redirect" title="CASE"><span style="color:#87cefa;">CASE</span></a> value1$: <a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> "A only"
+  <a href="CASE.html" class="mw-redirect" title="CASE"><span style="color:#87cefa;">CASE</span></a> value1$ <a href="TO.html" title="TO"><span style="color:#87cefa;">TO</span></a> value2$: <a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> "B to m" 'A is already evaluated
+  <a href="CASE.html" class="mw-redirect" title="CASE"><span style="color:#87cefa;">CASE</span></a> value1$, value2$, value3$: <a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> "z only" 'A and m are already evaluated
+  <a href="CASE_IS.html" class="mw-redirect" title="CASE IS"><span style="color:#87cefa;">CASE IS</span></a> &gt; value2$: <a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> "greater than m but not z" 'z is already evaluated
+  <a href="CASE_ELSE.html" class="mw-redirect" title="CASE ELSE"><span style="color:#87cefa;">CASE ELSE</span></a>: <a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> "other value" 'key entry below A including all numbers
+<a href="END_SELECT.html" title="END SELECT"><span style="color:#87cefa;">END SELECT</span></a> <i> </i>
+</p>
+<dl><dd><i>Notes:</i> <a class="mw-selflink selflink">STRING</a> values using multiple characters will be compared by the <a href="ASCII.html" title="ASCII">ASCII</a> code values sequentially from left to right. Once the equivalent code value of one string is larger than the other the evaluation stops. This allows string values to be compared and sorted alphabetically using <a href="Greater_Than.html" title="Greater Than">&gt;</a> or <a href="Less_Than.html" title="Less Than">&lt;</a> and to <a href="SWAP.html" title="SWAP">SWAP</a> values in <a href="Arrays.html" title="Arrays">arrays</a> irregardless of the string lengths.</dd></dl>
+<p><br />
+<i>See also:</i> 
+</p>
+<ul><li><a href="DIM.html" title="DIM">DIM</a>, <a href="DEFSTR.html" title="DEFSTR">DEFSTR</a></li>
+<li><a href="CHR%24.html" title="CHR$">CHR$</a>, <a href="ASC.html" title="ASC">ASC</a></li>
+<li><a href="LEFT%24.html" title="LEFT$">LEFT$</a>, <a href="RIGHT%24.html" title="RIGHT$">RIGHT$</a>, <a href="MID%24.html" title="MID$">MID$</a></li>
+<li><a href="LTRIM%24.html" title="LTRIM$">LTRIM$</a>, <a href="RTRIM%24.html" title="RTRIM$">RTRIM$</a></li>
+<li><a href="LCASE%24.html" title="LCASE$">LCASE$</a>, <a href="UCASE%24.html" title="UCASE$">UCASE$</a></li>
+<li><a href="STR%24.html" title="STR$">STR$</a> <span style="color:gray">(decimal to string value)</span></li>
+<li><a href="HEX%24.html" title="HEX$">HEX$</a> <span style="color:gray">(decimal to <a href="%26H.html" title="&amp;H">hexadecimal</a> string value)</span></li>
+<li><a href="MKI%24.html" title="MKI$">MKI$</a>, <a href="MKL%24.html" title="MKL$">MKL$</a>, <a href="MKS%24.html" title="MKS$">MKS$</a>, <a href="MKD%24.html" title="MKD$">MKD$</a>, <a href="MK%24.html" title="MK$">_MK$</a> <span style="color:gray">(numerical to <a href="ASCII.html" title="ASCII">ASCII</a> string)</span></li>
+<li><a href="CVI.html" title="CVI">CVI</a>, <a href="CVL.html" title="CVL">CVL</a>, <a href="CVS.html" title="CVS">CVS</a>, <a href="CVD.html" title="CVD">CVD</a>, <a href="CV.html" title="CV">_CV</a> <span style="color:gray">(<a href="ASCII.html" title="ASCII">ASCII</a> string to numerical value)</span></li>
+<li><a href="LEN.html" title="LEN">LEN</a>, <a href="VAL.html" title="VAL">VAL</a> <span style="color:gray">(function converts string to numerical value)</span></li>
+<li><a href="ASCII.html" title="ASCII">ASCII</a>, <a href="DRAW.html" title="DRAW">DRAW</a></li>
+<li><a href="PRINT.html" title="PRINT">PRINT</a>, <a href="PRINT_USING.html" title="PRINT USING">PRINT USING</a>, <a href="WRITE.html" title="WRITE">WRITE</a></li></ul>
+<p><br />
+</p>
+<hr />
+<center><i>Navigation:</i>
+<dl><dd><a href="Keyword_Reference_-_Alphabetical.html" title="Keyword Reference - Alphabetical">Keyword Reference - Alphabetical</a></dd>
+<dd><a href="Keyword_Reference_-_By_usage.html" title="Keyword Reference - By usage">Keyword Reference - By Usage</a></dd>
+<dd><a href="Main_Page.html" title="Main Page">Main Wiki Page</a></dd></dl></center>
+<!-- 
+NewPP limit report
+Cached time: 20210807122703
+Cache expiry: 86400
+Dynamic content: false
+Complications: []
+CPU time usage: 0.096 seconds
+Real time usage: 0.679 seconds
+Preprocessor visited node count: 222/1000000
+Post‐expand include size: 3337/2097152 bytes
+Template argument size: 434/2097152 bytes
+Highest expansion depth: 3/40
+Expensive parser function count: 0/100
+Unstrip recursion depth: 0/20
+Unstrip post‐expand size: 0/5000000 bytes
+-->
+<!--
+Transclusion expansion time report (%,ms,calls,template)
+100.00%  215.963      1 -total
+ 17.56%   37.922      3 Template:OutputEnd
+ 15.16%   32.739      4 Template:CodeEnd
+ 14.65%   31.643      5 Template:Text
+ 11.04%   23.849      3 Template:OutputStart
+  8.92%   19.256      1 Template:PageSyntax
+  7.28%   15.732      4 Template:CodeStart
+  6.70%   14.465      1 Template:KW
+  5.82%   12.563      1 Template:PageNavigation
+  3.96%    8.543     22 Template:Cl
+-->
+
+<!-- Saved in parser cache with key i4224360_mw2-mw_:pcache:idhash:678-0!canonical and timestamp 20210807122703 and revision id 23700
+ -->
+</div></div><div class="printfooter">Retrieved from "<a dir="ltr" href="index0e65.html?title=STRING&amp;oldid=23700">http://www.qb64.org/wiki/index.php?title=STRING&amp;oldid=23700</a>"</div>
+		<div id="catlinks" class="catlinks catlinks-allhidden" data-mw="interface"></div>
+	</div>
+</div>
+
+<div id="mw-navigation">
+	<h2>Navigation menu</h2>
+	<div id="mw-head">
+		<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-personal" class="vector-menu" aria-labelledby="p-personal-label" role="navigation" 
+	 >
+	<h3 id="p-personal-label">
+		<span>Personal tools</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="pt-login"><a href="index54c2.html?title=Special:UserLogin&amp;returnto=STRING" title="You are encouraged to log in; however, it is not mandatory [o]" accesskey="o">Log in</a></li></ul>
+		
+	</div>
+</nav>
+
+
+		<div id="left-navigation">
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-namespaces" class="vector-menu vector-menu-tabs vectorTabs" aria-labelledby="p-namespaces-label" role="navigation" 
+	 >
+	<h3 id="p-namespaces-label">
+		<span>Namespaces</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="ca-nstab-main" class="selected"><a href="STRING.html" title="View the content page [c]" accesskey="c">Page</a></li><li id="ca-talk" class="new"><a href="Talk_STRING.html?title=Talk:STRING&amp;action=edit&amp;redlink=1" rel="discussion" title="Discussion about the content page (page does not exist) [t]" accesskey="t">Discussion</a></li></ul>
+		
+	</div>
+</nav>
+
+
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-variants" class="vector-menu-empty emptyPortlet vector-menu vector-menu-dropdown vectorMenu" aria-labelledby="p-variants-label" role="navigation" 
+	 >
+	<input type="checkbox" class="vector-menu-checkbox vectorMenuCheckbox" aria-labelledby="p-variants-label" />
+	<h3 id="p-variants-label">
+		<span>Variants</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="menu vector-menu-content-list"></ul>
+		
+	</div>
+</nav>
+
+
+		</div>
+		<div id="right-navigation">
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-views" class="vector-menu vector-menu-tabs vectorTabs" aria-labelledby="p-views-label" role="navigation" 
+	 >
+	<h3 id="p-views-label">
+		<span>Views</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="ca-view" class="collapsible selected"><a href="STRING.html">Read</a></li><li id="ca-viewsource" class="collapsible"><a href="index1274.html?title=STRING&amp;action=edit" title="This page is protected.&#10;You can view its source [e]" accesskey="e">View source</a></li><li id="ca-history" class="collapsible"><a href="index7b40.html?title=STRING&amp;action=history" title="Past revisions of this page [h]" accesskey="h">View history</a></li></ul>
+		
+	</div>
+</nav>
+
+
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-cactions" class="vector-menu-empty emptyPortlet vector-menu vector-menu-dropdown vectorMenu" aria-labelledby="p-cactions-label" role="navigation" 
+	 >
+	<input type="checkbox" class="vector-menu-checkbox vectorMenuCheckbox" aria-labelledby="p-cactions-label" />
+	<h3 id="p-cactions-label">
+		<span>More</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="menu vector-menu-content-list"></ul>
+		
+	</div>
+</nav>
+
+
+			<div id="p-search" role="search">
+	<h3 >
+		<label for="searchInput">Search</label>
+	</h3>
+	<form action="https://www.qb64.org/wiki/index.php" id="searchform">
+		<div id="simpleSearch">
+			<input type="search" name="search" placeholder="Search QB64 Wiki" title="Search QB64 Wiki [f]" accesskey="f" id="searchInput"/>
+			<input type="hidden" name="title" value="Special:Search">
+			<input type="submit" name="fulltext" value="Search" title="Search the pages for this text" id="mw-searchButton" class="searchButton mw-fallbackSearchButton"/>
+			<input type="submit" name="go" value="Go" title="Go to a page with this exact name if it exists" id="searchButton" class="searchButton"/>
+		</div>
+	</form>
+</div>
+
+		</div>
+	</div>
+	
+<div id="mw-panel">
+	<div id="p-logo" role="banner">
+		<a  title="Visit the main page" class="mw-wiki-logo" href="Main_Page.html"></a>
+	</div>
+	<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-navigation" class="vector-menu vector-menu-portal portal portal-first" aria-labelledby="p-navigation-label" role="navigation" 
+	 >
+	<h3 id="p-navigation-label">
+		<span>Navigation</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="n-mainpage-description"><a href="Main_Page.html" title="Visit the main page [z]" accesskey="z">Main page</a></li><li id="n-recentchanges"><a href="Special_RecentChanges.html" title="A list of recent changes in the wiki [r]" accesskey="r">Recent changes</a></li><li id="n-randompage"><a href="SNDCOPY.html" title="Load a random page [x]" accesskey="x">Random page</a></li><li id="n-help-mediawiki"><a href="https://www.mediawiki.org/wiki/Special:MyLanguage/Help:Contents">Help about MediaWiki</a></li></ul>
+		
+	</div>
+</nav>
+
+
+	<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-tb" class="vector-menu vector-menu-portal portal" aria-labelledby="p-tb-label" role="navigation" 
+	 >
+	<h3 id="p-tb-label">
+		<span>Tools</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="t-whatlinkshere"><a href="Special_WhatLinksHere/STRING.html" title="A list of all wiki pages that link here [j]" accesskey="j">What links here</a></li><li id="t-recentchangeslinked"><a href="Special_RecentChangesLinked/STRING.html" rel="nofollow" title="Recent changes in pages linked from this page [k]" accesskey="k">Related changes</a></li><li id="t-specialpages"><a href="Special_SpecialPages.html" title="A list of all special pages [q]" accesskey="q">Special pages</a></li><li id="t-print"><a href="javascript:print();" rel="alternate" title="Printable version of this page [p]" accesskey="p">Printable version</a></li><li id="t-permalink"><a href="index0e65.html?title=STRING&amp;oldid=23700" title="Permanent link to this revision of the page">Permanent link</a></li><li id="t-info"><a href="index1a9d.html?title=STRING&amp;action=info" title="More information about this page">Page information</a></li></ul>
+		
+	</div>
+</nav>
+
+
+	
+</div>
+
+</div>
+
+<footer id="footer" class="mw-footer" role="contentinfo" >
+	<ul id="footer-info" >
+		<li id="footer-info-lastmod"> This page was last edited on 28 July 2021, at 17:07.</li>
+	</ul>
+	<ul id="footer-places" >
+		<li id="footer-places-privacy"><a href="My_wiki_Privacy_policy.html" title="My wiki:Privacy policy">Privacy policy</a></li>
+		<li id="footer-places-about"><a href="My_wiki_About.html" title="My wiki:About">About QB64 Wiki</a></li>
+		<li id="footer-places-disclaimer"><a href="My_wiki_General_disclaimer.html" title="My wiki:General disclaimer">Disclaimers</a></li>
+	</ul>
+	<ul id="footer-icons" class="noprint">
+		<li id="footer-poweredbyico"><a href="https://www.mediawiki.org/"><img src="resources/assets/poweredby_mediawiki_88x31.png" alt="Powered by MediaWiki" srcset="/wiki/resources/assets/poweredby_mediawiki_132x47.png 1.5x, /wiki/resources/assets/poweredby_mediawiki_176x62.png 2x" width="88" height="31" loading="lazy"/></a></li>
+	</ul>
+	<div style="clear: both;"></div>
+</footer>
+
+
+
+<script>(RLQ=window.RLQ||[]).push(function(){mw.config.set({"wgPageParseReport":{"limitreport":{"cputime":"0.096","walltime":"0.679","ppvisitednodes":{"value":222,"limit":1000000},"postexpandincludesize":{"value":3337,"limit":2097152},"templateargumentsize":{"value":434,"limit":2097152},"expansiondepth":{"value":3,"limit":40},"expensivefunctioncount":{"value":0,"limit":100},"unstrip-depth":{"value":0,"limit":20},"unstrip-size":{"value":0,"limit":5000000},"timingprofile":["100.00%  215.963      1 -total"," 17.56%   37.922      3 Template:OutputEnd"," 15.16%   32.739      4 Template:CodeEnd"," 14.65%   31.643      5 Template:Text"," 11.04%   23.849      3 Template:OutputStart","  8.92%   19.256      1 Template:PageSyntax","  7.28%   15.732      4 Template:CodeStart","  6.70%   14.465      1 Template:KW","  5.82%   12.563      1 Template:PageNavigation","  3.96%    8.543     22 Template:Cl"]},"cachereport":{"timestamp":"20210807122703","ttl":86400,"transientcontent":false}}});mw.config.set({"wgBackendResponseTime":2913});});</script></body>
+<!-- Mirrored from www.qb64.org/wiki/STRING by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 07 Aug 2021 12:53:17 GMT -->
+</html>

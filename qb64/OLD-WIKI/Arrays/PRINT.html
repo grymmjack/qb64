@@ -1,0 +1,326 @@
+
+<!DOCTYPE html>
+<html class="client-nojs" lang="en" dir="ltr">
+
+<!-- Mirrored from www.qb64.org/wiki/PRINT by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 07 Aug 2021 13:12:49 GMT -->
+<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=UTF-8" /><!-- /Added by HTTrack -->
+<head>
+<meta charset="UTF-8"/>
+<title>PRINT - QB64 Wiki</title>
+<script>document.documentElement.className="client-js";RLCONF={"wgBreakFrames":!1,"wgSeparatorTransformTable":["",""],"wgDigitTransformTable":["",""],"wgDefaultDateFormat":"dmy","wgMonthNames":["","January","February","March","April","May","June","July","August","September","October","November","December"],"wgRequestId":"YOWlVadTx2XheSMCc395zAAAAAI","wgCSPNonce":!1,"wgCanonicalNamespace":"","wgCanonicalSpecialPageName":!1,"wgNamespaceNumber":0,"wgPageName":"PRINT","wgTitle":"PRINT","wgCurRevisionId":23370,"wgRevisionId":23370,"wgArticleId":533,"wgIsArticle":!0,"wgIsRedirect":!1,"wgAction":"view","wgUserName":null,"wgUserGroups":["*"],"wgCategories":[],"wgPageContentLanguage":"en","wgPageContentModel":"wikitext","wgRelevantPageName":"PRINT","wgRelevantArticleId":533,"wgIsProbablyEditable":!1,"wgRelevantPageIsProbablyEditable":!1,"wgRestrictionEdit":[],"wgRestrictionMove":[]};RLSTATE={"site.styles":"ready","noscript":"ready","user.styles":"ready","user":"ready","user.options"
+:"loading","skins.vector.styles.legacy":"ready"};RLPAGEMODULES=["site","mediawiki.page.startup","mediawiki.page.ready","skins.vector.legacy.js"];</script>
+<script>(RLQ=window.RLQ||[]).push(function(){mw.loader.implement("user.options@1hzgi",function($,jQuery,require,module){/*@nomin*/mw.user.tokens.set({"patrolToken":"+\\","watchToken":"+\\","csrfToken":"+\\"});
+});});</script>
+<link rel="stylesheet" href="load5c90.css?lang=en&amp;modules=skins.vector.styles.legacy&amp;only=styles&amp;skin=vector"/>
+<script async="" src="load52c0.php?lang=en&amp;modules=startup&amp;only=scripts&amp;raw=1&amp;skin=vector"></script>
+<meta name="generator" content="MediaWiki 1.35.2"/>
+<link rel="shortcut icon" href="https://www.qb64.org/favicon.ico"/>
+<link rel="search" type="application/opensearchdescription+xml" href="opensearch_desc.php" title="QB64 Wiki (en)"/>
+<link rel="EditURI" type="application/rsd+xml" href="api-result251f.xml?action=rsd"/>
+<link rel="alternate" type="application/atom+xml" title="QB64 Wiki Atom feed" href="feeda295.xml?title=Special:RecentChanges&amp;feed=atom"/>
+<!--[if lt IE 9]><script src="/wiki/resources/lib/html5shiv/html5shiv.js"></script><![endif]-->
+</head>
+<body class="mediawiki ltr sitedir-ltr mw-hide-empty-elt ns-0 ns-subject page-PRINT rootpage-PRINT skin-vector action-view skin-vector-legacy">
+<div id="mw-page-base" class="noprint"></div>
+<div id="mw-head-base" class="noprint"></div>
+<div id="content" class="mw-body" role="main">
+	<a id="top"></a>
+	<div id="siteNotice" class="mw-body-content"></div>
+	<div class="mw-indicators mw-body-content">
+	</div>
+	<h1 id="firstHeading" class="firstHeading" lang="en">PRINT</h1>
+	<div id="bodyContent" class="mw-body-content">
+		<div id="siteSub" class="noprint">From QB64 Wiki</div>
+		<div id="contentSub"></div>
+		<div id="contentSub2"></div>
+		
+		<div id="jump-to-nav"></div>
+		<a class="mw-jump-link" href="#mw-head">Jump to navigation</a>
+		<a class="mw-jump-link" href="#searchInput">Jump to search</a>
+		<div id="mw-content-text" lang="en" dir="ltr" class="mw-content-ltr"><div class="mw-parser-output"><p>The <span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a class="mw-selflink selflink">PRINT</a></span> statement prints numeric or string expressions to the program screen. Typing shortcut <b>?</b>  will convert to PRINT.
+</p><p><br />
+</p>
+<h2><span class="mw-headline" id="Syntax">Syntax</span></h2>
+<dl><dd><dl><dd><dl><dd><b>PRINT</b> [<i>expression</i>] [{;|,] [<i>expression</i>...]</dd></dl></dd></dl></dd></dl>
+<p><br />
+</p>
+<h2><span class="mw-headline" id="Parameters">Parameters</span></h2>
+<ul><li><i>expression</i> is a numeric or string expression or list of expressions to be written to the screen. End quotes will not be displayed in strings.</li>
+<li>The print statement can be followed by a <a href="Semicolon.html" title="Semicolon">semicolon</a> to stop the print cursor or a <a href="Comma.html" title="Comma">comma</a> to tab space the next print.</li></ul>
+<p><br />
+<i>Usage:</i>
+</p>
+<ul><li><a href="STRING.html" title="STRING">STRING</a> values will eliminate leading and trailing quotation marks when printed to the screen. Use <a href="CHR%24.html" title="CHR$">CHR$</a>(34) to add quotes to the <a href="SCREEN.html" title="SCREEN">SCREEN</a>.</li>
+<li>PRINT with no parameters moves the print cursor to the next print row at column 1.</li>
+<li><i>expression</i> is a numeric or string expression to be printed.
+<ul><li><a href="SPACE%24.html" title="SPACE$">SPACE$</a>(<i>n%</i>) or <a href="SPC.html" title="SPC">SPC</a>(<i>n%</i>) - specifies that <i>n%</i> space characters will be printed.</li>
+<li><a href="TAB.html" title="TAB">TAB</a>(<i>column%</i>) - specifies that the print cursor is to move to column number <i>column%</i>. If the print cursor is already beyond that column, it is moved to the designated column on the next row.</li></ul></li>
+<li>A <i>separator</i> is used to separate multiple expressions and specifies how the print cursor is to be moved:
+<ul><li><a href="Semicolon.html" title="Semicolon">Semicolon</a>(;) - specifies that the print cursor stops at the end of the printed <i>expression</i> and may append later <i>expressions</i> or prints. PRINT&#160;; or PRINT ""; will stop cursor movement and append later prints. Ending <a href="Semicolon.html" title="Semicolon">semicolons</a> can also stop screen roll.</li>
+<li><a href="Comma.html" title="Comma">Comma</a>(,) - specifies that the print cursor is to move to the next 14-column tab-stop. If the print cursor is at column 56 or greater, it is moved to the next row at column 1. When used after an <i>expression</i> it may Tab-stop append later prints.</li>
+<li><a href="%2b.html" title="+">Plus</a>(+) uses <a href="Concatenation.html" title="Concatenation">concatenation</a> to add <a href="STRING.html" title="STRING">STRING</a> expressions ONLY with no spacing. <b>Cannot combine  numerical <i>expression</i>s!</b></li>
+<li>If a <i>separator</i> is not used at the end of the expression list, the print cursor moves to the next row at column 1.</li></ul></li>
+<li>When <b>printing numerical</b> <i>expressions</i> values, the following rules are used:
+<ul><li>If the value is positive, the number is prefixed with a space character, otherwise, the number is prefixed with a negative sign (-).</li>
+<li>If the value is an integer (whole number), no decimal point or fractional part will be printed.</li>
+<li>If the value is not an <a href="INTEGER.html" title="INTEGER">integer</a>(whole number) and has zero for a coefficient, no leading zero is printed. EX: -0.123 prints "-.123 "</li>
+<li>If the expression is in <a href="Scientific_notation.html" title="Scientific notation">scientific notation</a>, the number is also printed in scientific notation.</li>
+<li>The number is <a class="mw-selflink selflink">printed</a> with a space after it unless <a href="STR%24.html" title="STR$">STR$</a>(number) is used to convert it to string text.</li>
+<li>Numerical values MUST be added to a PRINT statement string using <a href="Comma.html" title="Comma">commas</a> or <a href="Semicolon.html" title="Semicolon">semicolons</a> on each side of the value or by using <a href="STR%24.html" title="STR$">STR$</a> to convert the value to a string to use <a href="Concatenation.html" title="Concatenation">concatenation</a> (+ string addition).</li></ul></li>
+<li><a href="VIEW_PRINT.html" title="VIEW PRINT">VIEW PRINT</a> can set up a viewport area for PRINTs. Text printed on the bottom view port row will scroll the text upward.</li>
+<li>Text to be printed can be a <a href="STRING.html" title="STRING">STRING</a> variable or a literal value inside of quotation marks.</li>
+<li>Use <a href="Semicolon.html" title="Semicolon">semicolon</a> ends on bottom 2 rows of the SCREEN mode used or the PRINT will roll the screen up.</li>
+<li><b>Quotes cannot be inside of a literal STRING! Use <a href="CHR%24.html" title="CHR$">CHR$</a>(34) <a href="Concatenation.html" title="Concatenation">concatenation</a> to insert <a href="Quotation_mark.html" title="Quotation mark">quotation marks</a> into a literal string.</b></li>
+<li>To better format number and text data placement use <span style="font-family: Courier New, Courier, monospace; font-size: 1.1em;"><a href="PRINT_USING.html" title="PRINT USING">PRINT USING</a></span>.</li>
+<li>Instead of typing PRINT you can just type a <a href="Question_mark.html" title="Question mark">question mark</a> (?). It will change to PRINT when enter is pressed in the IDE.</li>
+<li>Use the <a href="PRINTMODE.html" title="PRINTMODE">_PRINTMODE</a> statement before a print to deal with the text background in <b>QB64</b>:</li></ul>
+<dl><dd><ul><li><b>1</b> _KEEPBACKGROUND: Text background transparent. Only the text is displayed over anything behind it.</li>
+<li><b>2</b> _ONLYBACKGROUND: Text background is only displayed. Text is transparent to anything behind it.</li>
+<li><b>3</b> _FILLBACKGROUND: Text and background block anything behind them. Default setting.</li>
+<li>Use the <a href="PRINTMODE_(function).html" title="PRINTMODE (function)">_PRINTMODE (function)</a> to find the current _PRINTMODE setting number.</li></ul></dd></dl>
+<ul><li><a href="WRITE.html" title="WRITE">WRITE</a> can be used to print a list of comma separated data values to the screen with <a href="Comma.html" title="Comma">commas</a> between each value.</li>
+<li>Use <a href="DEST.html" title="DEST">_DEST</a> <a href="CONSOLE.html" title="CONSOLE">_CONSOLE</a> before PRINT statements to be used in a <a href="%24CONSOLE.html" title="$CONSOLE">console</a> window.</li>
+<li>Use <a href="CONTROLCHR.html" title="CONTROLCHR">_CONTROLCHR</a> <b>OFF</b> to PRINT the unprintable lower <a href="ASCII.html" title="ASCII">ASCII</a> control characters in QB64.</li></ul>
+<p><br />
+<i>Example 1:</i> Using semicolons, comma tabs or concatenation to insert <a href="ASCII.html" title="ASCII">ASCII</a> characters and numbers in a PRINT:
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: Courier, monospace; background-color: darkblue; color: lightgrey; word-wrap: break-word;">
+<a class="mw-selflink selflink"><span style="color:#87cefa;">PRINT</span></a> CHR$(34); "Hello world!"; CHR$(34) ' adding quotation marks
+<a class="mw-selflink selflink"><span style="color:#87cefa;">PRINT</span></a> 123 'demonstrates the positive leading space
+a$ = "Hello country!": a = 321: b = -321
+<a class="mw-selflink selflink"><span style="color:#87cefa;">PRINT</span></a> a$, a ' demonstrates comma in statement
+<a class="mw-selflink selflink"><span style="color:#87cefa;">PRINT</span></a> a$; a ' demonstrates semicolon in statement
+<a class="mw-selflink selflink"><span style="color:#87cefa;">PRINT</span></a> a$ + <a href="STR%24.html" title="STR$"><span style="color:#87cefa;">STR$</span></a>(b) ' concatenation of string numerical values only
+? "Hello city!" ' a&#160;? changes to PRINT after moving cursor from the code line in IDE
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: Courier; background-color: black; color: white;">"Hello world!"
+ 123
+Hello country!      321
+Hello country! 321
+Hello country!-321
+Hello city!
+</p>
+<dl><dd>First PRINT prints the text between two quotation marks, then it prints the value 123, notice that there are no quotation marks when printing the value, quotation marks mean that it will be treated like a literal string of text. a$ is set to "Hello country" and 'a' is set to the value 321, the dollar sign is used when a variable holds the text string. The contents of a$ is then printed and the "," means that the value of 'a' is printed separated by a tab and ";" means that there is no separation from the other text except for the leading positive value space.</dd></dl>
+<p><br />
+<i>Example 2:</i> Changing colors in a line of text using semicolons with colon separators between PRINTs on the same code line.
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: Courier, monospace; background-color: darkblue; color: lightgrey; word-wrap: break-word;">
+<a href="COLOR.html" title="COLOR"><span style="color:#87cefa;">COLOR</span></a> 12: <a class="mw-selflink selflink"><span style="color:#87cefa;">PRINT</span></a> "Start red ";&#160;: <a href="COLOR.html" title="COLOR"><span style="color:#87cefa;">COLOR</span></a> 10: <a class="mw-selflink selflink"><span style="color:#87cefa;">PRINT</span></a> "and end green."
+<a href="COLOR.html" title="COLOR"><span style="color:#87cefa;">COLOR</span></a> 11: <a class="mw-selflink selflink"><span style="color:#87cefa;">PRINT</span></a> "Start aqua ";
+<a href="COLOR.html" title="COLOR"><span style="color:#87cefa;">COLOR</span></a> 14: <a class="mw-selflink selflink"><span style="color:#87cefa;">PRINT</span></a> "and end blue."
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: Courier; background-color: black; color: white;"><span style="color:#FF1515">Start red</span> <span style="color:#15FF15">and end green.</span>
+<span style="color:#15FFFF">Start aqua</span> <span style="color:#0000FF">and end blue.</span> </p>
+<p><br />
+</p>
+<h2><span class="mw-headline" id="See_also">See also</span></h2>
+<ul><li><a href="PRINTMODE.html" title="PRINTMODE">_PRINTMODE</a>, <a href="PRINTSTRING.html" title="PRINTSTRING">_PRINTSTRING</a>, <a href="PRINT_USING.html" title="PRINT USING">PRINT USING</a></li>
+<li><a href="SPC.html" title="SPC">SPC</a>, <a href="TAB.html" title="TAB">TAB</a>, <a href="SPACE%24.html" title="SPACE$">SPACE$</a>, <a href="SCREEN.html" title="SCREEN">SCREEN</a></li>
+<li><a href="CSRLIN.html" title="CSRLIN">CSRLIN</a>, <a href="POS.html" title="POS">POS</a>, <a href="SCREEN_(function).html" title="SCREEN (function)">SCREEN (function)</a></li>
+<li><a href="COLOR.html" title="COLOR">COLOR</a>, <a href="LOCATE.html" title="LOCATE">LOCATE</a>, <a href="VIEW_PRINT.html" title="VIEW PRINT">VIEW PRINT</a></li>
+<li><a href="INPUT.html" title="INPUT">INPUT</a>, <a href="STR%24.html" title="STR$">STR$</a>, <a href="CHR%24.html" title="CHR$">CHR$</a></li>
+<li><a href="ASCII.html" title="ASCII">ASCII</a> (character codes), <a href="CONTROLCHR.html" title="CONTROLCHR">_CONTROLCHR</a></li>
+<li><a href="Text_Using_Graphics.html" title="Text Using Graphics">Text Using Graphics</a> (Demo)</li></ul>
+<p><br />
+</p>
+<hr />
+<center><i>Navigation:</i>
+<dl><dd><a href="Keyword_Reference_-_Alphabetical.html" title="Keyword Reference - Alphabetical">Keyword Reference - Alphabetical</a></dd>
+<dd><a href="Keyword_Reference_-_By_usage.html" title="Keyword Reference - By usage">Keyword Reference - By Usage</a></dd>
+<dd><a href="Main_Page.html" title="Main Page">Main Wiki Page</a></dd></dl></center>
+<!-- 
+NewPP limit report
+Cached time: 20210707104908
+Cache expiry: 86400
+Dynamic content: false
+Complications: []
+CPU time usage: 0.057 seconds
+Real time usage: 0.081 seconds
+Preprocessor visited node count: 204/1000000
+Post‐expand include size: 2375/2097152 bytes
+Template argument size: 303/2097152 bytes
+Highest expansion depth: 3/40
+Expensive parser function count: 0/100
+Unstrip recursion depth: 0/20
+Unstrip post‐expand size: 0/5000000 bytes
+-->
+<!--
+Transclusion expansion time report (%,ms,calls,template)
+100.00%   49.810      1 -total
+ 12.42%    6.186      1 Template:PageParameters
+ 10.59%    5.277      2 Template:KW
+  8.18%    4.076     14 Template:Cl
+  8.13%    4.051      9 Template:Parameter
+  7.55%    3.758      1 Template:PageSyntax
+  6.94%    3.458      2 Template:CodeStart
+  6.76%    3.365      4 Template:Text
+  6.61%    3.293      2 Template:CodeEnd
+  6.36%    3.168      2 Template:OutputStart
+-->
+
+<!-- Saved in parser cache with key i4224360_mw2-mw_:pcache:idhash:533-0!canonical and timestamp 20210707104908 and revision id 23370
+ -->
+</div></div><div class="printfooter">Retrieved from "<a dir="ltr" href="index7210.html?title=PRINT&amp;oldid=23370">http://www.qb64.org/wiki/index.php?title=PRINT&amp;oldid=23370</a>"</div>
+		<div id="catlinks" class="catlinks catlinks-allhidden" data-mw="interface"></div>
+	</div>
+</div>
+
+<div id="mw-navigation">
+	<h2>Navigation menu</h2>
+	<div id="mw-head">
+		<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-personal" class="vector-menu" aria-labelledby="p-personal-label" role="navigation" 
+	 >
+	<h3 id="p-personal-label">
+		<span>Personal tools</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="pt-login"><a href="index7242.html?title=Special:UserLogin&amp;returnto=PRINT" title="You are encouraged to log in; however, it is not mandatory [o]" accesskey="o">Log in</a></li></ul>
+		
+	</div>
+</nav>
+
+
+		<div id="left-navigation">
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-namespaces" class="vector-menu vector-menu-tabs vectorTabs" aria-labelledby="p-namespaces-label" role="navigation" 
+	 >
+	<h3 id="p-namespaces-label">
+		<span>Namespaces</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="ca-nstab-main" class="selected"><a href="PRINT.html" title="View the content page [c]" accesskey="c">Page</a></li><li id="ca-talk" class="new"><a href="Talk_PRINT.html?title=Talk:PRINT&amp;action=edit&amp;redlink=1" rel="discussion" title="Discussion about the content page (page does not exist) [t]" accesskey="t">Discussion</a></li></ul>
+		
+	</div>
+</nav>
+
+
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-variants" class="vector-menu-empty emptyPortlet vector-menu vector-menu-dropdown vectorMenu" aria-labelledby="p-variants-label" role="navigation" 
+	 >
+	<input type="checkbox" class="vector-menu-checkbox vectorMenuCheckbox" aria-labelledby="p-variants-label" />
+	<h3 id="p-variants-label">
+		<span>Variants</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="menu vector-menu-content-list"></ul>
+		
+	</div>
+</nav>
+
+
+		</div>
+		<div id="right-navigation">
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-views" class="vector-menu vector-menu-tabs vectorTabs" aria-labelledby="p-views-label" role="navigation" 
+	 >
+	<h3 id="p-views-label">
+		<span>Views</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="ca-view" class="collapsible selected"><a href="PRINT.html">Read</a></li><li id="ca-viewsource" class="collapsible"><a href="indexf3ca.html?title=PRINT&amp;action=edit" title="This page is protected.&#10;You can view its source [e]" accesskey="e">View source</a></li><li id="ca-history" class="collapsible"><a href="index7a63.html?title=PRINT&amp;action=history" title="Past revisions of this page [h]" accesskey="h">View history</a></li></ul>
+		
+	</div>
+</nav>
+
+
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-cactions" class="vector-menu-empty emptyPortlet vector-menu vector-menu-dropdown vectorMenu" aria-labelledby="p-cactions-label" role="navigation" 
+	 >
+	<input type="checkbox" class="vector-menu-checkbox vectorMenuCheckbox" aria-labelledby="p-cactions-label" />
+	<h3 id="p-cactions-label">
+		<span>More</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="menu vector-menu-content-list"></ul>
+		
+	</div>
+</nav>
+
+
+			<div id="p-search" role="search">
+	<h3 >
+		<label for="searchInput">Search</label>
+	</h3>
+	<form action="https://www.qb64.org/wiki/index.php" id="searchform">
+		<div id="simpleSearch">
+			<input type="search" name="search" placeholder="Search QB64 Wiki" title="Search QB64 Wiki [f]" accesskey="f" id="searchInput"/>
+			<input type="hidden" name="title" value="Special:Search">
+			<input type="submit" name="fulltext" value="Search" title="Search the pages for this text" id="mw-searchButton" class="searchButton mw-fallbackSearchButton"/>
+			<input type="submit" name="go" value="Go" title="Go to a page with this exact name if it exists" id="searchButton" class="searchButton"/>
+		</div>
+	</form>
+</div>
+
+		</div>
+	</div>
+	
+<div id="mw-panel">
+	<div id="p-logo" role="banner">
+		<a  title="Visit the main page" class="mw-wiki-logo" href="Main_Page.html"></a>
+	</div>
+	<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-navigation" class="vector-menu vector-menu-portal portal portal-first" aria-labelledby="p-navigation-label" role="navigation" 
+	 >
+	<h3 id="p-navigation-label">
+		<span>Navigation</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="n-mainpage-description"><a href="Main_Page.html" title="Visit the main page [z]" accesskey="z">Main page</a></li><li id="n-recentchanges"><a href="Special_RecentChanges.html" title="A list of recent changes in the wiki [r]" accesskey="r">Recent changes</a></li><li id="n-randompage"><a href="SNDCOPY.html" title="Load a random page [x]" accesskey="x">Random page</a></li><li id="n-help-mediawiki"><a href="https://www.mediawiki.org/wiki/Special:MyLanguage/Help:Contents">Help about MediaWiki</a></li></ul>
+		
+	</div>
+</nav>
+
+
+	<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-tb" class="vector-menu vector-menu-portal portal" aria-labelledby="p-tb-label" role="navigation" 
+	 >
+	<h3 id="p-tb-label">
+		<span>Tools</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="t-whatlinkshere"><a href="Special_WhatLinksHere/PRINT.html" title="A list of all wiki pages that link here [j]" accesskey="j">What links here</a></li><li id="t-recentchangeslinked"><a href="Special_RecentChangesLinked/PRINT.html" rel="nofollow" title="Recent changes in pages linked from this page [k]" accesskey="k">Related changes</a></li><li id="t-specialpages"><a href="Special_SpecialPages.html" title="A list of all special pages [q]" accesskey="q">Special pages</a></li><li id="t-print"><a href="javascript:print();" rel="alternate" title="Printable version of this page [p]" accesskey="p">Printable version</a></li><li id="t-permalink"><a href="index7210.html?title=PRINT&amp;oldid=23370" title="Permanent link to this revision of the page">Permanent link</a></li><li id="t-info"><a href="indexec15.html?title=PRINT&amp;action=info" title="More information about this page">Page information</a></li></ul>
+		
+	</div>
+</nav>
+
+
+	
+</div>
+
+</div>
+
+<footer id="footer" class="mw-footer" role="contentinfo" >
+	<ul id="footer-info" >
+		<li id="footer-info-lastmod"> This page was last edited on 17 February 2021, at 12:40.</li>
+	</ul>
+	<ul id="footer-places" >
+		<li id="footer-places-privacy"><a href="My_wiki_Privacy_policy.html" title="My wiki:Privacy policy">Privacy policy</a></li>
+		<li id="footer-places-about"><a href="My_wiki_About.html" title="My wiki:About">About QB64 Wiki</a></li>
+		<li id="footer-places-disclaimer"><a href="My_wiki_General_disclaimer.html" title="My wiki:General disclaimer">Disclaimers</a></li>
+	</ul>
+	<ul id="footer-icons" class="noprint">
+		<li id="footer-poweredbyico"><a href="https://www.mediawiki.org/"><img src="resources/assets/poweredby_mediawiki_88x31.png" alt="Powered by MediaWiki" srcset="/wiki/resources/assets/poweredby_mediawiki_132x47.png 1.5x, /wiki/resources/assets/poweredby_mediawiki_176x62.png 2x" width="88" height="31" loading="lazy"/></a></li>
+	</ul>
+	<div style="clear: both;"></div>
+</footer>
+
+
+
+<script>(RLQ=window.RLQ||[]).push(function(){mw.config.set({"wgPageParseReport":{"limitreport":{"cputime":"0.057","walltime":"0.081","ppvisitednodes":{"value":204,"limit":1000000},"postexpandincludesize":{"value":2375,"limit":2097152},"templateargumentsize":{"value":303,"limit":2097152},"expansiondepth":{"value":3,"limit":40},"expensivefunctioncount":{"value":0,"limit":100},"unstrip-depth":{"value":0,"limit":20},"unstrip-size":{"value":0,"limit":5000000},"timingprofile":["100.00%   49.810      1 -total"," 12.42%    6.186      1 Template:PageParameters"," 10.59%    5.277      2 Template:KW","  8.18%    4.076     14 Template:Cl","  8.13%    4.051      9 Template:Parameter","  7.55%    3.758      1 Template:PageSyntax","  6.94%    3.458      2 Template:CodeStart","  6.76%    3.365      4 Template:Text","  6.61%    3.293      2 Template:CodeEnd","  6.36%    3.168      2 Template:OutputStart"]},"cachereport":{"timestamp":"20210707104908","ttl":86400,"transientcontent":false}}});mw.config.set({"wgBackendResponseTime":2445});});</script></body>
+<!-- Mirrored from www.qb64.org/wiki/PRINT by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 07 Aug 2021 13:12:54 GMT -->
+</html>

@@ -1,0 +1,418 @@
+
+<!DOCTYPE html>
+<html class="client-nojs" lang="en" dir="ltr">
+
+<!-- Mirrored from www.qb64.org/wiki/SELECT_CASE by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 07 Aug 2021 13:11:07 GMT -->
+<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=UTF-8" /><!-- /Added by HTTrack -->
+<head>
+<meta charset="UTF-8"/>
+<title>SELECT CASE - QB64 Wiki</title>
+<script>document.documentElement.className="client-js";RLCONF={"wgBreakFrames":!1,"wgSeparatorTransformTable":["",""],"wgDigitTransformTable":["",""],"wgDefaultDateFormat":"dmy","wgMonthNames":["","January","February","March","April","May","June","July","August","September","October","November","December"],"wgRequestId":"YOWlRadTx2XheSMCc395egAAADA","wgCSPNonce":!1,"wgCanonicalNamespace":"","wgCanonicalSpecialPageName":!1,"wgNamespaceNumber":0,"wgPageName":"SELECT_CASE","wgTitle":"SELECT CASE","wgCurRevisionId":23483,"wgRevisionId":23483,"wgArticleId":620,"wgIsArticle":!0,"wgIsRedirect":!1,"wgAction":"view","wgUserName":null,"wgUserGroups":["*"],"wgCategories":[],"wgPageContentLanguage":"en","wgPageContentModel":"wikitext","wgRelevantPageName":"SELECT_CASE","wgRelevantArticleId":620,"wgIsProbablyEditable":!1,"wgRelevantPageIsProbablyEditable":!1,"wgRestrictionEdit":[],"wgRestrictionMove":[]};RLSTATE={"site.styles":"ready","noscript":"ready","user.styles":"ready","user":
+"ready","user.options":"loading","skins.vector.styles.legacy":"ready","mediawiki.toc.styles":"ready"};RLPAGEMODULES=["site","mediawiki.page.startup","mediawiki.page.ready","mediawiki.toc","skins.vector.legacy.js"];</script>
+<script>(RLQ=window.RLQ||[]).push(function(){mw.loader.implement("user.options@1hzgi",function($,jQuery,require,module){/*@nomin*/mw.user.tokens.set({"patrolToken":"+\\","watchToken":"+\\","csrfToken":"+\\"});
+});});</script>
+<link rel="stylesheet" href="loadd8b0.css?lang=en&amp;modules=mediawiki.toc.styles%7Cskins.vector.styles.legacy&amp;only=styles&amp;skin=vector"/>
+<script async="" src="load52c0.php?lang=en&amp;modules=startup&amp;only=scripts&amp;raw=1&amp;skin=vector"></script>
+<meta name="generator" content="MediaWiki 1.35.2"/>
+<link rel="shortcut icon" href="https://www.qb64.org/favicon.ico"/>
+<link rel="search" type="application/opensearchdescription+xml" href="opensearch_desc.php" title="QB64 Wiki (en)"/>
+<link rel="EditURI" type="application/rsd+xml" href="api-result251f.xml?action=rsd"/>
+<link rel="alternate" type="application/atom+xml" title="QB64 Wiki Atom feed" href="feeda295.xml?title=Special:RecentChanges&amp;feed=atom"/>
+<!--[if lt IE 9]><script src="/wiki/resources/lib/html5shiv/html5shiv.js"></script><![endif]-->
+</head>
+<body class="mediawiki ltr sitedir-ltr mw-hide-empty-elt ns-0 ns-subject page-SELECT_CASE rootpage-SELECT_CASE skin-vector action-view skin-vector-legacy">
+<div id="mw-page-base" class="noprint"></div>
+<div id="mw-head-base" class="noprint"></div>
+<div id="content" class="mw-body" role="main">
+	<a id="top"></a>
+	<div id="siteNotice" class="mw-body-content"></div>
+	<div class="mw-indicators mw-body-content">
+	</div>
+	<h1 id="firstHeading" class="firstHeading" lang="en">SELECT CASE</h1>
+	<div id="bodyContent" class="mw-body-content">
+		<div id="siteSub" class="noprint">From QB64 Wiki</div>
+		<div id="contentSub"></div>
+		<div id="contentSub2"></div>
+		
+		<div id="jump-to-nav"></div>
+		<a class="mw-jump-link" href="#mw-head">Jump to navigation</a>
+		<a class="mw-jump-link" href="#searchInput">Jump to search</a>
+		<div id="mw-content-text" lang="en" dir="ltr" class="mw-content-ltr"><div class="mw-parser-output"><p><a class="mw-selflink selflink">SELECT CASE</a> is used to determine the program flow by comparing the value of a variable to specific CASE values.
+</p><p><br />
+</p>
+<div id="toc" class="toc" role="navigation" aria-labelledby="mw-toc-heading"><input type="checkbox" role="button" id="toctogglecheckbox" class="toctogglecheckbox" style="display:none" /><div class="toctitle" lang="en" dir="ltr"><h2 id="mw-toc-heading">Contents</h2><span class="toctogglespan"><label class="toctogglelabel" for="toctogglecheckbox"></label></span></div>
+<ul>
+<li class="toclevel-1"><a href="#Syntax"><span class="tocnumber">1</span> <span class="toctext">Syntax</span></a></li>
+<li class="toclevel-1"><a href="#Description"><span class="tocnumber">2</span> <span class="toctext">Description</span></a></li>
+<li class="toclevel-1"><a href="#Examples"><span class="tocnumber">3</span> <span class="toctext">Examples</span></a></li>
+<li class="toclevel-1"><a href="#See_also"><span class="tocnumber">4</span> <span class="toctext">See also</span></a></li>
+</ul>
+</div>
+
+<h2><span class="mw-headline" id="Syntax">Syntax</span></h2>
+<dl><dd><b>SELECT</b> [EVERY]<b>CASE</b> <i>testExpression</i>
+<dl><dd><b>CASE</b> <i>expressionList1</i>
+<dl><dd>[statement-block1]</dd></dl></dd>
+<dd>[<b>CASE</b> <i>expressionList2</i>
+<dl><dd>[statement-block2]]...</dd></dl></dd>
+<dd>[<b>CASE ELSE</b>
+<dl><dd>[statementblock-n]]</dd></dl></dd></dl></dd>
+<dd><b>END SELECT</b></dd></dl>
+<p><br />
+</p>
+<h2><span class="mw-headline" id="Description">Description</span></h2>
+<ul><li><b>SELECT CASE</b> evaluates <i>testExpression</i> and executes the first matching <a href="CASE.html" class="mw-redirect" title="CASE">CASE</a> or <a href="CASE_ELSE.html" class="mw-redirect" title="CASE ELSE">CASE ELSE</a> block and exits.</li>
+<li><b>SELECT EVERYCASE</b> allows the execution of all matching <a href="CASE.html" class="mw-redirect" title="CASE">CASE</a> blocks from top to bottom or the <a href="CASE_ELSE.html" class="mw-redirect" title="CASE ELSE">CASE ELSE</a> block.</li>
+<li>The literal, variable or expression <i>testExpression</i> comparison can result in any string or numerical type.</li>
+<li><b>Note:</b> A <i>testExpression</i> variable value can be changed inside of true CASE evaluations in SELECT EVERYCASE.</li>
+<li>A <i>testExpression</i> derived from an expression or <a href="FUNCTION.html" title="FUNCTION">FUNCTION</a> will only be determined once at the start of the block execution.</li>
+<li><span id="allCASES">Supports individual CASE values and ranges or lists of literal values as below:</span>
+<ul><li><b>CASE</b> casevalue: code <span style="color:gray">'<b>case compares one numerical or text value</b></span></li>
+<li><b>CASE</b> casevalue1 <a href="TO.html" title="TO">TO</a> casevalue2: code <span style="color:gray">'<b>case compares a range of values </b></span></li>
+<li><b>CASE</b> casevalue1, casevalue2, casevalue3: code <span style="color:gray">'<b>case compares a list of values separated by commas</b></span></li>
+<li><b>CASE IS</b> &gt; casevalue: code <span style="color:gray">'<b>case compares a value as  =, &lt;&gt;, &lt; or &gt; </b></span></li>
+<li><b>CASE ELSE</b>: code <span style="color:gray">'<b>bottom case statement executes only when no other CASE is executed.</b></span></li></ul></li>
+<li>The CASE values should cover the normal ranges of the comparison <i>testExpression</i> values.</li>
+<li>Use <b>CASE ELSE</b> before <b>END SELECT</b> if an alternative is necessary when no other case matches.</li>
+<li>CASEs should be listed in an ascending or descending values for best and fastest results.</li>
+<li><a href="STRING.html" title="STRING">STRING</a> comparisons will be based on their respective <a href="ASCII.html" title="ASCII">ASCII</a> code values where capital letters are valued less than lower case.</li>
+<li>Use <b>SELECT CASE</b> when <a href="IF...html" title="IF...THEN">IF...THEN</a> statements get too long or complicated.</li>
+<li><b>SELECT CASE</b> and <b>EVERYCASE</b> statement blocks must <b>always</b> be ended with <a href="END_SELECT.html" title="END SELECT">END SELECT</a>.</li>
+<li>Use <b><a href="Colon.html" title="Colon">colons</a></b> to execute multiple statements in one line.</li>
+<li>An <b><a href="Underscore.html" title="Underscore">underscore</a></b> can be used anywhere after the code on one line to continue it to the next line in <b>QB64</b>.</li></ul>
+<p><br />
+</p>
+<h2><span class="mw-headline" id="Examples">Examples</span></h2>
+<p><i>Example 1:</i> SELECT CASE can use literal or variable <a href="STRING.html" title="STRING">STRING</a> or numerical values in CASE comparisons:
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: Courier, monospace; background-color: darkblue; color: lightgrey; word-wrap: break-word;"> <i> </i>
+<a href="INPUT.html" title="INPUT"><span style="color:#87cefa;">INPUT</span></a> "Enter a whole number value from 1 to 40: ", value
+value1 = 10
+value2 = 20
+value3 = 30
+
+<a class="mw-selflink selflink"><span style="color:#87cefa;">SELECT CASE</span></a> value
+  <a href="CASE.html" class="mw-redirect" title="CASE"><span style="color:#87cefa;">CASE</span></a> value1: <a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> "Ten only"
+  <a href="CASE.html" class="mw-redirect" title="CASE"><span style="color:#87cefa;">CASE</span></a> value1 <a href="TO.html" title="TO"><span style="color:#87cefa;">TO</span></a> value2: <a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> "11 to 20 only" '10 is already evaluated
+  <a href="CASE.html" class="mw-redirect" title="CASE"><span style="color:#87cefa;">CASE</span></a> value1, value2, value3: <a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> "30 only" '10 and 20 are already evaluated
+  <a href="CASE_IS.html" class="mw-redirect" title="CASE IS"><span style="color:#87cefa;">CASE IS</span></a> &gt; value2: <a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> "greater than 20 but not 30" '30 is already evaluated
+  <a href="CASE_ELSE.html" class="mw-redirect" title="CASE ELSE"><span style="color:#87cefa;">CASE ELSE</span></a>: <a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> "Other value" 'values less than 10
+<a href="END_SELECT.html" title="END SELECT"><span style="color:#87cefa;">END SELECT</span></a> <i> </i>
+</p>
+<dl><dd><i>Explanation:</i> The first true CASE is executed and SELECT CASE is exited. "Other value" is printed for values less than 10.</dd></dl>
+<p><br />
+<i>Example 2:</i> SELECT CASE will execute the first CASE statement that is true and ignore all CASE evaluations after that:
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: Courier, monospace; background-color: darkblue; color: lightgrey; word-wrap: break-word;">
+a = 100
+<a class="mw-selflink selflink"><span style="color:#87cefa;">SELECT CASE</span></a> a          'designate the value to compare
+  <a href="CASE.html" class="mw-redirect" title="CASE"><span style="color:#87cefa;">CASE</span></a> 1, 3, 5, 7, 9
+    <a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> "This will not be shown."
+  <a href="CASE.html" class="mw-redirect" title="CASE"><span style="color:#87cefa;">CASE</span></a> 10
+    <a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> "This will not be shown."
+  <a href="CASE.html" class="mw-redirect" title="CASE"><span style="color:#87cefa;">CASE</span></a> 50
+    <a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> "This will not be shown."
+  <a href="CASE.html" class="mw-redirect" title="CASE"><span style="color:#87cefa;">CASE</span></a> 100
+    <a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> "This will be displayed when a equals 100"
+    <a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> "(and no other case will be checked)"
+  <a href="CASE.html" class="mw-redirect" title="CASE"><span style="color:#87cefa;">CASE</span></a> 150
+    <a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> "This will not be shown."
+  <a href="CASE_IS.html" class="mw-redirect" title="CASE IS"><span style="color:#87cefa;">CASE IS</span></a> &lt; 150
+    <a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> "This will not be shown as a previous case was true"
+  <a href="CASE.html" class="mw-redirect" title="CASE"><span style="color:#87cefa;">CASE</span></a> 50 <a href="TO.html" title="TO"><span style="color:#87cefa;">TO</span></a> 150
+    <a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> "This will not be shown as a previous case was true"
+  <a href="CASE_ELSE.html" class="mw-redirect" title="CASE ELSE"><span style="color:#87cefa;">CASE ELSE</span></a>
+   <a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> "This will only print if it gets this far!"
+<a href="END_SELECT.html" title="END SELECT"><span style="color:#87cefa;">END SELECT</span></a> <i> </i>
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: Courier; background-color: black; color: white;">This will be displayed when a equals 100
+(and no other case will be checked)
+</p>
+<dl><dd><i>Explanation:</i> The first case where a value is true is shown, the remainder are skipped. Try changing the value of <i>a</i>.</dd></dl>
+<p><br />
+<i>Example 3:</i> Same as Example 2 but, SELECT EVERYCASE will execute every CASE statement that is true.
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: Courier, monospace; background-color: darkblue; color: lightgrey; word-wrap: break-word;">
+a = 100
+<a class="mw-selflink selflink"><span style="color:#87cefa;">SELECT EVERYCASE</span></a> a          'designate the value to compare
+  <a href="CASE.html" class="mw-redirect" title="CASE"><span style="color:#87cefa;">CASE</span></a> 1, 3, 5, 7, 9
+    <a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> "This will not be shown."
+  <a href="CASE.html" class="mw-redirect" title="CASE"><span style="color:#87cefa;">CASE</span></a> 10
+    <a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> "This will not be shown."
+  <a href="CASE.html" class="mw-redirect" title="CASE"><span style="color:#87cefa;">CASE</span></a> 50
+    <a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> "This will not be shown."
+  <a href="CASE.html" class="mw-redirect" title="CASE"><span style="color:#87cefa;">CASE</span></a> 100
+    <a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> "This will be displayed when a equals 100"
+    <a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> "(and other cases will be checked)"
+  <a href="CASE.html" class="mw-redirect" title="CASE"><span style="color:#87cefa;">CASE</span></a> 150
+    <a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> "This will not be shown."
+  <a href="CASE_IS.html" class="mw-redirect" title="CASE IS"><span style="color:#87cefa;">CASE IS</span></a> &lt; 150
+    <a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> "This will be shown as 100 is less than 150"
+  <a href="CASE.html" class="mw-redirect" title="CASE"><span style="color:#87cefa;">CASE</span></a> 50 <a href="TO.html" title="TO"><span style="color:#87cefa;">TO</span></a> 150
+    <a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> "This will be shown as 100 is between 50 and 150"
+  <a href="CASE_ELSE.html" class="mw-redirect" title="CASE ELSE"><span style="color:#87cefa;">CASE ELSE</span></a>
+   <a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> "This will only print if no other CASE is true!"
+<a href="END_SELECT.html" title="END SELECT"><span style="color:#87cefa;">END SELECT</span></a> <i> </i>
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: Courier; background-color: black; color: white;">This will be displayed when a equals 100
+(and other cases will be checked)
+This will be shown as 100 is less than 150
+This will be shown as 100 is between 50 and 150
+</p>
+<dl><dd><i>Explanation:</i> <a href="CASE_ELSE.html" class="mw-redirect" title="CASE ELSE">CASE ELSE</a> will only execute if no other CASE was true. See Example 5 for more usages.</dd></dl>
+<p><br />
+<i>Example 4:</i> SELECT CASE evaluates string values by the <a href="ASC.html" title="ASC">ASC</a> code value according to <a href="ASCII.html" title="ASCII">ASCII</a>.
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: Courier, monospace; background-color: darkblue; color: lightgrey; word-wrap: break-word;"> <i> </i>
+<a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> "Enter a letter, number or punctuation mark from the keyboard: ";
+valu$ = <a href="INPUT%24.html" title="INPUT$"><span style="color:#87cefa;">INPUT$</span></a>(1)
+<a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> value$
+value1$ = "A"
+value2$ = "m"
+value3$ = "z"
+
+<a class="mw-selflink selflink"><span style="color:#87cefa;">SELECT CASE</span></a> value$
+  <a href="CASE.html" class="mw-redirect" title="CASE"><span style="color:#87cefa;">CASE</span></a> value1$: <a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> "A only"
+  <a href="CASE.html" class="mw-redirect" title="CASE"><span style="color:#87cefa;">CASE</span></a> value1$ <a href="TO.html" title="TO"><span style="color:#87cefa;">TO</span></a> value2$: <a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> "B to m" 'A is already evaluated
+  <a href="CASE.html" class="mw-redirect" title="CASE"><span style="color:#87cefa;">CASE</span></a> value1$, value2$, value3$: <a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> "z only" 'A and m are already evaluated
+  <a href="CASE_IS.html" class="mw-redirect" title="CASE IS"><span style="color:#87cefa;">CASE IS</span></a> &gt; value2$: <a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> "greater than m but not z" 'z is already evaluated
+  <a href="CASE_ELSE.html" class="mw-redirect" title="CASE ELSE"><span style="color:#87cefa;">CASE ELSE</span></a>: <a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> "other value" 'key entry below A including all numbers
+<a href="END_SELECT.html" title="END SELECT"><span style="color:#87cefa;">END SELECT</span></a> <i> </i>
+</p>
+<dl><dd><i>Notes:</i> <a href="STRING.html" title="STRING">STRING</a> values using multiple characters will be compared by the <a href="ASCII.html" title="ASCII">ASCII</a> code values sequentially from left to right. Once the equivalent code value of one string is larger than the other the evaluation stops. This allows string values to be compared and sorted alphabetically using <a href="Greater_Than.html" title="Greater Than">&gt;</a> or <a href="Less_Than.html" title="Less Than">&lt;</a> and to <a href="SWAP.html" title="SWAP">SWAP</a> values in <a href="Arrays.html" title="Arrays">arrays</a> regardless of the string lengths.</dd></dl>
+<p><br />
+<i>Example 5:</i> EVERYCASE is used to draw sections of digital numbers in a simulated LED readout using numbers from 0 to 9:
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: Courier, monospace; background-color: darkblue; color: lightgrey; word-wrap: break-word;">
+<a href="SCREEN.html" title="SCREEN"><span style="color:#87cefa;">SCREEN</span></a> 12
+DO
+  <a href="LOCATE.html" title="LOCATE"><span style="color:#87cefa;">LOCATE</span></a> 1, 1: <a href="INPUT.html" title="INPUT"><span style="color:#87cefa;">INPUT</span></a> "Enter a number 0 to 9: ", num
+  <a href="CLS.html" title="CLS"><span style="color:#87cefa;">CLS</span></a>
+  <a class="mw-selflink selflink"><span style="color:#87cefa;">SELECT EVERYCASE</span></a> num
+    <a href="CASE.html" class="mw-redirect" title="CASE"><span style="color:#87cefa;">CASE</span></a> 0, 2, 3, 5 <a href="TO.html" title="TO"><span style="color:#87cefa;">TO</span></a> 9: <a href="PSET.html" title="PSET"><span style="color:#87cefa;">PSET</span></a> (20, 20), 12
+      <a href="DRAW.html" title="DRAW"><span style="color:#87cefa;">DRAW</span></a> "E2R30F2G2L30H2BR5P12,12" 'top horiz
+    <a href="CASE.html" class="mw-redirect" title="CASE"><span style="color:#87cefa;">CASE</span></a> 0, 4 <a href="TO.html" title="TO"><span style="color:#87cefa;">TO</span></a> 6, 8, 9: <a href="PSET.html" title="PSET"><span style="color:#87cefa;">PSET</span></a> (20, 20), 12
+      <a href="DRAW.html" title="DRAW"><span style="color:#87cefa;">DRAW</span></a> "F2D30G2H2U30E2BD5P12,12" 'left top vert
+    <a href="CASE.html" class="mw-redirect" title="CASE"><span style="color:#87cefa;">CASE</span></a> 0, 2, 6, 8: <a href="PSET.html" title="PSET"><span style="color:#87cefa;">PSET</span></a> (20, 54), 12
+      <a href="DRAW.html" title="DRAW"><span style="color:#87cefa;">DRAW</span></a> "F2D30G2H2U30E2BD5P12, 12" 'left bot vert
+    <a href="CASE.html" class="mw-redirect" title="CASE"><span style="color:#87cefa;">CASE</span></a> 2 <a href="TO.html" title="TO"><span style="color:#87cefa;">TO</span></a> 6, 8, 9: <a href="PSET.html" title="PSET"><span style="color:#87cefa;">PSET</span></a> (20, 54), 12
+      <a href="DRAW.html" title="DRAW"><span style="color:#87cefa;">DRAW</span></a> "E2R30F2G2L30H2BR5P12, 12" 'middle horiz
+    <a href="CASE.html" class="mw-redirect" title="CASE"><span style="color:#87cefa;">CASE</span></a> 0 <a href="TO.html" title="TO"><span style="color:#87cefa;">TO</span></a> 4, 7 <a href="TO.html" title="TO"><span style="color:#87cefa;">TO</span></a> 9: <a href="PSET.html" title="PSET"><span style="color:#87cefa;">PSET</span></a> (54, 20), 12
+      <a href="DRAW.html" title="DRAW"><span style="color:#87cefa;">DRAW</span></a> "F2D30G2H2U30E2BD5P12,12" 'top right vert  
+    <a href="CASE.html" class="mw-redirect" title="CASE"><span style="color:#87cefa;">CASE</span></a> 0, 1, 3 <a href="TO.html" title="TO"><span style="color:#87cefa;">TO</span></a> 9: <a href="PSET.html" title="PSET"><span style="color:#87cefa;">PSET</span></a> (54, 54), 12
+      <a href="DRAW.html" title="DRAW"><span style="color:#87cefa;">DRAW</span></a> "F2D30G2H2U30E2BD5P12,12" 'bottom right vert
+    <a href="CASE.html" class="mw-redirect" title="CASE"><span style="color:#87cefa;">CASE</span></a> 0, 2, 3, 5, 6, 8: <a href="PSET.html" title="PSET"><span style="color:#87cefa;">PSET</span></a> (20, 88), 12
+      <a href="DRAW.html" title="DRAW"><span style="color:#87cefa;">DRAW</span></a> "E2R30F2G2L30H2BR5P12,12" 'bottom horiz
+    <a href="CASE_ELSE.html" class="mw-redirect" title="CASE ELSE"><span style="color:#87cefa;">CASE ELSE</span></a> 
+      <a href="LOCATE.html" title="LOCATE"><span style="color:#87cefa;">LOCATE</span></a> 20, 20: <a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> "Goodbye!"; num
+  <a href="END_SELECT.html" title="END SELECT"><span style="color:#87cefa;">END SELECT</span></a>
+<a href="LOOP.html" title="LOOP"><span style="color:#87cefa;">LOOP</span></a> <a href="UNTIL.html" title="UNTIL"><span style="color:#87cefa;">UNTIL</span></a> num &gt; 9 
+</p>
+<dl><dd><b>Note:</b> <a href="CASE_ELSE.html" class="mw-redirect" title="CASE ELSE">CASE ELSE</a> will only execute if no other CASE is true! Changing the comparison value in a CASE may affect later CASE evaluations. <b>Beware of duplicate variables inside of cases affecting the comparison values and remaining cases.</b></dd></dl>
+<p><br />
+</p>
+<h2><span class="mw-headline" id="See_also">See also</span></h2>
+<ul><li><a href="IF...html" title="IF...THEN">IF...THEN</a>, <a href="Boolean.html" title="Boolean">Boolean</a></li></ul>
+<p><br />
+</p>
+<hr />
+<center><i>Navigation:</i>
+<dl><dd><a href="Keyword_Reference_-_Alphabetical.html" title="Keyword Reference - Alphabetical">Keyword Reference - Alphabetical</a></dd>
+<dd><a href="Keyword_Reference_-_By_usage.html" title="Keyword Reference - By usage">Keyword Reference - By Usage</a></dd>
+<dd><a href="Main_Page.html" title="Main Page">Main Wiki Page</a></dd></dl></center>
+<!-- 
+NewPP limit report
+Cached time: 20210707062706
+Cache expiry: 86400
+Dynamic content: false
+Complications: []
+CPU time usage: 0.129 seconds
+Real time usage: 0.380 seconds
+Preprocessor visited node count: 862/1000000
+Post‐expand include size: 8041/2097152 bytes
+Template argument size: 1515/2097152 bytes
+Highest expansion depth: 4/40
+Expensive parser function count: 0/100
+Unstrip recursion depth: 0/20
+Unstrip post‐expand size: 27/5000000 bytes
+-->
+<!--
+Transclusion expansion time report (%,ms,calls,template)
+100.00%  145.427      1 -total
+ 13.84%   20.131    108 Template:Cl
+  9.91%   14.410      1 Template:PageNavigation
+  7.90%   11.482      5 Template:CodeEnd
+  7.86%   11.430      1 Template:PageDescription
+  7.68%   11.164      1 Template:PageSyntax
+  7.54%   10.971      8 Template:Parameter
+  7.35%   10.694      5 Template:CodeStart
+  6.90%   10.028      1 Template:PageSeeAlso
+  6.54%    9.504      2 Template:OutputStart
+-->
+
+<!-- Saved in parser cache with key i4224360_mw2-mw_:pcache:idhash:620-0!canonical and timestamp 20210707062705 and revision id 23483
+ -->
+</div></div><div class="printfooter">Retrieved from "<a dir="ltr" href="indexa756.html?title=SELECT_CASE&amp;oldid=23483">http://www.qb64.org/wiki/index.php?title=SELECT_CASE&amp;oldid=23483</a>"</div>
+		<div id="catlinks" class="catlinks catlinks-allhidden" data-mw="interface"></div>
+	</div>
+</div>
+
+<div id="mw-navigation">
+	<h2>Navigation menu</h2>
+	<div id="mw-head">
+		<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-personal" class="vector-menu" aria-labelledby="p-personal-label" role="navigation" 
+	 >
+	<h3 id="p-personal-label">
+		<span>Personal tools</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="pt-login"><a href="index3b0a.html?title=Special:UserLogin&amp;returnto=SELECT+CASE" title="You are encouraged to log in; however, it is not mandatory [o]" accesskey="o">Log in</a></li></ul>
+		
+	</div>
+</nav>
+
+
+		<div id="left-navigation">
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-namespaces" class="vector-menu vector-menu-tabs vectorTabs" aria-labelledby="p-namespaces-label" role="navigation" 
+	 >
+	<h3 id="p-namespaces-label">
+		<span>Namespaces</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="ca-nstab-main" class="selected"><a href="SELECT_CASE.html" title="View the content page [c]" accesskey="c">Page</a></li><li id="ca-talk" class="new"><a href="Talk_SELECT_CASE.html?title=Talk:SELECT_CASE&amp;action=edit&amp;redlink=1" rel="discussion" title="Discussion about the content page (page does not exist) [t]" accesskey="t">Discussion</a></li></ul>
+		
+	</div>
+</nav>
+
+
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-variants" class="vector-menu-empty emptyPortlet vector-menu vector-menu-dropdown vectorMenu" aria-labelledby="p-variants-label" role="navigation" 
+	 >
+	<input type="checkbox" class="vector-menu-checkbox vectorMenuCheckbox" aria-labelledby="p-variants-label" />
+	<h3 id="p-variants-label">
+		<span>Variants</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="menu vector-menu-content-list"></ul>
+		
+	</div>
+</nav>
+
+
+		</div>
+		<div id="right-navigation">
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-views" class="vector-menu vector-menu-tabs vectorTabs" aria-labelledby="p-views-label" role="navigation" 
+	 >
+	<h3 id="p-views-label">
+		<span>Views</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="ca-view" class="collapsible selected"><a href="SELECT_CASE.html">Read</a></li><li id="ca-viewsource" class="collapsible"><a href="index2711.html?title=SELECT_CASE&amp;action=edit" title="This page is protected.&#10;You can view its source [e]" accesskey="e">View source</a></li><li id="ca-history" class="collapsible"><a href="index6d85.html?title=SELECT_CASE&amp;action=history" title="Past revisions of this page [h]" accesskey="h">View history</a></li></ul>
+		
+	</div>
+</nav>
+
+
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-cactions" class="vector-menu-empty emptyPortlet vector-menu vector-menu-dropdown vectorMenu" aria-labelledby="p-cactions-label" role="navigation" 
+	 >
+	<input type="checkbox" class="vector-menu-checkbox vectorMenuCheckbox" aria-labelledby="p-cactions-label" />
+	<h3 id="p-cactions-label">
+		<span>More</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="menu vector-menu-content-list"></ul>
+		
+	</div>
+</nav>
+
+
+			<div id="p-search" role="search">
+	<h3 >
+		<label for="searchInput">Search</label>
+	</h3>
+	<form action="https://www.qb64.org/wiki/index.php" id="searchform">
+		<div id="simpleSearch">
+			<input type="search" name="search" placeholder="Search QB64 Wiki" title="Search QB64 Wiki [f]" accesskey="f" id="searchInput"/>
+			<input type="hidden" name="title" value="Special:Search">
+			<input type="submit" name="fulltext" value="Search" title="Search the pages for this text" id="mw-searchButton" class="searchButton mw-fallbackSearchButton"/>
+			<input type="submit" name="go" value="Go" title="Go to a page with this exact name if it exists" id="searchButton" class="searchButton"/>
+		</div>
+	</form>
+</div>
+
+		</div>
+	</div>
+	
+<div id="mw-panel">
+	<div id="p-logo" role="banner">
+		<a  title="Visit the main page" class="mw-wiki-logo" href="Main_Page.html"></a>
+	</div>
+	<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-navigation" class="vector-menu vector-menu-portal portal portal-first" aria-labelledby="p-navigation-label" role="navigation" 
+	 >
+	<h3 id="p-navigation-label">
+		<span>Navigation</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="n-mainpage-description"><a href="Main_Page.html" title="Visit the main page [z]" accesskey="z">Main page</a></li><li id="n-recentchanges"><a href="Special_RecentChanges.html" title="A list of recent changes in the wiki [r]" accesskey="r">Recent changes</a></li><li id="n-randompage"><a href="SNDCOPY.html" title="Load a random page [x]" accesskey="x">Random page</a></li><li id="n-help-mediawiki"><a href="https://www.mediawiki.org/wiki/Special:MyLanguage/Help:Contents">Help about MediaWiki</a></li></ul>
+		
+	</div>
+</nav>
+
+
+	<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-tb" class="vector-menu vector-menu-portal portal" aria-labelledby="p-tb-label" role="navigation" 
+	 >
+	<h3 id="p-tb-label">
+		<span>Tools</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="t-whatlinkshere"><a href="Special_WhatLinksHere/SELECT_CASE.html" title="A list of all wiki pages that link here [j]" accesskey="j">What links here</a></li><li id="t-recentchangeslinked"><a href="Special_RecentChangesLinked/SELECT_CASE.html" rel="nofollow" title="Recent changes in pages linked from this page [k]" accesskey="k">Related changes</a></li><li id="t-specialpages"><a href="Special_SpecialPages.html" title="A list of all special pages [q]" accesskey="q">Special pages</a></li><li id="t-print"><a href="javascript:print();" rel="alternate" title="Printable version of this page [p]" accesskey="p">Printable version</a></li><li id="t-permalink"><a href="indexa756.html?title=SELECT_CASE&amp;oldid=23483" title="Permanent link to this revision of the page">Permanent link</a></li><li id="t-info"><a href="index272d.html?title=SELECT_CASE&amp;action=info" title="More information about this page">Page information</a></li></ul>
+		
+	</div>
+</nav>
+
+
+	
+</div>
+
+</div>
+
+<footer id="footer" class="mw-footer" role="contentinfo" >
+	<ul id="footer-info" >
+		<li id="footer-info-lastmod"> This page was last edited on 19 February 2021, at 15:25.</li>
+	</ul>
+	<ul id="footer-places" >
+		<li id="footer-places-privacy"><a href="My_wiki_Privacy_policy.html" title="My wiki:Privacy policy">Privacy policy</a></li>
+		<li id="footer-places-about"><a href="My_wiki_About.html" title="My wiki:About">About QB64 Wiki</a></li>
+		<li id="footer-places-disclaimer"><a href="My_wiki_General_disclaimer.html" title="My wiki:General disclaimer">Disclaimers</a></li>
+	</ul>
+	<ul id="footer-icons" class="noprint">
+		<li id="footer-poweredbyico"><a href="https://www.mediawiki.org/"><img src="resources/assets/poweredby_mediawiki_88x31.png" alt="Powered by MediaWiki" srcset="/wiki/resources/assets/poweredby_mediawiki_132x47.png 1.5x, /wiki/resources/assets/poweredby_mediawiki_176x62.png 2x" width="88" height="31" loading="lazy"/></a></li>
+	</ul>
+	<div style="clear: both;"></div>
+</footer>
+
+
+
+<script>(RLQ=window.RLQ||[]).push(function(){mw.config.set({"wgPageParseReport":{"limitreport":{"cputime":"0.129","walltime":"0.380","ppvisitednodes":{"value":862,"limit":1000000},"postexpandincludesize":{"value":8041,"limit":2097152},"templateargumentsize":{"value":1515,"limit":2097152},"expansiondepth":{"value":4,"limit":40},"expensivefunctioncount":{"value":0,"limit":100},"unstrip-depth":{"value":0,"limit":20},"unstrip-size":{"value":27,"limit":5000000},"timingprofile":["100.00%  145.427      1 -total"," 13.84%   20.131    108 Template:Cl","  9.91%   14.410      1 Template:PageNavigation","  7.90%   11.482      5 Template:CodeEnd","  7.86%   11.430      1 Template:PageDescription","  7.68%   11.164      1 Template:PageSyntax","  7.54%   10.971      8 Template:Parameter","  7.35%   10.694      5 Template:CodeStart","  6.90%   10.028      1 Template:PageSeeAlso","  6.54%    9.504      2 Template:OutputStart"]},"cachereport":{"timestamp":"20210707062706","ttl":86400,"transientcontent":false}}});mw.config.set({"wgBackendResponseTime":2055});});</script></body>
+<!-- Mirrored from www.qb64.org/wiki/SELECT_CASE by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 07 Aug 2021 13:11:07 GMT -->
+</html>

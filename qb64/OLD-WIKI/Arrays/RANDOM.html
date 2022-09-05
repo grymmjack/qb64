@@ -1,0 +1,340 @@
+
+<!DOCTYPE html>
+<html class="client-nojs" lang="en" dir="ltr">
+
+<!-- Mirrored from www.qb64.org/wiki/RANDOM by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 07 Aug 2021 13:22:50 GMT -->
+<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=UTF-8" /><!-- /Added by HTTrack -->
+<head>
+<meta charset="UTF-8"/>
+<title>RANDOM - QB64 Wiki</title>
+<script>document.documentElement.className="client-js";RLCONF={"wgBreakFrames":!1,"wgSeparatorTransformTable":["",""],"wgDigitTransformTable":["",""],"wgDefaultDateFormat":"dmy","wgMonthNames":["","January","February","March","April","May","June","July","August","September","October","November","December"],"wgRequestId":"YOWlr6dTx2XheSMCc397JAAAAAg","wgCSPNonce":!1,"wgCanonicalNamespace":"","wgCanonicalSpecialPageName":!1,"wgNamespaceNumber":0,"wgPageName":"RANDOM","wgTitle":"RANDOM","wgCurRevisionId":22897,"wgRevisionId":22897,"wgArticleId":569,"wgIsArticle":!0,"wgIsRedirect":!1,"wgAction":"view","wgUserName":null,"wgUserGroups":["*"],"wgCategories":[],"wgPageContentLanguage":"en","wgPageContentModel":"wikitext","wgRelevantPageName":"RANDOM","wgRelevantArticleId":569,"wgIsProbablyEditable":!1,"wgRelevantPageIsProbablyEditable":!1,"wgRestrictionEdit":[],"wgRestrictionMove":[]};RLSTATE={"site.styles":"ready","noscript":"ready","user.styles":"ready","user":"ready",
+"user.options":"loading","skins.vector.styles.legacy":"ready"};RLPAGEMODULES=["site","mediawiki.page.startup","mediawiki.page.ready","skins.vector.legacy.js"];</script>
+<script>(RLQ=window.RLQ||[]).push(function(){mw.loader.implement("user.options@1hzgi",function($,jQuery,require,module){/*@nomin*/mw.user.tokens.set({"patrolToken":"+\\","watchToken":"+\\","csrfToken":"+\\"});
+});});</script>
+<link rel="stylesheet" href="load5c90.css?lang=en&amp;modules=skins.vector.styles.legacy&amp;only=styles&amp;skin=vector"/>
+<script async="" src="load52c0.php?lang=en&amp;modules=startup&amp;only=scripts&amp;raw=1&amp;skin=vector"></script>
+<meta name="generator" content="MediaWiki 1.35.2"/>
+<link rel="shortcut icon" href="https://www.qb64.org/favicon.ico"/>
+<link rel="search" type="application/opensearchdescription+xml" href="opensearch_desc.php" title="QB64 Wiki (en)"/>
+<link rel="EditURI" type="application/rsd+xml" href="api-result251f.xml?action=rsd"/>
+<link rel="alternate" type="application/atom+xml" title="QB64 Wiki Atom feed" href="feeda295.xml?title=Special:RecentChanges&amp;feed=atom"/>
+<!--[if lt IE 9]><script src="/wiki/resources/lib/html5shiv/html5shiv.js"></script><![endif]-->
+</head>
+<body class="mediawiki ltr sitedir-ltr mw-hide-empty-elt ns-0 ns-subject page-RANDOM rootpage-RANDOM skin-vector action-view skin-vector-legacy">
+<div id="mw-page-base" class="noprint"></div>
+<div id="mw-head-base" class="noprint"></div>
+<div id="content" class="mw-body" role="main">
+	<a id="top"></a>
+	<div id="siteNotice" class="mw-body-content"></div>
+	<div class="mw-indicators mw-body-content">
+	</div>
+	<h1 id="firstHeading" class="firstHeading" lang="en">RANDOM</h1>
+	<div id="bodyContent" class="mw-body-content">
+		<div id="siteSub" class="noprint">From QB64 Wiki</div>
+		<div id="contentSub"></div>
+		<div id="contentSub2"></div>
+		
+		<div id="jump-to-nav"></div>
+		<a class="mw-jump-link" href="#mw-head">Jump to navigation</a>
+		<a class="mw-jump-link" href="#searchInput">Jump to search</a>
+		<div id="mw-content-text" lang="en" dir="ltr" class="mw-content-ltr"><div class="mw-parser-output"><p><b>RANDOM</b> is used in an <a href="OPEN.html" title="OPEN">OPEN</a> statement to read(<a href="GET.html" title="GET">GET</a>) from or write(<a href="PUT.html" title="PUT">PUT</a>) to a file. 
+</p><p><br />
+</p>
+<h2><span class="mw-headline" id="Syntax">Syntax</span></h2>
+<dl><dd><dl><dd>OPEN Filename$ FOR RANDOM AS #1 [LEN = <i>recordlength%</i>]</dd></dl></dd></dl>
+<p><br />
+</p>
+<ul><li>RANDOM is the Default mode if no mode is given in the <a href="OPEN.html" title="OPEN">OPEN</a> statement.</li>
+<li>It creates the file if the legal file name given does NOT exist.</li>
+<li>As a RANDOM file, it can read or write any record using <a href="GET.html" title="GET">GET</a> and/or <a href="PUT.html" title="PUT">PUT</a> statements.</li>
+<li><i>Recordlength%</i> is determined by getting the LEN of a <a href="TYPE.html" title="TYPE">TYPE</a> variable or a <a href="FIELD.html" title="FIELD">FIELD</a> statement.</li></ul>
+<dl><dd><dl><dd><a href="STRING.html" title="STRING">STRING</a> = 1 byte/character, <a href="INTEGER.html" title="INTEGER">INTEGER</a> = 2 bytes, <a href="LONG.html" title="LONG">LONG</a> = 4 bytes, <a href="SINGLE.html" title="SINGLE">SINGLE</a> = 4 bytes <a href="DOUBLE.html" title="DOUBLE">DOUBLE</a> = 8 bytes</dd>
+<dd><a href="BYTE.html" title="BYTE">_BYTE</a> = 1 byte, <a href="INTEGER64.html" title="INTEGER64">_INTEGER64</a> = 8 bytes, <a href="FLOAT.html" title="FLOAT">_FLOAT</a> = 10 bytes (so far)</dd></dl></dd></dl>
+<ul><li>If no record length is used in the <a href="OPEN.html" title="OPEN">OPEN</a> statement, the default record size is 128 bytes except for the last record.</li>
+<li>A record length cannot exceed 32767 or an <a href="ERROR_Codes.html" title="ERROR Codes">error</a> will occur!</li>
+<li>To determine the number of records in a file the records% = <a href="LOF.html" title="LOF">LOF</a> \ recordlength%.</li>
+<li>When <b>variable length strings</b> are PUT into RANDOM files the record length must exceed the maximum string entry by:</li></ul>
+<dl><dd><dl><dd>2 bytes are reserved for recording variable string lengths up to 32767 bytes (LEN = longest + 2)</dd>
+<dd>8 bytes are reserved for recording variable string lengths exceeding 32767 bytes (LEN = longest + 8)</dd></dl></dd></dl>
+<ul><li>A serial communication port can also be opened for RANDOM in an <a href="OPEN_COM.html" title="OPEN COM">OPEN COM</a> statement.</li></ul>
+<p><br />
+<i>Example 1:</i> Function that finds a RANDOM file's record number for a string value such as a phone number.
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: Courier, monospace; background-color: darkblue; color: lightgrey; word-wrap: break-word;"> <i> </i>
+<a href="TYPE.html" title="TYPE"><span style="color:#87cefa;">TYPE</span></a> customer
+  age <a href="AS.html" title="AS"><span style="color:#87cefa;">AS</span></a> <a href="INTEGER.html" title="INTEGER"><span style="color:#87cefa;">INTEGER</span></a>
+  phone <a href="AS.html" title="AS"><span style="color:#87cefa;">AS</span></a> <a href="STRING.html" title="STRING"><span style="color:#87cefa;">STRING</span></a> * 10
+<a href="END.html" title="END"><span style="color:#87cefa;">END</span></a> <a href="TYPE.html" title="TYPE"><span style="color:#87cefa;">TYPE</span></a>
+
+<a href="DIM.html" title="DIM"><span style="color:#87cefa;">DIM</span></a> <a href="SHARED.html" title="SHARED"><span style="color:#87cefa;">SHARED</span></a> cust <a href="AS.html" title="AS"><span style="color:#87cefa;">AS</span></a> customer, recLEN
+recLEN = <a href="LEN.html" title="LEN"><span style="color:#87cefa;">LEN</span></a>(cust)            'get the length of the record type
+<a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> "Rec<a href="LEN.html" title="LEN"><span style="color:#87cefa;">LEN</span></a>:"; recLEN
+
+<a href="OPEN.html" title="OPEN"><span style="color:#87cefa;">OPEN</span></a> "randfile.rec" <a href="FOR...html" title="FOR...NEXT"><span style="color:#87cefa;">FOR</span></a> <a class="mw-selflink selflink"><span style="color:#87cefa;">RANDOM</span></a> <a href="AS.html" title="AS"><span style="color:#87cefa;">AS</span></a> #1 <a href="LEN.html" title="LEN"><span style="color:#87cefa;">LEN</span></a> = recLEN
+<a href="FOR...html" title="FOR...NEXT"><span style="color:#87cefa;">FOR</span></a> i = 1 <a href="TO.html" title="TO"><span style="color:#87cefa;">TO</span></a> 4
+  <a href="READ.html" title="READ"><span style="color:#87cefa;">READ</span></a> cust.age, cust.phone
+  <a href="PUT.html" title="PUT"><span style="color:#87cefa;">PUT</span></a> #1, , cust
+<a href="NEXT.html" title="NEXT"><span style="color:#87cefa;">NEXT</span></a>
+<a href="CLOSE.html" title="CLOSE"><span style="color:#87cefa;">CLOSE</span></a> #1
+
+RP = RecordPos("randfile.rec", "2223456789")  'returns 0 if record not found!
+
+<a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> RP  
+
+<a href="IF...html" title="IF...THEN"><span style="color:#87cefa;">IF</span></a> RP <a href="THEN.html" title="THEN"><span style="color:#87cefa;">THEN</span></a>
+  <a href="OPEN.html" title="OPEN"><span style="color:#87cefa;">OPEN</span></a> "randfile.rec" <a href="FOR...html" title="FOR...NEXT"><span style="color:#87cefa;">FOR</span></a> <a class="mw-selflink selflink"><span style="color:#87cefa;">RANDOM</span></a> <a href="AS.html" title="AS"><span style="color:#87cefa;">AS</span></a> #2 <a href="LEN.html" title="LEN"><span style="color:#87cefa;">LEN</span></a> = recLEN
+  <a href="GET.html" title="GET"><span style="color:#87cefa;">GET</span></a> #2, RP, cust
+  <a href="CLOSE.html" title="CLOSE"><span style="color:#87cefa;">CLOSE</span></a> #2
+<a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> cust.age, cust.phone
+<a href="END_IF.html" class="mw-redirect" title="END IF"><span style="color:#87cefa;">END IF</span></a>
+
+<a href="END.html" title="END"><span style="color:#87cefa;">END</span></a>
+
+<a href="DATA.html" title="DATA"><span style="color:#87cefa;">DATA</span></a> 59,2223456789,62,4122776477,32,3335551212,49,1234567890
+
+<a href="FUNCTION.html" title="FUNCTION"><span style="color:#87cefa;">FUNCTION</span></a> RecordPos (file$, search$)
+f = <a href="FREEFILE.html" title="FREEFILE"><span style="color:#87cefa;">FREEFILE</span></a>
+<a href="OPEN.html" title="OPEN"><span style="color:#87cefa;">OPEN</span></a> file$ <a href="FOR_(file_statement).html" class="mw-redirect" title="FOR (file statement)"><span style="color:#87cefa;">FOR</span></a> <a href="INPUT_(file_mode).html" class="mw-redirect" title="INPUT (file mode)"><span style="color:#87cefa;">INPUT</span></a> <a href="AS.html" title="AS"><span style="color:#87cefa;">AS</span></a> #f
+FL = <a href="LOF.html" title="LOF"><span style="color:#87cefa;">LOF</span></a>(f)
+dat$ = <a href="INPUT%24.html" title="INPUT$"><span style="color:#87cefa;">INPUT$</span></a>(FL, f)
+<a href="CLOSE.html" title="CLOSE"><span style="color:#87cefa;">CLOSE</span></a> f
+recpos = <a href="INSTR.html" title="INSTR"><span style="color:#87cefa;">INSTR</span></a>(dat$, search$)
+<a href="IF...html" title="IF...THEN"><span style="color:#87cefa;">IF</span></a> recpos <a href="THEN.html" title="THEN"><span style="color:#87cefa;">THEN</span></a> RecordPos = recpos \ recLEN + 1 <a href="ELSE.html" title="ELSE"><span style="color:#87cefa;">ELSE</span></a> RecordPos = 0
+<a href="END_FUNCTION.html" title="END FUNCTION"><span style="color:#87cefa;">END FUNCTION</span></a> <i> </i>
+</p>
+<dl><dd><i>Note:</i> Random files can store records holding various variable types using a <a href="TYPE.html" title="TYPE">TYPE</a> definition or a <a href="FIELD.html" title="FIELD">FIELD</a> statement.</dd></dl>
+<p><br />
+<i>Example 2:</i> When not using a <a href="TYPE.html" title="TYPE">TYPE</a> or fixed length strings, QB4.5 allows RANDOM files to hold variable length strings up to 2 bytes less than the LEN = record length statement:
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: Courier, monospace; background-color: darkblue; color: lightgrey; word-wrap: break-word;"> <i> </i>
+<a href="CONTROLCHR.html" title="CONTROLCHR"><span style="color:#87cefa;">_CONTROLCHR</span></a> OFF
+<a href="OPEN.html" title="OPEN"><span style="color:#87cefa;">OPEN</span></a> "myfile.txt" <a href="FOR...html" title="FOR...NEXT"><span style="color:#87cefa;">FOR</span></a> <a href="OUTPUT.html" class="mw-redirect" title="OUTPUT"><span style="color:#87cefa;">OUTPUT</span></a> <a href="AS.html" title="AS"><span style="color:#87cefa;">AS</span></a> #1: <a href="CLOSE.html" title="CLOSE"><span style="color:#87cefa;">CLOSE</span></a> #1: ' clears former file of all entries.
+<a href="OPEN.html" title="OPEN"><span style="color:#87cefa;">OPEN</span></a> "myfile.txt" <a href="FOR...html" title="FOR...NEXT"><span style="color:#87cefa;">FOR</span></a> <a class="mw-selflink selflink"><span style="color:#87cefa;">RANDOM</span></a> <a href="AS.html" title="AS"><span style="color:#87cefa;">AS</span></a> #1 <a href="LEN.html" title="LEN"><span style="color:#87cefa;">LEN</span></a> = 13 'strings can be up to 11 bytes with 2 byte padder
+
+a$ = <a href="CHR%24.html" title="CHR$"><span style="color:#87cefa;">CHR$</span></a>(1) + <a href="CHR%24.html" title="CHR$"><span style="color:#87cefa;">CHR$</span></a>(0) + "ABCDEFGHI"
+b$ = "ABCDEFGHI"
+c$ = "1234"
+
+<a href="PUT.html" title="PUT"><span style="color:#87cefa;">PUT</span></a> #1, 1, a$
+<a href="PUT.html" title="PUT"><span style="color:#87cefa;">PUT</span></a> #1, 2, b$
+<a href="PUT.html" title="PUT"><span style="color:#87cefa;">PUT</span></a> #1, 3, c$
+
+<a href="FOR...html" title="FOR...NEXT"><span style="color:#87cefa;">FOR</span></a> i = 1 <a href="TO.html" title="TO"><span style="color:#87cefa;">TO</span></a> 3
+  <a href="GET.html" title="GET"><span style="color:#87cefa;">GET</span></a> #1, i, a$
+  <a href="PRINT.html" title="PRINT"><span style="color:#87cefa;">PRINT</span></a> a$, <a href="LEN.html" title="LEN"><span style="color:#87cefa;">LEN</span></a>(a$)
+<a href="NEXT.html" title="NEXT"><span style="color:#87cefa;">NEXT</span></a>
+
+<a href="CLOSE.html" title="CLOSE"><span style="color:#87cefa;">CLOSE</span></a> <i> </i>
+</p>
+<p style="padding: 1em; line-height:100%; margin-left:5px; white-space: pre; font-family: Courier; background-color: black; color: white;">☺ ABCDEFGHI       11
+ABCDEFGHI         9
+1234              4
+</p>
+<dl><dd><i>Note:</i> The 2 byte file padders before each string PUT will show the length of a string for GET as <a href="ASCII.html" title="ASCII">ASCII</a> characters. Padders will always be 2 bytes and strings up to the last one will be 13 bytes each no matter the length up to 11, so the file size can be determined as (2 + 11) + (2 + 9 + 2) + (2 + 4) or 13 + 13 + 2 + 4 = 32 bytes.</dd></dl>
+<p><br />
+<i>See also:</i> 
+</p>
+<ul><li><a href="GET.html" title="GET">GET</a>, <a href="PUT.html" title="PUT">PUT</a>, <a href="FIELD.html" title="FIELD">FIELD</a></li>
+<li><a href="BINARY-2.html" class="mw-redirect" title="BINARY">BINARY</a></li>
+<li><a href="SEEK.html" title="SEEK">SEEK</a>, <a href="SEEK_(statement).html" title="SEEK (statement)">SEEK (statement)</a></li></ul>
+<p><br />
+</p>
+<hr />
+<center><i>Navigation:</i>
+<dl><dd><a href="Keyword_Reference_-_Alphabetical.html" title="Keyword Reference - Alphabetical">Keyword Reference - Alphabetical</a></dd>
+<dd><a href="Keyword_Reference_-_By_usage.html" title="Keyword Reference - By usage">Keyword Reference - By Usage</a></dd>
+<dd><a href="Main_Page.html" title="Main Page">Main Wiki Page</a></dd></dl></center>
+<!-- 
+NewPP limit report
+Cached time: 20210707065852
+Cache expiry: 86400
+Dynamic content: false
+Complications: []
+CPU time usage: 0.079 seconds
+Real time usage: 0.092 seconds
+Preprocessor visited node count: 544/1000000
+Post‐expand include size: 4681/2097152 bytes
+Template argument size: 697/2097152 bytes
+Highest expansion depth: 3/40
+Expensive parser function count: 0/100
+Unstrip recursion depth: 0/20
+Unstrip post‐expand size: 0/5000000 bytes
+-->
+<!--
+Transclusion expansion time report (%,ms,calls,template)
+100.00%   32.894      1 -total
+ 24.74%    8.137     75 Template:Cl
+ 12.06%    3.966      1 Template:PageSyntax
+  9.29%    3.055      2 Template:CodeEnd
+  9.20%    3.027      2 Template:CodeStart
+  9.14%    3.008      1 Template:OutputStart
+  9.08%    2.988      1 Template:PageNavigation
+  8.86%    2.916      1 Template:OutputEnd
+-->
+
+<!-- Saved in parser cache with key i4224360_mw2-mw_:pcache:idhash:569-0!canonical and timestamp 20210707065852 and revision id 22897
+ -->
+</div></div><div class="printfooter">Retrieved from "<a dir="ltr" href="index967f.html?title=RANDOM&amp;oldid=22897">http://www.qb64.org/wiki/index.php?title=RANDOM&amp;oldid=22897</a>"</div>
+		<div id="catlinks" class="catlinks catlinks-allhidden" data-mw="interface"></div>
+	</div>
+</div>
+
+<div id="mw-navigation">
+	<h2>Navigation menu</h2>
+	<div id="mw-head">
+		<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-personal" class="vector-menu" aria-labelledby="p-personal-label" role="navigation" 
+	 >
+	<h3 id="p-personal-label">
+		<span>Personal tools</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="pt-login"><a href="index96df.html?title=Special:UserLogin&amp;returnto=RANDOM" title="You are encouraged to log in; however, it is not mandatory [o]" accesskey="o">Log in</a></li></ul>
+		
+	</div>
+</nav>
+
+
+		<div id="left-navigation">
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-namespaces" class="vector-menu vector-menu-tabs vectorTabs" aria-labelledby="p-namespaces-label" role="navigation" 
+	 >
+	<h3 id="p-namespaces-label">
+		<span>Namespaces</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="ca-nstab-main" class="selected"><a href="RANDOM.html" title="View the content page [c]" accesskey="c">Page</a></li><li id="ca-talk" class="new"><a href="Talk_RANDOM.html?title=Talk:RANDOM&amp;action=edit&amp;redlink=1" rel="discussion" title="Discussion about the content page (page does not exist) [t]" accesskey="t">Discussion</a></li></ul>
+		
+	</div>
+</nav>
+
+
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-variants" class="vector-menu-empty emptyPortlet vector-menu vector-menu-dropdown vectorMenu" aria-labelledby="p-variants-label" role="navigation" 
+	 >
+	<input type="checkbox" class="vector-menu-checkbox vectorMenuCheckbox" aria-labelledby="p-variants-label" />
+	<h3 id="p-variants-label">
+		<span>Variants</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="menu vector-menu-content-list"></ul>
+		
+	</div>
+</nav>
+
+
+		</div>
+		<div id="right-navigation">
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-views" class="vector-menu vector-menu-tabs vectorTabs" aria-labelledby="p-views-label" role="navigation" 
+	 >
+	<h3 id="p-views-label">
+		<span>Views</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="ca-view" class="collapsible selected"><a href="RANDOM.html">Read</a></li><li id="ca-viewsource" class="collapsible"><a href="index5345.html?title=RANDOM&amp;action=edit" title="This page is protected.&#10;You can view its source [e]" accesskey="e">View source</a></li><li id="ca-history" class="collapsible"><a href="index8c46.html?title=RANDOM&amp;action=history" title="Past revisions of this page [h]" accesskey="h">View history</a></li></ul>
+		
+	</div>
+</nav>
+
+
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-cactions" class="vector-menu-empty emptyPortlet vector-menu vector-menu-dropdown vectorMenu" aria-labelledby="p-cactions-label" role="navigation" 
+	 >
+	<input type="checkbox" class="vector-menu-checkbox vectorMenuCheckbox" aria-labelledby="p-cactions-label" />
+	<h3 id="p-cactions-label">
+		<span>More</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="menu vector-menu-content-list"></ul>
+		
+	</div>
+</nav>
+
+
+			<div id="p-search" role="search">
+	<h3 >
+		<label for="searchInput">Search</label>
+	</h3>
+	<form action="https://www.qb64.org/wiki/index.php" id="searchform">
+		<div id="simpleSearch">
+			<input type="search" name="search" placeholder="Search QB64 Wiki" title="Search QB64 Wiki [f]" accesskey="f" id="searchInput"/>
+			<input type="hidden" name="title" value="Special:Search">
+			<input type="submit" name="fulltext" value="Search" title="Search the pages for this text" id="mw-searchButton" class="searchButton mw-fallbackSearchButton"/>
+			<input type="submit" name="go" value="Go" title="Go to a page with this exact name if it exists" id="searchButton" class="searchButton"/>
+		</div>
+	</form>
+</div>
+
+		</div>
+	</div>
+	
+<div id="mw-panel">
+	<div id="p-logo" role="banner">
+		<a  title="Visit the main page" class="mw-wiki-logo" href="Main_Page.html"></a>
+	</div>
+	<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-navigation" class="vector-menu vector-menu-portal portal portal-first" aria-labelledby="p-navigation-label" role="navigation" 
+	 >
+	<h3 id="p-navigation-label">
+		<span>Navigation</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="n-mainpage-description"><a href="Main_Page.html" title="Visit the main page [z]" accesskey="z">Main page</a></li><li id="n-recentchanges"><a href="Special_RecentChanges.html" title="A list of recent changes in the wiki [r]" accesskey="r">Recent changes</a></li><li id="n-randompage"><a href="SNDCOPY.html" title="Load a random page [x]" accesskey="x">Random page</a></li><li id="n-help-mediawiki"><a href="https://www.mediawiki.org/wiki/Special:MyLanguage/Help:Contents">Help about MediaWiki</a></li></ul>
+		
+	</div>
+</nav>
+
+
+	<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-tb" class="vector-menu vector-menu-portal portal" aria-labelledby="p-tb-label" role="navigation" 
+	 >
+	<h3 id="p-tb-label">
+		<span>Tools</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="t-whatlinkshere"><a href="Special_WhatLinksHere/RANDOM.html" title="A list of all wiki pages that link here [j]" accesskey="j">What links here</a></li><li id="t-recentchangeslinked"><a href="Special_RecentChangesLinked/RANDOM.html" rel="nofollow" title="Recent changes in pages linked from this page [k]" accesskey="k">Related changes</a></li><li id="t-specialpages"><a href="Special_SpecialPages.html" title="A list of all special pages [q]" accesskey="q">Special pages</a></li><li id="t-print"><a href="javascript:print();" rel="alternate" title="Printable version of this page [p]" accesskey="p">Printable version</a></li><li id="t-permalink"><a href="index967f.html?title=RANDOM&amp;oldid=22897" title="Permanent link to this revision of the page">Permanent link</a></li><li id="t-info"><a href="index798d-2.html?title=RANDOM&amp;action=info" title="More information about this page">Page information</a></li></ul>
+		
+	</div>
+</nav>
+
+
+	
+</div>
+
+</div>
+
+<footer id="footer" class="mw-footer" role="contentinfo" >
+	<ul id="footer-info" >
+		<li id="footer-info-lastmod"> This page was last edited on 15 July 2020, at 16:11.</li>
+	</ul>
+	<ul id="footer-places" >
+		<li id="footer-places-privacy"><a href="My_wiki_Privacy_policy.html" title="My wiki:Privacy policy">Privacy policy</a></li>
+		<li id="footer-places-about"><a href="My_wiki_About.html" title="My wiki:About">About QB64 Wiki</a></li>
+		<li id="footer-places-disclaimer"><a href="My_wiki_General_disclaimer.html" title="My wiki:General disclaimer">Disclaimers</a></li>
+	</ul>
+	<ul id="footer-icons" class="noprint">
+		<li id="footer-poweredbyico"><a href="https://www.mediawiki.org/"><img src="resources/assets/poweredby_mediawiki_88x31.png" alt="Powered by MediaWiki" srcset="/wiki/resources/assets/poweredby_mediawiki_132x47.png 1.5x, /wiki/resources/assets/poweredby_mediawiki_176x62.png 2x" width="88" height="31" loading="lazy"/></a></li>
+	</ul>
+	<div style="clear: both;"></div>
+</footer>
+
+
+
+<script>(RLQ=window.RLQ||[]).push(function(){mw.config.set({"wgPageParseReport":{"limitreport":{"cputime":"0.079","walltime":"0.092","ppvisitednodes":{"value":544,"limit":1000000},"postexpandincludesize":{"value":4681,"limit":2097152},"templateargumentsize":{"value":697,"limit":2097152},"expansiondepth":{"value":3,"limit":40},"expensivefunctioncount":{"value":0,"limit":100},"unstrip-depth":{"value":0,"limit":20},"unstrip-size":{"value":0,"limit":5000000},"timingprofile":["100.00%   32.894      1 -total"," 24.74%    8.137     75 Template:Cl"," 12.06%    3.966      1 Template:PageSyntax","  9.29%    3.055      2 Template:CodeEnd","  9.20%    3.027      2 Template:CodeStart","  9.14%    3.008      1 Template:OutputStart","  9.08%    2.988      1 Template:PageNavigation","  8.86%    2.916      1 Template:OutputEnd"]},"cachereport":{"timestamp":"20210707065852","ttl":86400,"transientcontent":false}}});mw.config.set({"wgBackendResponseTime":1412});});</script></body>
+<!-- Mirrored from www.qb64.org/wiki/RANDOM by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 07 Aug 2021 13:22:54 GMT -->
+</html>
