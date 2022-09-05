@@ -1,0 +1,14 @@
+CONST FREQ_MAX = 32767
+CONST FREQ_MIN = 37
+CONST TIME_MAX = 0.20   '.5 sec
+CONST TIME_MIN = 0.18   '1/10th of asecond
+DO
+    _LIMIT 120
+    RANDOMIZE TIMER
+    roll:
+    r = FREQ_MIN + INT(RND * FREQ_MAX)
+    IF (r > FREQ_MAX) GOTO roll
+    t = TIME_MIN + INT(RND * TIME_MAX)
+    PRINT "SOUND";r;t
+    SOUND r, t
+LOOP UNTIL _KEYHIT
