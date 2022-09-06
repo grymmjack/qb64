@@ -15,9 +15,9 @@ DIM Angle% '    angle in degrees from bee to center of screen
 '- Main Program Begins Here -
 '----------------------------
 
-Sky& = _LOADIMAGE(".\tutorial\task15\sky.png", 32) '       load sky image into RAM
-Arrows& = _LOADIMAGE(".\tutorial\task15\arrows.png", 32) ' load arrows image into RAM
-Bee& = _LOADIMAGE(".\tutorial\task15\tbee0.png", 32) '     load bee image into RAM
+Sky& = _LOADIMAGE("sky.png", 32) '       load sky image into RAM
+Arrows& = _LOADIMAGE("arrows.png", 32) ' load arrows image into RAM
+Bee& = _LOADIMAGE("tbee0.png", 32) '     load bee image into RAM
 BeeX% = 319 '                                          set initial x coordinate of bee
 BeeY% = 70 '                                           set initial y coordinate of bee
 SCREEN _NEWIMAGE(640, 480, 32) '                       create graphics screen

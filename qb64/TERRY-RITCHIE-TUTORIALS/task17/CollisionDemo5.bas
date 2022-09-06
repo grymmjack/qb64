@@ -12,8 +12,8 @@ END TYPE
 DIM RedOval AS SPRITE '   red oval images
 DIM GreenOval AS SPRITE ' green oval images
 
-RedOval.image = _LOADIMAGE(".\tutorial\task17\redoval.png", 32) '     load red oval image image
-GreenOval.image = _LOADIMAGE(".\tutorial\task17\greenoval.png", 32) ' load green oval image
+RedOval.image = _LOADIMAGE("redoval.png", 32) '     load red oval image image
+GreenOval.image = _LOADIMAGE("greenoval.png", 32) ' load green oval image
 MakeMask RedOval '                                                    create mask for red oval image
 MakeMask GreenOval '                                                  create mask for green oval image
 SCREEN _NEWIMAGE(640, 480, 32) '                                      enter graphics screen

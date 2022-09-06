@@ -21,8 +21,8 @@ DIM x2%, y2% '            bird image lower right X,Y
 DIM Layer% '              layer counter
 
 RANDOMIZE TIMER '                                                           seed random number generator
-Sky& = _LOADIMAGE(".\tutorial\task21\sky.png", 32) '                        load sky image
-BirdSheet& = _LOADIMAGE(".\tutorial\task21\bird64x72.png", 32) '            load sprite sheet
+Sky& = _LOADIMAGE("sky.png", 32) '                        load sky image
+BirdSheet& = _LOADIMAGE("bird64x72.png", 32) '            load sprite sheet
 FOR Count% = 0 TO 19 '                                                      cycle through sprite sheet images
     BirdSprite&(Count%) = _NEWIMAGE(64, 72, 32) '                           create sprite holder
     _PUTIMAGE , BirdSheet&, BirdSprite&(Count%), (Count% * 64, 0)-(Count% * 64 + 63, 71) ' get sprite from sheet

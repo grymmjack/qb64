@@ -1,7 +1,7 @@
 DIM WilliamTell&
 DIM Count%
 
-WilliamTell& = _SNDOPEN(".\tutorial\task14\WilliamTell.ogg")
+WilliamTell& = _SNDOPEN("WilliamTell.ogg")
 PRINT
 PRINT " The first five seconds of the William Tell Overture"
 PRINT

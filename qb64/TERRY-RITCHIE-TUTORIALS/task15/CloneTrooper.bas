@@ -14,7 +14,7 @@ DIM Uuhhh& '        clone removal sound
 DIM Count% '        generic counter
 DIM x!, y% '        coordinates of image box for walking trooper
 
-Trooper& = _LOADIMAGE(".\tutorial\task15\trooper.png", 32) '    load the sprite sheet
+Trooper& = _LOADIMAGE("trooper.png", 32) '    load the sprite sheet
 Standing& = _NEWIMAGE(32, 68, 32) '                             create the standing image
 _PUTIMAGE , Trooper&, Standing&, (192, 0)-(223, 67) '           extract the standing image
 FOR Count% = 0 TO 5 '                                           cycle through six more images
@@ -24,11 +24,11 @@ FOR Count% = 0 TO 5 '                                           cycle through si
     _PUTIMAGE , Trooper&, Falling&(Count%), (46 * Count%, 68)-(46 * Count% + 45, 135) ' extract falling image
 NEXT Count%
 _FREEIMAGE Trooper& '                                           sprite sheet no longer needed
-AllRight& = _SNDOPEN(".\tutorial\task15\allright.ogg") '        load the sound files
-Blaster& = _SNDOPEN(".\tutorial\task15\blaster.ogg")
-MoveAlong& = _SNDOPEN(".\tutorial\task15\movealong.ogg")
-WhatsGoingOn& = _SNDOPEN(".\tutorial\task15\whatsgoingon.ogg")
-Uuhhh& = _SNDOPEN(".\tutorial\task15\uuhhh.ogg")
+AllRight& = _SNDOPEN("allright.ogg") '        load the sound files
+Blaster& = _SNDOPEN("blaster.ogg")
+MoveAlong& = _SNDOPEN("movealong.ogg")
+WhatsGoingOn& = _SNDOPEN("whatsgoingon.ogg")
+Uuhhh& = _SNDOPEN("uuhhh.ogg")
 _SNDPLAY MoveAlong& '                                           play sound
 SCREEN _NEWIMAGE(440, 230, 32) '                                enter graphics screen
 x! = 48 '                                                       set upper left x location

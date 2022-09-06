@@ -1,6 +1,6 @@
 DIM Phaser&
 
-Phaser& = _SNDOPEN(".\tutorial\task14\Phaser.ogg")
+Phaser& = _SNDOPEN("Phaser.ogg")
 
 PRINT
 PRINT " Press ENTER to fire phaser or ESC to quit."

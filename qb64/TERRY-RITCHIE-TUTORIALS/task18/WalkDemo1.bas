@@ -14,7 +14,7 @@ DIM Path$ '              location of sprites on drive
 
 '** Load each sprite image one at a time
 
-Path$ = ".\tutorial\task18\" '                              path to sprites
+Path$ = "" '                              path to sprites
 FOR Sprite% = 1 TO 6 '                                      load 6 sprites
     Filename$ = "walk" + _TRIM$(STR$(Sprite%)) + ".png" '   filename of sprite
     Walker&(Sprite%) = _LOADIMAGE(Path$ + Filename$, 32) '  load sprite

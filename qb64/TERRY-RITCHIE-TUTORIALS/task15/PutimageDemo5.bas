@@ -10,10 +10,10 @@ DIM SizeDir! '  direction size is going in (increasing or decreasing)
 DIM WhichBee% ' indicates which bee image to show (array index)
 DIM Buzz& '     buzzing sound
 
-Sky& = _LOADIMAGE(".\tutorial\task15\sky.png", 32) '      load sky image into memory
-Bee&(0) = _LOADIMAGE(".\tutorial\task15\tbee0.png", 32) ' load first bee image into memory
-Bee&(1) = _LOADIMAGE(".\tutorial\task15\tbee1.png", 32) ' load second bee image into memory
-Buzz& = _SNDOPEN(".\tutorial\task15\bee.ogg") '           load buzzing sound into memory
+Sky& = _LOADIMAGE("sky.png", 32) '      load sky image into memory
+Bee&(0) = _LOADIMAGE("tbee0.png", 32) ' load first bee image into memory
+Bee&(1) = _LOADIMAGE("tbee1.png", 32) ' load second bee image into memory
+Buzz& = _SNDOPEN("bee.ogg") '           load buzzing sound into memory
 BeeX% = 319 '                                             set initial x coordinate of bee
 BeeY% = 171 '                                             set initial y coordinate of bee
 BeeDir% = -1 '                                            set initial direction of bee (up)

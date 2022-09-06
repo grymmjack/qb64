@@ -46,7 +46,7 @@ DIM sa& '                  Sorcerer's Apprentice sound file
 
 SCREEN _NEWIMAGE(SWIDTH, SHEIGHT, 32) '      create 32 bit graphics screen
 _SCREENMOVE _MIDDLE '                        move window to center of desktop
-sa& = _SNDOPEN(".\tutorial\task16\apprentice.ogg") ' load sound file into RAM
+sa& = _SNDOPEN("apprentice.ogg") ' load sound file into RAM
 _SNDLOOP sa& '                               play music in continuous loop
 _MOUSEHIDE '                                 hide the mouse pointer
 _MOUSEMOVE SWIDTH \ 2, SHEIGHT \ 2 '         move mouse pointer to middle of screen

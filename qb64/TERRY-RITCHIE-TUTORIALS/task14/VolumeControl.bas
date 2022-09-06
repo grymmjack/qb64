@@ -9,7 +9,7 @@ LOCATE 13, 30
 PRINT "(press ESC key to end)"
 LOCATE 15, 23
 PRINT "UP/DOWN arrow keys to change volume."
-WilliamTell& = _SNDOPEN(".\tutorial\task14\WilliamTell.ogg") ' load OGG into RAM
+WilliamTell& = _SNDOPEN("WilliamTell.ogg") ' load OGG into RAM
 _SNDPLAY WilliamTell& '                                   play OGG file from RAM
 _SNDVOL WilliamTell&, Volume! '                           set OGG volume
 DO '                                                      MAIN LOOP begin

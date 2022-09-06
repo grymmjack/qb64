@@ -6,9 +6,9 @@ DIM r%, g%, b% '                        color attributes
 DIM Count% '                            polygon point counter
 
 SCREEN _NEWIMAGE(640, 480, 32)
-IF _FILEEXISTS(".\tutorial\task13\POINTDATA.XYP") THEN '            does data file exist?
+IF _FILEEXISTS("POINTDATA.XYP") THEN '            does data file exist?
     Handle& = FREEFILE '                                            yes, get a free file handle
-    OPEN ".\tutorial\task13\POINTDATA.XYP" FOR INPUT AS #Handle& '  open the data file
+    OPEN "POINTDATA.XYP" FOR INPUT AS #Handle& '  open the data file
     DO '                                                            main program loop
         INPUT #Handle&, NextValue% '                                get next command value
         IF NextValue% > 0 THEN '                                    end of data?

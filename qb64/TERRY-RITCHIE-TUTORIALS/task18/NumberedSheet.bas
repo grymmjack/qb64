@@ -4,7 +4,7 @@ DIM MarioSheet& ' the mario sprite sheet
 DIM x%, y% '      X,Y coordinate of sprite on sheet
 DIM Columns% '    number of sprite columns contained on sheet
 
-MarioSheet& = _LOADIMAGE(".\tutorial\task18\mario32x32.png", 32) ' load sprite cheet
+MarioSheet& = _LOADIMAGE("mario32x32.png", 32) ' load sprite cheet
 Columns% = _WIDTH(MarioSheet&) \ 32 '                              calculate number of columns on sheet
 
 SCREEN _NEWIMAGE(320, 200, 32) '                                   enter graphics screen

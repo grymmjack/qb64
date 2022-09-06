@@ -2,7 +2,7 @@ DIM Sky& '       handle to hold sky image
 DIM SkyWidth% '  width of sky image
 DIM SkyHeight% ' height of sky image
 
-Sky& = _LOADIMAGE(".\tutorial\task15\sky.png", 32) '                  load image into RAM
+Sky& = _LOADIMAGE("sky.png", 32) '                  load image into RAM
 SkyWidth% = _WIDTH(Sky&) '                                get image width
 SkyHeight% = _HEIGHT(Sky&) '                              get image height
 SCREEN _NEWIMAGE(SkyWidth%, SkyHeight%, 32) '             creat graphics screen

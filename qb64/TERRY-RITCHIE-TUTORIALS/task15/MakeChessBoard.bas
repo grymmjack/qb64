@@ -48,7 +48,7 @@ SUB MakeChessBoard ()
 
     '** Load the master graphic and parse out the individual images
 
-    ChessImage& = _LOADIMAGE(".\tutorial\task15\chess.png", 32) '   load the master graphics file
+    ChessImage& = _LOADIMAGE("chess.png", 32) '   load the master graphics file
     _PUTIMAGE , ChessImage&, ChessBoard&, (0, 70)-(591, 660) '      extract the wood board
     FOR Count% = 0 TO 3 '                                           cycle through 4 tiles
         WhiteTile&(Count%) = _NEWIMAGE(69, 69, 32) '                create white tile image

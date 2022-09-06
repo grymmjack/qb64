@@ -10,9 +10,9 @@ END TYPE
 DIM Layer(3) AS LAYER ' array of 3 layers
 DIM c% '                layer counter
 
-Layer(1).image = _LOADIMAGE(".\tutorial\task21\moonpatrol1.png", 32) ' load layer images
-Layer(2).image = _LOADIMAGE(".\tutorial\task21\moonpatrol2.png", 32)
-Layer(3).image = _LOADIMAGE(".\tutorial\task21\moonpatrol3.png", 32)
+Layer(1).image = _LOADIMAGE("moonpatrol1.png", 32) ' load layer images
+Layer(2).image = _LOADIMAGE("moonpatrol2.png", 32)
+Layer(3).image = _LOADIMAGE("moonpatrol3.png", 32)
 Layer(1).xdir = -1 '                                                   set layer direction and speed
 Layer(2).xdir = -2
 Layer(3).xdir = -4

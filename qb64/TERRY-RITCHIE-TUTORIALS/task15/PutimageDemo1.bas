@@ -5,7 +5,7 @@
 DIM Bee& '     the image file
 DIM cx%, cy% ' center x,y coordinate for image
 
-Bee& = _LOADIMAGE(".\tutorial\task15\tbee0.png", 32) '  load image file into memory
+Bee& = _LOADIMAGE("tbee0.png", 32) '  load image file into memory
 SCREEN _NEWIMAGE(640, 480, 32) '                        enter a graphics screen
 CLS , _RGB32(127, 127, 127) '                           clear the screen with gray
 LOCATE 2, 15 '                                          position text cursor

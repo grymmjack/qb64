@@ -13,7 +13,7 @@ DIM Dir% '               sprite travel direction
 
 '** Load sprite sheet and parse out individual images
 
-WalkerSheet& = _LOADIMAGE(".\tutorial\task18\walksheet104x156.png", 32)
+WalkerSheet& = _LOADIMAGE("walksheet104x156.png", 32)
 _CLEARCOLOR BRIGHTMAGENTA, WalkerSheet&
 FOR Sprite% = 0 TO 5
     Walker&(Sprite% + 1) = _NEWIMAGE(104, 156, 32)

@@ -1,6 +1,6 @@
 DIM Sky& ' sky.png image handle
 
-Sky& = _LOADIMAGE(".\tutorial\task15\sky.png", 32)
+Sky& = _LOADIMAGE("sky.png", 32)
 
 '* currently in screen 0 (text only)
 

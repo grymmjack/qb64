@@ -8,9 +8,9 @@ DIM SkyX% '     sky image x location
 DIM GroundX% '  ground image x location
 DIM PillarsX% ' pillars image x location
 
-Sky& = _LOADIMAGE(".\tutorial\task21\sky.png", 32) '          load sky image
-Ground& = _LOADIMAGE(".\tutorial\task21\tground.png", 32) '   load ground image
-Pillars& = _LOADIMAGE(".\tutorial\task21\tpillars.png", 32) ' load pillars image
+Sky& = _LOADIMAGE("sky.png", 32) '          load sky image
+Ground& = _LOADIMAGE("tground.png", 32) '   load ground image
+Pillars& = _LOADIMAGE("tpillars.png", 32) ' load pillars image
 SCREEN _NEWIMAGE(640, 480, 32) '                  create graphics csreen
 DO
     _LIMIT 60

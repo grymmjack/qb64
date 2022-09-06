@@ -8,8 +8,8 @@ DIM x%, y% '      x,y location of bullet hole
 Desktop& = _SCREENIMAGE '                                               grab screen shot
 SCREEN Desktop& '                                                       create screen from screen shot
 _FULLSCREEN '                                                           go full screen
-BulletHole& = _LOADIMAGE(".\tutorial\task15\bullethole.png", 32) '      load bullet hole image
-GunShot& = _SNDOPEN(".\tutorial\task15\gunshot.ogg") '                  load gun shot sound
+BulletHole& = _LOADIMAGE("bullethole.png", 32) '      load bullet hole image
+GunShot& = _SNDOPEN("gunshot.ogg") '                  load gun shot sound
 DO '                                                                    main program loop
     _LIMIT 30 '                                                         30 FPS
     WHILE _MOUSEINPUT: WEND '                                           get latest mouse information

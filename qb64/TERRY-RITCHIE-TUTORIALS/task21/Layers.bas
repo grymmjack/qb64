@@ -17,10 +17,10 @@ DIM BirdSprite&(19) '   20 individual bird sprites
 DIM Count% '            generic counter
 
 RANDOMIZE TIMER '                                               seed random number generator
-Sky& = _LOADIMAGE(".\tutorial\task21\sky.png", 32) '            load sky image
-Ground& = _LOADIMAGE(".\tutorial\task21\tground.png", 32) '     load ground image
-Pillars& = _LOADIMAGE(".\tutorial\task21\tpillars.png", 32) '   load pillars image
-BirdSheet& = _LOADIMAGE(".\tutorial\task21\bird64x72.png", 32) 'load sprite sheet
+Sky& = _LOADIMAGE("sky.png", 32) '            load sky image
+Ground& = _LOADIMAGE("tground.png", 32) '     load ground image
+Pillars& = _LOADIMAGE("tpillars.png", 32) '   load pillars image
+BirdSheet& = _LOADIMAGE("bird64x72.png", 32) 'load sprite sheet
 FOR Count% = 0 TO 19 '                                          cycle through sprite sheet images
     BirdSprite&(Count%) = _NEWIMAGE(64, 72, 32) '               create sprite holder
     _PUTIMAGE , BirdSheet&, BirdSprite&(Count%), (Count% * 64, 0)-(Count% * 64 + 63, 71) ' get sprite from sheet

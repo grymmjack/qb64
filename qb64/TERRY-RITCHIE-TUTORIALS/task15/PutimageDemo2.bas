@@ -6,7 +6,7 @@ DIM Bee& '     the image file
 DIM Square& '  a square image
 DIM cx%, cy% ' center x,y coordinates
 
-Bee& = _LOADIMAGE(".\tutorial\task15\tbee0.png", 32) '  load bee image file into memory
+Bee& = _LOADIMAGE("tbee0.png", 32) '  load bee image file into memory
 Square& = _NEWIMAGE(320, 320, 32) '                     create image smaller than screen in memory
 _DEST Square& '                                         square image is now destination
 CLS , _RGB32(255, 0, 255) '                             clear square with bright magenta (yuck)

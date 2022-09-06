@@ -1,7 +1,7 @@
 DIM Phaser&
 DIM Count%
 
-Phaser& = _SNDOPEN(".\tutorial\task14\Phaser.ogg")
+Phaser& = _SNDOPEN("Phaser.ogg")
 
 PRINT
 PRINT " Rapid phaser using _SNDPLAY."

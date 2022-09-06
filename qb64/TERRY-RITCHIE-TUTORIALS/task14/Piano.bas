@@ -187,7 +187,7 @@ SUB LOADPIANO ()
     DIM Path$ '           path to sound and graphics files
     DIM File$ '           sound file names
 
-    Path$ = ".\tutorial\task14\PIANO\"
+    Path$ = ""
     IF _DIREXISTS(Path$) THEN '                                        path exist?
         FOR Note% = 1 TO 88 '                                          cycle through notes
             File$ = Path$ + LTRIM$(STR$(Note%)) + ".ogg" '             construct file name

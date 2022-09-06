@@ -4,8 +4,8 @@ DIM Sky& '     sky image
 DIM Bee& '     bee image (with transparency)
 DIM Pcolor~& ' color at mouse pointer
 
-Sky& = _LOADIMAGE(".\tutorial\task16\sky.png", 32) '   load sky image
-Bee& = _LOADIMAGE(".\tutorial\task16\tbee0.png", 32) ' load transparent bee image
+Sky& = _LOADIMAGE("sky.png", 32) '   load sky image
+Bee& = _LOADIMAGE("tbee0.png", 32) ' load transparent bee image
 SCREEN _NEWIMAGE(640, 480, 32) '                       create graphics screen
 DO '                                                   begin main loop
     _LIMIT 30 '                                        30 frames per second

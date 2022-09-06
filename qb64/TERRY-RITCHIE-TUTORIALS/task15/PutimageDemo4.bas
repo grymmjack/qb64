@@ -5,7 +5,7 @@
 DIM Bee& '                   the image file
 DIM dx1%, dy1%, dx2%, dy2% ' x,y coordinates of display box
 
-Bee& = _LOADIMAGE(".\tutorial\task15\tbee0.png", 32) '  load bee image file into memory
+Bee& = _LOADIMAGE("tbee0.png", 32) '  load bee image file into memory
 SCREEN _NEWIMAGE(640, 480, 32) '                        enter a graphics screen (becomes new destination)
 dx1% = (640 - _WIDTH(Bee&)) \ 2 '                       calculate upper left x position
 dy1% = (480 - _WIDTH(Bee&)) \ 2 '                       calculate upper left y position

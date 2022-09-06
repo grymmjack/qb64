@@ -20,7 +20,7 @@ DIM Dir% '                sprite travel direction
 
 '** Load sprite sheet and record sprite locations
 
-WalkerSheet& = _LOADIMAGE(".\tutorial\task18\walksheet104x156.png", 32)
+WalkerSheet& = _LOADIMAGE("walksheet104x156.png", 32)
 _CLEARCOLOR BRIGHTMAGENTA, WalkerSheet&
 FOR Sprite% = 0 TO 5
     Walker(Sprite% + 1).x1 = Sprite% * 104

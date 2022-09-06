@@ -1,7 +1,7 @@
 DIM WilliamTell&
 DIM Seconds!
 
-WilliamTell& = _SNDOPEN(".\tutorial\task14\WilliamTell.mp3")
+WilliamTell& = _SNDOPEN("WilliamTell.mp3")
 PRINT
 PRINT " The file WilliamTell.mp3 is 216 seconds long. Enter the number of seconds"
 INPUT " to start the playing at > "; Seconds!

@@ -21,7 +21,7 @@ DIM Frame% '           frame counter
 
 '** Load sprite sheet and parse out individual sprites
 
-ZombieSheet& = _LOADIMAGE(".\tutorial\task19\zombie311x288.png", 32)
+ZombieSheet& = _LOADIMAGE("zombie311x288.png", 32)
 _CLEARCOLOR TRANSPARENT, ZombieSheet&
 FOR Sprite% = 0 TO 15
     Zombie&(Sprite%) = _NEWIMAGE(311, 288, 32)
@@ -30,11 +30,11 @@ FOR Sprite% = 0 TO 15
     '** load the zombie groan sounds
 
     IF Sprite% < 6 THEN
-        Groan&(Sprite% + 1) = _SNDOPEN(".\tutorial\task19\groan" + _TRIM$(STR$(Sprite% + 1)) + ".ogg")
+        Groan&(Sprite% + 1) = _SNDOPEN("groan" + _TRIM$(STR$(Sprite% + 1)) + ".ogg")
     END IF
 NEXT Sprite%
 _FREEIMAGE ZombieSheet& '                                  sprite sheet no longer needed
-Brains& = _LOADIMAGE(".\tutorial\task19\brains.png", 32) ' load brain image
+Brains& = _LOADIMAGE("brains.png", 32) ' load brain image
 _CLEARCOLOR TRANSPARENT, Brains& '                         set brain image transparent color
 SCREEN _NEWIMAGE(800, 600, 32) '                           enter graphics screen
 RANDOMIZE TIMER '                                          seed random number generator
@@ -220,7 +220,7 @@ FUNCTION P2PAngle (x1!, y1!, x2!, y2!) ' point to point angle calculator
     '- Output: the angle from x1,y1 to x2,y2 in degrees.                        -                                                 |
     '----------------------------------------------------------------------------
     '  _________________________________________________________________________________
-    ' |      0ø         y2-y1                                                           |
+    ' |      0ï¿½         y2-y1                                                           |
     ' |      |           (B)              x2,y2           Formula used here:            |
     ' |      |~~|~~~~~~~~~~~~~~~~~~~~~~~~~~/                                            |
     ' |      |--+                        /           radians = ATN((x2-x1)/(y2-y1))     |
@@ -237,7 +237,7 @@ FUNCTION P2PAngle (x1!, y1!, x2!, y2!) ' point to point angle calculator
     ' |      |-_   /                   *          the Arctangent of length A divided by |
     ' |      |  ~/                     |          length B is the answer in radians. To |
     ' |      | /                       V          convert the radians to degrees we     |
-    ' |      +----------------------------- 90ø   multiply the radians by 180 and then  |
+    ' |      +----------------------------- 90ï¿½   multiply the radians by 180 and then  |
     ' |    x1,y1                                  divide by -Pi.                        |
     '  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     '

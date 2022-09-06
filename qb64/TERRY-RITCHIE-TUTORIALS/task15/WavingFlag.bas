@@ -3,8 +3,8 @@ DIM Flags&(7) ' array containing individual frames of flag animation
 DIM Count% '    generic counter
 DIM Banner& '   Star Spangled Banner music
 
-AllFlags& = _LOADIMAGE(".\tutorial\task15\flags.png", 32) ' load image into memory
-Banner& = _SNDOPEN(".\tutorial\task15\anthem.ogg") '        load patriotic music into memory
+AllFlags& = _LOADIMAGE("flags.png", 32) ' load image into memory
+Banner& = _SNDOPEN("anthem.ogg") '        load patriotic music into memory
 DO '                                                        start image load loop
     Flags&(Count%) = _NEWIMAGE(256, 199, 32) '              create top row flag image holder
     Flags&(Count% + 4) = _NEWIMAGE(256, 199, 32) '          create bottom row flag image holder
