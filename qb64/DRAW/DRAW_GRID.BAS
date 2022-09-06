@@ -1,6 +1,17 @@
+'''
+' DRAW_GRID.bas
+' Draws a flexible grid. Feel free to use this for whatever you like.
+
+' @author Rick Christy <grymmjack@gmail.com>
+'
+
+' Setup screen for 320x200 32bit
 SCREEN _NEWIMAGE(320, 200, 32)
+
+' Enter fullscreen mode and keep pixels 1:1 ratio square
 _FULLSCREEN _SQUAREPIXELS
 
+' A grid consists of horizontal and vertical lines of color
 TYPE Grid
     imgWidth   AS INTEGER   ' Width of the full grid image
     imgHeight  AS INTEGER   ' Height of the full grid image
@@ -14,20 +25,22 @@ TYPE Grid
     imgHandle  AS LONG      ' Grid image handle
 END TYPE
 
+' Setup the grid object
 DIM theGrid AS Grid
-theGrid.imgWidth   = _WIDTH
-theGrid.imgHeight  = _HEIGHT
-theGrid.fgColor    = &HFF202020
-theGrid.xPos       = 0
-theGrid.yPos       = 0
-theGrid.gridWidth  = 10
-theGrid.gridHeight = 10
-theGrid.hStyle     = &B1010101010101010 ' Dotted perfect when 10x10
-theGrid.vStyle     = &B1010101010101010 ' Dotted perfect when 10x10
-' theGrid.hStyle     = &B1111111111111111 ' Solid
-' theGrid.vStyle     = &B1111111111111111 ' Solid
+theGrid.imgWidth   = _WIDTH             ' Width of the screen
+theGrid.imgHeight  = _HEIGHT            ' Height of the screen
+theGrid.fgColor    = &HFF202020         ' Fully opaque dark gray
+theGrid.xPos       = 0                  ' Left-most pixel of screen
+theGrid.yPos       = 0                  ' Top-most pixel of screen
+theGrid.gridWidth  = 10                 ' Grid width of 10 divides evenly
+theGrid.gridHeight = 10                 ' Grid height of 10 divides evenly
+theGrid.hStyle     = &B1111111111111111 ' Solid
+theGrid.vStyle     = &B1111111111111111 ' Solid
+' theGrid.hStyle     = &B1010101010101010 ' Dotted evenly when 10 x 10
+' theGrid.vStyle     = &B1010101010101010 ' Dotted evenly when 10 x 10
 theGrid.imgHandle  = _NEWIMAGE(theGrid.imgWidth, theGrid.imgHeight, 32)
 
+' Draw the grid into the grid image
 DrawGrid _
     theGrid.xPos, theGrid.yPos, _
     theGrid.imgWidth, theGrid.imgHeight, _
@@ -36,10 +49,15 @@ DrawGrid _
     theGrid.hStyle, theGrid.vStyle, _
     theGrid.imgHandle
 
+' Put the grid image onto the screen
 _PUTIMAGE (0, 0), theGrid.imgHandle
 
+' Wait for keypress
 SLEEP
+
 END
+
+
 
 ' Draws a grid onto an image
 SUB DrawGrid (xPos, yPos, w, h, gridW, gridH, fgColor&, hs, vs,imgHandle& )
