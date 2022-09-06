@@ -30,6 +30,7 @@ DIM theGrid AS Grid
 theGrid.imgWidth   = _WIDTH             ' Width of the screen
 theGrid.imgHeight  = _HEIGHT            ' Height of the screen
 theGrid.fgColor    = &HFF202020         ' Fully opaque dark gray
+' theGrid.fgColor    = &H80202020         ' Half transparent dark gray
 theGrid.xPos       = 0                  ' Left-most pixel of screen
 theGrid.yPos       = 0                  ' Top-most pixel of screen
 theGrid.gridWidth  = 10                 ' Grid width of 10 divides evenly
@@ -50,7 +51,7 @@ DrawGrid _
     theGrid.imgHandle
 
 ' Put the grid image onto the screen
-_PUTIMAGE (0, 0), theGrid.imgHandle
+_PUTIMAGE (theGrid.xPos, theGrid.yPos), theGrid.imgHandle
 
 ' Wait for keypress
 SLEEP
@@ -60,7 +61,7 @@ END
 
 
 ' Draws a grid onto an image
-SUB DrawGrid (xPos, yPos, w, h, gridW, gridH, fgColor&, hs, vs,imgHandle& )
+SUB DrawGrid (xPos, yPos, w, h, gridW, gridH, fgColor&, hs, vs, imgHandle&)
     oldDest& = _DEST
     _DEST imgHandle&
     COLOR fgColor&
