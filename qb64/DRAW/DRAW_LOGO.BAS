@@ -1,4 +1,4 @@
-SCREEN _NEWIMAGE(320, 200, 32)
+SCREEN _NEWIMAGE(640, 480, 32)
 _SCREENMOVE _MIDDLE
 
 TYPE CRAYON
@@ -31,6 +31,21 @@ RESTORE DRAW_BARS_CRAYON_BOX
 FOR i = 0 to 9
     READ DRAW_BARS_CRAYONS(i).char$, DRAW_BARS_CRAYONS(i).colr&
 NEXT i
+
+FOR row = 0 TO 5
+    FOR col = 0 TO 4
+        PRINT DRAW_LOGO$(row, col);" ";
+    NEXT col
+    PRINT
+NEXT row
+PRINT
+FOR row = 0 TO 1
+    FOR col = 0 TO 4
+        PRINT DRAW_BARS$(row, col);" ";
+    NEXT col
+    PRINT
+NEXT row
+
 
 END
 
