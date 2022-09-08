@@ -1,91 +1,92 @@
+$DEBUG
 '$DYNAMIC
-$Debug
-_SCREENMOVE 1200,400
+'$INCLUDE:'../_LIB/DUMP.BI'
 
-phrase$ = "foo bar baz"
-DIM words(LEN(phrase$)) AS STRING
-extract_words phrase$, words$()
-dump_string_array words$(), "words"
+CONST FALSE = 0: CONST TRUE = NOT FALSE
+CONST DEBUGGING = TRUE
+
+_SCREENMOVE 1200, 400
+
+phrase$ = "foo"
+' phrase$ = "foo bar baz bop bobo bilbo frodo"
+' phrase$ = "foo bar baz bop bobo bilbo frodo"
+' phrase$ = "foo bar baz bop bobo bilbo frodo"
+DIM SHARED words$(LEN(phrase$))
+str_explode phrase$, " ", words$(), wordCount%
+IF wordCount% > 0 THEN
+    REDIM _PRESERVE words$(wordCount%)
+ELSE
+    REDIM _PRESERVE words$(0)
+END IF
+PRINT dump_string_array$(words$(), "words")
 
 
 
-SUB extract_words (s$, words$())
-    DIM spaces(LEN(s$)) AS INTEGER
-    find_chars s$, " ", spaces%()
-    n = UBOUND(spaces)
-    dump_integer_array spaces%(), "spaces"
-    FOR i = 0 TO n
-        IF i + 1 <= n THEN
-            word$ = MID$(s$, spaces(i), spaces(i+1))
-            words$(i) = word$
-        ELSE
-            word$ = MID$(s$, spaces(i))
-            words$(i) = word$
+''
+' Explodes a string into an array of strings using a delimiter
+'
+' If the delimiter is not found, returns the target as dest$(0)
+' 
+' @param target$ String to explode
+' @param delim$ Delimiter
+' @param dest$() Array to explode into
+' @param numParts% The number of strings in the array
+'
+SUB str_explode (target$, delim$, dest$(), numParts%)
+    length = LEN(target$): DIM delimsPos%(length): numFound% = 0
+    str_find_pos target$, delim$, delimsPos%(), numFound%
+    IF numFound% > 0 THEN
+        REDIM _PRESERVE delimsPos%(numFound% - 1)
+    ELSE
+        dest$(0) = target$
+        numParts% = 0
+        EXIT SUB
+    END IF
+    IF DEBUGGING THEN PRINT dump_integer_array$(delimsPos%(), "delimsPos")
+    IF numFound% > 0 THEN
+        IF numFound% = 1 THEN
+            dest$(0) = LEFT$(target$, delimsPos%(0) - 1)
+            dest$(1) = MID$(target$, delimsPos%(0) + 1)
+            numParts% = 1
         END IF
-    NEXT i
-    REDIM _PRESERVE words$(UBOUND(spaces))
+        IF numFound% > 1 THEN
+            dest$(0) = LEFT$(target$, delimsPos%(0) - 1)
+            FOR i = 1 TO numFound%
+                IF i + 1 <= numFound% THEN
+                    dest$(i) = MID$(target$, delimsPos%(i - 1) + 1, delimsPos%(i) - delimsPos%(i - 1) - 1)
+                END IF
+            NEXT i
+            dest$(numFound%) = MID$(target$, delimsPos%(numFound% - 1) + 1)
+            numParts% = numFound%
+        END IF
+    END IF
 END SUB
 
 
-
-SUB find_chars (search$, char$, arrayFound%())
-    length = LEN(search$) : found = -1 : x = 0 : i = 1
+''
+' Searches for strings inside of strings and fills array with found positions
+'
+' @param target$ String to search
+' @param search$ String to search for in target
+' @param arrFound% The array to populate with positions search found in target
+' @param numFound% The number of times search found a match
+'
+SUB str_find_pos (target$, search$, arrFound%(), numFound%)
+    length = LEN(target$): found = -1: x = 0: i = 1
     DO
-        found = INSTR(i, search$, char$)
+        found = INSTR(i, target$, search$)
         IF found > 0 THEN
-            arrayFound%(x) = found
+            arrFound%(x) = found
             i = found + 1
             x = x + 1
         ELSE
             i = i + 1
         END IF
     LOOP UNTIL i = length
-    IF x > 0 THEN
-        REDIM _PRESERVE arrayFound%(x)
-    END IF
+    numFound% = x
 END SUB
 
-
-
-SUB dump_string_array (arrayString$(), label$)
-    n = UBOUND(arrayString$)
-    PRINT : PRINT label$; "$("; _TRIM$(STR$(n)); ") {"
-    FOR i = 0 TO n
-        PRINT SPC(2); "("; _TRIM$(STR$(i)); "): "; 
-        PRINT CHR$(34); arrayString$(i); CHR$(34)
-    NEXT i
-    PRINT "}" : PRINT
-END SUB
+'$INCLUDE:'../_LIB/DUMP.BM'
 
 
 
-SUB dump_integer_array (arrayInteger%(), label$)
-    n = UBOUND(arrayInteger%)
-    PRINT : PRINT label$; "%("; _TRIM$(STR$(n)); ") {"
-    FOR i = 0 TO n
-        PRINT SPC(2); "("; _TRIM$(STR$(i)); "):"; arrayInteger%(i)
-    NEXT i
-    PRINT "}" : PRINT
-END SUB
-
-
-
-SUB dump_single_array (arraySingle%(), label$)
-    n = UBOUND(arraySingle%)
-    PRINT : PRINT label$; "!("; _TRIM$(STR$(n)); ") {"
-    FOR i = 0 TO n
-        PRINT SPC(2); "("; _TRIM$(STR$(i)); "):"; arraySingle%(i)
-    NEXT i
-    PRINT "}" : PRINT
-END SUB
-
-
-
-SUB dump_long_array (arrayLong%(), label$)
-    n = UBOUND(arrayLong%)
-    PRINT : PRINT label$; "&("; _TRIM$(STR$(n)); ") {"
-    FOR i = 0 TO n
-        PRINT SPC(2); "("; _TRIM$(STR$(i)); "):"; arrayLong%(i)
-    NEXT i
-    PRINT "}" : PRINT
-END SUB

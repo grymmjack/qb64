@@ -1,0 +1,110 @@
+''
+' DUMP LIB
+'
+' Dumps variables in a human friendly way to assist in debugging.
+' Inspired by PHP print_r(): https://www.php.net/manual/en/function.print-r.php
+
+' https://www.merriam-webster.com/dictionary/dump
+' dump: to copy (data in a computer's internal storage) to an external storage 
+'       or output device
+'          ^^^^^^^^^^^^^ this.
+' 
+' @author Rick Christy <grymmjack@gmail.com
+'
+
+
+
+''
+' Dumps an array of strings
+'
+' @param arr$() Array of strings to dump
+' @param label$ Label to give the dump block
+'
+FUNCTION dump_string_array$ (arr$(), label$)
+    lb = LBOUND(arr$) : ub = UBOUND(arr$) : t$ = _TRIM$(STR$(ub - lb))
+    r$ = DUMP_NL$ + label$ + "$(" + t$ + ") {" + DUMP_NL$
+    FOR i = lb TO ub
+        i$ = _TRIM$(STR$(i))
+        l$ = _TRIM$(STR$(LEN(arr$(i))))
+        r$ = r$ + "  (" + i$ + "): " + CHR$(34) + arr$(i) + CHR$(34)
+        r$ = r$ + " [" + l$ + "]" + DUMP_NL$
+    NEXT i
+    r$ = r$ + "}" + DUMP_NL$
+    dump_string_array$ = r$
+END FUNCTION
+
+
+''
+' Dumps an array of integers
+'
+' @param arr%() Array of integers to dump
+' @param label$ Label to give the dump block
+'
+FUNCTION dump_integer_array$ (arr%(), label$)
+    lb = LBOUND(arr%) : ub = UBOUND(arr%) : t$ = _TRIM$(STR$(ub - lb))
+    r$ = DUMP_NL$ + label$ + "%(" + t$ + ") {" + DUMP_NL$
+    FOR i = lb TO ub
+        i$ = _TRIM$(STR$(i))
+        num$ = _TRIM$(STR$(arr%(i)))
+        r$ = r$ + "  (" + i$ + "): " + num$ + DUMP_NL$
+    NEXT i
+    r$ = r$ + "}" + DUMP_NL$
+    dump_integer_array$ = r$
+END FUNCTION
+
+
+''
+' Dumps an array of singles
+'
+' @param arr!() Array of singles to dump
+' @param label$ Label to give the dump block
+'
+FUNCTION dump_single_array$ (arr!(), label$)
+    lb = LBOUND(arr!) : ub = UBOUND(arr!) : t$ = _TRIM$(STR$(ub - lb))
+    r$ = DUMP_NL$ + label$ + "!(" + t$ + ") {" + DUMP_NL$
+    FOR i = lb TO ub
+        i$ = _TRIM$(STR$(i))
+        num$ = _TRIM$(STR$(arr!(i)))
+        r$ = r$ + "  (" + i$ + "): " + num$ + DUMP_NL$
+    NEXT i
+    r$ = r$ + "}" + DUMP_NL$
+    dump_single_array$ = r$
+END FUNCTION
+
+
+''
+' Dumps an array of longs
+'
+' @param arr&() Array of longs to dump
+' @param label$ Label to give the dump block
+'
+FUNCTION dump_long_array$ (arr&(), label$)
+    lb = LBOUND(arr&) : ub = UBOUND(arr&) : t$ = _TRIM$(STR$(ub - lb))
+    r$ = DUMP_NL$ + label$ + "&(" + t$ + ") {" + DUMP_NL$
+    FOR i = lb TO ub
+        i$ = _TRIM$(STR$(i))
+        num$ = _TRIM$(STR$(arr&(i)))
+        r$ = r$ + "  (" + i$ + "): " + num$ + DUMP_NL$
+    NEXT i
+    r$ = r$ + "}" + DUMP_NL$
+    dump_long_array$ = r$
+END FUNCTION
+
+
+''
+' Dumps an array of doubles
+'
+' @param arr#() Array of doubles to dump
+' @param label$ Label to give the dump block
+'
+FUNCTION dump_double_array$ (arr#(), label$)
+    lb = LBOUND(arr#) : ub = UBOUND(arr#) : t$ = _TRIM$(STR$(ub - lb))
+    r$ = DUMP_NL$ + label$ + "#(" + t$ + ") {" + DUMP_NL$
+    FOR i = lb TO ub
+        i$ = _TRIM$(STR$(i))
+        num$ = _TRIM$(STR$(arr#(i)))
+        r$ = r$ + "  (" + i$ + "): " + num$ + DUMP_NL$
+    NEXT i
+    r$ = r$ + "}" + DUMP_NL$
+    dump_double_array$ = r$
+END FUNCTION
