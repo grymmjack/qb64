@@ -5,13 +5,15 @@ $DEBUG
 CONST FALSE = 0: CONST TRUE = NOT FALSE
 CONST DEBUGGING = TRUE
 
-_SCREENMOVE 1200, 400
+SCREEN _NEWIMAGE(800, 600, 32)
+
+_SCREENMOVE 1000, 400
 
 
-' phrase$ = ""
-' phrase$ = "foo"
-' phrase$ = "foo bar"
-' phrase$ = "foo bar baz"
+phrase$ = ""
+phrase$ = "foo"
+phrase$ = "foo bar"
+phrase$ = "foo bar baz"
 phrase$ = "foo bar baz bop bobo bilbo frodo"
 DIM SHARED words$(LEN(phrase$))
 str_explode phrase$, " ", words$(), wordCount%
@@ -21,6 +23,30 @@ ELSE
     REDIM _PRESERVE words$(0)
 END IF
 PRINT dump_string_array$(words$(), "words")
+
+phrase2$ = str_implode$(words$(), "::")
+PRINT dump_string$(phrase2$, "phrase2")
+
+
+
+''
+' Implodes a string array into a string using delimiter as glue
+' 
+' @param arr$() Array to implode from
+' @param delim$ Delimiter to glue the array parts together with
+'
+FUNCTION str_implode$ (arr$(), delim$)
+    r$ = ""
+    lb = LBOUND(arr$) : ub = UBOUND(arr$)
+    FOR i = lb to ub
+        IF i + 1 <= ub THEN
+            r$ = r$ + arr$(i) + delim$
+        ELSE
+            r$ = r$ + arr$(i)
+        END IF
+    NEXT i
+    str_implode$ = r$
+END FUNCTION
 
 
 
@@ -72,6 +98,7 @@ SUB str_explode (target$, delim$, dest$(), numParts%)
         END IF
     END IF
 END SUB
+
 
 
 ''
