@@ -7,10 +7,12 @@ CONST DEBUGGING = TRUE
 
 _SCREENMOVE 1200, 400
 
-phrase$ = "foo"
-' phrase$ = "foo bar baz bop bobo bilbo frodo"
-' phrase$ = "foo bar baz bop bobo bilbo frodo"
-' phrase$ = "foo bar baz bop bobo bilbo frodo"
+
+' phrase$ = ""
+' phrase$ = "foo"
+' phrase$ = "foo bar"
+' phrase$ = "foo bar baz"
+phrase$ = "foo bar baz bop bobo bilbo frodo"
 DIM SHARED words$(LEN(phrase$))
 str_explode phrase$, " ", words$(), wordCount%
 IF wordCount% > 0 THEN
@@ -33,7 +35,10 @@ PRINT dump_string_array$(words$(), "words")
 ' @param numParts% The number of strings in the array
 '
 SUB str_explode (target$, delim$, dest$(), numParts%)
-    length = LEN(target$): DIM delimsPos%(length): numFound% = 0
+    length = LEN(target$)
+    delimLen = LEN(delim$)
+    IF length = 0 THEN EXIT SUB
+    DIM delimsPos%(length): numFound% = 0
     str_find_pos target$, delim$, delimsPos%(), numFound%
     IF numFound% > 0 THEN
         REDIM _PRESERVE delimsPos%(numFound% - 1)
@@ -45,18 +50,24 @@ SUB str_explode (target$, delim$, dest$(), numParts%)
     IF DEBUGGING THEN PRINT dump_integer_array$(delimsPos%(), "delimsPos")
     IF numFound% > 0 THEN
         IF numFound% = 1 THEN
-            dest$(0) = LEFT$(target$, delimsPos%(0) - 1)
-            dest$(1) = MID$(target$, delimsPos%(0) + 1)
+            dest$(0) = LEFT$(target$, delimsPos%(0) - delimLen)
+            dest$(1) = MID$(target$, delimsPos%(0) + delimLen)
             numParts% = 1
         END IF
         IF numFound% > 1 THEN
-            dest$(0) = LEFT$(target$, delimsPos%(0) - 1)
+            dest$(0) = LEFT$(target$, delimsPos%(0) - delimLen)
             FOR i = 1 TO numFound%
                 IF i + 1 <= numFound% THEN
-                    dest$(i) = MID$(target$, delimsPos%(i - 1) + 1, delimsPos%(i) - delimsPos%(i - 1) - 1)
+                    dest$(i) = MID$( _
+                        target$, _
+                        delimsPos%(i - 1) + delimLen, _
+                        delimsPos%(i) - delimsPos%(i - 1) - delimLen _
+                    )
                 END IF
             NEXT i
-            dest$(numFound%) = MID$(target$, delimsPos%(numFound% - 1) + 1)
+            dest$(numFound%) = MID$( _
+                target$, delimsPos%(numFound% - 1) + delimLen _
+            )
             numParts% = numFound%
         END IF
     END IF
@@ -73,11 +84,12 @@ END SUB
 '
 SUB str_find_pos (target$, search$, arrFound%(), numFound%)
     length = LEN(target$): found = -1: x = 0: i = 1
+    searchLen = LEN(search$)
     DO
         found = INSTR(i, target$, search$)
         IF found > 0 THEN
             arrFound%(x) = found
-            i = found + 1
+            i = found + searchLen
             x = x + 1
         ELSE
             i = i + 1
