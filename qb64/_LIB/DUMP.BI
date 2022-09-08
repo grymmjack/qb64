@@ -1,3 +1,15 @@
+''
+' DUMP LIB
+'
+' USAGE:
+'   Insert '$INCLUDE:'path_to/DUMP.BI' at the top of file
+'   Insert '$INCLUDE:'path_to/DUMP.BM' at the bottom of file
+'
+' @author Rick Christy <grymmjack@gmail.com>
+' @uses DUMP.BM
+'
+
+
 DIM SHARED DUMP_NL AS STRING
 $IF WIN THEN
     DUMP_NL$ = CHR$(13)
