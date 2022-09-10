@@ -7,6 +7,7 @@
         "**/*.run": true,
         "**/*_start.command": true
     },
+    "qb64.compilerPath": "/Users/gj/Downloads/qb64-2.1/qb64",
     "extensions.ignoreRecommendations": false,
     "editor.fontFamily": "\"Perfect DOS VGA 437 Win\", monospace",
     "terminal.integrated.fontFamily": "\"Perfect DOS VGA 437 Win\", monospace",
