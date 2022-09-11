@@ -1,6 +1,6 @@
 CONST FALSE = 0: CONST TRUE = NOT FALSE
 
-CANVAS& = _NEWIMAGE(_DESKTOPWIDTH, _DESKTOPHEIGHT, 256)
+CANVAS& = _NEWIMAGE(_DESKTOPWIDTH, _DESKTOPHEIGHT, 32)
 SCREEN CANVAS&
 
 w = 512
@@ -8,12 +8,10 @@ h = 256
 x = (_DESKTOPWIDTH-w) \ 2
 y = (_DESKTOPHEIGHT-h) \ 2
 
-_DEST CANVAS& : CLS ,0
-img& = _LOADIMAGE("STARFIGHTER-VGA.gif", 256)
+img& = _LOADIMAGE("STARFIGHTER-VGA.png", 256)
 
-' _PUTIMAGE (x,y)-(x+w,y+h), img&, CANVAS&
 _PUTIMAGE (x,y), img&, CANVAS&
-_FULLSCREEN _SQUAREPIXELS
+' _FULLSCREEN _SQUAREPIXELS
 
 SLEEP 
 
@@ -34,7 +32,7 @@ DIM c(255, 3) AS LONG
 
 ' Get starting palette from image using color array
 FOR z& = 0 TO UBOUND(c)
-    value32& = _PALETTECOLOR(z&, CANVAS&)
+    value32& = _PALETTECOLOR(z&, img&)
     r& = _RED32(value32&)
     g& = _GREEN32(value32&)
     b& = _BLUE32(value32&)
@@ -58,7 +56,8 @@ DO
                         c&((z + o) MOD range + startIdx, 1), _
                         c&((z + o) MOD range + startIdx, 2), _
                         c&((z + o) MOD range + startIdx, 3) _
-                    )
+                    ), img&
+                    _PUTIMAGE (x,y), img&, CANVAS&
                 NEXT z
             NEXT o
             FOR o = endIdx TO startIdx STEP -1
@@ -68,7 +67,8 @@ DO
                         c&((z + o) MOD range + startIdx, 1), _
                         c&((z + o) MOD range + startIdx, 2), _
                         c&((z + o) MOD range + startIdx, 3) _
-                    )
+                    ), img&
+                    _PUTIMAGE (x,y), img&, CANVAS&
                 NEXT z
             NEXT o
         CASE "forwards":
@@ -79,7 +79,8 @@ DO
                         c&((z + o) MOD range + startIdx, 1), _
                         c&((z + o) MOD range + startIdx, 2), _
                         c&((z + o) MOD range + startIdx, 3) _
-                    )
+                    ), img&
+                    _PUTIMAGE (x,y), img&, CANVAS&
                 NEXT z
             NEXT o
         CASE "backwards":
@@ -90,7 +91,8 @@ DO
                         c&((z + o) MOD range + startIdx, 1), _
                         c&((z + o) MOD range + startIdx, 2), _
                         c&((z + o) MOD range + startIdx, 3) _
-                    )
+                    ), img&
+                    _PUTIMAGE (x,y), img&, CANVAS&
                 NEXT z
             NEXT o
     END SELECT
