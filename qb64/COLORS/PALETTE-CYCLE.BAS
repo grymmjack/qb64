@@ -4,13 +4,13 @@ x = 0
 y = 0
 w = 512
 h = 256
-img& = _LOADIMAGE("/Users/gj/git/qb64/qb64/COLORS/STARFIGHTER.png", 256)
-_PUTIMAGE (x,y)-(x+w,y+h), img&, CANVAS&, (0, 0)-(w, h)
+' img& = _LOADIMAGE("/Users/gj/git/qb64/qb64/COLORS/STARFIGHTER.png", 256)
+' _PUTIMAGE (x,y)-(x+w,y+h), img&, CANVAS&, (0, 0)-(w, h)
 '_FULLSCREEN _SQUAREPIXELS
 
-limit    = 60 ' Loop limiter
-startIdx = 2 ' Starting palette color
-endIdx   = 10 ' Ending palette color
+limit    = 60  ' Loop limiter
+startIdx = 1   ' Starting palette color
+endIdx   = 254 ' Ending palette color
 
 ' Direction of palette cycle
 direction$ = "forwards"   
