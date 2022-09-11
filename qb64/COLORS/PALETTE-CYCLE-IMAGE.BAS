@@ -6,9 +6,9 @@ x = 0
 y = 0
 w = 512
 h = 256
-img& = _LOADIMAGE("/Users/gj/git/qb64/qb64/COLORS/STARFIGHTER.png", 256)
+img& = _LOADIMAGE("STARFIGHTER.png", 256)
 _PUTIMAGE (x,y)-(x+w,y+h), img&, CANVAS&, (0, 0)-(w, h)
-'_FULLSCREEN _SQUAREPIXELS
+_FULLSCREEN _SQUAREPIXELS
 
 limit    = 30 ' Loop limiter
 startIdx = 48 ' Starting palette color
