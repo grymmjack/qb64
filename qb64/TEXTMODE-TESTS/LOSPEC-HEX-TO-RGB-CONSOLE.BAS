@@ -14,6 +14,7 @@
 '
 $CONSOLE:ONLY
 _DEST _CONSOLE
+_CONTROLCHR OFF
 CONST ESC=27
 
 ' _FULLSCREEN _SQUAREPIXELS, _SMOOTH
@@ -105,10 +106,10 @@ NEXT I%
 
 FUNCTION RGBConsoleFG$ (r%, g%, b%)
     'ESC[38;2;{r};{g};{b}m    Set foreground color as RGB.
-    out$ = CHR$(ESC) + "[38;2;"
-    out$ = out$ + ";" + STR$(r%)
-    out$ = out$ + ";" + STR$(g%)
-    out$ = out$ + ";" + STR$(b%)
+    out$ = CHR$(ESC) + "[38;2"
+    out$ = out$ + ";" + _TRIM$(STR$(r%))
+    out$ = out$ + ";" + _TRIM$(STR$(g%))
+    out$ = out$ + ";" + _TRIM$(STR$(b%))
     out$ = out$ + "m"
     RGBConsoleFG$ = out$
 END FUNCTION
@@ -117,10 +118,10 @@ END FUNCTION
 
 FUNCTION RGBConsoleBG$ (r%, g%, b%)
     'ESC[48;2;{r};{g};{b}m    Set background color as RGB.
-    out$ = CHR$(ESC) + "[48;2;"
-    out$ = out$ + ";" + STR$(r%)
-    out$ = out$ + ";" + STR$(g%)
-    out$ = out$ + ";" + STR$(b%)
+    out$ = CHR$(ESC) + "[48;2"
+    out$ = out$ + ";" + _TRIM$(STR$(r%))
+    out$ = out$ + ";" + _TRIM$(STR$(g%))
+    out$ = out$ + ";" + _TRIM$(STR$(b%))
     out$ = out$ + "m"
     RGBConsoleBG$ = out$
 END FUNCTION
