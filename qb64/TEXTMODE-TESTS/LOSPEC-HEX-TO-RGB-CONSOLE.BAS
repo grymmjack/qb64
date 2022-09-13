@@ -81,7 +81,6 @@ PRINT STRING$(64, "-")
 
 FOR I% = 0 TO COLOR_COUNT%
     '_PALETTECOLOR I%, VAL(RGB_PAL(I%).HEX32$)
-
     IF I% = 0 THEN
         'COLOR I%, I%+1
         PRINT RGBConsoleBG(RGB_PAL(I%+1).R, RGB_PAL(I%+1).G, RGB_PAL(I%+1).B);
