@@ -1,0 +1,7 @@
+The implementation of the LZW-Compress library for QB64 and its examples
+is unlicensed and placed in the Public Domain (see PD-Unlicense.txt), it
+applies to the following files in this distribution:
+    - lzwpacker.bm
+    - docs\ (entire contents)
+    - example\LZW-HowTo.bas
+

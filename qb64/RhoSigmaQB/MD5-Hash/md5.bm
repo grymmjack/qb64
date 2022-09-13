@@ -1,0 +1,33 @@
+'+---------------+---------------------------------------------------+
+'| ###### ###### |     .--. .         .-.                            |
+'| ##  ## ##   # |     |   )|        (   ) o                         |
+'| ##  ##  ##    |     |--' |--. .-.  `-.  .  .-...--.--. .-.        |
+'| ######   ##   |     |  \ |  |(   )(   ) | (   ||  |  |(   )       |
+'| ##      ##    |     '   `'  `-`-'  `-'-' `-`-`|'  '  `-`-'`-      |
+'| ##     ##   # |                            ._.'                   |
+'| ##     ###### |  Sources & Documents placed in the Public Domain. |
+'+---------------+---------------------------------------------------+
+'|                                                                   |
+'| === md5.bm ===                                                    |
+'|                                                                   |
+'| == The FUNCTIONs to compute the MD5 Message-Digest in QB64 from   |
+'| == either a single string message or a complete file.             |
+'|                                                                   |
+'+-------------------------------------------------------------------+
+'| Done by RhoSigma, R.Heyder, provided AS IS, use at your own risk. |
+'| Find me in the QB64 Forum or mail to support@rhosigma-cw.net for  |
+'| any questions or suggestions. Thanx for your interest in my work. |
+'+-------------------------------------------------------------------+
+
+'--- docs\GetFileMD5.html
+'---------------------------------------------------------------------
+FUNCTION GetFileMD5$ (FileSpec$)
+GetFileMD5$ = FileMD5$(FileSpec$ + CHR$(0))
+END FUNCTION
+
+'--- docs\GetStringMD5.html
+'---------------------------------------------------------------------
+FUNCTION GetStringMD5$ (MsgData$)
+GetStringMD5$ = StringMD5$(MsgData$ + CHR$(0), LEN(MsgData$))
+END FUNCTION
+

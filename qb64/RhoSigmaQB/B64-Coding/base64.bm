@@ -1,0 +1,64 @@
+'+---------------+---------------------------------------------------+
+'| ###### ###### |     .--. .         .-.                            |
+'| ##  ## ##   # |     |   )|        (   ) o                         |
+'| ##  ##  ##    |     |--' |--. .-.  `-.  .  .-...--.--. .-.        |
+'| ######   ##   |     |  \ |  |(   )(   ) | (   ||  |  |(   )       |
+'| ##      ##    |     '   `'  `-`-'  `-'-' `-`-`|'  '  `-`-'`-      |
+'| ##     ##   # |                            ._.'                   |
+'| ##     ###### |  Sources & Documents placed in the Public Domain. |
+'+---------------+---------------------------------------------------+
+'|                                                                   |
+'| === base64.bm ===                                                 |
+'|                                                                   |
+'| == The library provides FUNCTIONs for Base64 en-/decoding in QB64.|
+'| == Encoding and decoding is done from string to string.           |
+'|                                                                   |
+'+-------------------------------------------------------------------+
+'| Done by RhoSigma, R.Heyder, provided AS IS, use at your own risk. |
+'| Find me in the QB64 Forum or mail to support@rhosigma-cw.net for  |
+'| any questions or suggestions. Thanx for your interest in my work. |
+'+-------------------------------------------------------------------+
+
+'--- docs\Base64Encode.html
+'---------------------------------------------------------------------
+FUNCTION Base64Encode$ (message$, wrapLen%, padFlag%, lineMode%)
+'--- option _explicit requirements ---
+DIM outSize&, numLine&, outBuff$
+'--- calc output buffer size ---
+outSize& = LEN(message$) / 3 * 4 'general encoding
+outSize& = ((outSize& + 3) AND -4) 'add padding space
+IF wrapLen% > 0 THEN
+    numLine& = outSize& / wrapLen%
+    outSize& = outSize& + (numLine& * 2) 'add CR+LF for line wraps
+END IF
+outSize& = outSize& + 256 'add a nice safety margin
+'--- base64 encoding ---
+outBuff$ = SPACE$(outSize&)
+outSize& = B64Enc&(outBuff$, message$, LEN(message$), wrapLen%, padFlag%, lineMode%)
+'--- set result ---
+Base64Encode$ = LEFT$(outBuff$, outSize&)
+END FUNCTION
+
+'--- docs\Base64Decode.html
+'---------------------------------------------------------------------
+FUNCTION Base64Decode$ (encoded$, strict%, lineMode%)
+'--- option _explicit requirements ---
+DIM outBuff$, outSize&
+'--- base64 decoding ---
+outBuff$ = SPACE$(LEN(encoded$))
+outSize& = B64Dec&(outBuff$, encoded$, LEN(encoded$), strict%, lineMode%)
+'--- check for errors & set result ---
+SELECT CASE outSize&
+    CASE B64DEC_ERROR_DAP
+        Base64Decode$ = "Base64-decoding-Error: Data after pad character."
+    CASE B64DEC_ERROR_PCW
+        Base64Decode$ = "Base64-decoding-Error: Pad character in wrong place."
+    CASE B64DEC_ERROR_SSB
+        Base64Decode$ = "Base64-decoding-Error: Single symbol block not valid."
+    CASE B64DEC_ERROR_BCI
+        Base64Decode$ = "Base64-decoding-Error: Bad character in input string."
+    CASE ELSE
+        Base64Decode$ = LEFT$(outBuff$, outSize&)
+END SELECT
+END FUNCTION
+

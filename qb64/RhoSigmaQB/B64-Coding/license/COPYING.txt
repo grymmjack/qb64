@@ -1,0 +1,21 @@
+The Base64 en-/decoding library for QB64 is based on the Base64 sources
+used in the MIME plugin of Notepad++.
+
+Although I did some changes to fit the whole thing into a QB64 library,
+I'am not the author or copyright holder of the Base64 Algorithm.
+
+----------------------------------------------------------------------
+
+The Base64 implementation of Notpad++ its MIME plugin is under the
+terms of the GNU General Public License version 2 (see GPL-2.0.txt),
+it applies to the following files in this distribution:
+    - base64.h
+
+However, the implementation of the QB64 library and its examples is
+unlicensed and placed in the Public Domain (see PD-Unlicense.txt), it
+applies to the following files in this distribution:
+    - base64.bi
+    - base64.bm
+    - docs\ (entire contents)
+    - example\Base64-HowTo.bas
+

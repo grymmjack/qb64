@@ -1,0 +1,9 @@
+The implementation of the DRF-Polygons library for QB64 and its examples
+is unlicensed and placed in the Public Domain (see PD-Unlicense.txt), it
+applies to the following files in this distribution:
+    - polygons.bm
+    - docs\ (entire contents)
+    - example\3dFuncPlot.bas
+    - example\FractalMountains.bas
+    - example\Polygons-HowTo.bas
+

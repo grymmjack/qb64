@@ -1,0 +1,22 @@
+The DES56-Crypt library for QB64 is based on the DES-56 sources found here:
+    - http://aminet.net/package/dev/gg/Crypt-1.0
+    - http://aminet.net/package/dev/gg/Crypt-2.0
+
+Although I did some changes to fit the whole thing into a QB64 library,
+I'am not the author or copyright holder of the DES-56 implementation.
+
+----------------------------------------------------------------------
+
+The DES-56 implementation is under the terms of the GNU General Public
+License version 2 (see GPL-2.0.txt), it applies to the following files
+in this distribution:
+    - des56.h
+
+However, the implementation of the QB64 library and its examples is
+unlicensed and placed in the Public Domain (see PD-Unlicense.txt), it
+applies to the following files in this distribution:
+    - des56.bi
+    - des56.bm
+    - docs\ (entire contents)
+    - example\DES56-HowTo.bas
+
