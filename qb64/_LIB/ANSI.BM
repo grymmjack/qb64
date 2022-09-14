@@ -16,6 +16,12 @@
 ' ansi_move_line_up$     Moves the cursor one one line up, scrolling if needed
 ' ansi_save_pos$         Save the cursor position
 ' ansi_restore_pos$      Restore the cursor position
+' ansi_erase_to_eos$     Erase from cursor to end of screen
+' ansi_erase_to_bos$     Erase from cursor to beginning of screen
+' ansi_erase_screen$     Erase entire screen
+' ansi_erase_to_eol$     Erase from cursor to end of line
+' ansi_erase_from_sol$   Erase from start of line to cursor
+' ansi_erase_line$       Erase line
 ' ansi_fg_256$           Sets the text foreground color using 8-bit 256 colors.
 ' ansi_bg_256$           Sets the text background color using 8-bit 256 colors.
 '
@@ -168,6 +174,72 @@ FUNCTION ansi_restore_pos$ ()
     ansi_x% = POS(0)
     ansi_y% = CSRLIN
     ansi_restore_pos$ = out$
+END FUNCTION
+
+
+''
+' Erase from cursor to end of screen
+' @return void
+FUNCTION ansi_erase_to_eos$ ()
+    out$ = CHR$(ESC) + "["
+    out$ = out$ + "0"
+    out$ = out$ + "J"
+    ansi_erase_to_eos$ = out$
+END FUNCTION
+
+
+''
+' Erase from cursor to beginning of screen
+' @return void
+FUNCTION ansi_erase_to_bos$ ()
+    out$ = CHR$(ESC) + "["
+    out$ = out$ + "1"
+    out$ = out$ + "J"
+    ansi_erase_to_bos$ = out$
+END FUNCTION
+
+
+''
+' Erase entire screen
+' @return void
+FUNCTION ansi_erase_screen$ ()
+    out$ = CHR$(ESC) + "["
+    out$ = out$ + "2"
+    out$ = out$ + "J"
+    ansi_erase_screen$ = out$
+END FUNCTION
+
+
+''
+' Erase from cursor to end of line
+' @return void
+FUNCTION ansi_erase_to_eol$ ()
+    out$ = CHR$(ESC) + "["
+    out$ = out$ + "0"
+    out$ = out$ + "K"
+    ansi_erase_to_eol$ = out$
+END FUNCTION
+
+
+''
+' Erase from start of line to cursor
+' @return void
+FUNCTION ansi_erase_from_sol$ ()
+    out$ = CHR$(ESC) + "["
+    out$ = out$ + "1"
+    out$ = out$ + "K"
+    ansi_erase_from_sol$ = out$
+END FUNCTION
+
+
+''
+' Erase line
+' @return void
+FUNCTION ansi_erase_line$ ()
+    out$ = CHR$(ESC) + "["
+    out$ = out$ + "2"
+    out$ = out$ + "K"
+    ansi_erase_line$ = out$
 END FUNCTION
 
 
