@@ -12,12 +12,12 @@
 ' @uses: https://lospec.com/palette-list/ansi32.hex
 ' @author Rick Christy <grymmjack@gmail.com>
 '
+
+' Setup the console
 $CONSOLE:ONLY
 _DEST _CONSOLE
 _CONTROLCHR OFF
 CONST ESC=27
-
-' _FULLSCREEN _SQUAREPIXELS, _SMOOTH
 
 ' Palette downloaded from LOSPEC in HEX format
 HEX_PALETTE_FILE$ = "./C64PAL.HEX"
@@ -64,8 +64,6 @@ CLOSE #1
 REDIM _PRESERVE RGB_PAL(COLOR_COUNT%) AS RGB_COLOR
 
 ' Initialize the screen
-' SCREEN _NEWIMAGE(800, 600, 256)
-' WIDTH 80, 50
 CLS
 
 ' Display the results
@@ -80,17 +78,13 @@ TEMP$ = "###       ###       ###       ###       &     &"
 PRINT STRING$(64, "-")
 
 FOR I% = 0 TO COLOR_COUNT%
-    '_PALETTECOLOR I%, VAL(RGB_PAL(I%).HEX32$)
     IF I% = 0 THEN
-        'COLOR I%, I%+1
-        PRINT RGBConsoleBG(RGB_PAL(I%+1).R, RGB_PAL(I%+1).G, RGB_PAL(I%+1).B);
-        PRINT RGBConsoleFG(RGB_PAL(I%).R, RGB_PAL(I%).G, RGB_PAL(I%).B);
+        PRINT ansi_bg_color_256(RGB_PAL(I%+1).R, RGB_PAL(I%+1).G, RGB_PAL(I%+1).B);
+        PRINT ansi_fg_color_256(RGB_PAL(I%).R, RGB_PAL(I%).G, RGB_PAL(I%).B);
     ELSE
-        'COLOR I%, 0
-        PRINT RGBConsoleBG(0,0,0);
-        PRINT RGBConsoleFG(RGB_PAL(I%).R, RGB_PAL(I%).G, RGB_PAL(I%).B);
+        PRINT ansi_bg_color_256(0,0,0);
+        PRINT ansi_fg_color_256(RGB_PAL(I%).R, RGB_PAL(I%).G, RGB_PAL(I%).B);
     END IF
-
 
     PRINT USING TEMP$; _
         I%+1, _
@@ -103,24 +97,38 @@ NEXT I%
 
 
 
-FUNCTION RGBConsoleFG$ (r%, g%, b%)
-    'ESC[38;2;{r};{g};{b}m    Set foreground color as RGB.
+''
+' Sets the console text color foreground using RGB 8-bit mode (256 colors)
+'
+' @param r% Red value 0-255
+' @param g% Green value 0-255
+' @param b% Blue value 0-255
+' @return string with ANSI escape codes for setting the color
+'
+FUNCTION ansi_fg_color_256$ (r%, g%, b%)
     out$ = CHR$(ESC) + "[38;2"
     out$ = out$ + ";" + _TRIM$(STR$(r%))
     out$ = out$ + ";" + _TRIM$(STR$(g%))
     out$ = out$ + ";" + _TRIM$(STR$(b%))
     out$ = out$ + "m"
-    RGBConsoleFG$ = out$
+    ansi_fg_color_256$ = out$
 END FUNCTION
 
 
 
-FUNCTION RGBConsoleBG$ (r%, g%, b%)
-    'ESC[48;2;{r};{g};{b}m    Set background color as RGB.
+''
+' Sets the console text color background using RGB 8-bit mode (256 colors)
+'
+' @param r% Red value 0-255
+' @param g% Green value 0-255
+' @param b% Blue value 0-255
+' @return string with ANSI escape codes for setting the color
+'
+FUNCTION ansi_bg_color_256$ (r%, g%, b%)
     out$ = CHR$(ESC) + "[48;2"
     out$ = out$ + ";" + _TRIM$(STR$(r%))
     out$ = out$ + ";" + _TRIM$(STR$(g%))
     out$ = out$ + ";" + _TRIM$(STR$(b%))
     out$ = out$ + "m"
-    RGBConsoleBG$ = out$
+    ansi_bg_color_256$ = out$
 END FUNCTION

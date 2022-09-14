@@ -29,7 +29,7 @@ END IF
 
 '--- Load the test (original) image.
 '-----
-oImg& = _LOADIMAGE("BeachGirl.jpg", 32)
+oImg& = _LOADIMAGE("../../../COLORS/gj-STARFIGHTER.png", 32)
 IF oImg& >= -1 THEN
     PRINT "ERROR: Can't load the test Image, make sure it's in the same"
     PRINT "       directory as this demo program's EXE file !!"
