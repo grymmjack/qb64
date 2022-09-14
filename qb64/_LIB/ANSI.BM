@@ -126,7 +126,7 @@ FUNCTION ansi_move_column$ (n%)
     out$ = CHR$(ESC) + "["
     out$ = out$ + _TRIM$(STR$(n%))
     out$ = out$ + "G"
-    ansi_move_lines_up$ = out$
+    ansi_move_column$ = out$
 END FUNCTION
 
 
