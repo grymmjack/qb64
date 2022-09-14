@@ -13,6 +13,9 @@
 ' ansi_move_lines_down$  Moves cursor to beginning of next line, n lines down
 ' ansi_move_lines_up$    Moves cursor to beginning of next line, n lines up
 ' ansi_move_column$      Moves the cursor to column position n
+' ansi_move_line_up$     Moves the cursor one one line up, scrolling if needed
+' ansi_save_pos$         Save the cursor position
+' ansi_restore_pos$      Restore the cursor position
 ' ansi_fg_256$           Sets the text foreground color using 8-bit 256 colors.
 ' ansi_bg_256$           Sets the text background color using 8-bit 256 colors.
 '
@@ -127,6 +130,44 @@ FUNCTION ansi_move_column$ (n%)
     out$ = out$ + _TRIM$(STR$(n%))
     out$ = out$ + "G"
     ansi_move_column$ = out$
+END FUNCTION
+
+
+''
+' Moves the cursor one one line up, scrolling if needed
+' @return string with ANSI escape codes to move the cursor
+FUNCTION ansi_move_line_up$ ()
+    out$ = CHR$(ESC)
+    out$ = out$ + "M"
+    ansi_move_line_up$ = out$
+END FUNCTION
+
+
+''
+' Save cursor position
+' @return void
+FUNCTION ansi_save_pos$ ()
+    SHARED ansi_x%
+    SHARED ansi_y%
+    out$ = CHR$(ESC) + "["
+    out$ = out$ + "s"
+    ansi_x% = POS(0)
+    ansi_y% = CSRLIN
+    ansi_save_pos$ = out$
+END FUNCTION
+
+
+''
+' Restore cursor position
+' @return void
+FUNCTION ansi_restore_pos$ ()
+    SHARED ansi_x%
+    SHARED ansi_y%
+    out$ = CHR$(ESC) + "["
+    out$ = out$ + "u"
+    ansi_x% = POS(0)
+    ansi_y% = CSRLIN
+    ansi_restore_pos$ = out$
 END FUNCTION
 
 
