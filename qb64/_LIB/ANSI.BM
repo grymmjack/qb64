@@ -3,15 +3,131 @@
 '
 ' Support for ANSI.SYS and extended codes for the terminal.
 ' 
-' FUNCTION      NOTES
-' ansi_fg_256$  Sets the text foreground color using 8-bit 256 colors.
-' ansi_bg_256$  Sets the text background color using 8-bit 256 colors.
+' FUNCTION               NOTES
+' ansi_home$             Moves the cursor to the home position (0,0)
+' ansi_locate$           Moves the cursor to the desired column and row
+' ansi_move_up$          Moves the cursor up n lines
+' ansi_move_down$        Moves the cursor down n lines
+' ansi_move_right$       Moves the cursor right n lines
+' ansi_move_left$        Moves the cursor left n lines
+' ansi_move_lines_down$  Moves cursor to beginning of next line, n lines down
+' ansi_move_lines_up$    Moves cursor to beginning of next line, n lines up
+' ansi_move_column$      Moves the cursor to column position n
+' ansi_fg_256$           Sets the text foreground color using 8-bit 256 colors.
+' ansi_bg_256$           Sets the text background color using 8-bit 256 colors.
 '
 ' @author Rick Christy <grymmjack@gmail.com>
 ' @depends ANSI.BI
 ' @see https://gist.github.com/grymmjack/9dae29a60ea65f086d0b35df96fe2291
 '
 
+
+''
+' Moves the cursor to the home position (0,0)
+'
+' @return string with ANSI escape codes to move the cursor
+FUNCTION ansi_home$ ()
+    out$ = CHR$(ESC) + "[H"
+    ansi_home$ = out$
+END FUNCTION
+
+
+''
+' Moves the cursor to the desired column and row
+' @param col% Column to move the cursor to
+' @param row% Row to move the cursor to
+' @return string with ANSI escape codes to move the cursor
+FUNCTION ansi_locate$ (col%, row%)
+    out$ = CHR$(ESC) + "["
+    out$ = out$ + _TRIM$(STR$(row%)) + ";"
+    out$ = out$ + _TRIM$(STR$(col%))
+    out$ = out$ + "H"
+    ansi_locate$ = out$
+END FUNCTION
+
+
+''
+' Moves the cursor up n lines
+' @param n% Number of lines to move the cursor up
+' @return string with ANSI escape codes to move the cursor
+FUNCTION ansi_move_up$ (n%)
+    out$ = CHR$(ESC) + "["
+    out$ = out$ + _TRIM$(STR$(n%))
+    out$ = out$ + "A"
+    ansi_move_up$ = out$
+END FUNCTION
+
+
+''
+' Moves the cursor down n lines
+' @param n% Number of lines to move the cursor down
+' @return string with ANSI escape codes to move the cursor
+FUNCTION ansi_move_down$ (n%)
+    out$ = CHR$(ESC) + "["
+    out$ = out$ + _TRIM$(STR$(n%))
+    out$ = out$ + "B"
+    ansi_move_down$ = out$
+END FUNCTION
+
+
+''
+' Moves the cursor right n lines
+' @param n% Number of lines to move the cursor right
+' @return string with ANSI escape codes to move the cursor
+FUNCTION ansi_move_right$ (n%)
+    out$ = CHR$(ESC) + "["
+    out$ = out$ + _TRIM$(STR$(n%))
+    out$ = out$ + "C"
+    ansi_move_right$ = out$
+END FUNCTION
+
+
+''
+' Moves the cursor left n lines
+' @param n% Number of lines to move the cursor left
+' @return string with ANSI escape codes to move the cursor
+FUNCTION ansi_move_left$ (n%)
+    out$ = CHR$(ESC) + "["
+    out$ = out$ + _TRIM$(STR$(n%))
+    out$ = out$ + "D"
+    ansi_move_left$ = out$
+END FUNCTION
+
+
+''
+' Moves the cursor to beginning of next line, n lines down
+' @param n% Number of lines to move the cursor down
+' @return string with ANSI escape codes to move the cursor
+FUNCTION ansi_move_lines_down$ (n%)
+    out$ = CHR$(ESC) + "["
+    out$ = out$ + _TRIM$(STR$(n%))
+    out$ = out$ + "E"
+    ansi_move_lines_down$ = out$
+END FUNCTION
+
+
+''
+' Moves the cursor to beginning of previous line, n lines up
+' @param n% Number of lines to move the cursor up
+' @return string with ANSI escape codes to move the cursor
+FUNCTION ansi_move_lines_up$ (n%)
+    out$ = CHR$(ESC) + "["
+    out$ = out$ + _TRIM$(STR$(n%))
+    out$ = out$ + "F"
+    ansi_move_lines_up$ = out$
+END FUNCTION
+
+
+''
+' Moves the cursor to column position n
+' @param n% Column to move the cursor to
+' @return string with ANSI escape codes to move the cursor
+FUNCTION ansi_move_column$ (n%)
+    out$ = CHR$(ESC) + "["
+    out$ = out$ + _TRIM$(STR$(n%))
+    out$ = out$ + "G"
+    ansi_move_lines_up$ = out$
+END FUNCTION
 
 
 ''
