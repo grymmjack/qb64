@@ -12,7 +12,7 @@
 ' @uses: https://lospec.com/palette-list/ansi32.hex
 ' @author Rick Christy <grymmjack@gmail.com>
 '
-
+'$INCLUDE:'../_LIB/ANSI.BI'
 ' Setup the console
 $CONSOLE:ONLY
 _DEST _CONSOLE
@@ -79,11 +79,11 @@ PRINT STRING$(64, "-")
 
 FOR I% = 0 TO COLOR_COUNT%
     IF I% = 0 THEN
-        PRINT ansi_bg_color_256(RGB_PAL(I%+1).R, RGB_PAL(I%+1).G, RGB_PAL(I%+1).B);
-        PRINT ansi_fg_color_256(RGB_PAL(I%).R, RGB_PAL(I%).G, RGB_PAL(I%).B);
+        PRINT ansi_bg_256(RGB_PAL(I%+1).R, RGB_PAL(I%+1).G, RGB_PAL(I%+1).B);
+        PRINT ansi_fg_256(RGB_PAL(I%).R, RGB_PAL(I%).G, RGB_PAL(I%).B);
     ELSE
-        PRINT ansi_bg_color_256(0,0,0);
-        PRINT ansi_fg_color_256(RGB_PAL(I%).R, RGB_PAL(I%).G, RGB_PAL(I%).B);
+        PRINT ansi_bg_256(0,0,0);
+        PRINT ansi_fg_256(RGB_PAL(I%).R, RGB_PAL(I%).G, RGB_PAL(I%).B);
     END IF
 
     PRINT USING TEMP$; _
@@ -95,40 +95,4 @@ FOR I% = 0 TO COLOR_COUNT%
         LTRIM$(RGB_PAL(I%).HEX32)
 NEXT I%
 
-
-
-''
-' Sets the console text color foreground using RGB 8-bit mode (256 colors)
-'
-' @param r% Red value 0-255
-' @param g% Green value 0-255
-' @param b% Blue value 0-255
-' @return string with ANSI escape codes for setting the color
-'
-FUNCTION ansi_fg_color_256$ (r%, g%, b%)
-    out$ = CHR$(ESC) + "[38;2"
-    out$ = out$ + ";" + _TRIM$(STR$(r%))
-    out$ = out$ + ";" + _TRIM$(STR$(g%))
-    out$ = out$ + ";" + _TRIM$(STR$(b%))
-    out$ = out$ + "m"
-    ansi_fg_color_256$ = out$
-END FUNCTION
-
-
-
-''
-' Sets the console text color background using RGB 8-bit mode (256 colors)
-'
-' @param r% Red value 0-255
-' @param g% Green value 0-255
-' @param b% Blue value 0-255
-' @return string with ANSI escape codes for setting the color
-'
-FUNCTION ansi_bg_color_256$ (r%, g%, b%)
-    out$ = CHR$(ESC) + "[48;2"
-    out$ = out$ + ";" + _TRIM$(STR$(r%))
-    out$ = out$ + ";" + _TRIM$(STR$(g%))
-    out$ = out$ + ";" + _TRIM$(STR$(b%))
-    out$ = out$ + "m"
-    ansi_bg_color_256$ = out$
-END FUNCTION
+'$INCLUDE:'../_LIB/ANSI.BM'

@@ -1,0 +1,50 @@
+''
+' ANSI LIB
+'
+' Support for ANSI.SYS and extended codes for the terminal.
+' 
+' FUNCTION      NOTES
+' ansi_fg_256$  Sets the text foreground color using 8-bit 256 colors.
+' ansi_bg_256$  Sets the text background color using 8-bit 256 colors.
+'
+' @author Rick Christy <grymmjack@gmail.com>
+' @depends ANSI.BI
+' @see https://gist.github.com/grymmjack/9dae29a60ea65f086d0b35df96fe2291
+'
+
+
+
+''
+' Sets the console text color foreground using RGB 8-bit mode (256 colors)
+'
+' @param r% Red value 0-255
+' @param g% Green value 0-255
+' @param b% Blue value 0-255
+' @return string with ANSI escape codes for setting the color
+'
+FUNCTION ansi_fg_256$ (r%, g%, b%)
+    out$ = CHR$(ESC) + "[38;2"
+    out$ = out$ + ";" + _TRIM$(STR$(r%))
+    out$ = out$ + ";" + _TRIM$(STR$(g%))
+    out$ = out$ + ";" + _TRIM$(STR$(b%))
+    out$ = out$ + "m"
+    ansi_fg_256$ = out$
+END FUNCTION
+
+
+''
+' Sets the console text color background using RGB 8-bit mode (256 colors)
+'
+' @param r% Red value 0-255
+' @param g% Green value 0-255
+' @param b% Blue value 0-255
+' @return string with ANSI escape codes for setting the color
+'
+FUNCTION ansi_bg_256$ (r%, g%, b%)
+    out$ = CHR$(ESC) + "[48;2"
+    out$ = out$ + ";" + _TRIM$(STR$(r%))
+    out$ = out$ + ";" + _TRIM$(STR$(g%))
+    out$ = out$ + ";" + _TRIM$(STR$(b%))
+    out$ = out$ + "m"
+    ansi_bg_256$ = out$
+END FUNCTION
