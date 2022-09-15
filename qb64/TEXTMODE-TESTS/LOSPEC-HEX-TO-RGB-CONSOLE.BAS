@@ -64,7 +64,9 @@ CLOSE #1
 REDIM _PRESERVE RGB_PAL(COLOR_COUNT%) AS RGB_COLOR
 
 ' Initialize the screen
-CLS
+PRINT ansi_mode_reset_all$()
+PRINT ansi_bg_black$() + ansi_fg_reset$()
+PRINT ansi_erase_screen$()
 
 ' Display the results
 PRINT "LOSPEC TO QB64 RGB_COLOR IMPORTER BY GRYMMJACK"
@@ -79,11 +81,11 @@ PRINT STRING$(64, "-")
 
 FOR I% = 0 TO COLOR_COUNT%
     IF I% = 0 THEN
-        PRINT ansi_bg_256(RGB_PAL(I%+1).R, RGB_PAL(I%+1).G, RGB_PAL(I%+1).B);
-        PRINT ansi_fg_256(RGB_PAL(I%).R, RGB_PAL(I%).G, RGB_PAL(I%).B);
+        PRINT ansi_bg_rgb(RGB_PAL(I%+1).R, RGB_PAL(I%+1).G, RGB_PAL(I%+1).B);
+        PRINT ansi_fg_rgb(RGB_PAL(I%).R, RGB_PAL(I%).G, RGB_PAL(I%).B);
     ELSE
-        PRINT ansi_bg_256(0,0,0);
-        PRINT ansi_fg_256(RGB_PAL(I%).R, RGB_PAL(I%).G, RGB_PAL(I%).B);
+        PRINT ansi_bg_rgb(0,0,0);
+        PRINT ansi_fg_rgb(RGB_PAL(I%).R, RGB_PAL(I%).G, RGB_PAL(I%).B);
     END IF
 
     PRINT USING TEMP$; _
