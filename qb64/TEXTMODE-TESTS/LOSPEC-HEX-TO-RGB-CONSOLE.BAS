@@ -64,13 +64,10 @@ CLOSE #1
 REDIM _PRESERVE RGB_PAL(COLOR_COUNT%) AS RGB_COLOR
 
 ' Initialize the screen
-PRINT ansi_mode_reset_all$()
-PRINT ansi_bg_black$() + ansi_fg_reset$()
-PRINT ansi_erase_screen$()
+PRINT ansi_mode_reset_all + ansi_bg_black + ansi_fg_reset +  ansi_erase_screen
 
 ' Display the results
 PRINT "LOSPEC TO QB64 RGB_COLOR IMPORTER BY GRYMMJACK"
-COLOR 8,0
 PRINT STRING$(64, "-")
 PRINT "PALETTE FILE: " + CHR$(34) + HEX_PALETTE_FILE$ + CHR$(34)
 PRINT STR$(COLOR_COUNT%) + " COLORS IMPORTED - ARRAY SIZE: " + STR$(UBOUND(RGB_PAL))
