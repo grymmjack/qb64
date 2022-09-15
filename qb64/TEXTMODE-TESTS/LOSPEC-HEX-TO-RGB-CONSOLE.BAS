@@ -94,4 +94,6 @@ FOR I% = 0 TO COLOR_COUNT%
         LTRIM$(RGB_PAL(I%).HEX32)
 NEXT I%
 
+PRINT ansi_mode_reset_all + ansi_bg_black + ansi_fg_reset
+
 '$INCLUDE:'../_LIB/ANSI.BM'
