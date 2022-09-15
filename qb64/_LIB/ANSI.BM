@@ -24,14 +24,22 @@
 ' ansi_erase_from_sol$   Erase from start of line to cursor
 ' ansi_erase_line$       Erase line
 '
-' ansi_fg_black$         Set foreground color to black
-' ansi_fg_blue$          Set foreground color to blue
-' ansi_fg_green$         Set foreground color to green
-' ansi_fg_cyan$          Set foreground color to cyan
-' ansi_fg_red$           Set foreground color to red
-' ansi_fg_magenta$       Set foreground color to magenta
-' ansi_fg_yellow$        Set foreground color to yellow
-' ansi_fg_white$         Set foreground color to white
+' ansi_fg_black$            Set foreground color to black
+' ansi_fg_blue$             Set foreground color to blue
+' ansi_fg_green$            Set foreground color to green
+' ansi_fg_cyan$             Set foreground color to cyan
+' ansi_fg_red$              Set foreground color to red
+' ansi_fg_magenta$          Set foreground color to magenta
+' ansi_fg_yellow$           Set foreground color to yellow
+' ansi_fg_white$            Set foreground color to white
+' ansi_fg_bright_black$     Set foreground color to black
+' ansi_fg_bright_blue$      Set foreground color to blue
+' ansi_fg_bright_green$     Set foreground color to green
+' ansi_fg_bright_cyan$      Set foreground color to cyan
+' ansi_fg_bright_red$       Set foreground color to red
+' ansi_fg_bright_magenta$   Set foreground color to magenta
+' ansi_fg_bright_yellow$    Set foreground color to yellow
+' ansi_fg_bright_white$     Set foreground color to white
 '
 ' ansi_fg_256$           Sets the text foreground color using 8-bit 256 colors.
 ' ansi_bg_256$           Sets the text background color using 8-bit 256 colors.
@@ -266,12 +274,32 @@ END FUNCTION
 
 
 ''
+' Set foreground color to bright black
+'
+' @return string with ANSI escape codes for setting the color
+FUNCTION ansi_fg_bright_black$ ()
+    out$ = CHR$(ESC) + "[1;30m"
+    ansi_fg_bright_black$ = out$
+END FUNCTION
+
+
+''
 ' Set foreground color to blue
 '
 ' @return string with ANSI escape codes for setting the color
 FUNCTION ansi_fg_blue$ ()
     out$ = CHR$(ESC) + "[34m"
     ansi_fg_blue$ = out$
+END FUNCTION
+
+
+''
+' Set foreground color to bright blue
+'
+' @return string with ANSI escape codes for setting the color
+FUNCTION ansi_fg_bright_blue$ ()
+    out$ = CHR$(ESC) + "[1;34m"
+    ansi_fg_bright_blue$ = out$
 END FUNCTION
 
 
@@ -286,12 +314,32 @@ END FUNCTION
 
 
 ''
+' Set foreground color to bright green
+'
+' @return string with ANSI escape codes for setting the color
+FUNCTION ansi_fg_bright_green$ ()
+    out$ = CHR$(ESC) + "[1;32m"
+    ansi_fg_bright_green$ = out$
+END FUNCTION
+
+
+''
 ' Set foreground color to cyan
 '
 ' @return string with ANSI escape codes for setting the color
 FUNCTION ansi_fg_cyan$ ()
     out$ = CHR$(ESC) + "[36m"
     ansi_fg_cyan$ = out$
+END FUNCTION
+
+
+''
+' Set foreground color to bright_cyan
+'
+' @return string with ANSI escape codes for setting the color
+FUNCTION ansi_fg_bright_cyan$ ()
+    out$ = CHR$(ESC) + "[1;36m"
+    ansi_fg_bright_cyan$ = out$
 END FUNCTION
 
 
@@ -306,12 +354,32 @@ END FUNCTION
 
 
 ''
+' Set foreground color to bright red
+'
+' @return string with ANSI escape codes for setting the color
+FUNCTION ansi_fg_bright_red$ ()
+    out$ = CHR$(ESC) + "[1;31m"
+    ansi_fg_bright_red$ = out$
+END FUNCTION
+
+
+''
 ' Set foreground color to magenta
 '
 ' @return string with ANSI escape codes for setting the color
 FUNCTION ansi_fg_magenta$ ()
     out$ = CHR$(ESC) + "[35m"
     ansi_fg_magenta$ = out$
+END FUNCTION
+
+
+''
+' Set foreground color to bright magenta
+'
+' @return string with ANSI escape codes for setting the color
+FUNCTION ansi_fg_bright_magenta$ ()
+    out$ = CHR$(ESC) + "[1;35m"
+    ansi_fg_bright_magenta$ = out$
 END FUNCTION
 
 
@@ -326,12 +394,32 @@ END FUNCTION
 
 
 ''
+' Set foreground color to bright yellow
+'
+' @return string with ANSI escape codes for setting the color
+FUNCTION ansi_fg_bright_yellow$ ()
+    out$ = CHR$(ESC) + "[1;33m"
+    ansi_fg_bright_yellow$ = out$
+END FUNCTION
+
+
+''
 ' Set foreground color to white
 '
 ' @return string with ANSI escape codes for setting the color
 FUNCTION ansi_fg_white$ ()
     out$ = CHR$(ESC) + "[37m"
     ansi_fg_white$ = out$
+END FUNCTION
+
+
+''
+' Set foreground color to bright white
+'
+' @return string with ANSI escape codes for setting the color
+FUNCTION ansi_fg_bright_white$ ()
+    out$ = CHR$(ESC) + "[1;37m"
+    ansi_fg_bright_white$ = out$
 END FUNCTION
 
 
