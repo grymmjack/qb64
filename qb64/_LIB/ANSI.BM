@@ -25,6 +25,14 @@
 ' ansi_erase_line$       Erase line
 '
 ' ansi_fg_black$         Set foreground color to black
+' ansi_fg_blue$          Set foreground color to blue
+' ansi_fg_green$         Set foreground color to green
+' ansi_fg_cyan$          Set foreground color to cyan
+' ansi_fg_red$           Set foreground color to red
+' ansi_fg_magenta$       Set foreground color to magenta
+' ansi_fg_yellow$        Set foreground color to yellow
+' ansi_fg_white$         Set foreground color to white
+'
 ' ansi_fg_256$           Sets the text foreground color using 8-bit 256 colors.
 ' ansi_bg_256$           Sets the text background color using 8-bit 256 colors.
 '
@@ -36,7 +44,7 @@
 
 ''
 ' Moves the cursor to the home position (0,0)
-'
+'2
 ' @return string with ANSI escape codes to move the cursor
 FUNCTION ansi_home$ ()
     out$ = CHR$(ESC) + "[H"
@@ -254,6 +262,76 @@ END FUNCTION
 FUNCTION ansi_fg_black$ ()
     out$ = CHR$(ESC) + "[30m"
     ansi_fg_black$ = out$
+END FUNCTION
+
+
+''
+' Set foreground color to blue
+'
+' @return string with ANSI escape codes for setting the color
+FUNCTION ansi_fg_blue$ ()
+    out$ = CHR$(ESC) + "[34m"
+    ansi_fg_blue$ = out$
+END FUNCTION
+
+
+''
+' Set foreground color to green
+'
+' @return string with ANSI escape codes for setting the color
+FUNCTION ansi_fg_green$ ()
+    out$ = CHR$(ESC) + "[32m"
+    ansi_fg_green$ = out$
+END FUNCTION
+
+
+''
+' Set foreground color to cyan
+'
+' @return string with ANSI escape codes for setting the color
+FUNCTION ansi_fg_cyan$ ()
+    out$ = CHR$(ESC) + "[36m"
+    ansi_fg_cyan$ = out$
+END FUNCTION
+
+
+''
+' Set foreground color to red
+'
+' @return string with ANSI escape codes for setting the color
+FUNCTION ansi_fg_red$ ()
+    out$ = CHR$(ESC) + "[31m"
+    ansi_fg_red$ = out$
+END FUNCTION
+
+
+''
+' Set foreground color to magenta
+'
+' @return string with ANSI escape codes for setting the color
+FUNCTION ansi_fg_magenta$ ()
+    out$ = CHR$(ESC) + "[35m"
+    ansi_fg_magenta$ = out$
+END FUNCTION
+
+
+''
+' Set foreground color to yellow
+'
+' @return string with ANSI escape codes for setting the color
+FUNCTION ansi_fg_yellow$ ()
+    out$ = CHR$(ESC) + "[33m"
+    ansi_fg_yellow$ = out$
+END FUNCTION
+
+
+''
+' Set foreground color to white
+'
+' @return string with ANSI escape codes for setting the color
+FUNCTION ansi_fg_white$ ()
+    out$ = CHR$(ESC) + "[37m"
+    ansi_fg_white$ = out$
 END FUNCTION
 
 

@@ -33,6 +33,14 @@ DECLARE FUNCTION ansi_erase_from_sol$ ()
 DECLARE FUNCTION ansi_erase_line$ ()
 
 DECLARE FUNCTION ansi_fg_black$ ()
+DECLARE FUNCTION ansi_fg_blue$ ()
+DECLARE FUNCTION ansi_fg_green$ ()
+DECLARE FUNCTION ansi_fg_cyan$ ()
+DECLARE FUNCTION ansi_fg_red$ ()
+DECLARE FUNCTION ansi_fg_magenta$ ()
+DECLARE FUNCTION ansi_fg_yellow$ ()
+DECLARE FUNCTION ansi_fg_white$ ()
+
 DECLARE FUNCTION ansi_fg_256$ (r%, g%, b%)
 DECLARE FUNCTION ansi_bg_256$ (r%, g%, b%)
 
