@@ -8,12 +8,13 @@
 ' @author Rick Christy <grymmjack@gmail.com>
 ' @uses ANSI.BM
 '
+CONST ANSI_ESC=27
 
 DIM SHARED ansi_x%  ' Cursor x position
 DIM SHARED ansi_y%  ' Cursor y position
 
 DECLARE FUNCTION ansi_home$ ()
-DECLARE FUNCTION ansi_locate$ (col%, row%)
+DECLARE FUNCTION ansi_locate$ (row%, col%)
 DECLARE FUNCTION ansi_move_up$ (n%)
 DECLARE FUNCTION ansi_move_down$ (n%)
 DECLARE FUNCTION ansi_move_right$ (n%)
