@@ -133,6 +133,7 @@ FUNCTION ansi_move_up$ (n%)
     out$ = chr$(ANSI_ESC) + "["
     out$ = out$ + _TRIM$(STR$(n%))
     out$ = out$ + "A"
+    LOCATE CSRLIN - n%, POS(0)
     ansi_move_up$ = out$
 END FUNCTION
 
@@ -146,6 +147,7 @@ FUNCTION ansi_move_down$ (n%)
     out$ = chr$(ANSI_ESC) + "["
     out$ = out$ + _TRIM$(STR$(n%))
     out$ = out$ + "B"
+    LOCATE CSRLIN + n%, POS(0)
     ansi_move_down$ = out$
 END FUNCTION
 
@@ -159,6 +161,7 @@ FUNCTION ansi_move_right$ (n%)
     out$ = chr$(ANSI_ESC) + "["
     out$ = out$ + _TRIM$(STR$(n%))
     out$ = out$ + "C"
+    LOCATE CSRLIN, POS(0) + n%
     ansi_move_right$ = out$
 END FUNCTION
 
@@ -172,6 +175,7 @@ FUNCTION ansi_move_left$ (n%)
     out$ = chr$(ANSI_ESC) + "["
     out$ = out$ + _TRIM$(STR$(n%))
     out$ = out$ + "D"
+    LOCATE CSRLIN, POS(0) - n%
     ansi_move_left$ = out$
 END FUNCTION
 
@@ -185,6 +189,7 @@ FUNCTION ansi_move_lines_down$ (n%)
     out$ = chr$(ANSI_ESC) + "["
     out$ = out$ + _TRIM$(STR$(n%))
     out$ = out$ + "E"
+    LOCATE CSRLIN + n%, POS(0)
     ansi_move_lines_down$ = out$
 END FUNCTION
 
@@ -198,6 +203,7 @@ FUNCTION ansi_move_lines_up$ (n%)
     out$ = chr$(ANSI_ESC) + "["
     out$ = out$ + _TRIM$(STR$(n%))
     out$ = out$ + "F"
+    LOCATE CSRLIN - n%, POS(0)
     ansi_move_lines_up$ = out$
 END FUNCTION
 
@@ -211,17 +217,19 @@ FUNCTION ansi_move_column$ (n%)
     out$ = chr$(ANSI_ESC) + "["
     out$ = out$ + _TRIM$(STR$(n%))
     out$ = out$ + "G"
+    LOCATE CSRLIN, n%
     ansi_move_column$ = out$
 END FUNCTION
 
 
 ''
-' Moves cursor one one line up, scrolling if needed
+' Moves cursor one line up, scrolling if needed
 '
 ' @return string with ANSI escape codes to move cursor
 FUNCTION ansi_move_line_up$ ()
     out$ = chr$(ANSI_ESC)
     out$ = out$ + "M"
+    LOCATE CSRLIN - n%, POS(0)
     ansi_move_line_up$ = out$
 END FUNCTION
 

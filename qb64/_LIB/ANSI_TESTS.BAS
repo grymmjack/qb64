@@ -2,13 +2,20 @@
 
 ' Setup the console
 $CONSOLE:ONLY
-_DEST _CONSOLE
 _CONTROLCHR OFF
 LOCATE 1,1,1 ' Initialize the cursor and turn it on
 CONST FALSE = 0, TRUE = NOT FALSE
 CONST TEST_ANSI_OUTPUT = TRUE
-test_ansi_home
-test_ansi_locate
+
+
+
+' DONE - OK as of 9/16/2022
+' test_ansi_home
+' test_ansi_locate
+' test_ansi_move_up
+' test_ansi_move_down
+
+test_ansi_move_right
 
 PRINT "All tests complete, press a key." : anykey
 CLS
@@ -25,6 +32,57 @@ SUB test_complete()
     CLS
     PRINT "Test complete, press a key."
     anykey
+END SUB
+
+
+SUB test_ansi_move_right()
+    CLS
+    PRINT "Press a key to test ansi cursor move right with ansi_move_right()..."
+    anykey
+    w  = _WIDTH(0)
+    h  = _HEIGHT(0)
+    cw = w \ 2 - 2
+    ch = h \ 2 - 1
+    nil$ = ansi_locate(ch, cw) : PRINT "Line is here in the middle.";
+    nil$ = nil$ + ansi_locate(ch, cw)
+    nil$ = nil$ + ansi_move_right(1) : PRINT "Moved right by one char.";
+    nil$ = nil$ + ansi_move_right(5) : PRINT "Moved right by 5 chars.";
+    IF TEST_ANSI_OUTPUT THEN PRINT nil$
+    anykey : test_complete
+END SUB
+
+
+SUB test_ansi_move_down()
+    CLS
+    PRINT "Press a key to test ansi cursor move down with ansi_move_down()..."
+    anykey
+    w  = _WIDTH(0)
+    h  = _HEIGHT(0)
+    cw = w \ 2 - 2
+    ch = h \ 2 - 1
+    nil$ = ansi_locate(ch, cw) : PRINT "Line is here in the middle.";
+    nil$ = nil$ + ansi_locate(ch, cw)
+    nil$ = nil$ + ansi_move_down(1) : PRINT "Line is one line down.";
+    nil$ = nil$ + ansi_move_down(5) : PRINT "Line is six lines down.";
+    IF TEST_ANSI_OUTPUT THEN PRINT nil$
+    anykey : test_complete
+END SUB
+
+
+SUB test_ansi_move_up()
+    CLS
+    PRINT "Press a key to test ansi cursor move up with ansi_move_up()..."
+    anykey
+    w  = _WIDTH(0)
+    h  = _HEIGHT(0)
+    cw = w \ 2 - 2
+    ch = h \ 2 - 1
+    nil$ = ansi_locate(ch, cw) : PRINT "Line is here in the middle.";
+    nil$ = nil$ + ansi_locate(ch, cw)
+    nil$ = nil$ + ansi_move_up(1) : PRINT "Line is one line up.";
+    nil$ = nil$ + ansi_move_up(5) : PRINT "Line is six lines up.";
+    IF TEST_ANSI_OUTPUT THEN PRINT nil$
+    anykey : test_complete
 END SUB
 
 
