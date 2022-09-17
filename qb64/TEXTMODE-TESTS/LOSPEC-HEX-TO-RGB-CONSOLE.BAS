@@ -15,7 +15,6 @@
 '$INCLUDE:'../_LIB/ANSI.BI'
 ' Setup the console
 $CONSOLE:ONLY
-_DEST _CONSOLE
 _CONTROLCHR OFF
 
 ' Palette downloaded from LOSPEC in HEX format
