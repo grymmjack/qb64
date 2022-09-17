@@ -1,6 +1,6 @@
 $DEBUG
 '$DYNAMIC
-'$INCLUDE:'../_LIB/DUMP.BI'
+'$INCLUDE:'../_LIB/_GJ_LIB.BI'
 
 CONST FALSE = 0: CONST TRUE = NOT FALSE
 CONST DEBUGGING = TRUE
@@ -125,7 +125,7 @@ SUB str_find_pos (target$, search$, arrFound%(), numFound%)
     numFound% = x
 END SUB
 
-'$INCLUDE:'../_LIB/DUMP.BM'
+'$INCLUDE:'../_LIB/_GJ_LIB.BM'
 
 
 
