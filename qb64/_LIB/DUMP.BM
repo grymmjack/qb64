@@ -55,6 +55,7 @@
 ' dump_single_array$    Works on 1 dimensional arrays only (right now).
 ' dump_long_array$      Works on 1 dimensional arrays only (right now).
 ' dump_double_array$    Works on 1 dimensional arrays only (right now).
+' dump_dict$            Dump a dictionary object and it's contents.
 '
 ' @author Rick Christy <grymmjack@gmail.com>
 ' @depends DUMP.BI
@@ -176,4 +177,26 @@ FUNCTION dump_double_array$ (arr#(), label$)
     NEXT i
     r$ = r$ + "}"
     dump_double_array$ = r$
+END FUNCTION
+
+
+''
+' Dumps a dictionary object and its contents
+'
+' @param dict$() Dictionary object to dump
+' @param label$ Label to give the dump block
+'
+FUNCTION dump_dict$ (dict() AS Dict, label$)
+    lb = LBOUND(dict) : ub = UBOUND(dict) : t$ = _TRIM$(STR$(ub - lb))
+    r$ = DUMP_NL$ + "DICT: " + label$ + "(" + t$ + ") {" + DUMP_NL$
+    q$ = CHR$(34)
+    FOR i = lb TO ub
+        i$ = _TRIM$(STR$(i))
+        key$ = dict(i).key
+        val$ = dict(i).val
+        r$ = r$ + "  (" + i$ + ") " + q$ + key$ + q$
+        r$ = r$ + ": " + q$ + val$ + q$ + DUMP_NL$
+    NEXT i
+    r$ = r$ + "}"
+    dump_dict$ = r$
 END FUNCTION
