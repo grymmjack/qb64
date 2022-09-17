@@ -8,6 +8,7 @@
 '   Insert '$INCLUDE:'path_to/DICT.BM' at the bottom of file
 '
 ' @author Rick Christy <grymmjack@gmail.com>
+' @uses DICT.BM
 '
 
 ' Dict type consists of keys and values and intended for array use

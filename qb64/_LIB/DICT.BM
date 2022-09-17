@@ -19,6 +19,7 @@
 ' dict_swap_keys_for_vals  Swaps a dict objects keys for its values
 '
 ' @author Rick Christy <grymmjack@gmail.com>
+' @uses DICT.BI
 '
 
 
