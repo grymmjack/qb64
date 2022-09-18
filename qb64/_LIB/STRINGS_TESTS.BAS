@@ -1,14 +1,8 @@
-$DEBUG
 '$DYNAMIC
 '$INCLUDE:'../_LIB/_GJ_LIB.BI'
 
-CONST FALSE = 0: CONST TRUE = NOT FALSE
-CONST DEBUGGING = TRUE
-
 SCREEN _NEWIMAGE(800, 600, 32)
-
 _SCREENMOVE 1000, 400
-
 
 phrase$ = ""
 phrase$ = "foo"
@@ -27,105 +21,4 @@ PRINT dump_string_array$(words$(), "words")
 phrase2$ = str_implode$(words$(), "::")
 PRINT dump_string$(phrase2$, "phrase2")
 
-
-
-''
-' Implodes a string array into a string using delimiter as glue
-' 
-' @param arr$() Array to implode from
-' @param delim$ Delimiter to glue the array parts together with
-'
-FUNCTION str_implode$ (arr$(), delim$)
-    r$ = ""
-    lb = LBOUND(arr$) : ub = UBOUND(arr$)
-    FOR i = lb to ub
-        IF i + 1 <= ub THEN
-            r$ = r$ + arr$(i) + delim$
-        ELSE
-            r$ = r$ + arr$(i)
-        END IF
-    NEXT i
-    str_implode$ = r$
-END FUNCTION
-
-
-
-''
-' Explodes a string into an array of strings using a delimiter
-'
-' If the delimiter is not found, returns the target as dest$(0)
-' 
-' @param target$ String to explode
-' @param delim$ Delimiter
-' @param dest$() Array to explode into
-' @param numParts% The number of strings in the array
-'
-SUB str_explode (target$, delim$, dest$(), numParts%)
-    length = LEN(target$)
-    delimLen = LEN(delim$)
-    IF length = 0 THEN EXIT SUB
-    DIM delimsPos%(length): numFound% = 0
-    str_find_pos target$, delim$, delimsPos%(), numFound%
-    IF numFound% > 0 THEN
-        REDIM _PRESERVE delimsPos%(numFound% - 1)
-    ELSE
-        dest$(0) = target$
-        numParts% = 0
-        EXIT SUB
-    END IF
-    IF DEBUGGING THEN PRINT dump_integer_array$(delimsPos%(), "delimsPos")
-    IF numFound% > 0 THEN
-        IF numFound% = 1 THEN
-            dest$(0) = LEFT$(target$, delimsPos%(0) - delimLen)
-            dest$(1) = MID$(target$, delimsPos%(0) + delimLen)
-            numParts% = 1
-        END IF
-        IF numFound% > 1 THEN
-            dest$(0) = LEFT$(target$, delimsPos%(0) - delimLen)
-            FOR i = 1 TO numFound%
-                IF i + 1 <= numFound% THEN
-                    dest$(i) = MID$( _
-                        target$, _
-                        delimsPos%(i - 1) + delimLen, _
-                        delimsPos%(i) - delimsPos%(i - 1) - delimLen _
-                    )
-                END IF
-            NEXT i
-            dest$(numFound%) = MID$( _
-                target$, delimsPos%(numFound% - 1) + delimLen _
-            )
-            numParts% = numFound%
-        END IF
-    END IF
-END SUB
-
-
-
-''
-' Searches for strings inside of strings and fills array with found positions
-'
-' @param target$ String to search
-' @param search$ String to search for in target
-' @param arrFound% The array to populate with positions search found in target
-' @param numFound% The number of times search found a match
-'
-SUB str_find_pos (target$, search$, arrFound%(), numFound%)
-    length = LEN(target$): found = -1: x = 0: i = 1
-    searchLen = LEN(search$)
-    DO
-        found = INSTR(i, target$, search$)
-        IF found > 0 THEN
-            arrFound%(x) = found
-            i = found + searchLen
-            x = x + 1
-        ELSE
-            i = i + 1
-        END IF
-    LOOP UNTIL i = length
-    numFound% = x
-END SUB
-
 '$INCLUDE:'../_LIB/_GJ_LIB.BM'
-
-
-
