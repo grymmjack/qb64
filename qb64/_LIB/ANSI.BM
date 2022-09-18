@@ -5,7 +5,6 @@
 ' 
 ' To emulate ANSI functionality using QB internals set this var to TRUE:
 ' GJ_LIB_ANSI_EMU = TRUE
-'
 ' This variable can be toggled between TRUE and FALSE whenever needed, as many
 ' times as desired as it is not a CONST.
 ' 
@@ -101,6 +100,7 @@
 ' @depends ANSI.BI
 ' @see https://gist.github.com/grymmjack/9dae29a60ea65f086d0b35df96fe2291
 '
+
 
 
 ''

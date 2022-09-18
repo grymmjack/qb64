@@ -1,4 +1,5 @@
-'$INCLUDE:'_GJ_LIB.BI'
+'$INCLUDE:'../_GJ_LIB.BI'
+_TITLE "GJ_LIB ANSI LIB TESTS"
 
 CONST TEST_ANSI_OUTPUT = TRUE
 GJ_LIB_ANSI_EMU = TRUE
@@ -6,6 +7,7 @@ GJ_LIB_ANSI_EMU = TRUE
 ' Setup the console
 $CONSOLE:ONLY
 _CONTROLCHR OFF
+_SCREENMOVE _MIDDLE
 LOCATE 1,1,1 ' Initialize the cursor and turn it on
 
 
@@ -128,4 +130,4 @@ SUB fill_screen_with_text()
     NEXT y
 END SUB
 
-'$INCLUDE:'_GJ_LIB.BM'
+'$INCLUDE:'../_GJ_LIB.BM'

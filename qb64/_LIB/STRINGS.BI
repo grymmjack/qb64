@@ -11,6 +11,8 @@
 ' @uses STRINGS.BM
 '
 
+
+
 DECLARE FUNCTION str_implode$ (arr$(), delim$)
 DECLARE SUB str_explode (target$, delim$, dest$(), numParts%)
 DECLARE SUB str_find_pos (target$, search$, arrFound%(), numFound%)

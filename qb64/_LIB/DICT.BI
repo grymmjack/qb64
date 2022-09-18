@@ -10,8 +10,11 @@
 ' @author Rick Christy <grymmjack@gmail.com>
 ' @uses DICT.BM
 '
+$LET GJ_LIB_DICT_INC = 1
 
-' Dict type consists of keys and values and intended for array use
+
+
+' Dict type consists of keys and values and is intended for array use
 TYPE Dict
     key AS STRING
     val AS STRING

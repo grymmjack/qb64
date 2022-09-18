@@ -1,5 +1,6 @@
-'$INCLUDE:'_GJ_LIB.BI'
+'$INCLUDE:'../_GJ_LIB.BI'
 '$DYNAMIC
+_TITLE "GJ_LIB Dict OBJECT TESTS"
 
 SCREEN _NEWIMAGE(1024, 768, 32)
 _SCREENMOVE _MIDDLE
@@ -47,4 +48,4 @@ PRINT dump_string_array(vals2$(), "vals from dict_get_vals")
 dict_swap_keys_for_vals myDict()
 PRINT dump_dict(myDict(), "myDict swapped")
 
-'$INCLUDE:'_GJ_LIB.BM'
+'$INCLUDE:'../_GJ_LIB.BM'

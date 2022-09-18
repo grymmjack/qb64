@@ -8,6 +8,9 @@
 ' @author Rick Christy <grymmjack@gmail.com>
 ' @uses ANSI.BM
 '
+
+
+
 CONST ANSI_ESC=27
 
 ' Emulate ANSI functionality using QB internals while outputing ANSI codes?
@@ -93,4 +96,3 @@ DECLARE FUNCTION ansi_fg_256$ (c%)
 DECLARE FUNCTION ansi_bg_256$ (rc%)
 DECLARE FUNCTION ansi_fg_rgb$ (r%, g%, b%)
 DECLARE FUNCTION ansi_bg_rgb$ (r%, g%, b%)
-
