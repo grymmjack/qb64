@@ -1,11 +1,15 @@
 ''
-' GRYMMJACK'S DICT Object
+' GRYMMJACK'S DICT Object (part of _GJ_LIB)
 '
 ' Simulates a dictionary object as found in other languages.
 '
-' USAGE:
+' USAGE FOR Dict Object alone:
 '   Insert '$INCLUDE:'path_to/DICT.BI' at the top of file
 '   Insert '$INCLUDE:'path_to/DICT.BM' at the bottom of file
+'
+' USAGE FOR _GJ_LIB:
+'   Insert '$INCLUDE:'path_to_GJ_LIB/_GJ_LIB.BI' at the top of file
+'   Insert '$INCLUDE:'path_to_GJ_LIB/_GJ_LIB.BM' at the bottom of file
 '
 ' SUB / FUNCTION           NOTES
 ' dict_populate            Populates a dict with arrays of keys and values
@@ -21,7 +25,7 @@
 ' @author Rick Christy <grymmjack@gmail.com>
 ' @uses DICT.BI
 '
-
+#IF
 
 
 ''

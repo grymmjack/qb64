@@ -2,7 +2,7 @@
 '$INCLUDE:'../_LIB/_GJ_LIB.BI'
 
 SCREEN _NEWIMAGE(800, 600, 32)
-_SCREENMOVE 1000, 400
+_SCREENMOVE _MIDDLE
 
 phrase$ = ""
 phrase$ = "foo"

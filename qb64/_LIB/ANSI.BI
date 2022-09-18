@@ -10,6 +10,9 @@
 '
 CONST ANSI_ESC=27
 
+' Emulate ANSI functionality using QB internals while outputing ANSI codes?
+ANSI_EMU = FALSE
+
 DIM SHARED ansi_x%  ' Cursor x position
 DIM SHARED ansi_y%  ' Cursor y position
 

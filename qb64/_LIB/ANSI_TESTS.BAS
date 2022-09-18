@@ -1,11 +1,12 @@
-'$INCLUDE:'ANSI.BI'
+'$INCLUDE:'_GJ_LIB.BI'
+
+CONST TEST_ANSI_OUTPUT = TRUE
+ANSI_INTERNAL_EMULATION = TRUE
 
 ' Setup the console
 $CONSOLE:ONLY
 _CONTROLCHR OFF
 LOCATE 1,1,1 ' Initialize the cursor and turn it on
-CONST FALSE = 0, TRUE = NOT FALSE
-CONST TEST_ANSI_OUTPUT = TRUE
 
 
 
@@ -127,4 +128,4 @@ SUB fill_screen_with_text()
     NEXT y
 END SUB
 
-'$INCLUDE:'ANSI.BM'
+'$INCLUDE:'_GJ_LIB.BM'

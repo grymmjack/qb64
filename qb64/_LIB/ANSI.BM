@@ -3,6 +3,12 @@
 '
 ' Support for ANSI.SYS and extended codes for terminal.
 ' 
+' To emulate ANSI functionality using QB internals set this var to TRUE:
+' ANSI_EMU = TRUE
+'
+' This variable can be toggled between TRUE and FALSE whenever needed, as many
+' times as desired as it is not a CONST.
+' 
 ' CURSOR MOVEMENT:
 ' FUNCTION               NOTES
 ' ansi_home$             Moves cursor to home position (0,0)
@@ -103,7 +109,9 @@
 ' @return string with ANSI escape codes to move cursor
 FUNCTION ansi_home$ ()
     out$ = chr$(ANSI_ESC) + "[H"
-    LOCATE 1,1
+    IF ANSI_EMU THEN
+        LOCATE 1,1
+    END IF
     ansi_home$ = out$
 END FUNCTION
 
@@ -119,7 +127,9 @@ FUNCTION ansi_locate$ (row%, col%)
     out$ = out$ + _TRIM$(STR$(row%)) + ";"
     out$ = out$ + _TRIM$(STR$(col%))
     out$ = out$ + "H"
-    LOCATE row%, col%
+    IF ANSI_EMU THEN
+        LOCATE row%, col%
+    END IF
     ansi_locate$ = out$
 END FUNCTION
 
@@ -133,7 +143,9 @@ FUNCTION ansi_move_up$ (n%)
     out$ = chr$(ANSI_ESC) + "["
     out$ = out$ + _TRIM$(STR$(n%))
     out$ = out$ + "A"
-    LOCATE CSRLIN - n%, POS(0)
+    IF ANSI_EMU THEN
+        LOCATE CSRLIN - n%, POS(0)
+    END IF
     ansi_move_up$ = out$
 END FUNCTION
 
@@ -147,7 +159,9 @@ FUNCTION ansi_move_down$ (n%)
     out$ = chr$(ANSI_ESC) + "["
     out$ = out$ + _TRIM$(STR$(n%))
     out$ = out$ + "B"
-    LOCATE CSRLIN + n%, POS(0)
+    IF ANSI_EMU THEN
+        LOCATE CSRLIN + n%, POS(0)
+    END IF
     ansi_move_down$ = out$
 END FUNCTION
 
@@ -161,7 +175,9 @@ FUNCTION ansi_move_right$ (n%)
     out$ = chr$(ANSI_ESC) + "["
     out$ = out$ + _TRIM$(STR$(n%))
     out$ = out$ + "C"
-    LOCATE CSRLIN, POS(0) + n%
+    IF ANSI_EMU THEN
+        LOCATE CSRLIN, POS(0) + n%
+    END IF
     ansi_move_right$ = out$
 END FUNCTION
 
@@ -175,7 +191,9 @@ FUNCTION ansi_move_left$ (n%)
     out$ = chr$(ANSI_ESC) + "["
     out$ = out$ + _TRIM$(STR$(n%))
     out$ = out$ + "D"
-    LOCATE CSRLIN, POS(0) - n%
+    IF ANSI_EMU THEN
+        LOCATE CSRLIN, POS(0) - n%
+    END IF
     ansi_move_left$ = out$
 END FUNCTION
 
@@ -189,7 +207,9 @@ FUNCTION ansi_move_lines_down$ (n%)
     out$ = chr$(ANSI_ESC) + "["
     out$ = out$ + _TRIM$(STR$(n%))
     out$ = out$ + "E"
-    LOCATE CSRLIN + n%, POS(0)
+    IF ANSI_EMU THEN
+        LOCATE CSRLIN + n%, POS(0)
+    END IF
     ansi_move_lines_down$ = out$
 END FUNCTION
 
@@ -203,7 +223,9 @@ FUNCTION ansi_move_lines_up$ (n%)
     out$ = chr$(ANSI_ESC) + "["
     out$ = out$ + _TRIM$(STR$(n%))
     out$ = out$ + "F"
-    LOCATE CSRLIN - n%, POS(0)
+    IF ANSI_EMU THEN
+        LOCATE CSRLIN - n%, POS(0)
+    END IF
     ansi_move_lines_up$ = out$
 END FUNCTION
 
@@ -217,7 +239,9 @@ FUNCTION ansi_move_column$ (n%)
     out$ = chr$(ANSI_ESC) + "["
     out$ = out$ + _TRIM$(STR$(n%))
     out$ = out$ + "G"
-    LOCATE CSRLIN, n%
+    IF ANSI_EMU THEN
+        LOCATE CSRLIN, n%
+    END IF
     ansi_move_column$ = out$
 END FUNCTION
 
@@ -229,7 +253,9 @@ END FUNCTION
 FUNCTION ansi_move_line_up$ ()
     out$ = chr$(ANSI_ESC)
     out$ = out$ + "M"
-    LOCATE CSRLIN - n%, POS(0)
+    IF ANSI_EMU THEN
+        LOCATE CSRLIN - n%, POS(0)
+    END IF
     ansi_move_line_up$ = out$
 END FUNCTION
 
@@ -243,8 +269,10 @@ FUNCTION ansi_save_pos$ ()
     SHARED ansi_y%
     out$ = chr$(ANSI_ESC) + "["
     out$ = out$ + "s"
-    ansi_x% = POS(0)
-    ansi_y% = CSRLIN
+    IF ANSI_EMU THEN
+        ansi_x% = POS(0)
+        ansi_y% = CSRLIN
+    END IF
     ansi_save_pos$ = out$
 END FUNCTION
 
@@ -258,9 +286,9 @@ FUNCTION ansi_restore_pos$ ()
     SHARED ansi_y%
     out$ = chr$(ANSI_ESC) + "["
     out$ = out$ + "u"
-    ansi_x% = POS(0)
-    ansi_y% = CSRLIN
-    LOCATE ansi_x%, ansi_y%
+    IF ANSI_EMU THEN
+        LOCATE ansi_x%, ansi_y%
+    END IF
     ansi_restore_pos$ = out$
 END FUNCTION
 

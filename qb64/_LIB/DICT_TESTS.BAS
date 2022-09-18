@@ -1,8 +1,8 @@
-'$INCLUDE:'DICT.BI'
-'$INCLUDE:'DUMP.BI'
+'$INCLUDE:'_GJ_LIB.BI'
 
 '$DYNAMIC
 SCREEN _NEWIMAGE(1024, 768, 32)
+_SCREENMOVE _MIDDLE
 
 DIM SHARED myDict(5) AS Dict
 DIM keys$(5)
@@ -47,5 +47,4 @@ PRINT dump_string_array(vals2$(), "vals from dict_get_vals")
 dict_swap_keys_for_vals myDict()
 PRINT dump_dict(myDict(), "myDict swapped")
 
-'$INCLUDE:'DICT.BM'
-'$INCLUDE:'DUMP.BM'
+'$INCLUDE:'_GJ_LIB.BM'
