@@ -74,8 +74,8 @@
 '
 FUNCTION dump_string$ (s$, label$)
     l$ = _TRIM$(STR$(LEN(s$)))
-    r$ = DUMP_NL$ + "STRING: " + label$ + "$ {" + DUMP_NL$
-    r$ = r$ + "  " + CHR$(34) + s$ + CHR$(34) + " [" + l$ + "]" + DUMP_NL$
+    r$ = GJ_LIB_NL$ + "STRING: " + label$ + "$ {" + GJ_LIB_NL$
+    r$ = r$ + "  " + CHR$(34) + s$ + CHR$(34) + " [" + l$ + "]" + GJ_LIB_NL$
     r$ = r$ + "} "
     dump_string$ = r$
 END FUNCTION
@@ -90,12 +90,12 @@ END FUNCTION
 '
 FUNCTION dump_string_array$ (arr$(), label$)
     lb = LBOUND(arr$) : ub = UBOUND(arr$) : t$ = _TRIM$(STR$(ub - lb))
-    r$ = DUMP_NL$ + "STRING ARRAY: " + label$ + "$(" + t$ + ") {" + DUMP_NL$
+    r$ = GJ_LIB_NL$ + "STRING ARRAY: " + label$ + "$(" + t$ + ") {" + GJ_LIB_NL$
     FOR i = lb TO ub
         i$ = _TRIM$(STR$(i))
         l$ = _TRIM$(STR$(LEN(arr$(i))))
         r$ = r$ + "  (" + i$ + "): " + CHR$(34) + arr$(i) + CHR$(34)
-        r$ = r$ + " [" + l$ + "]" + DUMP_NL$
+        r$ = r$ + " [" + l$ + "]" + GJ_LIB_NL$
     NEXT i
     r$ = r$ + "}"
     dump_string_array$ = r$
@@ -111,11 +111,11 @@ END FUNCTION
 '
 FUNCTION dump_integer_array$ (arr%(), label$)
     lb = LBOUND(arr%) : ub = UBOUND(arr%) : t$ = _TRIM$(STR$(ub - lb))
-    r$ = DUMP_NL$ + "INTEGER ARRAY: " + label$ + "%(" + t$ + ") {" + DUMP_NL$
+    r$ = GJ_LIB_NL$ + "INTEGER ARRAY: " + label$ + "%(" + t$ + ") {" + GJ_LIB_NL$
     FOR i = lb TO ub
         i$ = _TRIM$(STR$(i))
         num$ = _TRIM$(STR$(arr%(i)))
-        r$ = r$ + "  (" + i$ + "): " + num$ + DUMP_NL$
+        r$ = r$ + "  (" + i$ + "): " + num$ + GJ_LIB_NL$
     NEXT i
     r$ = r$ + "}"
     dump_integer_array$ = r$
@@ -131,11 +131,11 @@ END FUNCTION
 '
 FUNCTION dump_single_array$ (arr!(), label$)
     lb = LBOUND(arr!) : ub = UBOUND(arr!) : t$ = _TRIM$(STR$(ub - lb))
-    r$ = DUMP_NL$ + "SINGLE ARRAY: " + label$ + "!(" + t$ + ") {" + DUMP_NL$
+    r$ = GJ_LIB_NL$ + "SINGLE ARRAY: " + label$ + "!(" + t$ + ") {" + GJ_LIB_NL$
     FOR i = lb TO ub
         i$ = _TRIM$(STR$(i))
         num$ = _TRIM$(STR$(arr!(i)))
-        r$ = r$ + "  (" + i$ + "): " + num$ + DUMP_NL$
+        r$ = r$ + "  (" + i$ + "): " + num$ + GJ_LIB_NL$
     NEXT i
     r$ = r$ + "}"
     dump_single_array$ = r$
@@ -150,11 +150,11 @@ END FUNCTION
 '
 FUNCTION dump_long_array$ (arr&(), label$)
     lb = LBOUND(arr&) : ub = UBOUND(arr&) : t$ = _TRIM$(STR$(ub - lb))
-    r$ = DUMP_NL$ + "LONG ARRAY: " + label$ + "&(" + t$ + ") {" + DUMP_NL$
+    r$ = GJ_LIB_NL$ + "LONG ARRAY: " + label$ + "&(" + t$ + ") {" + GJ_LIB_NL$
     FOR i = lb TO ub
         i$ = _TRIM$(STR$(i))
         num$ = _TRIM$(STR$(arr&(i)))
-        r$ = r$ + "  (" + i$ + "): " + num$ + DUMP_NL$
+        r$ = r$ + "  (" + i$ + "): " + num$ + GJ_LIB_NL$
     NEXT i
     r$ = r$ + "}"
     dump_long_array$ = r$
@@ -169,11 +169,11 @@ END FUNCTION
 '
 FUNCTION dump_double_array$ (arr#(), label$)
     lb = LBOUND(arr#) : ub = UBOUND(arr#) : t$ = _TRIM$(STR$(ub - lb))
-    r$ = DUMP_NL$ + "DOUBLE ARRAY: " + label$ + "#(" + t$ + ") {" + DUMP_NL$
+    r$ = GJ_LIB_NL$ + "DOUBLE ARRAY: " + label$ + "#(" + t$ + ") {" + GJ_LIB_NL$
     FOR i = lb TO ub
         i$ = _TRIM$(STR$(i))
         num$ = _TRIM$(STR$(arr#(i)))
-        r$ = r$ + "  (" + i$ + "): " + num$ + DUMP_NL$
+        r$ = r$ + "  (" + i$ + "): " + num$ + GJ_LIB_NL$
     NEXT i
     r$ = r$ + "}"
     dump_double_array$ = r$
@@ -188,14 +188,14 @@ END FUNCTION
 '
 FUNCTION dump_dict$ (dict() AS Dict, label$)
     lb = LBOUND(dict) : ub = UBOUND(dict) : t$ = _TRIM$(STR$(ub - lb))
-    r$ = DUMP_NL$ + "DICT: " + label$ + "(" + t$ + ") {" + DUMP_NL$
+    r$ = GJ_LIB_NL$ + "DICT: " + label$ + "(" + t$ + ") {" + GJ_LIB_NL$
     q$ = CHR$(34)
     FOR i = lb TO ub
         i$ = _TRIM$(STR$(i))
         key$ = dict(i).key
         val$ = dict(i).val
         r$ = r$ + "  (" + i$ + ") " + q$ + key$ + q$
-        r$ = r$ + ": " + q$ + val$ + q$ + DUMP_NL$
+        r$ = r$ + ": " + q$ + val$ + q$ + GJ_LIB_NL$
     NEXT i
     r$ = r$ + "}"
     dump_dict$ = r$

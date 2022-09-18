@@ -10,12 +10,6 @@
 '
 
 
-DIM SHARED DUMP_NL AS STRING
-$IF WIN THEN
-    DUMP_NL$ = CHR$(13)
-$ELSE
-    DUMP_NL$ = CHR$(10)
-$END IF
 
 DECLARE FUNCTION dump_string$ (s$, label$)
 DECLARE FUNCTION dump_string_array$ (arr$(), label$)

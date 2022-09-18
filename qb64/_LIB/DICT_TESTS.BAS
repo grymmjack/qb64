@@ -1,12 +1,14 @@
 '$INCLUDE:'_GJ_LIB.BI'
-
 '$DYNAMIC
+
 SCREEN _NEWIMAGE(1024, 768, 32)
 _SCREENMOVE _MIDDLE
 
-DIM SHARED myDict(5) AS Dict
 DIM keys$(5)
 DIM vals$(5)
+DIM SHARED keys2$(5)
+DIM SHARED vals2$(5)
+DIM SHARED myDict(5) AS Dict
 
 keys$(0) = "bilbo"
 keys$(1) = "frodo"
@@ -35,8 +37,6 @@ val$ = dict_get_val_by_index(myDict(), index%)
 PRINT "val (from index) = " + val$
 PRINT "val (from key) = " + dict_get_val_by_key(myDict(), key$)
 
-DIM SHARED keys2$(5)
-DIM SHARED vals2$(5)
 
 dict_get_keys myDict(), keys2$()
 dict_get_vals myDict(), vals2$()

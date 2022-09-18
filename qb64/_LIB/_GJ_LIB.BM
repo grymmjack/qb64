@@ -3,6 +3,10 @@
 '
 ' This is the master BM file, which includes the other BM files for the library.
 '
+' Enable and disable debugging by setting this variable to TRUE or FALSE:
+' GJ_LIB_DEBUGGING = FALSE
+' This is not a CONST and can be set as needed as often as you like.
+'
 ' @author Rick Christy <grymmjack@gmail.com>
 ' @uses DICT.BM
 ' @uses DUMP.BM
