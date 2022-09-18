@@ -7,8 +7,10 @@
 ' @uses DICT.BI
 ' @uses DUMP.BI
 ' @uses ANSI.BI
+' @uses STRINGS.BI
 '
-
+s
 '$INCLUDE:'DICT.BI'
-'$INCLUDE:'DUMP.BI'
+'$INCLUDE:'DUMP.BI's
 '$INCLUDE:'ANSI.BI'
+'$INCLUDE:'STRINGS.BI'
