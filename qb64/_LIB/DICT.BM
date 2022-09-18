@@ -1,5 +1,5 @@
 ''
-' DICT Object
+' GRYMMJACK'S DICT Object
 '
 ' Simulates a dictionary object as found in other languages.
 '

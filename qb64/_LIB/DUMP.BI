@@ -1,5 +1,5 @@
 ''
-' DUMP LIB
+' GRYMMJACK'S DUMP LIB
 '
 ' USAGE:
 '   Insert '$INCLUDE:'path_to/DUMP.BI' at the top of file

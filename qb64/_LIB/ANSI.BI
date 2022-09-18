@@ -1,5 +1,5 @@
 ''
-' ANSI LIB
+' GRYMMJACK'S ANSI LIB
 '
 ' USAGE:
 '   Insert '$INCLUDE:'path_to/ANSI.BI' at the top of file

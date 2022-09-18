@@ -1,5 +1,5 @@
 ''
-' DUMP LIB
+' GRYMMJACK'S DUMP LIB
 '
 ' Dumps variables in a human friendly way to assist in debugging.
 ' Inspired by PHP print_r() [1] which I missed when writing in QB64.
