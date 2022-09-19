@@ -14,14 +14,31 @@
 		}
 	],
 	"settings": {
+		"files.exclude": {
+			"**/*.bas-bak": true,
+			"**/*.bi-bak": true,
+			"**/*.bm-bak": true,
+			"**/*.cmp-out": true,
+			"**/*.run": true,
+			"**/*_start.command": true
+		},
+		// "editor.multiCursorModifier": "ctrlCmd",
+		"qb64.compilerPath": "/Users/gj/Downloads/qb64-2.1/qb64",
 		"extensions.ignoreRecommendations": false,
+		"editor.fontFamily": "\"Perfect DOS VGA 437 Win\", monospace",
 		"terminal.integrated.fontFamily": "\"Perfect DOS VGA 437 Win\", monospace",
 		"terminal.integrated.fontSize": 16,
 		"terminal.integrated.lineHeight": 1.1,
 		"terminal.integrated.fontWeightBold": "normal",
+		"editor.fontSize": 16,
+		"editor.lineHeight": 1.1,
+		"editor.fontWeight": "normal",
+		"git.enableSmartCommit": true,
+		"git.autofetch": true,
 		"git.confirmSync": false,
 		"workbench.iconTheme": "vs-seti",
 		"workbench.colorTheme": "MS-DOS Editor Theme",
+		"editor.suggest.preview": true,
 		"workbench.colorCustomizations": {
 			"editorGutter.background": "#00000060",
 			"editorGutter.addedBackground": "#00aa00",
@@ -152,6 +169,8 @@
 			"scrollbarSlider.hoverBackground": "#ffffff40",
 			"scrollbarSlider.activeBackground": "#ffffff40"
 		},
+		"editor.minimap.autohide": false,
+		"editor.minimap.showSlider": "always",
 		"terminal.integrated.copyOnSelection": true,
 		"terminal.integrated.cursorBlinking": true,
 		"terminal.integrated.cursorStyle": "line",
@@ -160,6 +179,27 @@
 		"terminal.integrated.gpuAcceleration": "on",
 		"terminal.integrated.scrollback": 9999,
 		"terminal.integrated.shellIntegration.enabled": true,
+		"editor.cursorBlinking": "blink",
+		"editor.matchBrackets": "always",
+		"editor.guides.bracketPairs": "active",
+		"editor.language.brackets": [
+			[
+				"[",
+				"]"
+			],
+			[
+				"{",
+				"}"
+			],
+			[
+				"(",
+				")"
+			]
+		],
+		"editor.guides.highlightActiveIndentation": true,
+		"editor.rulers": [
+			80
+		],
 		"editor.tokenColorCustomizations": {
 			"functions": "#55ff55",
 			"variables": "#ffffff",
@@ -167,6 +207,11 @@
 			"strings": "#ffff55",
 			"comments": "#55ffff",
 			"keywords": "#93c4eb"
-		}
+		},
+		"editor.bracketPairColorization.enabled": true,
+		"editor.guides.bracketPairsHorizontal": true,
+		"editor.guides.highlightActiveBracketPair": true,
+		"editor.quickSuggestionsDelay": 3000,
+		"editor.stickyScroll.enabled": true
 	}
 }
