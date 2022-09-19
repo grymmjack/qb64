@@ -8,6 +8,9 @@
 		},
 		{
 			"path": "../QB64-Museum"
+		},
+		{
+			"path": "../QB64_GJ_LIB"
 		}
 	],
 	"settings": {
