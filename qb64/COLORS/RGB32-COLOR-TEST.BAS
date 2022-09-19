@@ -9,5 +9,3 @@ y = (600-h) \ 2
 img& = _LOADIMAGE("ASSETS/STARFIGHTER-RGB32.png", 256)
 
 _PUTIMAGE (x,y), img&, CANVAS&
-
-_MEMIMAGE

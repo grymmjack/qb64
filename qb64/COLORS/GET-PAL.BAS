@@ -2,7 +2,7 @@
 ' ***** THIS CODE IS WIP AND NOT FUNCTIONAL ONLY FOR REF / POSTERITY *****
 ' ************************************************************************
 
-'$INCLUDE:'~/git/QB64_GJ_LIB/DUMP/DUMP.BI'
+'$INCLUDE:'../../../QB64_GJ_LIB/DUMP/DUMP.BI'
 SCREEN _NEWIMAGE(_DESKTOPWIDTH,_DESKTOPHEIGHT,13)
 _FULLSCREEN _SQUAREPIXELS
 
@@ -114,4 +114,4 @@ SUB dump_rgb (r&, g&, b&, idx%, verbose)
         COLOR _DEFAULTCOLOR
     END IF
 END SUB
-'$INCLUDE:'~/git/QB64_GJ_LIB/DUMP/DUMP.BM'
+'$INCLUDE:'../../../QB64_GJ_LIB/DUMP/DUMP.BM'

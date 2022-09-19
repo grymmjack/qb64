@@ -9,7 +9,7 @@ x = (_DESKTOPWIDTH-w) \ 2
 y = (_DESKTOPHEIGHT-h) \ 2
 
 _DEST CANVAS& : CLS ,0
-img& = _LOADIMAGE(_STARTDIR$ + "/ASSETS/STARFIGHTER-VGA.gif", 256)
+img& = _LOADIMAGE("ASSETS/STARFIGHTER-VGA.gif", 256)
 
 ' _PUTIMAGE (x,y)-(x+w,y+h), img&, CANVAS&
 _PUTIMAGE (x,y), img&, CANVAS&
