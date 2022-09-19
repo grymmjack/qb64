@@ -4,12 +4,6 @@
 			"path": "."
 		},
 		{
-			"path": "../qb64-sample-programs"
-		},
-		{
-			"path": "../QB64-Museum"
-		},
-		{
 			"path": "../QB64_GJ_LIB"
 		}
 	],
