@@ -7,7 +7,7 @@ Screen NewImage(800, 327, 32)
 
 Print "Loading...";
 Dim Song As Long
-Song = SndOpen("GJ-TD.S3M") ' Replace this with your sound file
+Song = SndOpen("ASSETS/GJ-TD.S3M") ' Replace this with your sound file
 If Song < 1 Then
     Print "Failed to load song!"
     End

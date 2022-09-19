@@ -4,9 +4,10 @@ x = 0
 y = 0
 w = 512
 h = 256
-' img& = _LOADIMAGE("/Users/gj/git/qb64/qb64/COLORS/STARFIGHTER.png", 256)
-' _PUTIMAGE (x,y)-(x+w,y+h), img&, CANVAS&, (0, 0)-(w, h)
-'_FULLSCREEN _SQUAREPIXELS
+
+img& = _LOADIMAGE("ASSETS/STARFIGHTER.png", 256)
+_PUTIMAGE (x,y)-(x+w,y+h), img&, CANVAS&, (0, 0)-(w, h)
+_FULLSCREEN _SQUAREPIXELS
 
 limit    = 60  ' Loop limiter
 startIdx = 1   ' Starting palette color
@@ -34,10 +35,6 @@ FOR z = 0 TO UBOUND(c)
     c = (c + 1) MOD UBOUND(c)
     IF c = 0 THEN c = 1
 NEXT z
-
-
-        ' UI_TB(i).iHnd& = _LOADIMAGE(UI_IMAGES_DIR + UI_TB(i).iSrc, 32)
-        ' _PUTIMAGE (x,y)-(x+w,y+h), UI_TB(i).iHnd&, CANVAS&, (0, 0)-(w, h)
 
 ' Set starting palette using color array
 FOR z = 0 TO UBOUND(c)

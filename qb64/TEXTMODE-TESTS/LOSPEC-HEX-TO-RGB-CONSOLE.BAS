@@ -12,13 +12,13 @@
 ' @uses: https://lospec.com/palette-list/ansi32.hex
 ' @author Rick Christy <grymmjack@gmail.com>
 '
-'$INCLUDE:'../_LIB/ANSI.BI'
+'$INCLUDE:'../../../QB64_GJ_LIB/ANSI/ANSI.BI'
 ' Setup the console
 $CONSOLE:ONLY
 _CONTROLCHR OFF
 
 ' Palette downloaded from LOSPEC in HEX format
-HEX_PALETTE_FILE$ = "./ANSI32.HEX"
+HEX_PALETTE_FILE$ = "ASSETS/ANSI32.HEX"
 _BLINK OFF
 
 TYPE RGB_COLOR
@@ -94,4 +94,4 @@ NEXT I%
 
 PRINT ansi_mode_reset_all + ansi_bg_black + ansi_fg_reset
 
-'$INCLUDE:'../_LIB/ANSI.BM'
+'$INCLUDE:'../../../QB64_GJ_LIB/ANSI/ANSI.BM'

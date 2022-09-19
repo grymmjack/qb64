@@ -1,5 +1,5 @@
 SCREEN _NEWIMAGE(1024, 768, 32)
-i& = _LOADIMAGE("STARFIGHTER-RGB32.png") '<<<<<<<<<<<<< use any 24 bit image file
+i& = _LOADIMAGE("ASSETS/STARFIGHTER-RGB32.png") '<<<<<<<<<<<<< use any 24 bit image file
 
 FOR n! = 1 TO 0.01 STEP -0.01
     i2& = _COPYIMAGE(i&)

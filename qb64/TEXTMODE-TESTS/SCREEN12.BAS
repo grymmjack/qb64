@@ -16,7 +16,7 @@ NEXT BG
 
 'COLOR 16, 7
 'TEXT$ = "TESTING 12345!"
-'PRINT "Û²±°" + STRING$(72, " ") + "°±²Û"
+'PRINT "Û²ï¿½ï¿½" + STRING$(72, " ") + "ï¿½ï¿½ï¿½ï¿½"
 'LOCATE 1, (80 - LEN(TEXT$)) \ 2
 'PRINT "TESTING 12345!"
 'LOCATE 25, 1

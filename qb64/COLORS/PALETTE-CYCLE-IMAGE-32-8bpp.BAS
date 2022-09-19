@@ -8,7 +8,7 @@ h = 256
 x = (800 - w) \ 2
 y = (600 - h) \ 2
 
-img& = _LOADIMAGE("STARFIGHTER-VGA.png", 256)
+img& = _LOADIMAGE("ASSETS/STARFIGHTER-VGA.png", 256)
 _SCREENMOVE _MIDDLE
 
 _PUTIMAGE (x,y), img&, CANVAS&

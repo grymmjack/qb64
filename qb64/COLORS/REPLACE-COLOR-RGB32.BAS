@@ -9,7 +9,7 @@ h = 256
 x = (800-w) \ 2
 y = (600-h) \ 2
 
-img& = _LOADIMAGE("STARFIGHTER-RGB32b.png", 32)
+img& = _LOADIMAGE("ASSETS/STARFIGHTER-RGB32b.png", 32)
 _PUTIMAGE (x,y), img&, CANVAS&
 
 DO

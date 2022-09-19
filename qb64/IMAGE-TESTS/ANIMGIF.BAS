@@ -53,7 +53,7 @@ SCREEN _NEWIMAGE(220, 220, 32)
 DIM gifData AS GIFDATA
 DIM frameData(0 TO 0) AS FRAMEDATA
 
-filename$ = "nyan-cat.gif"  '<<<<<<<<<<<< Enter a file name here!!!
+filename$ = "ASSETS/nyan-cat.gif"  '<<<<<<<<<<<< Enter a file name here!!!
 
 IF LEN(filename$) = 0 THEN END
 openGif filename$, gifData, frameData()
