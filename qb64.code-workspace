@@ -28,9 +28,7 @@
 		"editor.lineHeight": 1.1,
 		"editor.fontWeight": "normal",
 		"git.enableSmartCommit": true,
-		"git.autofetch": true,
 		"git.confirmSync": false,
-		"workbench.iconTheme": "vs-seti",
 		"workbench.colorTheme": "MS-DOS Editor Theme",
 		"editor.suggest.preview": true,
 		"workbench.colorCustomizations": {
@@ -163,7 +161,6 @@
 			"scrollbarSlider.hoverBackground": "#ffffff40",
 			"scrollbarSlider.activeBackground": "#ffffff40"
 		},
-		"editor.minimap.autohide": false,
 		"editor.minimap.showSlider": "always",
 		"terminal.integrated.copyOnSelection": true,
 		"terminal.integrated.cursorBlinking": true,
@@ -171,7 +168,6 @@
 		"terminal.integrated.enableBell": true,
 		"terminal.integrated.enableFileLinks": true,
 		"terminal.integrated.gpuAcceleration": "on",
-		"terminal.integrated.scrollback": 9999,
 		"terminal.integrated.shellIntegration.enabled": true,
 		"editor.cursorBlinking": "blink",
 		"editor.matchBrackets": "always",
