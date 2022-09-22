@@ -16,6 +16,7 @@
 			"**/*.run": true,
 			"**/*_start.command": true
 		},
+		"zenMode.centerLayout": true,
 		// "editor.multiCursorModifier": "ctrlCmd",
 		"qb64.compilerPath": "/Users/gj/Downloads/qb64-2.1/qb64",
 		"extensions.ignoreRecommendations": false,
