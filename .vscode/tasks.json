@@ -13,20 +13,18 @@
 					"'${fileDirname}/${fileBasenameNoExtension}.exe'"
 				],
 				"linux": {
-					"command": "${config:qb64.installPath}/qb64",
 					"args": [
 						"-c",
 						"'${fileDirname}/${fileBasename}'",
 						"-x",
 						"-o",
-						"'${fileDirname}/${fileBasenameNoExtension}'"
+						"'{fileDirname}/${fileBasenameNoExtension}'"
 					]
 				},
 				"osx": {
-					"command": "${config:qb64.installPath}/qb64",
 					"args": [
 						"-c",
-						"'{fileDirname}/${fileBasename}'",
+						"'${fileDirname}/${fileBasename}'",
 						"-x",
 						"-o",
 						"'${fileDirname}/${fileBasenameNoExtension}'"
