@@ -1,0 +1,401 @@
+
+
+              ==========================================
+                      Dav's IDE v1.29 - (c) 2013
+                   A simple IDE for the QB64 Compiler
+              ===========================================
+
+
+                    * * * * CHANGE LOG * * * *
+                            
+
+ ------------------------------------------------------------------------
+
+ v1.29
+ -----
+
+ * Added: 'Insert Custom Comments' to edit menu.  User can set custom comments
+          to quickly insert into programs.  Comments saved in the .INI file.  
+          Set this in the 'IDE Settings/More IDE Settings/Set Custom Comments'.
+
+ * Added: Option to only compile files with a .BAS extension (off by default).
+          You may toggle this ON/OFF in the 'Compiler Options' menu.
+
+ * Added: Optional Precompiler action to run before compiling. Can turn ON/OFF 
+         (default OFF). Set the Precompiler in the 'Compiler Options' menu.
+
+ * Added; 'Insert _RGB() color' to edit menu. Select a Color and the proper
+          _RGB code for it will be added in your code, like: _RGB(123, 33, 88) 
+
+ * Added: Added 'Clear Recent Files List' option in 'More IDE Settings' menu.
+
+ * Fixed: FINALLY fixed the 'Recent Files' sorting bug. Duplicates removed and 
+          are listed in order used. Last file opened shown first, etc. 
+          (This was surprisingly tough to work out!).
+
+
+ v1.28
+ -----
+
+ * Added: Pressing ENTER while in the "Find Text" dialog box can start a search
+          and can also continue searching (find next). 
+
+ * Added: 'Find/Replace' now opens with any text user may have highlighted first.
+          You dont have to type it in the box, just highlight the text beforehand.
+          (note: currently restriced to data on a single line)
+
+ * Added: Courtesy notice given when selecting 'Open file in QB64' that this action 
+          will save the file first and any current changes.  User has the option to
+          proceed or not (If not then the file changes won't be saved). 
+
+ * Fixed: Bug where saving after compiling then pressing F5 executed compiler again 
+          instead of running the last compiled program. 
+
+
+ v1.27
+ -------------
+
+ * Added: Can now specify the QB64 compiler switch to use when compiling.
+          Defaults to -c, but you can change it to another one (like -x)
+          Look in the 'Compiler options...' menu for the change.
+          The current switch is now shown in the 'COMPILER=' info line.
+
+ * Fixed: Changed name of TEMP file used in compiling to a name compatable
+          with older QB64 compiler versions, (Now: _$DavsIDE-TEMPFILE.BAS)
+
+ * Changed: 'Modify COMMAND$...' replaces 'Optional Parameters to pass to
+             your EXE..." in the 'Compile' menu. (works like in QB45 IDE)
+
+ * Fixed: Corrected possible .INI saving/loading issue on certain systems.
+
+
+
+ v1.26
+ -------------
+
+ * Added: Command-line parameters can now be passed along to your compiled 
+          program when the IDE Runs it (Like QB does it).  Look for it under
+          the menu: 'Compile / Optional parameters to pass to EXE...'.
+
+ * Fixed: Fixed bug where compiler couldn't find supporting BI/.BM files when 
+          BAS was located in a directory other than the compiler.
+
+ * Fixed: Saving BAS changes made compiler think the code was unmodified and
+          would just run the last compiled EXE instead of compiling it.
+
+ * Fixed: (fingers crossed) fixed bug where after compiling a modified BAS
+          the IDE failed to ask user to save it first before closing it.
+
+
+ v1.25
+ -------------
+
+ * Added: TEMP file compiling. Compiling BAS no longer auto-saves the BAS first,
+          so you can edit + compile without making the BAS change permanant until
+          you save the edited BAS file yourself.  You can also compile & run
+          untitled programs (without saving it as a BAS first).
+
+ * Fixed: Saving/Compiling a file now does NOT empty the undo/redo buffer.
+          (So after a test compile, you can undo what you did before compiling)
+
+ * Fixed: Pressing F5 now re-compiles ONLY if BAS has been modified again.
+          If it hasn't been modified, the IDE runs the last compiled EXE.
+          Changed compile menu item to "Run/Compile" to reflect this.
+
+ * Added: Save/Load/Select all of the Notebox data (right click in Notebook).
+          (Tweaked notebook color - will add user selected colors next release)
+
+ * Fixed: File open dialog now defaults to list all QB64 files (BAS/BI/BM)
+          You Can still filter them separately. (Also Added .BM files to list)
+
+ * Added: Added a Toggle for displaying full path or just the filename in title bar.
+          (Turned on by default - Look in the 'MORE IDE SETTINGS' menu for it)
+
+ * Added: Gave a Shortcut to the 'Go to Line' number: (Ctrl+G) 
+
+ * Added: ESC key can now close all HELP windows and ASCII Chart.
+
+ * Added: Added the following new GL keywords to the IDE (Edit/Help/Status bar syntax):
+          _MEMEXISTS,$RESIZE,_RESIZE,_RESIZEHEIGHT,_RESIZEWIDTH,_SNDRAWDONE,_SNDRAWOPEN
+
+ * Fixed: Various typos in the HELP stuff.
+
+
+ v1.24
+ -------------
+
+ * Changed SUB/FUNCTION selection box.  Made it larger and gave it the 
+   QB-like font to match the rest of IDE style.  It's easier to use now.
+
+ * Fixed IDE from moving cursor position when the user canceled selecting
+   a SUB/FUNCTION from the SUB/FUNCTION selection box.
+
+ * Added "Please wait" message while SUB/FUNCTIONs list loads. On large 
+   sources containing hundreds of SUBs it may take a second or two.
+
+ * Fixed TAB (CHR$(9))from triggering a low ASCII warning when loading a
+   file.  (TABs are displayed & handled correctly in the IDE anyway)
+
+ * Added pressing ESC to also close some IDE windows, like the Note Box.
+
+
+ v1.23
+ -------------
+
+ * Fixed the Advanced Right Click Menu bug (appeared in v1.18) where the
+   recent file List was mysteriously added to the bottom of the pop menu
+   when a main menu selection occurred - resulting in a very long popup
+   menu display. This may be a Purebasic/SDL bug, which I only fixed by 
+   destroying & recreating the popup menu after every menu selection.
+
+ * Fixed a Title bar bug where the filename in the title bar was being 
+   changed even when the user canceled saving/loading a file.
+
+
+ v1.22
+ -------------
+
+ * Added "Go to SUB" and "Go to FUNCTION" in the new "Go to" menu.
+   A list of all SUB/FUNCTION currently contained in the code is 
+   displayed and the user can jump to them by double-clicking on
+   the name. This will exentually be changed to "View.." and they 
+   will be shown & edited separately from the main code (WIP).
+
+ * Moved "Go to Line number..." from Edit menu to the Go to menu. 
+
+ * Added current line number display at bottom right so you can
+   still know the current line when line-display is turned off.
+
+
+ v1.21
+ -------------
+
+ * Added choice of 3 Font sizes to the IDE editing window:
+   12pt (9x16), 14pt (10x19) and 16pt (11x22).  Font size defaults
+   to 12pt when first run, but you can set a new size from the
+   "IDE Settings" menu.  The size will be remembered next time.
+   The Font type is "Codepage 437" and cannot be changed.
+
+
+ v1.20
+ -------------
+
+ * Added Realtime keyword Syntax usage displayed in StatusBar.
+   Typing keywords in IDE updates StatusBar with correct usage.
+   Navigating the cursor on a keyword (by arrows or mouse) will 
+   update statusbar with that keyword syntax and help info.
+ * Fixed a memory releasing issue when exiting IDE.
+   
+
+ v1.19
+ -------------
+
+ * Added a Toolbar of standard file editing actions.  Toolbar view
+   can be toggled ON/OFF in IDE SETTINGS Menu (It's ON by default).
+ * Added a "More IDE Settings..." Sub-Menu, to hold More of course.
+   Put some older items in there to prevent an ever growing menu.
+ * Fixed Undo/Redo buffer. Now correctly resets Scintilla Undo/Redo 
+   buffer when doing any File New/Loading/Saving.
+ * Added option to reset all colors in custom scheme to default.
+   (just in case you want to start it all over from scratch)
+ * Added a set Bookmark color option to the custom color scheme.
+
+
+ v1.18
+ -------------
+
+ * Added Optional Autoloading of last opened file on IDE startup.
+   The Autoload option is turned OFF by default (in IDE SETTINGS).
+   After autoloading, the last editing line is remembered and set.
+   Opening files from the commandline overides Autoloading, so you
+   can associate BAS files with the IDE and open them as usual.
+ * Increased number of recent files to 8, gave them numbers menu.
+ * Fixed IDE from saying you have the latest version if it failed 
+   to connect to the website when checking for a new version. 
+   
+
+ v1.17
+ -------------
+
+ * Added "Check for new version online" in Help menu.
+   If new version found, gives option of opening link.
+ * Added Option to check for new version on startup (IDE Settings).
+   The automaic check on startup is turned OFF by default.
+   (DavsIDE won't go online unless YOU say so...)
+ * Changed HELP shortcut to F1 from Ctrl+L (that was reassigned).
+   F1 is the standard shortcut in windows programs.
+ * Added Ctrl+Q Shortcut to "Open File in QB64".
+ * Added Ctrl+L Shortcut to "Run Last Compiled EXE"
+ * Added List of IDE Shortcuts in Help menu
+
+
+ v1.16
+ -------------
+
+ * Added Bookmarks - Mark/Unmark line, jump to mark, clear all.
+   Bookmarks not yet saved with files and lost when file reloaded.
+ * Added a user Note Box (in Help menu) to save users notes, etc.
+   The Data is saved in DavsIDE.ini and will be remembered.
+ * Added * in title bar to denote file is modified and not saved.
+   Only shows on real, previously saved files (not untitled.bas)
+ * Fixed several internal things not worth explaining.  
+
+
+ v1.15
+ -------------
+
+ * Added "Compiler Options" letting you set compiler location,
+   and option of making EXE in the same location as BAS source.
+   The current set compiler location is shown in the menu.
+ * Added "Run Last Compiled EXE" option to the compile menu.
+ * Added "Recent Files" list to the File menu for easy access.
+ * Added 26 new QB64 keywords/syntax to the IDE (QB64 v0.954).
+ * Added PRINT Shortcut (?) to the Syntax highlighted keywords.
+ * Fixed bug that caused IDE to constantly ask to save file.
+   (only happened when the BAS file was named UNTITLED.BAS)
+ * Fixed bug that cause stray DavsIDE.ini files to be created
+   if the IDE wasn't run from within the QB64 folder.
+    
+
+ v1.14
+ -------------
+
+ * Added built-in HELP for all QB64 Keywords.
+   Read the HELP help page for more information. 
+   (in the HELP box type: HELP)
+ * Added Autocompletin Code Box (you can turn it on/off).
+ * Added Advanced right click menu for those who prefer that.
+ * Added Go to Line Number, some may want it.
+ * Added some Easter Eggs (game, jokes, etc..)
+
+
+ v1.13
+ -------------
+
+ * Added ability to fully customize IDE colors.
+   Now you can create your own IDE color scheme.
+ * Changed Default IDE color scheme to a new one.
+   Old default scheme still available as 'Xebron'.
+   (that makes 11 built-in schemes + 1 user defined)
+ * Added a QB64 keyword to the syntax highlighting.
+
+
+ v1.12
+ -------------
+
+ * Added all IDE settings are now saved when exiting IDE.
+ * (DavsIDE.ini settings file created in program  directory)
+
+
+ v1.11
+ -------------
+
+ * Added Toggle Autocase Keywords On/Off.
+ * Added Toggle syntax Highlight On/Off.
+   ( The above two changes were added to allow non-QB64 )
+   ( text files, like C/PHP/HTML, to be edited better.  )
+ * Consolidated all IDE Settings to the IDE Settings menu.
+
+
+ v1.10
+ -------------
+
+ * Added full Printing capability - now print your code.
+ * Added LineNumbers ON/OFF Toggle in View menu. While ON
+ * Added SELECT ALL option in edit menu, & shortcut (Ctrl+A)
+ * Added FIND NEXT in edit menu, & shortcut (F3)
+ * Added the .BI extension to 'Insert File' dialog boc.
+
+
+ v1.09 changes
+ -------------
+
+ * Added Find/ & Replace text (with match case, whole word)
+ * Added 3 more IDE color schemes - making that 10 in total!
+ * Fixed bug in loading routine (nothing major, no worries)
+ * Fixed bug in IDE color menu (again, nothing major)
+
+
+ v1.08 changes
+ -------------
+
+ * Added Autocasing of keywords (ie: 'print' becomes 'PRINT')
+ * Added 2 new IDE color schemes: Dav's Colors & Dark Candy
+ * Added Quick Links to QB64.NET and My WebSite
+ * Added IDE Help from menu
+ * Improved file loading/saving routines
+
+
+ v1.07 changes
+ -------------
+
+ * Added 5 IDE Color Schemes! Something for everyones taste.
+ * Added A NEW ASCII Chart to COPY/PASTE Extended Characters.
+ * Added .BI to the File OPEN/SAVE dialog list.
+ * Added Insert (paste) File at current position.
+ * Added warning NOTICE when loading Control Characters.
+ * Fixed some misspelled keywords in Lexer (like DYNAMIC).
+ * Fixed some Scintilla/IDE settings issues (CODEPAGE).
+
+
+ v1.06 changes
+ -------------
+
+ * Added Syntax-Highlighting for all QB64 commands and functions.
+   DavsIDE uses the Scintilla library for editing & highlighting.
+   the Scintilla License is located at the bottom of this document.
+ * Removed unused functions no longer needed because of Scintilla.
+ * Fixed a few file save/load bugs and cut/copy/paste issues.
+ * Added AutoIndent (drops down to previous column)
+ * Added Redo option in menu. 
+
+
+ v1.05 changes 
+ -------------
+
+ * Stopped IDE from trying to run a EXE when QB64 failed to compile one.
+ * Lowered ASCII Chart size to display better on smaller screen settings. 
+
+
+ v1.04 changes
+ -------------
+
+ * Replaced ASCII Chart with much better image (made in QB64!) and
+   much smaller one too. That, along with code optimization, resulted 
+   in 10% smaller EXE size.
+
+
+ v1.03 changes
+ -------------
+
+ * Added a built-in QB-like font that displays extended ASCII codes.
+   Does not require a font installation. IDE back to QB style look.
+
+ * Fixed serious bug that may save garbage when extended ASCII codes
+   used (fixed thanks to the new IDE font system used).
+
+ * Added a ASCII chart that shows all character codes.
+
+ * readme.txt was renamed DavsIDE.txt.
+
+
+ v1.02 changes
+ -------------
+
+ * (not distributed)
+
+
+ v1.01 Changes
+ -------------
+
+ * Changed font to view extended ASCII characters and changed IDE
+   color to look better with new font. Forced to ditch QB look...
+
+
+ v1.00 
+ -------------
+
+ * First version released November 30th, 2010.
+
+ ------------------------------------------------------------------------
+ ------------------------------------------------------------------------                

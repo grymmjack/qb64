@@ -5,6 +5,9 @@
 		},
 		{
 			"path": "../QB64_GJ_LIB"
+		},
+		{
+			"path": "../qb64-fh-Snippets"
 		}
 	],
 	"settings": {

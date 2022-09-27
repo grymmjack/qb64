@@ -1,0 +1,114 @@
+=============================================
+How to Append Data to the End of an .EXE File
+=============================================
+
+Thrown together by Dav. 
+
+"What is this?"
+
+This tutorial explains how you can append a data file, such as BMP, 
+to the end of a compiled QuickBasic program (an EXE file) and have the 
+program access it when it's running.
+
+"Why should I need it?"
+
+This technique can be useful if you want to include a file with your 
+program without distributing it seperately. This way the file will be 
+attached to the end of the EXE, so all you would have to distribute is 
+the EXE file.
+
+============================================================
+NOTE: In addition to this tutorial, I *HIGHLY* recommend using 
+a routine that gets the name of the currently running EXE file 
+(in case the EXE gets re-named - then this stuff won't work). 
+You can find such a routine coded by Glenn - and you can find 
+a link to his website at the top of the code post forum.
+============================================================
+
+"So how does it work?"
+
+Ok, the EXE must know what size it is, and at what position the data 
+would begin. How do we do this? Well, we have to get some EXE header 
+information and get the actual size of the executable part of the EXE, 
+and determine the position where that ends, and where the data begins. 
+Once that position is known, the EXE file can be OPENed and the data 
+read just like any other file.
+
+"What info do we need?"
+
+We don't need much EXE header info to do this, just 4 bytes in all, 
+or 6 if you want to check the EXE ID, which should always be MZ - the 
+intitials of the dude who defined the EXE structure - so I'm told.
+
+I'm no EXE expert, but I do have some specs on the EXE header as defined 
+by a QuickBasic program. We'll only need the first three:
+
+The part we need....
+
+     Exe.Signature (2 bytes) - should always be "MZ"
+     Exe.ExtraBytes (2 bytes) - number of bytes in last page
+     Exe.Pages (2 bytes) - number of whole and part pages
+
+The rest of the junk....
+
+     Exe.RelocItems (2 bytes)
+     Exe.HeaderSize (2 bytes)
+     Exe.MinAlloc (2 bytes)
+     Exe.MaxAlloc (2 bytes)
+     Exe.InitSS (2 bytes)
+     Exe.InitSP (2 bytes)
+     Exe.CheckSum (2 bytes)
+     Exe.InitIP (2 bytes)
+     Exe.InitCS (2 bytes)
+     Exe.RelocTable (2 bytes)
+     Exe.Overlay (2 bytes)
+
+Ok - we only need the first three fields (Exe.Signature, Exe.ExtraBytes, 
+Exe.Pages) to compute the size of the image area of the executable and 
+find the beginning of the data area.
+
+........
+
+First, we have to open the EXE file.
+
+NOTE: Use a routine such as Glenn has coded to find the true name of any 
+running EXE file. This way, if the EXE is renamed, this technique will 
+still work.
+
+   OPEN "filename.exe" FOR BINARY AS 1 'name of the EXE file
+
+Next, we grab the EXE header information....
+
+   Exe.Signature$ = INPUT$(2,1) 'should be "MZ"
+   Exe.Pages% = CVI(INPUT$(2, 1)) 'number of bytes in last page
+   Exe.ExtraBytes% = CVI(INPUT$(2, 1)) 'number of whole and part pages
+
+Now compute the exe image size...
+
+   IF Exe.Pages% MOD 512 <> 0 THEN
+      'if there's partial pages...
+      Exe.Size& = Exe.Pages% * 512& -(512& - Exe.ExtraBytes%)
+   ELSE
+      'If there's no partial pages...
+      Exe.Size& = Exe.Pages% * 512&
+   END IF
+
+   Datalocation& = Exe.Size& + 1
+
+  PRINT "EXE size is: "; Exe.Size&
+  PRINT "Data begins: "; Datalocation&
+
+Ok, so the location in the EXE where the data begins is at Datalocation&. 
+Thats all we need to know. We can get to it now like:
+
+   SEEK 1, Datalocation&
+
+That's it. Once the program is compiled, you can use DOS's copy command 
+to add the data to the EXE like so:
+
+COPY /B oldfile.exe+datafile.ext newfile.exe
+
+I hope this was clear. If you would like a full example program you can 
+compile using this technique, just ask and I'll post one.
+
+- Dav
