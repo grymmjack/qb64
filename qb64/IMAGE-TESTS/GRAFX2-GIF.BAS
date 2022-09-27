@@ -69,12 +69,54 @@ direction$ = "forwards"
 ' Determine color range of cycling
 range = endIdx - startIdx
 
+HEX_PALETTE_FILE$ = "ASSETS/ANSI32.HEX"
+
+TYPE RGB_COLOR
+    R AS INTEGER
+    G AS INTEGER
+    B AS INTEGER
+    H AS STRING
+    HEX32 AS STRING
+END TYPE
+
+'$DYNAMIC
+DIM RGB_PAL(256) AS RGB_COLOR ' Support for 256 colors maximum
+
+' Read the palette from the file and store it in RGB_PAL
+OPEN HEX_PALETTE_FILE$ FOR INPUT AS #1&
+COLOR_COUNT% = 0
+DO UNTIL EOF(1)
+    LINE INPUT #1, COLOR$
+
+    RED$   = UCASE$(MID$(COLOR$, 1, 2))
+    GREEN$ = UCASE$(MID$(COLOR$, 3, 2))
+    BLUE$  = UCASE$(MID$(COLOR$, 5, 2))
+
+    R$ = "&H00" + RED$
+    G$ = "&H00" + GREEN$
+    B$ = "&H00" + BLUE$
+    H$ = "#" + COLOR$
+    HEX32$ = "&HFF" + RED$ + GREEN$ + BLUE$
+
+    RGB_PAL(COLOR_COUNT%).R = VAL(R$)
+    RGB_PAL(COLOR_COUNT%).G = VAL(G$)
+    RGB_PAL(COLOR_COUNT%).B = VAL(B$)
+    RGB_PAL(COLOR_COUNT%).H = H$
+    RGB_PAL(COLOR_COUNT%).HEX32 = HEX32$
+
+    COLOR_COUNT% = COLOR_COUNT% + 1
+LOOP
+CLOSE #1
+
+' Resize the array to save space if we aren't using 256 colors
+REDIM _PRESERVE RGB_PAL(COLOR_COUNT%) AS RGB_COLOR
+
 ' Holds all the colors
 DIM c(255, 3) AS LONG
 
 ' Get starting palette from image using color array
 FOR z& = 0 TO UBOUND(c)
-    value32& = _PALETTECOLOR(z&, img&)
+    value32& = _PALETTECOLOR(z&, CANVAS&)
     r& = _RED32(value32&)
     g& = _GREEN32(value32&)
     b& = _BLUE32(value32&)

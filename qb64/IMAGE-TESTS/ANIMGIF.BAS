@@ -8,7 +8,7 @@
 DEFINT A-Z
 '$DYNAMIC
 
-DIM SHARED Dbg: Dbg = 0
+DIM SHARED Dbg: Dbg = 2
 DIM SHARED powerOf2&(11)
 FOR a = 0 TO 11: powerOf2&(a) = 2 ^ a: NEXT a
 
