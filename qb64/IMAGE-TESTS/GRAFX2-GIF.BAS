@@ -1,6 +1,6 @@
 '$INCLUDE:'../../../QB64_GJ_LIB/_GJ_LIB.BI'
 SCREEN _NEWIMAGE(1024, 768, 256)
-DIM gif~%%(511)
+DIM gif~%%(255)
 OPEN "ASSETS/test.gif" FOR BINARY AS #1
 GET #1, , gif~%%()
 CLOSE #1
