@@ -1,10 +1,10 @@
 $Debug
 '$INCLUDE:'../../../QB64_GJ_LIB/_GJ_LIB.BI'
-canvas& = _NEWIMAGE(1024, 768, 256)
+canvas& = _NEWIMAGE(1024, 768, 32)
 SCREEN canvas&
 
 DIM SHARED buffer~%%(127)
-file$ = "C:\GIT\QB64\QB64\IMAGE-TESTS\ASSETS\test.gif"
+file$ = "ASSETS/test.gif"
 pos_in_file = find_in_file(file$, "CRNG", buffer~%%())
 PRINT pos_in_file
 PRINT dump_unsigned_byte_array_as_ascii(buffer~%%(), "DATA")
@@ -60,7 +60,7 @@ END TYPE
 DIM gifData AS GIFDATA
 DIM frameData(0 TO 0) AS FRAMEDATA
 
-filename$ = "C:\git\qb64\qb64\IMAGE-TESTS\ASSETS\test.gif"  '<<<<<<<<<<<< Enter a file name here!!!
+filename$ = "ASSETS/test.gif"  '<<<<<<<<<<<< Enter a file name here!!!
 openGif filename$, gifData, frameData()
 CLOSE gifData.file
 
@@ -95,7 +95,7 @@ FOR i = 0 TO MAX_CYCLE_CONFIGS
         "inverse?:"; cc(i).inverse
 NEXT i
 
-img& = _LOADIMAGE(file$, 256)
+img& = _LOADIMAGE(file$, 32)
 _SOURCE img&
 _DEST canvas&
 ' _PUTIMAGE(img&, canvas&)
@@ -103,7 +103,7 @@ _DEST canvas&
 ' img& = _LOADIMAGE("ASSETS/STARFIGHTER-VGA.gif", 256)
 
 ' _PUTIMAGE (x,y)-(x+w,y+h), img&, CANVAS&
-_PUTIMAGE (700,0), img&, canvas&
+_PUTIMAGE (2*300,2*0)-(2*620,2*200), img&, canvas&
 
 limit    = 5 ' Loop limiter
 startIdx = cc(0).color_range_start ' Starting palette color
@@ -134,6 +134,30 @@ NEXT z&
 
 dump_colors c&(), "SCREEN 13", FALSE
 
+DO
+    ' FOR x=0 TO 15
+    '     FOR i=cc(x).color_range_start_range TO cc(x).color_end_range
+    '         ReplaceColorInBitmap _
+    '             canvas&, _
+    '             _RGB32(c&(i,1), c&(i,2), c&(i,3)), _
+    '             _RGB32(c&(i+1,1), c&(i+1,2), c&(i+1,3))
+    '     NEXT i
+    ' NEXT x
+    ' FOR x=14 TO 0 STEP -1
+    '     FOR i=cc(x).color_start_range TO cc(x).color_end_range
+    '         ReplaceColorInBitmap _
+    '             canvas&, _
+    '             _RGB32(c&(i,1), c&(i,2), c&(i,3)), _
+    '             _RGB32(c&(i+1,1), c&(i+1,2), c&(i+1,3))
+    '     NEXT i
+    ' NEXT x
+    FOR i=1 to UBOUND(c)
+        ReplaceColorInBitmap _
+            canvas&, _
+            _RGB32(c&(i,1), c&(i,2), c&(i,3)), _
+            _RGB32(c&(i+1,1), c&(i+1,2), c&(i+1,3))
+    NEXT i
+LOOP UNTIL _KEYHIT = 27
 END
 
 ' Cycle palette until ESC is pressed
@@ -401,6 +425,54 @@ SUB skipBlocks (file)
         IF Dbg AND 2 THEN PRINT "block size ="; byte~%%
         SEEK file, LOC(file) + byte~%% + 1
     LOOP WHILE byte~%%
+END SUB
+
+
+
+SUB ReplaceColorInBitmap (img&, srcColor&, destColor&)
+    bpp = _PIXELSIZE(img&) : w = _WIDTH(img&) : h = _HEIGHT(img&)
+
+    ' Only 32bpp images allowed
+    IF bpp <> 4 THEN EXIT SUB 
+
+    ' Setup buffer and offset
+    DIM buffer AS _MEM
+    buffer = _MEMIMAGE(img&)
+    DIM AS _OFFSET o, oLast
+    o = buffer.OFFSET                   ' Start here
+    oLast = buffer.OFFSET + w * h * bpp ' Stop here
+
+    ' s = Source, c = Check, d = Destination
+    DIM AS _UNSIGNED _BYTE sR, sG, sB, cR, cG, cB, dR, dG, dB
+
+    ' Source color RGB
+    sR = _RED(srcColor&)
+    sG = _GREEN(srcColor&)
+    sB = _BLUE(srcColor&)
+
+    ' Destination color RGB
+    dR = _RED(destColor&)
+    dG = _GREEN(destColor&)
+    dB = _BLUE(destColor&)
+
+    ' Check every color in the image
+    DO
+        ' Get colors from image
+        cB = _MEMGET(buffer, o, _UNSIGNED _BYTE) : o = o + 1
+        cG = _MEMGET(buffer, o, _UNSIGNED _BYTE) : o = o + 1
+        cR = _MEMGET(buffer, o, _UNSIGNED _BYTE) : o = o + 1
+
+        ' Check if they match and...
+        IF (sR = cR AND sG = cG AND sB = cB) THEN
+            ' ...replace if they do
+            o = o - 3
+            _MEMPUT buffer, o, dB AS _UNSIGNED _BYTE : o = o + 1
+            _MEMPUT buffer, o, dG AS _UNSIGNED _BYTE : o = o + 1
+            _MEMPUT buffer, o, dR AS _UNSIGNED _BYTE : o = o + 1
+        END IF
+        o = o + 1
+    LOOP UNTIL o = oLast
+    _MEMFREE buffer
 END SUB
 
 

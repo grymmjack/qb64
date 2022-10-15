@@ -8,10 +8,10 @@ h = 256
 x = (800 - w) \ 2
 y = (600 - h) \ 2
 
-img& = _LOADIMAGE("ASSETS/STARFIGHTER-VGA.png", 256)
-_SCREENMOVE _MIDDLE
+img& = _LOADIMAGE("ASSETS/STARFIGHTER-VGA.gif", 256)
+_PUTIMAGE (x,y)-(x+w,y+h), img&, CANVAS&, (0, 0)-(w, h)
 
-_PUTIMAGE (x,y), img&, CANVAS&
+_SCREENMOVE _MIDDLE
 ' _FULLSCREEN _SQUAREPIXELS
 
 SLEEP 
