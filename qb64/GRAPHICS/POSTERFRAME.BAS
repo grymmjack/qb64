@@ -1,0 +1,7 @@
+SCREEN _NEWIMAGE(1280, 720, 32)
+
+FONT_FILE$ = "Geometos.ttf"
+F& = _LOADFONT(FONT_FILE$, 32)
+_FONT F&
+
+
