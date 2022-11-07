@@ -19,6 +19,11 @@
 		"editor.multiCursorModifier": "ctrlCmd",
 		"zenMode.centerLayout": true,
 		// "editor.multiCursorModifier": "ctrlCmd",
+<<<<<<< Updated upstream
+=======
+		// "qb64.compilerPath": "/Users/gj/Downloads/qb64-2.1/qb64",
+		//"qb64.compilerPath": "/Users/gj/git/QB64pe/qb64pe",
+>>>>>>> Stashed changes
 		"extensions.ignoreRecommendations": false,
 		"editor.fontFamily": "\"Perfect DOS VGA 437 Win\", monospace",
 		"terminal.integrated.fontFamily": "\"Perfect DOS VGA 437 Win\", monospace",
@@ -204,6 +209,10 @@
 		"editor.guides.highlightActiveBracketPair": true,
 		"editor.quickSuggestionsDelay": 3000,
 		"editor.stickyScroll.enabled": true,
+<<<<<<< Updated upstream
 		"qb64.installPath": "/Users/gj/git/qb64-official"
+=======
+		"qb64.installPath": "I:\\git\\qb64-official"
+>>>>>>> Stashed changes
 	}
 }
