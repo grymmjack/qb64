@@ -23,7 +23,7 @@ img_title& = _NEWIMAGE(W, TITLE_PX, BPP)
 img_bg& = _LOADIMAGE(BG_IMG)
 _BLEND img_bg&
 _BLEND CANVAS&
-_SETALPHA BG_ALPHA, img_bg&
+_SETALPHA BG_ALPHA, ,img_bg&
 _PUTIMAGE (1, 1), img_bg&, CANVAS&
 
 DRAW "" _
