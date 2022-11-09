@@ -16,6 +16,7 @@ CONST _
     TITLE_X = 32, _
     TITLE_Y = 64
 
+
 CANVAS& = _NEWIMAGE(W, H, BPP)
 SCREEN CANVAS&
 COLOR ,&H0000AA
@@ -25,10 +26,12 @@ img_subtitle& = _NEWIMAGE(W, SUBTITLE_PX, BPP)
 img_title& = _NEWIMAGE(W, TITLE_PX, BPP)
 img_temp& = _NEWIMAGE(W, TITLE_BOX_H, BPP)
 
+' Background image
 img_bg& = _LOADIMAGE(BG_IMG)
 _SETALPHA BG_ALPHA, , img_bg&
 _PUTIMAGE (1, 1), img_bg&, CANVAS&
 
+' Black title box
 _DEST img_temp&
 DRAW "" _
     + "B M1,1" _
@@ -43,6 +46,7 @@ _SETALPHA TITLE_BOX_ALPHA, , img_temp&
 _PUTIMAGE (TITLE_BOX_X, TITLE_BOX_Y), img_temp&, CANVAS&
 _DEST 0
 
+' Title text
 F2& = _LOADFONT(FONT, TITLE_PX)
 _FONT F2&, img_title&
 _DEST img_title&
@@ -52,33 +56,7 @@ _DEST img_title&
 _DEST 0
 _PUTIMAGE (TITLE_X, TITLE_Y), img_title&, CANVAS&
 
-example$ = "" _
-    + " zindex:0" _
-    + " font:geometos" _
-    + " font_size:32" _
-    + " color_fg:" + STR$(_RGB(128, 128, 128)) _
-    + " color_bg:" + STR$(_RGB(0, 0, 0)) _
-    + " width:" + STR$(W) _
-    + " height: " + STR$(TITLE_BOX_H) _
-    + " alpha:200" _
-    + " text:'LET\'S LOOK AT'"
-
-' TYPE LAYER
-'     AS _UNSIGNED INTEGER zindex, font_size, width, height, alpha
-'     AS LONG color_fg, color_bg
-' END TYPE
-' DIM title AS LAYER
-' title.zindex = 0
-' title.font = "geometos"
-' title.font_size = 32
-' title.color_fg = _RGB(128, 128, 128)
-' title.color_bg = _RGB(0, 0, 0)
-' title.width = W
-' title.height = TITLE_BOX_H
-' title.alpha = TITLE_BOX_ALPHA
-' title.text = "LET'S LOOK AT"
-' draw_layer(title)
-
+' Sub-title text
 F& = _LOADFONT(FONT, SUBTITLE_PX)
 _FONT F&, img_subtitle&
 _DEST img_subtitle&
@@ -88,4 +66,57 @@ _DEST img_subtitle&
 _DEST 0
 _PUTIMAGE (SUBTITLE_X, SUBTITLE_Y), img_subtitle&, CANVAS&
 
+' Copy fully rendered screen
+old& = _COPYIMAGE(CANVAS&)
+_DISPLAY
+
+' Fade tests
 SLEEP
+fade_out _RGB(255, 255, 255), 25, 1
+SLEEP
+fade_in old&, 25, 1
+
+' Clean up
+_FREEIMAGE img_subtitle&
+_FREEIMAGE img_title&
+_FREEIMAGE img_temp&
+_FREEIMAGE img_bg&
+_FREEIMAGE old&
+
+
+
+''
+' Fades entire screen out to a color percentage at speed
+'
+' @param LONG toColor& Color to fade to in _RGB() format
+' @param INTEGER toPercent% percentage to fade to and stop
+' @param INTEGER speed% how fast to fade - 1 = normal speed
+' 
+SUB fade_out (toColor&, toPercent%, speed%)
+    colScreen& = _NEWIMAGE(W, H, BPP)
+    _DEST colScreen&
+    CLS ,toColor&
+    FOR i=0 TO toPercent% STEP speed%
+        _SETALPHA i, , colScreen&
+        _PUTIMAGE (0, 0), colScreen&, CANVAS&
+        _DISPLAY
+    NEXT i
+    _DEST 0
+    _FREEIMAGE colScreen&
+END SUB
+
+
+''
+' Fades an image into screen to percentage at speed
+'
+' @param LONG img& Image handle to fade in from _LOADIMAGE format
+' @param INTEGER toPercent% percentage to fade to and stop
+' @param INTEGER speed% how fast to fade - 1 = normal speed
+' 
+SUB fade_in (img&, toPercent%,  speed%)
+    FOR i=0 TO toPercent% STEP speed%
+        _SETALPHA i, , img&
+        _PUTIMAGE (0, 0), img&, CANVAS&
+        _DISPLAY
+    NEXT i
+END SUB
