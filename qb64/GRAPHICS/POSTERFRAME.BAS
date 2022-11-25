@@ -72,9 +72,9 @@ _DISPLAY
 
 ' Fade tests
 SLEEP
-fade_out _RGB(255, 255, 255), 25, 1
+fade_out _RGB(255, 255, 255), 100, 1
 SLEEP
-fade_in old&, 25, 1
+fade_in old&, 100, 1
 
 ' Clean up
 _FREEIMAGE img_subtitle&
