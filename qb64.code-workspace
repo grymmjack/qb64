@@ -203,6 +203,7 @@
 		"editor.guides.bracketPairsHorizontal": true,
 		"editor.guides.highlightActiveBracketPair": true,
 		"editor.quickSuggestionsDelay": 3000,
-		"debug.openDebug": "neverOpen"
+		"debug.openDebug": "neverOpen",
+		"qb64.isCreateBakFileEnabled": false
 	}
 }
