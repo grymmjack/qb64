@@ -16,7 +16,6 @@
 			"**/*.run": true,
 			"**/*_start.command": true
 		},
-		"editor.multiCursorModifier": "ctrlCmd",
 		"zenMode.centerLayout": true,
 		// "editor.multiCursorModifier": "ctrlCmd",
 		"extensions.ignoreRecommendations": false,
@@ -31,6 +30,7 @@
 		"git.enableSmartCommit": true,
 		"git.confirmSync": false,
 		"workbench.colorTheme": "MS-DOS Editor Theme",
+		"workbench.tree.indent": 16,
 		"editor.suggest.preview": true,
 		"workbench.colorCustomizations": {
 			"editorGutter.background": "#00000060",
