@@ -1,0 +1,10 @@
+REM Demonstration of PAINT
+REM \CHAP3\CH3_23.BAS
+
+SCREEN 1
+CIRCLE (106, 100), 75, 1
+LINE (138, 35)-(288, 165), 1, B
+PAINT (160, 100), 2, 1
+f$ = INPUT$(1)
+
+END

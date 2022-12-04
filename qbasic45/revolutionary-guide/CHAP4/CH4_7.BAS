@@ -1,0 +1,9 @@
+REM Demonstration of the RANDOMIZE(x) statement
+REM \CHAP4\CH4_7.BAS
+ 
+CLS
+RANDOMIZE (1)
+PRINT RND, RND, RND, RND, RND
+PRINT RND, RND, RND, RND, RND
+
+END  

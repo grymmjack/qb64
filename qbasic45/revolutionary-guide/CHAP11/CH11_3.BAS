@@ -1,0 +1,16 @@
+REM Demonstration of integration OF SOUNDs
+REM \CHAP11\CH11_3.BAS
+
+CLS
+FOR i = 1 to 7
+    READ f
+    SOUND f, 18.2
+NEXT i
+ 
+DATA 261.63,293.66,329.63,349.23,392,440,493.88
+
+PRINT "END"
+f$ = INPUT$(1)
+
+END 
+

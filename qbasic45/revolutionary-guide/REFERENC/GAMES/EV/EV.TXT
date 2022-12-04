@@ -1,0 +1,64 @@
+********************************************************************************
+************************** Extreme Velocity Text File **************************
+********************************************************************************
+
+  I. About myself
+  
+  II. About Extreme Velocity
+
+  III. Secret Car ???
+
+  IV. Extreme Velocity II
+
+
+
+
+ I. About myself
+
+        Hi, my name is Dave Cote, and I am the person who made Extreme
+Velocity.  I am 16 years old and live in Saskatchewan, Canada.  I first
+made the game for a programing course in school, and never expected it to
+reach whoever is reading this.  I have programing in QBASIC and GWBASIC for
+a couple years now and this is my best game so far.  I want to buy Visual
+Basic but I need more cash, so donations are VERY welcome.  My address is at
+the bottom of this text file.
+
+ II. About Extreme Velocity
+
+        Extreme Velocity was made in GWBASIC for a school project, and
+I seem to have all or almost all of the bugs worked out.  It should work fine
+on anything from a 286 to a Pentium 133 or better if you change the machine
+speed setting at the beginning of the game.
+
+ III. Secret Car ???
+
+        There is a secret car in Extreme Velocity which can be goten by going
+to the car selection screen and typeing SEEKRET.  You must not type anything
+before it or it will not work.  If it dosen't work, push escape to return to
+the main menu and then back the car selection screen to try again.  The stats
+on it are 6 Accel., 4 Cornering, and 7 Top speed.
+
+ IV. Extreme Velocity II
+
+        After making Extreme Velocity, I found a lot of things that I could 
+do to make it better.  I am Currently making Extreme Velocity II.  It will
+still have the same basic concept but it will have:
+
+                        - Oponent cars on the track
+                        - Weapons, lasers, missels, BOOM!
+                        - More cars, and more detail
+                        - More tracks
+                        
+        It is being made in QBASIC and will not work in GWBASIC.  If you want
+to buy a copy for five dollars in canadian funds, or send donations towards 
+Visual Basic, to:
+
+                        Dave Cote
+                        Box 160
+                        Vanscoy, Saskatchewan
+                        S0L 3J0
+                        Canada
+
+
+Thanks alot
+        Dave Cote

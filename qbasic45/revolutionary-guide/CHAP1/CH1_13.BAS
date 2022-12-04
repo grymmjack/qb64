@@ -1,0 +1,20 @@
+REM INT, FIX and CINT functions illustration
+REM \CHAP1\CH1_13.BAS
+ 
+CLS
+a = 9.123
+b = 9.999
+PRINT INT(a)
+PRINT INT(-a)
+PRINT INT(b)
+PRINT INT(-b)
+PRINT FIX(a)
+PRINT FIX(-a)
+PRINT FIX(b)
+PRINT FIX(-b)
+PRINT CINT(a)
+PRINT CINT(-a)
+PRINT CINT(b)
+PRINT CINT(-b)
+
+END   

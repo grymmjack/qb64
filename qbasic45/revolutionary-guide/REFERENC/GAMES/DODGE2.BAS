@@ -1,0 +1,52 @@
+10 REM Dodge v1.0
+20 REM By A.Sill
+30 REM FOR WROX PRESS
+40 REM ++++++++ TITLE SCREEN
+50 SCREEN 9
+60 CLS
+70 COLOR 3: LOCATE 2, 29: PRINT "TWO PLAYER DODGER"
+80 COLOR 2: LOCATE 5, 2: PRINT "Player One is Green and uses the ARROW keys"
+90 COLOR 4: LOCATE 7, 2: PRINT "Player Two is Red and uses the Q,A,O,P keys"
+100 COLOR 7: LOCATE 22, 31: PRINT "Press any key"
+110 WHILE A$ = "": A$ = INKEY$: WEND
+120 REM ++++++++ INITIALISE VARIABLES
+130 X1% = 100: X2% = 540: Y1% = 175: Y2% = 175
+140 D1% = 0: D2% = 0: PX1% = X1%: PX2% = X2%: PY1% = Y1%: PY2% = Y2%
+150 REM ++++++++ DRAW GAME SCREEN
+160 CLS
+170 LINE (1, 1)-(640, 1), 7
+180 LINE (639, 1)-(639, 329), 7
+190 LINE (639, 329)-(1, 329), 7
+200 LINE (1, 329)-(1, 1), 7
+210 REM ++++++++ GAME
+220 A$ = INKEY$
+230 IF A$ = "Q" OR A$ = "q" THEN D1% = 2
+240 IF A$ = "A" OR A$ = "a" THEN D1% = 4
+250 IF A$ = "O" OR A$ = "o" THEN D1% = 3
+260 IF A$ = "P" OR A$ = "p" THEN D1% = 1
+270 IF A$ <> "" THEN IF ASC(LEFT$(A$, 1)) = 0 AND RIGHT$(A$, 1) = "M" THEN D2% = 1
+280 IF A$ <> "" THEN IF ASC(LEFT$(A$, 1)) = 0 AND RIGHT$(A$, 1) = "H" THEN D2% = 2
+290 IF A$ <> "" THEN IF ASC(LEFT$(A$, 1)) = 0 AND RIGHT$(A$, 1) = "K" THEN D2% = 3
+300 IF A$ <> "" THEN IF ASC(LEFT$(A$, 1)) = 0 AND RIGHT$(A$, 1) = "P" THEN D2% = 4
+310 IF D1% = 1 THEN X1% = X1% + 1
+320 IF D1% = 2 THEN Y1% = Y1% - 1
+330 IF D1% = 3 THEN X1% = X1% - 1
+340 IF D1% = 4 THEN Y1% = Y1% + 1
+350 IF D2% = 1 THEN X2% = X2% + 1
+360 IF D2% = 2 THEN Y2% = Y2% - 1
+370 IF D2% = 3 THEN X2% = X2% - 1
+380 IF D2% = 4 THEN Y2% = Y2% + 1
+390 IF POINT(X1%, Y1%) <> 4 AND POINT(X1%, Y1%) <> 7 THEN LINE (PX1%, PY1%)-(X1%, Y1%), 2 ELSE PRINT "1 CRASHED": L% = 2: GOTO 430
+400 IF POINT(X2%, Y2%) <> 2 AND POINT(X2%, Y2%) <> 7 THEN LINE (PX2%, PY2%)-(X2%, Y2%), 4 ELSE PRINT "2 CRASHED": L% = 4: GOTO 430
+410 PX1% = X1%: PX2% = X2%: PY1% = Y1%: PY2% = Y2%
+420 GOTO 220
+430 REM ++++++++ CRASHED
+440 FOR A = 1 TO 175: LINE (0, A)-(640, A), L%
+450 LINE (0, 350 - A)-(640, 350 - A), L%: NEXT A
+460 FOR A = 175 TO 100 STEP -1: LINE (0, A)-(640, A), 0
+470 LINE (0, 350 - A)-(640, 350 - A), 0: NEXT A
+480 COLOR 7: LOCATE 9, 27: PRINT "Player "; L% / 2; " has crashed"
+490 COLOR 7: LOCATE 17, 31: PRINT "Press any key"
+500 WHILE A$ = "": A$ = INKEY$: WEND
+510 RUN
+

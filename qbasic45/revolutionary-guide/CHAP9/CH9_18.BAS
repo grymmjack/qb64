@@ -1,0 +1,10 @@
+REM Line segments
+REM \CHAP9\CHAP9_18.BAS
+
+PI = 3.141
+SCREEN 1: CLS
+FOR W = 0 TO 2 * PI STEP .025 * PI
+  X = 150 * COS(W): Y = 90 * SIN(W)
+  LINE (160, 100)-(160 + X, 100 - Y)
+NEXT
+F$ = INPUT$(1)
