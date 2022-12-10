@@ -1,0 +1,25 @@
+FUNCTION n$ (integ%)
+    n$ = _TRIM$(STR$(integ%))
+END FUNCTION
+
+
+FUNCTION clamp% (value%, min%, max%)
+    IF value% > max% THEN
+        clamp% = max%
+    ELSEIF value% < min% THEN
+        clamp% = min%
+    ELSE
+        clamp% = value%
+    END IF
+END FUNCTION
+
+
+FUNCTION in_bounds% (value%, bottom%, top%, min%, max%)
+    IF value% + bottom% >= min% AND value% + top% <= max% THEN 
+        _ECHO "in bounds"
+        in_bounds% = -1
+    ELSE
+        _ECHO "not in bounds"
+        in_bounds% = 0
+    END IF
+END FUNCTION

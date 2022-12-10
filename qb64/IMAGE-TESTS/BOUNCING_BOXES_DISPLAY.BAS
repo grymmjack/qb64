@@ -1,12 +1,12 @@
 _FULLSCREEN _SQUAREPIXELS
-' SCREEN _NEWIMAGE(1920, 1080, 256)
+'SCREEN _NEWIMAGE(1920, 1080, 256)
 SCREEN 13
-CONST NUM_BALLS           = 8
-CONST LIM                 = 60
-CONST MAX_SPEED           = 3
+CONST NUM_BALLS           = 3
+CONST LIM                 = 120
+CONST MAX_SPEED           = 4
 CONST CIRC_RADIUS         = 0
 CONST CIRC_COLOR          = 10
-CONST USE_SOUND           = 0
+CONST USE_SOUND           = 1
 CONST SOUND_FREQ          = 5000
 CONST SOUND_DUR           = 0.05
 CONST DELAY_DUR           = 0

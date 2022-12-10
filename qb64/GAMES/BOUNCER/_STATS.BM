@@ -1,0 +1,33 @@
+SUB stats_init
+    STATS.TOP_BOUNCES%   = 0
+    STATS.RIGHT_BOUNCES% = 0
+    STATS.BOT_BOUNCES%   = 0
+    STATS.LEFT_BOUNCES%  = 0
+    STATS.BLOCK_BOUNCES% = 0
+END Sub
+
+
+SUB stats_update
+    DIM t AS INTEGER
+    t% = STATS.TOP_BOUNCES%
+    t% = t% + STATS.RIGHT_BOUNCES%
+    t% = t% + STATS.BOT_BOUNCES%
+    t% = t% + STATS.LEFT_BOUNCES%
+    t% = t% + STATS.BLOCK_BOUNCES%
+    DIM AS STRING s, s2
+    s$ = "ESC=Quit, SPACE=RND Blocks"
+
+    s2$ = "# Bounces:"
+    s2$ = s2$ + " T=" + n$(STATS.TOP_BOUNCES%)
+    s2$ = s2$ + " R=" + n$(STATS.RIGHT_BOUNCES%)
+    s2$ = s2$ + " B=" + n$(STATS.BOT_BOUNCES%)
+    s2$ = s2$ + " L=" + n$(STATS.LEFT_BOUNCES%)
+    s2$ = s2$ + " BL=" + n$(STATS.BLOCK_BOUNCES%)
+    s2$ = s2$ + "    (" + n$(t%) + ")"
+    s2$ = s2$ + "    TIMER: " + n$(TIMER_TICKS%)
+    s2$ = s2$ + "   # Blocks=" + n$(CFG.NUM_BLOCKS%)
+    LOCATE _HEIGHT-1, 1 : PRINT SPACE$(_WIDTH);
+    LOCATE _HEIGHT-1, 1 : PRINT s$;
+    LOCATE _HEIGHT, 1 : PRINT SPACE$(_WIDTH);
+    LOCATE _HEIGHT, 1 : PRINT s2$;
+END SUB

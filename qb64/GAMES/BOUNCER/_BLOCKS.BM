@@ -1,0 +1,25 @@
+SUB blocks_init
+    REDIM BLOCKS(1 TO CFG.NUM_BLOCKS%) AS BLOCK_OBJECT
+    DIM AS INTEGER i, j, w, h, x, y, c
+    screen_clear
+    FOR i% = 1 TO CFG.NUM_BLOCKS%
+        RANDOMIZE TIMER
+        w% = INT(RND*10) + 2
+        h% = INT(RND*10) + 2
+        x% = clamp(INT(RND * LEVEL.END_X%) - w%, 1, LEVEL.END_X%)
+        y% = clamp(INT(RND * LEVEL.END_Y%) - h%, 1, LEVEL.END_Y%)
+        c% = INT(RND * 15) + 1
+        IF CFG.RANDOM_BG% THEN c% = c% + 8
+        _ECHO "i=" + n$(i%) + " w=" + n$(w%) + " h=" + n$(h%) + " x=" + n$(x%) + " y=" + n$(y%)
+        BLOCKS(i%).X% = x%
+        BLOCKS(i%).Y% = y%
+        BLOCKS(i%).W% = w%
+        BLOCKS(i%).H% = h%
+        BLOCKS(i%).KOLOR% = c%
+        FOR j% = y% TO y%+h%
+            LOCATE j%, x%
+            COLOR c%
+            PRINT STRING$(w%, CHR$(219));
+        NEXT j%    
+    NEXT i%
+END SUB

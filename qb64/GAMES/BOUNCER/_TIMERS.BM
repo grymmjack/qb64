@@ -1,0 +1,36 @@
+SUB timers_init
+    IF CFG.AUTO_BLOCKS_SECS% > 0 THEN 
+         timer_auto_switch_blocks
+        timer_update_ticks
+    END IF
+END SUB
+
+
+SUB timer_auto_switch_blocks
+    timer_clear_ticks
+    RANDOMIZE_TIMER% = _FREETIMER
+    ON TIMER(RANDOMIZE_TIMER%, CFG.AUTO_BLOCKS_SECS%) blocks_init
+    TIMER(RANDOMIZE_TIMER%) ON
+END SUB
+
+
+SUB timer_update_ticks
+    ON TIMER(1) timer_inc_ticks
+    TIMER(1) ON
+END SUB
+
+SUB timer_set_ticks (new_ticks%)
+    TIMER_TICKS% = new_ticks%
+END SUB
+
+SUB timer_inc_ticks
+    TIMER_TICKS% = TIMER_TICKS% + 1
+END SUB
+
+SUB timer_dec_ticks
+    TIMER_TICKS% = TIMER_TICKS% - 1
+END SUB
+
+SUB timer_clear_ticks
+    TIMER_TICKS% = 0
+END SUB

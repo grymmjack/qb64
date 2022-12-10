@@ -1,0 +1,72 @@
+SUB ball_init
+    BALL.X%       = _WIDTH \ 2
+    BALL.Y%       = _HEIGHT \ 2
+    BALL.X_DIR%   = 1
+    BALL.Y_DIR%   = -1
+    BALL.SPEED%   = 1
+    BALL.KOLOR%   = 15
+    BALL.DISPLAY$ = CHR$(9)
+END SUB
+
+
+FUNCTION ball_get_collision% ()
+    ball_get_collision% = SCREEN(BALL.Y% + BALL.Y_DIR%, BALL.X% + BALL.X_DIR%)
+END FUNCTION
+
+
+SUB ball_move
+    LOCATE BALL.Y%, BALL.X% : PRINT SPACE$(LEN(BALL.DISPLAY$))
+    DIM c AS INTEGER
+    c% = ball_get_collision
+    IF c% = 219 THEN ball_hit_block
+    BALL.X% = clamp(BALL.X% + BALL.X_DIR%, LEVEL.START_X%, LEVEL.END_X%)
+    BALL.Y% = clamp(BALL.Y% + BALL.Y_DIR%, LEVEL.START_Y%, LEVEL.END_Y%)
+    COLOR BALL.KOLOR%
+    LOCATE BALL.Y%, BALL.X% : PRINT BALL.DISPLAY$;
+END SUB
+
+SUB ball_stay_in_bounds
+    IF BALL.Y% = LEVEL.START_Y% THEN ball_bounce_top
+    IF BALL.X% = LEVEL.END_X% THEN ball_bounce_right
+    IF BALL.Y% = LEVEL.END_Y% THEN ball_bounce_bot
+    IF BALL.X% = LEVEL.START_X% THEN ball_bounce_left
+END SUB
+
+
+SUB ball_bounce_top
+    STATS.TOP_BOUNCES% = STATS.TOP_BOUNCES% + 1
+    BALL.Y_DIR% = BALL.Y_DIR% * -1
+    SOUND 4000, 0.25
+END SUB
+
+
+SUB ball_bounce_right   
+    STATS.RIGHT_BOUNCES% = STATS.RIGHT_BOUNCES% + 1
+    BALL.X_DIR% = BALL.X_DIR% * -1
+    SOUND 2000, 0.25
+END SUB
+
+
+SUB ball_bounce_bot    
+    STATS.BOT_BOUNCES% = STATS.BOT_BOUNCES% + 1
+    BALL.Y_DIR% = BALL.Y_DIR% * -1
+    SOUND 3000, 0.25
+END SUB
+
+
+SUB ball_bounce_left
+    STATS.LEFT_BOUNCES% = STATS.LEFT_BOUNCES% + 1
+    BALL.X_DIR% = BALL.X_DIR% * -1
+    SOUND 1000, 0.25
+END SUB
+
+
+SUB ball_hit_block
+    STATS.BLOCK_BOUNCES% = STATS.BLOCK_BOUNCES% + 1
+    RANDOMIZE TIMER
+    BALL.X_DIR% = BALL.X_DIR * -1 
+    BALL.Y_DIR% = BALL.Y_DIR * -1
+    BALL.X% = clamp(BALL.X% + INT(RND*2)-1, LEVEL.START_X%, LEVEL.END_X%)
+    BALL.Y% = clamp(BALL.Y% + INT(RND*2)-1, LEVEL.START_Y%, LEVEL.END_Y%)
+    SOUND 500, 0.33
+END SUB
