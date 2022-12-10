@@ -204,6 +204,24 @@
 		"editor.guides.highlightActiveBracketPair": true,
 		"editor.quickSuggestionsDelay": 3000,
 		"debug.openDebug": "neverOpen",
-		"qb64.isCreateBakFileEnabled": false
+		"qb64.formatMode": "No Change",
+		"qb64.isCreateBakFileEnabled": false,
+		"qb64.isCreateGitIgnoreEnabled": false,
+		"qb64.isCurrentRowHighlightEnabled": false,
+		"qb64.isTodoHighlightEnabled": false,
+		"qb64.isRgbColorEnabled": false,
+		"qb64.installPath": "I:\\git\\QB64pe",
+		"qb64.isHoverTextFileEnabled": true,
+		"explorer.confirmDragAndDrop": false,
+		"explorer.confirmDelete": false,
+		"git.autofetch": true,
+		"autoalign.moveableItemsAdditional": [
+			"AS"
+		],
+		"qb64.isFormatMetaComamndsMixedCaseEnabled": false,
+		"terminal.integrated.defaultProfile.windows": "Command Prompt",
+		"markdown.preview.openMarkdownLinks": "inPreview",
+		"markdown.links.openLocation": "beside",
+		"markdown.preview.linkify": true
 	}
 }
