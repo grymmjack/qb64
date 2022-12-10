@@ -1,5 +1,9 @@
+DEFINT a-z
+$CONSOLE
 RANDOMIZE TIMER
 SCREEN 0
+CONST NUM_BRICKS = 5
+CONST LIM = 30
 TYPE BALL_OBJECT
     X AS INTEGER
     Y AS INTEGER
@@ -9,8 +13,8 @@ TYPE BALL_OBJECT
     DISPLAY AS STRING
 END TYPE
 DIM SHARED BALL AS BALL_OBJECT
-BALL.X% = _WIDTH\2
-BALL.Y% = _HEIGHT\2
+BALL.X% = _WIDTH \ 2
+BALL.Y% = _HEIGHT \ 2
 BALL.SPEED% = 1
 BALL.X_DIRECTION% = 1
 BALL.Y_DIRECTION% = -1
@@ -26,13 +30,57 @@ DIM SHARED LEVEL AS LEVEL_OBJECT
 LEVEL.START_X% = 1
 LEVEL.START_Y% = 1
 LEVEL.END_X% = _WIDTH
-LEVEL.END_Y% = _HEIGHT
+LEVEL.END_Y% = _HEIGHT - 2
+
+TYPE BRICK_OBJECT
+    X AS INTEGER
+    Y AS INTEGER
+    W AS INTEGER
+    H AS INTEGER
+    INDEX AS INTEGER
+    KOLOR AS INTEGER
+    LIVES AS INTEGER
+END TYPE
+
+DIM BRICKS(1 TO NUM_BRICKS) AS BRICK_OBJECT
+
+1
+CLS
+COLOR 8:LOCATE 25, 1: PRINT "ESC = QUIT, SPACE = RANDOMIZE BLOCKS":LOCATE 24,1
+FOR i% = 1 TO NUM_BRICKS
+    RANDOMIZE TIMER
+    w% = INT(RND*10) + 1
+    h% = INT(RND*10) + 1
+    x% = clamp(INT(RND * LEVEL.END_X%) - w%, 1, LEVEL.END_X%)
+    y% = clamp(INT(RND * LEVEL.END_Y%) - h%, 1, LEVEL.END_Y%)
+    c% = INT(RND * 15) + 1
+    _ECHO "w=" + n(w%) + " h=" + n(h%) + " x=" + n(x%) + " y=" + n(y%)
+    BRICKS(i%).X% = x%
+    BRICKS(i%).Y% = y%
+    BRICKS(i%).W% = w%
+    BRICKS(i%).H% = h%
+    BRICKS(i%).KOLOR% = c%
+    FOR j% = y% TO y%+h%
+        LOCATE j%, x%
+        COLOR c%
+        PRINT STRING$(w%, "%");
+    NEXT j%    
+NEXT i%
 
 DO:
-    _LIMIT 30
+    _LIMIT LIM
     LOCATE BALL.Y%, BALL.X% : PRINT SPACE$(LEN(BALL.DISPLAY$))
-    BALL.X% = BALL.X% + BALL.X_DIRECTION%
-    BALL.Y% = BALL.Y% + BALL.Y_DIRECTION%
+    c% = SCREEN(BALL.Y% + BALL.Y_DIRECTION%, BALL.X% + BALL.X_DIRECTION%)
+    IF c% = ASC("%") THEN
+        BALL.X_DIRECTION% = BALL.X_DIRECTION * -1
+        BALL.Y_DIRECTION% = BALL.Y_DIRECTION * -1
+        RANDOMIZE TIMER
+        BALL.X% = clamp(BALL.X% + INT(RND*2)-1, LEVEL.START_X%, LEVEL.END_X%)
+        BALL.Y% = clamp(BALL.Y% + INT(RND*2)-1, LEVEL.START_Y%, LEVEL.END_Y%)
+        SOUND 500, 0.33
+    END IF
+    BALL.X% = clamp(BALL.X% + BALL.X_DIRECTION%, LEVEL.START_X%, LEVEL.END_X%)
+    BALL.Y% = clamp(BALL.Y% + BALL.Y_DIRECTION%, LEVEL.START_Y%, LEVEL.END_Y%)
     IF BALL.Y% = LEVEL.END_Y% THEN 
         BALL.Y_DIRECTION% = BALL.Y_DIRECTION% * -1
         SOUND 3000, 0.25
@@ -49,8 +97,24 @@ DO:
         BALL.X_DIRECTION% = BALL.X_DIRECTION% * -1
         SOUND 1000, 0.25
     END IF
+    COLOR 15
     LOCATE BALL.Y%, BALL.X% : PRINT BALL.DISPLAY$;
     _DISPLAY
+    IF INKEY$ = " " THEN 1
 LOOP UNTIL _KEYHIT = 27
 
 
+FUNCTION n$ (integ%)
+    n$ = _TRIM$(STR$(integ%))
+END FUNCTION
+
+
+FUNCTION clamp% (value%, min%, max%)
+    IF value% > max% THEN
+        clamp% = max%
+    ELSEIF value% < min% THEN
+        clamp% = min%
+    ELSE
+        clamp% = value%
+    END IF
+END FUNCTION
