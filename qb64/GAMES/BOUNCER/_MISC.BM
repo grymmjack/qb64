@@ -3,7 +3,7 @@ FUNCTION n$ (integ%)
 END FUNCTION
 
 FUNCTION ln$ (longval!)
-    n$ = _TRIM$(STR$(longval!))
+    ln$ = _TRIM$(STR$(longval!))
 END FUNCTION
 
 FUNCTION inc% (value%)

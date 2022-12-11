@@ -2,8 +2,9 @@ SUB timers_init
     TICKS_TIMER.STARTED#   = TIMER
     TICKS_TIMER.TICKS&     = 0
     TICKS_TIMER.SECONDS&   = 0
-    TIMER_LAPS(0).STARTED# = TICKS_TIMER.STARTED!
+    TIMER_LAPS(0).STARTED# = TICKS_TIMER.STARTED#
     TICKS_TIMER.LAP_COUNT% = 1
+    timers_main_startup
 END SUB
 
 SUB timers_tick
@@ -13,21 +14,18 @@ SUB timers_tick
             blocks_init
         END IF
     END IF
-    IF 
-    TICKS_TIMER.TICKS& = TICKS_TIMER.TICKS& + 1
     new_time# = TIMER
-    IF new_time# - TICKS_TIMER.STARTED# >= 18 THEN
-        TICKS_TIMER.SECONDS& = TICKS_TIMER.SECONDS& + 1
-    END IF
+    TICKS_TIMER.TICKS& = TICKS_TIMER.TICKS& + 1
+    TICKS_TIMER.SECONDS& = TICKS_TIMER.SECONDS& + 1
 END SUB
 
-SUB timer_main_setup
+SUB timers_main_startup
     MAIN_TIMER% = _FREETIMER
     ON TIMER(MAIN_TIMER%, 1) timers_tick
     TIMER(MAIN_TIMER%) ON
 END SUB
 
-SUB timer_main_shutdown
+SUB timers_main_shutdown
     TIMER(MAIN_TIMER%) OFF
     TIMER(MAIN_TIMER%) FREE
 END SUB
