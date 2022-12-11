@@ -4,6 +4,8 @@ SUB configure
     CFG.RANDOM_BG%         = 0
     CFG.NUM_BLOCKS%        = 7
     CFG.PREV_NUM_BLOCKS%   = CFG.NUM_BLOCKS%
+    CFG.BLOCK_MAX_W%       = 10
+    CFG.BLOCK_MAX_H%       = 10
     CFG.LIM%               = 30
     CFG.AUTO_BLOCKS_SECS%  = 7
 END SUB

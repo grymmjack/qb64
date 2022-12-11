@@ -3,7 +3,7 @@ FUNCTION n$ (integ%)
 END FUNCTION
 
 FUNCTION inc% (value%)
-    inc% = value% + 1
+    value% = value% + 1
 END FUNCTION
 
 FUNCTION dec% (value%)
@@ -49,19 +49,19 @@ FUNCTION in_bounds% (value%, bottom%, top%, minimum%, maximum%)
         in_bounds% = 0
     END IF
 END FUNCTION
- 
-FUNCTION rand_in_range% (min%, max%)
-    rand_in_range% = INT(RND * (max% - min% + 1)) + 1
+
+FUNCTION rand_in_range% (minimum%, maximum%)
+    rand_in_range% = INT(RND * (maximum% - minimum% + 1)) + 1
 END FUNCTION
 
 FUNCTION rand_int_choice% (arr_choices%())
-    DIM AS INTEGER min, max
-    min% = LBOUND(arr_choices%()) : max% = UBOUND(arr_choices%())
-    rand_int_choice% = arr_choices%(rand_in_range(min%, max%))
+    DIM AS INTEGER minimum, maximum
+    minimum% = LBOUND(arr_choices%) : maximum% = UBOUND(arr_choices%)
+    rand_int_choice% = arr_choices%(rand_in_range(minimum%, maximum%))
 END FUNCTION
 
-FUNCTION rand_str_choice% (arr_choices$())
-    DIM AS INTEGER min, max
-    min% = LBOUND(arr_choices$()) : max% = UBOUND(arr_choices$())
-    rand_str_choice$ = arr_choices$(rand_in_range(min%, max%))
+FUNCTION rand_str_choice$ (arr_choices$())
+    DIM AS INTEGER minimum, maximum
+    minimum% = LBOUND(arr_choices$) : maximum% = UBOUND(arr_choices$)
+    rand_str_choice$ = arr_choices$(rand_in_range(minimum%, maximum%))
 END FUNCTION

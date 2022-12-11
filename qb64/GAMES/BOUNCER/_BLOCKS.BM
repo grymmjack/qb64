@@ -12,7 +12,7 @@ END SUB
 
 SUB blocks_init
     REDIM BLOCKS(1 TO CFG.NUM_BLOCKS%) AS BLOCK_OBJECT
-    DIM AS INTEGER i, j, w, h, x, y, c
+    DIM AS INTEGER i, j, w, h, x, y, c, in_range_x, in_range_y
     screen_clear
     FOR i% = 1 TO CFG.NUM_BLOCKS%
         RANDOMIZE TIMER
@@ -21,9 +21,9 @@ SUB blocks_init
         DO: 'prevent creation of block where ball currently is
             x% = clamp(INT(RND * LEVEL.END_X%) - w%, 1, LEVEL.END_X%)
             y% = clamp(INT(RND * LEVEL.END_Y%) - h%, 1, LEVEL.END_Y%)
-        UNTIL _
-            x% NOT in_range(dec(BALL.X%), inc(BALL.X%)) AND _
-            y% NOT in_range(dec(BALL.Y%), inc(BALL.Y%))
+            in_range_x% = in_range(BALL.X%, BALL.X%-1, BALL.X%+1)
+            in_range_y% = in_range(BALL.Y%, BALL.Y%-1, BALL.Y%+1)
+        LOOP UNTIL NOT (in_range_x% + in_range_y%)
         IF CFG.RANDOM_BG% THEN 
             c% = rand_in_range(8,15)
         ELSE
@@ -45,13 +45,13 @@ END SUB
 
 SUB blocks_inc
     CFG.PREV_NUM_BLOCKS% = CFG.NUM_BLOCKS%
-    CFG.NUM_BLOCKS% = min(dec(CFG.NUM_BLOCKS%), 1)
+    CFG.NUM_BLOCKS% = min(CFG.NUM_BLOCKS%+1, 1)
     IF CFG.PREV_NUM_BLOCKS% <> CFG.NUM_BLOCKS% THEN blocks_init
 END SUB
 
 
 SUB blocks_dec
     CFG.PREV_NUM_BLOCKS% = CFG.NUM_BLOCKS%
-    CFG.NUM_BLOCKS% = min(inc(CFG.NUM_BLOCKS%), 1)
+    CFG.NUM_BLOCKS% = min(CFG.NUM_BLOCKS%-1, 1)
     IF CFG.PREV_NUM_BLOCKS% <> CFG.NUM_BLOCKS% THEN blocks_init
 END SUB

@@ -85,7 +85,7 @@ SUB ball_hit_block
     bouncing_left%  = ball_will_bounce_left%
     bouncing_right% = ball_will_bounce_right%
     IF bouncing_up% THEN BALL.Y_DIR%    = -1
-    IF boucning_down% THEN BALL.Y_DIR%  = 1
+    IF bouncing_down% THEN BALL.Y_DIR%  = 1
     IF bouncing_left% THEN BALL.X_DIR%  = -1
     IF bouncing_right% THEN BALL.X_DIR% = 1
     SOUND 500, 0.33
