@@ -42,6 +42,7 @@ SUB blocks_init
     NEXT i%
 END SUB
 
+
 SUB blocks_inc
     CFG.PREV_NUM_BLOCKS% = CFG.NUM_BLOCKS%
     CFG.NUM_BLOCKS% = min(dec(CFG.NUM_BLOCKS%), 1)

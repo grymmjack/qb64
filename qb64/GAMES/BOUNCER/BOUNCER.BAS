@@ -16,24 +16,41 @@ debug_init
 
 DIM k AS STRING 
 DO:
-    IF CFG.LIM > 0 THEN _LIMIT CFG.LIM
+    IF CFG.LIM% > 0 THEN _LIMIT CFG.LIM%
+    
     k$ = INKEY$
+
     SELECT CASE k$
-        CASE " "  : blocks_init
-        CASE ","  : blocks_inc
-        CASE "."  : blocks_dec
-        CASE " ?" : debug_start 'F5
-        CASE " A" : debug_next  'F7
-        CASE " B" : debug_stop  'F8
+        CASE " ": 'SPACE = randomize blocks
+            blocks_init
+        CASE ",": ', = increment total blocks
+            blocks_inc
+        CASE ".": '. = decrement total blocks
+            blocks_dec
+        CASE CHR$(0) + "?": 'F5 = start debugging
+            debug_start 
+        CASE CHR$(0) + "A": 'F7 = go to next debug step
+            debug_next  
+        CASE CHR$(0) + "B": 'F8 = stop debugging
+            debug_stop
     END SELECT
-    IF NOT DEBUGGER.ENABLED% OR DEBUGGER.CUR_STEP% <> DEBUGGER.PREV_STEP% THEN
-        ball_move
-        ball_stay_in_bounds
-        stats_update
-    _DISPLAY
-LOOP UNTIL _KEYHIT = 27
+
+    IF DEBUGGER.ENABLED% = 0 THEN
+        game_step
+    END IF
+    IF DEBUGGER.CUR_STEP% <> DEBUGGER.PREV_STEP% THEN
+        game_step
+    END IF
+LOOP UNTIL _KEYHIT = 27 'ESC = Quit
 
 COLOR 0, 7 : CLS
 SYSTEM
+
+SUB game_step
+    ball_move
+    ball_stay_in_bounds
+    stats_update
+    _DISPLAY
+END SUB
 
 '$INCLUDE:'_ALL.BM'
