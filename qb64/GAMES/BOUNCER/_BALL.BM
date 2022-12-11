@@ -26,6 +26,23 @@ SUB ball_get_9grid
             END IF
         NEXT x%
     NEXT y%
+    IF DEBUGGER.ENABLED% = 1 THEN ball_dump_9grid
+END SUB
+
+
+SUB ball_dump_9grid
+    DIM AS INTEGER y, x
+    DIM s AS STRING
+    _ECHO ""
+    _ECHO "BALL_9GRID(" + n$(y%) + ", " + n$(x%) + ") {"
+    FOR y% = 1 TO 3
+        s$ = "    "
+        FOR x% = 1 TO 3
+            s$ = s$ + n$(BALL_9GRID(y%, x%)) + " "
+        NEXT x%
+        _ECHO s$
+    NEXT y%
+    _ECHO "}"
 END SUB
 
 

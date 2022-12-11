@@ -1,5 +1,5 @@
 SUB debug_init
-    DEBUGGER.ENABLED%   = 0
+    DEBUGGER.ENABLED%   = 1
     DEBUGGER.CUR_STEP%  = 0
     DEBUGGER.PREV_STEP% = 0
 END SUB
