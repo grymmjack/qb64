@@ -1,6 +1,6 @@
 SUB timers_init
     IF CFG.AUTO_BLOCKS_SECS% > 0 THEN 
-         timer_auto_switch_blocks
+        timer_auto_switch_blocks
         timer_update_ticks
     END IF
 END SUB

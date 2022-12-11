@@ -2,24 +2,66 @@ FUNCTION n$ (integ%)
     n$ = _TRIM$(STR$(integ%))
 END FUNCTION
 
+FUNCTION inc% (value%)
+    inc% = value% + 1
+END FUNCTION
 
-FUNCTION clamp% (value%, min%, max%)
-    IF value% > max% THEN
-        clamp% = max%
-    ELSEIF value% < min% THEN
-        clamp% = min%
+FUNCTION dec% (value%)
+    dec% = value% - 1
+END FUNCTION
+
+FUNCTION inv% (value%)
+    inv% = value% * -1
+END FUNCTION
+
+FUNCTION min% (value%, minimum%)
+    IF value% < minimum% THEN value% = minimum%
+    min% = value%
+END FUNCTION
+
+FUNCTION max% (value%, maximum%)
+    IF value% > maximum% THEN value% = maximum%
+    max% = value%
+END FUNCTION
+
+FUNCTION clamp% (value%, minimum%, maximum%)
+    IF value% > maximum% THEN
+        clamp% = maximum%
+    ELSEIF value% < minimum% THEN
+        clamp% = minimum%
     ELSE
         clamp% = value%
     END IF
 END FUNCTION
 
+FUNCTION in_range% (value%, minimum%, maximum%)
+    IF value% >= minimum% AND value% <= maximum% THEN 
+        in_range% = -1
+    ELSE
+        in_range% = 0
+    END IF
+END FUNCTION
 
-FUNCTION in_bounds% (value%, bottom%, top%, min%, max%)
-    IF value% + bottom% >= min% AND value% + top% <= max% THEN 
-        _ECHO "in bounds"
+FUNCTION in_bounds% (value%, bottom%, top%, minimum%, maximum%)
+    IF value% + bottom% >= minimum% AND value% + top% <= maximum% THEN 
         in_bounds% = -1
     ELSE
-        _ECHO "not in bounds"
         in_bounds% = 0
     END IF
+END FUNCTION
+ 
+FUNCTION rand_in_range% (min%, max%)
+    rand_in_range% = INT(RND * (max% - min% + 1)) + 1
+END FUNCTION
+
+FUNCTION rand_int_choice% (arr_choices%())
+    DIM AS INTEGER min, max
+    min% = LBOUND(arr_choices%()) : max% = UBOUND(arr_choices%())
+    rand_int_choice% = arr_choices%(rand_in_range(min%, max%))
+END FUNCTION
+
+FUNCTION rand_str_choice% (arr_choices$())
+    DIM AS INTEGER min, max
+    min% = LBOUND(arr_choices$()) : max% = UBOUND(arr_choices$())
+    rand_str_choice$ = arr_choices$(rand_in_range(min%, max%))
 END FUNCTION

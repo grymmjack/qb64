@@ -1,12 +1,25 @@
-SUB screen_init
+SUB screen_init 
+    screen_reset
+    __SCREEN.BG_KOLOR%    = 0
+    __SCREEN.FG_KOLOR%    = 0
+    __SCREEN.W%           = _WIDTH
+    __SCREEN.H%           = _HEIGHT
+    __SCREEN.BPP%         = _PIXELSIZE
+END SUB
+
+SUB screen_reset
     SCREEN 0
     _BLINK OFF
     _CONTROLCHR OFF
-    IF CFG.FULLSCREEN% = 1 THEN _FULLSCREEN _SQUAREPIXELS, _SMOOTH
+    IF CFG.FULLSCREEN_SMOOTH% = 1 THEN
+        IF CFG.FULLSCREEN% = 1 THEN _FULLSCREEN _SQUAREPIXELS, _SMOOTH
+    ELSE
+        IF CFG.FULLSCREEN% = 1 THEN _FULLSCREEN _SQUAREPIXELS
+    END IF
 END SUB
 
-
 SUB screen_clear
-    IF CFG.RANDOM_BG% THEN COLOR ,INT(RND*7)
+    IF CFG.RANDOM_BG% THEN __SCREEN.BG_KOLOR% = rand_in_range(0, 7)
+    COLOR ,__SCREEN.BG_KOLOR%
     CLS
 END SUB

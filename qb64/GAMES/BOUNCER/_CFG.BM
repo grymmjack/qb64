@@ -1,7 +1,11 @@
 SUB configure
     CFG.FULLSCREEN%       = 1
-    CFG.RANDOM_BG%        = 1
+    CFG.RANDOM_BG%        = 0
     CFG.NUM_BLOCKS%       = 7
+    CFG.PREV_NUM_BLOCKS%  = CFG.NUM_BLOCKS%
     CFG.LIM%              = 30
     CFG.AUTO_BLOCKS_SECS% = 7
+    CFG.DEBUGGING%        = 1
+    CFG.DEBUG_STEP%       = 1
+    CFG.DEBUG_STEP%       = 0
 END SUB

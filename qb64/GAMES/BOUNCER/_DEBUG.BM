@@ -1,0 +1,5 @@
+SUB init_debugger
+    DEBUGGER.ENABLED%   = 1
+    DEBUGGER.STEP%      = 1
+    DEBUGGER.PREV_STEP% = 0
+END SUB
