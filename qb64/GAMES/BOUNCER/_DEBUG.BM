@@ -1,5 +1,18 @@
-SUB init_debugger
+SUB debug_init
     DEBUGGER.ENABLED%   = 1
-    DEBUGGER.STEP%      = 1
+    DEBUGGER.CUR_STEP%      = 1
     DEBUGGER.PREV_STEP% = 0
+END SUB
+
+SUB debug_start
+    DEBUGGER.ENABLED% = 1
+END SUB
+
+SUB debug_next
+    DEBUGGER.PREV_STEP% = DEBUGGER.CUR_STEP%
+    inc(DEBUGGER.CUR_STEP%)
+END SUB
+
+SUB debug_stop
+    DEBUGGER.ENABLED% = 0
 END SUB

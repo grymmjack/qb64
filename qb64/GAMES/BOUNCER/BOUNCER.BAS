@@ -12,6 +12,7 @@ level_init
 block_init
 blocks_init
 timers_init
+debug_init
 
 DIM k AS STRING 
 DO:
@@ -25,7 +26,7 @@ DO:
         CASE " A" : debug_next  'F7
         CASE " B" : debug_stop  'F8
     END SELECT
-    IF NOT CFG.DEBUGGING% OR CFG.DEBUG_STEP% <> CFG.DEBUG_PREV_STEP% THEN
+    IF NOT DEBUGGER.ENABLED% OR DEBUGGER.CUR_STEP% <> DEBUGGER.PREV_STEP% THEN
         ball_move
         ball_stay_in_bounds
         stats_update

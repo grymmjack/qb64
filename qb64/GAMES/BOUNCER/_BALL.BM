@@ -8,21 +8,86 @@ SUB ball_init
     BALL.DISPLAY$ = CHR$(9)
 END SUB
 
-SUB ball_hit_block
-    DIM AS INTEGER new_x, new_y
-    STATS.BLOCK_BOUNCES% = STATS.BLOCK_BOUNCES% + 1
-    RANDOMIZE TIMER
 
-    new_x% = BALL.X% + BALL.X_DIR%
-    new_y% = BALL.Y% + BALL.Y_DIR%
-    IF in_range(new_x%, LEVEL.START_X%, LEVEL.END_X%) THEN
-        BALL.X_DIR% = BALL.X_DIR * -1 
-    END IF
-    IF in_range(new_y%, LEVEL.START_Y%, LEVEL.END_Y%) THEN
-        BALL.Y_DIR% = BALL.Y_DIR * -1
-    END IF
-    ' BALL.X% = clamp(BALL.X% * BALL.X_DIR%, LEVEL.START_X%, LEVEL.END_X%)
-    ' BALL.Y% = clamp(BALL.Y% + INT(RND*2)-1, LEVEL.START_Y%, LEVEL.END_Y%)
+SUB ball_get_9grid
+    DIM AS INTEGER x, y, grid_x, grid_y, char
+    FOR y%=1 TO 3
+        grid_y% = clamp(BALL.Y% + y%, LEVEL.START_Y%, LEVEL.END_Y%)
+        FOR x% = 1 TO 3
+            grid_x% = clamp(BALL.X% + x%, LEVEL.START_X%, LEVEL.END_X%)
+            char% = SCREEN(grid_y%, grid_x%)
+            IF char% <> ASC(BALL.DISPLAY$) THEN 
+                SELECT CASE char%
+                    CASE ASC(BLOCK.DISPLAY$):
+                        BALL_9GRID(y%, x%) = 1
+                    CASE ELSE:
+                        BALL_9GRID(y%, x%) = 0
+                END SELECT
+            END IF
+        NEXT x%
+    NEXT y%
+END SUB
+
+
+FUNCTION ball_will_bounce_9grid% (y%, x%)
+    DIM AS INTEGER check_y, check_x
+    check_y% = BALL.Y% + BALL.Y_DIR%
+    check_x% = BALL.X% + BALL.X_DIR%
+    ball_will_bounce_9grid% = BALL_9GRID(check_y%, check_x%)
+END FUNCTION
+
+
+FUNCTION ball_will_bounce_left% ()
+    '..x
+    '.*x
+    '..x
+    IF BALL_9GRID(1,3) _
+     + BALL_9GRID(2,3) _
+     + BALL_9GRID(3,3) >= 2 THEN ball_will_bounce_left% = 1
+END FUNCTION
+
+
+FUNCTION ball_will_bounce_right% ()
+    'x..
+    'x*.
+    'x..
+    IF BALL_9GRID(1,1) _
+     + BALL_9GRID(2,1) _
+     + BALL_9GRID(3,1) >= 2 THEN ball_will_bounce_right% = 1
+END FUNCTION
+
+
+FUNCTION ball_will_bounce_down% ()
+    'xxx
+    '.*.
+    '...
+    IF BALL_9GRID(1,1) _
+     + BALL_9GRID(1,2) _
+     + BALL_9GRID(1,3) >= 2 THEN ball_will_bounce_down% = 1
+END FUNCTION
+
+
+FUNCTION ball_will_bounce_up% ()
+    '...
+    '.*.
+    'xxx
+    IF BALL_9GRID(3,1) _
+     + BALL_9GRID(3,2) _
+     + BALL_9GRID(3,3) >= 2 THEN ball_will_bounce_up% = 1
+END FUNCTION
+
+
+SUB ball_hit_block
+    DIM AS INTEGER bouncing_up, bouncing_down, bouncing_left, bouncing_right
+    STATS.BLOCK_BOUNCES% = STATS.BLOCK_BOUNCES% + 1
+    bouncing_up%    = ball_will_bounce_up%
+    bouncing_down%  = ball_will_bounce_down%
+    bouncing_left%  = ball_will_bounce_left%
+    bouncing_right% = ball_will_bounce_right%
+    IF bouncing_up% THEN BALL.Y_DIR%    = -1
+    IF boucning_down% THEN BALL.Y_DIR%  = 1
+    IF bouncing_left% THEN BALL.X_DIR%  = -1
+    IF bouncing_right% THEN BALL.X_DIR% = 1
     SOUND 500, 0.33
 END SUB
 
@@ -36,11 +101,12 @@ END FUNCTION
 
 
 SUB ball_move
-    DIM c AS INTEGER
-    COLOR BALL.KOLOR%, _BACKGROUNDCOLOR
+    COLOR BALL.KOLOR%, __SCREEN.BG_KOLOR%
     LOCATE BALL.Y%, BALL.X% : PRINT SPACE$(LEN(BALL.DISPLAY$))
-    c% = ball_get_collision
-    IF c% = 219 THEN ball_hit_block
+    ball_get_9grid
+    IF (ball_will_bounce_9grid(BALL.Y%, BALL.X%)) THEN
+        ball_hit_block
+    END IF
     BALL.X% = clamp(BALL.X% + BALL.X_DIR%, LEVEL.START_X%, LEVEL.END_X%)
     BALL.Y% = clamp(BALL.Y% + BALL.Y_DIR%, LEVEL.START_Y%, LEVEL.END_Y%)
     LOCATE BALL.Y%, BALL.X% : PRINT BALL.DISPLAY$;
@@ -49,7 +115,7 @@ END SUB
 
 SUB ball_stay_in_bounds
     IF BALL.Y% = LEVEL.START_Y% THEN 
-        ball_bounce_top
+         ball_bounce_top
     ELSEIF BALL.X% = LEVEL.END_X% THEN 
         ball_bounce_right
     ELSEIF BALL.Y% = LEVEL.END_Y% THEN 
