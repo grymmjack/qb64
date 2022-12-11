@@ -31,8 +31,8 @@ SUB blocks_init
         END IF
         BLOCKS(i%).X% = x%
         BLOCKS(i%).Y% = y%
-        BLOCKS(i%).W% = w%
-        BLOCKS(i%).H% = h%
+        BLOCKS(i%).W% = rand_in_range(1, CFG.BLOCK_MAX_W%)
+        BLOCKS(i%).H% = rand_in_range(1, CFG.BLOCK_MAX_H%)
         BLOCKS(i%).KOLOR% = c%
         FOR j% = y% TO y%+h%
             LOCATE j%, x%

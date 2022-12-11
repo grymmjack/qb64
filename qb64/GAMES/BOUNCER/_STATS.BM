@@ -24,7 +24,7 @@ SUB stats_update
     s2$ = s2$ + " L=" + n$(STATS.LEFT_BOUNCES%)
     s2$ = s2$ + " BL=" + n$(STATS.BLOCK_BOUNCES%)
     s2$ = s2$ + "    (" + n$(t%) + ")"
-    s2$ = s2$ + "    TIMER: " + n$(TIMER_TICKS%)
+    s2$ = s2$ + "    TIMER: " + ln$(TICKS_TIMER.SECONDS&)
     s2$ = s2$ + "   # Blocks=" + n$(CFG.NUM_BLOCKS%)
     LOCATE _HEIGHT-1, 1 : PRINT SPACE$(_WIDTH);
     LOCATE _HEIGHT-1, 1 : PRINT s$;

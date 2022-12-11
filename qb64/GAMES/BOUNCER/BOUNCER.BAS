@@ -35,12 +35,9 @@ DO:
             debug_stop
     END SELECT
 
-    IF DEBUGGER.ENABLED% = 0 THEN
-        game_step
-    END IF
-    IF DEBUGGER.CUR_STEP% <> DEBUGGER.PREV_STEP% THEN
-        game_step
-    END IF
+    game_step
+
+    IF DEBUGGER.ENABLED% OR DEBUGGER.CUR_STEP% <> DEBUGGER.PREV_STEP% THEN SLEEP
 LOOP UNTIL _KEYHIT = 27 'ESC = Quit
 
 COLOR 0, 7 : CLS

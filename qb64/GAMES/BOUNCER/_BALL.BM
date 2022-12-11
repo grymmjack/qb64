@@ -30,10 +30,18 @@ END SUB
 
 
 FUNCTION ball_will_bounce_9grid% (y%, x%)
-    DIM AS INTEGER check_y, check_x
-    check_y% = BALL.Y% + BALL.Y_DIR%
-    check_x% = BALL.X% + BALL.X_DIR%
-    ball_will_bounce_9grid% = BALL_9GRID(check_y%, check_x%)
+    DIM AS INTEGER check_y, check_x, checks_sum
+    checks_sum% = 0
+    FOR check_y% = 1 TO 3
+        FOR check_x% = 1 TO 3
+            checks_sum% = checks_sum% + BALL_9GRID(check_y%, check_x%)
+        NEXT check_x%
+    NEXT check_y%
+    IF checks_sum% > 0 THEN
+        ball_will_bounce_9grid% = -1
+    ELSE
+        ball_will_bounce_9grid% = 0
+    END IF
 END FUNCTION
 
 

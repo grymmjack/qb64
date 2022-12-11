@@ -2,8 +2,12 @@ FUNCTION n$ (integ%)
     n$ = _TRIM$(STR$(integ%))
 END FUNCTION
 
+FUNCTION ln$ (longval!)
+    n$ = _TRIM$(STR$(longval!))
+END FUNCTION
+
 FUNCTION inc% (value%)
-    value% = value% + 1
+    inc% = value% + 1
 END FUNCTION
 
 FUNCTION dec% (value%)
@@ -39,14 +43,6 @@ FUNCTION in_range% (value%, minimum%, maximum%)
         in_range% = -1
     ELSE
         in_range% = 0
-    END IF
-END FUNCTION
-
-FUNCTION in_bounds% (value%, bottom%, top%, minimum%, maximum%)
-    IF value% + bottom% >= minimum% AND value% + top% <= maximum% THEN 
-        in_bounds% = -1
-    ELSE
-        in_bounds% = 0
     END IF
 END FUNCTION
 

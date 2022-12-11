@@ -1,36 +1,33 @@
 SUB timers_init
-    IF CFG.AUTO_BLOCKS_SECS% > 0 THEN 
-        timer_auto_switch_blocks
-        timer_update_ticks
+    TICKS_TIMER.STARTED#   = TIMER
+    TICKS_TIMER.TICKS&     = 0
+    TICKS_TIMER.SECONDS&   = 0
+    TIMER_LAPS(0).STARTED# = TICKS_TIMER.STARTED!
+    TICKS_TIMER.LAP_COUNT% = 1
+END SUB
+
+SUB timers_tick
+    DIM new_time AS DOUBLE
+    IF CFG.AUTO_BLOCKS_SECS% > 0 THEN
+        IF TICKS_TIMER.TICKS& MOD CFG.AUTO_BLOCKS_SECS% = 0 THEN 
+            blocks_init
+        END IF
+    END IF
+    IF 
+    TICKS_TIMER.TICKS& = TICKS_TIMER.TICKS& + 1
+    new_time# = TIMER
+    IF new_time# - TICKS_TIMER.STARTED# >= 18 THEN
+        TICKS_TIMER.SECONDS& = TICKS_TIMER.SECONDS& + 1
     END IF
 END SUB
 
-
-SUB timer_auto_switch_blocks
-    timer_clear_ticks
-    RANDOMIZE_TIMER% = _FREETIMER
-    ON TIMER(RANDOMIZE_TIMER%, CFG.AUTO_BLOCKS_SECS%) blocks_init
-    TIMER(RANDOMIZE_TIMER%) ON
+SUB timer_main_setup
+    MAIN_TIMER% = _FREETIMER
+    ON TIMER(MAIN_TIMER%, 1) timers_tick
+    TIMER(MAIN_TIMER%) ON
 END SUB
 
-
-SUB timer_update_ticks
-    ON TIMER(1) timer_inc_ticks
-    TIMER(1) ON
-END SUB
-
-SUB timer_set_ticks (new_ticks%)
-    TIMER_TICKS% = new_ticks%
-END SUB
-
-SUB timer_inc_ticks
-    TIMER_TICKS% = TIMER_TICKS% + 1
-END SUB
-
-SUB timer_dec_ticks
-    TIMER_TICKS% = TIMER_TICKS% - 1
-END SUB
-
-SUB timer_clear_ticks
-    TIMER_TICKS% = 0
+SUB timer_main_shutdown
+    TIMER(MAIN_TIMER%) OFF
+    TIMER(MAIN_TIMER%) FREE
 END SUB
