@@ -43,7 +43,6 @@ SUB blocks_init
             PRINT STRING$(w%, BLOCK.DISPLAY$);
         NEXT j%    
     NEXT i%
-    debug_breakpoint
 END SUB
 
 

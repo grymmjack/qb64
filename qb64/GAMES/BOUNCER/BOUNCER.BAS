@@ -50,30 +50,24 @@ DO:
         CASE ".": '. = decrement total blocks
             DPRINT "INKEY$: '.' DECREMENT BLOCKS", DEBUG_AVG
             blocks_inc : game_step
-        CASE CHR$(0) + ";": 'F1 = show debug console
-            DPRINT "INKEY$: 'F1' DEBUG CONSOLE", DEBUG_AVG
-            dmsg$ = " [BEFORE F1]" 
-            dmsg$ = dmsg$ + "  DEBUG ENABLED: " + b$(DEBUG.ENABLED%)
-            dmsg$ = dmsg$ + "  IN CONSOLE: " + b$(DEBUG.IN_CONSOLE%)
-            dmsg$ = dmsg$ + "  PREV_STEP: " + n$(DEBUG.PREV_STEP%)
-            dmsg$ = dmsg$ + "  NEXT_STEP: " + n$(DEBUG.NEXT_STEP%)
-            DPRINT dmsg$, DEBUG_MAX
-            debug_console : stats_update : game_step
-            dmsg$ = " [AFTER F1]" 
-            dmsg$ = dmsg$ + "  DEBUG ENABLED: " + b$(DEBUG.ENABLED%)
-            dmsg$ = dmsg$ + "  IN CONSOLE: " + b$(DEBUG.IN_CONSOLE%)
-            dmsg$ = dmsg$ + "  PREV_STEP: " + n$(DEBUG.PREV_STEP%)
-            dmsg$ = dmsg$ + "  NEXT_STEP: " + n$(DEBUG.NEXT_STEP%)
-            DPRINT dmsg$, DEBUG_MAX
+        CASE CHR$(0) + "G": 'HOME = Show console explicit
+            DPRINT "INKEY$: 'HOME' SHOW DEBUG CONSOLE EXPLICIT", DEBUG_AVG
+            debug_console_show
+        CASE CHR$(0) + "O": 'END = Hide console explicit
+            DPRINT "INKEY$: 'END' HIDE DEBUG CONSOLE EXPLICIT", DEBUG_AVG
+            debug_console_hide
+        CASE CHR$(0) + ";": 'F1 = toggle ball trace path
+            DPRINT "INKEY$: 'F1' TOGGLE BALL TRACE PATH", DEBUG_AVG
+            ball_toggle_trace_path
         CASE CHR$(0) + "<": 'F2 = clear debug console
             DPRINT "INKEY$: 'F2' CLEAR CONSOLE", DEBUG_AVG
-            console_clear : stats_update
+            console_clear
         CASE CHR$(0) + "=": 'F3 = mark console
             DPRINT "INKEY$: 'F3' MARK CONSOLE", DEBUG_AVG
-            console_mark : stats_update
+            console_mark
         CASE CHR$(0) + ">": 'F4 = toggle ball char
             DPRINT "INKEY$: 'F4' toggle ball char", DEBUG_AVG
-            ball_toggle_char : stats_update
+            ball_toggle_char
         CASE CHR$(0) + "?": 'F5 = start debugging
             DPRINT "INKEY$: 'F5' START DEBUGGING", DEBUG_AVG
             debug_start : stats_update
@@ -92,6 +86,7 @@ DO:
         CASE CHR$(0) + CHR$(133): 'F11 = debug level max
             DPRINT "INKEY$: 'F11' DEBUG LEVEL MAX", DEBUG_AVG
             DEBUG.VERBOSITY% = DEBUG_MAX : stats_update
+        'FUTURE - add F12 - toggle cross hair to show x, y of screen and ball
         CASE CHR$(27): ' ESC = Quit
             DPRINT "INKEY$: 'ESC' QUIT", DEBUG_AVG
             timers_main_shutdown
@@ -104,12 +99,6 @@ DO:
         game_step
     END IF
 
-    IF DEBUG.IN_CONSOLE% = TRUE THEN 
-        IF DEBUG.NEXT_STEP% = TRUE THEN
-            DPRINT "debug_show_console", DEBUG_MAX
-            debug_show_console
-        END IF
-    END IF
     _DISPLAY
     
 LOOP UNTIL _KEYHIT = 27 'ESC = Quit

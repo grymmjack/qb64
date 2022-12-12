@@ -1,24 +1,51 @@
 SUB ball_init
     DPRINT "ball_init", DEBUG_AVG
-    BALL.X%       = _WIDTH \ 2
-    BALL.Y%       = _HEIGHT \ 2
-    BALL.X_DIR%   = 1
-    BALL.Y_DIR%   = -1
-    BALL.SPEED%   = 1
-    BALL.KOLOR%   = 15
-    BALL.DISPLAY$ = CHR$(10)
+    BALL.X%          = _WIDTH \ 2
+    BALL.Y%          = _HEIGHT \ 2
+    BALL.X_DIR%      = 1
+    BALL.Y_DIR%      = -1
+    BALL.SPEED%      = 1
+    BALL.KOLOR%      = 15
+    BALL.TRACE_PATH% = FALSE
+    BALL.DISPLAY$    = CHR$(9)
 END SUB
 
 
 SUB ball_toggle_char
     DPRINT "ball_toggle_char", DEBUG_MAX
-    IF BALL.DISPLAY$ = CHR$(9) THEN 
-        BALL.DISPLAY$ = CHR$(10) 
+    IF BALL.DISPLAY$ = BALL_ROUND$ THEN 
+        BALL.DISPLAY$ = BALL_SOLID$
     ELSE 
-        BALL.DISPLAY$ = CHR$(9)
+        BALL.DISPLAY$ = BALL_ROUND$
     ENDIF
     screen_set_active_page GAME_SCREEN
     LOCATE BALL.Y%, BALL.X% : PRINT BALL.DISPLAY$;
+END SUB
+
+
+SUB ball_toggle_trace_path
+    DPRINT "ball_toggle_trace_path", DEBUG_MAX
+    IF BALL.TRACE_PATH% = TRUE THEN 
+        BALL.TRACE_PATH% = FALSE
+        ball_clear_traces
+    ELSE
+        BALL.TRACE_PATH% = TRUE
+    END IF
+END SUB
+
+
+SUB ball_clear_traces
+    DPRINT "ball_clear_traces", DEBUG_MAX
+    DIM AS INTEGER y, x, c
+    FOR y% = LEVEL.START_Y% TO LEVEL.END_Y%
+        FOR x% = LEVEL.START_X TO LEVEL.END_X%
+            c% = SCREEN(y%, x%)
+            IF c% = ASC(".") THEN
+                screen_set_both_pages GAME_SCREEN
+                LOCATE y%, x% : PRINT " ";
+            END IF
+        NEXT x%
+    NEXT y%
 END SUB
 
 
@@ -256,41 +283,43 @@ FUNCTION ball_will_invert_path% ()
         AND (BALL_9GRID(3,3) = 1) _
     )
     sum% = 0
+    DIM AS INTEGER will_corner, will_2L, will_3L
+    will_corner% = FALSE : will_2L% = FALSE : will_3L% = FALSE
     IF top_left%  = TRUE AND BALL.X_DIR% = -1 AND BALL.Y_DIR% = -1 THEN 
-        sum% = sum% + 1
+        sum% = sum% + 1 : will_corner% = TRUE
     END IF
     IF top_right% = TRUE AND BALL.X_DIR% = 1 AND BALL.Y_DIR% = -1 THEN 
-        sum% = sum% + 1
+        sum% = sum% + 1 : will_corner% = TRUE
     END IF
     IF bot_left%  = TRUE AND BALL.X_DIR% = -1 AND BALL.Y_DIR% = 1 THEN 
-        sum% = sum% + 1
+        sum% = sum% + 1 : will_corner% = TRUE
     END IF
     IF bot_right% = TRUE AND BALL.X_DIR% = 1 AND BALL.Y_DIR% = 1 THEN 
-        sum% = sum% + 1
-    END IF
-    IF top_left_3L%  = TRUE AND BALL.X_DIR% = -1 AND BALL.Y_DIR% = -1 THEN
-        sum% = sum% + 1
-    END IF
-    IF top_right_3L% = TRUE AND BALL.X_DIR% = 1 AND BALL.Y_DIR% = -1 THEN
-        sum% = sum% + 1
-    END IF
-    IF bot_left_3L%  = TRUE AND BALL.X_DIR% = -1 AND BALL.Y_DIR% = 1 THEN
-        sum% = sum% + 1
-    END IF
-    IF bot_right_3L% = TRUE AND BALL.X_DIR% = 1 AND BALL.Y_DIR% = 1 THEN
-        sum% = sum% + 1
+        sum% = sum% + 1 : will_corner% = TRUE
     END IF
     IF top_left_2L%  = TRUE AND BALL.X_DIR% = -1 AND BALL.Y_DIR% = -1 THEN
-        sum% = sum% + 1
+        sum% = sum% + 1 : will_2L% = TRUE
     END IF
     IF top_right_2L% = TRUE AND BALL.X_DIR% = 1 AND BALL.Y_DIR% = -1 THEN
-        sum% = sum% + 1
+        sum% = sum% + 1 : will_2L% = TRUE
     END IF
     IF bot_left_2L%  = TRUE AND BALL.X_DIR% = -1 AND BALL.Y_DIR% = 1 THEN
-        sum% = sum% + 1
+        sum% = sum% + 1 : will_2L% = TRUE
     END IF
     IF bot_right_2L% = TRUE AND BALL.X_DIR% = 1 AND BALL.Y_DIR% = 1 THEN
-        sum% = sum% + 1
+        sum% = sum% + 1 : will_2L% = TRUE
+    END IF
+    IF top_left_3L%  = TRUE AND BALL.X_DIR% = -1 AND BALL.Y_DIR% = -1 THEN
+        sum% = sum% + 1 : will_3L% = TRUE
+    END IF
+    IF top_right_3L% = TRUE AND BALL.X_DIR% = 1 AND BALL.Y_DIR% = -1 THEN
+        sum% = sum% + 1 : will_3L% = TRUE
+    END IF
+    IF bot_left_3L%  = TRUE AND BALL.X_DIR% = -1 AND BALL.Y_DIR% = 1 THEN
+        sum% = sum% + 1 : will_3L% = TRUE
+    END IF
+    IF bot_right_3L% = TRUE AND BALL.X_DIR% = 1 AND BALL.Y_DIR% = 1 THEN
+        sum% = sum% + 1 : will_3L% = TRUE
     END IF
     DPRINT "   top_left%=" + n$(top_left%), DEBUG_AVG
     DPRINT "  top_right%=" + n$(top_right%), DEBUG_AVG
@@ -305,6 +334,9 @@ FUNCTION ball_will_invert_path% ()
     ELSE
         DPRINT "ball_will_invert_path = FALSE", DEBUG_AVG
         ball_will_invert_path% = FALSE
+    END IF
+    IF will_2L% = TRUE THEN
+        debug_breakpoint
     END IF
 END FUNCTION
 
@@ -414,7 +446,11 @@ SUB ball_move
     DPRINT "ball_move", DEBUG_AVG
     COLOR BALL.KOLOR%, __SCREEN.BG_KOLOR%
     screen_set_active_page GAME_SCREEN
-    LOCATE BALL.Y%, BALL.X% : PRINT SPACE$(LEN(BALL.DISPLAY$))
+    IF BALL.TRACE_PATH% = FALSE THEN 
+        LOCATE BALL.Y%, BALL.X% : PRINT SPACE$(LEN(BALL.DISPLAY$))
+    ELSE 
+        LOCATE BALL.Y%, BALL.X% : PRINT ".";
+    END IF
     ball_get_9grid
     IF (ball_will_bounce_9grid(BALL.Y%, BALL.X%)) THEN
         ball_hit_block

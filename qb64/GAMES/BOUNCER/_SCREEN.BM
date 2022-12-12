@@ -43,6 +43,6 @@ END SUB
 
 SUB screen_set_both_pages (page%)
     SCREEN ,,page%,page%
-    __SCREEN.ACTIVE_PAGE% = page%
+    __SCREEN.ACTIVE_PAGE%  = page%
     __SCREEN.VISIBLE_PAGE% = page%
 END SUB
