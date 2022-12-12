@@ -52,14 +52,14 @@ DO:
             blocks_inc : game_step
         CASE CHR$(0) + ";": 'F1 = show debug console
             DPRINT "INKEY$: 'F1' DEBUG CONSOLE", DEBUG_AVG
-            dmsg$ = " [BEFORE debug_console CODE]" 
+            dmsg$ = " [BEFORE F1]" 
             dmsg$ = dmsg$ + "  DEBUG ENABLED: " + b$(DEBUG.ENABLED%)
             dmsg$ = dmsg$ + "  IN CONSOLE: " + b$(DEBUG.IN_CONSOLE%)
             dmsg$ = dmsg$ + "  PREV_STEP: " + n$(DEBUG.PREV_STEP%)
             dmsg$ = dmsg$ + "  NEXT_STEP: " + n$(DEBUG.NEXT_STEP%)
             DPRINT dmsg$, DEBUG_MAX
             debug_console : stats_update
-            dmsg$ = " [AFTER debug_console CODE]" 
+            dmsg$ = " [AFTER F1]" 
             dmsg$ = dmsg$ + "  DEBUG ENABLED: " + b$(DEBUG.ENABLED%)
             dmsg$ = dmsg$ + "  IN CONSOLE: " + b$(DEBUG.IN_CONSOLE%)
             dmsg$ = dmsg$ + "  PREV_STEP: " + n$(DEBUG.PREV_STEP%)

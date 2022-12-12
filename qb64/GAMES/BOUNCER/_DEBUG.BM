@@ -65,8 +65,7 @@ END SUB
 SUB debug_show_console
     DEBUG.IN_CONSOLE% = TRUE
     IF DEBUG.ENABLED% = TRUE THEN
-        screen_set_both_pages DEBUGGER_CONSOLE
-        _DISPLAY
+        screen_set_visible_page DEBUGGER_CONSOLE
     END IF
 END SUB
 
@@ -74,16 +73,7 @@ SUB debug_hide_console
     DPRINT "debug_hide_console", DEBUG_MAX
     DEBUG.IN_CONSOLE% = FALSE
     IF DEBUG.ENABLED% = TRUE THEN
-        screen_set_both_pages GAME_SCREEN
-        _DISPLAY
-    END IF
-END SUB
-
-SUB debug_update_console
-    DPRINT "debug_update_console", DEBUG_MAX
-    IF DEBUG.ENABLED% = TRUE THEN
-        screen_set_both_pages DEBUGGER_CONSOLE
-        _DISPLAY
+        screen_set_visible_page GAME_SCREEN
     END IF
 END SUB
 

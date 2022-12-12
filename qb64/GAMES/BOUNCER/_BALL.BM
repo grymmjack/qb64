@@ -17,6 +17,7 @@ SUB ball_get_9grid
         grid_y% = clamp(BALL.Y%-2 + y%, LEVEL.START_Y%, LEVEL.END_Y%)
         FOR x% = 1 TO 3
             grid_x% = clamp(BALL.X%-2 + x%, LEVEL.START_X%, LEVEL.END_X%)
+            screen_set_active_page GAME_SCREEN
             char% = SCREEN(grid_y%, grid_x%)
             IF char% <> ASC(BALL.DISPLAY$) THEN 
                 SELECT CASE char%

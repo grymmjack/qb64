@@ -15,7 +15,6 @@ SUB timers_tick
             blocks_init
         END IF
     END IF
-    IF DEBUG.IN_CONSOLE% = TRUE THEN debug_update_console
     TICKS_TIMER.TICKS& = TICKS_TIMER.TICKS& + 1
     TICKS_TIMER.SECONDS& = TICKS_TIMER.SECONDS& + 1
 END SUB
