@@ -34,7 +34,7 @@ SUB stats_update
     s2$ = s2$ + "   # Blocks=" + n$(CFG.NUM_BLOCKS%)
 
     LOCATE _HEIGHT-2, 1 : PRINT SPACE$(_WIDTH)
-    IF DEBUG.ENABLED% = 1 THEN
+    IF DEBUG.ENABLED% = TRUE THEN
         SELECT CASE DEBUG.VERBOSITY%
             CASE DEBUG_MIN: 
                 s3$ = "[MIN]"

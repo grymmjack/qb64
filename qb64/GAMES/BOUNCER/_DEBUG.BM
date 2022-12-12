@@ -16,7 +16,7 @@ END SUB
 
 SUB debug_start
     DPRINT "debug_start", DEBUG_MAX
-    DEBUG.ENABLED% = 1
+    DEBUG.ENABLED% = TRUE
     TIMER(MAIN_TIMER%) OFF
 END SUB
 

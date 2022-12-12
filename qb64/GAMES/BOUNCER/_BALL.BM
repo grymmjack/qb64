@@ -28,7 +28,7 @@ SUB ball_get_9grid
             END IF
         NEXT x%
     NEXT y%
-    IF DEBUG.ENABLED% = 1 THEN ball_dump_9grid
+    IF DEBUG.ENABLED% = TRUE THEN ball_dump_9grid
 END SUB
 
 
