@@ -26,9 +26,9 @@ DO:
         CASE " ": 'SPACE = randomize blocks
             blocks_init : game_step
         CASE ",": ', = increment total blocks
-            blocks_inc : game_step
-        CASE ".": '. = decrement total blocks
             blocks_dec : game_step
+        CASE ".": '. = decrement total blocks
+            blocks_inc : game_step
         CASE CHR$(0) + ";": 'F1 = show debug console
             debug_console : stats_update
         CASE CHR$(0) + "<": 'F2 = clear debug console
