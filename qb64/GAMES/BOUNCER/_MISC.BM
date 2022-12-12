@@ -24,13 +24,17 @@ FUNCTION inv% (value%)
 END FUNCTION
 
 FUNCTION min% (value%, minimum%)
-    DPRINT "min(value%=" + n$(value%) + ", minimum%=" + n$(minimum%) + ")", DEBUG_MAX
+    DPRINT _
+        "min(value%=" + n$(value%) + _
+        ", minimum%=" + n$(minimum%) + ")", DEBUG_MAX
     IF value% < minimum% THEN value% = minimum%
     min% = value%
 END FUNCTION
 
 FUNCTION max% (value%, maximum%)
-    DPRINT "max(value%=" + n$(value%) + ", maximum%=" + n$(maximum%) + ")", DEBUG_MAX
+    DPRINT _
+        "max(value%=" + n$(value%) + _
+        ", maximum%=" + n$(maximum%) + ")", DEBUG_MAX
     IF value% > maximum% THEN value% = maximum%
     max% = value%
 END FUNCTION

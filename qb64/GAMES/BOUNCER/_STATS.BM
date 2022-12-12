@@ -11,6 +11,9 @@ END Sub
 SUB stats_update
     DPRINT "stats_update", DEBUG_MAX
     DIM t AS INTEGER
+    DIM AS LONG old_fg, old_bg
+    old_fg& = _DEFAULTCOLOR
+    old_bg& = _BACKGROUNDCOLOR
     t% = STATS.TOP_BOUNCES%
     t% = t% + STATS.RIGHT_BOUNCES%
     t% = t% + STATS.BOT_BOUNCES%
@@ -31,13 +34,25 @@ SUB stats_update
 
     LOCATE _HEIGHT-2, 1 : PRINT SPACE$(_WIDTH)
     IF DEBUG.ENABLED% = 1 THEN
-        s3$ = "[DEBUGGING] "
-        s3$ = s3$ + "STEP: " + n$(DEBUG.CUR_STEP%)
-        s3$ = s3$ + " - F1 CONSOLE / F2 CLEAR CONSOLE / F7 NEXT / F8 STOP"
-        LOCATE _HEIGHT-2, 1 : PRINT s3$
+        SELECT CASE DEBUG.VERBOSITY%
+            CASE DEBUG_MIN: 
+                s3$ = "[MIN]"
+            CASE DEBUG_AVG: 
+                s3$ = "[AVG]"
+            CASE DEBUG_MAX: 
+                s3$ = "[MAX]"
+        END SELECT
+        s3$ = s3$ + " S:" + n$(DEBUG.CUR_STEP%)
+        s3$ = s3$ + "  F1 CON  F2 CLR CON  F3 MARK  F7 NEXT  F8 STOP"
+        s3$ = s3$ + "  F9 MIN  F10 AVG  F11 MAX"
+        COLOR 0,15
+        LOCATE _HEIGHT-2, 1 : PRINT SPACE$(_WIDTH)
+        LOCATE _HEIGHT-2, 1 : PRINT s3$;
     END IF
+    COLOR 15, 0
     LOCATE _HEIGHT-1, 1 : PRINT SPACE$(_WIDTH);
     LOCATE _HEIGHT-1, 1 : PRINT s$;
     LOCATE _HEIGHT, 1 : PRINT SPACE$(_WIDTH);
     LOCATE _HEIGHT, 1 : PRINT s2$;
+    COLOR old_fg&, old_bg&
 END SUB

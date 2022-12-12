@@ -32,3 +32,11 @@ SUB timers_main_shutdown
     TIMER(MAIN_TIMER%) OFF
     TIMER(MAIN_TIMER%) FREE
 END SUB
+
+SUB timers_start_lap
+    DPRINT "timers_start_lap", DEBUG_MAX
+END SUB
+
+SUB timers_end_lap
+    DPRINT "timers_end_lap", DEBUG_MAX
+END SUB

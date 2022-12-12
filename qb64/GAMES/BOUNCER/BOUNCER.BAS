@@ -32,20 +32,26 @@ DO:
         CASE CHR$(0) + ";": 'F1 = show debug console
             debug_console
         CASE CHR$(0) + "<": 'F2 = clear debug console
-            debug_console
+            console_clear
+        CASE CHR$(0) + "=": 'F3 = mark console
+            console_mark
         CASE CHR$(0) + "?": 'F5 = start debugging
             debug_start 
         CASE CHR$(0) + "A": 'F7 = go to next debug step
             debug_next  
         CASE CHR$(0) + "B": 'F8 = stop debugging
             debug_stop
+        CASE CHR$(0) + "C": 'F9 = debug level min
+            DEBUG.VERBOSITY% = DEBUG_MIN
+        CASE CHR$(0) + "D": 'F10 = debug level avg
+            DEBUG.VERBOSITY% = DEBUG_AVG
+        CASE CHR$(0) + CHR$(133): 'F11 = debug level max
+            DEBUG.VERBOSITY% = DEBUG_MAX
         CASE CHR$(27): ' ESC = Quit
             timers_main_shutdown
             END
             SYSTEM
     END SELECT
-
-    stats_update
 
     IF DEBUG.ENABLED% THEN
         IF DEBUG.NEXT_STEP% THEN game_step
@@ -65,6 +71,7 @@ SUB game_step
     IF DEBUG.ENABLED% THEN DEBUG.NEXT_STEP% = FALSE
     ball_move
     ball_stay_in_bounds
+    stats_update
 END SUB
 
 '$INCLUDE:'_ALL.BM'
