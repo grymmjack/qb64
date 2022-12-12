@@ -1,18 +1,74 @@
 SUB debug_init
-    DEBUGGER.ENABLED%   = 1
-    DEBUGGER.CUR_STEP%  = 0
-    DEBUGGER.PREV_STEP% = 0
+    DPRINT "debug_init", DEBUG_MAX
+    DEBUG.ENABLED%     = FALSE
+    DEBUG.IN_CONSOLE%  = FALSE
+    DEBUG.VERBOSE%     = TRUE
+    DEBUG.VERBOSITY%   = DEBUG_MIN
+    DEBUG.NEXT_STEP%   = FALSE
+    DEBUG.CUR_STEP%    = 0
+    DEBUG.PREV_STEP%   = 0
+    IF DEBUG.ENABLED% THEN debug_start
 END SUB
 
 SUB debug_start
-    DEBUGGER.ENABLED% = 1
+    DPRINT "debug_start", DEBUG_NAX
+    debug_init
+    DEBUG.ENABLED% = 1
+    TIMER(MAIN_TIMER%) OFF
 END SUB
 
 SUB debug_next
-    DEBUGGER.PREV_STEP% = DEBUGGER.CUR_STEP%
-    DEBUGGER.CUR_STEP%  = DEBUGGER.CUR_STEP% + 1
+    DPRINT "debug_next", DEBUG_NAX
+    DEBUG.PREV_STEP% = DEBUG.CUR_STEP%
+    DEBUG.CUR_STEP%  = DEBUG.CUR_STEP% + 1
+    DEBUG.NEXT_STEP% = TRUE
 END SUB
 
 SUB debug_stop
-    DEBUGGER.ENABLED% = 0
+    DPRINT "debug_stop", DEBUG_NAX
+    IF DEBUG.IN_CONSOLE% THEN debug_hide_console
+    debug_init
+    TIMER(MAIN_TIMER%) ON
+END SUB
+
+SUB debug_console
+    DPRINT "debug_console", DEBUG_NAX
+    IF DEBUG.IN_CONSOLE% THEN debug_hide_console ELSE debug_show_console
+END SUB
+
+SUB debug_show_console
+    DPRINT "debug_show_console", DEBUG_NAX
+    DEBUG.IN_CONSOLE% = TRUE
+    SCREEN ,,1,1
+    _DISPLAY
+END SUB
+
+SUB debug_hide_console
+    DPRINT "debug_hide_console", DEBUG_NAX
+    DEBUG.IN_CONSOLE% = FALSE
+    SCREEN ,,0,0
+    _DISPLAY
+END SUB
+
+SUB debug_update_console
+    DPRINT "debug_update_console", DEBUG_NAX
+    SCREEN ,,1 : _DISPLAY
+END SUB
+
+SUB console_clear
+    DPRINT "console_clear", DEBUG_NAX
+    SCREEN ,,1 : CLS : SCREEN ,,0
+END SUB
+
+SUB console_log (s$)
+    SCREEN ,,1 : PRINT s$ : SCREEN ,,0
+END SUB
+
+SUB DPRINT (s$, verbosity%)
+    IF DEBUG.ENABLED% THEN 
+        IF verbosity% >= DEBUG.VERBOSITY% THEN console_log(s$)
+    END IF
+    IF DEBUG.VERBOSE% THEN 
+        IF verbosity% >= DEBUG.VERBOSITY% THEN _ECHO s$
+    END IF
 END SUB

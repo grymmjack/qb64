@@ -1,4 +1,5 @@
 SUB configure
+    DPRINT "configure", DEBUG_AVG
     CFG.FULLSCREEN%        = 0
     CFG.FULLSCREEN_SMOOTH% = 1
     CFG.RANDOM_BG%         = 0

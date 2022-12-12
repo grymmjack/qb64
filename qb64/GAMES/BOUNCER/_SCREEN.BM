@@ -1,4 +1,5 @@
 SUB screen_init 
+    DPRINT "screen_init", DEBUG_AVG
     screen_reset
     __SCREEN.BG_KOLOR%    = 0
     __SCREEN.FG_KOLOR%    = 0
@@ -8,6 +9,7 @@ SUB screen_init
 END SUB
 
 SUB screen_reset
+    DPRINT "screen_reset", DEBUG_AVG
     SCREEN 0
     _BLINK OFF
     _CONTROLCHR OFF
@@ -19,6 +21,7 @@ SUB screen_reset
 END SUB
 
 SUB screen_clear
+    DPRINT "screen_clear", DEBUG_AVG
     IF CFG.RANDOM_BG% THEN __SCREEN.BG_KOLOR% = rand_in_range(0, 7)
     COLOR ,__SCREEN.BG_KOLOR%
     CLS

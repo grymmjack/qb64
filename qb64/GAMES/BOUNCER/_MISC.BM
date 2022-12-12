@@ -1,34 +1,45 @@
 FUNCTION n$ (integ%)
+    DPRINT "n$(integ%=" + _TRIM$(STR$(integ%)) + ")", DEBUG_MAX
     n$ = _TRIM$(STR$(integ%))
 END FUNCTION
 
 FUNCTION ln$ (longval!)
+    DPRINT "ln$(longval!=" + _TRIM$(STR$(longval!)) + ")", DEBUG_MAX
     ln$ = _TRIM$(STR$(longval!))
 END FUNCTION
 
 FUNCTION inc% (value%)
+    DPRINT "inc(value%=" + n$(value%) + ")", DEBUG_MAX
     inc% = value% + 1
 END FUNCTION
 
 FUNCTION dec% (value%)
+    DPRINT "dec(value%=" + n$(value%) + ")", DEBUG_MAX
     dec% = value% - 1
 END FUNCTION
 
 FUNCTION inv% (value%)
+    DPRINT "inv(value%=" + n$(value%) + ")", DEBUG_MAX
     inv% = value% * -1
 END FUNCTION
 
 FUNCTION min% (value%, minimum%)
+    DPRINT "min(value%=" + n$(value%) + ", minimum%=" + n$(minimum%) + ")", DEBUG_MAX
     IF value% < minimum% THEN value% = minimum%
     min% = value%
 END FUNCTION
 
 FUNCTION max% (value%, maximum%)
+    DPRINT "max(value%=" + n$(value%) + ", maximum%=" + n$(maximum%) + ")", DEBUG_MAX
     IF value% > maximum% THEN value% = maximum%
     max% = value%
 END FUNCTION
 
 FUNCTION clamp% (value%, minimum%, maximum%)
+    DPRINT _
+        "clamp(value%=" + n$(value%) + _
+        ", minimum%=" + n$(minimum%) + _
+        ", maximum%=" + n$(maximum%) + ")", DEBUG_AVG
     IF value% > maximum% THEN
         clamp% = maximum%
     ELSEIF value% < minimum% THEN
@@ -39,6 +50,10 @@ FUNCTION clamp% (value%, minimum%, maximum%)
 END FUNCTION
 
 FUNCTION in_range% (value%, minimum%, maximum%)
+    DPRINT _
+        "in_range(value%=" + n$(value%) + _
+        ", minimum%=" + n$(minimum%) + _
+        ", maximum%=" + n$(maximum%) + ")", DEBUG_AVG
     IF value% >= minimum% AND value% <= maximum% THEN 
         in_range% = -1
     ELSE
@@ -47,16 +62,21 @@ FUNCTION in_range% (value%, minimum%, maximum%)
 END FUNCTION
 
 FUNCTION rand_in_range% (minimum%, maximum%)
+    DPRINT _
+        "rand_in_range(minimum%=" + n$(minimum%) + _
+        ", maximum%=" + n$(maximum%) + ")", DEBUG_AVG
     rand_in_range% = INT(RND * (maximum% - minimum% + 1)) + 1
 END FUNCTION
 
 FUNCTION rand_int_choice% (arr_choices%())
+    DPRINT "rand_int_choice(arr_choices%())", DEBUG_AVG
     DIM AS INTEGER minimum, maximum
     minimum% = LBOUND(arr_choices%) : maximum% = UBOUND(arr_choices%)
     rand_int_choice% = arr_choices%(rand_in_range(minimum%, maximum%))
 END FUNCTION
 
 FUNCTION rand_str_choice$ (arr_choices$())
+    DPRINT "rand_str_choice(arr_choices%())", DEBUG_AVG
     DIM AS INTEGER minimum, maximum
     minimum% = LBOUND(arr_choices$) : maximum% = UBOUND(arr_choices$)
     rand_str_choice$ = arr_choices$(rand_in_range(minimum%, maximum%))

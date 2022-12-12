@@ -2,7 +2,10 @@ $CONSOLE
 OPTION _EXPLICIT
 OPTION _EXPLICITARRAY
 RANDOMIZE TIMER
- 
+$IF FALSE = UNDEFINED AND TRUE = UNDEFINED THEN
+    CONST FALSE = 0 : CONST TRUE = NOT FALSE
+$END IF
+
 '$INCLUDE:'_ALL.BI'
 
 configure
@@ -17,7 +20,6 @@ debug_init
 DIM k AS STRING 
 DO:
     IF CFG.LIM% > 0 THEN _LIMIT CFG.LIM%
-    
     k$ = INKEY$
 
     SELECT CASE k$
@@ -27,20 +29,31 @@ DO:
             blocks_inc
         CASE ".": '. = decrement total blocks
             blocks_dec
+        CASE CHR$(0) + ";": 'F1 = show debug console
+            debug_console
+        CASE CHR$(0) + "<": 'F2 = clear debug console
+            debug_console
         CASE CHR$(0) + "?": 'F5 = start debugging
             debug_start 
         CASE CHR$(0) + "A": 'F7 = go to next debug step
             debug_next  
         CASE CHR$(0) + "B": 'F8 = stop debugging
             debug_stop
+        CASE CHR$(27): ' ESC = Quit
+            timers_main_shutdown
+            END
+            SYSTEM
     END SELECT
 
-    game_step
+    stats_update
 
-    IF DEBUGGER.ENABLED% OR DEBUGGER.CUR_STEP% <> DEBUGGER.PREV_STEP% THEN 
-        TIMER(MAIN_TIMER%) OFF
-        SLEEP
+    IF DEBUG.ENABLED% THEN
+        IF DEBUG.NEXT_STEP% THEN game_step
+    ELSE
+        game_step
     END IF
+
+    _DISPLAY
     
 LOOP UNTIL _KEYHIT = 27 'ESC = Quit
 
@@ -48,10 +61,10 @@ COLOR 0, 7 : CLS
 SYSTEM
 
 SUB game_step
+    DPRINT "game_step", DEBUG_MIN
+    IF DEBUG.ENABLED% THEN DEBUG.NEXT_STEP% = FALSE
     ball_move
     ball_stay_in_bounds
-    stats_update
-    _DISPLAY
 END SUB
 
 '$INCLUDE:'_ALL.BM'

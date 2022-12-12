@@ -1,6 +1,7 @@
 SUB level_init
+    DPRINT "level_init", DEBUG_AVG
     LEVEL.START_X% = 1
     LEVEL.START_Y% = 1
     LEVEL.END_X%   = _WIDTH
-    LEVEL.END_Y%   = _HEIGHT - 2
+    LEVEL.END_Y%   = _HEIGHT - 3
 END SUB

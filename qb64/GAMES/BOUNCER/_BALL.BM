@@ -1,4 +1,5 @@
 SUB ball_init
+    DPRINT "ball_init", DEBUG_AVG
     BALL.X%       = _WIDTH \ 2
     BALL.Y%       = _HEIGHT \ 2
     BALL.X_DIR%   = 1
@@ -10,6 +11,7 @@ END SUB
 
 
 SUB ball_get_9grid
+    DPRINT "ball_get_9grid", DEBUG_AVG 
     DIM AS INTEGER x, y, grid_x, grid_y, char
     FOR y%=1 TO 3
         grid_y% = clamp(BALL.Y% + y%, LEVEL.START_Y%, LEVEL.END_Y%)
@@ -26,27 +28,30 @@ SUB ball_get_9grid
             END IF
         NEXT x%
     NEXT y%
-    IF DEBUGGER.ENABLED% = 1 THEN ball_dump_9grid
+    IF DEBUG.ENABLED% = 1 THEN ball_dump_9grid
 END SUB
 
 
 SUB ball_dump_9grid
+    DPRINT "ball_dump_9grid", DEBUG_AVG
     DIM AS INTEGER y, x
     DIM s AS STRING
-    _ECHO ""
-    _ECHO "BALL_9GRID(" + n$(y%) + ", " + n$(x%) + ") {"
+    DPRINT ""
+    DPRINT "BALL_9GRID(" + n$(y%) + ", " + n$(x%) + ") {"
     FOR y% = 1 TO 3
         s$ = "    "
         FOR x% = 1 TO 3
             s$ = s$ + n$(BALL_9GRID(y%, x%)) + " "
         NEXT x%
-        _ECHO s$
+        DPRINT s$
     NEXT y%
-    _ECHO "}"
+    DPRINT "}"
 END SUB
 
 
 FUNCTION ball_will_bounce_9grid% (y%, x%)
+    DPRINT "ball_will_bounce_9grid (" + _
+        "y%=" + n$(y%) + ", x%=" + n$(x%) + ")", DEBUG_AVG
     DIM AS INTEGER check_y, check_x, checks_sum
     checks_sum% = 0
     FOR check_y% = 1 TO 3
@@ -55,54 +60,83 @@ FUNCTION ball_will_bounce_9grid% (y%, x%)
         NEXT check_x%
     NEXT check_y%
     IF checks_sum% > 0 THEN
-        ball_will_bounce_9grid% = -1
+        ball_will_bounce_9grid% = TRUE
     ELSE
-        ball_will_bounce_9grid% = 0
+        ball_will_bounce_9grid% = FALSE
     END IF
 END FUNCTION
 
 
 FUNCTION ball_will_bounce_left% ()
+    DPRINT "ball_will_bounce_left()", DEBUG_AVG
     '..x
     '.*x
     '..x
     IF BALL_9GRID(1,3) _
      + BALL_9GRID(2,3) _
-     + BALL_9GRID(3,3) >= 2 THEN ball_will_bounce_left% = 1
+     + BALL_9GRID(3,3) >= 1 THEN 
+        DPRINT "ball_will_bounce_left = TRUE", DEBUG_MAX
+        ball_will_bounce_left% = TRUE
+    ELSE
+        DPRINT "ball_will_bounce_left = FALSE", DEBUG_MAX
+        ball_will_bounce_left% = FALSE
+    END IF
 END FUNCTION
 
 
 FUNCTION ball_will_bounce_right% ()
+    DPRINT "ball_will_bounce_right()", DEBUG_AVG
     'x..
     'x*.
     'x..
     IF BALL_9GRID(1,1) _
      + BALL_9GRID(2,1) _
-     + BALL_9GRID(3,1) >= 2 THEN ball_will_bounce_right% = 1
+     + BALL_9GRID(3,1) >= 1 THEN 
+        DPRINT "ball_will_bounce_right = TRUE", DEBUG_MAX
+        ball_will_bounce_right% = TRUE
+    ELSE
+        DPRINT "ball_will_bounce_right = FALSE", DEBUG_MAX
+        ball_will_bounce_right% = FALSE
+    END IF
 END FUNCTION
 
 
 FUNCTION ball_will_bounce_down% ()
+    DPRINT "ball_will_bounce_down()", DEBUG_AVG
     'xxx
     '.*.
     '...
     IF BALL_9GRID(1,1) _
      + BALL_9GRID(1,2) _
-     + BALL_9GRID(1,3) >= 2 THEN ball_will_bounce_down% = 1
+     + BALL_9GRID(1,3) >= 1 THEN 
+        DPRINT "ball_will_bounce_down = TRUE", DEBUG_MAX
+        ball_will_bounce_down% = TRUE
+    ELSE
+        DPRINT "ball_will_bounce_down = FALSE", DEBUG_MAX
+        ball_will_bounce_down% = FALSE
+    END IF
 END FUNCTION
 
 
 FUNCTION ball_will_bounce_up% ()
+    DPRINT "ball_will_bounce_up()", DEBUG_AVG
     '...
     '.*.
     'xxx
     IF BALL_9GRID(3,1) _
      + BALL_9GRID(3,2) _
-     + BALL_9GRID(3,3) >= 2 THEN ball_will_bounce_up% = 1
+     + BALL_9GRID(3,3) >= 1 THEN 
+        DPRINT "ball_will_bounce_up = TRUE", DEBUG_MAX
+        ball_will_bounce_up% = TRUE
+    ELSE
+        DPRINT "ball_will_bounce_up = FALSE", DEBUG_MAX
+        ball_will_bounce_up% = FALSE
+    END IF
 END FUNCTION
 
 
 SUB ball_hit_block
+    DPRINT "ball_hit_block", DEBUG_AVG
     DIM AS INTEGER bouncing_up, bouncing_down, bouncing_left, bouncing_right
     STATS.BLOCK_BOUNCES% = STATS.BLOCK_BOUNCES% + 1
     bouncing_up%    = ball_will_bounce_up%
@@ -118,6 +152,7 @@ END SUB
 
 
 FUNCTION ball_get_collision% ()
+    DPRINT "ball_get_collision()", DEBUG_AVG
     DIM AS INTEGER x, y
     x% = clamp(BALL.X% + BALL.X_DIR%, LEVEL.START_X%, LEVEL.END_X%)
     y% = clamp(BALL.Y% + BALL.Y_DIR%, LEVEL.START_Y%, LEVEL.END_Y%)
@@ -126,6 +161,7 @@ END FUNCTION
 
 
 SUB ball_move
+    DPRINT "ball_move", DEBUG_AVG
     COLOR BALL.KOLOR%, __SCREEN.BG_KOLOR%
     LOCATE BALL.Y%, BALL.X% : PRINT SPACE$(LEN(BALL.DISPLAY$))
     ball_get_9grid
@@ -139,6 +175,7 @@ END SUB
 
 
 SUB ball_stay_in_bounds
+    DPRINT "ball_stay_in_bounds", DEBUG_AVG
     IF BALL.Y% = LEVEL.START_Y% THEN 
          ball_bounce_top
     ELSEIF BALL.X% = LEVEL.END_X% THEN 
@@ -152,6 +189,7 @@ END SUB
 
 
 SUB ball_bounce_top
+    DPRINT "ball_bounce_top", DEBUG_AVG
     STATS.TOP_BOUNCES% = STATS.TOP_BOUNCES% + 1
     BALL.Y_DIR% = BALL.Y_DIR% * -1
     SOUND 4000, 0.25
@@ -159,13 +197,15 @@ END SUB
 
 
 SUB ball_bounce_right   
+    DPRINT "ball_bounce_right", DEBUG_AVG
     STATS.RIGHT_BOUNCES% = STATS.RIGHT_BOUNCES% + 1
     BALL.X_DIR% = BALL.X_DIR% * -1
     SOUND 2000, 0.25
 END SUB
 
 
-SUB ball_bounce_bot    
+SUB ball_bounce_bot
+    DPRINT "ball_bounce_bot", DEBUG_AVG
     STATS.BOT_BOUNCES% = STATS.BOT_BOUNCES% + 1
     BALL.Y_DIR% = BALL.Y_DIR% * -1
     SOUND 3000, 0.25
@@ -173,6 +213,7 @@ END SUB
 
 
 SUB ball_bounce_left
+    DPRINT "ball_bounce_left", DEBUG_AVG
     STATS.LEFT_BOUNCES% = STATS.LEFT_BOUNCES% + 1
     BALL.X_DIR% = BALL.X_DIR% * -1
     SOUND 1000, 0.25

@@ -1,4 +1,5 @@
 SUB block_init
+    DPRINT "block_init", DEBUG_AVG
     BLOCK.X%       = 1
     BLOCK.Y%       = 1
     BLOCK.W%       = CFG.BLOCK_MAX_W%
@@ -11,6 +12,7 @@ END SUB
 
 
 SUB blocks_init
+    DPRINT "blocks_init", DEBUG_AVG
     REDIM BLOCKS(1 TO CFG.NUM_BLOCKS%) AS BLOCK_OBJECT
     DIM AS INTEGER i, j, w, h, x, y, c, in_range_x, in_range_y
     screen_clear
@@ -44,6 +46,7 @@ END SUB
 
 
 SUB blocks_inc
+    DPRINT "blocks_inc", DEBUG_AVG
     CFG.PREV_NUM_BLOCKS% = CFG.NUM_BLOCKS%
     CFG.NUM_BLOCKS% = min(CFG.NUM_BLOCKS%+1, 1)
     IF CFG.PREV_NUM_BLOCKS% <> CFG.NUM_BLOCKS% THEN blocks_init
@@ -51,6 +54,7 @@ END SUB
 
 
 SUB blocks_dec
+    DPRINT "blocks_dev", DEBUG_AVG
     CFG.PREV_NUM_BLOCKS% = CFG.NUM_BLOCKS%
     CFG.NUM_BLOCKS% = min(CFG.NUM_BLOCKS%-1, 1)
     IF CFG.PREV_NUM_BLOCKS% <> CFG.NUM_BLOCKS% THEN blocks_init
