@@ -23,22 +23,22 @@ SUB stats_update
     DIM AS STRING s, s2, s3
     s$ = "ESC:END,SPACE:RND,+/-:SPD,F1:TRACE,F4:BALL,F5:DEBUG->HOME/END:SHOW/HIDE CONSOLE"
 
-    s2$ = "BOUNCES"
-    IF BALL.TRACE_PATH% = TRUE THEN s2$ = s2$ + " TRACING"
-    s2$ = s2$ + " T=" + n$(STATS.TOP_BOUNCES%)
-    s2$ = s2$ + " R=" + n$(STATS.RIGHT_BOUNCES%)
-    s2$ = s2$ + " B=" + n$(STATS.BOT_BOUNCES%)
-    s2$ = s2$ + " L=" + n$(STATS.LEFT_BOUNCES%)
-    s2$ = s2$ + " BL=" + n$(STATS.BLOCK_BOUNCES%)
-    s2$ = s2$ + " BI=" + n$(STATS.BALL_INVERTS%)
+    s2$ = "BOUNCE"
+    IF BALL.TRACE_PATH% = TRUE THEN s2$ = s2$ + " TR"
+    s2$ = s2$ + " T" + n$(STATS.TOP_BOUNCES%)
+    s2$ = s2$ + " R" + n$(STATS.RIGHT_BOUNCES%)
+    s2$ = s2$ + " B" + n$(STATS.BOT_BOUNCES%)
+    s2$ = s2$ + " L" + n$(STATS.LEFT_BOUNCES%)
+    s2$ = s2$ + " BL" + n$(STATS.BLOCK_BOUNCES%)
+    s2$ = s2$ + " BI" + n$(STATS.BALL_INVERTS%)
     s2$ = s2$ + " (" + n$(t%) + ")"
-    s2$ = s2$ + "  TMR:" + ln$(TICKS_TIMER.SECONDS&)
-    s2$ = s2$ + "  FPS:" + n$(CFG.LIM%)
-    s2$ = s2$ + "  #B=" + n$(CFG.NUM_BLOCKS%)
+    s2$ = s2$ + " TMR:" + ln$(TICKS_TIMER.SECONDS&)
+    s2$ = s2$ + " FPS:" + n$(CFG.LIM%)
+    s2$ = s2$ + " #B" + n$(CFG.NUM_BLOCKS%)
     IF DEBUG.DO_BREAKPOINTS% = TRUE THEN
-        s2$ = s2$ + "  B:RKP ON"
+        s2$ = s2$ + " B:RKP ON"
     ELSE
-        s2$ = s2$ + "  B:RKP OFF"
+        s2$ = s2$ + " B:RKP OFF"
     END IF
 
     screen_set_both_pages GAME_SCREEN

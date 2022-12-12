@@ -11,6 +11,16 @@ SUB ball_init
 END SUB
 
 
+SUB ball_error_trap
+    DPRINT "ball_error_trap", DEBUG_MAX
+    DIM c AS INTEGER
+    c% = SCREEN(BALL.Y%, BALL.X%)
+    IF c% = ASC(BLOCK.DISPLAY$) THEN
+        debug_breakpoint "*** BALL ON TOP BLOCK! ***"
+    END IF
+END SUB
+
+
 SUB ball_toggle_char
     DPRINT "ball_toggle_char", DEBUG_MAX
     IF BALL.DISPLAY$ = BALL_ROUND$ THEN 
@@ -283,8 +293,9 @@ FUNCTION ball_will_invert_path% ()
         AND (BALL_9GRID(3,3) = 1) _
     )
     sum% = 0
-    DIM AS INTEGER will_corner, will_2L, will_3L
+    DIM AS INTEGER will_corner, will_2L, will_3L, will_invert
     will_corner% = FALSE : will_2L% = FALSE : will_3L% = FALSE
+    will_invert% = FALSE
     IF top_left%  = TRUE AND BALL.X_DIR% = -1 AND BALL.Y_DIR% = -1 THEN 
         sum% = sum% + 1 : will_corner% = TRUE
     END IF
@@ -321,6 +332,7 @@ FUNCTION ball_will_invert_path% ()
     IF bot_right_3L% = TRUE AND BALL.X_DIR% = 1 AND BALL.Y_DIR% = 1 THEN
         sum% = sum% + 1 : will_3L% = TRUE
     END IF
+    IF sum% > 0 THEN will_invert% = TRUE
     DPRINT "    top_left%=" + b$(top_left%), DEBUG_AVG
     DPRINT "   top_right%=" + b$(top_right%), DEBUG_AVG
     DPRINT "    bot_left%=" + b$(bot_left%), DEBUG_AVG
@@ -335,8 +347,13 @@ FUNCTION ball_will_invert_path% ()
     DPRINT "bot_right_3L%=" + b$(bot_right_3L%), DEBUG_AVG
     DPRINT "-------------", DEBUG_AVG
     DPRINT " sum: " + n$(sum%), DEBUG_AVG
+    DPRINT "-------------", DEBUG_AVG
+    DPRINT " will invert%=" + b$(will_invert%), DEBUG_AVG
+    DPRINT " will_corner%=" + b$(will_corner%), DEBUG_AVG
+    DPRINT "     will_2L%=" + b$(will_2L%), DEBUG_AVG
+    DPRINT "     will_3L%=" + b$(will_3L%), DEBUG_AVG
     IF will_2L% = TRUE THEN
-        debug_breakpoint "!!! will_2L"
+        'debug_breakpoint "will_2L"
     END IF
     IF sum% > 0 THEN
         DPRINT "ball_will_invert_path = TRUE", DEBUG_AVG
@@ -356,7 +373,8 @@ FUNCTION ball_will_bounce_left% ()
     '..x
     IF BALL_9GRID(1,3) _
      + BALL_9GRID(2,3) _
-     + BALL_9GRID(3,3) >= 2 THEN 
+     + BALL_9GRID(3,3) >= 2 _
+    AND BALL.X_DIR% = 1 THEN 
         DPRINT "ball_will_bounce_left = TRUE", DEBUG_AVG
         ball_will_bounce_left% = TRUE
     ELSE
@@ -373,7 +391,8 @@ FUNCTION ball_will_bounce_right% ()
     'x..
     IF BALL_9GRID(1,1) _
      + BALL_9GRID(2,1) _
-     + BALL_9GRID(3,1) >= 2 THEN 
+     + BALL_9GRID(3,1) >= 2 _
+    AND BALL.X_DIR% = -1 THEN 
         DPRINT "ball_will_bounce_right = TRUE", DEBUG_AVG
         ball_will_bounce_right% = TRUE
     ELSE
@@ -390,7 +409,8 @@ FUNCTION ball_will_bounce_down% ()
     '...
     IF BALL_9GRID(1,1) _
      + BALL_9GRID(1,2) _
-     + BALL_9GRID(1,3) >= 2 THEN 
+     + BALL_9GRID(1,3) >= 2 _
+    AND BALL.Y_DIR% = -1 THEN 
         DPRINT "ball_will_bounce_down = TRUE", DEBUG_AVG
         ball_will_bounce_down% = TRUE
     ELSE
@@ -407,7 +427,8 @@ FUNCTION ball_will_bounce_up% ()
     'xxx
     IF BALL_9GRID(3,1) _
      + BALL_9GRID(3,2) _
-     + BALL_9GRID(3,3) >= 2 THEN 
+     + BALL_9GRID(3,3) >= 2 _
+    AND BALL.Y_DIR% = 1 THEN 
         DPRINT "ball_will_bounce_up = TRUE", DEBUG_AVG
         ball_will_bounce_up% = TRUE
     ELSE
@@ -430,6 +451,20 @@ SUB ball_hit_block
     bouncing_left%  = ball_will_bounce_left%
     bouncing_right% = ball_will_bounce_right%
     inverting_path% = ball_will_invert_path%
+    ' Invert if hitting both left and any vertical direction
+    IF bouncing_left% AND bouncing_down% _
+       OR bouncing_left% AND bouncing_up% THEN
+        DPRINT "* HITTING BOTH LEFT AND VERTICAL", DEBUG_MAX
+        inverting_path% = TRUE
+        ball_error_trap
+    END IF
+    ' Invert if hitting both right and any vertical direction
+    IF bouncing_right% AND bouncing_down% _
+       OR bouncing_right% AND bouncing_up% THEN
+        DPRINT "* HITTING BOTH RIGHT AND VERTICAL", DEBUG_MAX
+        inverting_path% = TRUE
+        ball_error_trap
+    END IF
     IF inverting_path% = TRUE THEN
         BALL.Y_DIR% = BALL.Y_DIR% * -1
         BALL.X_DIR% = BALL.X_DIR% * -1
@@ -445,12 +480,6 @@ SUB ball_hit_block
         bouncing% = TRUE
     ELSEIF bouncing_right% = TRUE THEN 
         BALL.X_DIR% = 1
-        bouncing% = TRUE
-    ELSE 'safety invert path
-        debug_breakpoint "!!! safety invert path"
-        STATS.BALL_INVERTS% = STATS.BALL_INVERTS + 1
-        BALL.Y_DIR% = BALL.Y_DIR% * -1
-        BALL.X_DIR% = BALL.X_DIR% * -1
         bouncing% = TRUE
     END IF
     IF bouncing% = TRUE THEN SOUND 500, 0.33
