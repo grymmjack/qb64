@@ -1,6 +1,6 @@
 SUB debug_init
     DPRINT "debug_init", DEBUG_MAX
-    DEBUG.ENABLED%     = FALSE
+    DEBUG.ENABLED%     = TRUE
     DEBUG.IN_CONSOLE%  = FALSE
     DEBUG.VERBOSE%     = TRUE
     DEBUG.VERBOSITY%   = DEBUG_MIN
@@ -11,52 +11,52 @@ SUB debug_init
 END SUB
 
 SUB debug_start
-    DPRINT "debug_start", DEBUG_NAX
+    DPRINT "debug_start", DEBUG_MAX
     debug_init
     DEBUG.ENABLED% = 1
     TIMER(MAIN_TIMER%) OFF
 END SUB
 
 SUB debug_next
-    DPRINT "debug_next", DEBUG_NAX
+    DPRINT "debug_next", DEBUG_MAX
     DEBUG.PREV_STEP% = DEBUG.CUR_STEP%
     DEBUG.CUR_STEP%  = DEBUG.CUR_STEP% + 1
     DEBUG.NEXT_STEP% = TRUE
 END SUB
 
 SUB debug_stop
-    DPRINT "debug_stop", DEBUG_NAX
+    DPRINT "debug_stop", DEBUG_MAX
     IF DEBUG.IN_CONSOLE% THEN debug_hide_console
     debug_init
     TIMER(MAIN_TIMER%) ON
 END SUB
 
 SUB debug_console
-    DPRINT "debug_console", DEBUG_NAX
+    DPRINT "debug_console", DEBUG_MAX
     IF DEBUG.IN_CONSOLE% THEN debug_hide_console ELSE debug_show_console
 END SUB
 
 SUB debug_show_console
-    DPRINT "debug_show_console", DEBUG_NAX
+    DPRINT "debug_show_console", DEBUG_MAX
     DEBUG.IN_CONSOLE% = TRUE
     SCREEN ,,1,1
     _DISPLAY
 END SUB
 
 SUB debug_hide_console
-    DPRINT "debug_hide_console", DEBUG_NAX
+    DPRINT "debug_hide_console", DEBUG_MAX
     DEBUG.IN_CONSOLE% = FALSE
     SCREEN ,,0,0
     _DISPLAY
 END SUB
 
 SUB debug_update_console
-    DPRINT "debug_update_console", DEBUG_NAX
+    DPRINT "debug_update_console", DEBUG_MAX
     SCREEN ,,1 : _DISPLAY
 END SUB
 
 SUB console_clear
-    DPRINT "console_clear", DEBUG_NAX
+    DPRINT "console_clear", DEBUG_MAX
     SCREEN ,,1 : CLS : SCREEN ,,0
 END SUB
 
@@ -66,9 +66,9 @@ END SUB
 
 SUB DPRINT (s$, verbosity%)
     IF DEBUG.ENABLED% THEN 
-        IF verbosity% >= DEBUG.VERBOSITY% THEN console_log(s$)
+        IF DEBUG.VERBOSITY% >= verbosity% THEN console_log(s$)
     END IF
     IF DEBUG.VERBOSE% THEN 
-        IF verbosity% >= DEBUG.VERBOSITY% THEN _ECHO s$
+        IF DEBUG.VERBOSITY% >= verbosity% THEN _ECHO s$
     END IF
 END SUB

@@ -33,7 +33,7 @@ SUB stats_update
     IF DEBUG.ENABLED% = 1 THEN
         s3$ = "[DEBUGGING] "
         s3$ = s3$ + "STEP: " + n$(DEBUG.CUR_STEP%)
-        s3$ = s3$ + " - F1 = CONSOLE / F2 = CLEAR CONSOLE / F7 = NEXT / F8 = STOP"
+        s3$ = s3$ + " - F1 CONSOLE / F2 CLEAR CONSOLE / F7 NEXT / F8 STOP"
         LOCATE _HEIGHT-2, 1 : PRINT s3$
     END IF
     LOCATE _HEIGHT-1, 1 : PRINT SPACE$(_WIDTH);
