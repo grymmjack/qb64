@@ -3,7 +3,7 @@ SUB debug_init
     DEBUG.ENABLED%         = FALSE
     DEBUG.IN_CONSOLE%      = FALSE
     DEBUG.VERBOSE%         = TRUE
-    DEBUG.VERBOSITY%       = DEBUG_MIN
+    DEBUG.VERBOSITY%       = DEBUG_AVG
     DEBUG.NEXT_STEP%       = TRUE
     DEBUG.CUR_STEP%        = 0
     DEBUG.PREV_STEP%       = 0

@@ -49,7 +49,6 @@ DO:
             DEBUG.VERBOSITY% = DEBUG_MAX : stats_update
         CASE CHR$(27): ' ESC = Quit
             timers_main_shutdown
-            END
             SYSTEM
     END SELECT
 
