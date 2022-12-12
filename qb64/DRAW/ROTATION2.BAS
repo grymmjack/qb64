@@ -10,7 +10,7 @@ Rotation = 0  'The rotation counter.
 Angle = -5 * .017453
 
 DO
-  _LIMIT 1
+  _LIMIT 30
   OldX = X
   OldY = Y
   X = (OldX * COS(Angle)) + (OldY * SIN(Angle))

@@ -59,7 +59,7 @@ DO
 FOR angle! = 0 TO 2 * pi! STEP .1
 SCREEN 7, , curpage, 1 - curpage
 CLS
-_LIMIT 1
+_LIMIT 30
 FOR x = BOXX1 TO BOXX2
 FOR y = BOXY1 TO BOXY2
 

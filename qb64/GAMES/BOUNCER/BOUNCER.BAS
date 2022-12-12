@@ -23,6 +23,10 @@ DO:
     k$ = INKEY$
 
     SELECT CASE k$
+        CASE "=": '+/ = Increase speed by increasing limit
+            CFG.LIM% = CFG.LIM% + 1 : stats_update
+        CASE "-": '- = Decrease speed by decreasing limit  
+            CFG.LIM% = CFG.LIM% - 1 : stats_update
         CASE " ": 'SPACE = randomize blocks
             blocks_init : game_step
         CASE ",": ', = increment total blocks

@@ -9,7 +9,7 @@ $Debug
 DEFINT A-Z
 '$DYNAMIC
 
-DIM SHARED Dbg: Dbg = 1
+DIM SHARED Dbg: Dbg = 0
 DIM SHARED powerOf2&(11)
 FOR a = 0 TO 11: powerOf2&(a) = 2 ^ a: NEXT a
 
@@ -54,11 +54,11 @@ SCREEN _NEWIMAGE(220, 220, 32)
 DIM gifData AS GIFDATA
 DIM frameData(0 TO 0) AS FRAMEDATA
 
-filename$ = "C:\git\qb64\qb64\IMAGE-TESTS\ASSETS\test.gif"  '<<<<<<<<<<<< Enter a file name here!!!
+filename$ = "ASSETS/test.gif"  '<<<<<<<<<<<< Enter a file name here!!!
 
 IF LEN(filename$) = 0 THEN END
 openGif filename$, gifData, frameData()
-PRINT gifData.file
+' PRINT gifData.file
 END
 
 ' Loop away.

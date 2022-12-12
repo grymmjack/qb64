@@ -105,7 +105,7 @@ _DEST canvas&
 ' _PUTIMAGE (x,y)-(x+w,y+h), img&, CANVAS&
 _PUTIMAGE (2*300,2*0)-(2*620,2*200), img&, canvas&
 
-limit    = 5 ' Loop limiter
+limit    = 50 ' Loop limiter
 startIdx = cc(0).color_range_start ' Starting palette color
 endIdx   = cc(0).color_range_end ' Ending palette color
 

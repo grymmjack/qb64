@@ -7,7 +7,7 @@ SCREEN 13, 0, 1
 DIM s AS STRING
 s$ = "C4" _
    + "N" _
-   + "D10"
+   + "D10" _
    + ""
 
 DRAW s$

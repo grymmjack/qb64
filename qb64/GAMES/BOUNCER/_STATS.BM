@@ -20,7 +20,7 @@ SUB stats_update
     t% = t% + STATS.LEFT_BOUNCES%
     t% = t% + STATS.BLOCK_BOUNCES%
     DIM AS STRING s, s2, s3
-    s$ = "ESC=Quit, SPACE=RND Blocks"
+    s$ = "ESC=Quit, SPACE=RND Blocks, +=Faster, -=Slower"
 
     s2$ = "# Bounces:"
     s2$ = s2$ + " T=" + n$(STATS.TOP_BOUNCES%)
@@ -30,6 +30,7 @@ SUB stats_update
     s2$ = s2$ + " BL=" + n$(STATS.BLOCK_BOUNCES%)
     s2$ = s2$ + "    (" + n$(t%) + ")"
     s2$ = s2$ + "    TIMER: " + ln$(TICKS_TIMER.SECONDS&)
+    s2$ = s2$ + " FPS: " + n$(CFG.LIM%)
     s2$ = s2$ + "   # Blocks=" + n$(CFG.NUM_BLOCKS%)
 
     LOCATE _HEIGHT-2, 1 : PRINT SPACE$(_WIDTH)
