@@ -21,10 +21,10 @@ SUB stats_update
     t% = t% + STATS.LEFT_BOUNCES%
     t% = t% + STATS.BLOCK_BOUNCES%
     DIM AS STRING s, s2, s3
-    s$ = "ESC:END,SPACE:RND,+/-:SPD,F1:TRACE,F4:BALL,F5:DEBUG,HOME/END:SHOW/HIDE CONSOLE"
+    s$ = "ESC:END,SPACE:RND,+/-:SPD,F1:TRACE,F4:BALL,F5:DEBUG->HOME/END:SHOW/HIDE CONSOLE"
 
-    s2$ = "BOUNCES "
-    IF BALL.TRACE_PATH% = TRUE THEN s2$ = s2$ + "TRACING"
+    s2$ = "BOUNCES"
+    IF BALL.TRACE_PATH% = TRUE THEN s2$ = s2$ + " TRACING"
     s2$ = s2$ + " T=" + n$(STATS.TOP_BOUNCES%)
     s2$ = s2$ + " R=" + n$(STATS.RIGHT_BOUNCES%)
     s2$ = s2$ + " B=" + n$(STATS.BOT_BOUNCES%)
