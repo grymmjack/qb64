@@ -90,7 +90,7 @@ DO:
             DPRINT "INKEY$: 'F11' DEBUG LEVEL MAX", DEBUG_AVG
             DEBUG.VERBOSITY% = DEBUG_MAX : stats_update
         'FUTURE - add F12 - toggle cross hair to show x, y of screen and ball
-        CASE CHR$(27): ' ESC = Quit
+        CASE CHR$(27): '  ESC = Quit
             DPRINT "INKEY$: 'ESC' QUIT", DEBUG_AVG
             timers_main_shutdown
             SYSTEM

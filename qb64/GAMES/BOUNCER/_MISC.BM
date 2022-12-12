@@ -74,6 +74,13 @@ FUNCTION in_range% (value%, minimum%, maximum%)
     END IF
 END FUNCTION
 
+FUNCTION rand_sign% ()
+    DIM r AS INTEGER
+    r% = -1 + INT(RND*2)
+    IF r% = 0 THEN r% = 1
+    rand_sign% = r%
+END FUNCTION
+
 FUNCTION rand_in_range% (minimum%, maximum%)
     DPRINT _
         "rand_in_range(minimum%=" + n$(minimum%) + _

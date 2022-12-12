@@ -1,0 +1,30 @@
+ball_hit_block
+ball_will_bounce_up()
+ball_will_bounce_up = TRUE
+ball_will_bounce_down()
+ball_will_bounce_down = FALSE
+ball_will_bounce_left()
+ball_will_bounce_left = TRUE
+ball_will_bounce_right()
+ball_will_bounce_right = FALSE
+ball_will_invert_path()
+    top_left%=FALSE
+   top_right%=FALSE
+    bot_left%=FALSE
+   bot_right%=FALSE
+ top_left_2L%=FALSE
+top_right_2L%=FALSE
+ bot_left_2L%=FALSE
+bot_right_2L%=FALSE
+ top_left_3L%=FALSE
+top_right_3L%=FALSE
+ bot_left_3L%=FALSE
+bot_right_3L%=FALSE
+-------------
+ sum: 0
+-------------
+ will invert%=FALSE
+ will_corner%=FALSE
+     will_2L%=FALSE
+     will_3L%=FALSE
+ball_will_invert_path = FALSE

@@ -451,20 +451,6 @@ SUB ball_hit_block
     bouncing_left%  = ball_will_bounce_left%
     bouncing_right% = ball_will_bounce_right%
     inverting_path% = ball_will_invert_path%
-    ' Invert if hitting both left and any vertical direction
-    IF bouncing_left% AND bouncing_down% _
-       OR bouncing_left% AND bouncing_up% THEN
-        DPRINT "* HITTING BOTH LEFT AND VERTICAL", DEBUG_MAX
-        inverting_path% = TRUE
-        ball_error_trap
-    END IF
-    ' Invert if hitting both right and any vertical direction
-    IF bouncing_right% AND bouncing_down% _
-       OR bouncing_right% AND bouncing_up% THEN
-        DPRINT "* HITTING BOTH RIGHT AND VERTICAL", DEBUG_MAX
-        inverting_path% = TRUE
-        ball_error_trap
-    END IF
     IF inverting_path% = TRUE THEN
         BALL.Y_DIR% = BALL.Y_DIR% * -1
         BALL.X_DIR% = BALL.X_DIR% * -1
@@ -503,6 +489,7 @@ SUB ball_move
     BALL.Y% = clamp(BALL.Y% + BALL.Y_DIR%, LEVEL.START_Y%, LEVEL.END_Y%)
     screen_set_active_page GAME_SCREEN
     LOCATE BALL.Y%, BALL.X% : PRINT BALL.DISPLAY$;
+    ball_error_trap
 END SUB
 
 
