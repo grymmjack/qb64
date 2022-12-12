@@ -58,7 +58,7 @@ DO:
             dmsg$ = dmsg$ + "  PREV_STEP: " + n$(DEBUG.PREV_STEP%)
             dmsg$ = dmsg$ + "  NEXT_STEP: " + n$(DEBUG.NEXT_STEP%)
             DPRINT dmsg$, DEBUG_MAX
-            debug_console : stats_update
+            debug_console : stats_update : game_step
             dmsg$ = " [AFTER F1]" 
             dmsg$ = dmsg$ + "  DEBUG ENABLED: " + b$(DEBUG.ENABLED%)
             dmsg$ = dmsg$ + "  IN CONSOLE: " + b$(DEBUG.IN_CONSOLE%)
@@ -71,6 +71,9 @@ DO:
         CASE CHR$(0) + "=": 'F3 = mark console
             DPRINT "INKEY$: 'F3' MARK CONSOLE", DEBUG_AVG
             console_mark : stats_update
+        CASE CHR$(0) + ">": 'F4 = toggle ball char
+            DPRINT "INKEY$: 'F4' toggle ball char", DEBUG_AVG
+            ball_toggle_char : stats_update
         CASE CHR$(0) + "?": 'F5 = start debugging
             DPRINT "INKEY$: 'F5' START DEBUGGING", DEBUG_AVG
             debug_start : stats_update

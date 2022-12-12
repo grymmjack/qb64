@@ -6,7 +6,19 @@ SUB ball_init
     BALL.Y_DIR%   = -1
     BALL.SPEED%   = 1
     BALL.KOLOR%   = 15
-    BALL.DISPLAY$ = CHR$(9)
+    BALL.DISPLAY$ = CHR$(10)
+END SUB
+
+
+SUB ball_toggle_char
+    DPRINT "ball_toggle_char", DEBUG_MAX
+    IF BALL.DISPLAY$ = CHR$(9) THEN 
+        BALL.DISPLAY$ = CHR$(10) 
+    ELSE 
+        BALL.DISPLAY$ = CHR$(9)
+    ENDIF
+    screen_set_active_page GAME_SCREEN
+    LOCATE BALL.Y%, BALL.X% : PRINT BALL.DISPLAY$;
 END SUB
 
 
@@ -71,7 +83,9 @@ END FUNCTION
 FUNCTION ball_will_invert_path% ()
     DPRINT "ball_will_invert_path()", DEBUG_AVG
     DIM AS INTEGER top_left, top_right, bot_left, bot_right, sum
-    DIM AS INTEGER top_left_L, top_right_L, bot_left_L, bot_right_L
+    '_3L = 3 L shape neighbors _2L = partial L shape neighbors (2 but not 3)
+    DIM AS INTEGER top_left_2L, top_right_2L, bot_left_2L, bot_right_2L
+    DIM AS INTEGER top_left_3L, top_right_3L, bot_left_3L, bot_right_3L
 
     'x..
     '.*.
@@ -129,10 +143,66 @@ FUNCTION ball_will_invert_path% ()
         AND (BALL_9GRID(3,2) = 0) _
         AND (BALL_9GRID(3,3) = 1) _
     )
+    'xx.
+    'x*.
+    '...\ = x-1 y-1
+    top_left_2L% = ( _
+            (BALL_9GRID(1,1) = 1) _
+        AND (BALL_9GRID(1,2) = 1) _
+        AND (BALL_9GRID(1,3) = 0) _
+        AND (BALL_9GRID(2,1) = 1) _
+        AND (BALL_9GRID(2,2) = 0) _
+        AND (BALL_9GRID(2,3) = 0) _
+        AND (BALL_9GRID(3,1) = 0) _
+        AND (BALL_9GRID(3,2) = 0) _
+        AND (BALL_9GRID(3,3) = 0) _
+    )
+    '.xx
+    '.*x
+    '.../ = x+1 y-1
+    top_right_2L% = ( _
+            (BALL_9GRID(1,1) = 0) _
+        AND (BALL_9GRID(1,2) = 1) _
+        AND (BALL_9GRID(1,3) = 1) _
+        AND (BALL_9GRID(2,1) = 0) _
+        AND (BALL_9GRID(2,2) = 0) _
+        AND (BALL_9GRID(2,3) = 1) _
+        AND (BALL_9GRID(3,1) = 0) _
+        AND (BALL_9GRID(3,2) = 0) _
+        AND (BALL_9GRID(3,3) = 0) _
+    )
+    '...
+    'x*.
+    'xx./ = x-1 y+1
+    bot_left_2L% = ( _
+            (BALL_9GRID(1,1) = 0) _
+        AND (BALL_9GRID(1,2) = 0) _
+        AND (BALL_9GRID(1,3) = 0) _
+        AND (BALL_9GRID(2,1) = 1) _
+        AND (BALL_9GRID(2,2) = 0) _
+        AND (BALL_9GRID(2,3) = 0) _
+        AND (BALL_9GRID(3,1) = 1) _
+        AND (BALL_9GRID(3,2) = 1) _
+        AND (BALL_9GRID(3,3) = 0) _
+    )
+    '...
+    '.*x
+    '.xx\ = x+1 y+1
+    bot_right_2L% = ( _
+            (BALL_9GRID(1,1) = 0) _
+        AND (BALL_9GRID(1,2) = 0) _
+        AND (BALL_9GRID(1,3) = 0) _
+        AND (BALL_9GRID(2,1) = 0) _
+        AND (BALL_9GRID(2,2) = 0) _
+        AND (BALL_9GRID(2,3) = 1) _
+        AND (BALL_9GRID(3,1) = 0) _
+        AND (BALL_9GRID(3,2) = 1) _
+        AND (BALL_9GRID(3,3) = 1) _
+    )
     'xxx
     'x*.
     'x..\ = x-1 y-1
-    top_left_L% = ( _
+    top_left_3L% = ( _
             (BALL_9GRID(1,1) = 1) _
         AND (BALL_9GRID(1,2) = 1) _
         AND (BALL_9GRID(1,3) = 1) _
@@ -146,7 +216,7 @@ FUNCTION ball_will_invert_path% ()
     'xxx
     '.*x
     '..x/ = x+1 y-1
-    top_right_L% = ( _
+    top_right_3L% = ( _
             (BALL_9GRID(1,1) = 1) _
         AND (BALL_9GRID(1,2) = 1) _
         AND (BALL_9GRID(1,3) = 1) _
@@ -160,7 +230,7 @@ FUNCTION ball_will_invert_path% ()
     'x..
     'x*.
     'xxx/ = x-1 y+1
-    bot_left_L% = ( _
+    bot_left_3L% = ( _
             (BALL_9GRID(1,1) = 1) _
         AND (BALL_9GRID(1,2) = 0) _
         AND (BALL_9GRID(1,3) = 0) _
@@ -174,7 +244,7 @@ FUNCTION ball_will_invert_path% ()
     '..x
     '.*x
     'xxx\ = x+1 y+1
-    bot_right_L% = ( _
+    bot_right_3L% = ( _
             (BALL_9GRID(1,1) = 0) _
         AND (BALL_9GRID(1,2) = 0) _
         AND (BALL_9GRID(1,3) = 1) _
@@ -198,16 +268,28 @@ FUNCTION ball_will_invert_path% ()
     IF bot_right% = TRUE AND BALL.X_DIR% = 1 AND BALL.Y_DIR% = 1 THEN 
         sum% = sum% + 1
     END IF
-    IF top_left_L%  = TRUE AND BALL.X_DIR% = -1 AND BALL.Y_DIR% = -1 THEN
+    IF top_left_3L%  = TRUE AND BALL.X_DIR% = -1 AND BALL.Y_DIR% = -1 THEN
         sum% = sum% + 1
     END IF
-    IF top_right_L% = TRUE AND BALL.X_DIR% = 1 AND BALL.Y_DIR% = -1 THEN
+    IF top_right_3L% = TRUE AND BALL.X_DIR% = 1 AND BALL.Y_DIR% = -1 THEN
         sum% = sum% + 1
     END IF
-    IF bot_left_L%  = TRUE AND BALL.X_DIR% = -1 AND BALL.Y_DIR% = 1 THEN
+    IF bot_left_3L%  = TRUE AND BALL.X_DIR% = -1 AND BALL.Y_DIR% = 1 THEN
         sum% = sum% + 1
     END IF
-    IF bot_right_L% = TRUE AND BALL.X_DIR% = 1 AND BALL.Y_DIR% = 1 THEN
+    IF bot_right_3L% = TRUE AND BALL.X_DIR% = 1 AND BALL.Y_DIR% = 1 THEN
+        sum% = sum% + 1
+    END IF
+    IF top_left_2L%  = TRUE AND BALL.X_DIR% = -1 AND BALL.Y_DIR% = -1 THEN
+        sum% = sum% + 1
+    END IF
+    IF top_right_2L% = TRUE AND BALL.X_DIR% = 1 AND BALL.Y_DIR% = -1 THEN
+        sum% = sum% + 1
+    END IF
+    IF bot_left_2L%  = TRUE AND BALL.X_DIR% = -1 AND BALL.Y_DIR% = 1 THEN
+        sum% = sum% + 1
+    END IF
+    IF bot_right_2L% = TRUE AND BALL.X_DIR% = 1 AND BALL.Y_DIR% = 1 THEN
         sum% = sum% + 1
     END IF
     DPRINT "   top_left%=" + n$(top_left%), DEBUG_AVG
