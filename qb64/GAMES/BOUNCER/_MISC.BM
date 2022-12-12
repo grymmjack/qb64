@@ -59,9 +59,9 @@ FUNCTION in_range% (value%, minimum%, maximum%)
         ", minimum%=" + n$(minimum%) + _
         ", maximum%=" + n$(maximum%) + ")", DEBUG_MAX
     IF value% >= minimum% AND value% <= maximum% THEN 
-        in_range% = -1
+        in_range% = TRUE
     ELSE
-        in_range% = 0
+        in_range% = FALSE
     END IF
 END FUNCTION
 

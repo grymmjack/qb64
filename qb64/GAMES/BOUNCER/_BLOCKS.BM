@@ -21,11 +21,11 @@ SUB blocks_init
         w% = rand_in_range(1, CFG.BLOCK_MAX_W%)
         h% = rand_in_range(1, CFG.BLOCK_MAX_H%)
         DO: 'prevent creation of block where ball currently is
-            x% = clamp(INT(RND * LEVEL.END_X%) - w%, 1, LEVEL.END_X%)
-            y% = clamp(INT(RND * LEVEL.END_Y%) - h%, 1, LEVEL.END_Y%)
-            in_range_x% = in_range(BALL.X%, BALL.X%-1, BALL.X%+1)
-            in_range_y% = in_range(BALL.Y%, BALL.Y%-1, BALL.Y%+1)
-        LOOP UNTIL NOT (in_range_x% + in_range_y%)
+            x% = clamp(rand_in_range(LEVEL.START_X%, LEVEL.END_X%-w%), 1, LEVEL.END_X%)
+            y% = clamp(rand_in_range(LEVEL.START_Y%, LEVEL.END_Y%-h%), 1, LEVEL.END_Y%)
+            in_range_x% = in_range(BALL.X%, x%, x%+w%)
+            in_range_y% = in_range(BALL.Y%, y%, y%+h%)
+        LOOP UNTIL in_range_x% = FALSE AND in_range_y% = FALSE
         IF CFG.RANDOM_BG% THEN 
             c% = rand_in_range(8,15)
         ELSE
