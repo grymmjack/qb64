@@ -24,29 +24,29 @@ DO:
 
     SELECT CASE k$
         CASE " ": 'SPACE = randomize blocks
-            blocks_init
+            blocks_init : game_step
         CASE ",": ', = increment total blocks
-            blocks_inc
+            blocks_inc : game_step
         CASE ".": '. = decrement total blocks
-            blocks_dec
+            blocks_dec : game_step
         CASE CHR$(0) + ";": 'F1 = show debug console
-            debug_console
+            debug_console : stats_update
         CASE CHR$(0) + "<": 'F2 = clear debug console
-            console_clear
+            console_clear : stats_update
         CASE CHR$(0) + "=": 'F3 = mark console
-            console_mark
+            console_mark : stats_update
         CASE CHR$(0) + "?": 'F5 = start debugging
-            debug_start 
+            debug_start : stats_update
         CASE CHR$(0) + "A": 'F7 = go to next debug step
-            debug_next  
+            debug_next : stats_update
         CASE CHR$(0) + "B": 'F8 = stop debugging
-            debug_stop
+            debug_stop : stats_update
         CASE CHR$(0) + "C": 'F9 = debug level min
-            DEBUG.VERBOSITY% = DEBUG_MIN
+            DEBUG.VERBOSITY% = DEBUG_MIN : stats_update
         CASE CHR$(0) + "D": 'F10 = debug level avg
-            DEBUG.VERBOSITY% = DEBUG_AVG
+            DEBUG.VERBOSITY% = DEBUG_AVG : stats_update
         CASE CHR$(0) + CHR$(133): 'F11 = debug level max
-            DEBUG.VERBOSITY% = DEBUG_MAX
+            DEBUG.VERBOSITY% = DEBUG_MAX : stats_update
         CASE CHR$(27): ' ESC = Quit
             timers_main_shutdown
             END

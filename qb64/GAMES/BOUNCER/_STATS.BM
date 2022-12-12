@@ -43,7 +43,7 @@ SUB stats_update
                 s3$ = "[MAX]"
         END SELECT
         s3$ = s3$ + " S:" + n$(DEBUG.CUR_STEP%)
-        s3$ = s3$ + "  F1 CON  F2 CLR CON  F3 MARK  F7 NEXT  F8 STOP"
+        s3$ = s3$ + "  F1 CON  F2 CLR  F3 MARK  F7 NEXT  F8 STOP"
         s3$ = s3$ + "  F9 MIN  F10 AVG  F11 MAX"
         COLOR 0,15
         LOCATE _HEIGHT-2, 1 : PRINT SPACE$(_WIDTH)
