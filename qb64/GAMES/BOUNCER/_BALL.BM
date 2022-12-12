@@ -327,6 +327,9 @@ FUNCTION ball_will_invert_path% ()
     DPRINT "  bot_right%=" + n$(bot_right%), DEBUG_AVG
     DPRINT " ------------", DEBUG_AVG
     DPRINT " sum: " + n$(sum%), DEBUG_AVG
+    IF will_2L% = TRUE THEN
+        debug_breakpoint
+    END IF
     IF sum% > 0 THEN
         DPRINT "ball_will_invert_path = TRUE", DEBUG_AVG
         STATS.BALL_INVERTS% = STATS.BALL_INVERTS% + 1
@@ -334,9 +337,6 @@ FUNCTION ball_will_invert_path% ()
     ELSE
         DPRINT "ball_will_invert_path = FALSE", DEBUG_AVG
         ball_will_invert_path% = FALSE
-    END IF
-    IF will_2L% = TRUE THEN
-        debug_breakpoint
     END IF
 END FUNCTION
 
