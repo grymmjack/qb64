@@ -1,9 +1,10 @@
 SUB debug_init
     DPRINT "debug_init", DEBUG_MAX
     DEBUG.ENABLED%         = FALSE
+    DEBUG.DO_BREAKPOINTS%  = TRUE
     DEBUG.IN_CONSOLE%      = FALSE
     DEBUG.VERBOSE%         = TRUE
-    DEBUG.VERBOSITY%       = DEBUG_MAX
+    DEBUG.VERBOSITY%       = DEBUG_AVG
     DEBUG.NEXT_STEP%       = TRUE
     DEBUG.CUR_STEP%        = 0
     DEBUG.PREV_STEP%       = 0
@@ -29,15 +30,27 @@ SUB debug_next
     END IF
 END SUB
 
-SUB debug_breakpoint
+SUB debug_breakpoint (msg$)
     DPRINT "debug_breakpoint", DEBUG_MIN
-    DEBUG.ENABLED% = TRUE
-    DEBUG.NEXT_STEP% = FALSE
-    TIMER(MAIN_TIMER%) OFF
-    DPRINT "[BREAKPOINT REACHED]", DEBUG_MIN
-    console_mark
-    debug_console
+    IF DEBUG.DO_BREAKPOINTS% = TRUE THEN
+        DEBUG.ENABLED% = TRUE
+        DEBUG.NEXT_STEP% = FALSE
+        TIMER(MAIN_TIMER%) OFF
+        DPRINT "[BREAKPOINT REACHED]: " + msg$, DEBUG_MIN
+        console_mark
+        debug_console
+    END IF
 END SUB
+
+SUB debug_toggle_do_breakpoints
+    DPRINT "debug_toggle_do_breakpoints", DEBUG_MAX
+    IF DEBUG.DO_BREAKPOINTS% = TRUE THEN 
+        DEBUG.DO_BREAKPOINTS% = FALSE
+    ELSE 
+        DEBUG.DO_BREAKPOINTS% = TRUE
+    ENDIF
+END SUB
+
 
 SUB debug_stop
     DPRINT "debug_stop", DEBUG_MAX

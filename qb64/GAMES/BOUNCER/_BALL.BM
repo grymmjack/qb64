@@ -321,14 +321,22 @@ FUNCTION ball_will_invert_path% ()
     IF bot_right_3L% = TRUE AND BALL.X_DIR% = 1 AND BALL.Y_DIR% = 1 THEN
         sum% = sum% + 1 : will_3L% = TRUE
     END IF
-    DPRINT "   top_left%=" + n$(top_left%), DEBUG_AVG
-    DPRINT "  top_right%=" + n$(top_right%), DEBUG_AVG
-    DPRINT "   bot_left%=" + n$(bot_left%), DEBUG_AVG
-    DPRINT "  bot_right%=" + n$(bot_right%), DEBUG_AVG
-    DPRINT " ------------", DEBUG_AVG
+    DPRINT "    top_left%=" + b$(top_left%), DEBUG_AVG
+    DPRINT "   top_right%=" + b$(top_right%), DEBUG_AVG
+    DPRINT "    bot_left%=" + b$(bot_left%), DEBUG_AVG
+    DPRINT "   bot_right%=" + b$(bot_right%), DEBUG_AVG
+    DPRINT " top_left_2L%=" + b$(top_left_2L%), DEBUG_AVG
+    DPRINT "top_right_2L%=" + b$(top_right_2L%), DEBUG_AVG
+    DPRINT " bot_left_2L%=" + b$(bot_left_2L%), DEBUG_AVG
+    DPRINT "bot_right_2L%=" + b$(bot_right_2L%), DEBUG_AVG
+    DPRINT " top_left_3L%=" + b$(top_left_3L%), DEBUG_AVG
+    DPRINT "top_right_3L%=" + b$(top_right_3L%), DEBUG_AVG
+    DPRINT " bot_left_3L%=" + b$(bot_left_3L%), DEBUG_AVG
+    DPRINT "bot_right_3L%=" + b$(bot_right_3L%), DEBUG_AVG
+    DPRINT "-------------", DEBUG_AVG
     DPRINT " sum: " + n$(sum%), DEBUG_AVG
     IF will_2L% = TRUE THEN
-        debug_breakpoint
+        debug_breakpoint "!!! will_2L"
     END IF
     IF sum% > 0 THEN
         DPRINT "ball_will_invert_path = TRUE", DEBUG_AVG
@@ -414,8 +422,9 @@ SUB ball_hit_block
     DIM AS INTEGER _
         bouncing_up, bouncing_down, _
         bouncing_left, bouncing_right, _
-        inverting_path
+        inverting_path, bouncing
     STATS.BLOCK_BOUNCES% = STATS.BLOCK_BOUNCES% + 1
+    bouncing%       = FALSE
     bouncing_up%    = ball_will_bounce_up%
     bouncing_down%  = ball_will_bounce_down%
     bouncing_left%  = ball_will_bounce_left%
@@ -424,21 +433,27 @@ SUB ball_hit_block
     IF inverting_path% = TRUE THEN
         BALL.Y_DIR% = BALL.Y_DIR% * -1
         BALL.X_DIR% = BALL.X_DIR% * -1
-    END IF
-    IF bouncing_up% = TRUE THEN 
+        bouncing% = TRUE
+    ELSEIF bouncing_up% = TRUE THEN 
         BALL.Y_DIR% = -1
+        bouncing% = TRUE
     ELSEIF bouncing_down% = TRUE THEN 
         BALL.Y_DIR% = 1
+        bouncing% = TRUE
     ELSEIF bouncing_left% = TRUE THEN 
         BALL.X_DIR% = -1
+        bouncing% = TRUE
     ELSEIF bouncing_right% = TRUE THEN 
         BALL.X_DIR% = 1
+        bouncing% = TRUE
+    ELSE 'safety invert path
+        debug_breakpoint "!!! safety invert path"
+        STATS.BALL_INVERTS% = STATS.BALL_INVERTS + 1
+        BALL.Y_DIR% = BALL.Y_DIR% * -1
+        BALL.X_DIR% = BALL.X_DIR% * -1
+        bouncing% = TRUE
     END IF
-    IF bouncing_up = TRUE% OR _
-       bouncing_down% = TRUE OR _
-       bouncing_left% = TRUE OR _
-       bouncing_right% = TRUE OR _
-       inverting_path% = TRUE THEN SOUND 500, 0.33
+    IF bouncing% = TRUE THEN SOUND 500, 0.33
 END SUB
 
 

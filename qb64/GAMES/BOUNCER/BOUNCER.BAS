@@ -35,6 +35,9 @@ DO:
     k$ = INKEY$
     IF k$ <> "" THEN DPRINT "INKEY$", DEBUG_MIN
     SELECT CASE k$
+        CASE LCASE$("b"): 'B = Toggle breakpoints
+            DPRINT "INKEY$: 'B' TOGGLE BREAKPOINTS", DEBUG_AVG
+            debug_toggle_do_breakpoints : stats_update
         CASE "=": '+/ = Increase speed by increasing limit
             DPRINT "INKEY$: '=' INCREASE LIMIT", DEBUG_AVG
             CFG.LIM% = CFG.LIM% + 1 : stats_update

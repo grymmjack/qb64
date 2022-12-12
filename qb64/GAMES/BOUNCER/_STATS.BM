@@ -35,6 +35,11 @@ SUB stats_update
     s2$ = s2$ + "  TMR:" + ln$(TICKS_TIMER.SECONDS&)
     s2$ = s2$ + "  FPS:" + n$(CFG.LIM%)
     s2$ = s2$ + "  #B=" + n$(CFG.NUM_BLOCKS%)
+    IF DEBUG.DO_BREAKPOINTS% = TRUE THEN
+        s2$ = s2$ + "  B:RKP ON"
+    ELSE
+        s2$ = s2$ + "  B:RKP OFF"
+    END IF
 
     screen_set_both_pages GAME_SCREEN
     LOCATE _HEIGHT-2, 1 : PRINT SPACE$(_WIDTH)
