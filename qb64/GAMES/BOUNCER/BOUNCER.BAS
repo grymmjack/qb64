@@ -1,3 +1,15 @@
+''
+' BOUNCER
+' 
+' A little sandbox prototype to help me master the logic and physics for
+' ball and paddle stuff. Mostly figuring out collisions and reflections.
+'
+' Press F5 to start the debugger. This is something that will also wind up
+' going into my QB64_GJ_LIB for sure. Also a bunch of the _MISC.BM funcs
+' and subs will be added too.
+'
+' @author Rick Christy <grymmjack@gmail.com>
+'
 $CONSOLE
 OPTION _EXPLICIT
 OPTION _EXPLICITARRAY
