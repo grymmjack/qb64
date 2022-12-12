@@ -1,0 +1,11 @@
+REM Adding data to the file FTEL
+REM \CHAP6\CH6_3.BAS
+
+NUM% = 4
+NAME$ = "Petrov I.L."
+TEL$ = "654-32-10"
+OPEN "C:\WROXDATA\FTEL.DAT" FOR APPEND AS #1
+WRITE #1, NUM%
+WRITE #1, NAME$, TEL$
+CLOSE #1
+

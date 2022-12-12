@@ -1,0 +1,37 @@
+QB Invaders Documentation Ver 1.0
+Copyright(c) 1996  Nocturnal Creations
+All rights reserved
+Author: Tim Truman
+
+The author makes no warranties about the use of this software, expressed
+or implied.
+
+
+<>> About
+----------------
+ QB Invaders is donationware. If you enjoy it consider sending a
+ dollar or so. In return for your good deed I'll send back nastier
+ aliens , more levels, and the QuickBasic source code.
+
+<>> Requirements
+----------------
+ QB Invaders requires a VGA monitor.
+
+  
+<>> Playing
+----------------
+ The game premise is identicle to Space Invaders. Shoot all the aliens
+ using your mobile ground based missle launcher before they land on earth.
+
+ The left Alt key moves your launcher left and the left Ctrl key moves
+ your launcher to the right. Once you have an alien lined up in your
+ sights hit the Space bar to fire a missle.
+
+ Once in a while the command ship will come around to check on the alien
+ troops. Shoot him for bonus points. Wait for the right moment and you get
+ a free life.
+
+ Clear all the aliens in a wave and you'll move onto battle quicker
+ and nastier aliens. Good Luck !
+
+

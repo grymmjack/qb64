@@ -1,0 +1,17 @@
+a100
+PUSH    BP                                 
+MOV     BP,SP                              
+MOV     AH,3b                              
+MOV     DL,00                              
+MOV     BX,[BP+06]                         
+MOV     dx,[BX]                            
+INT     21                                 
+pop     BP                                 
+RETF    0002                               
+
+nsetdir.com
+rcx
+12
+w
+q
+

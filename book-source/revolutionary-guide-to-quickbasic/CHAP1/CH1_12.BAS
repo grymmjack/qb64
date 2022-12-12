@@ -1,0 +1,15 @@
+REM Demonstration of Math Functions
+REM \CHAP1\CH1_12.BAS
+ 
+CLS
+PRINT ABS(-234)
+Pi = 3.141593
+PRINT SIN(30 * Pi/ 180)
+PRINT COS(30 * Pi / 180)
+PRINT TAN(45 * Pi / 180)
+PRINT ATN(1) * 180 / Pi
+PRINT LOG(2)
+PRINT EXP(1)
+PRINT SQR(4)
+
+END   

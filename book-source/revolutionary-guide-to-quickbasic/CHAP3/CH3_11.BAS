@@ -1,0 +1,10 @@
+REM Demonstrates the LINE command
+REM \CHAP3\CH3_11.BAS
+
+SCREEN 1: CLS
+PSET (50, 50)
+LINE -(50, 150)
+LINE -(150, 150)
+LINE -(150, 50)
+LINE -(50, 50)
+LINE (60, 60)-(140, 140), 1, BF

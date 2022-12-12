@@ -1,0 +1,51 @@
+                                E N I G M A
+                                -----------
+                                    By 
+                                Andrew Clare
+
+Enigma is a maze game featuring VGA graphics, a cheat mode, 6 levels and more
+
+Game controls:
+--------------
+Use the arrow keys to move your figure around the maze. Press b to use a bomb
+q resets the maze and destroys a life.
+
+Doors and keys:
+---------------
+Use the correctly lettered keys to open doors of a certain type. Key A will
+open door A and so on.
+
+Portcullises:
+-------------
+Land on the purple dots and a block will drop in a certain direction around 
+you, often trapping you so be careful!!!
+
+Teleports:
+---------
+Land on a teleport and you will be teleported to another part of the maze. Be 
+careful though, some teleports leave you trapped. Teleports are represented by
+4 yellow circles.
+
+Faces:
+------
+There are 3 different colors of face giving you various amounts of life.
+
+Bombs:
+------
+Bombs are littered around the mazes and are often needed to complete certain
+mazes. Bombs can destroy doors, keys and walls but some walls are indestuctable
+and can not be destroyed.
+
+Cheat mode:
+-----------
+There is an inbuilt cheatmode in the game, see if you can find it.
+
+Exit:
+-----
+Get to this and you have completed the maze.
+
+Crystals:
+---------
+In every maze is a crystal, get all these and you will get a spectacular 
+ending!!!
+

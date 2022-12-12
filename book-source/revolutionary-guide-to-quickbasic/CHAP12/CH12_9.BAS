@@ -1,0 +1,23 @@
+REM Fireworks
+REM \CHAP12\CH12_9.BAS
+
+CLS
+PRINT "PLEASE WAIT WHILE WE CALCULATE THE SINES AND COSINES. CHEERS."
+DIM S(360),C(360)
+FOR T=0 TO 360
+    S(T)=SIN(T):C(T)=COS(T)
+NEXT T
+
+CLS
+LOCATE 24,1:PRINT "Press a key and wait to end"
+WHILE INKEY$=""
+    X=RND*500+100:Y=RND*300+20
+    COL=RND*14+1
+    FOR T=1 TO 53
+        FOR W=0 TO 324 STEP 36
+            PSET (S(W)*T+X,C(W)*T+Y),COL
+            IF T>10 THEN PSET(S(W)*(T-12)+X,C(W)*(T-12)+Y),0
+        NEXT W
+        IF T>40 THEN COL=0
+    NEXT T
+WEND

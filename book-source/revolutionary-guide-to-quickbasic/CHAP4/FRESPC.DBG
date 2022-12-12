@@ -1,0 +1,31 @@
+a100
+PUSH    BP                                 
+MOV     BP,SP                              
+MOV     BX,[BP+06] 
+MOV     DL,[BX]
+MOV     AH,36
+INT     21                                 
+PUSH    DX
+PUSH    CX
+PUSH    BX
+MOV     bX,[BP+0C]                         
+MOV     [bX],Ax                            
+MOV     bX,[BP+0A]
+POP     aX
+MOV     [bX],aX
+MOV     bX,[BP+08]
+POP     CX
+MOV     [bX],CX
+MOV     BX,[BP+06]
+POP     DX
+MOV     [BX],DX
+pop     BP                                 
+RETF    0008
+
+
+nFRESPC.COM
+rcx
+2a
+w
+q
+

@@ -1,0 +1,11 @@
+REM Rotating two lines
+REM \CHAP9\CHAP9_19.BAS
+
+SCREEN 2: CLS
+FOR I = 0 TO 639 STEP 7
+  LINE (0, 0)-(I, 199)
+NEXT
+FOR I = 0 TO 199 STEP 5
+  LINE (0, 0)-(639, I)
+NEXT
+F$ = INPUT$(1)

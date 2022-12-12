@@ -1,0 +1,23 @@
+REM DUPLICATED PIXELBUG
+REM WRITTEN BY A.SILL
+REM FOR WROX PRESS
+REM (c). 1992
+REM
+SCREEN 9
+start:
+X = RND * 320: Y = RND * 175
+C = 1: T = 1
+DX = X: DY = Y
+CLS
+WHILE INKEY$ = ""
+  X = X + RND * 5 - RND * 5: IF X > 317 THEN X = 316 ELSE IF X < 1 THEN X = 1
+  Y = Y + RND * 3 - RND * 3: IF Y > 172 THEN Y = 171 ELSE IF Y < 1 THEN Y = 1
+  C = C + .0004: T = T + .0004: IF C > 4 THEN C = 1
+  IF T = 60 THEN GOTO start
+  LINE (DX, DY)-(X, Y), C
+  LINE (320 + DX, 175 + DY)-(320 + X, 175 + Y), C
+  LINE (DX, DY + 175)-(X, 175 + Y), C
+  LINE (320 + DX, DY)-(320 + X, Y), C
+  DX = X: DY = Y
+WEND
+

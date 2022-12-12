@@ -1,0 +1,35 @@
+DEFINT A-Z
+
+GOSUB Loadbiton
+astring$ = "abc"
+bitnumber = 16
+PRINT astring$
+GOSUB Callbiton
+PRINT astring$
+END
+
+Loadbiton:
+DIM biton(28)
+DEF SEG = VARSEG(biton(0))
+FOR i = 0 TO 55
+READ j
+POKE (VARPTR(biton(0)) + i), j
+NEXT i
+DEF SEG
+RETURN
+
+Callbiton:
+DEF SEG = VARSEG(biton(0))
+CALL ABSOLUTE(SADD(astring$), bitnumber, VARPTR(biton(0)))
+DEF SEG
+RETURN
+
+
+DATA &H55,&H8B,&HEC,&H8B,&H5E,&H06,&H8B,&H17
+DATA &H83,&HEA,&H01,&H8B,&HCA,&H81,&HE1,&HF8
+DATA &H00,&H2B,&HD1,&HD1,&HE9,&HD1,&HE9,&HD1
+DATA &HE9,&H8B,&H5E,&H08,&H8B,&H37,&H03,&HF1
+DATA &H56,&HAC,&HB1,&H07,&H2A,&HCA,&HB2,&H01
+DATA &HD2,&HE2,&HB4,&H00,&HB6,&H00,&H0B,&HC2
+DATA &H5F,&H1E,&H07,&HAA,&H5D,&HCA,&H04,&H00
+

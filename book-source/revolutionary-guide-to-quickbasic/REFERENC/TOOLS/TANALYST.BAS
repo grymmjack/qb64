@@ -1,0 +1,98 @@
+10 REM TEXT ANALYST
+20 REM Written by A.Sill
+30 REM FOR WROX PRESS
+40 REM (c) 1992
+50 REM
+60 ON ERROR GOTO 830
+70 SCREEN 9: CLS
+80 A$ = "TEXT ANALYST"
+90 COLOR 2
+100 LOCATE 2, (80 - LEN(A$)) / 2: PRINT A$
+110 COLOR 10
+120 COLOR 10: LOCATE 5, 1: PRINT "This program requests a text file (any will do) and analyses the content."
+130 PRINT "It works best with short ascii files.   It shows how deep text analysis can be  achieved, even though it is in a very basic and slow example."
+140 RAND = 0
+150 LOCATE 20, 33: COLOR 12: PRINT "Press any key"
+160 A$ = ""
+170 A$ = INKEY$: RAND = RAND + .1: IF A$ = "" THEN 170
+180 RAND = RAND - VAL(RIGHT$(TIME$, 2))
+190 RANDOMIZE RAND
+200 DIM WORD$(1000, 1)
+210 CLS
+220 WORDS% = 0: NUMBSENT% = 0: WL% = 0: DIFWORDS% = 1: WORD$(1, 0) = "A": WORD$(1, 1) = "1"
+230 CLS : COLOR 3: PRINT "BASIC TEXT ANALYST"
+240 COLOR 4: PRINT "----- ---- -------"
+250 COLOR 7: LOCATE 4, 1: INPUT "Enter Filename : "; F$
+260 IF F$ = "" OR LEN(F$) > 30 THEN GOTO 250
+270 OPEN F$ FOR INPUT AS #1
+280 WHILE NOT EOF(1)
+290 INPUT #1, A$
+300 FOR A = 1 TO LEN(A$)
+310 B$ = MID$(A$, A, 1)
+320 IF B$ = "." THEN NUMBSENT% = NUMBSENT% + 1
+330 IF B$ = " " AND WL% = 0 THEN GOTO 360
+340 IF (B$ = " " OR B$ = "(" OR B$ = ")" OR B$ = "?" OR B$ = "!" OR B$ = CHR$(34) OR B$ = "," OR B$ = "." OR B$ = "" OR A = LEN(A$)) AND WL% > 0 THEN GOSUB 460: GOTO 360
+350 WL% = WL% + 1
+360 NEXT A
+370 WEND
+380 LOCATE 11, 1: COLOR 7: PRINT "Number of words : "; WORDS%
+390 PRINT "Number of Sentences : "; NUMBSENT%
+400 PRINT "Average sentence length was : "; (WORDS% / NUMBSENT%); "words long"
+410 PRINT "The number of different words is "; DIFWORDS%
+420 GOSUB 600 ' GET NUMBER OF EACH LENGTH OF WORD
+430 COLOR 15: LOCATE 23, 27: PRINT "Press to a key to run again"
+440 WHILE INKEY$ = "": WEND
+450 GOTO 890
+460 REM *** SUBROUTINE
+470 WORDS% = WORDS% + 1
+480 FLAG% = 0
+490 IF A - WL% < 1 THEN WL% = WL% - 1: GOTO 490
+500 IF RIGHT$(MID$(A$, A - WL%, WL% + 1), 1) = "." THEN FLAG% = 1
+510 LOCATE 6, 16: PRINT SPACE$(50)
+520 LOCATE 6, 1: COLOR 14: PRINT "Current Word : "; MID$(A$, A - WL%, WL% + 1 - FLAG%)
+530 FLAG2% = 0
+540 FOR B = 1 TO DIFWORDS%
+550 IF MID$(A$, A - WL%, WL% + 1 - FLAG%) = WORD$(B, 0) THEN WORD$(B, 1) = STR$(VAL(WORD$(B, 1)) + 1): FLAG2% = 1
+560 NEXT B
+570 IF FLAG2% = 0 THEN DIFWORDS% = DIFWORDS% + 1: WORD$(DIFWORDS%, 0) = MID$(A$, A - WL%, WL% + 1 - FLAG%): WORD$(DIFWORDS%, 1) = STR$(VAL(WORD$(DIFWORDS%, 1)) + 1)
+580 WL% = 0
+590 RETURN
+600 REM *** GET NUMBER OF EACH LENGTH OF WORD
+610 COLOR 3: LOCATE 7, 34: PRINT "WORD LENGTHS"
+620 COLOR 14: LOCATE 8, 5: PRINT "1   2   3   4   5   6   7   8   9   10   11   12   13   14   15   16+": COLOR 7
+630 FOR A = 1 TO 9
+640 C = 0
+650 FOR B = 1 TO DIFWORDS%
+660 IF LEN(WORD$(B, 0)) = A + 1 THEN C = C + VAL(WORD$(B, 1))
+670 NEXT B
+680 LOCATE 9, (A * 4): PRINT C
+690 NEXT A
+700 FOR A = 10 TO 15
+710 C = 0
+720 FOR B = 1 TO DIFWORDS%
+730 IF LEN(WORD$(B, 0)) = A + 1 THEN C = C + VAL(WORD$(B, 1))
+740 NEXT B
+750 LOCATE 9, (A * 5) - 9: PRINT C
+760 NEXT A
+770 C = 0
+780 FOR B = 1 TO DIFWORDS%
+790 IF LEN(WORD$(B, 0)) > 17 THEN C = C + VAL(WORD$(B, 1))
+800 NEXT B
+810 LOCATE 9, 71: PRINT C
+820 RETURN
+830 REM *** ERROR HANDLING
+840 PRINT : COLOR 15: PRINT "ERROR HAS OCCURRED"; CHR$(7)
+850 IF ERR = 53 THEN PRINT "FILE IS NOT AVAILABLE"
+860 PRINT "Press a key to continue"
+870 WHILE INKEY$ = "": WEND
+880 RESUME 230
+890 REM ********* RETURN TO MENU POSER
+900 CLS
+910 COLOR 12: PRINT : PRINT : PRINT "          Do you want to 1. Run again or": PRINT "                         2. Return to DOS ?."
+920 LOCATE 3, 26: COLOR 7: PRINT "1"
+930 LOCATE 4, 26: PRINT "2"
+940 A$ = INKEY$: IF A$ = "" THEN GOTO 940
+950 IF A$ = "1" THEN CLEAR : RUN
+960 IF A$ = "2" THEN CLS : SYSTEM
+970 GOTO 940
+

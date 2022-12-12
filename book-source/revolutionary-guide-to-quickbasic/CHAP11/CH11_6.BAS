@@ -1,0 +1,8 @@
+REM Scale of D Minor
+REM \CHAP11\CH11_6.BAS
+
+CLS
+PLAY "MB D E F G A B- O5 C D"
+PRINT "END"
+
+END 
