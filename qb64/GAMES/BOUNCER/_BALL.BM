@@ -125,6 +125,7 @@ FUNCTION ball_will_invert_path% ()
     DIM AS INTEGER top_left_2L, top_right_2L, bot_left_2L, bot_right_2L
     DIM AS INTEGER top_left_3L, top_right_3L, bot_left_3L, bot_right_3L
     DIM AS INTEGER top_left_4L, top_right_4L, bot_left_4L, bot_right_4L
+    DIM AS INTEGER top_left_5L, top_right_5L, bot_left_5L, bot_right_5L
 
     'x..
     '.*.
@@ -327,13 +328,13 @@ FUNCTION ball_will_invert_path% ()
     'xx./ = x-1 y+1
     bot_left_4L% = ( _
             (BALL_9GRID(1,1) = 1) _
-        AND (BALL_9GRID(1,2) = 1) _
-        AND (BALL_9GRID(1,3) = 1) _
-        AND (BALL_9GRID(2,1) = 0) _
+        AND (BALL_9GRID(1,2) = 0) _
+        AND (BALL_9GRID(1,3) = 0) _
+        AND (BALL_9GRID(2,1) = 1) _
         AND (BALL_9GRID(2,2) = 0) _
         AND (BALL_9GRID(2,3) = 0) _
         AND (BALL_9GRID(3,1) = 1) _
-        AND (BALL_9GRID(3,2) = 0) _
+        AND (BALL_9GRID(3,2) = 1) _
         AND (BALL_9GRID(3,3) = 0) _
     )
     '..x
@@ -350,10 +351,66 @@ FUNCTION ball_will_invert_path% ()
         AND (BALL_9GRID(3,2) = 1) _
         AND (BALL_9GRID(3,3) = 1) _
     )
+    'x.x
+    'x*.
+    'x..\ = x-1 y-1
+    top_left_5L% = ( _
+            (BALL_9GRID(1,1) = 1) _
+        AND (BALL_9GRID(1,2) = 0) _
+        AND (BALL_9GRID(1,3) = 1) _
+        AND (BALL_9GRID(2,1) = 1) _
+        AND (BALL_9GRID(2,2) = 0) _
+        AND (BALL_9GRID(2,3) = 0) _
+        AND (BALL_9GRID(3,1) = 1) _
+        AND (BALL_9GRID(3,2) = 0) _
+        AND (BALL_9GRID(3,3) = 0) _
+    )
+    'x.x
+    '.*x
+    '..x/ = x+1 y-1
+    top_right_5L% = ( _
+            (BALL_9GRID(1,1) = 1) _
+        AND (BALL_9GRID(1,2) = 0) _
+        AND (BALL_9GRID(1,3) = 1) _
+        AND (BALL_9GRID(2,1) = 0) _
+        AND (BALL_9GRID(2,2) = 0) _
+        AND (BALL_9GRID(2,3) = 1) _
+        AND (BALL_9GRID(3,1) = 0) _
+        AND (BALL_9GRID(3,2) = 0) _
+        AND (BALL_9GRID(3,3) = 1) _
+    )
+    'x..
+    'x*.
+    'x.x/ = x-1 y+1
+    bot_left_5L% = ( _
+            (BALL_9GRID(1,1) = 1) _
+        AND (BALL_9GRID(1,2) = 0) _
+        AND (BALL_9GRID(1,3) = 0) _
+        AND (BALL_9GRID(2,1) = 1) _
+        AND (BALL_9GRID(2,2) = 0) _
+        AND (BALL_9GRID(2,3) = 0) _
+        AND (BALL_9GRID(3,1) = 1) _
+        AND (BALL_9GRID(3,2) = 0) _
+        AND (BALL_9GRID(3,3) = 1) _
+    )
+    '..x
+    '.*x
+    'x.x\ = x+1 y+1
+    bot_right_5L% = ( _
+            (BALL_9GRID(1,1) = 0) _
+        AND (BALL_9GRID(1,2) = 0) _
+        AND (BALL_9GRID(1,3) = 1) _
+        AND (BALL_9GRID(2,1) = 0) _
+        AND (BALL_9GRID(2,2) = 0) _
+        AND (BALL_9GRID(2,3) = 1) _
+        AND (BALL_9GRID(3,1) = 1) _
+        AND (BALL_9GRID(3,2) = 0) _
+        AND (BALL_9GRID(3,3) = 1) _
+    )
     sum% = 0
-    DIM AS INTEGER will_corner, will_2L, will_3L, will_4L, will_invert
+    DIM AS INTEGER will_corner, will_2L, will_3L, will_4L, will_5L, will_invert
     will_corner% = FALSE
-    will_2L% = FALSE : will_3L% = FALSE : will_4L% = FALSE
+    will_2L% = FALSE : will_3L% = FALSE : will_4L% = FALSE : will_5L% = FALSE
     will_invert% = FALSE
     IF top_left%  = TRUE AND BALL.X_DIR% = -1 AND BALL.Y_DIR% = -1 THEN 
         sum% = sum% + 1 : will_corner% = TRUE
@@ -403,6 +460,18 @@ FUNCTION ball_will_invert_path% ()
     IF bot_right_4L% = TRUE AND BALL.X_DIR% = 1 AND BALL.Y_DIR% = 1 THEN
         sum% = sum% + 1 : will_4L% = TRUE
     END IF
+    IF top_left_5L%  = TRUE AND BALL.X_DIR% = -1 AND BALL.Y_DIR% = -1 THEN
+        sum% = sum% + 1 : will_5L% = TRUE
+    END IF
+    IF top_right_5L% = TRUE AND BALL.X_DIR% = 1 AND BALL.Y_DIR% = -1 THEN
+        sum% = sum% + 1 : will_5L% = TRUE
+    END IF
+    IF bot_left_5L%  = TRUE AND BALL.X_DIR% = -1 AND BALL.Y_DIR% = 1 THEN
+        sum% = sum% + 1 : will_5L% = TRUE
+    END IF
+    IF bot_right_5L% = TRUE AND BALL.X_DIR% = 1 AND BALL.Y_DIR% = 1 THEN
+        sum% = sum% + 1 : will_5L% = TRUE
+    END IF
     IF sum% > 0 THEN will_invert% = TRUE
     DPRINT "    top_left%=" + b$(top_left%), DEBUG_AVG
     DPRINT "   top_right%=" + b$(top_right%), DEBUG_AVG
@@ -420,6 +489,10 @@ FUNCTION ball_will_invert_path% ()
     DPRINT "top_right_4L%=" + b$(top_right_4L%), DEBUG_AVG
     DPRINT " bot_left_4L%=" + b$(bot_left_4L%), DEBUG_AVG
     DPRINT "bot_right_4L%=" + b$(bot_right_4L%), DEBUG_AVG
+    DPRINT " top_left_5L%=" + b$(top_left_5L%), DEBUG_AVG
+    DPRINT "top_right_5L%=" + b$(top_right_5L%), DEBUG_AVG
+    DPRINT " bot_left_5L%=" + b$(bot_left_5L%), DEBUG_AVG
+    DPRINT "bot_right_5L%=" + b$(bot_right_5L%), DEBUG_AVG
     DPRINT "-------------", DEBUG_AVG
     DPRINT " sum: " + n$(sum%), DEBUG_AVG
     DPRINT "-------------", DEBUG_AVG
@@ -428,6 +501,7 @@ FUNCTION ball_will_invert_path% ()
     DPRINT "     will_2L%=" + b$(will_2L%), DEBUG_AVG
     DPRINT "     will_3L%=" + b$(will_3L%), DEBUG_AVG
     DPRINT "     will_4L%=" + b$(will_4L%), DEBUG_AVG
+    DPRINT "     will_5L%=" + b$(will_5L%), DEBUG_AVG
     IF sum% > 0 THEN
         DPRINT "ball_will_invert_path = TRUE", DEBUG_AVG
         STATS.BALL_INVERTS% = STATS.BALL_INVERTS% + 1
@@ -527,13 +601,7 @@ SUB ball_hit_block
     IF BALL.HIT_90_NUM% >= 2 THEN
         BALL.X% = BALL.X% + rand_sign
         BALL.Y% = BALL.Y% + rand_sign
-        SOUND 7500, 0.5
-        SOUND 6500, 0.5
-        SOUND 5500, 0.5
-        SOUND 4500, 0.5
-        SOUND 3500, 0.5
-        SOUND 2500, 0.5
-        SOUND 1500, 0.5
+        ball_sound_random
         BALL.HIT_90_NUM% = 0
     END IF
     IF inverting_path% = TRUE THEN
@@ -582,16 +650,30 @@ END SUB
 SUB ball_stay_in_bounds
     DPRINT "ball_stay_in_bounds", DEBUG_AVG
     IF BALL.Y% = LEVEL.START_Y% THEN 
-         ball_bounce_top
+        IF BALL.HIT_90_NUM% >= 2 THEN BALL.X_DIR% = BALL.X_DIR% * rand_sign
+        ball_bounce_top
     ELSEIF BALL.X% = LEVEL.END_X% THEN 
+        IF BALL.HIT_90_NUM% >= 2 THEN BALL.Y_DIR% = BALL.Y_DIR% * rand_sign
         ball_bounce_right
     ELSEIF BALL.Y% = LEVEL.END_Y% THEN 
+        IF BALL.HIT_90_NUM% >= 2 THEN BALL.X_DIR% = BALL.X_DIR% * rand_sign
         ball_bounce_bot
     ELSEIF BALL.X% = LEVEL.START_X% THEN 
+        IF BALL.HIT_90_NUM% >= 2 THEN BALL.Y_DIR% = BALL.Y_DIR% * rand_sign
         ball_bounce_left
     END IF
 END SUB
 
+SUB ball_sound_random
+    DPRINT "ball_sound_random", DEBUG_MAX
+    SOUND 7500, 0.5
+    SOUND 6500, 0.5
+    SOUND 5500, 0.5
+    SOUND 4500, 0.5
+    SOUND 3500, 0.5
+    SOUND 2500, 0.5
+    SOUND 1500, 0.5
+END SUB
 
 SUB ball_bounce_top
     DPRINT "ball_bounce_top", DEBUG_AVG
