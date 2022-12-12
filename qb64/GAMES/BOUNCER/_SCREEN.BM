@@ -1,11 +1,13 @@
 SUB screen_init 
     DPRINT "screen_init", DEBUG_AVG
     screen_reset
-    __SCREEN.BG_KOLOR%    = 0
-    __SCREEN.FG_KOLOR%    = 0
-    __SCREEN.W%           = _WIDTH
-    __SCREEN.H%           = _HEIGHT
-    __SCREEN.BPP%         = _PIXELSIZE
+    __SCREEN.BG_KOLOR%     = 0
+    __SCREEN.FG_KOLOR%     = 0
+    __SCREEN.W%            = _WIDTH
+    __SCREEN.H%            = _HEIGHT
+    __SCREEN.BPP%          = _PIXELSIZE
+    __SCREEN.VISIBLE_PAGE% = 0
+    __SCREEN.ACTIVE_PAGE%  = 0
     _SCREENMOVE _MIDDLE
 END SUB
 
@@ -24,7 +26,23 @@ END SUB
 SUB screen_clear
     DPRINT "screen_clear", DEBUG_AVG
     IF CFG.RANDOM_BG% = TRUE THEN __SCREEN.BG_KOLOR% = rand_in_range(0, 7)
-    SCREEN ,,1
+    screen_set_active_page GAME_SCREEN
     COLOR ,__SCREEN.BG_KOLOR%
     CLS
+END SUB
+
+SUB screen_set_active_page (page%)
+    SCREEN ,,page%
+    __SCREEN.ACTIVE_PAGE% = page%
+END SUB
+
+SUB screen_set_visible_page (page%)
+    SCREEN ,,,page%
+    __SCREEN.VISIBLE_PAGE% = page%
+END SUB
+
+SUB screen_set_both_pages (page%)
+    SCREEN ,,page%,page%
+    __SCREEN.ACTIVE_PAGE% = page%
+    __SCREEN.VISIBLE_PAGE% = page%
 END SUB

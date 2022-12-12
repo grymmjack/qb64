@@ -1,6 +1,15 @@
 FUNCTION n$ (integ%)
-    DPRINT "n$(integ%=" + _TRIM$(STR$(integ%)) + ")", DEBUG_MAX
+    DPRINT "n$(integ%=" + _TRIM$(STR$(integ%)) + ")", DEBUG_WTF
     n$ = _TRIM$(STR$(integ%))
+END FUNCTION
+
+FUNCTION b$ (integ%)
+    DPRINT "b$(integ%=" + _TRIM$(STR$(integ%)) + ")", DEBUG_MAX
+    IF integ% = -1 THEN
+        b$ = "TRUE"
+    ELSEIF integ% = 0 THEN
+        b$ = "FALSE"
+    ENDIF
 END FUNCTION
 
 FUNCTION ln$ (longval!)

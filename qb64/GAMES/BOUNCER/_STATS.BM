@@ -35,7 +35,7 @@ SUB stats_update
     s2$ = s2$ + " FPS:" + n$(CFG.LIM%)
     s2$ = s2$ + "   #B=" + n$(CFG.NUM_BLOCKS%)
 
-    SCREEN ,,0,0
+    screen_set_both_pages GAME_SCREEN
     LOCATE _HEIGHT-2, 1 : PRINT SPACE$(_WIDTH)
     IF DEBUG.ENABLED% = TRUE THEN
         SELECT CASE DEBUG.VERBOSITY%

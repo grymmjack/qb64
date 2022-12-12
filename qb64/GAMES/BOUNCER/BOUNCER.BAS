@@ -29,7 +29,7 @@ blocks_init
 timers_init
 debug_init
 
-DIM k AS STRING 
+DIM AS STRING k, dmsg
 DO:
     IF CFG.LIM% > 0 THEN _LIMIT CFG.LIM%
     k$ = INKEY$
@@ -52,7 +52,19 @@ DO:
             blocks_inc : game_step
         CASE CHR$(0) + ";": 'F1 = show debug console
             DPRINT "INKEY$: 'F1' DEBUG CONSOLE", DEBUG_AVG
+            dmsg$ = " [BEFORE debug_console CODE]" 
+            dmsg$ = dmsg$ + "  DEBUG ENABLED: " + b$(DEBUG.ENABLED%)
+            dmsg$ = dmsg$ + "  IN CONSOLE: " + b$(DEBUG.IN_CONSOLE%)
+            dmsg$ = dmsg$ + "  PREV_STEP: " + n$(DEBUG.PREV_STEP%)
+            dmsg$ = dmsg$ + "  NEXT_STEP: " + n$(DEBUG.NEXT_STEP%)
+            DPRINT dmsg$, DEBUG_MAX
             debug_console : stats_update
+            dmsg$ = " [AFTER debug_console CODE]" 
+            dmsg$ = dmsg$ + "  DEBUG ENABLED: " + b$(DEBUG.ENABLED%)
+            dmsg$ = dmsg$ + "  IN CONSOLE: " + b$(DEBUG.IN_CONSOLE%)
+            dmsg$ = dmsg$ + "  PREV_STEP: " + n$(DEBUG.PREV_STEP%)
+            dmsg$ = dmsg$ + "  NEXT_STEP: " + n$(DEBUG.NEXT_STEP%)
+            DPRINT dmsg$, DEBUG_MAX
         CASE CHR$(0) + "<": 'F2 = clear debug console
             DPRINT "INKEY$: 'F2' CLEAR CONSOLE", DEBUG_AVG
             console_clear : stats_update

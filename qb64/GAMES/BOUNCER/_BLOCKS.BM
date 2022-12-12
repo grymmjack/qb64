@@ -39,7 +39,7 @@ SUB blocks_init
         FOR j% = y% TO y%+h%
             LOCATE j%, x%
             COLOR c%
-            SCREEN ,,0
+            screen_set_active_page GAME_SCREEN
             PRINT STRING$(w%, BLOCK.DISPLAY$);
         NEXT j%    
     NEXT i%

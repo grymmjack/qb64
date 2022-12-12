@@ -51,7 +51,7 @@ END SUB
 
 FUNCTION ball_will_bounce_9grid% (y%, x%)
     DPRINT "ball_will_bounce_9grid (" + _
-        "y%=" + n$(y%) + ", x%=" + n$(x%) + ")", DEBUG_AVG
+        "y%=" + n$(y%) + ", x%=" + n$(x%) + ")", DEBUG_MAX
     DIM AS INTEGER check_y, check_x, checks_sum
     checks_sum% = 0
     FOR check_y% = 1 TO 3
@@ -330,7 +330,7 @@ END SUB
 SUB ball_move
     DPRINT "ball_move", DEBUG_AVG
     COLOR BALL.KOLOR%, __SCREEN.BG_KOLOR%
-    SCREEN ,,0
+    screen_set_active_page GAME_SCREEN
     LOCATE BALL.Y%, BALL.X% : PRINT SPACE$(LEN(BALL.DISPLAY$))
     ball_get_9grid
     IF (ball_will_bounce_9grid(BALL.Y%, BALL.X%)) THEN
@@ -338,7 +338,7 @@ SUB ball_move
     END IF
     BALL.X% = clamp(BALL.X% + BALL.X_DIR%, LEVEL.START_X%, LEVEL.END_X%)
     BALL.Y% = clamp(BALL.Y% + BALL.Y_DIR%, LEVEL.START_Y%, LEVEL.END_Y%)
-    SCREEN ,,0
+    screen_set_active_page GAME_SCREEN
     LOCATE BALL.Y%, BALL.X% : PRINT BALL.DISPLAY$;
 END SUB
 
