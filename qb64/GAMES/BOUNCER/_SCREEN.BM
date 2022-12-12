@@ -8,22 +8,31 @@ SUB screen_init
     __SCREEN.BPP%          = _PIXELSIZE
     __SCREEN.VISIBLE_PAGE% = 0
     __SCREEN.ACTIVE_PAGE%  = 0
-    _SCREENMOVE _MIDDLE
+    IF CFG.FULLSCREEN% = FALSE THEN
+        _SCREENMOVE _MIDDLE
+    END IF
 END SUB
 
 SUB screen_reset
     DPRINT "screen_reset", DEBUG_AVG
-    SCREEN 0,,0,0
+    screen_set_active_page GAME_SCREEN : screen_fullscreen
+    screen_set_active_page DEBUGGER_CONSOLE : screen_fullscreen
+END SUB
+
+
+SUB screen_fullscreen
+    DPRINT "screen_fullscreen", DEBUG_WTF
     _BLINK OFF
     _CONTROLCHR OFF
     IF CFG.FULLSCREEN% = TRUE THEN
         IF CFG.FULLSCREEN_SMOOTH% = TRUE THEN 
             _FULLSCREEN _SQUAREPIXELS, _SMOOTH
         ELSE
-            IF CFG.FULLSCREEN% = TRUE THEN _FULLSCREEN _SQUAREPIXELS
+            _FULLSCREEN _SQUAREPIXELS
         END IF
     END IF
 END SUB
+
 
 SUB screen_clear
     DPRINT "screen_clear", DEBUG_AVG
@@ -34,17 +43,23 @@ SUB screen_clear
 END SUB
 
 SUB screen_set_active_page (page%)
+    DPRINT "screen_set_active_page(page%=" + n$(page%) + ")", DEBUG_WTF
     SCREEN ,,page%
+    screen_fullscreen
     __SCREEN.ACTIVE_PAGE% = page%
 END SUB
 
 SUB screen_set_visible_page (page%)
+    DPRINT "screen_set_visible_page(page%=" + n$(page%) + ")", DEBUG_WTF
     SCREEN ,,,page%
+    screen_fullscreen
     __SCREEN.VISIBLE_PAGE% = page%
 END SUB
 
 SUB screen_set_both_pages (page%)
+    DPRINT "screen_set_both_pages(page%=" + n$(page%) + ")", DEBUG_WTF
     SCREEN ,,page%,page%
+    screen_fullscreen
     __SCREEN.ACTIVE_PAGE%  = page%
     __SCREEN.VISIBLE_PAGE% = page%
 END SUB

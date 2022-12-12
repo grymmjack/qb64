@@ -76,6 +76,7 @@ END FUNCTION
 
 FUNCTION rand_sign% ()
     DIM r AS INTEGER
+    RANDOMIZE TIMER
     r% = -1 + INT(RND*2)
     IF r% = 0 THEN r% = 1
     rand_sign% = r%
@@ -85,6 +86,7 @@ FUNCTION rand_in_range% (minimum%, maximum%)
     DPRINT _
         "rand_in_range(minimum%=" + n$(minimum%) + _
         ", maximum%=" + n$(maximum%) + ")", DEBUG_MAX
+    RANDOMIZE TIMER
     rand_in_range% = INT(RND * (maximum% - minimum% + 1)) + 1
 END FUNCTION
 

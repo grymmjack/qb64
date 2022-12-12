@@ -31,6 +31,7 @@ SUB stats_update
     s2$ = s2$ + " L" + n$(STATS.LEFT_BOUNCES%)
     s2$ = s2$ + " BL" + n$(STATS.BLOCK_BOUNCES%)
     s2$ = s2$ + " BI" + n$(STATS.BALL_INVERTS%)
+    s2$ = s2$ + " B9" + n$(BALL.HIT_90_NUM%)
     s2$ = s2$ + " (" + n$(t%) + ")"
     s2$ = s2$ + " TMR:" + ln$(TICKS_TIMER.SECONDS&)
     s2$ = s2$ + " FPS:" + n$(CFG.LIM%)

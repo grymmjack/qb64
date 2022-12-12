@@ -37,9 +37,9 @@ SUB blocks_init
         BLOCKS(i%).H% = rand_in_range(1, CFG.BLOCK_MAX_H%)
         BLOCKS(i%).KOLOR% = c%
         FOR j% = y% TO y%+h%
+            screen_set_active_page GAME_SCREEN
             LOCATE j%, x%
             COLOR c%
-            screen_set_active_page GAME_SCREEN
             PRINT STRING$(w%, BLOCK.DISPLAY$);
         NEXT j%    
     NEXT i%

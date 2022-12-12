@@ -21,13 +21,13 @@ $END IF
 '$INCLUDE:'_ALL.BI'
 
 configure
-screen_init
 ball_init
 level_init
 block_init
 blocks_init
 timers_init
 debug_init
+screen_init
 
 DIM AS STRING k, dmsg
 DO:
