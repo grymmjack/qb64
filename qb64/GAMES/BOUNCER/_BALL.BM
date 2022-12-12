@@ -217,6 +217,7 @@ FUNCTION ball_will_invert_path% ()
     DPRINT " sum: " + n$(sum%), DEBUG_AVG
     IF sum% > 0 THEN
         DPRINT "ball_will_invert_path = TRUE", DEBUG_AVG
+        STATS.BALL_INVERTS% = STATS.BALL_INVERTS% + 1
         ball_will_invert_path% = TRUE
     ELSE
         DPRINT "ball_will_invert_path = FALSE", DEBUG_AVG
@@ -305,30 +306,31 @@ SUB ball_hit_block
     bouncing_left%  = ball_will_bounce_left%
     bouncing_right% = ball_will_bounce_right%
     inverting_path% = ball_will_invert_path%
-    IF inverting_path% THEN
+    IF inverting_path% = TRUE THEN
         BALL.Y_DIR% = BALL.Y_DIR% * -1
         BALL.X_DIR% = BALL.X_DIR% * -1
     END IF
-    IF bouncing_up% THEN 
+    IF bouncing_up% = TRUE THEN 
         BALL.Y_DIR% = -1
-    ELSEIF bouncing_down% THEN 
+    ELSEIF bouncing_down% = TRUE THEN 
         BALL.Y_DIR% = 1
-    ELSEIF bouncing_left% THEN 
+    ELSEIF bouncing_left% = TRUE THEN 
         BALL.X_DIR% = -1
-    ELSEIF bouncing_right% THEN 
+    ELSEIF bouncing_right% = TRUE THEN 
         BALL.X_DIR% = 1
     END IF
-    IF bouncing_up% OR _
-       bouncing_down% OR _
-       bouncing_left% OR _
-       bouncing_right% OR _
-       inverting_path% THEN SOUND 500, 0.33
+    IF bouncing_up = TRUE% OR _
+       bouncing_down% = TRUE OR _
+       bouncing_left% = TRUE OR _
+       bouncing_right% = TRUE OR _
+       inverting_path% = TRUE THEN SOUND 500, 0.33
 END SUB
 
 
 SUB ball_move
     DPRINT "ball_move", DEBUG_AVG
     COLOR BALL.KOLOR%, __SCREEN.BG_KOLOR%
+    SCREEN ,,0
     LOCATE BALL.Y%, BALL.X% : PRINT SPACE$(LEN(BALL.DISPLAY$))
     ball_get_9grid
     IF (ball_will_bounce_9grid(BALL.Y%, BALL.X%)) THEN
@@ -336,6 +338,7 @@ SUB ball_move
     END IF
     BALL.X% = clamp(BALL.X% + BALL.X_DIR%, LEVEL.START_X%, LEVEL.END_X%)
     BALL.Y% = clamp(BALL.Y% + BALL.Y_DIR%, LEVEL.START_Y%, LEVEL.END_Y%)
+    SCREEN ,,0
     LOCATE BALL.Y%, BALL.X% : PRINT BALL.DISPLAY$;
 END SUB
 

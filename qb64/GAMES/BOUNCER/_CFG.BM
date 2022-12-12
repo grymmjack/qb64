@@ -1,6 +1,6 @@
 SUB configure
     DPRINT "configure", DEBUG_AVG
-    CFG.FULLSCREEN%        = TRUE
+    CFG.FULLSCREEN%        = FALSE
     CFG.FULLSCREEN_SMOOTH% = TRUE
     CFG.RANDOM_BG%         = FALSE
     CFG.NUM_BLOCKS%        = 7

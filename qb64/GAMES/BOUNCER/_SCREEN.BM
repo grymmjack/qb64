@@ -6,11 +6,12 @@ SUB screen_init
     __SCREEN.W%           = _WIDTH
     __SCREEN.H%           = _HEIGHT
     __SCREEN.BPP%         = _PIXELSIZE
+    _SCREENMOVE _MIDDLE
 END SUB
 
 SUB screen_reset
     DPRINT "screen_reset", DEBUG_AVG
-    SCREEN 0
+    SCREEN 0,,0,0
     _BLINK OFF
     _CONTROLCHR OFF
     IF CFG.FULLSCREEN_SMOOTH% = TRUE THEN
@@ -22,7 +23,8 @@ END SUB
 
 SUB screen_clear
     DPRINT "screen_clear", DEBUG_AVG
-    IF CFG.RANDOM_BG% THEN __SCREEN.BG_KOLOR% = rand_in_range(0, 7)
+    IF CFG.RANDOM_BG% = TRUE THEN __SCREEN.BG_KOLOR% = rand_in_range(0, 7)
+    SCREEN ,,1
     COLOR ,__SCREEN.BG_KOLOR%
     CLS
 END SUB

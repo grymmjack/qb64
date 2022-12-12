@@ -5,6 +5,7 @@ SUB stats_init
     STATS.BOT_BOUNCES%   = 0
     STATS.LEFT_BOUNCES%  = 0
     STATS.BLOCK_BOUNCES% = 0
+    STATS.BALL_INVERTS%  = 0
 END Sub
 
 
@@ -22,17 +23,19 @@ SUB stats_update
     DIM AS STRING s, s2, s3
     s$ = "ESC=Quit, SPACE=RND Blocks, +=Faster, -=Slower"
 
-    s2$ = "# Bounces:"
+    s2$ = "BOUNCES "
     s2$ = s2$ + " T=" + n$(STATS.TOP_BOUNCES%)
     s2$ = s2$ + " R=" + n$(STATS.RIGHT_BOUNCES%)
     s2$ = s2$ + " B=" + n$(STATS.BOT_BOUNCES%)
     s2$ = s2$ + " L=" + n$(STATS.LEFT_BOUNCES%)
     s2$ = s2$ + " BL=" + n$(STATS.BLOCK_BOUNCES%)
+    s2$ = s2$ + " BI=" + n$(STATS.BALL_INVERTS%)
     s2$ = s2$ + "    (" + n$(t%) + ")"
-    s2$ = s2$ + "    TIMER: " + ln$(TICKS_TIMER.SECONDS&)
-    s2$ = s2$ + " FPS: " + n$(CFG.LIM%)
-    s2$ = s2$ + "   # Blocks=" + n$(CFG.NUM_BLOCKS%)
+    s2$ = s2$ + "    TMR:" + ln$(TICKS_TIMER.SECONDS&)
+    s2$ = s2$ + " FPS:" + n$(CFG.LIM%)
+    s2$ = s2$ + "   #B=" + n$(CFG.NUM_BLOCKS%)
 
+    SCREEN ,,0,0
     LOCATE _HEIGHT-2, 1 : PRINT SPACE$(_WIDTH)
     IF DEBUG.ENABLED% = TRUE THEN
         SELECT CASE DEBUG.VERBOSITY%

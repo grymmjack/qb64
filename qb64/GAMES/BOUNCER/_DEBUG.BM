@@ -11,7 +11,7 @@ SUB debug_init
     DEBUG.PREV_MARK_TIMER# = 0
     DEBUG.MARK_TIME$       = ""
     DEBUG.MARK_TIMER#      = 0
-    IF DEBUG.ENABLED% THEN debug_start
+    IF DEBUG.ENABLED% = TRUE THEN debug_start
 END SUB
 
 SUB debug_start
@@ -22,28 +22,39 @@ END SUB
 
 SUB debug_next
     DPRINT "debug_next", DEBUG_MAX
-    IF DEBUG.ENABLED% THEN
+    IF DEBUG.ENABLED% = TRUE THEN
         DEBUG.PREV_STEP% = DEBUG.CUR_STEP%
         DEBUG.CUR_STEP%  = DEBUG.CUR_STEP% + 1
         DEBUG.NEXT_STEP% = TRUE
     END IF
 END SUB
 
+SUB debug_breakpoint
+    DPRINT "debug_breakpoint", DEBUG_MIN
+    DEBUG.ENABLED% = TRUE
+    DEBUG.NEXT_STEP% = FALSE
+    TIMER(MAIN_TIMER%) OFF
+    DPRINT "[BREAKPOINT REACHED]", DEBUG_MIN
+    console_mark
+    debug_console
+END SUB
+
 SUB debug_stop
     DPRINT "debug_stop", DEBUG_MAX
-    IF DEBUG.ENABLED% THEN
+    IF DEBUG.ENABLED% = TRUE THEN
         IF DEBUG.IN_CONSOLE% THEN 
             debug_hide_console
         END IF
-        debug_init
+        DEBUG.ENABLED%   = FALSE
+        DEBUG.NEXT_STEP% = FALSE
         TIMER(MAIN_TIMER%) ON
     END IF
 END SUB
 
 SUB debug_console
     DPRINT "debug_console", DEBUG_MAX
-    IF DEBUG.ENABLED% THEN
-        IF DEBUG.IN_CONSOLE% THEN 
+    IF DEBUG.ENABLED% = TRUE THEN
+        IF DEBUG.IN_CONSOLE% = TRUE THEN 
             debug_hide_console 
         ELSE 
             debug_show_console
@@ -52,34 +63,33 @@ SUB debug_console
 END SUB
 
 SUB debug_show_console
-    DPRINT "debug_show_console", DEBUG_MAX
-    IF DEBUG.ENABLED% THEN
-        DEBUG.IN_CONSOLE% = TRUE
-        SCREEN ,,1,1
+    DEBUG.IN_CONSOLE% = TRUE
+    IF DEBUG.ENABLED% = TRUE THEN
+        SCREEN ,,,1
         _DISPLAY
     END IF
 END SUB
 
 SUB debug_hide_console
     DPRINT "debug_hide_console", DEBUG_MAX
-    IF DEBUG.ENABLED% THEN
-        DEBUG.IN_CONSOLE% = FALSE
-        SCREEN ,,0,0
+    DEBUG.IN_CONSOLE% = FALSE
+    IF DEBUG.ENABLED% = TRUE THEN
+        SCREEN ,,,0
         _DISPLAY
     END IF
 END SUB
 
 SUB debug_update_console
     DPRINT "debug_update_console", DEBUG_MAX
-    IF DEBUG.ENABLED% THEN
-        SCREEN ,,1 : _DISPLAY
+    IF DEBUG.ENABLED% = TRUE THEN
+        SCREEN ,,1,1 : _DISPLAY
     END IF
 END SUB
 
 SUB console_clear
     DPRINT "console_clear", DEBUG_MAX
-    IF DEBUG.ENABLED% THEN
-        SCREEN ,,1 : CLS : SCREEN ,,0
+    IF DEBUG.ENABLED% = TRUE THEN
+        SCREEN ,,1 : CLS
         DIM i AS INTEGER
         FOR i% = 0 TO 50
             _ECHO ""
@@ -90,7 +100,7 @@ END SUB
 SUB console_mark
     DPRINT "console_mark", DEBUG_MAX
     DIM time_diff AS DOUBLE
-    IF DEBUG.ENABLED% THEN
+    IF DEBUG.ENABLED% = TRUE THEN
         DEBUG.MARK_TIME$  = TIME$
         DEBUG.MARK_TIMER# = TIMER
         DPRINT "", DEBUG_MIN
@@ -109,16 +119,16 @@ SUB console_mark
 END SUB
 
 SUB console_log (s$)
-    IF DEBUG.ENABLED% THEN
-        SCREEN ,,1 : PRINT s$ : SCREEN ,,0
+    IF DEBUG.ENABLED% = TRUE THEN
+        SCREEN ,,1 : LOCATE ,1 : PRINT s$
     END IF
 END SUB
 
 SUB DPRINT (s$, verbosity%)
-    IF DEBUG.ENABLED% THEN 
+    IF DEBUG.ENABLED% = TRUE THEN 
         IF DEBUG.VERBOSITY% >= verbosity% THEN console_log(s$)
     END IF
-    IF DEBUG.VERBOSE% THEN 
+    IF DEBUG.VERBOSE% = TRUE THEN 
         IF DEBUG.VERBOSITY% >= verbosity% THEN _ECHO s$
     END IF
 END SUB

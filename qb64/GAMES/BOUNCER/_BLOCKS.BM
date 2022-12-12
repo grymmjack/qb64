@@ -26,7 +26,7 @@ SUB blocks_init
             in_range_x% = in_range(BALL.X%, x%, x%+w%)
             in_range_y% = in_range(BALL.Y%, y%, y%+h%)
         LOOP UNTIL in_range_x% = FALSE AND in_range_y% = FALSE
-        IF CFG.RANDOM_BG% THEN 
+        IF CFG.RANDOM_BG% = TRUE THEN 
             c% = rand_in_range(8,15)
         ELSE
             c% = rand_in_range(1,15)
@@ -39,9 +39,11 @@ SUB blocks_init
         FOR j% = y% TO y%+h%
             LOCATE j%, x%
             COLOR c%
+            SCREEN ,,0
             PRINT STRING$(w%, BLOCK.DISPLAY$);
         NEXT j%    
     NEXT i%
+    debug_breakpoint
 END SUB
 
 

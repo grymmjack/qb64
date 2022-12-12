@@ -2,6 +2,44 @@
 		"version": "2.0.0",
 		"tasks": [
 			{
+				"label": "remove_prev_bin",
+				"type": "shell",
+				"command": "start",
+				"presentation": {
+					"echo": true,
+					"reveal": "never",
+					"focus": false,
+					"panel": "shared",
+					"showReuseMessage": false,
+					"clear": false
+				},
+				"args": [
+					"/b",
+					"cmd",
+					"/c",
+					"del \"${fileDirname}\\${fileBasenameNoExtension}.exe\""
+				]
+			},
+			{
+				"label": "run_bin",
+				"type": "shell",
+				"command": "start",
+				"args": [
+					"/b",
+					"cmd",
+					"/c",
+					"\"${fileDirname}/${fileBasenameNoExtension}.exe\""
+				],
+				"presentation": {
+					"echo": true,
+					"reveal": "never",
+					"focus": false,
+					"panel": "shared",
+					"showReuseMessage": false,
+					"clear": false
+				},
+			},
+			{
 				"label": "build",
 				"type": "shell",
 				"command": "${config:qb64.installPath}/qb64.exe",
