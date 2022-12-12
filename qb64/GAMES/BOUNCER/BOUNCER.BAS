@@ -40,7 +40,7 @@ DO:
         CASE CHR$(0) + "A": 'F7 = go to next debug step
             debug_next : stats_update
         CASE CHR$(0) + "B": 'F8 = stop debugging
-            debug_stop : stats_update
+            debug_stop : game_step
         CASE CHR$(0) + "C": 'F9 = debug level min
             DEBUG.VERBOSITY% = DEBUG_MIN : stats_update
         CASE CHR$(0) + "D": 'F10 = debug level avg

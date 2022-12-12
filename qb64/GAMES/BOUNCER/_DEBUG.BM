@@ -1,6 +1,6 @@
 SUB debug_init
     DPRINT "debug_init", DEBUG_MAX
-    DEBUG.ENABLED%         = TRUE
+    DEBUG.ENABLED%         = FALSE
     DEBUG.IN_CONSOLE%      = FALSE
     DEBUG.VERBOSE%         = TRUE
     DEBUG.VERBOSITY%       = DEBUG_MIN
