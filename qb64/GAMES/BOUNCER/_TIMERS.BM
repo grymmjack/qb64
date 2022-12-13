@@ -5,23 +5,30 @@ SUB timers_init
     TICKS_TIMER.SECONDS&   = 0
     TIMER_LAPS(0).STARTED# = TICKS_TIMER.STARTED#
     TICKS_TIMER.LAP_COUNT% = 1
+    TICKS_TIMER.HOLD%      = FALSE
     timers_main_startup
 END SUB
 
 SUB timers_tick
     DPRINT "timers_tick", DEBUG_MAX
     IF CFG.AUTO_BLOCKS_SECS% > 0 THEN
-        IF TICKS_TIMER.TICKS& MOD CFG.AUTO_BLOCKS_SECS% = 0 THEN 
+        IF TICKS_TIMER.TICKS& > 0 AND TICKS_TIMER.TICKS& MOD CFG.AUTO_BLOCKS_SECS% = 0 THEN 
             blocks_init
         END IF
     END IF
-    IF CFG.BALL_CHAOS_TIMER% = TRUE THEN
+    IF CFG.BALL_CHAOS_TIMER% = TRUE AND TICKS_TIMER.HOLD% = FALSE THEN
         IF TICKS_TIMER.TICKS& MOD CFG.CHAOS_SECS% = 0 THEN
             ball_chaos
         END IF
     END IF
     TICKS_TIMER.TICKS& = TICKS_TIMER.TICKS& + 1
     TICKS_TIMER.SECONDS& = TICKS_TIMER.SECONDS& + 1
+END SUB
+
+SUB timers_ticks_reset
+    DPRINT "timers_ticks_reset", DEBUG_AVG
+    TICKS_TIMER.TICKS&   = 0
+    TICKS_TIMER.SECONDS& = 0
 END SUB
 
 SUB timers_main_startup

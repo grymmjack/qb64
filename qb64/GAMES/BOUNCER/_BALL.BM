@@ -123,6 +123,7 @@ FUNCTION ball_will_bounce_9grid% (y%, x%)
         NEXT check_x%
     NEXT check_y%
     IF checks_sum% > 0 THEN
+        ball_chaos_hold
         ball_will_bounce_9grid% = TRUE
     ELSE
         ball_will_bounce_9grid% = FALSE
@@ -141,6 +142,7 @@ FUNCTION ball_will_bounce_25grid% (y%, x%)
         NEXT check_x%
     NEXT check_y%
     IF checks_sum% > 0 THEN
+        ball_chaos_hold
         ball_will_bounce_25grid% = TRUE
     ELSE
         ball_will_bounce_25grid% = FALSE
@@ -682,8 +684,18 @@ SUB ball_move
     screen_set_active_page GAME_SCREEN
     COLOR BALL.KOLOR&, __SCREEN.BG_KOLOR&
     LOCATE BALL.Y%, BALL.X% : PRINT BALL.DISPLAY$;
+    ball_chaos_unhold
 END SUB
 
+SUB ball_chaos_hold
+    DPRINT "ball_chaos_hold", DEBUG_MAX
+    TICKS_TIMER.HOLD% = TRUE
+END SUB
+
+SUB ball_chaos_unhold
+    DPRINT "ball_chaos_unhold", DEBUG_MAX
+    TICKS_TIMER.HOLD% = FALSE
+END SUB
 
 SUB ball_chaos
     DIM AS INTEGER old_x, old_y, x, y, sum
@@ -696,8 +708,8 @@ SUB ball_chaos
     IF sum = 0 THEN
         old_x% = BALL.X% : old_y% = BALL.Y%
         ball_erase old_y%, old_x%
-        BALL.X% = BALL.X% + (rand_in_range(1,2) * rand_sign)
-        BALL.Y% = BALL.Y% + (rand_in_range(1,2) * rand_sign)
+        BALL.X% = BALL.X% + (rand_in_range(0,1) * rand_sign)
+        BALL.Y% = BALL.Y% + (rand_in_range(0,1) * rand_sign)
         DIM s AS STRING
         s$ = "***** BALL_CHAOS_TIMER ***** "
         s$ = s$ + "OLD BALL.Y%=" + n$(old_y%)
@@ -821,42 +833,42 @@ SUB ball_sound_random
 END SUB
 
 SUB ball_soundfx_random
-    PLAY "V25 O5 T255 MS L64 C,D#,E#,G MB"
+    PLAY "V25 O5 T255 MS L64 C,D#,E#,G MF"
 END SUB
 
 SUB ball_sound_chaos
     DPRINT "ball_sound_chaos", DEBUG_MAX
     STATS.BALL_RANDOMS% = STATS.BALL_RANDOMS% + 1
     IF CFG.SOUND_ENABLED% = FALSE THEN EXIT SUB
-    PLAY "V25 O6 T180 MS L64 DD#DD#DD#DD# MB"
+    PLAY "V25 O6 T180 MS L64 DD#DD#DD#DD# MF"
 END SUB
 
 SUB ball_sound_bounce_top
     DPRINT "ball_sound_bounce_top", DEBUG_MAX
     STATS.TOP_BOUNCES% = STATS.TOP_BOUNCES% + 1
     IF CFG.SOUND_ENABLED% = FALSE THEN EXIT SUB
-    PLAY "V50 O4 T180 MS L32 C MB"
+    PLAY "V50 O4 T180 MS L32 C MF"
 END SUB
 
 SUB ball_sound_bounce_bot
     DPRINT "ball_sound_bounce_bot", DEBUG_MAX
     STATS.BOT_BOUNCES% = STATS.BOT_BOUNCES% + 1
     IF CFG.SOUND_ENABLED% = FALSE THEN EXIT SUB
-    PLAY "V50 O3 T180 MS L32 C MB"
+    PLAY "V50 O3 T180 MS L32 C MF"
 END SUB
 
 SUB ball_sound_bounce_left
     DPRINT "ball_sound_bounce_left", DEBUG_MAX
     STATS.LEFT_BOUNCES% = STATS.LEFT_BOUNCES% + 1
     IF CFG.SOUND_ENABLED% = FALSE THEN EXIT SUB
-    PLAY "V50 O3 T180 MS L32 F MB"
+    PLAY "V50 O3 T180 MS L32 F MF"
 END SUB
 
 SUB ball_sound_bounce_right
     DPRINT "ball_sound_bounce_right", DEBUG_MAX
     STATS.RIGHT_BOUNCES% = STATS.RIGHT_BOUNCES% + 1
     IF CFG.SOUND_ENABLED% = FALSE THEN EXIT SUB
-    PLAY "V50 O3 T180 MS L32 G MB"
+    PLAY "V50 O3 T180 MS L32 G MF"
 END SUB
 
 SUB ball_sound_hit_block
@@ -867,17 +879,17 @@ SUB ball_sound_hit_block
     r% = rand_in_range(1,6)
     SELECT CASE r%
         CASE 1:
-            PLAY "V70 O1 T180 MS L32 C MB"
+            PLAY "V70 O1 T180 MS L32 C MF"
         CASE 2: 
-            PLAY "V70 O1 T180 MS L32 G MB"
+            PLAY "V70 O1 T180 MS L32 G MF"
         CASE 3:
-            PLAY "V70 O1 T180 MS L32 D MB"
+            PLAY "V70 O1 T180 MS L32 D MF"
         CASE 4:
-            PLAY "V70 O1 T180 MS L32 F MB"
+            PLAY "V70 O1 T180 MS L32 F MF"
         CASE 5:
-            PLAY "V70 O1 T180 MS L32 G MB"
+            PLAY "V70 O1 T180 MS L32 G MF"
         CASE 5:
-            PLAY "V70 O3 T255 MS L64 A MB"
+            PLAY "V70 O3 T255 MS L64 A MF"
     END SELECT
 END SUB
 
