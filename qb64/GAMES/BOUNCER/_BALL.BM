@@ -617,9 +617,11 @@ END SUB
 SUB ball_erase (y%, x%)
     DPRINT "ball_erase", DEBUG_AVG
     screen_set_active_page GAME_SCREEN
+    y% = clamp(y%, LEVEL.START_Y%, LEVEL.END_Y%)
+    x% = clamp(x%, LEVEL.START_X%, LEVEL.END_X%)
     COLOR BALL.KOLOR%, __SCREEN.BG_KOLOR%
     IF BALL.TRACE_PATH% = FALSE THEN 
-        LOCATE y%, X% : PRINT SPACE$(LEN(BALL.DISPLAY$))
+        LOCATE y%, x% : PRINT SPACE$(LEN(BALL.DISPLAY$))
     ELSE 
         LOCATE y%, x% : PRINT CHR$(249);
     END IF
