@@ -13,9 +13,13 @@ END SUB
 
 SUB blocks_init
     DPRINT "blocks_init", DEBUG_AVG
-    REDIM BLOCKS(1 TO CFG.NUM_BLOCKS%) AS BLOCK_OBJECT
     DIM AS INTEGER i, j, w, h, x, y, c, in_range_x, in_range_y
     screen_clear
+    IF CFG.RAND_NUM_BLOCKS% = TRUE THEN
+        CFG.PREV_NUM_BLOCKS% = CFG.NUM_BLOCKS%
+        CFG.NUM_BLOCKS% = rand_in_range(0, CFG.ORIG_NUM_BLOCKS%)
+    END IF
+    REDIM BLOCKS(1 TO CFG.NUM_BLOCKS%) AS BLOCK_OBJECT
     FOR i% = 1 TO CFG.NUM_BLOCKS%
         RANDOMIZE TIMER
         w% = rand_in_range(1, CFG.BLOCK_MAX_W%)
@@ -34,6 +38,11 @@ SUB blocks_init
             DO:
                 c% = rand_in_range(1,15)
             LOOP UNTIL c% <> _BACKGROUNDCOLOR
+        END IF
+        IF CFG.RANDOM_FG% = TRUE THEN
+            DO:
+                BALL.KOLOR% = rand_in_range(1,15)
+            LOOP UNTIL BALL.KOLOR% <> _BACKGROUNDCOLOR
         END IF
         BLOCKS(i%).X% = x%
         BLOCKS(i%).Y% = y%

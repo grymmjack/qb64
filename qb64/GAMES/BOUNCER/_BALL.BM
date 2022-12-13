@@ -50,6 +50,28 @@ SUB ball_clear_traces
 END SUB
 
 
+SUB ball_get_25grid
+    DPRINT "ball_get_25grid", DEBUG_AVG 
+    DIM AS INTEGER x, y, grid_x, grid_y, char
+    FOR y%=1 TO 5
+        grid_y% = clamp(BALL.Y%-5 + y%, LEVEL.START_Y%, LEVEL.END_Y%)
+        FOR x% = 1 TO 5
+            grid_x% = clamp(BALL.X%-5 + x%, LEVEL.START_X%, LEVEL.END_X%)
+            screen_set_active_page GAME_SCREEN
+            char% = SCREEN(grid_y%, grid_x%)
+            IF char% <> ASC(BALL.DISPLAY$) THEN 
+                SELECT CASE char%
+                    CASE ASC(BLOCK.DISPLAY$):
+                        BALL_25GRID(y%, x%) = 1
+                    CASE ELSE:
+                        BALL_25GRID(y%, x%) = 0
+                END SELECT
+            END IF
+        NEXT x%
+    NEXT y%
+END SUB
+
+
 SUB ball_get_9grid
     DPRINT "ball_get_9grid", DEBUG_AVG 
     DIM AS INTEGER x, y, grid_x, grid_y, char
@@ -104,6 +126,24 @@ FUNCTION ball_will_bounce_9grid% (y%, x%)
         ball_will_bounce_9grid% = TRUE
     ELSE
         ball_will_bounce_9grid% = FALSE
+    END IF
+END FUNCTION
+
+
+FUNCTION ball_will_bounce_25grid% (y%, x%)
+    DPRINT "ball_will_bounce_25grid (" + _
+        "y%=" + n$(y%) + ", x%=" + n$(x%) + ")", DEBUG_MAX
+    DIM AS INTEGER check_y, check_x, checks_sum
+    checks_sum% = 0
+    FOR check_y% = 1 TO 5
+        FOR check_x% = 1 TO 5
+            checks_sum% = checks_sum% + BALL_25GRID(check_y%, check_x%)
+        NEXT check_x%
+    NEXT check_y%
+    IF checks_sum% > 0 THEN
+        ball_will_bounce_25grid% = TRUE
+    ELSE
+        ball_will_bounce_25grid% = FALSE
     END IF
 END FUNCTION
 
@@ -642,6 +682,36 @@ SUB ball_move
     screen_set_active_page GAME_SCREEN
     COLOR BALL.KOLOR%, __SCREEN.BG_KOLOR%
     LOCATE BALL.Y%, BALL.X% : PRINT BALL.DISPLAY$;
+END SUB
+
+
+SUB ball_chaos
+    DIM AS INTEGER old_x, old_y
+    ball_get_25grid    
+    IF  ball_will_bounce_25grid(BALL.Y%-5, BALL.X%-5) = FALSE _
+    AND ball_will_bounce_25grid(BALL.Y%-4, BALL.X%-4) = FALSE _
+    AND ball_will_bounce_25grid(BALL.Y%-3, BALL.X%-3) = FALSE _
+    AND ball_will_bounce_25grid(BALL.Y%-2, BALL.X%-2) = FALSE _
+    AND ball_will_bounce_25grid(BALL.Y%-1, BALL.X%-1) = FALSE _
+    AND ball_will_bounce_25grid(BALL.Y%, BALL.X%)     = FALSE _
+    AND ball_will_bounce_25grid(BALL.Y%+1, BALL.X%+1) = FALSE _
+    AND ball_will_bounce_25grid(BALL.Y%+2, BALL.X%+2) = FALSE _
+    AND ball_will_bounce_25grid(BALL.Y%+3, BALL.X%+3) = FALSE _
+    AND ball_will_bounce_25grid(BALL.Y%+4, BALL.X%+4) = FALSE _
+    AND ball_will_bounce_25grid(BALL.Y%+5, BALL.X%+5) = FALSE THEN
+        old_x% = BALL.X% : old_y% = BALL.Y%
+        ball_erase old_y%, old_x%
+        BALL.X% = BALL.X% + (rand_in_range(1,2) * rand_sign)
+        BALL.Y% = BALL.Y% + (rand_in_range(1,2) * rand_sign)
+        DIM s AS STRING
+        s$ = "***** BALL_CHAOS_TIMER ***** "
+        s$ = s$ + "OLD BALL.Y%=" + n$(old_y%)
+        s$ = s$ + ", BALL.X%=" + n$(old_x%)
+        s$ = s$ + " -> NEW BALL.Y%=" + n$(BALL.Y%)
+        s$ = s$ + ", BALL.X%=" + n$(BALL.X%)
+        DPRINT s$, DEBUG_MIN
+        ball_sound_chaos
+    END IF
 END SUB
 
 
