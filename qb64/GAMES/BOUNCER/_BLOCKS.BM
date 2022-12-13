@@ -22,6 +22,7 @@ SUB blocks_init
         CFG.NUM_BLOCKS% = rand_in_range(1, CFG.ORIG_NUM_BLOCKS%)
     END IF
     REDIM BLOCKS(1 TO CFG.NUM_BLOCKS%) AS BLOCK_OBJECT
+    ball_get_9grid
     FOR i% = 1 TO CFG.NUM_BLOCKS%
         RANDOMIZE TIMER
         w% = rand_in_range(1, CFG.BLOCK_MAX_W%)
@@ -31,7 +32,7 @@ SUB blocks_init
             y% = clamp(rand_in_range(LEVEL.START_Y%, LEVEL.END_Y%-h%), 1, LEVEL.END_Y%)
             in_range_x% = in_range(BALL.X%, x%, x%+w%)
             in_range_y% = in_range(BALL.Y%, y%, y%+h%)
-        LOOP UNTIL in_range_x% = FALSE AND in_range_y% = FALSE
+        LOOP UNTIL in_range_x% = FALSE AND in_range_y% = FALSE AND ball_will_bounce_9grid(y%, x%) = FALSE
         IF CFG.RANDOM_BG% = TRUE THEN 
             DO:
                 c& = rand_in_range(8,15)
