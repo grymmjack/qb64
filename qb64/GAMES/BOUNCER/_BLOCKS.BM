@@ -24,7 +24,6 @@ SUB blocks_init
     REDIM BLOCKS(1 TO CFG.NUM_BLOCKS%) AS BLOCK_OBJECT
     ball_get_9grid
     FOR i% = 1 TO CFG.NUM_BLOCKS%
-        RANDOMIZE TIMER
         w% = rand_in_range(1, CFG.BLOCK_MAX_W%)
         h% = rand_in_range(1, CFG.BLOCK_MAX_H%)
         DO: 'prevent creation of block where ball currently is
