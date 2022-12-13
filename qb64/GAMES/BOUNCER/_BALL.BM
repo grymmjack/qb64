@@ -596,7 +596,6 @@ SUB ball_hit_block
         BALL.X_DIR% = BALL.X_DIR% * -1
         BALL.HIT_90_NUM% = BALL.HIT_90_NUM% + 1
         ball_sound_invert
-        bouncing% = TRUE
     ELSEIF bouncing_up% = TRUE THEN 
         BALL.Y_DIR% = -1
         bouncing% = TRUE
@@ -616,9 +615,12 @@ END SUB
 
 SUB ball_erase (y%, x%)
     DPRINT "ball_erase", DEBUG_AVG
-    screen_set_active_page GAME_SCREEN
+    DIM AS INTEGER c
     y% = clamp(y%, LEVEL.START_Y%, LEVEL.END_Y%)
     x% = clamp(x%, LEVEL.START_X%, LEVEL.END_X%)
+    c% = SCREEN(y%, x%)
+    IF c% = ASC(BLOCK.DISPLAY$) THEN EXIT SUB
+    screen_set_active_page GAME_SCREEN
     COLOR BALL.KOLOR%, __SCREEN.BG_KOLOR%
     IF BALL.TRACE_PATH% = FALSE THEN 
         LOCATE y%, x% : PRINT SPACE$(LEN(BALL.DISPLAY$))
@@ -655,6 +657,55 @@ SUB ball_stay_in_bounds
     ELSEIF BALL.X% <= LEVEL.START_X% THEN 
         ball_bounce_left
     END IF
+    pad% = 3
+    'top left corner of level
+    IF BALL.Y% = (LEVEL.START_Y% + pad%) AND BALL.X% = (LEVEL.START_X% + pad%) THEN
+        DPRINT "* IN TOP LEFT CORNER OF LEVEL", DEBUG_AVG
+        new_x% = BALL.X% + rand_in_range(1,pad%)
+        IF new_x% <> BALL.X% THEN 
+            BALL.HIT_90_NUM% = 0
+            ball_erase BALL.Y%, BALL.X%
+            BALL.X% = new_x%
+            ball_sound_random
+            STATS.BALL_RANDOMS% = STATS.BALL_RANDOMS% + 1
+        END IF        
+    END IF
+    'bottom left corner of level
+    IF BALL.Y% = (LEVEL.END_Y% - pad%) AND BALL.X% = (LEVEL.START_X% + pad%) THEN
+        DPRINT "* IN BOTTOM LEFT CORNER OF LEVEL", DEBUG_AVG
+        new_x% = BALL.X% + rand_in_range(1,pad%)
+        IF new_x% <> BALL.X% THEN 
+            BALL.HIT_90_NUM% = 0
+            ball_erase BALL.Y%, BALL.X%
+            BALL.X% = new_x%
+            ball_sound_random
+            STATS.BALL_RANDOMS% = STATS.BALL_RANDOMS% + 1
+        END IF
+    END IF
+    'top right corner of level
+    IF BALL.Y% = (LEVEL.START_Y% + pad%) AND BALL.X% = (LEVEL.END_X% - pad%) THEN
+        DPRINT "* IN TOP RIGHT CORNER OF LEVEL", DEBUG_AVG
+        new_x% = BALL.X% - rand_in_range(1,pad%)
+        IF new_x% <> BALL.X% THEN 
+            BALL.HIT_90_NUM% = 0
+            ball_erase BALL.Y%, BALL.X%
+            BALL.X% = new_x%
+            ball_sound_random
+            STATS.BALL_RANDOMS% = STATS.BALL_RANDOMS% + 1
+        END IF
+    END IF
+    'bottom right corner of level
+    IF BALL.Y% = (LEVEL.END_Y% - pad%) AND BALL.X% = (LEVEL.END_X% - pad%) THEN
+        DPRINT "* IN BOTTOM RIGHT CORNER OF LEVEL", DEBUG_AVG
+        new_x% = BALL.X% - rand_in_range(1,pad%)
+        IF new_x% <> BALL.X% THEN 
+            BALL.HIT_90_NUM% = 0
+            ball_erase BALL.Y%, BALL.X%
+            BALL.X% = new_x%
+            ball_sound_random
+            STATS.BALL_RANDOMS% = STATS.BALL_RANDOMS% + 1
+        END IF
+    END IF    
 END SUB
 
 
@@ -705,48 +756,64 @@ SUB ball_sound_random
 END SUB
 
 SUB ball_soundfx_random
-    SOUND 7500, 0.5
-    SOUND 6500, 0.5
-    SOUND 5500, 0.5
-    SOUND 4500, 0.5
-    SOUND 3500, 0.5
-    SOUND 2500, 0.5
-    SOUND 1500, 0.5
+    PLAY "V25 O5 T255 MS L64 C,D#,E#,G MB"
+END SUB
+
+SUB ball_sound_chaos
+    DPRINT "ball_sound_chaos", DEBUG_MAX
+    STATS.BALL_RANDOMS% = STATS.BALL_RANDOMS% + 1
+    IF CFG.SOUND_ENABLED% = FALSE THEN EXIT SUB
+    PLAY "V25 O6 T180 MS L64 DD#DD#DD#DD# MB"
 END SUB
 
 SUB ball_sound_bounce_top
     DPRINT "ball_sound_bounce_top", DEBUG_MAX
     STATS.TOP_BOUNCES% = STATS.TOP_BOUNCES% + 1
     IF CFG.SOUND_ENABLED% = FALSE THEN EXIT SUB
-    SOUND 4000, 0.25
+    PLAY "V50 O4 T180 MS L32 C MB"
 END SUB
 
 SUB ball_sound_bounce_bot
     DPRINT "ball_sound_bounce_bot", DEBUG_MAX
     STATS.BOT_BOUNCES% = STATS.BOT_BOUNCES% + 1
     IF CFG.SOUND_ENABLED% = FALSE THEN EXIT SUB
-    SOUND 3000, 0.25
+    PLAY "V50 O3 T180 MS L32 C MB"
 END SUB
 
 SUB ball_sound_bounce_left
     DPRINT "ball_sound_bounce_left", DEBUG_MAX
     STATS.LEFT_BOUNCES% = STATS.LEFT_BOUNCES% + 1
     IF CFG.SOUND_ENABLED% = FALSE THEN EXIT SUB
-    SOUND 1000, 0.25
+    PLAY "V50 O3 T180 MS L32 F MB"
 END SUB
 
 SUB ball_sound_bounce_right
     DPRINT "ball_sound_bounce_right", DEBUG_MAX
     STATS.RIGHT_BOUNCES% = STATS.RIGHT_BOUNCES% + 1
     IF CFG.SOUND_ENABLED% = FALSE THEN EXIT SUB
-    SOUND 2000, 0.25
+    PLAY "V50 O3 T180 MS L32 G MB"
 END SUB
 
 SUB ball_sound_hit_block
     DPRINT "ball_sound_hit_block", DEBUG_MAX
     STATS.BLOCK_BOUNCES% = STATS.BLOCK_BOUNCES% + 1
     IF CFG.SOUND_ENABLED% = FALSE THEN EXIT SUB
-    SOUND 500, 0.33
+    DIM r AS INTEGER
+    r% = rand_in_range(1,6)
+    SELECT CASE r%
+        CASE 1:
+            PLAY "V70 O1 T180 MS L32 C MB"
+        CASE 2: 
+            PLAY "V70 O1 T180 MS L32 G MB"
+        CASE 3:
+            PLAY "V70 O1 T180 MS L32 D MB"
+        CASE 4:
+            PLAY "V70 O1 T180 MS L32 F MB"
+        CASE 5:
+            PLAY "V70 O1 T180 MS L32 G MB"
+        CASE 5:
+            PLAY "V70 O3 T255 MS L64 A MB"
+    END SELECT
 END SUB
 
 SUB ball_sound_invert

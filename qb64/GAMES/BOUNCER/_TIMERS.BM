@@ -31,7 +31,7 @@ SUB timers_tick
                 s$ = s$ + " -> NEW BALL.Y%=" + n$(BALL.Y%)
                 s$ = s$ + ", BALL.X%=" + n$(BALL.X%)
                 DPRINT s$, DEBUG_MIN
-                ball_sound_random
+                ball_sound_chaos
             END IF
         END IF
     END IF
