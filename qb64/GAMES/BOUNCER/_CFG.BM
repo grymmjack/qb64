@@ -7,12 +7,12 @@ SUB configure
     CFG.SOUND_ENABLED%     = TRUE
     CFG.BALL_CHAOS_TIMER%  = TRUE
     CFG.RAND_NUM_BLOCKS%   = TRUE
-    CFG.CHAOS_SECS%        = 2
+    CFG.CHAOS_SECS%        = 1
     CFG.NUM_BLOCKS%        = 16
     CFG.ORIG_NUM_BLOCKS%   = CFG.NUM_BLOCKS%
     CFG.PREV_NUM_BLOCKS%   = CFG.NUM_BLOCKS%
     CFG.BLOCK_MAX_W%       = 10
     CFG.BLOCK_MAX_H%       = 10 
-    CFG.LIM%               = 30
-    CFG.AUTO_BLOCKS_SECS%  = 2
+    CFG.LIM%               = 120
+    CFG.AUTO_BLOCKS_SECS%  = 10
 END SUB
