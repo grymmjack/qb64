@@ -15,6 +15,26 @@ SUB timers_tick
             blocks_init
         END IF
     END IF
+    IF CFG.BALL_CHAOS_TIMER% = TRUE THEN
+        IF TICKS_TIMER.TICKS& MOD CFG.CHAOS_SECS% = 0 THEN
+            DIM AS INTEGER old_x, old_y
+            ball_get_9grid
+            IF ball_will_bounce_9grid(BALL.Y%, BALL.X% ) = FALSE THEN
+                old_x% = BALL.X% : old_y% = BALL.Y%
+                ball_erase old_y%, old_x%
+                BALL.X% = BALL.X% + (rand_in_range(1,2) * rand_sign)
+                BALL.Y% = BALL.Y% + (rand_in_range(1,2) * rand_sign)
+                DIM s AS STRING
+                s$ = "***** BALL_CHAOS_TIMER ***** "
+                s$ = s$ + "OLD BALL.Y%=" + n$(old_y%)
+                s$ = s$ + ", BALL.X%=" + n$(old_x%)
+                s$ = s$ + " -> NEW BALL.Y%=" + n$(BALL.Y%)
+                s$ = s$ + ", BALL.X%=" + n$(BALL.X%)
+                DPRINT s$, DEBUG_AVG
+                ball_sound_random
+            END IF
+        END IF
+    END IF
     TICKS_TIMER.TICKS& = TICKS_TIMER.TICKS& + 1
     TICKS_TIMER.SECONDS& = TICKS_TIMER.SECONDS& + 1
 END SUB

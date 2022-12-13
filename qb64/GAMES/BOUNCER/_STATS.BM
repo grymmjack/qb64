@@ -6,6 +6,7 @@ SUB stats_init
     STATS.LEFT_BOUNCES%  = 0
     STATS.BLOCK_BOUNCES% = 0
     STATS.BALL_INVERTS%  = 0
+    STATS.BALL_RANDOMS%  = 0
 END Sub
 
 
@@ -16,10 +17,6 @@ SUB stats_update
     old_fg& = _DEFAULTCOLOR
     old_bg& = _BACKGROUNDCOLOR
     t% = STATS.TOP_BOUNCES%
-    t% = t% + STATS.RIGHT_BOUNCES%
-    t% = t% + STATS.BOT_BOUNCES%
-    t% = t% + STATS.LEFT_BOUNCES%
-    t% = t% + STATS.BLOCK_BOUNCES%
     DIM AS STRING s, s2, s3
     s$ = "ESC:END,SPACE:RND,+/-:SPD,F1:TRACE,F4:BALL,F5:DEBUG->HOME/END:SHOW/HIDE CONSOLE"
 
@@ -31,15 +28,20 @@ SUB stats_update
     s2$ = s2$ + " L" + n$(STATS.LEFT_BOUNCES%)
     s2$ = s2$ + " BL" + n$(STATS.BLOCK_BOUNCES%)
     s2$ = s2$ + " BI" + n$(STATS.BALL_INVERTS%)
+    s2$ = s2$ + " BR" + n$(STATS.BALL_RANDOMS%)
     s2$ = s2$ + " B9" + n$(BALL.HIT_90_NUM%)
-    s2$ = s2$ + " (" + n$(t%) + ")"
-    s2$ = s2$ + " TMR:" + ln$(TICKS_TIMER.SECONDS&)
+    s2$ = s2$ + " TI:" + ln$(TICKS_TIMER.SECONDS&)
     s2$ = s2$ + " FPS:" + n$(CFG.LIM%)
     s2$ = s2$ + " #B" + n$(CFG.NUM_BLOCKS%)
     IF DEBUG.DO_BREAKPOINTS% = TRUE THEN
         s2$ = s2$ + " B:RKP ON"
     ELSE
         s2$ = s2$ + " B:RKP OFF"
+    END IF
+    IF CFG.SOUND_ENABLED% = TRUE THEN
+        s2$ = s2$ + " S:ND ON"
+    ELSE
+        s2$ = s2$ + " S:ND OFF"
     END IF
 
     screen_set_both_pages GAME_SCREEN

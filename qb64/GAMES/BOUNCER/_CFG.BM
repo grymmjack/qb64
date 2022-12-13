@@ -1,8 +1,11 @@
 SUB configure
     DPRINT "configure", DEBUG_AVG
-    CFG.FULLSCREEN%        = TRUE
+    CFG.FULLSCREEN%        = FALSE
     CFG.FULLSCREEN_SMOOTH% = FALSE
     CFG.RANDOM_BG%         = FALSE
+    CFG.SOUND_ENABLED%     = TRUE
+    CFG.BALL_CHAOS_TIMER%  = TRUE
+    CFG.CHAOS_SECS%        = 5
     CFG.NUM_BLOCKS%        = 16
     CFG.PREV_NUM_BLOCKS%   = CFG.NUM_BLOCKS%
     CFG.BLOCK_MAX_W%       = 10 

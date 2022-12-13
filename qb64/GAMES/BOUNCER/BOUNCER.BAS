@@ -35,6 +35,9 @@ DO:
     k$ = INKEY$
     IF k$ <> "" THEN DPRINT "INKEY$", DEBUG_MIN
     SELECT CASE k$
+        CASE LCASE$("s"): 'S = Toggle sound
+            DPRINT "INKEY$: 'S' TOGGLE SOUND", DEBUG_AVG
+            ball_toggle_sound : stats_update
         CASE LCASE$("b"): 'B = Toggle breakpoints
             DPRINT "INKEY$: 'B' TOGGLE BREAKPOINTS", DEBUG_AVG
             debug_toggle_do_breakpoints : stats_update

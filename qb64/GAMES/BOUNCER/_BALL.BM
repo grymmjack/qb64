@@ -12,16 +12,6 @@ SUB ball_init
 END SUB
 
 
-SUB ball_error_trap
-    DPRINT "ball_error_trap", DEBUG_MAX
-    DIM c AS INTEGER
-    c% = SCREEN(BALL.Y%, BALL.X%)
-    IF c% = ASC(BLOCK.DISPLAY$) THEN
-        debug_breakpoint "*** BALL ON TOP BLOCK! ***"
-    END IF
-END SUB
-
-
 SUB ball_toggle_char
     DPRINT "ball_toggle_char", DEBUG_MAX
     IF BALL.DISPLAY$ = BALL_ROUND$ THEN 
@@ -79,7 +69,7 @@ SUB ball_get_9grid
             END IF
         NEXT x%
     NEXT y%
-    IF DEBUG.ENABLED% = TRUE THEN ball_dump_9grid
+    IF DEBUG.ENABLED% = TRUE AND DEBUG.VERBOSITY% >= DEBUG_AVG THEN ball_dump_9grid
 END SUB
 
 
@@ -473,41 +463,41 @@ FUNCTION ball_will_invert_path% ()
         sum% = sum% + 1 : will_5L% = TRUE
     END IF
     IF sum% > 0 THEN will_invert% = TRUE
-    DPRINT "    top_left%=" + b$(top_left%), DEBUG_AVG
-    DPRINT "   top_right%=" + b$(top_right%), DEBUG_AVG
-    DPRINT "    bot_left%=" + b$(bot_left%), DEBUG_AVG
-    DPRINT "   bot_right%=" + b$(bot_right%), DEBUG_AVG
-    DPRINT " top_left_2L%=" + b$(top_left_2L%), DEBUG_AVG
-    DPRINT "top_right_2L%=" + b$(top_right_2L%), DEBUG_AVG
-    DPRINT " bot_left_2L%=" + b$(bot_left_2L%), DEBUG_AVG
-    DPRINT "bot_right_2L%=" + b$(bot_right_2L%), DEBUG_AVG
-    DPRINT " top_left_3L%=" + b$(top_left_3L%), DEBUG_AVG
-    DPRINT "top_right_3L%=" + b$(top_right_3L%), DEBUG_AVG
-    DPRINT " bot_left_3L%=" + b$(bot_left_3L%), DEBUG_AVG
-    DPRINT "bot_right_3L%=" + b$(bot_right_3L%), DEBUG_AVG
-    DPRINT " top_left_4L%=" + b$(top_left_4L%), DEBUG_AVG
-    DPRINT "top_right_4L%=" + b$(top_right_4L%), DEBUG_AVG
-    DPRINT " bot_left_4L%=" + b$(bot_left_4L%), DEBUG_AVG
-    DPRINT "bot_right_4L%=" + b$(bot_right_4L%), DEBUG_AVG
-    DPRINT " top_left_5L%=" + b$(top_left_5L%), DEBUG_AVG
-    DPRINT "top_right_5L%=" + b$(top_right_5L%), DEBUG_AVG
-    DPRINT " bot_left_5L%=" + b$(bot_left_5L%), DEBUG_AVG
-    DPRINT "bot_right_5L%=" + b$(bot_right_5L%), DEBUG_AVG
-    DPRINT "-------------", DEBUG_AVG
-    DPRINT " sum: " + n$(sum%), DEBUG_AVG
-    DPRINT "-------------", DEBUG_AVG
-    DPRINT " will invert%=" + b$(will_invert%), DEBUG_AVG
-    DPRINT " will_corner%=" + b$(will_corner%), DEBUG_AVG
-    DPRINT "     will_2L%=" + b$(will_2L%), DEBUG_AVG
-    DPRINT "     will_3L%=" + b$(will_3L%), DEBUG_AVG
-    DPRINT "     will_4L%=" + b$(will_4L%), DEBUG_AVG
-    DPRINT "     will_5L%=" + b$(will_5L%), DEBUG_AVG
+    DPRINT "    top_left%=" + b$(top_left%), DEBUG_WTF
+    DPRINT "   top_right%=" + b$(top_right%), DEBUG_WTF
+    DPRINT "    bot_left%=" + b$(bot_left%), DEBUG_WTF
+    DPRINT "   bot_right%=" + b$(bot_right%), DEBUG_WTF
+    DPRINT " top_left_2L%=" + b$(top_left_2L%), DEBUG_WTF
+    DPRINT "top_right_2L%=" + b$(top_right_2L%), DEBUG_WTF
+    DPRINT " bot_left_2L%=" + b$(bot_left_2L%), DEBUG_WTF
+    DPRINT "bot_right_2L%=" + b$(bot_right_2L%), DEBUG_WTF
+    DPRINT " top_left_3L%=" + b$(top_left_3L%), DEBUG_WTF
+    DPRINT "top_right_3L%=" + b$(top_right_3L%), DEBUG_WTF
+    DPRINT " bot_left_3L%=" + b$(bot_left_3L%), DEBUG_WTF
+    DPRINT "bot_right_3L%=" + b$(bot_right_3L%), DEBUG_WTF
+    DPRINT " top_left_4L%=" + b$(top_left_4L%), DEBUG_WTF
+    DPRINT "top_right_4L%=" + b$(top_right_4L%), DEBUG_WTF
+    DPRINT " bot_left_4L%=" + b$(bot_left_4L%), DEBUG_WTF
+    DPRINT "bot_right_4L%=" + b$(bot_right_4L%), DEBUG_WTF
+    DPRINT " top_left_5L%=" + b$(top_left_5L%), DEBUG_WTF
+    DPRINT "top_right_5L%=" + b$(top_right_5L%), DEBUG_WTF
+    DPRINT " bot_left_5L%=" + b$(bot_left_5L%), DEBUG_WTF
+    DPRINT "bot_right_5L%=" + b$(bot_right_5L%), DEBUG_WTF
+    DPRINT "-------------", DEBUG_WTF
+    DPRINT " sum: " + n$(sum%), DEBUG_WTF
+    DPRINT "-------------", DEBUG_WTF
+    DPRINT " will invert%=" + b$(will_invert%), DEBUG_WTF
+    DPRINT " will_corner%=" + b$(will_corner%), DEBUG_WTF
+    DPRINT "     will_2L%=" + b$(will_2L%), DEBUG_WTF
+    DPRINT "     will_3L%=" + b$(will_3L%), DEBUG_WTF
+    DPRINT "     will_4L%=" + b$(will_4L%), DEBUG_WTF
+    DPRINT "     will_5L%=" + b$(will_5L%), DEBUG_WTF
     IF sum% > 0 THEN
-        DPRINT "ball_will_invert_path = TRUE", DEBUG_AVG
-        STATS.BALL_INVERTS% = STATS.BALL_INVERTS% + 1
+        DPRINT "ball_will_invert_path = TRUE", DEBUG_WTF
+        ball_sound_invert
         ball_will_invert_path% = TRUE
     ELSE
-        DPRINT "ball_will_invert_path = FALSE", DEBUG_AVG
+        DPRINT "ball_will_invert_path = FALSE", DEBUG_WTF
         ball_will_invert_path% = FALSE
     END IF
 END FUNCTION
@@ -521,8 +511,9 @@ FUNCTION ball_will_bounce_left% ()
     IF BALL_9GRID(1,3) _
      + BALL_9GRID(2,3) _
      + BALL_9GRID(3,3) >= 2 _
-    AND BALL.X_DIR% = 1 THEN 
+    THEN 
         DPRINT "ball_will_bounce_left = TRUE", DEBUG_AVG
+        BALL.HIT_90_NUM% = 0
         ball_will_bounce_left% = TRUE
     ELSE
         DPRINT "ball_will_bounce_left = FALSE", DEBUG_AVG
@@ -539,8 +530,9 @@ FUNCTION ball_will_bounce_right% ()
     IF BALL_9GRID(1,1) _
      + BALL_9GRID(2,1) _
      + BALL_9GRID(3,1) >= 2 _
-    AND BALL.X_DIR% = -1 THEN 
+    THEN 
         DPRINT "ball_will_bounce_right = TRUE", DEBUG_AVG
+        BALL.HIT_90_NUM% = 0
         ball_will_bounce_right% = TRUE
     ELSE
         DPRINT "ball_will_bounce_right = FALSE", DEBUG_AVG
@@ -557,8 +549,9 @@ FUNCTION ball_will_bounce_down% ()
     IF BALL_9GRID(1,1) _
      + BALL_9GRID(1,2) _
      + BALL_9GRID(1,3) >= 2 _
-    AND BALL.Y_DIR% = -1 THEN 
+    THEN 
         DPRINT "ball_will_bounce_down = TRUE", DEBUG_AVG
+        BALL.HIT_90_NUM% = 0
         ball_will_bounce_down% = TRUE
     ELSE
         DPRINT "ball_will_bounce_down = FALSE", DEBUG_AVG
@@ -575,8 +568,9 @@ FUNCTION ball_will_bounce_up% ()
     IF BALL_9GRID(3,1) _
      + BALL_9GRID(3,2) _
      + BALL_9GRID(3,3) >= 2 _
-    AND BALL.Y_DIR% = 1 THEN 
+    THEN 
         DPRINT "ball_will_bounce_up = TRUE", DEBUG_AVG
+        BALL.HIT_90_NUM% = 0
         ball_will_bounce_up% = TRUE
     ELSE
         DPRINT "ball_will_bounce_up = FALSE", DEBUG_AVG
@@ -591,23 +585,17 @@ SUB ball_hit_block
         bouncing_up, bouncing_down, _
         bouncing_left, bouncing_right, _
         inverting_path, bouncing
-    STATS.BLOCK_BOUNCES% = STATS.BLOCK_BOUNCES% + 1
     bouncing%       = FALSE
     bouncing_up%    = ball_will_bounce_up%
     bouncing_down%  = ball_will_bounce_down%
     bouncing_left%  = ball_will_bounce_left%
     bouncing_right% = ball_will_bounce_right%
     inverting_path% = ball_will_invert_path%
-    IF BALL.HIT_90_NUM% >= 2 THEN
-        BALL.X% = BALL.X% + rand_sign
-        BALL.Y% = BALL.Y% + rand_sign
-        ball_sound_random
-        BALL.HIT_90_NUM% = 0
-    END IF
     IF inverting_path% = TRUE THEN
         BALL.Y_DIR% = BALL.Y_DIR% * -1
         BALL.X_DIR% = BALL.X_DIR% * -1
         BALL.HIT_90_NUM% = BALL.HIT_90_NUM% + 1
+        ball_sound_invert
         bouncing% = TRUE
     ELSEIF bouncing_up% = TRUE THEN 
         BALL.Y_DIR% = -1
@@ -619,22 +607,28 @@ SUB ball_hit_block
         BALL.X_DIR% = -1
         bouncing% = TRUE
     ELSEIF bouncing_right% = TRUE THEN 
-        BALL.X_DIR% = 1
+         BALL.X_DIR% = 1
         bouncing% = TRUE
     END IF
-    IF bouncing% = TRUE THEN SOUND 500, 0.33
+    IF bouncing% = TRUE THEN ball_sound_hit_block
+END SUB
+
+
+SUB ball_erase (y%, x%)
+    DPRINT "ball_erase", DEBUG_AVG
+    screen_set_active_page GAME_SCREEN
+    COLOR BALL.KOLOR%, __SCREEN.BG_KOLOR%
+    IF BALL.TRACE_PATH% = FALSE THEN 
+        LOCATE y%, X% : PRINT SPACE$(LEN(BALL.DISPLAY$))
+    ELSE 
+        LOCATE y%, x% : PRINT CHR$(249);
+    END IF
 END SUB
 
 
 SUB ball_move
     DPRINT "ball_move", DEBUG_AVG
-    COLOR BALL.KOLOR%, __SCREEN.BG_KOLOR%
-    screen_set_active_page GAME_SCREEN
-    IF BALL.TRACE_PATH% = FALSE THEN 
-        LOCATE BALL.Y%, BALL.X% : PRINT SPACE$(LEN(BALL.DISPLAY$))
-    ELSE 
-        LOCATE BALL.Y%, BALL.X% : PRINT CHR$(249);
-    END IF
+    ball_erase BALL.Y%, BALL.X%
     ball_get_9grid
     IF (ball_will_bounce_9grid(BALL.Y%, BALL.X%)) THEN
         ball_hit_block
@@ -642,30 +636,73 @@ SUB ball_move
     BALL.X% = clamp(BALL.X% + BALL.X_DIR%, LEVEL.START_X%, LEVEL.END_X%)
     BALL.Y% = clamp(BALL.Y% + BALL.Y_DIR%, LEVEL.START_Y%, LEVEL.END_Y%)
     screen_set_active_page GAME_SCREEN
+    COLOR BALL.KOLOR%, __SCREEN.BG_KOLOR%
     LOCATE BALL.Y%, BALL.X% : PRINT BALL.DISPLAY$;
-    ball_error_trap
 END SUB
 
 
 SUB ball_stay_in_bounds
     DPRINT "ball_stay_in_bounds", DEBUG_AVG
-    IF BALL.Y% = LEVEL.START_Y% THEN 
-        IF BALL.HIT_90_NUM% >= 2 THEN BALL.X_DIR% = BALL.X_DIR% * rand_sign
+    DIM AS INTEGER new_x, pad
+    IF BALL.Y% <= LEVEL.START_Y% THEN 
         ball_bounce_top
-    ELSEIF BALL.X% = LEVEL.END_X% THEN 
-        IF BALL.HIT_90_NUM% >= 2 THEN BALL.Y_DIR% = BALL.Y_DIR% * rand_sign
+    ELSEIF BALL.X% >= LEVEL.END_X% THEN 
         ball_bounce_right
-    ELSEIF BALL.Y% = LEVEL.END_Y% THEN 
-        IF BALL.HIT_90_NUM% >= 2 THEN BALL.X_DIR% = BALL.X_DIR% * rand_sign
+    ELSEIF BALL.Y% >= LEVEL.END_Y% THEN 
         ball_bounce_bot
-    ELSEIF BALL.X% = LEVEL.START_X% THEN 
-        IF BALL.HIT_90_NUM% >= 2 THEN BALL.Y_DIR% = BALL.Y_DIR% * rand_sign
+    ELSEIF BALL.X% <= LEVEL.START_X% THEN 
         ball_bounce_left
     END IF
 END SUB
 
+
+SUB ball_bounce_top
+    DPRINT "ball_bounce_top", DEBUG_AVG
+    BALL.Y_DIR% = BALL.Y_DIR% * -1
+    DIM AS INTEGER new_x
+    ball_sound_bounce_top
+END SUB
+
+
+SUB ball_bounce_right   
+    DPRINT "ball_bounce_right", DEBUG_AVG
+    BALL.X_DIR% = BALL.X_DIR% * -1
+    ball_sound_bounce_right
+END SUB
+
+
+SUB ball_bounce_bot
+    DPRINT "ball_bounce_bot", DEBUG_AVG
+    BALL.Y_DIR% = BALL.Y_DIR% * -1
+    ball_sound_bounce_bot
+END SUB
+
+
+SUB ball_bounce_left
+    DPRINT "ball_bounce_left", DEBUG_AVG
+    BALL.X_DIR% = BALL.X_DIR% * -1
+    ball_sound_bounce_left
+END SUB
+
+
+SUB ball_toggle_sound
+    DPRINT "ball_toggle_sound", DEBUG_MAX
+    IF CFG.SOUND_ENABLED% = TRUE THEN 
+        CFG.SOUND_ENABLED% = FALSE
+    ELSE
+        CFG.SOUND_ENABLED% = TRUE
+    END IF
+END SUB
+
+
 SUB ball_sound_random
     DPRINT "ball_sound_random", DEBUG_MAX
+    STATS.BALL_RANDOMS% = STATS.BALL_RANDOMS% + 1
+    IF CFG.SOUND_ENABLED% = FALSE THEN EXIT SUB
+    ball_soundfx_random
+END SUB
+
+SUB ball_soundfx_random
     SOUND 7500, 0.5
     SOUND 6500, 0.5
     SOUND 5500, 0.5
@@ -675,33 +712,45 @@ SUB ball_sound_random
     SOUND 1500, 0.5
 END SUB
 
-SUB ball_bounce_top
-    DPRINT "ball_bounce_top", DEBUG_AVG
+SUB ball_sound_bounce_top
+    DPRINT "ball_sound_bounce_top", DEBUG_MAX
     STATS.TOP_BOUNCES% = STATS.TOP_BOUNCES% + 1
-    BALL.Y_DIR% = BALL.Y_DIR% * -1
+    IF CFG.SOUND_ENABLED% = FALSE THEN EXIT SUB
     SOUND 4000, 0.25
 END SUB
 
-
-SUB ball_bounce_right   
-    DPRINT "ball_bounce_right", DEBUG_AVG
-    STATS.RIGHT_BOUNCES% = STATS.RIGHT_BOUNCES% + 1
-    BALL.X_DIR% = BALL.X_DIR% * -1
-    SOUND 2000, 0.25
-END SUB
-
-
-SUB ball_bounce_bot
-    DPRINT "ball_bounce_bot", DEBUG_AVG
+SUB ball_sound_bounce_bot
+    DPRINT "ball_sound_bounce_bot", DEBUG_MAX
     STATS.BOT_BOUNCES% = STATS.BOT_BOUNCES% + 1
-    BALL.Y_DIR% = BALL.Y_DIR% * -1
+    IF CFG.SOUND_ENABLED% = FALSE THEN EXIT SUB
     SOUND 3000, 0.25
 END SUB
 
-
-SUB ball_bounce_left
-    DPRINT "ball_bounce_left", DEBUG_AVG
+SUB ball_sound_bounce_left
+    DPRINT "ball_sound_bounce_left", DEBUG_MAX
     STATS.LEFT_BOUNCES% = STATS.LEFT_BOUNCES% + 1
-    BALL.X_DIR% = BALL.X_DIR% * -1
+    IF CFG.SOUND_ENABLED% = FALSE THEN EXIT SUB
     SOUND 1000, 0.25
 END SUB
+
+SUB ball_sound_bounce_right
+    DPRINT "ball_sound_bounce_right", DEBUG_MAX
+    STATS.RIGHT_BOUNCES% = STATS.RIGHT_BOUNCES% + 1
+    IF CFG.SOUND_ENABLED% = FALSE THEN EXIT SUB
+    SOUND 2000, 0.25
+END SUB
+
+SUB ball_sound_hit_block
+    DPRINT "ball_sound_hit_block", DEBUG_MAX
+    STATS.BLOCK_BOUNCES% = STATS.BLOCK_BOUNCES% + 1
+    IF CFG.SOUND_ENABLED% = FALSE THEN EXIT SUB
+    SOUND 500, 0.33
+END SUB
+
+SUB ball_sound_invert
+    DPRINT "ball_sound_invert", DEBUG_MAX
+    STATS.BALL_INVERTS% = STATS.BALL_INVERTS% + 1
+    IF CFG.SOUND_ENABLED% = FALSE THEN EXIT SUB
+    ball_soundfx_random
+END SUB
+
