@@ -13,12 +13,13 @@ END SUB
 
 SUB blocks_init
     DPRINT "blocks_init", DEBUG_AVG
+    blocks_sound_init
     DIM AS INTEGER i, j, w, h, x, y, in_range_x, in_range_y
     DIM c AS LONG
     screen_clear
     IF CFG.RAND_NUM_BLOCKS% = TRUE THEN
         CFG.PREV_NUM_BLOCKS% = CFG.NUM_BLOCKS%
-        CFG.NUM_BLOCKS% = rand_in_range(0, CFG.ORIG_NUM_BLOCKS%)
+        CFG.NUM_BLOCKS% = rand_in_range(1, CFG.ORIG_NUM_BLOCKS%)
     END IF
     REDIM BLOCKS(1 TO CFG.NUM_BLOCKS%) AS BLOCK_OBJECT
     FOR i% = 1 TO CFG.NUM_BLOCKS%
@@ -87,4 +88,26 @@ SUB blocks_dec
     CFG.PREV_NUM_BLOCKS% = CFG.NUM_BLOCKS%
     CFG.NUM_BLOCKS% = min(CFG.NUM_BLOCKS%-1, 1)
     IF CFG.PREV_NUM_BLOCKS% <> CFG.NUM_BLOCKS% THEN blocks_init
+END SUB
+
+
+SUB blocks_sound_init
+    DPRINT "blocks_sound_init", DEBUG_AVG
+    IF CFG.SOUND_ENABLED% = FALSE THEN EXIT SUB
+    DIM r AS INTEGER
+    r% = rand_in_range(1,6)
+    SELECT CASE r%
+        CASE 1:
+            PLAY "V70 O3 T180 MS L32 C,C#,D,D# O4 C,C#,D,D# O5 C,C#,D,D# MB"
+        CASE 2: 
+            PLAY "V70 O3 T180 MS L32 G,G#,A,A# O4 G,G#,A,A# O5 G,G#,A,A# MB"
+        CASE 3:
+            PLAY "V70 O3 T180 MS L32 D,D#,E,E# O4 D,D#,E,E# O5 D,D#,E,E# MB"
+        CASE 4:
+            PLAY "V70 O3 T180 MS L32 F,F#,G,G# O4 F,F#,G,G# O5 F,F#,G,G# MB"
+        CASE 5:
+            PLAY "V70 O3 T180 MS L32 B,B#,C,C# O4 B,B#,C,C# O5 B,B#,C,C# MB"
+        CASE 5:
+            PLAY "V70 O3 T255 MS L32 A,A#,C,C# O4 A,A#,C,C# O5 A,A#,C,C# MB"
+    END SELECT    
 END SUB

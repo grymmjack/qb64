@@ -686,19 +686,14 @@ END SUB
 
 
 SUB ball_chaos
-    DIM AS INTEGER old_x, old_y
-    ball_get_25grid    
-    IF  ball_will_bounce_25grid(BALL.Y%-5, BALL.X%-5) = FALSE _
-    AND ball_will_bounce_25grid(BALL.Y%-4, BALL.X%-4) = FALSE _
-    AND ball_will_bounce_25grid(BALL.Y%-3, BALL.X%-3) = FALSE _
-    AND ball_will_bounce_25grid(BALL.Y%-2, BALL.X%-2) = FALSE _
-    AND ball_will_bounce_25grid(BALL.Y%-1, BALL.X%-1) = FALSE _
-    AND ball_will_bounce_25grid(BALL.Y%, BALL.X%)     = FALSE _
-    AND ball_will_bounce_25grid(BALL.Y%+1, BALL.X%+1) = FALSE _
-    AND ball_will_bounce_25grid(BALL.Y%+2, BALL.X%+2) = FALSE _
-    AND ball_will_bounce_25grid(BALL.Y%+3, BALL.X%+3) = FALSE _
-    AND ball_will_bounce_25grid(BALL.Y%+4, BALL.X%+4) = FALSE _
-    AND ball_will_bounce_25grid(BALL.Y%+5, BALL.X%+5) = FALSE THEN
+    DIM AS INTEGER old_x, old_y, x, y, sum
+    ball_get_25grid
+    FOR y% = 1 TO 5
+        FOR x% = 1 TO 5
+            sum% = sum% + BALL_25GRID(y%, x%)
+        NEXT x%
+    NEXT y%
+    IF sum = 0 THEN
         old_x% = BALL.X% : old_y% = BALL.Y%
         ball_erase old_y%, old_x%
         BALL.X% = BALL.X% + (rand_in_range(1,2) * rand_sign)
