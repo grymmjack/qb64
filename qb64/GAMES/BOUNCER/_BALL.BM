@@ -705,7 +705,7 @@ SUB ball_chaos
             sum% = sum% + BALL_25GRID(y%, x%)
         NEXT x%
     NEXT y%
-    IF sum = 0 THEN
+    IF sum% = 0 THEN
         old_x% = BALL.X% : old_y% = BALL.Y%
         ball_erase old_y%, old_x%
         BALL.X% = BALL.X% + (rand_in_range(0,1) * rand_sign)
@@ -718,6 +718,8 @@ SUB ball_chaos
         s$ = s$ + ", BALL.X%=" + n$(BALL.X%)
         DPRINT s$, DEBUG_MIN
         ball_sound_chaos
+    ELSE
+        ball_chaos_hold
     END IF
 END SUB
 
