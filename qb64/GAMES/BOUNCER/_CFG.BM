@@ -14,5 +14,5 @@ SUB configure
     CFG.BLOCK_MAX_W%       = 10
     CFG.BLOCK_MAX_H%       = 10 
     CFG.LIM%               = 30
-    CFG.AUTO_BLOCKS_SECS%  = 60
+    CFG.AUTO_BLOCKS_SECS%  = 30
 END SUB

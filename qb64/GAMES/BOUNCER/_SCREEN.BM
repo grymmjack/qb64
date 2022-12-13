@@ -34,9 +34,9 @@ END SUB
 
 SUB screen_clear
     DPRINT "screen_clear", DEBUG_AVG
-    IF CFG.RANDOM_BG% = TRUE THEN __SCREEN.BG_KOLOR% = rand_in_range(0, 7)
+    IF CFG.RANDOM_BG% = TRUE THEN __SCREEN.BG_KOLOR& = rand_in_range(0, 7)
     screen_set_active_page GAME_SCREEN
-    COLOR ,__SCREEN.BG_KOLOR%
+    COLOR BALL.KOLOR&,__SCREEN.BG_KOLOR&
     CLS
 END SUB
 

@@ -1,6 +1,6 @@
 TYPE SCREEN_OBJECT
-    BG_KOLOR     AS INTEGER
-    FG_KOLOR     AS INTEGER
+    BG_KOLOR     AS LONG
+    FG_KOLOR     AS LONG
     W            AS INTEGER
     H            AS INTEGER
     BPP          AS INTEGER

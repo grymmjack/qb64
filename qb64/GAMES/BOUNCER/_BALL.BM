@@ -5,7 +5,7 @@ SUB ball_init
     BALL.X_DIR%      = 1
     BALL.Y_DIR%      = -1
     BALL.SPEED%      = 1
-    BALL.KOLOR%      = 15
+    BALL.KOLOR&      = 15
     BALL.HIT_90_NUM% = 0
     BALL.TRACE_PATH% = TRUE
     BALL.DISPLAY$    = CHR$(9)
@@ -661,7 +661,7 @@ SUB ball_erase (y%, x%)
     c% = SCREEN(y%, x%)
     IF c% = ASC(BLOCK.DISPLAY$) THEN EXIT SUB
     screen_set_active_page GAME_SCREEN
-    COLOR BALL.KOLOR%, __SCREEN.BG_KOLOR%
+    COLOR BALL.KOLOR&, __SCREEN.BG_KOLOR&
     IF BALL.TRACE_PATH% = FALSE THEN 
         LOCATE y%, x% : PRINT SPACE$(LEN(BALL.DISPLAY$))
     ELSE 
@@ -680,7 +680,7 @@ SUB ball_move
     BALL.X% = clamp(BALL.X% + BALL.X_DIR%, LEVEL.START_X%, LEVEL.END_X%)
     BALL.Y% = clamp(BALL.Y% + BALL.Y_DIR%, LEVEL.START_Y%, LEVEL.END_Y%)
     screen_set_active_page GAME_SCREEN
-    COLOR BALL.KOLOR%, __SCREEN.BG_KOLOR%
+    COLOR BALL.KOLOR&, __SCREEN.BG_KOLOR&
     LOCATE BALL.Y%, BALL.X% : PRINT BALL.DISPLAY$;
 END SUB
 

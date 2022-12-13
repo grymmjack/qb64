@@ -5,7 +5,7 @@ SUB block_init
     BLOCK.W%       = CFG.BLOCK_MAX_W%
     BLOCK.H%       = CFG.BLOCK_MAX_H%
     BLOCK.INDEX%   = 0
-    BLOCK.KOLOR%   = 10
+    BLOCK.KOLOR&   = 10
     BLOCK.LIVES%   = 3
     BLOCK.DISPLAY$ = CHR$(219) 'CHR$(177)
 END SUB
@@ -13,7 +13,8 @@ END SUB
 
 SUB blocks_init
     DPRINT "blocks_init", DEBUG_AVG
-    DIM AS INTEGER i, j, w, h, x, y, c, in_range_x, in_range_y
+    DIM AS INTEGER i, j, w, h, x, y, in_range_x, in_range_y
+    DIM c AS LONG
     screen_clear
     IF CFG.RAND_NUM_BLOCKS% = TRUE THEN
         CFG.PREV_NUM_BLOCKS% = CFG.NUM_BLOCKS%
@@ -32,27 +33,41 @@ SUB blocks_init
         LOOP UNTIL in_range_x% = FALSE AND in_range_y% = FALSE
         IF CFG.RANDOM_BG% = TRUE THEN 
             DO:
-                c% = rand_in_range(8,15)
-            LOOP UNTIL c% <> _BACKGROUNDCOLOR
+                c& = rand_in_range(8,15)
+            LOOP UNTIL c& <> _BACKGROUNDCOLOR
         ELSE
             DO:
-                c% = rand_in_range(1,15)
-            LOOP UNTIL c% <> _BACKGROUNDCOLOR
+                c& = rand_in_range(1,15)
+            LOOP UNTIL c& <> _BACKGROUNDCOLOR
         END IF
         IF CFG.RANDOM_FG% = TRUE THEN
             DO:
-                BALL.KOLOR% = rand_in_range(1,15)
-            LOOP UNTIL BALL.KOLOR% <> _BACKGROUNDCOLOR
+                BALL.KOLOR& = rand_in_range(8,15)
+            LOOP UNTIL BALL.KOLOR& <> _BACKGROUNDCOLOR
         END IF
+        ' kludge to fix contrast for low contrast color combinations
+        IF BALL.KOLOR& = 3 AND _BACKGROUNDCOLOR = 2 THEN BALL.KOLOR& = 15
+        IF BALL.KOLOR& = 2 AND _BACKGROUNDCOLOR = 3 THEN BALL.KOLOR& = 15
+        IF BALL.KOLOR& = 4 AND _BACKGROUNDCOLOR = 5 THEN BALL.KOLOR& = 15
+        IF BALL.KOLOR& = 5 AND _BACKGROUNDCOLOR = 4 THEN BALL.KOLOR& = 15
+        IF BALL.KOLOR& = 1 AND _BACKGROUNDCOLOR = 4 THEN BALL.KOLOR& = 15
+        IF BALL.KOLOR& = 4 AND _BACKGROUNDCOLOR = 1 THEN BALL.KOLOR& = 15
+        IF BALL.KOLOR& = 6 AND _BACKGROUNDCOLOR = 5 THEN BALL.KOLOR& = 15
+        IF BALL.KOLOR& = 5 AND _BACKGROUNDCOLOR = 6 THEN BALL.KOLOR& = 15
+        IF BALL.KOLOR& = 6 AND _BACKGROUNDCOLOR = 4 THEN BALL.KOLOR& = 15
+        IF BALL.KOLOR& = 4 AND _BACKGROUNDCOLOR = 6 THEN BALL.KOLOR& = 15
+        IF BALL.KOLOR& = 6 AND _BACKGROUNDCOLOR = 3 THEN BALL.KOLOR& = 15
+        IF BALL.KOLOR& = 3 AND _BACKGROUNDCOLOR = 6 THEN BALL.KOLOR& = 15
+        IF _BACKGROUNDCOLOR = 7 THEN BALL.KOLOR& = 0
         BLOCKS(i%).X% = x%
         BLOCKS(i%).Y% = y%
         BLOCKS(i%).W% = rand_in_range(1, CFG.BLOCK_MAX_W%)
         BLOCKS(i%).H% = rand_in_range(1, CFG.BLOCK_MAX_H%)
-        BLOCKS(i%).KOLOR% = c%
+        BLOCKS(i%).KOLOR& = c&
         FOR j% = y% TO y%+h%
             screen_set_active_page GAME_SCREEN
             LOCATE j%, x%
-            COLOR c%, __SCREEN.BG_KOLOR%
+            COLOR c&, __SCREEN.BG_KOLOR&
             PRINT STRING$(w%, BLOCK.DISPLAY$);
         NEXT j%    
     NEXT i%
