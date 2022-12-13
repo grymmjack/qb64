@@ -7,7 +7,7 @@ SUB ball_init
     BALL.SPEED%      = 1
     BALL.KOLOR%      = 15
     BALL.HIT_90_NUM% = 0
-    BALL.TRACE_PATH% = FALSE
+    BALL.TRACE_PATH% = TRUE
     BALL.DISPLAY$    = CHR$(9)
 END SUB
 

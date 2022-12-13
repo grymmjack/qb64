@@ -1,8 +1,6 @@
 SUB screen_init 
     DPRINT "screen_init", DEBUG_AVG
     screen_reset
-    __SCREEN.BG_KOLOR%     = 0
-    __SCREEN.FG_KOLOR%     = 0
     __SCREEN.W%            = _WIDTH
     __SCREEN.H%            = _HEIGHT
     __SCREEN.BPP%          = _PIXELSIZE

@@ -7,7 +7,7 @@ SUB block_init
     BLOCK.INDEX%   = 0
     BLOCK.KOLOR%   = 10
     BLOCK.LIVES%   = 3
-    BLOCK.DISPLAY$ = CHR$(219)
+    BLOCK.DISPLAY$ = CHR$(219) 'CHR$(177)
 END SUB
 
 
@@ -27,9 +27,13 @@ SUB blocks_init
             in_range_y% = in_range(BALL.Y%, y%, y%+h%)
         LOOP UNTIL in_range_x% = FALSE AND in_range_y% = FALSE
         IF CFG.RANDOM_BG% = TRUE THEN 
-            c% = rand_in_range(8,15)
+            DO:
+                c% = rand_in_range(8,15)
+            LOOP UNTIL c% <> _BACKGROUNDCOLOR
         ELSE
-            c% = rand_in_range(1,15)
+            DO:
+                c% = rand_in_range(1,15)
+            LOOP UNTIL c% <> _BACKGROUNDCOLOR
         END IF
         BLOCKS(i%).X% = x%
         BLOCKS(i%).Y% = y%
@@ -39,7 +43,7 @@ SUB blocks_init
         FOR j% = y% TO y%+h%
             screen_set_active_page GAME_SCREEN
             LOCATE j%, x%
-            COLOR c%
+            COLOR c%, __SCREEN.BG_KOLOR%
             PRINT STRING$(w%, BLOCK.DISPLAY$);
         NEXT j%    
     NEXT i%
