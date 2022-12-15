@@ -275,9 +275,11 @@ FUNCTION VECT2D_eq% (vec1 AS VECT2D, vec2 AS VECT2D)
 END FUNCTION
 
 FUNCTION radians_to_degrees! (radians AS SINGLE)
-    radians_to_degrees! = radians! * 180 / _PI
+    radians_to_degrees! = _R2D(radians)
+    ' radians_to_degrees! = radians! * 180 / _PI
 END FUNCTION
 
 FUNCTION degrees_to_radians! (degrees AS SINGLE)
-    degrees_to_radians! = degrees! * _PI / 180
+    degrees_to_radians! = _D2R(degrees)
+    ' degrees_to_radians! = degrees! * _PI / 180
 END FUNCTION
