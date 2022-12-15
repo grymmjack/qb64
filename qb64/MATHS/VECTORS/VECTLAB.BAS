@@ -273,3 +273,9 @@ FUNCTION VECT2D_eq% (vec1 AS VECT2D, vec2 AS VECT2D)
         VECT2D_eq% = FALSE
     END IF
 END FUNCTION
+
+FUNCTION radians_to_degrees! (radians AS SINGLE)
+    DIM Pi AS SINGLE
+    Pi = 3.141592
+    radians_to_degrees! = radians! * 180 / Pi
+END FUNCTION
