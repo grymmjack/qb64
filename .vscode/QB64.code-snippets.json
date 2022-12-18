@@ -1,0 +1,12 @@
+{
+	"Block Comment": {
+		"prefix": "''",
+		"body": [
+			"''",
+			"' ${1:block}",
+			"' ${2:description}",
+			"' $0"
+		],
+		"description": "Block Comment"
+	}
+}
