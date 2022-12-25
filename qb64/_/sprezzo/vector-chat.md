@@ -1,5 +1,9 @@
-          
-        /|\
+* = Ball
+
+
+
+
+*       /|\
  perp    |     x2,y2
     \ q  |    / para
       \ A|A /
@@ -18,7 +22,7 @@ velocity vector
 vx, vy
 
 dt
-delta time
+delta time (_LIMIT)
 
 rotated/new velocity vector:
 new_vx   new_vy
@@ -75,7 +79,7 @@ A = arccos(vx*nx + vy*ny)
 v_perp = vx * cos(A) - vy * sin(A)
 v_para = vx * sin(A) + vy * cos(A)
 
-collision is done by changing: v_perp = -v_perp
+collision is done by changing: v_perp = -v_perp 
 
 3. unrotate
 for random: +/- to angle A before unrotate
