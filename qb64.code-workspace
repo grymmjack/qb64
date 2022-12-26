@@ -5,6 +5,9 @@
 		},
 		{
 			"path": "../QB64_GJ_LIB"
+		},
+		{
+			"path": "../DRAW"
 		}
 	],
 	"settings": {
@@ -220,6 +223,13 @@
 		"terminal.integrated.defaultProfile.windows": "Command Prompt",
 		"markdown.preview.openMarkdownLinks": "inPreview",
 		"markdown.links.openLocation": "beside",
-		"markdown.preview.linkify": true
+		"markdown.preview.linkify": true,
+		"workbench.list.multiSelectModifier": "alt",
+		"githubPullRequests.pullBranch": "never",
+		"editor.quickSuggestions": {
+			"comments": "inline"
+		},
+		"editor.suggestOnTriggerCharacters": false,
+		"editor.tabCompletion": "on"
 	}
 }
