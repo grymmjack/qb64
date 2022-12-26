@@ -1,6 +1,6 @@
 SCREEN 12
 ' _FULLSCREEN _SQUAREPIXELS, _SMOOTH
-$CONSOLE
+' $CONSOLE
 
 TYPE BRICK_OBJ
     x AS INTEGER
@@ -70,7 +70,7 @@ DIM AS INTEGER new_x, new_y, col_x, col_y
 DIM AS LONG col
 
 DO:
-    _LIMIT 60
+    _LIMIT 120
 
     new_x% = BALL.x% + (BALL.x_speed% * BALL.x_dir%)
     new_y% = BALL.y% + (BALL.y_speed% * BALL.y_dir%)
@@ -84,8 +84,8 @@ DO:
     END IF
 
     col& = POINT(new_x% + BALL.x_speed% * BALL.x_dir%, new_y% + BALL.y_speed% * BALL.y_dir%)
-    _ECHO _TRIM$(STR$(new_x%)) + ", " + _TRIM$(STR$(new_y%))
-    _ECHO _TRIM$(STR$(col&))
+    ' _ECHO _TRIM$(STR$(new_x%)) + ", " + _TRIM$(STR$(new_y%))
+    ' _ECHO _TRIM$(STR$(col&))
     IF col& <> 0 AND col& <> 15 THEN
         SOUND 15000, 0.005
         BRICK_collision
@@ -102,7 +102,7 @@ SUB WALL_collision
     DIM AS INTEGER new_x_dir, new_y_dir
     new_x_dir% = INT(RND(1)*3)-1 ' random number from -1, 0, +1
     new_y_dir% = INT(RND(1)*3)-1
-    _ECHO _TRIM$(STR$(new_x_dir%)) + ", " + _TRIM$(STR$(new_y_dir%))
+    ' _ECHO _TRIM$(STR$(new_x_dir%)) + ", " + _TRIM$(STR$(new_y_dir%))
     BALL.x_dir% = new_x_dir%
     BALL.y_dir% = new_y_dir%
 END SUB
