@@ -97,6 +97,24 @@
 					"reveal": "always",
 					"panel": "new"
 				}
+			},
+			{
+				"label": "Remove .exe files",
+				"type": "shell",
+				"options": {
+					"cwd": "${fileDirname}"
+				},
+				"command": "bash",
+				"args": [
+					"-c",
+					"find",
+					"-name",
+					"\"*.exe\"",
+					"-exec",
+					"echo",
+					"{}",
+					"\\;"
+				]
 			}
 		]
 	}
