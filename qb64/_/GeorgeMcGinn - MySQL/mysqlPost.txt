@@ -1,0 +1,128 @@
+The mySQL/mariaDB Client Connector allows QB64/QB64pe users to embed SQL into their BASIC programs.
+
+Rather than using pipecom or SHELL to execute SQL, this allows you to process SQL like you would in C/C++, PYTHON, or other
+languages with SQL embedded. There are both specific SQL functions and a generic SQLCMD function that will allow you to process
+any SQL statement.
+
+This has been tested on Linux, macOSX, and on the Raspberry PI, and with both mySQL and MariaDB. Since I do not have a Windows
+machine, I was unable to test it there. But the C/C++ code works using any C/C++ compiler, and was tested with gcc, g++, clang and
+clang++, and on Linux, clang++-11.
+
+The C/C++ code takes care of all the pointers and when processing fetchrow, keeps track of where you are in the SQL table or view.
+
+The following specific SQL statements have been created for use in a QB64 BASIC program. All return an INTEGER return code, except
+for sqlFetchRow, which returns a CHARACTER string, delimited by tabs, of the next row to read from a SQL table/view. All parameters
+passed are STRINGS. The functions are:
+
+	sqlConnect
+	(opt_host_name AS STRING, opt_user_name AS STRING, opt_password AS STRING, opt_db_name AS STRING)
+	
+	sqlDisconnect
+	
+	sqlPing
+	
+	sqlShowDatabases
+	
+	sqlShowTables
+	
+    sqlCMD
+    (opt_sql_stmt AS STRING)
+    
+    sqlStoreResult
+    (opt_sql_stmt AS STRING)
+    
+    sqlChangeUser
+    (opt_user_name AS STRING, opt_password AS STRING, opt_db_name AS STRING)
+    
+    sqlSelectDatabase
+    (opt_db_name AS STRING)
+    
+    sqlUseDatabase
+    (opt_db_name AS STRING)
+    
+    sqlDropDatabase
+    (opt_db_name AS STRING)
+    
+    sqlCreateDatabase
+    (opt_db_name AS STRING)
+    
+	sqlCreateOutFile
+	(opt_select_what AS STRING, opt_select_from AS STRING, opt_select_filename AS STRING)
+	
+    sqlDropTable 
+    (opt_tbl_name AS STRING)
+    
+    sqlDropView
+    (opt_tbl_name AS STRING)
+    
+    sqlNumRows
+    (opt_tbl_name AS STRING)
+    
+    sqlNumFields
+    (opt_tbl_name AS STRING)
+    
+    sqlProcessStmt
+    (opt_sql_stmt AS STRING)
+    
+    sqlUseResult
+    (opt_sql_stmt AS STRING)
+    
+    sqlFetchRow$ 
+    
+    FsqlFreeFetchRow
+    
+    sqlVerifyUser
+    (opt_user_name AS STRING, opt_language_id AS STRING)
+    
+    sqlCreateUser
+    (opt_user_name AS STRING, opt_password AS STRING)
+    
+	sqlGrant 
+	(opt_user_name AS STRING, opt_db_name AS STRING, opt_tbl_name AS STRING, opt_privileges AS STRING)
+	
+	sqlRevoke
+	(opt_user_name AS STRING, opt_db_name AS STRING, opt_tbl_name AS STRING, opt_privileges AS STRING)
+
+
+
+For QB64 on a Linux OS:
+
+QB64: Add the following to the g++ line in both makeline_lnx.txt and makeline_lnx_nogui.txt
+
+-I/usr/include/mysql 
+-lmysqlclient
+
+Example (makeline_lnx.txt):
+g++ -no-pie -w qbx.cpp -I/usr/include/mysql parts/core/os/lnx/src.a -lGL -lGLU -lX11 -lpthread -ldl -lrt -lmysqlclient -D FREEGLUT_STATIC -o 
+
+For mariaDB:
+$(mariadb_config --include --libs)
+
+Example (makeline_lnx.txt):
+g++ -no-pie -w qbx.cpp $(mariadb_config --include --libs) parts/core/os/lnx/src.a -lGL -lGLU -lX11 -ldl -lrt -lmysqlclient -D FREEGLUT_STATIC -o 
+
+
+For QB64pe:
+
+MYSQL
+Add the following to the IDE "C++ Compiler Settings Menu":
+C++ Compiler flags: -no-pie -I/usr/include/mysql
+C++ Linker flags: -lmysqlclient
+
+OR - You can add the following to the "/internal/config.ini" file:
+
+In the section [COMPILER SETTINGS]:
+ExtraCppFlags=-no-pie -I/usr/include/mysql
+ExtraLinkerFlags=-lmysqlclient
+
+MARIADB (*** NOTE: This has not been tested using the makefile method of compiling, but should work)
+Add the following to the IDE "C++ Compiler Settings Menu":
+C++ Compiler flags: -no-pie $(mariadb_config --include --libs)
+
+OR - You can add the following to the "/internal/config.ini" file:
+
+In the section [COMPILER SETTINGS]:
+ExtraCppFlags=-no-pie $(mariadb_config --include --libs)
+
+
+For QB64 on a macOSX:
