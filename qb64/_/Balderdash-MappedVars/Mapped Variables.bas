@@ -1,5 +1,6 @@
 Option _Explicit
 $Console:Only
+'see: https://en.cppreference.com/w/cpp/header/map
 
 Declare Library ".\mappedvar"
     Function mapvar& (name As String, value As String)
