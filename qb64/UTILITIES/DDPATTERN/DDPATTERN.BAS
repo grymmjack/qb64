@@ -12,7 +12,7 @@
 '
 
 DIM SHARED CANVAS AS LONG
-CANVAS& = _NEWIMAGE(800, 800, 32)
+CANVAS& = _NEWIMAGE(800, 1000, 32)
 SCREEN CANVAS&
 _TITLE "DDPATTERN"
 
@@ -20,10 +20,10 @@ CONST NUM_COLORS_IN_PALETTE = 15
 CONST NUM_PATTERNS_IN_FILE  = 30
 CONST NUM_ROWS_IN_PATTERN   = 8
 CONST NUM_COLS_IN_PATTERN   = 8
-CONST PATTERN_CELL_W        = 1
-CONST PATTERN_CELL_H        = 1
-CONST NUM_PATTERN_GRID_X    = 3
-CONST NUM_PATTERN_GRID_Y    = 3
+CONST PATTERN_CELL_W        = 2
+CONST PATTERN_CELL_H        = 2
+CONST NUM_PATTERN_GRID_X    = 6
+CONST NUM_PATTERN_GRID_Y    = 2
 
 TYPE APPLE2_COLOR_PALETTE
     AS _UNSIGNED LONG BLACK, GRAY1, DBLUE, PURPLE, RED, ORANGE, PINK, YELLOW
@@ -59,9 +59,9 @@ load_dazzledraw_pattern_file "B.W.PATTERNS1.bin", DAZZLEDRAW_PATTERNS_3()
 load_dazzledraw_pattern_file "B.W.PATTERNS2.bin", DAZZLEDRAW_PATTERNS_4()
 
 render_dazzledraw_pattern_column DAZZLEDRAW_PATTERNS_1(), 1, "ORIG.PATTERNS.bin"
-render_dazzledraw_pattern_column DAZZLEDRAW_PATTERNS_2(), 3, "MIXED.COLORS.bin"
-render_dazzledraw_pattern_column DAZZLEDRAW_PATTERNS_3(), 5, "B.W.PATTERNS1.bin"
-render_dazzledraw_pattern_column DAZZLEDRAW_PATTERNS_4(), 7, "B.W.PATTERNS2.bin"
+render_dazzledraw_pattern_column DAZZLEDRAW_PATTERNS_2(), 2, "MIXED.COLORS.bin"
+render_dazzledraw_pattern_column DAZZLEDRAW_PATTERNS_3(), 3, "B.W.PATTERNS1.bin"
+render_dazzledraw_pattern_column DAZZLEDRAW_PATTERNS_4(), 4, "B.W.PATTERNS2.bin"
 
 
 
@@ -122,7 +122,7 @@ END SUB
 ' 
 SUB render_dazzledraw_pattern_grid (pattern$, x%, y%, num%, fn$)
     DIM rows, cols AS INTEGER
-    FOR rows% = y% TO y% + NUM_PATTERN_GRID_Y
+    FOR rows% = y% TO y% + NUM_PATTERN_GRID_Y-1
         FOR cols% = x% TO x% + NUM_PATTERN_GRID_X
             render_dazzledraw_pattern _
                 pattern$, _
@@ -168,9 +168,9 @@ SUB render_dazzledraw_pattern (pattern$, x%, y%, w%, h%, num%, fn$)
             pixel_color%    = color_byte~%%
             pattern_color~& = A2_CN(pixel_color%)
             _DEST CANVAS&
-            LINE (start_x%, start_y%)-(end_x%, end_y%), pattern_color~&, BF
+            LINE (start_x%, start_y%)-(end_x%-1, end_y%-1), pattern_color~&, BF
             _DEST img&
-            PSET (cols%, rows%), pattern_color~&
+            PSET (cols%-1, rows%-1), pattern_color~&
             pixel% = pixel% + 1
             _DEST CANVAS&
         NEXT cols%
@@ -180,7 +180,6 @@ SUB render_dazzledraw_pattern (pattern$, x%, y%, w%, h%, num%, fn$)
     SAVEIMAGE img&, fn$ + _TRIM$(STR$(num%))
     _FREEIMAGE img&
 END SUB
-
 
 
 ''
