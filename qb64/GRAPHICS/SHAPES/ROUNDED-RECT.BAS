@@ -5,11 +5,11 @@ DIM AS INTEGER x, y, w, h, r
 DIM AS _UNSIGNED LONG lc, fc
 DIM img AS LONG
 
-x%   = 0                  ' x position
-y%   = 0                  ' y position
+x%   = 0                   ' x position
+y%   = 0                   ' y position
 w%   = 50                  ' width
 h%   = 50                  ' height
-r%   = 15                   ' corner radius
+r%   = 15                  ' corner radius
 lc~& = _RGB32(255, 255, 0) ' line color
 fc~& = _RGB32(0, 128, 255) ' fill color
 img& = _NEWIMAGE(320, 200, 32)
@@ -31,7 +31,7 @@ _SOURCE img& : _DEST CANVAS& : _PUTIMAGE (x%+40, y%+50)
 ' @param INTEGER h height
 ' @param INTEGER r radius
 ' @param _UNSIGNED LONG lc line color
-' @param _UNSIGNED LONG fc fill color (does not fill if -1)
+' @param _UNSIGNED LONG fc fill color (does not fill if 0)
 ' @param LONG img handle to paint on
 ' 
 SUB rounded_rectangle (w%, h%, r%, lc~&, fc~&, img&)
