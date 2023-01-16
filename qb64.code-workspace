@@ -5,9 +5,6 @@
 		},
 		{
 			"path": "../QB64_GJ_LIB"
-		},
-		{
-			"path": "../DRAW"
 		}
 	],
 	"settings": {
@@ -230,6 +227,15 @@
 			"comments": "inline"
 		},
 		"editor.suggestOnTriggerCharacters": false,
-		"editor.tabCompletion": "on"
+		"editor.tabCompletion": "on",
+		"githubPullRequests.ignoredPullRequestBranches": [
+			"main"
+		],
+		"webSearch.searchEngines": {
+			"qb64": "https://qb64phoenix.com/qb64wiki/index.php/%s"
+		},
+		"webSearch.defaultSearchEngines": [
+		],
+		"webSearch.useDefaultSearchEnginesList": false
 	}
 }

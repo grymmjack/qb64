@@ -1,6 +1,6 @@
 Declare Library
     Function snprintf& (str As String, Byval length As _Offset, format As String, Byval var1 As Long, Byval var2 As Long)
-End Declare
+End Declare    
 
 Dim s As String
 

@@ -23,4 +23,9 @@
     {
         "key": "cmd+b",
         "command": "-workbench.action.toggleSidebarVisibility"
-    }]
+    },
+    {
+        "key": "F5",
+        "command": "workbench.action.tasks.build"
+    }
+]
