@@ -232,10 +232,12 @@
 			"main"
 		],
 		"webSearch.searchEngines": {
-			"qb64": "https://qb64phoenix.com/qb64wiki/index.php/%s"
+			"QB64 Official Wiki": "https://github.com/QB64Official/qb64/search?q=%s&type=wikis"
+			"QB64 PE Wiki": "https://qb64phoenix.com/qb64wiki/index.php/%s"
 		},
 		"webSearch.defaultSearchEngines": [
 		],
-		"webSearch.useDefaultSearchEnginesList": false
+		"webSearch.useDefaultSearchEnginesList": false,
+		"webSearch.messageLevels": "hideAll"
 	}
 }
