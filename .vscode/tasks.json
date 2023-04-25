@@ -23,7 +23,7 @@
 			"label": "Compile",
 			"dependsOn": "Remove",
 			"type": "shell",
-			"command": "${config:qb64.installPath}/qb64.exe",
+			"command": "${config:qb64.compilerPath}",
 			"args": [
 				"-x",
 				"${fileDirname}\\${fileBasename}",
