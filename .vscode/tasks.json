@@ -8,11 +8,11 @@
 			"command": "${fileDirname}\\${fileBasenameNoExtension}.exe",
 			"presentation": {
 				"echo": false,
-				"reveal": "silent",
+				"reveal": "always",
 				"focus": false,
 				"panel": "shared",
 				"showReuseMessage": false,
-				"clear": true
+				"clear": false
 			},
 			"group": {
 				"kind": "build",
@@ -31,7 +31,7 @@
 				"${fileDirname}\\${fileBasenameNoExtension}.exe"
 			],
 			"presentation": {
-				"reveal": "silent",
+				"reveal": "always",
 				"panel": "shared",
 				"focus": false
 			}
@@ -44,7 +44,7 @@
 				"${fileDirname}\\${fileBasenameNoExtension}.exe"
 			],
 			"presentation": {
-				"reveal": "never",
+				"reveal": "always",
 				"panel": "shared",
 				"focus": false
 			}
