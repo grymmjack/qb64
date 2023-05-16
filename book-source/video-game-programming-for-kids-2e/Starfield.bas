@@ -20,12 +20,12 @@ DIM AS SINGLE BASE_BRIGHT, MAX_BRIGHT, SPEED_DIV, SZ_MIN, SZ_MAX
 DIM AS SINGLE b, x, y, s
 DIM AS INTEGER n
 
-NUM_STARS%   = 1500  'how many stars are there
+NUM_STARS%   = 300  'how many stars are there
 SZ_MIN!      = 1     'min size of star
 SZ_MAX!      = 1     'max size of star
 BASE_BRIGHT! = 20    'base light amount (brightness)
 MAX_BRIGHT!  = 255   'maximum light amount (brightness)
-SPEED_DIV!   = 500.0 'speed divisor - higher = slower
+SPEED_DIV!   = 3500.0 'speed divisor - higher = slower
 
 DIM STARS(NUM_STARS%) AS STAR
 
