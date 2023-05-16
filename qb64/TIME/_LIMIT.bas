@@ -1,5 +1,5 @@
 FOR y% = 0 to 10
-    _LIMIT 30
+    _LIMIT 1
     old_s# = s#
     s# = TIMER
     FOR i% = 0 to 10
