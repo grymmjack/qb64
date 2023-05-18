@@ -55,7 +55,6 @@ metronomePlaying% = FALSE
 
 myTimer% = _FREETIMER
 ON TIMER(myTimer%, 0.001) clickMetronome
-TIMER(myTimer%) ON
 
 DO:
     _DELAY .001
@@ -68,26 +67,35 @@ TIMER(myTimer%) OFF
 TIMER(myTimer%) FREE
 
 SUB toggleMetronome
-    metronomePlaying% = NOT metronomePlaying% 
+    IF metronomePlaying% = TRUE THEN
+        TIMER(myTimer%) OFF
+    ELSE
+        TIMER(myTimer%) ON
+    END IF
+    metronomePlaying% = NOT metronomePlaying%
 END SUB
 
 SUB clickMetronome
     STATIC ticks AS INTEGER
     STATIC bar AS INTEGER
-    DIM click AS STRING
-    DIM clickBar AS STRING
-    click$ = "MB T=" + VARPTR$(BPM!) + " L64 O6 C"
-    clickBar$ = "MB T=" + VARPTR$(BPM!) + " L16 O5 G"
-    ticks% = ticks% + 1
+    ' DIM click AS STRING
+    ' DIM clickBar AS STRING
+    ' click$ = "MB T=" + VARPTR$(BPM!) + " L64 O6 C"
+    ' clickBar$ = "MB T=" + VARPTR$(BPM!) + " L16 O5 G"
     ' PRINT "clickMetronome - ", _TRIM$(STR$(metronomePlaying%)), _TRIM$(STR$(ticks%)), _TRIM$(STR$(quarterNote!))
     IF metronomePlaying% = TRUE THEN 
-        IF bar% >= timeDenominator% THEN
-            bar% = 0
-            PLAY clickBar$
+        IF ticks% = 0 THEN
+            SOUND 6000, 0.5 'PLAY clickBar$
         ELSEIF ticks% >= (eighthNote! * 1000) THEN
             ticks% = 0
             bar% = bar% + 1
-            PLAY click$
+            IF bar% >= timeDenominator% THEN
+                SOUND 6000, 0.5 'PLAY clickBar$        
+                bar% = 0
+            ELSE
+                SOUND 5000, 0.5 ' PLAY click$
+            END IF
         END IF
     END IF
+    ticks% = ticks% + 1
 END SUB
