@@ -92,7 +92,8 @@ SUB clickMetronome
         IF ticks% = 0 THEN
             SOUND 6000, 0.5 'PLAY clickBar$
         ELSEIF _
-            (ticks% >= (sixteenthNote! * 1000) AND timeDenominator% = 8) _
+            (ticks% >= (thirtysecondNote! * 1000) AND timeDenominator% = 16) _
+         OR (ticks% >= (sixteenthNote! * 1000) AND timeDenominator% = 8) _
          OR (ticks% >= (eighthNote! * 1000) AND timeDenominator% = 4) THEN
             ticks% = 0
             bar% = bar% + 1
