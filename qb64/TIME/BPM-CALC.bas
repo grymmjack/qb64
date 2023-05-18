@@ -62,10 +62,8 @@ myTimer% = _FREETIMER
 ON TIMER(myTimer%, 0.001) clickMetronome
 
 DO:
-    _DELAY .001
     K$ = INKEY$
     IF K$ = CHR$(32) THEN toggleMetronome
-    _KEYCLEAR 1
 LOOP UNTIL K$ = CHR$(27)
 
 TIMER(myTimer%) OFF
@@ -83,14 +81,15 @@ END SUB
 SUB clickMetronome
     STATIC ticks AS INTEGER
     STATIC bar AS INTEGER
-    ' DIM click AS STRING
-    ' DIM clickBar AS STRING
-    ' click$ = "MB T=" + VARPTR$(BPM!) + " L64 O6 C"
-    ' clickBar$ = "MB T=" + VARPTR$(BPM!) + " L16 O5 G"
+    DIM click AS STRING
+    DIM clickBar AS STRING
+    clickBar$ = "MB L64 O6 G"
+    click$    = "MB L64 O6 C"
     ' PRINT "clickMetronome - ", _TRIM$(STR$(metronomePlaying%)), _TRIM$(STR$(ticks%)), _TRIM$(STR$(quarterNote!))
     IF metronomePlaying% = TRUE THEN 
         IF ticks% = 0 THEN
-            SOUND 6000, 0.5 'PLAY clickBar$
+            ' SOUND 6000, 0.5 
+            PLAY clickBar$
         ELSEIF _
             (ticks% >= (thirtysecondNote! * 1000) AND timeDenominator% = 16) _
          OR (ticks% >= (sixteenthNote! * 1000) AND timeDenominator% = 8) _
@@ -98,10 +97,12 @@ SUB clickMetronome
             ticks% = 0
             bar% = bar% + 1
             IF bar% >= timeNumerator% THEN
-                SOUND 6000, 0.5 'PLAY clickBar$        
+                ' SOUND 6000, 0.5 
+                PLAY clickBar$        
                 bar% = 0
             ELSE
-                SOUND 5000, 0.5 ' PLAY click$
+                ' SOUND 5000, 0.5 
+                PLAY click$
             END IF
         END IF
     END IF
