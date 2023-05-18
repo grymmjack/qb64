@@ -1,13 +1,10 @@
+CONST FALSE = 0 : CONST TRUE = NOT FALSE
+
+DIM I AS STRING
+
 DIM AS INTEGER _
     timeNumerator, _
-    timeDenomenator, _
-    bars, _
-    wholeNotes, _
-    halfNotes, _
-    quarterNotes, _
-    eighthNotes, _
-    sixteenthNotes, _
-    thirtysecondNotes
+    timeDenominator
 
 DIM AS SINGLE _
     BPM, _
@@ -22,40 +19,61 @@ DIM AS SINGLE _
 INPUT "Enter BPM: ", I$
 BPM! = VAL(I$)
 
-INPUT "Enter time signature numerator: ", I$
+INPUT "Enter time signature numerator:   ", I$
 timeNumerator% = VAL(I$)
 
 INPUT "Enter time signature denominator: ", I$
-timeDenomenator% = VAL(I$)
+timeDenominator% = VAL(I$)
 
-bars%              = _CEIL(BPM! / timeDenomenator%)
-wholeNotes%        = timeNumerator% * bars%
-halfNotes%         = timeNumerator% * 2  * bars%
-quarterNotes%      = timeNumerator% * 4  * bars%
-eighthNotes%       = timeNumerator% * 8  * bars%
-sixteenthNotes%    = timeNumerator% * 16 * bars%
-thirtysecondNotes% = timeNumerator% * 32 * bars%
+bar!               = (60 / BPM!) * 4
+wholeNote!         = (60 / BPM!) * 4
+halfNote!          = (60 / BPM!) * 2
+quarterNote!       = 60 / BPM!      
+eighthNote!        = (60 / BPM!) / 2
+sixteenthNote!     = (60 / BPM!) / 4
+thirtysecondNote!  = (60 / BPM!) / 8
 
-bar!               = BPM! / bars%
-wholeNote!         = BPM! / wholeNotes%
-halfNote!          = BPM! / halfNotes%
-quarterNote!       = BPM! / quarterNotes%
-eighthNote!        = BPM! / eighthNotes%
-sixteenthNote!     = BPM! / sixteenthNotes%
-thirtysecondNote!  = BPM! / thirtysecondNotes%
+tmph$ = "&   &  &"
+tmpl$ = "\   \ #,.##### #####,"
+PRINT
+PRINT USING tmph$; "UNIT"; "SECONDS"; "MS    "
+PRINT USING tmph$; "----"; "-------"; "-----"
+PRINT USING tmpl$; "Bar"; wholeNote!; wholeNote! * 1000
+PRINT USING tmpl$; "1/1"; wholeNote!; wholeNote! * 1000
+PRINT USING tmpl$; "1/2"; halfNote!; halfNote! * 1000
+PRINT USING tmpl$; "1/4"; quarterNote!; quarterNote! * 1000
+PRINT USING tmpl$; "1/8"; eighthNote!; eighthNote! * 1000
+PRINT USING tmpl$; "1/16"; sixteenthNote!; sixteenthNote! * 1000
+PRINT USING tmpl$; "1/32"; thirtysecondNote!; thirtysecondNote! * 1000
 
 PRINT
-PRINT _TRIM$(STR$(BPM!)); " BPM "; 
-PRINT _TRIM$(STR$(timeNumerator%)); "/"; _TRIM$(STR$(timeDenomenator%)); 
-PRINT " Calculations:"
-PRINT STRING$(50, "-")
-PRINT "UNIT", " COUNT", " DURATION (Secs)"
-PRINT STRING$(50, "-")
-PRINT "Bar", bars%, bar!
-PRINT "1/1 ", wholeNotes%, wholeNote!
-PRINT "1/2 ", halfNotes%, halfNote!
-PRINT "1/4 ", quarterNotes%, quarterNote!
-PRINT "1/8 ", eighthNotes%, eighthNote!
-PRINT "1/16", sixteenthNotes%, sixteenthNote!
-PRINT "1/32", thirtysecondNotes%, thirtysecondNote!
+PRINT "PRESS [SPACE] TO START / STOP METRONOME - [ESC] = QUIT"
+PRINT
 
+DIM SHARED AS INTEGER metronomePlaying, myTimer
+metronomePlaying% = FALSE
+
+myTimer% = _FREETIMER
+ON TIMER(myTimer%, 1/10) clickMetronome
+TIMER(myTimer%) ON
+
+DO:
+    _LIMIT 10
+    K$ = INKEY$
+    IF K$ = CHR$(32) THEN toggleMetronome
+    _KEYCLEAR 1
+LOOP UNTIL K$ = CHR$(27)
+
+TIMER(myTimer%) OFF
+TIMER(myTimer%) FREE
+
+SUB toggleMetronome
+    metronomePlaying% = NOT metronomePlaying% 
+END SUB
+
+SUB clickMetronome
+    PRINT "clickMetronome - ", _TRIM$(STR$(metronomePlaying%))
+    IF metronomePlaying% = TRUE THEN 
+        PRINT : PRINT "Click!" : PRINT
+    END IF
+END SUB
