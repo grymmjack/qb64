@@ -25,6 +25,11 @@ timeNumerator% = VAL(I$)
 INPUT "Enter time signature denominator: ", I$
 timeDenominator% = VAL(I$)
 
+IF timeNumerator% > timeDenominator% THEN
+    PRINT "Illegal time signature - improper fraction: "; _TRIM$(STR$(timeNumerator%)); _TRIM$(STR$(timeDenominator%)); " ABORTING"
+    SYSTEM
+END IF
+
 bar!               = (60 / BPM!) * 4
 wholeNote!         = (60 / BPM!) * 4
 halfNote!          = (60 / BPM!) * 2
@@ -86,10 +91,12 @@ SUB clickMetronome
     IF metronomePlaying% = TRUE THEN 
         IF ticks% = 0 THEN
             SOUND 6000, 0.5 'PLAY clickBar$
-        ELSEIF ticks% >= (eighthNote! * 1000) THEN
+        ELSEIF _
+            (ticks% >= (sixteenthNote! * 1000) AND timeDenominator% = 8) _
+         OR (ticks% >= (eighthNote! * 1000) AND timeDenominator% = 4) THEN
             ticks% = 0
             bar% = bar% + 1
-            IF bar% >= timeDenominator% THEN
+            IF bar% >= timeNumerator% THEN
                 SOUND 6000, 0.5 'PLAY clickBar$        
                 bar% = 0
             ELSE
