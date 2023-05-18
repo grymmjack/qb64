@@ -2,11 +2,11 @@ CONST FALSE = 0 : CONST TRUE = NOT FALSE
 
 DIM I AS STRING
 
-DIM AS INTEGER _
+DIM SHARED AS INTEGER _
     timeNumerator, _
     timeDenominator
 
-DIM AS SINGLE _
+DIM SHARED AS SINGLE _
     BPM, _
     bar, _
     wholeNote, _
@@ -54,11 +54,11 @@ DIM SHARED AS INTEGER metronomePlaying, myTimer
 metronomePlaying% = FALSE
 
 myTimer% = _FREETIMER
-ON TIMER(myTimer%, 1/10) clickMetronome
+ON TIMER(myTimer%, 0.001) clickMetronome
 TIMER(myTimer%) ON
 
 DO:
-    _LIMIT 10
+    _DELAY .001
     K$ = INKEY$
     IF K$ = CHR$(32) THEN toggleMetronome
     _KEYCLEAR 1
@@ -72,8 +72,22 @@ SUB toggleMetronome
 END SUB
 
 SUB clickMetronome
-    PRINT "clickMetronome - ", _TRIM$(STR$(metronomePlaying%))
+    STATIC ticks AS INTEGER
+    STATIC bar AS INTEGER
+    DIM click AS STRING
+    DIM clickBar AS STRING
+    click$ = "MB T=" + VARPTR$(BPM!) + " L64 O6 C"
+    clickBar$ = "MB T=" + VARPTR$(BPM!) + " L16 O5 G"
+    ticks% = ticks% + 1
+    ' PRINT "clickMetronome - ", _TRIM$(STR$(metronomePlaying%)), _TRIM$(STR$(ticks%)), _TRIM$(STR$(quarterNote!))
     IF metronomePlaying% = TRUE THEN 
-        PRINT : PRINT "Click!" : PRINT
+        IF bar% >= timeDenominator% THEN
+            bar% = 0
+            PLAY clickBar$
+        ELSEIF ticks% >= (eighthNote! * 1000) THEN
+            ticks% = 0
+            bar% = bar% + 1
+            PLAY click$
+        END IF
     END IF
 END SUB
