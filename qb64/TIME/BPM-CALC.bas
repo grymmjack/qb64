@@ -1,42 +1,72 @@
 CONST FALSE = 0 : CONST TRUE = NOT FALSE
 
-DIM I AS STRING
-
-DIM SHARED AS INTEGER _
-    timeNumerator, _
-    timeDenominator
-
-DIM SHARED AS SINGLE _
-    BPM, _
-    bar, _
+DIM AS SINGLE _
+    bpm, _
+    nextNote, _
+    noteDivider, _
+    curTime, _
     wholeNote, _
     halfNote, _
     quarterNote, _
     eighthNote, _
     sixteenthNote, _
-    thirtysecondNote
+    thirtysecondNote, _
+    sixtyfourthNote
+
+DIM AS INTEGER _
+    numerator, _
+    denomoniator
+
+DIM count AS LONG
+DIM AS STRING I, tmph, tmpl
+DIM metronomePlaying AS INTEGER
+metronomePlaying% = FALSE
+
+bpm!         = 120
+numerator%   = 3
+denominator% = 4
 
 INPUT "Enter BPM: ", I$
-BPM! = VAL(I$)
+bpm! = VAL(I$)
 
 INPUT "Enter time signature numerator:   ", I$
-timeNumerator% = VAL(I$)
+numerator% = VAL(I$)
 
 INPUT "Enter time signature denominator: ", I$
-timeDenominator% = VAL(I$)
+denominator% = VAL(I$)
 
-IF timeNumerator% > timeDenominator% THEN
-    PRINT "Illegal time signature - improper fraction: "; _TRIM$(STR$(timeNumerator%)); _TRIM$(STR$(timeDenominator%)); " ABORTING"
+IF numerator% > denominator% THEN
+    PRINT "Illegal time signature - improper fraction: "; _TRIM$(STR$(numerator%)); "/"; _TRIM$(STR$(denominator%)); " - ABORTING"
     SYSTEM
 END IF
 
-bar!               = (60 / BPM!) * 4
-wholeNote!         = (60 / BPM!) * 4
-halfNote!          = (60 / BPM!) * 2
-quarterNote!       = 60 / BPM!      
-eighthNote!        = (60 / BPM!) / 2
-sixteenthNote!     = (60 / BPM!) / 4
-thirtysecondNote!  = (60 / BPM!) / 8
+wholeNote!        = (60 / bpm) * 4
+halfNote!         = (60 / bpm) * 2
+quarterNote!      = (60 / bpm)
+eighthNote!       = (60 / bpm) / 2
+sixteenthNote!    = (60 / bpm) / 4
+thirtysecondNote! = (60 / bpm) / 8
+sixtyfourthNote!  = (60 / bpm) / 16
+
+SELECT CASE denominator%
+    CASE 1:
+        noteDivider! = wholeNote!
+    CASE 2:
+        noteDivider! = halfNote!
+    CASE 4:
+        noteDivider! = quarterNote!
+    CASE 8:
+        noteDivider! = eighthNote!
+    CASE 16:
+        noteDivider! = sixteenthNote!
+    CASE 32:
+        noteDivider! = thirtysecondNote!
+    CASE 64:
+        noteDivider! = sixtyfourthNote!
+END SELECT
+
+nextNote! = TIMER(.001)
+count& = 0
 
 tmph$ = "&   &  &"
 tmpl$ = "\   \ #,.##### #####,"
@@ -50,61 +80,41 @@ PRINT USING tmpl$; "1/4"; quarterNote!; quarterNote! * 1000
 PRINT USING tmpl$; "1/8"; eighthNote!; eighthNote! * 1000
 PRINT USING tmpl$; "1/16"; sixteenthNote!; sixteenthNote! * 1000
 PRINT USING tmpl$; "1/32"; thirtysecondNote!; thirtysecondNote! * 1000
+PRINT USING tmpl$; "1/64"; sixtyfourthNote!; sixtyfourthNote! * 1000
 
 PRINT
 PRINT "PRESS [SPACE] TO START / STOP METRONOME - [ESC] = QUIT"
 PRINT
 
-DIM SHARED AS INTEGER metronomePlaying, myTimer
-metronomePlaying% = FALSE
-
-myTimer% = _FREETIMER
-ON TIMER(myTimer%, 0.001) clickMetronome
-
-DO:
+DO
     K$ = INKEY$
-    IF K$ = CHR$(32) THEN toggleMetronome
-LOOP UNTIL K$ = CHR$(27)
-
-TIMER(myTimer%) OFF
-TIMER(myTimer%) FREE
-
-SUB toggleMetronome
-    IF metronomePlaying% = TRUE THEN
-        TIMER(myTimer%) OFF
-    ELSE
-        TIMER(myTimer%) ON
+    IF K$ = CHR$(32) THEN 
+        count& = 0
+        metronomePlaying% = NOT metronomePlaying%
     END IF
-    metronomePlaying% = NOT metronomePlaying%
-END SUB
 
-SUB clickMetronome
-    STATIC ticks AS INTEGER
-    STATIC bar AS INTEGER
-    DIM click AS STRING
-    DIM clickBar AS STRING
-    clickBar$ = "MB L64 O6 G"
-    click$    = "MB L64 O6 C"
-    ' PRINT "clickMetronome - ", _TRIM$(STR$(metronomePlaying%)), _TRIM$(STR$(ticks%)), _TRIM$(STR$(quarterNote!))
-    IF metronomePlaying% = TRUE THEN 
-        IF ticks% = 0 THEN
-            ' SOUND 6000, 0.5 
-            PLAY clickBar$
-        ELSEIF _
-            (ticks% >= (thirtysecondNote! * 1000) AND timeDenominator% = 16) _
-         OR (ticks% >= (sixteenthNote! * 1000) AND timeDenominator% = 8) _
-         OR (ticks% >= (eighthNote! * 1000) AND timeDenominator% = 4) THEN
-            ticks% = 0
-            bar% = bar% + 1
-            IF bar% >= timeNumerator% THEN
-                ' SOUND 6000, 0.5 
-                PLAY clickBar$        
-                bar% = 0
-            ELSE
-                ' SOUND 5000, 0.5 
-                PLAY click$
+    curTime = TIMER(.001)
+
+    IF curTime >= nextNote THEN
+        IF metronomePlaying% = TRUE THEN
+            IF count = 0 THEN ' bar
+                PLAY "MB L64 O6 G"
+            ELSE ' beat
+                PLAY "MB L64 O6 C"
             END IF
         END IF
+        count = (count + 1) MOD numerator%
+
+        nextNote = nextNote + noteDivider!
+    ELSE
+        DIM diffTime AS SINGLE
+        diffTime = nextNote - curTime
+        IF metronomePlaying% = TRUE THEN
+            PRINT count; nextNote; curTime; diffTime
+        END IF
+
+        IF diffTime > 0 THEN
+            _DELAY diffTime
+        END IF
     END IF
-    ticks% = ticks% + 1
-END SUB
+LOOP UNTIL K$ = CHR$(27)
