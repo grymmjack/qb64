@@ -1,9 +1,11 @@
+OPTION _EXPLICIT
 CONST FALSE = 0 : CONST TRUE = NOT FALSE
 
 DIM AS SINGLE _
     bpm, _
     nextNote, _
     noteDivider, _
+    diffTime, _
     curTime, _
     wholeNote, _
     halfNote, _
@@ -15,10 +17,10 @@ DIM AS SINGLE _
 
 DIM AS INTEGER _
     numerator, _
-    denomoniator
+    denominator
 
 DIM count AS LONG
-DIM AS STRING I, tmph, tmpl
+DIM AS STRING I, K, tmph, tmpl
 DIM metronomePlaying AS INTEGER
 metronomePlaying% = FALSE
 
@@ -107,14 +109,13 @@ DO
 
         nextNote = nextNote + noteDivider!
     ELSE
-        DIM diffTime AS SINGLE
-        diffTime = nextNote - curTime
+        diffTime! = nextNote! - curTime!
         IF metronomePlaying% = TRUE THEN
-            PRINT count; nextNote; curTime; diffTime
+            PRINT count&; nextNote!; curTime!; diffTime!
         END IF
 
-        IF diffTime > 0 THEN
-            _DELAY diffTime
+        IF diffTime! > 0 THEN
+            _DELAY diffTime!
         END IF
     END IF
 LOOP UNTIL K$ = CHR$(27)
