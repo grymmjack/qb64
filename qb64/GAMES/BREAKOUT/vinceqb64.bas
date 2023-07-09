@@ -69,7 +69,7 @@ DO
    IF mx > 74 THEN LOCATE , 74
    PRINT STRING$(7, 8);
    PCOPY 1, 0
-'1 IF TIMER < t + .01 THEN 1
+1 IF TIMER < t + .01 THEN 1
     _limit 10
 LOOP UNTIL INP(&H60) = 1
 SYSTEM
