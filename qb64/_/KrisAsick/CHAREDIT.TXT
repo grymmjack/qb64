@@ -1,0 +1,36 @@
+--- ASCII CHARACTER EDITOR --- v1.02 --- Copyright 2018 Pixelmusement -------
+
+This program is FREEWARE! Share it with your friends! :D
+
+-----------------------------------------------------------------------------
+
+This program was made in a little over 3 hours across a single livestream
+hosted on Twitch for the purpose of creating a custom font for a much larger
+coding project to follow. It is not well tested so if you're going to use it
+for any serious work I highly recommend saving often and mounting it inside
+a solo DOSBox folder so as not to expose any other mounted files to potential
+crashes!
+
+Use the arrow keys to move the edit cursor and spacebar to plot/unplot the
+bits in a glyph. Use the numreic keypad (with NumLock on, may need to flip
+it off and on a couple times with DOSBox) to change the active glyph being
+edited. Note that because you're changing the text mode glyphs the changes
+will affects the editor's contents in real time.
+
+If you screw up royally and lose sight of everything you can press ESC or F2
+followed by Y to either exit out of the program or reset to the default font.
+
+-----------------------------------------------------------------------------
+
+LICENSE AGREEMENT
+
+ASCII Character Editor is a tiny project made super-quick. Kris Asick and
+Pixelmusement provide no warranty towards its use and do not guarantee it
+will function without failure. You use it at your own risk.
+
+Although held under copyright, Pixelmusement grants permission to distribute
+this software free of charge however you so desire. You may not however
+charge money for this program, nor any derivatives made from the source code.
+
+If you make a derivative build with the source code, Kris Asick and/or
+Pixelmusement should remain credited as the original creator.
