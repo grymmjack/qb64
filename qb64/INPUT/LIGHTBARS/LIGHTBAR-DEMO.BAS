@@ -1,12 +1,11 @@
-$Debug
 ''
 ' LIGHTBAR Menu
 '
-' Creating lightbar driven menus using arrow keys to choose, enter to select, and
-' making it reusable and modular.
+' Creating lightbar driven menus using arrow keys to choose, enter to select, 
+' and making it reusable and modular.
 '
-' Code is a bit long, I'm sure someone can do this better! Regardless, this will end
-' up in my QB64_GJ_LIB library soon.
+' Code is a bit long, I'm sure someone can do this better! Regardless, this 
+' will end up in my QB64_GJ_LIB library soon.
 ' 
 ' @author Rick Christy <grymmjack@gmail.com>
 '
@@ -28,7 +27,8 @@ TYPE LIGHTBAR ' bg|b = background, fg|f = foreground, k = key
     key_bg_color AS INTEGER ' unselected hot key background color
     key_fg_color AS INTEGER ' unselected hot key foreground color
     opt_selected AS INTEGER ' selected option index
-    opt_vertical AS INTEGER ' 1 = true (then vertical) 0 = false (then horizontal)
+    opt_vertical AS INTEGER ' 1 = true (then vertical) 0 = false (then horiz)
+    max_width    AS INTEGER ' maximum width for horizontal options
     delimeter    AS STRING  ' Single character used to surround hot key
 END TYPE
 
@@ -46,21 +46,23 @@ menu.bar_bg_color% = 3  : menu.bar_fg_color% = 11 ' Selected option colors
 menu.bar_kf_color% = 14 : menu.bar_kb_color% = 11 ' Selected hot key colors
 menu.key_bg_color% = 0  : menu.key_fg_color% = 14 ' Unselected hot key colors
 ' Select the first option by default
-menu.opt_selected% = 0
+menu.opt_selected% = 7
 ' Use vertical orientation (new lines after each option)
 menu.opt_vertical% = 1
 ' Use vertical orientation (new lines after each option)
-' menu.opt_vertical = 0
+menu.opt_vertical = 0
 ' Delimiter can be any single character but must be same char on both sides
 ' OK: "|F|oo", Not OK: "[F]oo"
 menu.delimeter$ = "|" 
+' Set max width to screen width
+menu.max_width% = _WIDTH(0)
 
-' Populate the LIGHTBAR options - NOTE: spaces and formatting are kept intact
-' If you want longer bars, add more spaces or whatever characters that bar is made of.
-IF menu.opt_vertical% = 1 THEN ' vertical LIGHTBAR menu
+' Populate the LIGHTBAR options - NOTE: Vertical options are padded with spaces
+' If you want longer bars, add more spaces or characters that bar is made of
+IF menu.opt_vertical% = 1 THEN ' Vertical LIGHTBAR menu
     opts$(0)  = " |P|izza                   " ' | = delimeter, so |P| for Pizza
     opts$(1)  = " |R|ibs                    " ' Notice that Ribs, ...
-    opts$(2)  = " |W|ings                   " ' Wings, ...
+    opts$(2)  = " |H|ot Wings               " ' Hot Wings, ...
     opts$(3)  = " |S|alad                   " ' Salad, ...
     opts$(4)  = " |B|readsticks             " ' ...
     opts$(5)  = " |A|pple Pie               " ' ...
@@ -71,14 +73,14 @@ IF menu.opt_vertical% = 1 THEN ' vertical LIGHTBAR menu
     opts$(10) = " |F|ettucinni Alfredo Bowl " ' ...
     opts$(11) = " |J|uice for the Bambinos  " ' ...
     opts$(12) = " |W|ine for Padre + Madre  " ' All of the same length
-    opts$(13) = " |Q|uit " ' However, each option can have a different bar length like this.
+    opts$(13) = " |Q|uit " ' However, each can have diff bar length like this.
 END IF
 
-' Populate the LIGHTBAR options - NOTE: spaces and formatting are kept intact
-IF menu.opt_vertical% = 0 THEN ' horizontal LIGHTBAR menu
+' Populate the LIGHTBAR options - NOTE: Horizontal options aren't padded.
+IF menu.opt_vertical% = 0 THEN ' Horizontal LIGHTBAR menu
     opts$(0)  = " |P|izza "
     opts$(1)  = " |R|ibs "
-    opts$(2)  = " |W|ings "
+    opts$(2)  = " |H|ot Wings "
     opts$(3)  = " |S|alad "
     opts$(4)  = " |B|readsticks "
     opts$(5)  = " |A|pple Pie "
@@ -103,7 +105,7 @@ COLOR 12, 0: PRINT "----------------------------------------"
 COLOR 9, 0 : PRINT " PRESS ARROWS & HOME/END to choose..."
 COLOR 9, 0 : PRINT " PRESS ENTER or HOT KEY to PICK..."
 COLOR 9, 0 : PRINT " PRESS ESC to abort!"
-
+PRINT
 ' Draw the LIGHTBAR menu, and store the result chosen in choice%
 choice% = LIGHTBAR%(menu, opts$())
 
@@ -134,21 +136,20 @@ COLOR 12, 0 : PRINT "Thank you! Come again!"
 ' @return integer choice made (-1 if abort with ESC)
 '
 FUNCTION LIGHTBAR%(menu AS LIGHTBAR, options$())
-    DIM AS STRING k, o
-    DIM AS INTEGER key_pos_s, key_pos_e, ks, fg, bg, kf, kb
-    DIM AS INTEGER row, col, orig_bg, orig_fg, lb, ub, sel, choice_made
-    DIM AS INTEGER rows_drawn, cols_drawn, i, j
-    lb% = LBOUND(options$) : ub% = UBOUND(options$)
+    DIM AS STRING k
+    DIM AS INTEGER key_pos_s, key_pos_e, key_code
+    DIM AS INTEGER orig_bg, orig_fg, fg, bg, kf, kb
+    DIM AS INTEGER row, col, cur_row, cur_col, lb, ub, sel, chose, w, i
 
     ' UDT for option data
     TYPE LIGHTBAR_OPTION
-        row         AS INTEGER  ' Option row
-        col         AS INTEGER  ' Option column
-        opt_left    AS STRING   ' Option left side text
-        opt_key     AS STRING   ' Option hot key
-        opt_right   AS STRING   ' Option right side text
-        opt_len     AS INTEGER  ' Option length (left + key + right)
-        is_selected AS INTEGER  ' Is this option selected? 0 = no, 1 = yes
+        row AS INTEGER ' Option row
+        col AS INTEGER ' Option column
+        lft AS STRING  ' Option left side text
+        key AS STRING  ' Option hot key
+        rgt AS STRING  ' Option right side text
+        len AS INTEGER ' Option length (left + key + right)
+        sel AS INTEGER ' Is this option selected? 0 = no, 1 = yes
     END TYPE
 
     ' Define key constants
@@ -158,64 +159,71 @@ FUNCTION LIGHTBAR%(menu AS LIGHTBAR, options$())
     CONST KEY_UP    = 72 : CONST KEY_DOWN  = 80
     CONST KEY_ENTER = 13
 
-    DIM keys(lb% TO ub%) AS STRING ' holds hot keys (chars in delimeters)
-    row%         = CSRLIN : col% = POS(0)       ' store initial cursor position
-    orig_fg%     = SCREEN(row%, col%, 1) AND 15 ' store initial foreground color
-    orig_bg%     = SCREEN(row%, col%, 1) \ 16   ' store initial background color
-    cols_drawn%  = 0                            ' init columns drawn
+    ' Get lower and upper bounds of options array
+    lb% = LBOUND(options$) : ub% = UBOUND(options$)
+
+    ' Capture initial state for cursor and colors
+    row%     = CSRLIN : col% = POS(0)       ' Store initial cursor position
+    orig_fg% = SCREEN(row%, col%, 1) AND 15 ' Store initial foreground color
+    orig_bg% = SCREEN(row%, col%, 1) \ 16   ' Store initial background color
+    cur_row% = row% : cur_col% = col%       ' Init current row and current col
+    w%       = menu.max_width%              ' Get the max width for horiz menu
+    DIM o(lb% TO ub%) AS LIGHTBAR_OPTION
 
     LIGHTBAR_get_options:
-        DIM opt(lb% TO ub%) AS LIGHTBAR_OPTION
         FOR i% = lb% to ub%
             ' Extract hot key start and end positions
             key_pos_s% = INSTR(0, options$(i%), menu.delimeter$)
             key_pos_e% = INSTR(key_pos_s%, options$(i%), menu.delimeter$)
 
-            ' Extract left and right part of option without hotkey or delimeter
-            opt(i%).opt_left$  = MID$(options$(i%), 0, key_pos_s%)
-            opt(i%).opt_right$ = MID$(options$(i%), key_pos_s% + 3)
+            ' Extract left and right part of option without key or delimeter
+            o(i%).lft$ = MID$(options$(i%), 0, key_pos_s%)
+            o(i%).rgt$ = MID$(options$(i%), key_pos_s% + 3)
 
             ' Capture hot key into arrays
-            opt(i%).opt_key$ = MID$(options$(i%), key_pos_s% + 1, 1)
-
+            o(i%).key$ = MID$(options$(i%), key_pos_s% + 1, 1)
 
             ' Capture visible option length
-            o$ = opt(i%).opt_left$ + opt(i%).opt_key$ + opt(i%).opt_right$
-
-            opt(i%).opt_len% = LEN(o$)
+            o(i%).len% = LEN(o(i%).lft$ + o(i%).key$ + o(i%).rgt$)
 
             ' Check if option is selected
-            opt(i%).is_selected% = 0
-            IF i% = menu.opt_selected% THEN
-                sel% = i%
-                opt(i%).is_selected% = 1
-            END IF
+            o(i%).sel% = 0
+            IF i% = menu.opt_selected% THEN sel% = i% : o(i%).sel% = 1
 
             ' Calculate row and col positions for option
-            IF menu.opt_vertical% = 1 THEN
-                opt(i%).row% = row% + i%
-                opt(i%).col% = col%
-            ELSE
-                opt(i%).row% = row%
-                cols_drawn%  = cols_drawn% + opt(i%).opt_len%
-                opt(i%).col% = cols_drawn% - opt(i%).opt_len%
+            IF menu.opt_vertical% = 1 THEN ' Vertical
+                o(i%).row% = row% + i% ' In vert LIGHTBAR menu, 1 opt per row
+                o(i%).col% = col%      ' In vert LIGHTBAR menu, column is same
+            ELSE ' Horizontal
+                IF cur_col% + o(i%).len% >= w% THEN ' Option WILL wrap
+                    o(i%).col%   = col%              ' Reset col to init col
+                    cur_col% = col% + o(i%).len%     ' Reset cur_col counter
+                    cur_row% = cur_row% + 1          ' Increment cur_row
+                    o(i%).row%   = cur_row%          ' Set row to cur_row
+                ELSE ' Option will NOT wrap
+                    o(i%).col%   = cur_col%          ' Set col to current col
+                    o(i%).row%   = cur_row%          ' Set row to current row
+                    cur_col% = cur_col% + o(i%).len% ' Increment current col
+                END IF
             END IF
+            LOCATE cur_row%, cur_col%
         NEXT i%
 
     LIGHTBAR_draw:
-        FOR j% = lb% TO ub% ' Walk the array of menu options
-            safe_locate opt(j%).row%, opt(j%).col%
-            IF j% = sel% THEN ' selected colors
+        FOR i% = lb% TO ub% ' Walk the array of menu options
+            LOCATE o(i%).row%, o(i%).col% ' Position the option
+            IF i% = sel% THEN ' Selected colors
                 fg% = menu.bar_fg_color% : bg% = menu.bar_bg_color%
                 kf% = menu.bar_kf_color% : kb% = menu.bar_kb_color%
-            ELSE ' unselected colors
+            ELSE ' Unselected colors
                 fg% = menu.opt_fg_color% : bg% = menu.opt_bg_color%
                 kf% = menu.key_fg_color% : kb% = menu.key_bg_color%
             END IF
-            COLOR fg%, bg% : PRINT opt(j%).opt_left$; ' draw opt left
-            COLOR kf%, kb% : PRINT opt(j%).opt_key$;  ' draw opt hot key
-            COLOR fg%, bg% : PRINT opt(j%).opt_right$ ' draw opt right
-        NEXT j%
+            ' Draw the option
+            COLOR fg%, bg% : PRINT o(i%).lft$; ' Draw opt left
+            COLOR kf%, kb% : PRINT o(i%).key$; ' Draw opt hot key
+            COLOR fg%, bg% : PRINT o(i%).rgt$; ' Draw opt right
+        NEXT i%
 
     ' Wait for the user to choose an option
     LIGHTBAR_get_choice:
@@ -223,9 +231,9 @@ FUNCTION LIGHTBAR%(menu AS LIGHTBAR, options$())
             _LIMIT 30
             k$ = INKEY$
             IF k$ <> "" THEN
-                IF LEFT$(k$, 1) = CHR$(0) THEN ' handle SPECIAL keys
-                    ks% = ASC(RIGHT$(k$, 1)) ' get the char code minus the CHR$(0)
-                    SELECT CASE ks%
+                IF LEFT$(k$, 1) = CHR$(0) THEN ' Handle SPECIAL keys
+                    key_code% = ASC(RIGHT$(k$, 1)) ' Get char code sans CHR$(0)
+                    SELECT CASE key_code%
                         CASE KEY_HOME:
                             sel% = lb%
                             GOTO LIGHTBAR_draw
@@ -243,10 +251,10 @@ FUNCTION LIGHTBAR%(menu AS LIGHTBAR, options$())
                     END SELECT
                 END IF
 
-                FOR i% = lb% TO ub% ' handle option hot keys
-                    IF LCASE$(k$) = LCASE$(opt(i%).opt_key$) THEN
+                FOR i% = lb% TO ub% ' Handle option hot keys
+                    IF LCASE$(k$) = LCASE$(o(i%).key$) THEN
                         sel% = i%
-                        choice_made% = 1
+                        chose% = 1
                         GOTO LIGHTBAR_draw
                     END IF
                 NEXT i%
@@ -256,52 +264,17 @@ FUNCTION LIGHTBAR%(menu AS LIGHTBAR, options$())
                 END IF
 
             END IF
-        LOOP UNTIL k$ = CHR$(KEY_ENTER) OR k$ = CHR$(KEY_ESC) OR choice_made% = 1
+        LOOP UNTIL k$ = CHR$(KEY_ENTER) OR k$ = CHR$(KEY_ESC) OR chose% = 1
 
-    ' User chose option or aborted with ESC
-    COLOR orig_fg%, orig_bg% ' restore original colors
+    ' Restore original colors
+    COLOR orig_fg%, orig_bg% 
 
-     ' position cursor under menu
+    ' Position cursor under menu
     IF menu.opt_vertical = 1 THEN
-        LOCATE row% + (ub% - lb%) + 1, col% ' if vertical
+        LOCATE row% + (ub% - lb%) + 1, col% ' Vertical
     ELSE
-        LOCATE opt(ub%).row% + 1, col% ' if not vertical
+        LOCATE o(ub%).row% + 1, col% ' Horizontal
     END IF
 
     LIGHTBAR% = sel%
-END FUNCTION
-
-
-''
-' Safely locates within boundaries
-' @param INTEGER row%
-' @param INTEGER col%
-' 
-SUB safe_locate(row%, col%)
-    IF col% > _WIDTH(0) THEN
-        row% = row% + (col% \ _WIDTH(0))
-        col% = col% MOD _WIDTH(0)
-    END IF
-    LOCATE clamp_int(row%, 1, _HEIGHT(0)), clamp_int(col%, 1, _WIDTH(0))
-END SUB
-
-
-''
-' Clamps a value between a minimum and a maximum
-' Clamp = do not be less than min, or more than max.
-' @param INTEGER var% to clamp
-' @param INTEGER min% minimum value allowed
-' @param INTEGER max% maximum value allowed
-' @return INTEGER clamped value between min and max range
-'
-FUNCTION clamp_int%(var%, min%, max%)
-    DIM r AS INTEGER
-    IF (var%) < min% THEN 
-        r% = min%
-    ELSEIF (var%) > max% THEN 
-        r% = max%
-    ELSE
-        r% = var%
-    END IF
-    clamp_int = r%
 END FUNCTION
