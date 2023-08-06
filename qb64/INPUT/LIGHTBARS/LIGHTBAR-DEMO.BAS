@@ -12,33 +12,33 @@
 OPTION _EXPLICIT
 _TITLE "LIGHTBAR Menu Routine DEMO"
 
-SCREEN 0        ' this uses SCREEN 0 (text mode)
-_BLINK OFF      ' allow high intensity background colors > 7
-_CONTROLCHR OFF ' allow printing of any characters including control chars
+SCREEN 0        ' This uses SCREEN 0 (text mode)
+_BLINK OFF      ' Allow high intensity background colors > 7
+_CONTROLCHR OFF ' Allow printing of any characters including control chars
 
 ' LIGHTBAR configuration UDT
-TYPE LIGHTBAR ' bg|b = background, fg|f = foreground, k = key
-    opt_bg_color AS INTEGER ' unselected background color
-    opt_fg_color AS INTEGER ' unselected foreground color
-    bar_bg_color AS INTEGER ' selected background color
-    bar_fg_color AS INTEGER ' selected foreground color
-    bar_kf_color AS INTEGER ' selected hot key foreground color
-    bar_kb_color AS INTEGER ' selected hot key background color
-    key_bg_color AS INTEGER ' unselected hot key background color
-    key_fg_color AS INTEGER ' unselected hot key foreground color
-    opt_selected AS INTEGER ' selected option index
+TYPE LIGHTBAR
+    opt_bg_color AS INTEGER ' Unselected background color
+    opt_fg_color AS INTEGER ' Unselected foreground color
+    bar_bg_color AS INTEGER ' Selected background color
+    bar_fg_color AS INTEGER ' Selected foreground color
+    bar_kf_color AS INTEGER ' Selected hot key foreground color
+    bar_kb_color AS INTEGER ' Selected hot key background color
+    key_bg_color AS INTEGER ' Unselected hot key background color
+    key_fg_color AS INTEGER ' Unselected hot key foreground color
+    opt_selected AS INTEGER ' Selected option index
     opt_vertical AS INTEGER ' 1 = true (then vertical) 0 = false (then horiz)
-    max_width    AS INTEGER ' maximum width for horizontal options
+    max_width    AS INTEGER ' Maximum width for horizontal options
     delimeter    AS STRING  ' Single character used to surround hot key
 END TYPE
 
 DIM menu AS LIGHTBAR    ' Create a LIGHTBAR menu
 DIM opts(13) AS STRING  ' Our menu will contain 6 options (0 indexed array)
 
-DIM choice AS INTEGER   ' This variable will contain the choice the user made
-' using either the hot key directly, or by using the
-' home, end, or arrow keys to select with ENTER.
-' This variable will be -1 if the user hit ESC to abort.
+' choice variable will contain the choice the user made using either the 
+' hot key directly, or by using the home, end, or arrow keys to select 
+' and confirm with ENTER. This var  will be -1 if the user hit ESC to abort.
+DIM choice AS INTEGER   
 
 ' Configure the LIGHTBAR menu
 menu.opt_bg_color% = 0  : menu.opt_fg_color% = 12 ' Unselected option colors
@@ -46,12 +46,10 @@ menu.bar_bg_color% = 3  : menu.bar_fg_color% = 11 ' Selected option colors
 menu.bar_kf_color% = 14 : menu.bar_kb_color% = 11 ' Selected hot key colors
 menu.key_bg_color% = 0  : menu.key_fg_color% = 14 ' Unselected hot key colors
 ' Select the first option by default
-menu.opt_selected% = 7
+menu.opt_selected% = 0
 ' Use vertical orientation (new lines after each option)
 menu.opt_vertical% = 1
-' Use vertical orientation (new lines after each option)
-menu.opt_vertical = 0
-' Delimiter can be any single character but must be same char on both sides
+' Delimiter can be any single char but must be same char on both sides of key
 ' OK: "|F|oo", Not OK: "[F]oo"
 menu.delimeter$ = "|" 
 ' Set max width to screen width
@@ -106,6 +104,7 @@ COLOR 9, 0 : PRINT " PRESS ARROWS & HOME/END to choose..."
 COLOR 9, 0 : PRINT " PRESS ENTER or HOT KEY to PICK..."
 COLOR 9, 0 : PRINT " PRESS ESC to abort!"
 PRINT
+
 ' Draw the LIGHTBAR menu, and store the result chosen in choice%
 choice% = LIGHTBAR%(menu, opts$())
 
