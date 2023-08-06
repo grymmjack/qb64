@@ -1,5 +1,5 @@
 ''
-' LIGHTBAR Menu
+' LIGHTBAR32 Menu
 '
 ' Creating lightbar driven menus using arrow keys to choose, enter to select, 
 ' and making it reusable and modular.
@@ -12,7 +12,6 @@
 OPTION _EXPLICIT
 _TITLE "LIGHTBAR32 Menu Routine DEMO"
 
-'SCREEN 0       ' This uses SCREEN 0 (text mode)
 DIM CANVAS AS LONG
 CANVAS& = _NEWIMAGE(132 * 8, 50*16, 32)
 SCREEN CANVAS&
@@ -218,6 +217,7 @@ FUNCTION LIGHTBAR32%(menu AS LIGHTBAR32, opt$(), o() AS LIGHTBAR_OPTION)
 
     LIGHTBAR32% = sel%
 END FUNCTION
+
 
 ''
 ' Get LIGHTBAR32 options as an array

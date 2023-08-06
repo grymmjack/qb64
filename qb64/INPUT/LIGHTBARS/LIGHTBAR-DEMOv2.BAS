@@ -197,6 +197,7 @@ FUNCTION LIGHTBAR%(menu AS LIGHTBAR, opt$(), o() AS LIGHTBAR_OPTION)
     LIGHTBAR% = sel%
 END FUNCTION
 
+
 ''
 ' Get LIGHTBAR options as an array
 ' @param LIGHTBAR menu
