@@ -10,29 +10,51 @@
 ' @author Rick Christy <grymmjack@gmail.com>
 '
 OPTION _EXPLICIT
-_TITLE "LIGHTBAR Menu Routine DEMO"
+_TITLE "LIGHTBAR32 Menu Routine DEMO"
 
-SCREEN 0        ' This uses SCREEN 0 (text mode)
+'SCREEN 0       ' This uses SCREEN 0 (text mode)
+DIM CANVAS AS LONG
+CANVAS& = _NEWIMAGE(132 * 8, 50*16, 32)
+SCREEN CANVAS&
+
+DIM SHARED EGA(0 TO 15) AS _UNSIGNED LONG
+EGA(0)  = _RGB32(&H00, &H00, &H00)
+EGA(1)  = _RGB32(&H00, &H00, &HAA)
+EGA(2)  = _RGB32(&H00, &HAA, &H00)
+EGA(3)  = _RGB32(&H00, &HAA, &HAA)
+EGA(4)  = _RGB32(&HAA, &H00, &H00)
+EGA(5)  = _RGB32(&HAA, &H00, &HAA)
+EGA(6)  = _RGB32(&HAA, &H55, &H00)
+EGA(7)  = _RGB32(&HAA, &HAA, &HAA)
+EGA(8)  = _RGB32(&H55, &H55, &H55)
+EGA(9)  = _RGB32(&H55, &H55, &HFF)
+EGA(10) = _RGB32(&H55, &HFF, &H55)
+EGA(11) = _RGB32(&H55, &HFF, &HFF)
+EGA(12) = _RGB32(&HFF, &H55, &H55)
+EGA(13) = _RGB32(&HFF, &H55, &HFF)
+EGA(14) = _RGB32(&HFF, &HFF, &H55)
+EGA(15) = _RGB32(&HFF, &HFF, &HFF)
+
 _BLINK OFF      ' Allow high intensity background colors > 7
 _CONTROLCHR OFF ' Allow printing of any characters including control chars
 
-' LIGHTBAR configuration UDT
-TYPE LIGHTBAR
-    opt_bg_color AS INTEGER ' Unselected background color
-    opt_fg_color AS INTEGER ' Unselected foreground color
-    bar_bg_color AS INTEGER ' Selected background color
-    bar_fg_color AS INTEGER ' Selected foreground color
-    bar_kf_color AS INTEGER ' Selected hot key foreground color
-    bar_kb_color AS INTEGER ' Selected hot key background color
-    key_bg_color AS INTEGER ' Unselected hot key background color
-    key_fg_color AS INTEGER ' Unselected hot key foreground color
-    opt_selected AS INTEGER ' Selected option index
-    opt_vertical AS INTEGER ' 1 = true (then vertical) 0 = false (then horiz)
-    max_width    AS INTEGER ' Maximum width for horizontal options
-    delimeter    AS STRING  ' Single character used to surround hot key
+' LIGHTBAR32 configuration UDT
+TYPE LIGHTBAR32
+    opt_bg_color AS _UNSIGNED LONG    ' Unselected background color
+    opt_fg_color AS _UNSIGNED LONG    ' Unselected foreground color
+    bar_bg_color AS _UNSIGNED LONG    ' Selected background color
+    bar_fg_color AS _UNSIGNED LONG    ' Selected foreground color
+    bar_kf_color AS _UNSIGNED LONG    ' Selected hot key foreground color
+    bar_kb_color AS _UNSIGNED LONG    ' Selected hot key background color
+    key_bg_color AS _UNSIGNED LONG    ' Unselected hot key background color
+    key_fg_color AS _UNSIGNED LONG    ' Unselected hot key foreground color
+    opt_selected AS INTEGER           ' Selected option index
+    opt_vertical AS INTEGER           ' 1 = true (then vertical) 0 = false (then horiz)
+    max_width    AS INTEGER           ' Maximum width for horizontal options
+    delimeter    AS STRING            ' Single character used to surround hot key
 END TYPE
 
-DIM menu AS LIGHTBAR    ' Create a LIGHTBAR menu
+DIM menu AS LIGHTBAR32    ' Create a LIGHTBAR32 menu
 DIM opts(13) AS STRING  ' Our menu will contain 6 options (0 indexed array)
 
 ' choice variable will contain the choice the user made using either the 
@@ -40,11 +62,11 @@ DIM opts(13) AS STRING  ' Our menu will contain 6 options (0 indexed array)
 ' and confirm with ENTER. This var  will be -1 if the user hit ESC to abort.
 DIM choice AS INTEGER   
 
-' Configure the LIGHTBAR menu
-menu.opt_bg_color% = 0  : menu.opt_fg_color% = 12 ' Unselected option colors
-menu.bar_bg_color% = 3  : menu.bar_fg_color% = 11 ' Selected option colors
-menu.bar_kf_color% = 14 : menu.bar_kb_color% = 3  ' Selected hot key colors
-menu.key_bg_color% = 0  : menu.key_fg_color% = 14 ' Unselected hot key colors
+' Configure the LIGHTBAR32 menu
+menu.opt_bg_color~& = EGA(0)  : menu.opt_fg_color~& = EGA(12) ' Unselected option colors
+menu.bar_bg_color~& = EGA(3)  : menu.bar_fg_color~& = EGA(11) ' Selected option colors
+menu.bar_kf_color~& = EGA(14) : menu.bar_kb_color~& = EGA(3)  ' Selected hot key colors
+menu.key_bg_color~& = EGA(0)  : menu.key_fg_color~& = EGA(14) ' Unselected hot key colors
 ' Select the first option by default
 menu.opt_selected% = 0
 ' Use vertical orientation (new lines after each option)
@@ -55,9 +77,9 @@ menu.delimeter$ = "|"
 ' Set max width to screen width
 menu.max_width% = _WIDTH(0)
 
-' Populate the LIGHTBAR options - NOTE: Vertical options are padded with spaces
+' Populate the LIGHTBAR32 options - NOTE: Vertical options are padded with spaces
 ' If you want longer bars, add more spaces or characters that bar is made of
-IF menu.opt_vertical% = 1 THEN ' Vertical LIGHTBAR menu
+IF menu.opt_vertical% = 1 THEN ' Vertical LIGHTBAR32 menu
     opts$(0)  = " |P|izza                   " ' | = delimeter, so |P| for Pizza
     opts$(1)  = " |R|ibs                    " ' Notice that Ribs, ...
     opts$(2)  = " |H|ot Wings               " ' Hot Wings, ...
@@ -74,8 +96,8 @@ IF menu.opt_vertical% = 1 THEN ' Vertical LIGHTBAR menu
     opts$(13) = " |Q|uit " ' However, each can have diff bar length like this.
 END IF
 
-' Populate the LIGHTBAR options - NOTE: Horizontal options aren't padded.
-IF menu.opt_vertical% = 0 THEN ' Horizontal LIGHTBAR menu
+' Populate the LIGHTBAR32 options - NOTE: Horizontal options aren't padded.
+IF menu.opt_vertical% = 0 THEN ' Horizontal LIGHTBAR32 menu
     opts$(0)  = " |P|izza "
     opts$(1)  = " |R|ibs "
     opts$(2)  = " |H|ot Wings "
@@ -92,56 +114,56 @@ IF menu.opt_vertical% = 0 THEN ' Horizontal LIGHTBAR menu
     opts$(13) = " |Q|uit "
 END IF
 
-' Draw some basic goofy screen under which we will have a LIGHTBAR menu
-COLOR 12, 0: PRINT "----------------------------------------"
-COLOR 7, 0 : PRINT " Welcome to"; 
-COLOR 12, 0: PRINT " ANTONIOS"; : COLOR 10, 0: PRINT " PIZZERIA!"
-COLOR 7, 0 : PRINT " Pick your favorite food from our menu!"
-COLOR 14, 0: PRINT "----------------------------------------"
-COLOR 2, 0 : PRINT " ..if you're not hungry press ESCAPE.. "
-COLOR 12, 0: PRINT "----------------------------------------"
-COLOR 9, 0 : PRINT " PRESS ARROWS & HOME/END to choose..."
-COLOR 9, 0 : PRINT " PRESS ENTER or HOT KEY to PICK..."
-COLOR 9, 0 : PRINT " PRESS ESC to abort!"
+' Draw some basic goofy screen under which we will have a LIGHTBAR32 menu
+COLOR EGA(12), EGA(0) : PRINT "----------------------------------------"
+COLOR EGA(7),  EGA(0) : PRINT " Welcome to"; 
+COLOR EGA(12), EGA(0) : PRINT " ANTONIOS"; : COLOR EGA(10), EGA(0): PRINT " PIZZERIA!"
+COLOR EGA(7),  EGA(0) : PRINT " Pick your favorite food from our menu!"
+COLOR EGA(14), EGA(0) : PRINT "----------------------------------------"
+COLOR EGA(2),  EGA(0) : PRINT " ..if you're not hungry press ESCAPE.. "
+COLOR EGA(12), EGA(0) : PRINT "----------------------------------------"
+COLOR EGA(9),  EGA(0) : PRINT " PRESS ARROWS & HOME/END to choose..."
+COLOR EGA(9),  EGA(0) : PRINT " PRESS ENTER or HOT KEY to PICK..."
+COLOR EGA(9),  EGA(0) : PRINT " PRESS ESC to abort!"
 PRINT
 
-' Draw the LIGHTBAR menu, and store the result chosen in choice%
-choice% = LIGHTBAR%(menu, opts$())
+' Draw the LIGHTBAR32 menu, and store the result chosen in choice%
+choice% = LIGHTBAR32%(menu, opts$())
 
 ' If user did not press ESC to abort show which option they chose.
 IF choice% <> -1 THEN
     PRINT
-    COLOR 11, 0 : PRINT "You chose option ";
-    COLOR 14, 0 : PRINT UCASE$(_TRIM$(STR$(choice%)));
-    COLOR 11, 0 : PRINT ": ";
-    COLOR 12, 0 : PRINT _TRIM$(opts$(choice%))
+    COLOR EGA(11), EGA(0) : PRINT "You chose option ";
+    COLOR EGA(14), EGA(0) : PRINT UCASE$(_TRIM$(STR$(choice%)));
+    COLOR EGA(11), EGA(0) : PRINT ": ";
+    COLOR EGA(12), EGA(0) : PRINT _TRIM$(opts$(choice%))
     IF choice% = 0 THEN
-        COLOR 10, 0 : PRINT "An excellent choice! It is also my favorite!"
+        COLOR EGA(10), EGA(0) : PRINT "An excellent choice! It is also my favorite!"
     END IF
 ' User pressed ESC to abort, so show something else
 ELSE
     PRINT
-    COLOR 3, 0 : PRINT "Not hungry eh? OK you come back later!"
+    COLOR EGA(3), EGA(0) : PRINT "Not hungry eh? OK you come back later!"
 END IF
 PRINT
-COLOR 12, 0 : PRINT "Thank you! Come again!"
+COLOR EGA(12), EGA(0) : PRINT "Thank you! Come again!"
 
 
 
 ''
-' Render a LIGHTBAR menu using options$
-' @param LIGHTBAR menu UDT
+' Render a LIGHTBAR32 menu using options$
+' @param LIGHTBAR32 menu UDT
 ' @param string array of menu options
 ' @return integer choice made (-1 if abort with ESC)
 '
-FUNCTION LIGHTBAR%(menu AS LIGHTBAR, options$())
+FUNCTION LIGHTBAR32%(menu AS LIGHTBAR32, options$())
     DIM AS STRING k
     DIM AS INTEGER key_pos_s, key_pos_e, key_code
-    DIM AS INTEGER orig_bg, orig_fg, fg, bg, kf, kb
+    DIM AS _UNSIGNED LONG orig_bg, orig_fg, fg, bg, kf, kb
     DIM AS INTEGER row, col, cur_row, cur_col, lb, ub, sel, chose, w, i
 
     ' UDT for option data
-    TYPE LIGHTBAR_OPTION
+    TYPE LIGHTBAR32_OPTION
         row AS INTEGER ' Option row
         col AS INTEGER ' Option column
         lft AS STRING  ' Option left side text
@@ -162,14 +184,14 @@ FUNCTION LIGHTBAR%(menu AS LIGHTBAR, options$())
     lb% = LBOUND(options$) : ub% = UBOUND(options$)
 
     ' Capture initial state for cursor and colors
-    row%     = CSRLIN : col% = POS(0)       ' Store initial cursor position
-    orig_fg% = SCREEN(row%, col%, 1) AND 15 ' Store initial foreground color
-    orig_bg% = SCREEN(row%, col%, 1) \ 16   ' Store initial background color
-    cur_row% = row% : cur_col% = col%       ' Init current row and current col
-    w%       = menu.max_width%              ' Get the max width for horiz menu
-    DIM o(lb% TO ub%) AS LIGHTBAR_OPTION
+    row%      = CSRLIN : col% = POS(0)       ' Store initial cursor position
+    orig_fg~& = EGA(7) ' Store initial foreground color
+    orig_bg~& = EGA(0) ' Store initial background color
+    cur_row%  = row% : cur_col% = col%       ' Init current row and current col
+    w%        = menu.max_width%              ' Get the max width for horiz menu
+    DIM o(lb% TO ub%) AS LIGHTBAR32_OPTION
 
-    LIGHTBAR_get_options:
+    LIGHTBAR32_get_options:
         FOR i% = lb% to ub%
             ' Extract hot key start and end positions
             key_pos_s% = INSTR(0, options$(i%), menu.delimeter$)
@@ -191,8 +213,8 @@ FUNCTION LIGHTBAR%(menu AS LIGHTBAR, options$())
 
             ' Calculate row and col positions for option
             IF menu.opt_vertical% = 1 THEN ' Vertical
-                o(i%).row% = row% + i% ' In vert LIGHTBAR menu, 1 opt per row
-                o(i%).col% = col%      ' In vert LIGHTBAR menu, column is same
+                o(i%).row% = row% + i% ' In vert LIGHTBAR32 menu, 1 opt per row
+                o(i%).col% = col%      ' In vert LIGHTBAR32 menu, column is same
             ELSE ' Horizontal
                 IF cur_col% + o(i%).len% >= w% THEN ' Option WILL wrap
                     o(i%).col%   = col%              ' Reset col to init col
@@ -208,24 +230,24 @@ FUNCTION LIGHTBAR%(menu AS LIGHTBAR, options$())
             LOCATE cur_row%, cur_col%
         NEXT i%
 
-    LIGHTBAR_draw:
+    LIGHTBAR32_draw:
         FOR i% = lb% TO ub% ' Walk the array of menu options
             LOCATE o(i%).row%, o(i%).col% ' Position the option
             IF i% = sel% THEN ' Selected colors
-                fg% = menu.bar_fg_color% : bg% = menu.bar_bg_color%
-                kf% = menu.bar_kf_color% : kb% = menu.bar_kb_color%
+                fg~& = menu.bar_fg_color~& : bg~& = menu.bar_bg_color~&
+                kf~& = menu.bar_kf_color~& : kb~& = menu.bar_kb_color~&
             ELSE ' Unselected colors
-                fg% = menu.opt_fg_color% : bg% = menu.opt_bg_color%
-                kf% = menu.key_fg_color% : kb% = menu.key_bg_color%
+                fg~& = menu.opt_fg_color~& : bg~& = menu.opt_bg_color~&
+                kf~& = menu.key_fg_color~& : kb~& = menu.key_bg_color~&
             END IF
             ' Draw the option
-            COLOR fg%, bg% : PRINT o(i%).lft$; ' Draw opt left
-            COLOR kf%, kb% : PRINT o(i%).key$; ' Draw opt hot key
-            COLOR fg%, bg% : PRINT o(i%).rgt$; ' Draw opt right
+            COLOR fg~&, bg~& : PRINT o(i%).lft$; ' Draw opt left
+            COLOR kf~&, kb~& : PRINT o(i%).key$; ' Draw opt hot key
+            COLOR fg~&, bg~& : PRINT o(i%).rgt$; ' Draw opt right
         NEXT i%
 
     ' Wait for the user to choose an option
-    LIGHTBAR_get_choice:
+    LIGHTBAR32_get_choice:
         DO:
             _LIMIT 30
             k$ = INKEY$
@@ -235,18 +257,18 @@ FUNCTION LIGHTBAR%(menu AS LIGHTBAR, options$())
                     SELECT CASE key_code%
                         CASE KEY_HOME:
                             sel% = lb%
-                            GOTO LIGHTBAR_draw
+                            GOTO LIGHTBAR32_draw
                         CASE KEY_END:
                             sel% = ub%
-                            GOTO LIGHTBAR_draw
+                            GOTO LIGHTBAR32_draw
                         CASE KEY_DOWN, KEY_RIGHT:
                             sel% = sel% + 1
                             IF sel% > ub% THEN sel% = lb%
-                            GOTO LIGHTBAR_draw
+                            GOTO LIGHTBAR32_draw
                         CASE KEY_UP, KEY_LEFT:
                             sel% = sel% - 1
                             IF sel% < lb% THEN sel% = ub%
-                            GOTO LIGHTBAR_draw
+                            GOTO LIGHTBAR32_draw
                     END SELECT
                 END IF
 
@@ -254,7 +276,7 @@ FUNCTION LIGHTBAR%(menu AS LIGHTBAR, options$())
                     IF LCASE$(k$) = LCASE$(o(i%).key$) THEN
                         sel% = i%
                         chose% = 1
-                        GOTO LIGHTBAR_draw
+                        GOTO LIGHTBAR32_draw
                     END IF
                 NEXT i%
 
@@ -266,7 +288,7 @@ FUNCTION LIGHTBAR%(menu AS LIGHTBAR, options$())
         LOOP UNTIL k$ = CHR$(KEY_ENTER) OR k$ = CHR$(KEY_ESC) OR chose% = 1
 
     ' Restore original colors
-    COLOR orig_fg%, orig_bg% 
+    COLOR orig_fg~&, orig_bg~& 
 
     ' Position cursor under menu
     IF menu.opt_vertical = 1 THEN
@@ -275,5 +297,5 @@ FUNCTION LIGHTBAR%(menu AS LIGHTBAR, options$())
         LOCATE o(ub%).row% + 1, col% ' Horizontal
     END IF
 
-    LIGHTBAR% = sel%
+    LIGHTBAR32% = sel%
 END FUNCTION
