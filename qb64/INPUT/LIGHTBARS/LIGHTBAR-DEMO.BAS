@@ -30,6 +30,14 @@ TYPE LIGHTBAR
     opt_vertical AS INTEGER ' 1 = true (then vertical) 0 = false (then horiz)
     max_width    AS INTEGER ' Maximum width for horizontal options
     delimeter    AS STRING  ' Single character used to surround hot key
+    use_sounds   AS INTEGER ' 1 = true (use sounds) 0 = false (no sounds)
+    snd_move_frq AS SINGLE  ' Frequency for SOUND movement
+    snd_move_dur AS SINGLE  ' Duration for SOUND movement
+    snd_move_vol AS SINGLE  ' Volume for SOUND movement
+    snd_pick_frq AS SINGLE  ' Frequency for SOUND pick
+    snd_pick_dur AS SINGLE  ' Duration for SOUND pick
+    snd_pick_vol AS SINGLE  ' Volume for SOUND pick
+
 END TYPE
 
 DIM menu AS LIGHTBAR    ' Create a LIGHTBAR menu
@@ -48,12 +56,20 @@ menu.key_bg_color% = 0  : menu.key_fg_color% = 14 ' Unselected hot key colors
 ' Select the first option by default
 menu.opt_selected% = 0
 ' Use vertical orientation (new lines after each option)
-menu.opt_vertical% = 1
+menu.opt_vertical% = 0
 ' Delimiter can be any single char but must be same char on both sides of key
 ' OK: "|F|oo", Not OK: "[F]oo"
 menu.delimeter$ = "|" 
 ' Set max width to screen width
 menu.max_width% = _WIDTH(0)
+' Setup sounds
+menu.use_sounds% = 1
+menu.snd_move_frq! = 200
+menu.snd_move_dur! = 0.2
+menu.snd_move_vol! = 1.0
+menu.snd_pick_frq! = 100
+menu.snd_pick_dur! = 1
+menu.snd_pick_vol! = 1.0
 
 ' Populate the LIGHTBAR options - NOTE: Vertical options are padded with spaces
 ' If you want longer bars, add more spaces or characters that bar is made of
@@ -205,7 +221,6 @@ FUNCTION LIGHTBAR%(menu AS LIGHTBAR, options$())
                     cur_col% = cur_col% + o(i%).len% ' Increment current col
                 END IF
             END IF
-            LOCATE cur_row%, cur_col%
         NEXT i%
 
     LIGHTBAR_draw:
@@ -235,17 +250,21 @@ FUNCTION LIGHTBAR%(menu AS LIGHTBAR, options$())
                     SELECT CASE key_code%
                         CASE KEY_HOME:
                             sel% = lb%
+                            GOSUB LIGHTBAR_sound_move
                             GOTO LIGHTBAR_draw
                         CASE KEY_END:
                             sel% = ub%
+                            GOSUB LIGHTBAR_sound_move
                             GOTO LIGHTBAR_draw
                         CASE KEY_DOWN, KEY_RIGHT:
                             sel% = sel% + 1
                             IF sel% > ub% THEN sel% = lb%
+                            GOSUB LIGHTBAR_sound_move
                             GOTO LIGHTBAR_draw
                         CASE KEY_UP, KEY_LEFT:
                             sel% = sel% - 1
                             IF sel% < lb% THEN sel% = ub%
+                            GOSUB LIGHTBAR_sound_move
                             GOTO LIGHTBAR_draw
                     END SELECT
                 END IF
@@ -254,6 +273,7 @@ FUNCTION LIGHTBAR%(menu AS LIGHTBAR, options$())
                     IF LCASE$(k$) = LCASE$(o(i%).key$) THEN
                         sel% = i%
                         chose% = 1
+                        GOSUB LIGHTBAR_sound_pick
                         GOTO LIGHTBAR_draw
                     END IF
                 NEXT i%
@@ -275,5 +295,19 @@ FUNCTION LIGHTBAR%(menu AS LIGHTBAR, options$())
         LOCATE o(ub%).row% + 1, col% ' Horizontal
     END IF
 
+    GOSUB LIGHTBAR_sound_pick
     LIGHTBAR% = sel%
+    EXIT FUNCTION
+
+    LIGHTBAR_sound_move:
+        IF menu.use_sounds% = 1 THEN
+            SOUND menu.snd_move_frq!, menu.snd_move_dur!, menu.snd_move_vol!
+        END IF
+        RETURN
+    LIGHTBAR_sound_pick:
+        IF menu.use_sounds% = 1 THEN
+            SOUND menu.snd_pick_frq!, menu.snd_pick_dur!, menu.snd_pick_vol!
+        END IF
+        RETURN
+
 END FUNCTION

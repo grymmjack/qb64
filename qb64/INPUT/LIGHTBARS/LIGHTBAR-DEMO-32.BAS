@@ -1,5 +1,5 @@
 ''
-' LIGHTBAR Menu
+' LIGHTBAR32 Menu
 '
 ' Creating lightbar driven menus using arrow keys to choose, enter to select, 
 ' and making it reusable and modular.
@@ -40,18 +40,25 @@ _CONTROLCHR OFF ' Allow printing of any characters including control chars
 
 ' LIGHTBAR32 configuration UDT
 TYPE LIGHTBAR32
-    opt_bg_color AS _UNSIGNED LONG    ' Unselected background color
-    opt_fg_color AS _UNSIGNED LONG    ' Unselected foreground color
-    bar_bg_color AS _UNSIGNED LONG    ' Selected background color
-    bar_fg_color AS _UNSIGNED LONG    ' Selected foreground color
-    bar_kf_color AS _UNSIGNED LONG    ' Selected hot key foreground color
-    bar_kb_color AS _UNSIGNED LONG    ' Selected hot key background color
-    key_bg_color AS _UNSIGNED LONG    ' Unselected hot key background color
-    key_fg_color AS _UNSIGNED LONG    ' Unselected hot key foreground color
-    opt_selected AS INTEGER           ' Selected option index
-    opt_vertical AS INTEGER           ' 1 = true (then vertical) 0 = false (then horiz)
-    max_width    AS INTEGER           ' Maximum width for horizontal options
-    delimeter    AS STRING            ' Single character used to surround hot key
+    opt_bg_color AS _UNSIGNED LONG ' Unselected background color
+    opt_fg_color AS _UNSIGNED LONG ' Unselected foreground color
+    bar_bg_color AS _UNSIGNED LONG ' Selected background color
+    bar_fg_color AS _UNSIGNED LONG ' Selected foreground color
+    bar_kf_color AS _UNSIGNED LONG ' Selected hot key foreground color
+    bar_kb_color AS _UNSIGNED LONG ' Selected hot key background color
+    key_bg_color AS _UNSIGNED LONG ' Unselected hot key background color
+    key_fg_color AS _UNSIGNED LONG ' Unselected hot key foreground color
+    opt_selected AS INTEGER        ' Selected option index
+    opt_vertical AS INTEGER        ' 1 = true (then vertical) 0 = false (then horiz)
+    max_width    AS INTEGER        ' Maximum width for horizontal options
+    delimeter    AS STRING         ' Single character used to surround hot key
+    use_sounds   AS INTEGER        ' 1 = true (use sounds) 0 = false (no sounds)
+    snd_move_frq AS SINGLE         ' Frequency for SOUND movement
+    snd_move_dur AS SINGLE         ' Duration for SOUND movement
+    snd_move_vol AS SINGLE         ' Volume for SOUND movement
+    snd_pick_frq AS SINGLE         ' Frequency for SOUND pick
+    snd_pick_dur AS SINGLE         ' Duration for SOUND pick
+    snd_pick_vol AS SINGLE         ' Volume for SOUND pick
 END TYPE
 
 DIM menu AS LIGHTBAR32    ' Create a LIGHTBAR32 menu
@@ -70,12 +77,20 @@ menu.key_bg_color~& = EGA(0)  : menu.key_fg_color~& = EGA(14) ' Unselected hot k
 ' Select the first option by default
 menu.opt_selected% = 0
 ' Use vertical orientation (new lines after each option)
-menu.opt_vertical% = 1
+menu.opt_vertical% = 0
 ' Delimiter can be any single char but must be same char on both sides of key
 ' OK: "|F|oo", Not OK: "[F]oo"
 menu.delimeter$ = "|" 
 ' Set max width to screen width
 menu.max_width% = _WIDTH(0)
+' Setup sounds
+menu.use_sounds% = 1
+menu.snd_move_frq! = 200
+menu.snd_move_dur! = 0.2
+menu.snd_move_vol! = 1.0
+menu.snd_pick_frq! = 100
+menu.snd_pick_dur! = 1
+menu.snd_pick_vol! = 1.0
 
 ' Populate the LIGHTBAR32 options - NOTE: Vertical options are padded with spaces
 ' If you want longer bars, add more spaces or characters that bar is made of
@@ -216,7 +231,7 @@ FUNCTION LIGHTBAR32%(menu AS LIGHTBAR32, options$())
                 o(i%).row% = row% + i% ' In vert LIGHTBAR32 menu, 1 opt per row
                 o(i%).col% = col%      ' In vert LIGHTBAR32 menu, column is same
             ELSE ' Horizontal
-                IF cur_col% + o(i%).len% >= w% THEN ' Option WILL wrap
+                IF ((cur_col% + o(i%).len%) * _FONTWIDTH) >= w% THEN ' Will wrap
                     o(i%).col%   = col%              ' Reset col to init col
                     cur_col% = col% + o(i%).len%     ' Reset cur_col counter
                     cur_row% = cur_row% + 1          ' Increment cur_row
@@ -227,7 +242,6 @@ FUNCTION LIGHTBAR32%(menu AS LIGHTBAR32, options$())
                     cur_col% = cur_col% + o(i%).len% ' Increment current col
                 END IF
             END IF
-            LOCATE cur_row%, cur_col%
         NEXT i%
 
     LIGHTBAR32_draw:
@@ -257,17 +271,21 @@ FUNCTION LIGHTBAR32%(menu AS LIGHTBAR32, options$())
                     SELECT CASE key_code%
                         CASE KEY_HOME:
                             sel% = lb%
+                            GOSUB LIGHTBAR32_sound_move
                             GOTO LIGHTBAR32_draw
                         CASE KEY_END:
                             sel% = ub%
+                            GOSUB LIGHTBAR32_sound_move
                             GOTO LIGHTBAR32_draw
                         CASE KEY_DOWN, KEY_RIGHT:
                             sel% = sel% + 1
                             IF sel% > ub% THEN sel% = lb%
+                            GOSUB LIGHTBAR32_sound_move
                             GOTO LIGHTBAR32_draw
                         CASE KEY_UP, KEY_LEFT:
                             sel% = sel% - 1
                             IF sel% < lb% THEN sel% = ub%
+                            GOSUB LIGHTBAR32_sound_move
                             GOTO LIGHTBAR32_draw
                     END SELECT
                 END IF
@@ -276,6 +294,7 @@ FUNCTION LIGHTBAR32%(menu AS LIGHTBAR32, options$())
                     IF LCASE$(k$) = LCASE$(o(i%).key$) THEN
                         sel% = i%
                         chose% = 1
+                        GOSUB LIGHTBAR32_sound_pick
                         GOTO LIGHTBAR32_draw
                     END IF
                 NEXT i%
@@ -287,6 +306,7 @@ FUNCTION LIGHTBAR32%(menu AS LIGHTBAR32, options$())
             END IF
         LOOP UNTIL k$ = CHR$(KEY_ENTER) OR k$ = CHR$(KEY_ESC) OR chose% = 1
 
+
     ' Restore original colors
     COLOR orig_fg~&, orig_bg~& 
 
@@ -297,5 +317,19 @@ FUNCTION LIGHTBAR32%(menu AS LIGHTBAR32, options$())
         LOCATE o(ub%).row% + 1, col% ' Horizontal
     END IF
 
+    GOSUB LIGHTBAR32_sound_pick
     LIGHTBAR32% = sel%
+    EXIT FUNCTION
+
+    LIGHTBAR32_sound_move:
+        IF menu.use_sounds% = 1 THEN
+            SOUND menu.snd_move_frq!, menu.snd_move_dur!, menu.snd_move_vol!
+        END IF
+        RETURN
+    LIGHTBAR32_sound_pick:
+        IF menu.use_sounds% = 1 THEN
+            SOUND menu.snd_pick_frq!, menu.snd_pick_dur!, menu.snd_pick_vol!
+        END IF
+        RETURN
+
 END FUNCTION
