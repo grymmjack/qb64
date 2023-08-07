@@ -229,7 +229,7 @@ END FUNCTION
 ' @param INTEGER sel% the selected menu item
 '
 SUB LIGHTBAR32.get_options(menu AS LIGHTBAR32, options$(), o() AS LIGHTBAR_OPTION, row%, col%, sel%)
-    DIM AS INTEGER i, lb, ub, key_pos_s, key_pos_e, key_code
+    DIM AS INTEGER i, lb, ub, key_pos_s, key_pos_e
     DIM AS INTEGER cur_row, cur_col, w
     
     ' Get lower and upper bounds of options array
