@@ -7,13 +7,13 @@ DIM AS INTEGER row, col
 DIM char_stats(4) AS INTEGER
 PRINT "Choose a password 3-8 characters in length."
 PRINT ": ";
-answer1$ = imput$(3, 8, "*", "_", "ENTER PASSWORD")
+answer1$ = imput$(3, 8, 0, "*", "_", "ENTER PASSWORD")
 get_char_stats answer1$, char_stats%()
 print_char_stats answer1$, char_stats%()
 
 PRINT "Enter a random thought..."
 PRINT ": ";
-answer2$ = imput$(0, 77, "", "_", "it can literrally be anything...")
+answer2$ = imput$(0, 77, 1, "", "_", "it can literrally be anything...")
 get_char_stats answer2$, char_stats%()
 print_char_stats answer2$, char_stats%()
 
@@ -22,11 +22,11 @@ PRINT ": ";
 row% = CSRLIN : col% = POS(0)
 PRINT "____________________ ____________________ ____________________";
 LOCATE row%, col%
-word1$ = imput$(0, 20, "", "_", "WORD 1")
+word1$ = imput$(0, 20, 1, "", "_", "WORD 1")
 LOCATE row%, col% + 21
-word2$ = imput$(0, 20, "", "_", "WORD 2")
+word2$ = imput$(0, 20, 1, "", "_", "WORD 2")
 LOCATE row%, col% + 42
-word3$ = imput$(0, 20, "", "_", "WORD 3")
+word3$ = imput$(0, 20, 1, "", "_", "WORD 3")
 words$ = word1$ + " " + word2$ + " " + word3$
 get_char_stats words$, char_stats%()
 print_char_stats words$, char_stats%()
@@ -56,25 +56,31 @@ END SUB
 '
 ' @param INTEGER min% minimum length of input required
 ' @param INTEGER max% maximum length of input allowed
+' @param INTEGER use_default% use placeholder as default value
 ' @param STRING echo_char$ instead of showing keys as typed use char$
 ' @param STRING empty_char$ to use instead of space
 ' @param STRING placeholder$ display string and as soon as key typed, clear it
 ' @return STRING of characters typed
 '
-FUNCTION imput$(min%, max%, echo_char$, empty_char$, placeholder$)
+FUNCTION imput$(min%, max%, use_default%, echo_char$, empty_char$, placeholder$)
     DIM AS STRING k, ret
     DIM AS INTEGER orig_row, orig_col, cur_row, cur_col, done
     orig_row% = CSRLIN : orig_col% = POS(0)
     cur_row% = orig_row% : cur_col% = orig_col%
     IF empty_char$ = "" THEN empty_char$ = " "
 
+    IF max% > 0 THEN ' print max empty_char if placeholder blank
+        imput_draw orig_row%, orig_col%, STRING$(max%, empty_char$)
+    END IF
     IF placeholder$ <> "" THEN ' print placeholder
         imput_draw orig_row%, orig_col%, placeholder$
-    ELSEIF max% > 0 THEN ' print max empty_char if placeholder blank
-        imput_draw orig_row%, orig_col%, STRING$(max%, empty_char$)
     END IF
 
     done% = 0
+    IF use_default% = 1 THEN 
+        ret$ = placeholder$
+        LOCATE orig_row%, orig_col% + LEN(placeholder$), 1
+    END IF
     DO:
         _LIMIT 30
         k$ = INKEY$
@@ -83,7 +89,8 @@ FUNCTION imput$(min%, max%, echo_char$, empty_char$, placeholder$)
                 imput$ = "" : EXIT FUNCTION
             END IF
             IF k$ = CHR$(13) THEN ' finish with enter...
-                IF LEN(ret$) >= min% AND LEN(ret$) <= max% THEN ' and legal...
+                IF use_default% = 1 OR _
+                LEN(ret$) >= min% AND LEN(ret$) <= max% THEN ' and legal...
                     done% = 1
                 ELSE ' not legal because not long enough
                     BEEP
@@ -91,17 +98,13 @@ FUNCTION imput$(min%, max%, echo_char$, empty_char$, placeholder$)
             END IF
             IF k$ = CHR$(24) OR k$ = CHR$(25) THEN ' CTRL-X or CTRL-Y = clear
                 IF LEN(ret$) > 0 THEN
+                    ret$ = "" ' empty the contents of the user input
                     IF max% > 0 THEN ' if max, print empty_char$ * max
                         IF placeholder$ <> "" THEN
                             imput_draw orig_row%, orig_col%, STRING$(LEN(placeholder$), " ")
                         END IF
                         imput_draw orig_row%, orig_col%, STRING$(max%, empty_char$)
                     END IF
-                    IF placeholder$ <> "" THEN ' draw placeholder if needed
-                        imput_draw orig_row%, orig_col%, STRING$(LEN(placeholder$), empty_char$)
-                        imput_draw orig_row%, orig_col%, placeholder$
-                    END IF
-                    ret$ = "" ' empty the contents of the user input
                 END IF
             END IF
             IF k$ = CHR$(8) THEN ' backspace
@@ -116,10 +119,6 @@ FUNCTION imput$(min%, max%, echo_char$, empty_char$, placeholder$)
                             imput_draw orig_row%, orig_col%, STRING$(LEN(placeholder$), " ")
                         END IF
                         imput_draw orig_row%, orig_col%, STRING$(max%, empty_char$)
-                    END IF
-                    IF placeholder$ <> "" THEN ' draw placeholder if needed
-                        imput_draw orig_row%, orig_col%, STRING$(LEN(placeholder$), empty_char$)
-                        imput_draw orig_row%, orig_col%, placeholder$
                     END IF
                 END IF
             END IF
