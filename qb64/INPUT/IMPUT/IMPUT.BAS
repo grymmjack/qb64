@@ -37,41 +37,52 @@ FUNCTION imput$(min%, max%, echo_char$, empty_char$, placeholder$)
     DIM AS INTEGER orig_row, orig_col, cx, cy, done
     orig_row% = CSRLIN : orig_col% = POS(0)
     IF empty_char$ = "" THEN empty_char$ = " "
-    IF min% > 0 OR max% > 0 THEN
+
+    IF placeholder$ <> "" THEN ' print placeholder
+        LOCATE orig_row%, orig_col%
+        PRINT placeholder$;
+        LOCATE orig_row%, orig_col%
+    ELSEIF max% > 0 THEN ' print max empty_char if placeholder blank
         LOCATE orig_row%, orig_col%
         PRINT STRING$(max%, empty_char$);
         LOCATE orig_row%, orig_col%
     END IF
-    IF placeholder$ <> "" THEN 
-        LOCATE orig_row%, orig_col%
-        PRINT placeholder$;
-        LOCATE orig_row%, orig_col%
-    END IF
+
     done% = 0
     DO:
         _LIMIT 30
         k$ = INKEY$
-        IF k$ <> "" THEN
-            IF k$ = CHR$(27) THEN ' abort with esc
-                done% = 2
+        IF k$ <> "" THEN ' valid keypress
+            IF k$ = CHR$(27) THEN ' abort with ESCAPE
+                imput$ = ""
+                EXIT FUNCTION
             END IF
             IF k$ = CHR$(13) THEN ' finish with enter...
                 IF LEN(ret$) >= min% AND LEN(ret$) <= max% THEN ' and legal...
                     done% = 1
-                ELSE
+                ELSE ' not legal because not long enough
                     BEEP
                 END IF
             END IF
             IF k$ = CHR$(24) OR k$ = CHR$(25) THEN ' CTRL-X or CTRL-Y = clear
                 IF LEN(ret$) > 0 THEN
-                    LOCATE orig_row%, orig_col%
-                    PRINT STRING$(LEN(placeholder$), empty_char$);
-                    LOCATE orig_row%, orig_col%
+                    IF max% > 0 THEN ' if max print empty_char$ * max
+                        IF placeholder$ <> "" THEN
+                            LOCATE orig_row%, orig_col%
+                            PRINT STRING$(LEN(placeholder$), " ");
+                            LOCATE orig_row%, orig_col%
+                        END IF
+                        LOCATE orig_row%, orig_col%
+                        PRINT STRING$(max%, empty_char$);
+                        LOCATE orig_row%, orig_col%
+                    END IF
                     IF placeholder$ <> "" THEN
+                        LOCATE orig_row%, orig_col%
+                        PRINT STRING$(LEN(placeholder$), empty_char$);
                         LOCATE orig_row%, orig_col%
                         PRINT placeholder$;
                         LOCATE orig_row%, orig_col%
-                    END IF            
+                    END IF
                     ret$ = ""
                 END IF
             END IF
@@ -81,26 +92,43 @@ FUNCTION imput$(min%, max%, echo_char$, empty_char$, placeholder$)
                     cur_col% = POS(0)
                     LOCATE cur_row%, cur_col% - 1
                     PRINT empty_char$;
-                    LOCATE cy%, cx% - 1
+                    LOCATE cur_row%, cur_col% - 1
                     ret$ = MID$(ret$, 1, LEN(ret$)-1)
-                ELSEIF LEN(ret$) = 0 THEN ' nothing to erase - print placeholder
+                END IF
+                IF LEN(ret$) = 0 THEN ' nothing to erase - print placeholder
+                    IF max% > 0 THEN ' if max print empty_char$ * max
+                        IF placeholder$ <> "" THEN
+                            LOCATE orig_row%, orig_col%
+                            PRINT STRING$(LEN(placeholder$), " ");
+                            LOCATE orig_row%, orig_col%
+                        END IF
+                        LOCATE orig_row%, orig_col%
+                        PRINT STRING$(max%, empty_char$);
+                        LOCATE orig_row%, orig_col%
+                    END IF
                     IF placeholder$ <> "" THEN
+                        LOCATE orig_row%, orig_col%
+                        PRINT STRING$(LEN(placeholder$), empty_char$);
                         LOCATE orig_row%, orig_col%
                         PRINT placeholder$;
                         LOCATE orig_row%, orig_col%
-                    ELSEIF max% > 0 THEN ' if max print empty_char$ * max
-                        LOCATE orig_row%, orig_col%
-                        PRINT STRING$(max%, empty_char$);
                     END IF
                 END IF
             END IF
             IF ASC(k$) >= 32 THEN ' valid printable character
                 IF LEN(ret$) + 1 <= max% THEN ' less than or equal to max
                     IF LEN(ret$) = 0 THEN ' clear placeholder on first key
-                        LOCATE orig_row%, orig_col%
                         IF placeholder$ <> "" THEN
+                            LOCATE orig_row%, orig_col%
                             PRINT STRING$(LEN(placeholder$), empty_char$);
-                        ELSEIF max% > 0 THEN ' if max print empty_char$ * max
+                            LOCATE orig_row%, orig_col%
+                        END IF
+                        IF max% > 0 THEN ' if max print empty_char$ * max
+                            IF placeholder$ <> "" THEN
+                                LOCATE orig_row%, orig_col%
+                                PRINT STRING$(LEN(placeholder$), " ");
+                                LOCATE orig_row%, orig_col%
+                            END IF
                             LOCATE orig_row%, orig_col%
                             PRINT STRING$(max%, empty_char$);
                             LOCATE orig_row%, orig_col%
@@ -117,13 +145,8 @@ FUNCTION imput$(min%, max%, echo_char$, empty_char$, placeholder$)
                 END IF
             END IF
         END IF
-    LOOP UNTIL done% > 0
-    SELECT CASE done%
-        CASE 1:
-            imput$ = ret$
-        CASE 2:
-            imput$ = ""
-    END SELECT
+    LOOP UNTIL done% = 1
+    imput$ = ret$
 END FUNCTION
 
 SUB get_char_stats (st$, char_stats%())
