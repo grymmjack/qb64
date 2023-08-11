@@ -32,6 +32,7 @@ get_char_stats words$, char_stats%()
 print_char_stats words$, char_stats%()
 
 
+
 ''
 ' (imp)roved input draw string routine
 ' Draws from a position, then returns to that same position
@@ -64,6 +65,7 @@ FUNCTION imput$(min%, max%, echo_char$, empty_char$, placeholder$)
     DIM AS STRING k, ret
     DIM AS INTEGER orig_row, orig_col, cur_row, cur_col, done
     orig_row% = CSRLIN : orig_col% = POS(0)
+    cur_row% = orig_row% : cur_col% = orig_col%
     IF empty_char$ = "" THEN empty_char$ = " "
 
     IF placeholder$ <> "" THEN ' print placeholder
