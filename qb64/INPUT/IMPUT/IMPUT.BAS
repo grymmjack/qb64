@@ -11,13 +11,13 @@ answer1$ = imput$(3, 8, 0, "*", "_", "ENTER PASSWORD")
 get_char_stats answer1$, char_stats%()
 print_char_stats answer1$, char_stats%()
 
-PRINT "Enter a random thought..."
+PRINT : PRINT "Enter a random thought..."
 PRINT ": ";
-answer2$ = imput$(0, 77, 1, "", "_", "it can literrally be anything...")
+answer2$ = imput$(0, 77, 1, "", ".", "it can literrally be anything...")
 get_char_stats answer2$, char_stats%()
 print_char_stats answer2$, char_stats%()
 
-PRINT "Now enter 3 different short words"
+PRINT : PRINT "Now enter 3 different short words"
 PRINT ": ";
 row% = CSRLIN : col% = POS(0)
 PRINT "____________________ ____________________ ____________________";
@@ -159,6 +159,7 @@ END FUNCTION
 ' @param INTEGER char_stats%() array to store stats in
 '
 SUB get_char_stats (st$, char_stats%())
+    IF st$ = "" THEN EXIT SUB
     DIM AS INTEGER i, vowels, consonants, digits, symbols, spaces
     DIM AS STRING ch, s
     s$ = UCASE$(st$)
@@ -195,7 +196,8 @@ END SUB
 ' @param INTEGER char_stats%() array stats are in
 '
 SUB print_char_stats(st$, char_stats%())
-    PRINT:PRINT
+    IF st$ = "" THEN EXIT SUB
+    PRINT : PRINT
     PRINT "String: "; st$
     PRINT
     PRINT "--- Statistics ---"
