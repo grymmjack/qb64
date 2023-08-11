@@ -177,7 +177,7 @@ SUB get_char_stats (st$, char_stats%())
             CASE CHR$(32), CHR$(13), CHR$(9):
                 spaces% = spaces% + 1
             CASE ELSE:
-                  symbols% = symbols% + 1
+                symbols% = symbols% + 1
         END SELECT
     NEXT i%
     char_stats%(0) = vowels%
