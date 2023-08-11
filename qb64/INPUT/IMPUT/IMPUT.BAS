@@ -41,7 +41,7 @@ print_char_stats words$, char_stats%()
 ' @param STRING s$ string to draw
 '
 SUB imput_draw(row%, col%, s$)
-    LOCATE row%, col% : PRINT s$; : LOCATE row%, col%
+    LOCATE row%, col%, 1 : PRINT s$; : LOCATE row%, col%, 1
 END SUB
 
 
