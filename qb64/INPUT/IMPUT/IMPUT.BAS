@@ -5,10 +5,11 @@ DIM answer AS STRING
 DIM char_stats(4) AS INTEGER
 PRINT "Choose a password 3-8 characters in length."
 PRINT ": ";
-answer$ = imput$(3, 8, "*", ".", "ENTER PASSWORD")
+answer$ = imput$(3, 8, "*", "_", "ENTER PASSWORD")
 get_char_stats answer$, char_stats%()
 PRINT
 PRINT "User entered: "; answer$
+PRINT
 PRINT "--- Statistics ---"
 PRINT
 PRINT "Length: "; _TRIM$(STR$(LEN(answer$)))
