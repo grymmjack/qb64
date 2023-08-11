@@ -1,3 +1,4 @@
+OPTION _EXPLICIT
 $Debug
 _CONTROLCHR OFF
 SCREEN 0
@@ -47,6 +48,7 @@ END SUB
 ' (imp)roved input
 '
 ' - Accepts any visible characters (ASC(32)+)
+' - Use ENTER to complete input
 ' - Can backspace, when backspace replaces with blank or empty_char$
 ' - Abort with ESC (optional)
 ' - Clear with CTRL-X, CTRL-Y
@@ -60,7 +62,7 @@ END SUB
 '
 FUNCTION imput$(min%, max%, echo_char$, empty_char$, placeholder$)
     DIM AS STRING k, ret
-    DIM AS INTEGER orig_row, orig_col, cx, cy, done
+    DIM AS INTEGER orig_row, orig_col, cur_row, cur_col, done
     orig_row% = CSRLIN : orig_col% = POS(0)
     IF empty_char$ = "" THEN empty_char$ = " "
 
@@ -157,7 +159,7 @@ END FUNCTION
 '
 SUB get_char_stats (st$, char_stats%())
     DIM AS INTEGER i, vowels, consonants, digits, symbols, spaces
-    DIM ch AS STRING
+    DIM AS STRING ch, s
     s$ = UCASE$(st$)
     FOR i% = 1 TO LEN(st$)
         ch$ = MID$(s$, i%, 1)
