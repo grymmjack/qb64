@@ -51,8 +51,15 @@ END SUB
 ' - Accepts any visible characters (ASC(32)+)
 ' - Use ENTER to complete input
 ' - Can backspace, when backspace replaces with blank or empty_char$
+' - +Can use delete, when pressing delete, removes from the right side
+' - +Can use insert or overwrite mode
+' - +Can use CTRL-LEFT and CTRL-RIGHT to move between words
+' - +Can use HOME and END to go to home or end
+' - +Can use TAB to insert spaces
+' - +Configure to use sound or not (new param)
+' - +Configure to use cursor or not (new param)
 ' - Abort with ESC (optional)
-' - Clear with CTRL-X, CTRL-Y
+' - Clear with CTRL-K, CTRL-X, CTRL-Y
 '
 ' @param INTEGER min% minimum length of input required
 ' @param INTEGER max% maximum length of input allowed
@@ -96,7 +103,9 @@ FUNCTION imput$(min%, max%, use_default%, echo_char$, empty_char$, placeholder$)
                     BEEP
                 END IF
             END IF
-            IF k$ = CHR$(24) OR k$ = CHR$(25) THEN ' CTRL-X or CTRL-Y = clear
+            IF k$ = CHR$(24) _
+            OR k$ = CHR$(25) _
+            OR k$ = CHR$(11) THEN ' CTRL-(K,X,Y) = clear
                 IF LEN(ret$) > 0 THEN
                     ret$ = "" ' empty the contents of the user input
                     IF max% > 0 THEN ' if max, print empty_char$ * max

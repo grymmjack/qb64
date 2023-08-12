@@ -70,7 +70,6 @@
             "windows": {
                 "command": "del",
                 "args": [
-                    "/y",
                     "${fileDirname}\\${fileBasenameNoExtension}.exe"
                 ]
             },

@@ -1,0 +1,34 @@
+| = cursor
+
+cursor rules:
+- should only be able to move left up to the edge of orig_col
+- should only be able to move right up to the existing length of input LEN(s$)
+- where can move left or right can also use CTRL-LEFT or CTRL-RIGHT to go to prev/next word
+
+op (op_pos) = orig_col - cx = how many positions from the left
+
+op possibilities:
+o1 = backspace      o3 = move caret left
+o2 = delete         o4 = move caret right
+
+(. = space allowed up to max)
+
+conditions for checks              op      o1      o2      o3      o4
+A      behind   : aaa|......       3       Y       N       Y       N
+B      in front : |aaa......       0       N       Y       N       Y
+C      between  : a|aa......       1       Y       Y       Y       Y
+  
+Ao2 No cannot delete because there is nothing to the right of the cursor
+Ao4 No cannot move right because already at end of input and nothing to move to
+Bo1 No because cursor is already at the beginning of the input field (orig_col)
+Bo3 No because cursor is already at the beginning of the input field (orig_col)
+
+Aop s$ = s$ + k$
+Bop s$ = k$ + s$
+Cop s$ = MID$(s$, 0, cx%) a
+       + k$
+       + MID$(s$, cx%) aa
+
+
+o3 = if can move left, LOCATE cur_row%, cur_col%-1
+o4 = if can move right, LOCATE cur_row%, cur_col%+1
