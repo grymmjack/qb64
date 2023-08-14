@@ -1,0 +1,8 @@
+DIM canvas AS LONG
+canvas& = _NEWIMAGE(800, 600, 32)
+SCREEN canvas&
+LOCATE ,,1',30,31
+' LOCATE ,,1,0,31
+PRINT "HI";
+LOCATE ,POS(0)-1
+SLEEP

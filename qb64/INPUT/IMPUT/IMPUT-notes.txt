@@ -32,3 +32,79 @@ Cop s$ = MID$(s$, 0, cx%) a
 
 o3 = if can move left, LOCATE cur_row%, cur_col%-1
 o4 = if can move right, LOCATE cur_row%, cur_col%+1
+
+
+tests
+-----
+in loop:
+    when key pressed get key pressed
+        control keys: INS, ESC, ENTER
+        cusor keys are: LEFT, RIGHT, HOME, END
+        modifier keys are: BACKSPACE, DEL
+        character keys are: typed character not in above
+
+        get cursor position
+
+        pressing INSERT toggles cursor mode, loop
+        pressing ENTER accepts input if >= min AND <= max
+        pressing ESC aborts
+        pressing CTRL-K|X|Y 
+            clear line
+            move cursor to first position
+            loop
+
+        if key pressed is a character:
+            ignore rest of loop if input +1 would be > max length 
+
+        when at last position 
+            pressing RIGHT does nothing
+            pressing END does nothing
+            pressing DELETE does nothing
+            pressing LEFT moves the cursor -1 position to the left
+            pressing BACKSPACE
+                removes char at end of input
+                moves cursor -1 position to the left
+            typing a character
+                append a character to the last position
+                position cursor to the right of typed position
+
+        when at first position
+            pressing LEFT does nothing
+            pressing BACKSPACE does nothing
+            pressing HOME does nothing
+            pressing RIGHT moves cursor +1 position to the right
+            pressing END moves cursor to last position
+            pressing DELETE
+                removes char right of cursor
+                move all following chars left by -1
+                keep current cursor position
+            typing a character
+                insert character at first position
+                if insert mode
+                    move all characters in front of cursor to the right by +1
+                locate cursor +1 right of typed char position
+
+        when not at first or last positions
+            pressing RIGHT moves cursor +1 position to the right
+            pressing LEFT moves cursor -1 position to the left
+            pressing HOME moves cursor to first position
+            pressing END moves cursor to last position
+            pressing DELETE
+                removes char right of cursor
+                move all following chars left by -1
+                keep current cursor position
+            pressing BACKSPACE
+                remove char left of cursor
+                if insert mode
+                    moves all following chars left by -1
+                moves cursor -1 position to the left
+            when insert mode is on
+                typing a character
+                    inserts character behind cursor
+                    moves all characters in front of cursor to the right by +1
+                    locates the cursor +1 right of typed char position
+            when overwrite mode is on
+                typing a character
+                    overwrites character cursor is on
+                    locates the cursor +1 right of typed char position
+loop
