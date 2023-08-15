@@ -1,4 +1,9 @@
 '$DYNAMIC
+
+'@todo all: .sort, .rsort, .unique, .reverse, .random, .shuffle, .size, .count, .find, .not
+'@todo numbers: .sum, .avg, .product, .filter_gt, .filter_lt, .filter_gte, .filter_lte, .filter_between, .filter_odd, .filter_even
+'@todo strings: .filter_starts_with, .filter_contains, .filter_ends_with, .filter_len_gt, .filter_len_lt
+
 DIM CANVAS AS LONG
 DIM temp_str AS STRING
 CANVAS& = _NEWIMAGE(800, 600, 32)
