@@ -263,10 +263,8 @@ SUB ARR_BYTE.shuffle(source_arr%%(), dest_arr%%())
     count% = ub% - lb%
     REDIM dest_arr(0 TO count%) AS _BYTE
     CALL ARR_BYTE.copy(source_arr%%(), dest_arr%%())
+    RANDOMIZE TIMER 
     FOR i% = 0 TO count%
-        RANDOMIZE TIMER 
-        r1% = INT(RND * count%) + 1
-        r2% = INT(RND * count%) + 1
-        SWAP source_arr%%(r1%), dest_arr%%(r2%)
+        SWAP dest_arr%%(i%), dest_arr%%(lb% + RND * (ub% - lb%)) 
     NEXT i%
 END SUB
