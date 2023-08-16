@@ -251,9 +251,13 @@ END FUNCTION
 
 
 
-SUB ARR_BYTE.shuffle%%(source_arr%%(), dest_arr%())
-    DIM AS INTEGER lb, ub, i
+SUB ARR_BYTE.shuffle(source_arr%%(), dest_arr%())
+    DIM AS INTEGER lb, ub, i, done
     lb% = LBOUND(arr%%) : ub% = UBOUND(arr%%)
+    REDIM dest_arr(0 TO (%ub - lb%)) AS _BYTE
+    DIM indexes(0 TO (ub% - lb%)) AS INTEGER
     RANDOMIZE TIMER 
-    
+    DO:
+        
+    LOOP UNTIL done% = 1
 END SUB
