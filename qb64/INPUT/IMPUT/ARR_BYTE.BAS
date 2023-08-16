@@ -258,29 +258,15 @@ END FUNCTION
 ' @param _BYTE ARRAY dest_arr%%() to store shuffled array in
 '
 SUB ARR_BYTE.shuffle(source_arr%%(), dest_arr%%())
-    DIM AS INTEGER lb, ub, i, x, r, count, not_in, done
+    DIM AS INTEGER lb, ub, i, r1, r2, count
     lb% = LBOUND(source_arr%%) : ub% = UBOUND(source_arr%%)
     count% = ub% - lb%
     REDIM dest_arr(0 TO count%) AS _BYTE
-    DIM indexes(0 TO count%) AS INTEGER
+    CALL ARR_BYTE.copy(source_arr%%(), dest_arr%%())
     FOR i% = 0 TO count%
-        done% = 0
-        DO:
-            _LIMIT 30
-            not_in% = -1
-            DO:
-                RANDOMIZE TIMER : r% = INT(RND * count%) + 1
-                FOR x% = 0 TO count%
-                    IF r% <> indexes(x%) THEN 
-                        not_in% = not_in% + 1
-                    END IF
-                NEXT x%
-            LOOP UNTIL not_in% = count%
-            done% = 1
-        LOOP UNTIL done% = 1
-        indexes(i%) = r%
-    NEXT i%
-    FOR i% = 0 TO count%
-        dest_arr%%(i%) = source_arr%%(indexes(i%))
+        RANDOMIZE TIMER 
+        r1% = INT(RND * count%) + 1
+        r2% = INT(RND * count%) + 1
+        SWAP source_arr%%(r1%), dest_arr%%(r2%)
     NEXT i%
 END SUB
