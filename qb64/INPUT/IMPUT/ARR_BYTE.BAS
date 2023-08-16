@@ -17,9 +17,11 @@ CALL ARR_BYTE.push(bytes%%(), 3) '2
 CALL ARR_BYTE.push(bytes%%(), 4) '3
 CALL ARR_BYTE.push(bytes%%(), 5) '4
 CALL ARR_BYTE.push(bytes%%(), 6) '5
-' PRINT(_TRIM$(STR$(ARR_BYTE.count(bytes%%()))))
-' CALL ARR_BYTE.reverse(bytes%%(), dest_bytes%%())
 CALL ARR_BYTE.join(bytes%%(), temp_str$)
+PRINT temp_str$
+' PRINT(_TRIM$(STR$(ARR_BYTE.count(bytes%%()))))
+CALL ARR_BYTE.shuffle(bytes%%(), dest_bytes%%())
+CALL ARR_BYTE.join(dest_bytes%%(), temp_str$)
 PRINT temp_str$
 ' PRINT(_TRIM$(STR$(ARR_BYTE.random%%(bytes%%()))))
 
@@ -250,14 +252,35 @@ FUNCTION ARR_BYTE.random%%(arr%%())
 END FUNCTION
 
 
-
-SUB ARR_BYTE.shuffle(source_arr%%(), dest_arr%())
-    DIM AS INTEGER lb, ub, i, done
-    lb% = LBOUND(arr%%) : ub% = UBOUND(arr%%)
-    REDIM dest_arr(0 TO (%ub - lb%)) AS _BYTE
-    DIM indexes(0 TO (ub% - lb%)) AS INTEGER
-    RANDOMIZE TIMER 
-    DO:
-        
-    LOOP UNTIL done% = 1
+''
+' Shuffle the elements of a _BYTE array
+' @param _BYTE ARRAY source_arr%%() to shuffle
+' @param _BYTE ARRAY dest_arr%%() to store shuffled array in
+'
+SUB ARR_BYTE.shuffle(source_arr%%(), dest_arr%%())
+    DIM AS INTEGER lb, ub, i, x, r, count, not_in, done
+    lb% = LBOUND(source_arr%%) : ub% = UBOUND(source_arr%%)
+    count% = ub% - lb%
+    REDIM dest_arr(0 TO count%) AS _BYTE
+    DIM indexes(0 TO count%) AS INTEGER
+    FOR i% = 0 TO count%
+        done% = 0
+        DO:
+            _LIMIT 30
+            not_in% = -1
+            DO:
+                RANDOMIZE TIMER : r% = INT(RND * count%) + 1
+                FOR x% = 0 TO count%
+                    IF r% <> indexes(x%) THEN 
+                        not_in% = not_in% + 1
+                    END IF
+                NEXT x%
+            LOOP UNTIL not_in% = count%
+            done% = 1
+        LOOP UNTIL done% = 1
+        indexes(i%) = r%
+    NEXT i%
+    FOR i% = 0 TO count%
+        dest_arr%%(i%) = source_arr%%(indexes(i%))
+    NEXT i%
 END SUB
