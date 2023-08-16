@@ -1,0 +1,159 @@
+********************************************************************************
+*
+*   \         (c) Thomas Antoni, 21.9.2002 - 13.4.2006
+*    \ /\           Mailto:thomas@antonis.de
+*    ( )            Downloaded from www.antonis.de --- www.qbasic.de   
+*  .( o ).
+*                        ----==== Hottest QBasic Stuff on Earth !!! ====----
+*
+********************************************************************************
+
+
+********************************************************************************
+*
+* .---------------.
+* | DEUTSCHE INFO |    (Refer to below for English-language info)
+* '---------------'
+*
+* QB-MonsterFAQ - 1028 der am häufigsten zu Q(uick)Basic gestellten Fragen
+*                 mit über 2000 Antworten und 417 Beispielprogrammen
+*
+********************************************************************************
+
+...::: Installation und Starten der QB-MonsterFAQ
+Die QB-MonsterFAQ ist bequem mit dem beiliegenden Datenbankprogramm CUEcards 
+lesbar. Die QB-MonsterFAQ benötigt keinerlei spezielle Installation und keine 
+Einträge in der Windows Registry.
+
+Kopiere einfach alle Dateien des Download-Archivs in ein beliebiges Verzeichnis.
+Starte dort CUECARDS.EXE und öffne die QB-MonsterFAQ über "Datei -> öffnen ->
+QBmonFAQ.cue"
+
+Über "Extras -> Optionen -> Allgemein -> Automatisch öffnen: QBMonFAQ.cue" 
+kannst Du erreichen, dass die QB-MonsterFAQ bei jedem Start automatisch geöffnet 
+wird.
+
+Über 417 der in der FAQ aufgeführten Beispielprogramme findest Du als direkt
+startbare BAS-Dateien im Verzeichnis PROGS\ . Die HTML-Datei PROGS\_INHALT.HTM
+enthält eine nach Rubriken geordnete Liste der Beispielprogramme. Über die
+dort angebotenen Links können die Beispielprogramme gestartet oder umgespeichert
+werden.  
+
+
+...::: Wem gehört die FAQ? 
+Diese FAQ ist geistiges Eigentum der gesamten deutschsprachigen QBasic-
+Community. Der Datenbestand der QB-MonsterFAQ selbst (Datei QBMONFAQ.CUE und 
+Beispielprogramme) steht unter einer "Free-Document-Lizenz", die im Eintrag 
+"Lizenzbedingungen" in der Kategorie "Hilfe" spezifiziert ist. Unter den dort 
+genannten Bedingungen kann die FAQ Datei beliebig modifiziert, erweitert, 
+vervielfältigt und weitergegeben werden.
+
+
+...::: Online-Version der FAQ
+Unter http://www.qbasic.de/faq gibt es auch eine Online-Version dieser FAQ. 
+Diese ist jedoch nur eine behelfsmäßige HTML-Umsetzung der Offline-Version. Ihr 
+fehlen viele Formatierungsmerkmale wie Mehrfach-Leerzeichen und -Zeilenvorschübe 
+sowie klickbare Links. Außerdem sind die über 100 Beispielprogramme dort nicht 
+enthalten. Aus diesen Gründen wird die Verwendung der vorliegenden Offline-
+Version empfohlen.
+
+
+...::: Was bezweckt die FAQ? 
+Diese FAQ ist ein riesiges Nachschlagewerk mit Lösungen zu den am häufigsten
+genannten Programmierproblemen zu Q(uick)Basic. Sie soll verhindern, dass in den
+QBasic-Foren dutzenfach immer wieder dieselben Fragen gestellt werden. Studiere
+bitte grundsätzlich immer diese FAQ, bevor Du QBasic-Einsteigerfragen in einem
+Forum stellst. 
+
+
+...::: Korrekturen, Ergänzungen und Fragen zur FAQ
+Fertig ausgearbeitete Korrekturen und Ergänzungen können direkt an mich gemailt
+werden. Sende Detailfragen bitte nicht an mich, sondern stelle diese in
+unserem Deutschen QBasic-Programmierforum (http://www.qbasic.de/forum ). Ich
+beobachte die dortigen Diskussionen sehr sorgfältig und werde wichtige
+Informationen von dort in die FAQ einbauen.
+
+
+...::: Neue Versionen der FAQ
+Die QB-MonsterFAQ wird ständig ergänzt und erweitert. In größeren Abständen
+wird ein FAQ-Update auf www.qbasic.de in der Tutorial-Rubrik erscheinen.
+
+
+...::: Lizenzbedingungen für CUEcards
+Alle Rechte des Softwareprodukts CUEcards liegen bei dem Hersteller, der Firma
+Marcus Human Software Technologie. Die Software darf kostenlos beliebig
+weitergegeben werden, solange sie unverändert bleibt 
+
+
+
+
+********************************************************************************
+*
+* .----------------.
+* | ENGLISH  INFO  | 
+* '----------------'
+*
+* QB-MonsterFAQ - 1028 Of The Most Frequently Asked Questions on Q(uick)Basic
+*                 With more than 2000 Answers and 417 Example Programs
+*
+********************************************************************************
+
+...::: How to install and launch the QB-MonsterFAQ?
+The QB-MosterFAQ is easy to use by means of the provided database programm 
+CUEcards. The QB-MonsterFAQ is ready-to-run. There is not need of any special 
+installation procedure and Windows registry entries.
+
+Simply copy all files of the downloaded archive into any directory, launch
+CUECARDS.EXE and open the QB-MonsterFAQ via  "Datei -> öffnen -> QBmonFAQ.cue" .
+
+Use the "Extras -> Optionen -> Allgemein -> Automatisch öffnen: QBMonFAQ.cue"
+option to make QBMONFAQ.CUE the standard start file.
+
+Over 417 of the example programs quoted in the FAQ are available as ready-to-run 
+BAS files in the PROGS\ directory. A task-oriented list of all programs with 
+short descriptions is provided under PROGS\_INHALT.HTM.
+
+
+...::: Who is owner of this FAQ? 
+This FAQ ist intellectual property of the jointed German-language QBasic 
+community. The FAQ (file QBMONFAQ.CUE) and the example programs are distributed 
+under a "Free-Document License". Everybody is permitted to download, publish and 
+modify it under the conditions which are listed the "Hilfe" category unter 
+"Lizenzbedingungen".
+
+
+...::: The online version of the FAQ
+There is an online version of the QB-MonsterFAQ available on 
+http://www.qbasic.de/faq . The online version is only a makeshift HTML export of 
+the offline version, missing many of the formatting features. E.g., clickable 
+links, multiple blanks and multi linefeeds don't work and it lacks the 100+ 
+example BAS-programms. It's heavily recommended to use this downloaded offline 
+version and not the online version.
+
+
+...::: Why has the FAQ been made? 
+This FAQ should answer nearly all standard questions on QBasic which are posted 
+over and over again on all QBasic boards. Please consult this FAQ before 
+annoying the community of any QBasic newsgroup or discussion board with 
+alsways the same "stereotype" beginner's question on QBasic. 
+
+
+...::: Corrections, add-ons and questions 
+Send fully elaborated corrections, translations and supplementations directly to 
+me. Please don't send me questions on FAQ details, but post such topics on our 
+"Deutsches QBasic-Programmierforum" (http://www.qbasic.de/forum ). I will keep
+track of those discussions and let flow important results into the FAQ.
+
+
+...::: New versions of the FAQ
+The QB-MonsterFAQ will be continuously extended. Eventual updates will be 
+published in the "Tutorials" category of www.qbasic.de.
+
+
+...::: License conditions for CUEcards
+CUEcards ist property of Marcus Human Software Technologie which owns all rights 
+on this software. The software product can be distributed to anybody free of 
+charge as long as it remains unmodified.
+
+
+                     ---=== End of file _ANTONI.TXT ===---

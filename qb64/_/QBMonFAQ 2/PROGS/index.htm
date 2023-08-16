@@ -1,0 +1,793 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD><TITLE>QBasic-Programme aus der QB-MonsterFAQ</TITLE>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8559-1">
+
+<!-- Meta-Angaben fuer Suchmaschinen -->
+<meta name="description" content="417 Beispielprogramme für QBasic,
+QuickBASIC und PowerBASIC aus der QB-MonsterFAQ. Darin finden Sie Problemlösungen
+zu fast allen in den diversen Foren gestellten Fragen. Für Einsteiger und Fortgeschrittene">
+<meta name="keywords" content="QBasic,QuickBasic,Powerbasic,Beispielprogramme, 
+FAQ,Einsteiger">
+<meta name="author" content="Thomas Antoni">
+
+<!-- Hover-Effekte ================================= -->
+<style type="text/css">
+  <!-- A:hover {color:"#ff0000";} -->
+</style>
+<!-- Ende Hover-Effekte ============================ -->
+
+</HEAD>
+
+<body>
+
+<!-- snip -->
+
+<center>
+<table border=0 bgcolor="white" cellpadding = 6><tr><td>
+<pre><font face="Courier New,Courier">
+<b>************************************************************
+*                                                          *
+* 417 QBasic-Beispielprogramme aus der QB-MonsterFAQ, V2.0 *
+* 417 QBasic Example Programs  for the QB-MonsterFAQ, V2.0 *
+* ======================================================== *
+*         Collected by                                     *
+*  \      Thomas Antoni, Sept 28, 1999 - April 12, 2006    *
+*   \ /\   E-Mail   :  thomas*antonis.de                   *
+*   ( )    Websites :  <a href="http://www.qbasic.de" target=_blank>www.qbasic.de</a> --- <a href="http://www.antonis.de" target=_blank>www.antonis.de</a>    *
+* .( o ).                                                  *
+*          ---=== Hottest QBasic Stuff on Earth !!! ===--- *            
+*                                                          *
+************************************************************
+
+<a name="inhalt"></a>
+I N H A L T  /  C O N T E N T S
+============================================================</b>
+ 1. <a href="#1">Vorwort / Preface</a>
+ 2. <a href="#2">Für Einsteiger (für den SelfQB-Kurs)</a> 
+ 3. <a href="#3">Tastatureingabe</a>
+ 4. <a href="#4">Text anzeigen und bearbeiten</a>
+ 5. <a href="#5">Grafik und Bilder anzeigen</a>
+ 6. <a href="#6">Bilder anzeigen (BPM, ICO usw.)</a>
+ 7. <a href="#7">Datum/Uhrzeit und Bildung von Wartezeiten</a>
+ 8. <a href="#8">Zahlen bearbeiten, Mathe-Probleme</a>
+ 9. <a href="#9">Sound</a>
+10. <a href="#10">Sortieren, suchen und ersetzen</a>
+11. <a href="#11">Spiele programmieren</a>
+12. <a href="#12">Dateien, Verzeichnisse und Laufwerke bearbeiten</a>
+13. <a href="#13">Maus, Menüs, Dialogboxen und Fenster</a>
+14. <a href="#14">Subroutinen und Funktionen</a>
+15. <a href="#15">Bibiotheken, CHAIN- und MAK-Module</a>
+16. <a href="#16">QBasic unter Windows</a>
+17. <a href="#17">Sonstiges</a>
+
+<a name="1"></a>
+<b>1. Vorwort / Preface
+============================================================</b>
+
+DEUTSCH
+--------------------
+Hier findest Du die meisten der in der QB-MonsterFAQ 
+angegebenen Beispiel-Programme. Diese Programme beinhalten 
+die am häufigsten nachgefragten Lösungen zu Q(uick)Basic- 
+Programmierproblemen aus verschiedensten Bereichen. Alle 
+Programme sind voll funktionsfähig und wurden von mir mit 
+QBasic 1.1 unter MS-DOS 6.22 und in der DOS-Box von Windows 
+95 getestet. SUBs und FUNCTIONs haben jeweils einen kleinen 
+"Testrahmen" erhalten, um als Demo bequem startbar zu sein.
+
+Einige wenige Programme laufen ausnahmsweise nicht mit 
+QBasic, sondern setzen QuickBasic 4.5 oder 7.1 voraus. 
+Hierauf wird dann im Programmkopf jeweils speziell 
+hingewiesen. Bei QuickBASIC ist zu beachten, dass die 
+Entwicklungsumgebung bei allen Programmen, die einen der 
+Befehle CALL ABSOLUTE, INTERRUPT oder INTERRUPTX enthalten, 
+mit der Option "/L" gestartet werden muss.
+
+Die QB-MonsterFAQ ist die weltweit größte FAQ zu QBasic
+und QuickBASIC und steht zum Online-Lesen zur Verfügung
+unter <a href="http://www.antonis.de/faq/" target=_blank>www.antonis.de/faq</a> . Die wesentlich komfortablere
+Offline-Version der FAQ kann heruntergeladen werden auf
+<a href="http://www.qbasic.de" target=_blank>www.qbasic.de</a> unter
+"QBasic -> Tutorials -> Nachschlagewerke" .
+
+HINWEIS: Einige der Programme sind in mehreren Kategorien 
+         aufgeführt.
+
+
+ENGLISH
+--------------------
+Here please find most of the code snippets of the QB-
+MonsterFAQ. Tested and fully functioning programms only. 
+I've tested all progs with QBasic 1.1 under MS-DOS 6.22 and 
+the Windows 95 DOS box. Some of the progs will only run 
+under QuickBASIC 4.5 or 7.1; refer to the program header 
+comments.
+
+For running programs containing CALL ABSOLUTE, INTERRUPT or 
+INTERRUPTX statements, the IDE has to be started with the 
+"/L" option.
+
+The QB-MonsterFAQ is the world's biggest FAQ on QBasic and 
+QuickBasic! The FAQ is available as an online-readable
+database under <a href="http://www.antonis.de/faq/" target=_blank>www.antonis.de/faq</a> . The much more
+user-friendly FAQ offline version is provided at
+<a href="http://www.qbasic.de" target=_blank>www.qbasic.de</a> under
+"QBasic -> Tutorials -> Nachschlagewerke" 
+
+
+Copyright
+--------------------
+All programs of this collection can be downloaded from 
+<a href="http://www.antonis.de/faq/progs/" target=_blank>www.antonis.de/faq/progs/</a> or from <a href="http://www.qbasic.de" target=_blank>www.qbasic.de</a> .
+
+All programs are provided under the GNU FDL (Free-Document 
+License) and can be published, modified and integrated into 
+your own programs without any copyright claims.
+
+
+
+
+<a name="2"></a>                                           <a href="#inhalt">zurück zum Inhalt</a>
+<b>2. Für Einsteiger (für den SelfQB-Kurs) 
+============================================================</b>
+<a href="erstprog.bas">ERSTPROG.BAS</a> = Erstes kleines Programm
+<a href="mathdemo.bas">MATHDEMO.BAS</a> = Kleines Mathe-Demoprogramm
+<a href="ifthen.bas">IFTHEN  .BAS</a> = Demo für IF...THEN-Abfragen
+<a href="inputif.bas">INPUTIF .BAS</a> = Demo für Tastatureingabe mit INPUT und
+                 für IF...THEN
+<a href="loop.bas">LOOP    .BAS</a> = 5 Möglichkeiten, die Zahlen von 0 bis 100
+                 anzuzeigen
+<a href="case-1.bas">CASE-1  .BAS</a> = Beispiel 1 fuer den SELECT CASE Befehl
+<a href="case-2.bas">CASE-2  .BAS</a> = Beispiel 2 fuer den SELECT CASE Befehl
+<a href="case-3.bas">CASE-3  .BAS</a> = Beispiel 3 fuer den SELECT CASE Befehl
+<a href="feld.bas">FELD    .BAS</a> = Felder (Arrays) bearbeiten in QBasic
+<a href="subq.bas">SUBQ    .BAS</a> = Demo für eine SUBroutine
+<a href="funcq.bas">FUNCQ   .BAS</a> = Demo für eine FUNCTION
+
+<a name="3"></a>                                           <a href="#inhalt">zurück zum Inhalt</a>
+<b>3.Tastatureingabe
+============================================================</b>
+<a href="tastcode.bas">TASTCODE.BAS</a> = Zeigt den CHR$()-Tastencode der gerade
+                 gedrückten Taste an
+<a href="intext.bas">INTEXT  .BAS</a> = Tasteneingabe mit Längenbegrenzung
+<a href="intext2.bas">INTEXT2 .BAS</a> = Tasteneingabe mit Längenbegrenzung
+<a href="intext3.bas">INTEXT3 .BAS</a> = Tasteneingabe mit Vorbesetzungswert
+<a href="intext4.bas">INTEXT4 .BAS</a> = Komfortable Eingaberoutine m. Editierfunktion
+<a href="intext5.bas">INTEXT5 .BAS</a> = Komfortable Eingaberoutine, ersetzt INPUT
+<a href="intext6.bas">INTEXT6 .BAS</a> = Eingaberoutine - Zeileneditor mit einstell-
+                 barer Eingabelänge
+<a href="shoplist.bas">SHOPLIST.BAS</a> = Längenbegrenzte Tastatureingaben in
+                 Tabellenfelder
+<a href="passwrd1.bas">PASSWRD1.BAS</a> = Einfache Passworteingabe mit Sternchenanzeige
+<a href="passwrd3.bas">PASSWRD3.BAS</a> = Passwort-Eingabe mit Sternchenanzeige
+<a href="longinp.bas">LONGINP .BAS</a> = INPUT-Ersatz fuer mehrzeilige Text-Eingabe
+                 - fast ein Editor!
+<a href="inpenter.bas">INPENTER.BAS</a> = Text eingeben, der Zeilenvorschübe enthält
+<a href="inputext.bas">INPUTEXT.BAS</a> = Eingaberoutine für langen Text
+<a href="inpuesc.bas">INPUESC .BAS</a> = INPUT mit Esc abbrechbar machen, Eing.routine
+<a href="keyesc.bas">KEYESC  .BAS</a> = Tastatureingabe, die mit Esc abbrechbar ist
+<a href="xkey.bas">XKEY    .BAS</a> = Tastenauswertung direkt mit dem INP-Befehl
+                 ohne INPUT und INKEY$
+<a href="keyscan.bas">KEYSCAN .BAS</a> = Tastenbetaetigungen erfassen über INP(&H60)
+<a href="keystat.bas">KEYSTAT .BAS</a> = Zustandsanzeige d.Sondertasten Shift, NumLock
+<a href="taststat.bas">TASTSTAT.BAS</a> = Tastaturstatus für Strg, Alt, Shift, Num usw.
+                 abfragen und ändern
+<a href="keystat2.bas">KEYSTAT2.BAS</a> = Sondertasten mit ON KEY abfragen (Shift,Strg,
+                 Alt, NumLock usw.)
+<a href="speckeys.bas">SPECKEYS.BAS</a> = Sondertasten abfragen (Strg, Alt, Shift, Num)
+<a href="discolit.bas">DISCOLIT.BAS</a> = Lichtorgel mit den Tastatur-LEDs
+<a href="keylites.bas">KEYLITES.BAS</a> = Num-LED an der Tastatur blinken lassen
+<a href="multikey.bas">MULTIKEY.BAS</a> = Erfassen von Mehrfachtastenbetätigungen
+<a href="multitas.bas">MULTITAS.BAS</a> = Erfassen von Mehrfachtastenbetätigungen
+<a href="onkey.bas">ONKEY   .BAS</a> = Ereignisgesteuerte Tatenbearbeitung
+                 (Demonstration der ON KEY Funktion)
+<a href="onkey2.bas">ONKEY2  .BAS</a> = Ereignisgesteuerte Abfrage der F1 Taste
+<a href="escereig.bas">ESCEREIG.BAS</a> = Ereignisgesteuerter Programmabbruch mit Esc
+<a href="taste0-1.bas">TASTE0-1.BAS</a> = Erfasst das Drücken u.Loslassen der Alt-Taste
+<a href="tastkurz.bas">TASTKURZ.BAS</a> = Zeitlich begrenzte Tasteneingabe
+<a href="tastmitt.bas">TASTMITT.BAS</a> = Tastatureingabe mitten im Text
+<a href="typein.bas">TYPEIN  .BAS</a> = Texteingabe mit Schreibmaschinengeräusch
+<a href="zalinput.bas">ZALINPUT.BAS</a> = Auf Zahlen beschränkte Tasteneingabe
+<a href="tastpuff.bas">TASTPUFF.BAS</a> = Füllstand des Tastaturpuffers ermitteln
+<a href="zalgrenz.bas">ZALGRENZ.BAS</a> = Zahleneingabe mit Begrenzung des Eingabewerts
+
+<a name="4"></a>                                           <a href="#inhalt">zurück zum Inhalt</a>
+<b>4.Text anzeigen und bearbeiten
+============================================================</b>
+<a href="textbear.bas">TEXTBEAR.BAS</a> = Die wichtigsten Befehle zur Textbearbeitung
+<a href="cprint.bas">CPRINT  .BAS</a> = Text zentriert anzeigen
+<a href="rprint.bas">RPRINT  .BAS</a> = Text rechtsbündig anzeigen
+<a href="bloksatz.bas">BLOKSATZ.BAS</a> = Text in Blocksatz formatieren und anzeigen
+<a href="wordwrap.bas">WORDWRAP.BAS</a> = Text mit korrektem Zeilenumbruch anzeigen
+<a href="wordwra2.bas">WORDWRA2.BAS</a> = Text mit Zeilenumbruch und wählbarer Zeilen-
+                 länge anzeigen
+<a href="showtxt3.bas">SHOWTXT3.BAS</a> = Anzeige von Text mit automatischem
+                 Zeilenumbruch
+<a href="laufschr.bas">LAUFSCHR.BAS</a> = Laufschrift von rechts nach links
+<a href="laufshr2.bas">LAUFSHR2.BAS</a> = Laufschrift, die aus der Mitte heraus nach
+                 außen" wächst"
+<a href="laufshr3.bas">LAUFSHR3.BAS</a> = Laufschrift scrollt von rechts nach links
+                 und verschwindet dort
+<a href="laufshr5.bas">LAUFSHR5.BAS</a> = Laufschrift im Textmodus
+<a href="ticker.bas">TICKER  .BAS</a> = Text-Ticker - weich eingeblendete Laufschrift
+                 in SREEN13
+<a href="noscrol1.bas">NOSCROL1.BAS</a> = Bildschirmausgabe in Zeile 25 ohne Scrollen
+<a href="noscrol2.bas">NOSCROL2.BAS</a> = Bildschirmausgabe in Zeile 25 ohne Scrollen
+<a href="run.bas">RUN     .BAS</a> = Ein animiertes Strichmaennchen laeuft ueber
+                 den Bildschirm
+<a href="screenr2.bas">SCREENR2.BAS</a> = Auslesen des Text-Bildschirms mit PEEK
+<a href="screenr3.bas">SCREENR3.BAS</a> = Auslesen des Text-Bildschirms mit BSAVE
+<a href="screenr4.bas">SCREENR4.BAS</a> = Auslesen des Zeichencodes und der Farbe eines
+                 Textzeichens vom Bildschirm mit SCREEN
+<a href="screenrd.bas">SCREENRD.BAS</a> = Auslesen des Text-Bildschirms mit SCREEN
+<a href="screnles.bas">SCRENLES.BAS</a> = Inhalt des Textbildschirms SCREEN 0 in Datei
+                 lesen (mit PEEK)
+<a href="showtxt1.bas">SHOWTXT1.BAS</a> = Einfacher Textviewer, zeigt eine Textdatei an
+<a href="showtxt2.bas">SHOWTXT2.BAS</a> = Textviewer, zeigt e. Textdatei seitenweise an
+<a href="tabelle.bas">TABELLE .BAS</a> = Tabelle anzeigen in einem Teilbereich des
+                 Bildschirms
+<a href="trim_all.bas">TRIM_ALL.BAS</a> = Alle Leerzeichen aus einem String entfernen
+<a href="buczaehl.bas">BUCZAEHL.BAS</a> = Zählt die Buchstaben in einem Text
+<a href="wortzael.bas">WORTZAEL.BAS</a> = Zählt wie oft ein Wort in einem Text vorkommt
+<a href="textruek.bas">TEXTRUEK.BAS</a> = Text rueckwaerts anzeigen
+<a href="typein.bas">TYPEIN  .BAS</a> = Texteingabe mit Schreibmaschinengeraeusch
+<a href="typer.bas">TYPER   .BAS</a> = Anzeige von Text mit Schreibmaschinengeräusch
+<a href="ucaseuml.bas">UCASEUML.BAS</a> = UCASE-Funktion, die auch Text mit Umlauten
+                 korrekt in Großbuchstaben wandelt
+<a href="zufwort1.bas">ZUFWORT1.BAS</a> = Zufallsworte erzeugen (Worte nach Zufalls-
+                 prinzip auswählen)
+<a href="zufawort.bas">ZUFAWORT.BAS</a> = Zufallswörter erzeugen
+<a href="beweg.bas">BEWEG   .BAS</a> = Ein Textzeichen mit den Cursortasten bewegen
+<a href="box.bas">BOX     .BAS</a> = Zeichnen eines Kastens aus Doppelstrichen im
+                 Textmodus
+<a href="box2.bas">BOX2    .BAS</a> = Anzeige eines Kastens im Textmodus mit vielen
+                 Gestaltungsmöglichkeiten
+<a href="box_ani.bas">BOX_ANI .BAS</a> = Animierte Box auf dem Bildschirm anzeigen
+<a href="box_scha.bas">BOX_SCHA.BAS</a> = Kasten im Textmodus zeichnen mit Schatten 
+<a href="umlaute.bas">UMLAUTE .BAS</a> = Umlaute in "ae", oe" usw. wandeln
+<a href="blinktxt.bas">BLINKTXT.BAS</a> = Blinkenden Text anzeigen
+<a href="eprint.bas">EPRINT  .BAS</a> = Anzeigen nicht druckbarer ASCII-Steuerzeichen
+<a href="asc2ansi.bas">ASC2ANSI.BAS</a> = ASCII-ANSI-Konvertierung für Eingabetext
+<a href="asci2bin.bas">ASCI2BIN.BAS</a> = ASCII-Zeichen in Binärzahlen umwandeln
+<a href="asciansi.bas">ASCIANSI.BAS</a> = Umwandlung einer ASCII- in e. ANSI-Textdatei
+<a href="color-1.bas">COLOR-1 .BAS</a> = Farben verwenden im Textmodus
+<a href="txtcolor.bas">TXTCOLOR.BAS</a> = Textanzeige mit farblich unterschiedlichen
+                 Buchstaben
+<a href="textwin.bas">TEXTWIN .BAS</a> = Texteditor - Text in einem Fenster editieren
+
+<a name="5"></a>                                           <a href="#inhalt">zurück zum Inhalt</a>
+<b>5.Grafik anzeigen
+============================================================</b>
+<a href="3d_1.bas">3D_1    .BAS</a> = 3D-Grafikdemo - Anzeige eines 3D-Quadrats
+<a href="3d_2.bas">3D_2    .BAS</a> = 3D-Grafikdemo - rotierender Würfel
+<a href="3d_3.bas">3D_3    .BAS</a> = 3D-Grafikdemo - rotierender Ball
+<a href="3d_4.bas">3D_4    .BAS</a> = 3D-Grafikdemo - Anzeige vieler 3D-Ringe
+<a href="3dkugel1.bas">3DKUGEL1.BAS</a> = Zeigt 3D-Kugeln zufälliger Größe und Frabe an
+<a href="3dkugel2.bas">3DKUGEL2.BAS</a> = Zeigt 3D-Kugeln als Drahtgittermodelle an
+<a href="3dkugel3.bas">3DKUGEL3.BAS</a> = Einfache dreidimenionale Kugelgrafik
+<a href="ani-run.bas">ANI-RUN .BAS</a> = Animiertes laufendes Männchen mit GET und PUT
+<a href="animat1.bas">ANIMAT1 .BAS</a> = Ein Radfahrer fährt über den Bildschirm
+<a href="ballmov2.bas">BALLMOV2.BAS</a> = Page-Flipping-Demo - Fliegende Bälle Cursor-
+                 Steuerung
+<a href="ballmove.bas">BALLMOVE.BAS</a> = Page-Flipping-Demo - fliegender Ball, der den
+                 Hintergrund nicht zerstoert
+<a href="ballpral.bas">BALLPRAL.BAS</a> = Ball bewegen, der an einer Wand abprallt
+<a href="beweg2.bas">BEWEG2  .BAS</a> = Einen Sprite ueber den Bildschirm bewegen
+<a href="beweg3.bas">BEWEG3  .BAS</a> = Einen Kreis mit den Cursortasten bewegen
+<a href="beweg4.bas">BEWEG4  .BAS</a> = Spielfigur mit Cursor-Tasten bewegen
+<a href="bline.bas">BLINE   .BAS</a> = Eine Linie mit dem Bresenham-Algorithmus
+                 zeichnen (ohne LINE)
+<a href="dreh.bas">DREH    .BAS</a> = Drehen eines Punktes um einen Symmetriepunkt
+<a href="drehtext.bas">DREHTEXT.BAS</a> = Drehen von Text
+<a href="dreifuel.bas">DREIFUEL.BAS</a> = Dreieck mit Farbe füllen ohne PAINT
+<a href="erase1.bas">ERASE1  .BAS</a> = Bildschirmelement löschen und alten
+                 Hintergrund wieder herstellen
+<a href="fader.bas">FADER   .BAS</a> = Dunkel-hell-Farbverlauf für einen Text
+<a href="fill.bas">FILL    .BAS</a> = Füllen eines Dreiecks mit einer Farbe
+<a href="getpoint.bas">GETPOINT.BAS</a> = Farbe eines Pixels in SCREEN12 abfragen ohne
+                 POINT-Befehl direkt aus dem Grafikspeicher
+<a href="graphtut.bas">GRAPHTUT.BAS</a> = Englisches interaktives Grafiktutorial,
+                 demonstriert LINE, CIRCLE, PAINT und PSET
+<a href="spiral.bas">SPIRAL  .BAS</a> = Zeichnen von Spiralen
+<a href="stickman.bas">STICKMAN.BAS</a> = Ein Strichmaennchen mit Cursortasten bewegen
+<a href="circle1.bas">CIRCLE1 .BAS</a> = Einen Kreis zeichnen ohne CIRCLE
+<a href="diklinie.bas">DIKLINIE.BAS</a> = Zeichnen einer dicken Linie (als Rechteck)
+<a href="fatlines.bas">FATLINES.BAS</a> = Zeichnet eine dicke Linie (durch Aneinander-
+                 setzen mehrerer Einzellinien)
+<a href="fonter.bas">FONTER  .BAS</a> = Font-Generator für SCREEN 12
+<a href="getdemo1.bas">GETDEMO1.BAS</a> = Demonstration 1 des Grafik-GET-Befehls
+<a href="getdemo2.bas">GETDEMO2.BAS</a> = Demonstration 2 des Grafik-GET-Befehls
+<a href="getput1.bas">GETPUT1 .BAS</a> = Radfahr-Animation mit Grafik-GET/PUT
+<a href="getput2.bas">GETPUT2 .BAS</a> = Demo der Modi PSET/PRESET/AND/OR/XOR des
+                 Grafik-PUT-Befehls
+<a href="glasful1.bas">GLASFUL1.BAS</a> = Animiertes Befüllen eines Glases
+<a href="glasful2.bas">GLASFUL2.BAS</a> = Animiertes Befüllen eines Glases
+<a href="glasful3.bas">GLASFUL3.BAS</a> = Animiertes Befüllen eines Glases
+<a href="grafik.bas">GRAFIK  .BAS</a> = Kleine Demo der wichtigsten Grafikbefehle
+<a href="grapmove.bas">GRAPMOVE.BAS</a> = Ein Mondgesicht mit Cursortasten über den
+                 Bildschirm bewegen
+<a href="kreisfar.bas">KREISFAR.BAS</a> = Kreis mit Farbe füllen
+<a href="kreisrol.bas">KREISROL.BAS</a> = Ein Kreis rollt diagonal über den Bildschirm
+<a href="kreisful.bas">KREISFUL.BAS</a> = Kreis mit Farbe füllen ohne PAINT und DRAW
+<a href="laufshr4.bas">LAUFSHR4.BAS</a> = Laufschrift im Grafikmodus
+<a href="pageflip.bas">PAGEFLIP.BAS</a> = Page-Flipping-Demo - Bildschirmseiten mit
+                 SCREEN umschalten für Animationen
+<a href="pagefli2.bas">PAGEFLI2.BAS</a> = Page-Flipping-Demo in SCREEN 9
+<a href="paintmus.bas">PAINTMUS.BAS</a> = Ausmalen eines Dreiecks mit einem Muster
+                 (Texturieren)
+<a href="palette1.bas">PALETTE1.BAS</a> = Palettendemo - demonstriert die Farbmischung
+                 mit de mPALETTE-Befehl, inklusive Fading
+<a href="palette2.bas">PALETTE2.BAS</a> = Demonstration d. PALETTE-Befehls in Screen 12
+<a href="pixcolor.bas">PIXCOLOR.BAS</a> = Farbe eines Bildschirm-Pixels abfragen mit
+                 POINT
+<a href="rotier1.bas">ROTIER1 .BAS</a> = Rotierendes Viereck anzeigen
+<a href="run.bas">RUN     .BAS</a> = Animation: Strichmännchen läuft über den
+                 Bildschirm
+<a href="sprite1.bas">SPRITE1 .BAS</a> = Einen Sprite erzeugen und anzeigen
+<a href="screen12.bas">SCREEN12.BAS</a> = Direktzugriff auf das Video-RAM von SCREEN 13
+<a href="screener.bas">SCREENER.BAS</a> = Bildschirmeigenschaften ermitteln
+<a href="screens.bas">SCREENS .BAS</a> = Ermittelt die verfügbaren SCREEN-Modi
+<a href="selcls.bas">SELCLS  .BAS</a> = Ausschnitt des Grafikbildschirms löschen
+<a href="smalfont.bas">SMALFONT.BAS</a> = Kleine Schrift in SCREEN 12/13
+<a href="snowman.bas">SNOWMAN .BAS</a> = Schneemann-Animation mit GET und PUT
+<a href="rgbfarbe.bas">RGBFARBE.BAS</a> = Beliebige RGB-Farben erzeugen mit PALETTE
+<a href="verlauf.bas">VERLAUF .BAS</a> = Farbverläufe mit QBasic realisieren
+
+<a name="6"></a>                                           <a href="#inhalt">zurück zum Inhalt</a>
+<b>6. Bilder anzeigen (BPM, ICO usw.)
+============================================================</b>
+<a href="bmp-load.bas">BMP-LOAD.BAS</a> = BMP-Loader zum Anzeigen von BMP-Grafiken
+<a href="bmpload2.bas">BMPLOAD2.BAS</a> = BMP-Loader zum Anzeigen von BMP-Bildern mit
+                 256 Farben
+<a href="bmpload3.bas">BMPLOAD3.BAS</a> = BMP-Loader zum Anzeigen von BMP-Grafiken
+<a href="thomas.bmp">THOMAS  .BMP</a> = Beispielgrafik für BMP-Loader (256 Farben,
+                 320x200 Pixel)
+<a href="iconload.bas">ICONLOAD.BAS</a> = Icons anzeigen (für Windows-Icons)
+<a href="iconview.bas">ICONVIEW.BAS</a> = Icons anzeigen (für Windows- und OS/2-Icons)
+
+<a name="7"></a>                                           <a href="#inhalt">zurück zum Inhalt</a>
+<b>7.Datum/Uhrzeit und Bildung von Wartezeiten
+============================================================</b>
+
+Wartezeiten erzeugen
+--------------------
+<a href="timer.bas">TIMER   .BAS</a> = Erzeugung genauer Wartezeiten (min. 0,056 sec)
+<a href="timer24.bas">TIMER24 .BAS</a> = Erzeugung von Wartezeiten, die auch um
+                 Mitternacht funktionieren
+<a href="timer1.bas">TIMER1  .BAS</a> = Kurze Wartezeiten erzeugen - unabhängig von
+                 der Taktfrequenz des Computers
+<a href="timer2.bas">TIMER2  .BAS</a> = Selbstanspassender Timer - unabhängig von
+                 der CPU-Speed
+<a href="mytimer.bas">MYTIMER .BAS</a> = Extrem kurze Wartezeiten erzeugen durch
+                 Umkonfigurieren des System-Timers
+
+
+Uhrzeit anzeigen
+-----------------------------
+<a href="time.bas">TIME    .BAS</a> = Uhrzeitanzeige
+<a href="dat-zeit.bas">DAT-ZEIT.BAS</a> = Datum u.Uhrzeit im deutschen Format anzeigen
+<a href="ontimer.bas">ONTIMER .BAS</a> = Uhrzeitanzeige unabhängig vom Hauptprogramm
+                 mit ON TIMER
+<a href="uhrgross.bas">UHRGROSS.BAS</a> = Digitaluhr mit grossen Ziffern
+
+
+Countdown-Timer & Stoppuhren
+-----------------------------
+<a href="count.bas">COUNT   .BAS</a> = Einfacher Countdown-Timer
+<a href="countdwn.bas">COUNTDWN.BAS</a> = Countdown-Timer
+<a href="counter.bas">COUNTER .BAS</a> = Countdown-Timer, der das Nullsetzen des
+                 System-Timers um Mitternacht beherrscht
+<a href="stopuhr1.bas">STOPUHR1.BAS</a> = Einfache Stoppuhr mit sec- und min-Anzeige
+<a href="stopuhr2.bas">STOPUHR2.BAS</a> = Einfache Stoppuhr mit sec u. 1/10 sec Anzeige
+<a href="stopuhr3.bas">STOPUHR3.BAS</a> = Komfort-Stoppuhr, min, sec, 1/10 sec Anzeige
+<a href="stopuhr4.bas">STOPUHR4.BAS</a> = Stoppuhr mit Verwendung des ON TIMER-Befehls
+<a href="zeitdiff.bas">ZEITDIFF.BAS</a> = Zeitdifferenz zwischen 2 Zeitpunkten in
+                 Sekunden ermitteln
+
+
+Datum bearbeiten
+-----------------------------
+<a href="weekday.bas">WEEKDAY .BAS</a> = Wochentag eines vorgegebenen Datums ermitteln
+<a href="weekday2.bas">WEEKDAY2.BAS</a> = Wochentag eines vorgegebenen Datums ermitteln
+<a href="tagdiff.bas">TAGDIFF .BAS</a> = Ermittelt die Tage zwischen 2 Zeitpunkten
+<a href="dat2tag.bas">DAT2TAG .BAS</a> = Tage und Datum ineinander umrechnen
+<a href="datum.bas">DATUM   .BAS</a> = Anspringen einer Datums-abhaengigen Routine
+<a href="dat2dat.bas">DAT2DAT .BAS</a> = Hängt das Datum an die Namen aller Dateien
+                 eines Ordners an
+<a href="datrueck.bas">DATRUECK.BAS</a> = Datumrücksteller zur Verlängerung der Nutz-
+                 ungsdauer von Sharewareprogrammen
+<a href="kalwoche.bas">KALWOCHE.BAS</a> = Berechnung d.aktuellen Kalenderwoche KW1-KW52
+
+<a name="8"></a>                                           <a href="#inhalt">zurück zum Inhalt</a>
+<b>8. Zahlen bearbeiten, Mathe-Probleme
+============================================================</b>
+
+Zahlen konvertieren
+-----------------------------
+<a href="any2dec.bas">ANY2DEC .BAS</a> = Zahlenkonvertierung beliebige Basis -&gt; Dez.
+<a href="dec2any.bas">DEC2ANY .BAS</a> = Zahlenkonvertierung Dez. -&gt; beliebige Basis
+<a href="bin2dec1.bas">BIN2DEC1.BAS</a> = Zahlenkonvertierung  Binär -&gt; Dezimal
+<a href="bin2dec2.bas">BIN2DEC2.BAS</a> = Zahlenkonvertierung  Binär -&gt; Dezimal
+<a href="bin2dec3.bas">BIN2DEC3.BAS</a> = Zahlenkonvertierung  Binär -&gt; Dezimal
+<a href="dec2bin1.bas">DEC2BIN1.BAS</a> = Zahlenkonvertierung Dezimal -&gt; Binär
+<a href="dec2bin2.bas">DEC2BIN2.BAS</a> = Zahlenkonvertierung Dezimal -&gt; Binär
+<a href="dec2bin3.bas">DEC2BIN3.BAS</a> = Zahlenkonvertierung Dezimal -&gt; Binär
+<a href="dec2bin4.bas">DEC2BIN4.BAS</a> = Zahlenkonvertierung Dezimal -&gt; Binär und ein
+                 Bit extrahieren
+<a href="dec2hex1.bas">DEC2HEX1.BAS</a> = Zahlenkonvertierung Dez. -&gt; Hex (mit HEX$)
+<a href="dec2hex2.bas">DEC2HEX2.BAS</a> = Zahlenkonvertierung Dez. -&gt; Hex (ohne HEX$)
+<a href="hex2dec1.bas">HEX2DEC1.BAS</a> = Zahlenkonvertierung Hex -&gt; Dez. (mit VAL)
+<a href="hex2dec2.bas">HEX2DEC2.BAS</a> = Zahlenkonvertierung Hex -&gt; Dez. (ohne VAL)
+<a href="hexdecre.bas">HEXDECRE.BAS</a> = Hexzahl mit "Komma" in Dezimalzahl wandeln
+<a href="bin2asci.bas">BIN2ASCI.BAS</a> = Binärzahlen in ASCII-Zeichen umwandeln
+<a href="floa2fix.bas">FLOA2FIX.BAS</a> = Gleitpunktzahl in Festpunktzahl wandeln
+<a href="floafix2.bas">FLOAFIX2.BAS</a> = Gleitpunktzahl in Festpunktzahl wandeln
+<a href="floatfix.bas">FLOATFIX.BAS</a> = Gleitpunktzahl in Festpunktzahl wandeln
+<a href="zal2wort.bas">ZAL2WORT.BAS</a> = Wandelt eine max.4-stellige Zahl in Wörter um
+<a href="zahl2txt.bas">ZAHL2TXT.BAS</a> = Wandelt eine Zahl in einen Text um
+<a href="num2word.bas">NUM2WORD.BAS</a> = Wandelt eine Zahl in einen engl. Text
+<a href="romanum.bas">ROMANUM .BAS</a> = Wandelt römische in arabische zahlen um
+<a href="norm2pol.bas">NORM2POL.BAS</a> = Normal-Polarform-Konverter f. Komplexe Zahlen
+
+
+Zahlen anzeigen und eingeben
+-----------------------------
+<a href="mitnull.bas">MITNULL .BAS</a> = Ganzzahlen mit führenden Nullen im festen
+                 Format anzeigen (Kilometerzählereffekt)
+<a href="komma2pt.bas">KOMMA2PT.BAS</a> = Zahleneingabe mit Komma statt Dezimalpunkt
+<a href="kommaanz.bas">KOMMAANZ.BAS</a> = Zahlenanzeige mit Komma statt Dezimalpunkt
+<a href="kommainp.bas">KOMMAINP.BAS</a> = Zahleneingabe mit Komma statt Dezimalpunkt
+<a href="kommapkt.bas">KOMMAPKT.BAS</a> = Zahlenanzeige mit Komma statt Dezimalpunkten
+                 und Trennpunkten nach je 3 Stellen
+<a href="mitnulgp.bas">MITNULGP.BAS</a> = Gleitpunktzahl mit führenden Nullen anzeigen
+<a href="expoanz.bas">EXPOANZ .BAS</a> = Demo d.Exponentialanzeige v.Gleitpunktzahlen
+
+
+Zufallszahlen
+-----------------------------
+<a href="zufaelle.bas">ZUFAELLE.BAS</a> = Zufallszahlen 1..n erzeugen
+<a href="randomno.bas">RANDOMNO.BAS</a> = Zufallszahlen ohne Wiederholung ermitteln
+<a href="zufowi.bas">ZUFOWI  .BAS</a> = Zufallszahlen ohne Wiederholung erzeugen
+<a href="lotto.bas">LOTTO   .BAS</a> = Lottozahlengenerator (6 aus 49)
+
+
+Mathematische Probleme
+-----------------------------
+<a href="beharr.bas">BEHARR  .BAS</a> = Ermittlung der "Beharrlichkeit" einer Zahl
+<a href="bernouli.bas">BERNOULI.BAS</a> = Berechnung der Bernoulliwahrscheinlichkeit
+<a href="binomi.bas">BINOMI  .BAS</a> = Berechnung d. Binominalkoeffizienten n über k
+<a href="binomi2.bas">BINOMI2 .BAS</a> = Berechnung d. Binominalkoeffizienten n über k
+<a href="binomko.bas">BINOMKO .BAS</a> = Berechnung d. Binominalkoeffizienten n über k
+<a href="fakultat.bas">FAKULTAT.BAS</a> = Fakultät n! berechnen
+<a href="fakbig.bas">FAKBIG  .BAS</a> = Sehr große Fakultäten n! berechnen
+<a href="fakulrec.bas">FAKULREC.BAS</a> = Fakultät n! rekursiv berechnen
+<a href="fakult.bas">FAKULT  .BAS</a> = Fakultät bis 1754! berechnen mit PowerBASIC
+<a href="fakult.exe">FAKULT  .EXE</a> = dito, compiliertes EXE-Programm
+<a href="fastfak.bas">FASTFAK .BAS</a> = Schnelle Fakultätsberechnung n!
+<a href="formel.bas">FORMEL  .BAS</a> = Formel-Löser in QBasic
+<a href="gerschni.bas">GERSCHNI.BAS</a> = Schnittpunkt zweier Geraden berechnen
+<a href="getpi.bas">GETPI   .BAS</a> = Berechnet Pi auf 1000 Dezimalstellen genau
+<a href="groezahl.bas">GROEZAHL.BAS</a> = Ermittlung der größten von mehreren Zahlen
+<a href="happynum.bas">HAPPYNUM.BAS</a> = Berechnung v.Happy Numbers (fröhliche Zahlen)
+<a href="hapynum2.bas">HAPYNUM2.BAS</a> = Berechnung v.Happy Numbers (fröhliche Zahlen)
+<a href="heron.bas">HERON   .BAS</a> = Wurzelberechnung nach Heron ohne SQR
+<a href="newton.bas">NEWTON  .BAS</a> = Wurzelberechnung nach Newton ohne SQR
+<a href="wurzelna.bas">WURZELNA.BAS</a> = Wurzelberechnung über ein Näherungsverfahren
+<a href="juliafra.bas">JULIAFRA.BAS</a> = Fraktalgenerator für Julia-Mengen
+<a href="mandel1.bas">MANDEL1 .BAS</a> = Anzeige einer Mandelbrot-Grafik (Fraktal)
+<a href="mandel2.bas">MANDEL2 .BAS</a> = Anzeige einer Mandelbrot-Grafik (Fraktal)
+<a href="matrain1.bas">MATRAIN1.BAS</a> = Einfacher Mathetrainer für das Addieren
+<a href="matrain2.bas">MATRAIN2.BAS</a> = Mathetrainer für die 4 Grundrechenarten
+<a href="numcheck.bas">NUMCHECK.BAS</a> = Prueft, ob ein Eingabewert eine Zahl ist
+<a href="overflow.bas">OVERFLOW.BAS</a> = Programmabbruch bei Zahlenüberlauf abfangen
+<a href="pqformel.bas">PQFORMEL.BAS</a> = Lösung der Quadratischen pq-Gleichung
+<a href="quadrat.bas">QUADRAT .BAS</a> = Lösung der Quadratischen Gleichung mit der
+                 "Mitternachtsformel"
+<a href="polynul.bas">POLYNUL .BAS</a> = Nullstellen eines Polynoms berechnen
+<a href="polynul2.bas">POLYNUL2.BAS</a> = Nullstellen eines Polynoms berechnen nach dem
+                 Bairstow-Verfahren
+<a href="paralel2.bas">PARALEL2.BAS</a> = Parallele zu einer Geraden zeichnen
+<a href="parallel.bas">PARALLEL.BAS</a> = Zeichnen von parallelen Linien
+<a href="primegen.bas">PRIMEGEN.BAS</a> = Primzahlen-Generator - findet über 3 Mio
+                 Primzahlen
+<a href="primtest.bas">PRIMTEST.BAS</a> = Testet, ob eine Zahl eine Primzahl ist
+<a href="primzahl.bas">PRIMZAHL.BAS</a> = Ermittelt die Primzahlen bis 1500
+<a href="primfak.bas">PRIMFAK .BAS</a> = Primfaktorzerlegung
+<a href="primzerl.bas">PRIMZERL.BAS</a> = Primfaktorzerlegung
+<a href="pungerad.bas">PUNGERAD.BAS</a> = Berechnet d.Abstand e.Punktes von e.Geraden
+<a href="quersum.bas">QUERSUM .BAS</a> = Berechnet die Quersumme einer Zahl
+<a href="rundung1.bas">RUNDUNG1.BAS</a> = Kaufmännische Rundung
+<a href="rundung2.bas">RUNDUNG2.BAS</a> = Wissenschaftliche Rundung
+<a href="scheitel.bas">SCHEITEL.BAS</a> = Scheitelform der Quadratischen Gleichung
+                 berechnen (aus ax^2 + bx + c = 0)
+<a href="sinkurve.bas">SINKURVE.BAS</a> = Sinuskurve anzeigen
+<a href="sinampl.bas">SINAMPL .BAS</a> = Sinuskurve anzeigen, mit wählbarer Amplitude
+                 und Frequenz
+<a href="tangent1.bas">TANGENT1.BAS</a> = Tangenten an einen Kreis zeichnen
+<a href="tangent2.bas">TANGENT2.BAS</a> = Berechnet gemeinsamen Tangenten an 2 Kreise
+<a href="tangent3.bas">TANGENT3.BAS</a> = Berechnet die Tangenten von einem Punkt an
+                 einen Kreis
+<a href="tarech.bas">TARECH  .BAS</a> = Einfacher Taschenrechner für die 4 Grund-
+                 rechenarten
+<a href="rechner.bas">RECHNER .BAS</a> = Taschenrechner für die 4 Grundrechenarten
+<a href="tarech2.bas">TARECH2 .BAS</a> = Taschenrechner
+<a href="ungenau.bas">UNGENAU .BAS</a> = Demo für die Rundungsfehler bei Gleitpunkt-
+                 Verarbeitung
+<a href="vzanzeig.bas">VZANZEIG.BAS</a> = Vorzeichenrichtige Anzeige von Formel-Termen
+<a href="dezimal1.bas">DEZIMAL1.BAS</a> = Zerlegen einer Zahl in ihre Dezimalstellen
+<a href="dezimal2.bas">DEZIMAL2.BAS</a> = Zerlegen einer Zahl in ihre Dezimalstellen
+<a href="ggteil.bas">GGTEIL  .BAS</a> = Den größten gemeinsamen Teiler berechnen
+<a href="kgv.bas">KGV     .BAS</a> = Das kleinste gemeinsame Vielfache berechnen
+<a href="kreisnit.bas">KREISNIT.BAS</a> = Die Schnittpunkte zweier Kreise berechnen
+<a href="langrech.bas">LANGRECH.BAS</a> = Taschenrechner fuer riesenlange Zahlen
+<a href="linie2p.bas">LINIE2P .BAS</a> = Geradengleichung aus 2 Punkten berechnen
+<a href="teilbar.bas">TEILBAR .BAS</a> = Prüft ob 2 Zahlen durcheinander teilbar sind
+<a href="vzlosint.bas">VZLOSINT.BAS</a> = Vorzeichenlose 16-Bit INTEGER-Zahl erzeugen
+<a href="word2byt.bas">WORD2BYT.BAS</a> = Die beiden Bytes aus e. 16-Bit-Wort auslesen
+<a href="zahl2zif.bas">ZAHL2ZIF.BAS</a> = Ziffern einer Ganzzahl isoliert abspeichern
+<a href="zerleg.bas">ZERLEG  .BAS</a> = Zahl in die einzelnen Dezimalstellen zerlegen
+<a href="zinsen1.bas">ZINSEN1 .BAS</a> = Kapitalwachstum mit Zinseszins berechnen
+<a href="zinsen2.bas">ZINSEN2 .BAS</a> = Kapital-Verdopplung mit Zinseszinz berechnen
+<a href="spline.bas">SPLINE  .BAS</a> = Zeichnet eine Spline-Kurve durch 4 Punkte
+
+<a name="9"></a>                                           <a href="#inhalt">zurück zum Inhalt</a>
+<b>9.Sound
+============================================================</b>
+<a href="entchen.bas">ENTCHEN .BAS</a> = "Alle meine Entchen" über d. Speaker spielen
+<a href="musik.bas">MUSIK   .BAS</a> = Diverse Musikstücke u.Sounds für d.PC-Speaker
+<a href="musik2.bas">MUSIK2  .BAS</a> = Diverse Musikstücke u.Sounds für d.PC-Speaker
+<a href="on-play.bas">ON-PLAY .BAS</a> = Spielt lange Musikstücke mit ON PLAY
+<a href="sirene.bas">SIRENE  .BAS</a> = Erzeugt einen Sirenenklang mit SOUND
+<a href="sirene2.bas">SIRENE2 .BAS</a> = Polizei-Sirene mit SOUND
+<a href="starwars.bas">STARWARS.BAS</a> = Die Starwars-Melodie mit PLAY abspielen
+<a href="frequenz.bas">FREQUENZ.BAS</a> = Frequenzbereich des PC-Speakers messen
+<a href="zufsound.bas">ZUFSOUND.BAS</a> = Zufalls-Musik mit Grundmelodie erzeugen
+<a href="dirsound.bas">DIRSOUND.BAS</a> = Ton über I/O-Port an den PC-Speaker ausgeben
+<a href="wavplay1.bas">WAVPLAY1.BAS</a> = Einfacher Player für WAV-Dateien
+
+<a name="10"></a>                                           <a href="#inhalt">zurück zum Inhalt</a>
+<b>10.Sortieren, suchen, ersetzen
+============================================================</b>
+<a href="sort_2.bas">SORT_2  .BAS</a> = Sortieren von 2 Zahlen mit SWAP
+<a href="sort_1.bas">SORT_1  .BAS</a> = Einfaches Beispiel zum Sortieren von Zahlen
+                 mit "Bubble-Sort"
+<a href="sort.bas">SORT    .BAS</a> = Sortieren von Zahlen mit den beiden Sortier-
+                 Verfahren Bubble-Sort und Quick-Sort
+<a href="sortquik.bas">SORTQUIK.BAS</a> = Sortieren mit QuickSort (rekursiv)
+<a href="sortqik2.bas">SORTQIK2.BAS</a> = Sortieren mit QuickSort (nicht-rekursive
+                 Variante)
+<a href="sortrev.bas">SORTREV .BAS</a> = Sortieren von Zahlen in abfallender Reihen-
+                 folge sortieren (mitt BubbleSort)
+<a href="sortshel.bas">SORTSHEL.BAS</a> = Sortieren mit ShellSort
+<a href="dossort.bas">DOSSORT .BAS</a> = Sortieren mit Hilfe des SORT-Befehls von DOS
+<a href="sort_txt.bas">SORT_TXT.BAS</a> = Sortieren von Texten mit korrekter Behandlung
+                 der deutschen Umlaute
+<a href="suchen01.bas">SUCHEN01.BAS</a> = Suche in einem Text mit dem INSTR-Befehl
+<a href="suchen02.bas">SUCHEN02.BAS</a> = Textsuche in einem Wörterbuch
+<a href="bisearch.bas">BISEARCH.BAS</a> = Binäre Suche in sortierten Feldern
+<a href="replace.bas">REPLACE .BAS</a> = Suchen und Ersetzen von Text in einer Datei
+<a href="tab2spc.bas">TAB2SPC .BAS</a> = Tabulatoren durch Leerzeichen ersetzen
+<a href="visisort.bas">VISISORT.BAS</a> = Demonstriert 9 Sortieralgorithmen visuell und
+                 misst deren Geschwindigkeit
+
+<a name="11"></a>                                           <a href="#inhalt">zurück zum Inhalt</a>
+<b>11.Spiele programmieren
+============================================================</b>
+<a href="zahlrat.bas">ZAHLRAT .BAS</a> = Zahlenraten in einem wählbaren Zahlenbereich
+<a href="adventur.bas">ADVENTUR.BAS</a> = Text-Adventure - so könnte es anfangen ...
+<a href="quiz.bas">QUIZ    .BAS</a> = Ein einfaches Quiz-Programm
+<a href="wuerfel.bas">WUERFEL .BAS</a> = Elektronischer Wuerfel
+<a href="wuerfel2.bas">WUERFEL2.BAS</a> = Würfelspiel mit ASCII-Grafik i.Textbildschirm
+<a href="autorenn.bas">AUTORENN.BAS</a> = Ein einfaches Autorenn-Spiel im Textmodus
+<a href="pong.bas">PONG    .BAS</a> = Pong-Clone (Tennisspiel )
+<a href="starwarf.bas">STARWARF.BAS</a> = Star-Wars Intro mit Star-Wars Melodie u.-Font
+<a href="wayfind.bas">WAYFIND .BAS</a> = Wegfinde-Routine
+<a href="elisa.bas">ELISA   .BAS</a> = Ein Computer-Gespraechspartner (KI / AI)
+<a href="leben.bas">LEBEN   .BAS</a> = Das Spiel des Lebens (Wachstums-Simulation)
+
+<a name="12"></a>                                           <a href="#inhalt">zurück zum Inhalt</a>
+<b>12.Dateien, Verzeichnisse und Laufwerke bearbeiten
+============================================================</b>
+
+Dateien
+-----------------------------
+<a href="seqfile.bas">SEQFILE .BAS</a> = Datei schreiben und lesen - ganz einfach mit
+                 einer sequentiellen Datei
+<a href="var2file.bas">VAR2FILE.BAS</a> = Variablen in eine Datei schreiben u.rücklesen
+<a href="seqfile2.bas">SEQFILE2.BAS</a> = Schreibt ein Wort in eine Datei und liest es
+                 wieder zurück
+<a href="datei.bas">DATEI   .BAS</a> = Schreibt einen kleinen Text in eine Datei
+<a href="txtdatei.bas">TXTDATEI.BAS</a> = Eingegebenen Text in eine Datei schreiben
+<a href="filexist.bas">FILEXIST.BAS</a> = Testet ob eine Datei existiert
+<a href="filexis2.bas">FILEXIS2.BAS</a> = Testet ob eine Datei existiert
+                 (Komfort-Version)
+<a href="seqerror.bas">SEQERROR.BAS</a> = Prüft ob e. sequentielle Datei vorhanden ist
+<a href="filcopy1.bas">FILCOPY1.BAS</a> = Kopieren einer Datei, byteweise ohne SHELL
+<a href="filcopy2.bas">FILCOPY2.BAS</a> = Schnelles Kopieren einer Datei über e. Puffer
+<a href="filcopy3.bas">FILCOPY3.BAS</a> = Schnelles Kopieren einer Datei über e. Puffer
+<a href="filesize.bas">FILESIZE.BAS</a> = Ermittelt die Größe einer wählbaren Datei
+<a href="filength.bas">FILENGTH.BAS</a> = Länge und Zeilenzahl einer Datei ermitteln
+<a href="merge.bas">MERGE   .BAS</a> = Merger - fasst mehrere Dateien zusammen
+<a href="pathname.bas">PATHNAME.BAS</a> = Pfad u. Dateinamen des gerade ausgegefuehrten
+                 EXE-Programms ermitteln
+<a href="pathnameexe">PATHNAME EXE</a> = dito, compilierte EXE-Datei
+<a href="exepath.bas">EXEPATH .BAS</a> = Pfad und Namen der eigenen Programmdatei
+                 ermitteln
+<a href="exename.bas">EXENAME .BAS</a> = Ein Programm ermittelt seinen eigenen Namen
+<a href="readfile.zip">READFILE.ZIP</a> = Zugriff auf eine externe Begleitdatei
+<a href="score.zip">SCORE   .ZIP</a> = Highscore-Liste direkt in EXE-Datei einbetten
+<a href="verschlu.bas">VERSCHLU.BAS</a> = Einfache Ver- und Entschluesselung von Text
+<a href="encrypt.bas">ENCRYPT .BAS</a> = Textverschlüsselung 
+<a href="cryptme.bas">CRYPTME .BAS</a> = Textverschlüsselung mit Passwortschutz
+<a href="showbin.bas">SHOWBIN .BAS</a> = Binär-Viewer - Den Inhalt einer beliebigen
+                 Datei im Binärcode anzeigen
+<a href="showhex.bas">SHOWHEX .BAS</a> = Hex-Viewer - Den Inhalt einer wählbaren Datei
+                 im Hexadezimalcode anzeigen, mit Adressen
+<a href="showtxt1.bas">SHOWTXT1.BAS</a> = Einfacher Text-Viewer - Zeigt den Inhalt
+                 einer wählbaren Datei als ASCII-Text an
+<a href="showtxt2.bas">SHOWTXT2.BAS</a> = Textviewer mit seitenweiser Anzeige
+<a href="dateidat.bas">DATEIDAT.BAS</a> = Datei-Erstellungsdatum aendern
+
+
+Verzeichnisse, Ordner
+-----------------------------
+<a href="dir_1.bas">DIR_1   .BAS</a> = Inhalt e. Verzeichnisses auflisten ohne SHELL
+<a href="dir_2.bas">DIR_2   .BAS</a> = Inhalt eines Verzeichnisses auflisten mit
+                 Hilfe des Befehls SHELL "DIR .."
+<a href="xdir.bas">XDIR    .BAS</a> = Inhalt eines Verzeichnisses auflisten - per
+                 Interrupt-Bearbeitung
+<a href="path.bas">PATH    .BAS</a> = Ermitteln des aktuellen Pfadnamens
+<a href="search1.bas">SEARCH1 .BAS</a> = Nach Dateien suchen in einem wählbaren Pfad
+<a href="dirmakno.bas">DIRMAKNO.BAS</a> = Erstellen durchnummerierter Verzeichnisse
+
+
+Laufwerke
+-----------------------------
+<a href="chkdrive.bas">CHKDRIVE.BAS</a> = Anzeige der vorhandenen Laufwerke
+<a href="lw_liste.bas">LW_LISTE.BAS</a> = Ermittlung der vorhandenen Laufwerke inkl.Typ
+<a href="drive.bas">DRIVE   .BAS</a> = Funktionen zum Handling von Verzeichnissen
+                 und Laufwerken
+<a href="dir_3.bas">DIR_3   .BAS</a> = Inhalt eines Verzeichnisses auflisten
+<a href="dirlist.bas">DIRLIST .BAS</a> = Listet die Dateien in einem Verzeichnis auf
+                 mit Platzhaltern, z.B. *.BAS
+<a href="showdir.bas">SHOWDIR .BAS</a> = Inhalt eines Verzeichnisses anzeigen - mit
+                 dem DIR$-Befehl von QB 7.1 und PowerBASIC
+<a href="tree.bas">TREE    .BAS</a> = Listet alle Verzeichnisse eines Laufwerks auf
+<a href="cdopen.bas">CDOPEN  .BAS</a> = Öffnet und schließt das CD-ROM-Laufwerk
+<a href="medichk.bas">MEDICHK .BAS</a> = Prüft ob eine Floppy/CD/DVD im Laufwerk liegt
+<a href="diskcop1.bas">DISKCOP1.BAS</a> = Kopieren einer Diskette mit SHELL
+<a href="diskcop2.bas">DISKCOP2.BAS</a> = Kopieren einer Diskette BIOS-Interrupt
+
+<a name="13"></a>                                           <a href="#inhalt">zurück zum Inhalt</a>
+<b>13.Maus, Menüs, Dialogboxen und Fenster
+============================================================</b>
+
+Maus
+-----------------------------
+<a href="mouse.bas">MOUSE   .BAS</a> = Mausroutinen für QBasic 1.1 und QB 4.5/7.1
+<a href="maus.bas">MAUS    .BAS</a> = Einfache Mausroutine für QuickBASIC
+<a href="maus2.bas">MAUS2   .BAS</a> = Einfache Mausroutine für QuickBASIC
+<a href="mauscur2.bas">MAUSCUR2.BAS</a> = Mausroutine für QBasic und QuickBASIC mit
+                 veränderbarem Mauszeiger
+<a href="mauscurs.bas">MAUSCURS.BAS</a> = Mausroutine für QBasic und QuickBASIC mit
+                 veränderbarem Mauszeiger
+<a href="mouse2.bas">MOUSE2  .BAS</a> = Maus-Routine, funktioniert unter QBasic und
+                 QuickBASIC in allen SCREEN-Modi
+<a href="mouseint.bas">MOUSEINT.BAS</a> = Mausroutine für QBasic und QuickBASIC
+                 mit Interrupts
+<a href="mousetxt.bas">MOUSETXT.BAS</a> = Mausroutine für den Textbildschirm SCREEN 0
+                 (für QuickBASIC, nicht für QBasic)
+
+
+Menüs
+-----------------------------
+<a href="menu1.bas">MENU1   .BAS</a> = kleines textbasiertes Auswahlmenü
+<a href="menu3.bas">MENU3   .BAS</a> = Bildschirmmenü mit Scrollfunktion
+<a href="menuupdn.bas">MENUUPDN.BAS</a> = Scroll-Menü mit Up/Down-Tasten-Bedienung
+<a href="menupull.bas">MENUPULL.BAS</a> = Komfortables Pulldown-Menü über die Tastatur
+<a href="pulldown.bas">PULLDOWN.BAS</a> = Pulldown-Menü anzeigen und bearbeiten  
+<a href="menumaus.bas">MENUMAUS.BAS</a> = Maus-gesteuertes Menü
+
+
+Dialogboxen und Fenster
+-----------------------------
+<a href="qbaswin.bas">QBASWIN .BAS</a> = Windows-ähnliche Pop-Up-Fenster erzeugen
+<a href="progress.bas">PROGRESS.BAS</a> = Einfacher Fortschrittbalken im Textbildschirm
+<a href="progres.bas">PROGRES .BAS</a> = Fortschrittbalken im Textbildschirm
+<a href="progres2.bas">PROGRES2.BAS</a> = Fortschrittbalken im Grafikbildschirm
+<a href="rahmen.bas">RAHMEN  .BAS</a> = Zeichnet einen Rahmen aus Textzeichen
+<a href="rahmfarb.bas">RAHMFARB.BAS</a> = Zeichnet ein farbiges Fester mit Titeltext
+<a href="button.bas">BUTTON  .BAS</a> = Erstellen eines Klickbuttons
+<a href="guisubs.bas">GUISUBS .BAS</a> = Subroutinen zur Erzeugung von Bedienungsober-
+                 flächen mit Dialogboxen und Menüs
+
+<a name="14"></a>                                           <a href="#inhalt">zurück zum Inhalt</a>
+<b>14.Subroutinen und Funktionen
+============================================================</b>
+<a href="subtutor.bas">SUBTUTOR.BAS</a> = Englisches Tutorial über SUBs und FUNCTIONs
+<a href="feld2sub.bas">FELD2SUB.BAS</a> = Feld an eine SUB/FUNCTION übergeben
+<a href="feldsub.bas">FELDSUB .BAS</a> = Feld an eine SUB/FUNCTION übergeben
+<a href="mehrueck.bas">MEHRUECK.BAS</a> = SUB/FUNCTION gibt mehr als einen Wert zurück
+<a href="share.bas">SHARE   .BAS</a> = Variablen in Hauptprogramm und SUB gemeinsam
+                 nutzen mit SHARED
+<a href="shared.bas">SHARED  .BAS</a> = Variablen in Hauptprogramm und SUB gemeinsam
+                 nutzen mit SHARED
+<a href="type4sub.bas">TYPE4SUB.BAS</a> = Anwenderdefiniertes Feld an SUB übergeben
+<a href="recurse.bas">RECURSE .BAS</a> = Rekursion: Eine SUB ruft sich selbst auf
+<a href="rekurs.bas">REKURS  .BAS</a> = Rekursion: Eine SUB ruft sich selbst auf
+<a href="rekurs2.bas">REKURS2 .BAS</a> = Rekursion: Zeichnen von Quadraten
+<a href="callreva.bas">CALLREVA.BAS</a> = Unterschied zwischen "Call by Reference" und
+                 "CALL by Value"
+
+<a name="15"></a>                                           <a href="#inhalt">zurück zum Inhalt</a>
+<b>15.Bibliotheken, CHAIN- und MAK-Module
+============================================================</b>
+<a href="qlb.zip">QLB     .ZIP</a> = Beispiel für die Erstellung einer .QLB
+                 QuickLibrary (Hoch2.qlb)        
+<a href="lib.zip">LIB     .ZIP</a> = Erstellen und Einbinden von .LIB-Bibliotheken
+<a href="chain1.zip">CHAIN1  .ZIP</a> = Einfaches Beispiel CHAIN: Aufteilen eines
+                 Programms auf 2 Dateien
+<a href="chain2.zip">CHAIN2  .ZIP</a> = Beispiel für CHAIN: 2 Pogrammdateien greifen
+                 auf dasselbe Feld zu
+<a href="module.zip">MODULE  .ZIP</a> = Demonstriert die Verwendung von MAK-Modulen
+                 in QuickBASIC
+
+<a name="16"></a>                                           <a href="#inhalt">zurück zum Inhalt</a>
+<b>16.QBasic unter Windows
+============================================================</b>
+<a href="desktop.bas">DESKTOP .BAS</a> = Erzeugt eine Desktop-Verknüpfung für ein QB
+                 -EXE-Programm mit Icon
+<a href="fentitel.bas">FENTITEL.BAS</a> = Windows-Fenstertitel auslesen und setzen
+<a href="longname.bas">LONGNAME.BAS</a> = Unterstützung für lange Datei- u. Ordnernamen
+<a href="pcname.bas">PCNAME  .BAS</a> = Findet den Namen des eigenen Computers heraus
+<a href="registry.bas">REGISTRY.BAS</a> = Zugriff auf Windows Registry
+<a href="w95_2dos.bas">W95_2DOS.BAS</a> = Lange Windows-Dateinamen in DOS-Dateinamen
+                 umwandeln (8+3)
+
+<a name="17"></a>                                           <a href="#inhalt">zurück zum Inhalt</a>
+<b>17.Sonstiges
+============================================================</b>
+<a href="commandp.bas">COMMANDP.BAS</a> = Liefert die einzelnen Parameter der COMMAND$-
+                 Kommandozeile
+<a href="amplib.bas">AMPLIB  .BAS</a> = Ausschalten des ATX-Netzteils und Auslesen
+                 des Laptop-Akkustandes 
+<a href="ip-get.bas">IP-GET  .BAS</a> = Ermitteln und Anzeigen der eigenen IP-Adresse
+<a href="sysinfo.bas">SYSINFO .BAS</a> = Anzeige der Systeminfos
+<a href="bsave_1.bas">BSAVE_1 .BAS</a> = Autodemo für die Befehle BSAVE und BLOAD
+<a href="oder.bas">ODER    .BAS</a> = Veranschaulichung der OR-Funktion (ODER)
+<a href="command.bas">COMMAND .BAS</a> = Komandozeilen-Interpreter ("Fake-OS")
+<a href="joytest.bas">JOYTEST .BAS</a> = Joystick-Testprogramm
+<a href="stackflo.bas">STACKFLO.BAS</a> = Erzeugt einen Stack-Überlauf
+<a href="chat.bas">CHAT    .BAS</a> = Netzwerk-Chat über serielles Nullmodemkabel
+<a href="terminal.bas">TERMINAL.BAS</a> = Chat über serielles Nullmodemkabel
+<a href="easychat.bas">EASYCHAT.BAS</a> = Netzwerk-Chat über serielles Nullmodemkabel
+<a href="pberror.bas">PBERROR .BAS</a> = Fehlerbearbeitung bei PowerBASIC
+
+                                           <a href="#inhalt">zurück zum Inhalt</a>
+
+        ---=== Ende der QB-MonsterFAQ Programme ===---
+</font></pre>
+</td></tr>
+</table>
+</center>
+
+<!-- snip -->
+
+
+<!------- Fußleiste ------------>
+<br><br><hr><br>
+<table border=0 BGCOLOR="#A8CAFE" width=100%><tr><td align=center>
+[<a href="http://www.antonis.de/index.htm" target=_top>zur Startseite http://www.antonis.de</a>]
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[<a href="http://www.antonis.de/welcome.htm">zur framelosen Startseite</a>]
+</td></tr></table>
+<br>
+</body>
+</html>
+
+
+
+
+
+
+

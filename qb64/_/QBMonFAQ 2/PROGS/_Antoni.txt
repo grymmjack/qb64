@@ -1,0 +1,8 @@
+417 Beispielprogramme aus der QB-MonsterFAQ V2.0
+====================================================
+_Inhalt.htm = Liste aller Programme, HTML-Datei mit anklickbaren Links
+index.htm   = identische Liste
+_Inhalt.txt = Liste aller Programme als TXT-Datei
+
+
+ Thomas Antoni, 14.4.2006  - www.antonis.de - thomas@antonis.de

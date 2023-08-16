@@ -1,0 +1,744 @@
+************************************************************
+*
+* 417 QBasic-Beispielprogramme für die QB-MonsterFAQ, V2.0
+* 417 QBasic Sample Programs for the QB-MonsterFAQ, V2.0
+* ========================================================
+*         Collected by
+*  \      Thomas Antoni, Sept 28, 1999 - April 12, 2006
+*   \ /\   E-Mail   :  thomas*antonis.de
+*   ( )    Websites :  www.qbasic.de --- www.antonis.de  
+* .( o ).  
+*          ---=== Hottest QBasic Stuff on Earth !!! ===---             
+*
+************************************************************
+
+
+I N H A L T  /  C O N T E N T S
+============================================================
+ 1. Vorwort / Preface
+ 2. Für Einsteiger (für den SelfQB-Kurs) 
+ 3. Tastatureingabe
+ 4. Text anzeigen und bearbeiten
+ 5. Grafik und Bilder anzeigen
+ 6. Bilder anzeigen (BPM, ICO usw.)
+ 7. Datum/Uhrzeit und Bildung von Wartezeiten
+ 8. Zahlen bearbeiten, Mathe-Probleme
+ 9. Sound
+10. Sortieren, suchen und ersetzen
+11. Spiele programmieren
+12. Dateien, Verzeichnisse und Laufwerke bearbeiten
+13. Maus, Menüs, Dialogboxen und Fenster
+14. Subroutinen und Funktionen
+15. Bibiotheken, CHAIN- und MAK-Module
+16. QBasic unter Windows
+17. Sonstiges
+
+
+Vorwort / Preface
+============================================================
+
+DEUTSCH
+--------------------
+Hier findest Du die meisten der in der QB-MonsterFAQ 
+angegebenen Beispiel-Programme. Diese Programme beinhalten 
+die am häufigsten nachgefragten Lösungen zu Q(uick)Basic- 
+Programmierproblemen aus verschiedensten Bereichen. Alle 
+Programme sind voll funktionsfähig und wurden von mir mit 
+QBasic 1.1 unter MS-DOS 6.22 und in der DOS-Box von Windows 
+95 getestet. SUBs und FUNCTIONs haben jeweils einen kleinen 
+"Testrahmen" erhalten, um als Demo bequem startbar zu sein.
+
+Einige wenige Programme laufen ausnahmsweise nicht mit 
+QBasic, sondern setzen QuickBasic 4.5 oder 7.1 voraus. 
+Hierauf wird dann im Programmkopf jeweils speziell 
+hingewiesen. Bei QuickBASIC ist zu beachten, dass die 
+Entwicklungsumgebung bei allen Programmen, die einen der 
+Befehle CALL ABSOLUTE, INTERRUPT oder INTERRUPTX enthalten, 
+mit der Option "/L" gestartet werden muss.
+
+Die QB-MonsterFAQ ist die weltweit größte FAQ zu QBasic
+und QuickBASIC und steht zum Online-Lesen zur Verfügung
+unter www.antonis.de/faq . Die wesentlich komfortablere
+Offline-Version der FAQ kann heruntergeladen werden auf
+www.qbasic.de unter
+"QBasic -> Tutorials -> Nachschlagewerke" .
+
+HINWEIS: Einige der Programme sind in mehreren Kategorien 
+         aufgeführt.
+
+
+ENGLISH
+--------------------
+Here please find most of the code snippets of the QB-
+MonsterFAQ. Tested and fully functioning programms only. 
+I've tested all progs with QBasic 1.1 under MS-DOS 6.22 and 
+the Windows 95 DOS box. Some of the progs will only run 
+under QuickBASIC 4.5 or 7.1; refer to the program header 
+comments.
+
+For running programs containing CALL ABSOLUTE, INTERRUPT or 
+INTERRUPTX statements, the IDE has to be started with the 
+"/L" option.
+
+The QB-MonsterFAQ is the world's biggest FAQ on QBasic and 
+QuickBasic! The FAQ is available as an online-readable
+database under www.antonis.de/faq . The much more
+user-friendly FAQ offline version is provided at
+www.qbasic.de under
+"QBasic -> Tutorials -> Nachschlagewerke" 
+
+
+Copyright
+--------------------
+All programs of this collection can be downloaded from 
+www.antonis.de/faq/progs/ or from www.qbasic.de .
+
+All programs are provided under the GNU FDL (Free-Document 
+License) and can be published, modified and integrated into 
+your own programs without any copyright claims.
+
+
+2. Für Einsteiger (für den SelfQB-Kurs) 
+============================================================
+ERSTPROG.BAS = Erstes kleines Programm
+MATHDEMO.BAS = Kleines Mathe-Demoprogramm
+IFTHEN  .BAS = Demo für IF...THEN-Abfragen
+INPUTIF .BAS = Demo für Tastatureingabe mit INPUT und
+                 für IF...THEN
+LOOP    .BAS = 5 Möglichkeiten, die Zahlen von 0 bis 100
+                 anzuzeigen
+CASE-1  .BAS = Beispiel 1 fuer den SELECT CASE Befehl
+CASE-2  .BAS = Beispiel 2 fuer den SELECT CASE Befehl
+CASE-3  .BAS = Beispiel 3 fuer den SELECT CASE Befehl
+FELD    .BAS = Felder (Arrays) bearbeiten in QBasic
+SUBQ    .BAS = Demo für eine SUBroutine
+FUNCQ   .BAS = Demo für eine FUNCTION
+
+
+3. Tastatureingabe
+============================================================
+TASTCODE.BAS = Zeigt den CHR$()-Tastencode der gerade
+                 gedrückten Taste an
+INTEXT  .BAS = Tasteneingabe mit Längenbegrenzung
+INTEXT2 .BAS = Tasteneingabe mit Längenbegrenzung
+INTEXT3 .BAS = Tasteneingabe mit Vorbesetzungswert
+INTEXT4 .BAS = Komfortable Eingaberoutine m. Editierfunktion
+INTEXT5 .BAS = Komfortable Eingaberoutine, ersetzt INPUT
+INTEXT6 .BAS = Eingaberoutine - Zeileneditor mit einstell-
+                 barer Eingabelänge
+SHOPLIST.BAS = Längenbegrenzte Tastatureingaben in
+                 Tabellenfelder
+PASSWRD1.BAS = Einfache Passworteingabe mit Sternchenanzeige
+PASSWRD3.BAS = Passwort-Eingabe mit Sternchenanzeige
+LONGINP .BAS = INPUT-Ersatz fuer mehrzeilige Text-Eingabe
+                 - fast ein Editor!
+INPENTER.BAS = Text eingeben, der Zeilenvorschübe enthält
+INPUTEXT.BAS = Eingaberoutine für langen Text
+INPUESC .BAS = INPUT mit Esc abbrechbar machen, Eing.routine
+KEYESC  .BAS = Tastatureingabe, die mit Esc abbrechbar ist
+XKEY    .BAS = Tastenauswertung direkt mit dem INP-Befehl
+                 ohne INPUT und INKEY$
+KEYSCAN .BAS = Tastenbetaetigungen erfassen über INP(&H60)
+KEYSTAT .BAS = Zustandsanzeige d.Sondertasten Shift, NumLock
+TASTSTAT.BAS = Tastaturstatus für Strg, Alt, Shift, Num usw.
+                 abfragen und ändern
+KEYSTAT2.BAS = Sondertasten mit ON KEY abfragen (Shift,Strg,
+                 Alt, NumLock usw.)
+SPECKEYS.BAS = Sondertasten abfragen (Strg, Alt, Shift, Num)
+DISCOLIT.BAS = Lichtorgel mit den Tastatur-LEDs
+KEYLITES.BAS = Num-LED an der Tastatur blinken lassen
+MULTIKEY.BAS = Erfassen von Mehrfachtastenbetätigungen
+MULTITAS.BAS = Erfassen von Mehrfachtastenbetätigungen
+ONKEY   .BAS = Ereignisgesteuerte Tatenbearbeitung
+                 (Demonstration der ON KEY Funktion)
+ONKEY2  .BAS = Ereignisgesteuerte Abfrage der F1 Taste
+ESCEREIG.BAS = Ereignisgesteuerter Programmabbruch mit Esc
+TASTE0-1.BAS = Erfasst das Drücken u.Loslassen der Alt-Taste
+TASTKURZ.BAS = Zeitlich begrenzte Tasteneingabe
+TASTMITT.BAS = Tastatureingabe mitten im Text
+TYPEIN  .BAS = Texteingabe mit Schreibmaschinengeräusch
+ZALINPUT.BAS = Auf Zahlen beschränkte Tasteneingabe
+TASTPUFF.BAS = Füllstand des Tastaturpuffers ermitteln
+ZALGRENZ.BAS = Zahleneingabe mit Begrenzung des Eingabewerts
+
+
+4. Text anzeigen und bearbeiten
+============================================================
+TEXTBEAR.BAS = Die wichtigsten Befehle zur Textbearbeitung
+CPRINT  .BAS = Text zentriert anzeigen
+RPRINT  .BAS = Text rechtsbündig anzeigen
+BLOKSATZ.BAS = Text in Blocksatz formatieren und anzeigen
+WORDWRAP.BAS = Text mit korrektem Zeilenumbruch anzeigen
+WORDWRA2.BAS = Text mit Zeilenumbruch und wählbarer Zeilen-
+                 länge anzeigen
+SHOWTXT3.BAS = Anzeige von Text mit automatischem
+                 Zeilenumbruch
+LAUFSCHR.BAS = Laufschrift von rechts nach links
+LAUFSHR2.BAS = Laufschrift, die aus der Mitte heraus nach
+                 außen "wächst"
+LAUFSHR3.BAS = Laufschrift scrollt von rechts nach links
+                 und verschwindet dort
+LAUFSHR5.BAS = Laufschrift im Textmodus
+TICKER  .BAS = Text-Ticker - weich eingeblendete Laufschrift
+                 in SREEN 13
+NOSCROL1.BAS = Bildschirmausgabe in Zeile 25 ohne Scrollen
+NOSCROL2.BAS = Bildschirmausgabe in Zeile 25 ohne Scrollen
+RUN     .BAS = Ein animiertes Strichmaennchen laeuft ueber
+                 den Bildschirm
+SCREENR2.BAS = Auslesen des Text-Bildschirms mit PEEK
+SCREENR3.BAS = Auslesen des Text-Bildschirms mit BSAVE
+SCREENR4.BAS = Auslesen des Zeichencodes und der Farbe eines
+                 Textzeichens vom Bildschirm mit SCREEN
+SCREENRD.BAS = Auslesen des Text-Bildschirms mit SCREEN
+SCRENLES.BAS = Inhalt des Textbildschirms SCREEN 0 in Datei
+                 lesen (mit PEEK)
+SHOWTXT1.BAS = Einfacher Textviewer, zeigt eine Textdatei an
+SHOWTXT2.bas = Textviewer, zeigt e. Textdatei seitenweise an
+TABELLE .BAS = Tabelle anzeigen in einem Teilbereich des
+                 Bildschirms
+TRIM_ALL.BAS = Alle Leerzeichen aus einem String entfernen
+BUCZAEHL.BAS = Zählt die Buchstaben in einem Text
+WORTZAEL.BAS = Zählt wie oft ein Wort in einem Text vorkommt
+TEXTRUEK.BAS = Text rueckwaerts anzeigen
+TYPEIN  .BAS = Texteingabe mit Schreibmaschinengeraeusch
+TYPER   .BAS = Anzeige von Text mit Schreibmaschinengeräusch
+UCASEUML.BAS = UCASE-Funktion, die auch Text mit Umlauten
+                 korrekt in Großbuchstaben wandelt
+ZUFWORT1.BAS = Zufallsworte erzeugen (Worte nach Zufalls-
+                 prinzip auswählen)
+ZUFAWORT.BAS = Zufallswörter erzeugen
+BEWEG   .BAS = Ein Textzeichen mit den Cursortasten bewegen
+BOX     .BAS = Zeichnen eines Kastens aus Doppelstrichen im
+                 Textmodus
+BOX2    .BAS = Anzeige eines Kastens im Textmodus mit vielen
+                 Gestaltungsmöglichkeiten
+BOX_ANI .BAS = Animierte Box auf dem Bildschirm anzeigen
+BOX_SCHA.BAS = Kasten im Textmodus zeichnen mit Schatten 
+UMLAUTE .BAS = Umlaute in "ae", oe" usw. wandeln
+BLINKTXT.BAS = Blinkenden Text anzeigen
+EPRINT  .BAS = Anzeigen nicht druckbarer ASCII-Steuerzeichen
+ASC2ANSI.BAS = ASCII-ANSI-Konvertierung für Eingabetext
+ASCI2BIN.BAS = ASCII-Zeichen in Binärzahlen umwandeln
+ASCIANSI.BAS = Umwandlung einer ASCII- in e. ANSI-Textdatei
+COLOR-1 .BAS = Farben verwenden im Textmodus
+TXTCOLOR.BAS = Textanzeige mit farblich unterschiedlichen
+                 Buchstaben
+TEXTWIN .BAS = Texteditor - Text in einem Fenster editieren
+
+
+5. Grafik anzeigen
+============================================================
+3D_1    .BAS = 3D-Grafikdemo - Anzeige eines 3D-Quadrats
+3D_2    .BAS = 3D-Grafikdemo - rotierender Würfel
+3D_3    .BAS = 3D-Grafikdemo - rotierender Ball
+3D_4    .BAS = 3D-Grafikdemo - Anzeige vieler 3D-Ringe
+3DKUGEL1.BAS = Zeigt 3D-Kugeln zufälliger Größe und Frabe an
+3DKUGEL2.BAS = Zeigt 3D-Kugeln als Drahtgittermodelle an
+3DKUGEL3.BAS = Einfache dreidimenionale Kugelgrafik
+ANI-RUN .BAS = Animiertes laufendes Männchen mit GET und PUT
+ANIMAT1 .BAS = Ein Radfahrer fährt über den Bildschirm
+BALLMOV2.BAS = Page-Flipping-Demo - Fliegende Bälle Cursor-
+                 Steuerung
+BALLMOVE.BAS = Page-Flipping-Demo - fliegender Ball, der den
+                 Hintergrund nicht zerstoert
+BALLPRAL.BAS = Ball bewegen, der an einer Wand abprallt
+BEWEG2  .BAS = Einen Sprite ueber den Bildschirm bewegen
+BEWEG3  .BAS = Einen Kreis mit den Cursortasten bewegen
+BEWEG4  .BAS = Spielfigur mit Cursor-Tasten bewegen
+BLINE   .BAS = Eine Linie mit dem Bresenham-Algorithmus
+                 zeichnen (ohne LINE)
+DREH    .BAS = Drehen eines Punktes um einen Symmetriepunkt
+DREHTEXT.BAS = Drehen von Text
+DREIFUEL.BAS = Dreieck mit Farbe füllen ohne PAINT
+ERASE1  .BAS = Bildschirmelement löschen und alten
+                 Hintergrund wieder herstellen
+FADER   .BAS = Dunkel-hell-Farbverlauf für einen Text
+FILL    .BAS = Füllen eines Dreiecks mit einer Farbe
+GETPOINT.BAS = Farbe eines Pixels in SCREEN12 abfragen ohne
+                 POINT-Befehl direkt aus dem Grafikspeicher
+GRAPHTUT.BAS = Englisches interaktives Grafiktutorial,
+                 demonstriert LINE, CIRCLE, PAINT und PSET
+SPIRAL  .BAS = Zeichnen von Spiralen
+STICKMAN.BAS = Ein Strichmaennchen mit Cursortasten bewegen
+CIRCLE1 .BAS = Einen Kreis zeichnen ohne CIRCLE
+DIKLINIE.BAS = Zeichnen einer dicken Linie (als Rechteck)
+FATLINES.BAS = Zeichnet eine dicke Linie (durch Aneinander-
+                 setzen mehrerer Einzellinien)
+FONTER  .BAS = Font-Generator für SCREEN 12
+GETDEMO1.BAS = Demonstration 1 des Grafik-GET-Befehls
+GETDEMO2.BAS = Demonstration 2 des Grafik-GET-Befehls
+GETPUT1 .BAS = Radfahr-Animation mit Grafik-GET/PUT
+GETPUT2 .BAS = Demo der Modi PSET/PRESET/AND/OR/XOR des
+                 Grafik-PUT-Befehls
+GLASFUL1.BAS = Animiertes Befüllen eines Glases
+GLASFUL2.BAS = Animiertes Befüllen eines Glases
+GLASFUL3.BAS = Animiertes Befüllen eines Glases
+GRAFIK  .BAS = Kleine Demo der wichtigsten Grafikbefehle
+GRAPMOVE.BAS = Ein Mondgesicht mit Cursortasten über den
+               Bildschirm bewegen
+KREISFAR.BAS = Kreis mit Farbe füllen
+KREISROL.BAS = Ein Kreis rollt diagonal über den Bildschirm
+KREISFUL.BAS = Kreis mit Farbe füllen ohne PAINT und DRAW
+LAUFSHR4.BAS = Laufschrift im Grafikmodus
+PAGEFLIP.BAS = Page-Flipping-Demo - Bildschirmseiten mit
+                 SCREEN umschalten für Animationen
+PAGEFLI2.BAS = Page-Flipping-Demo in SCREEN 9
+PAINTMUS.BAS = Ausmalen eines Dreiecks mit einem Muster
+                 (Texturieren)
+PALETTE1.BAS = Palettendemo - demonstriert die Farbmischung
+                 mit dem PALETTE-Befehl, inklusive Fading
+PALETTE2.BAS = Demonstration d. PALETTE-Befehls in Screen 12
+PIXCOLOR.BAS = Farbe eines Bildschirm-Pixels abfragen mit
+                 POINT
+ROTIER1 .BAS = Rotierendes Viereck anzeigen
+RUN     .BAS = Animation: Strichmännchen läuft über den
+                 Bildschirm
+SPRITE1 .BAS = Einen Sprite erzeugen und anzeigen
+SCREEN12.BAS = Direktzugriff auf das Video-RAM von SCREEN 13
+SCREENER.BAS = Bildschirmeigenschaften ermitteln
+SCREENS .BAS = Ermittelt die verfügbaren SCREEN-Modi
+SELCLS  .BAS = Ausschnitt des Grafikbildschirms löschen
+SMALFONT.BAS = Kleine Schrift in SCREEN 12/13
+SNOWMAN .BAS = Schneemann-Animation mit GET und PUT
+RGBFARBE.BAS = Beliebige RGB-Farben erzeugen mit PALETTE
+VERLAUF .BAS = Farbverläufe mit QBasic realisieren
+
+
+6. Bilder anzeigen (BPM, ICO usw.)
+============================================================
+BMP-LOAD.BAS = BMP-Loader zum Anzeigen von BMP-Grafiken
+BMPLOAD2.BAS = BMP-Loader zum Anzeigen von BMP-Bildern mit
+                 256-Farben
+BMPLOAD3.BAS = BMP-Loader zum Anzeigen von BMP-Grafiken
+THOMAS  .BMP = Beispielgrafik für BMP-Loader (256 Farben,
+                 320 x 200 Pixel)
+ICONLOAD.BAS = Icons anzeigen (für Windows-Icons)
+ICONVIEW.BAS = Icons anzeigen (für Windows- und OS/2-Icons)
+
+
+7. Datum/Uhrzeit und Bildung von Wartezeiten
+============================================================
+
+Wartezeiten erzeugen
+--------------------
+TIMER   .BAS = Erzeugung genauer Wartezeiten (min. 0,056 sec)
+TIMER24 .BAS = Erzeugung von Wartezeiten, die auch um
+                 Mitternacht funktionieren
+TIMER1  .BAS = Kurze Wartezeiten erzeugen - unabhängig von
+                 der Taktfrequenz des Computers
+TIMER2  .BAS = Selbstanspassender Timer - unabhängig von
+                 der CPU-Speed
+MYTIMER .BAS = Extrem kurze Wartezeiten erzeugen durch
+                 Umkonfigurieren des System-Timers
+
+
+Uhrzeitanzeige
+-----------------------------
+TIME    .BAS = Uhrzeitanzeige
+DAT-ZEIT.BAS = Datum u.Uhrzeit im deutschen Format anzeigen
+ONTIMER .BAS = Uhrzeitanzeige unabhängig vom Hauptprogramm
+                 mit ON TIMER 
+UHRGROSS.BAS = Digitaluhr mit grossen Ziffern
+
+
+Countdown-Timer & Stoppuhren
+-----------------------------
+COUNT   .BAS = Einfacher Countdown-Timer
+COUNTDWN.BAS = Countdown-Timer
+COUNTER .BAS = Countdown-Timer, der das Nullsetzen des
+                 System-Timers um Mitternacht beherrscht
+STOPUHR1.BAS = Einfache Stoppuhr mit sec- und min-Anzeige
+STOPUHR2.BAS = Einfache Stoppuhr mit sec u. 1/10 sec Anzeige
+STOPUHR3.BAS = Komfort-Stoppuhr, min, sec, 1/10 sec Anzeige
+STOPUHR4.BAS = Stoppuhr mit Verwendung des ON TIMER-Befehls
+ZEITDIFF.BAS = Zeitdifferenz zwischen 2 Zeitpunkten in
+                 Sekunden ermitteln
+
+
+Datum-Routinen
+-----------------------------
+WEEKDAY .BAS = Wochentag eines vorgegebenen Datums ermitteln
+WEEKDAY2.BAS = Wochentag eines vorgegebenen Datums ermitteln
+TAGDIFF .BAS = Ermittelt die Tage zwischen 2 Zeitpunkten
+DAT2TAG .BAS = Tage und Datum ineinander umrechnen
+DATUM   .BAS = Anspringen einer Datums-abhaengigen Routine
+DAT2DAT .BAS = Hängt das Datum an die Namen aller Dateien
+                 eines Ordners an
+DATRUECK.BAS = Datumrücksteller zur Verlängerung der Nutz-
+                 ungsdauer von Sharewareprogrammen
+KALWOCHE.BAS = Berechnung d.aktuellen Kalenderwoche KW1-KW52
+
+
+8. Zahlen bearbeiten, Mathe-Probleme
+============================================================
+
+Zahlen konvertieren
+-----------------------------
+ANY2DEC .BAS = Zahlenkonvertierung beliebige Basis -> Dez.
+DEC2ANY .BAS = Zahlenkonvertierung Dez. -> beliebige Basis
+BIN2DEC1.BAS = Zahlenkonvertierung  Binär -> Dezimal
+BIN2DEC2.BAS = Zahlenkonvertierung  Binär -> Dezimal
+BIN2DEC3.BAS = Zahlenkonvertierung  Binär -> Dezimal
+DEC2BIN1.BAS = Zahlenkonvertierung Dezimal -> Binär
+DEC2BIN2.BAS = Zahlenkonvertierung Dezimal -> Binär
+DEC2BIN3.BAS = Zahlenkonvertierung Dezimal -> Binär
+DEC2BIN4.BAS = Zahlenkonvertierung Dezimal -> Binär und ein
+                 Bit extrahieren
+DEC2HEX1.BAS = Zahlenkonvertierung Dez. -> Hex (mit HEX$)
+DEC2HEX2.BAS = Zahlenkonvertierung Dez. -> Hex (ohne HEX$)
+HEX2DEC1.BAS = Zahlenkonvertierung Hex -> Dez. (mit VAL)
+HEX2DEC2.BAS = Zahlenkonvertierung Hex -> Dez. (ohne VAL)
+HEXDECRE.BAS = Hexzahl mit "Komma" in Dezimalzahl wandeln
+BIN2ASCI.BAS = Binärzahlen in ASCII-Zeichen umwandeln
+FLOA2FIX.BAS = Gleitpunktzahl in Festpunktzahl wandeln
+FLOAFIX2.BAS = Gleitpunktzahl in Festpunktzahl wandeln
+FLOATFIX.BAS = Gleitpunktzahl in Festpunktzahl wandeln
+ZAL2WORT.BAS = Wandelt eine max.4-stellige Zahl in Wörter um
+ZAHL2TXT.BAS = Wandelt eine Zahl in einen Text um
+NUM2WORD.BAS = Wandelt eine Zahl in einen engl. Text
+ROMANUM .BAS = Wandelt römische in arabische zahlen um
+NORM2POL.BAS = Normal-Polarform-Konverter f. Komplexe Zahlen
+
+
+Zahlen anzeigen und eingeben
+-----------------------------
+MITNULL .BAS = Ganzzahlen mit führenden Nullen im festen
+                 Format anzeigen (Kilometerzählereffekt)
+KOMMA2PT.BAS = Zahleneingabe mit Komma statt Dezimalpunkt
+KOMMAANZ.BAS = Zahlenanzeige mit Komma statt Dezimalpunkt
+KOMMAINP.BAS = Zahleneingabe mit Komma statt Dezimalpunkt
+KOMMAPKT.BAS = Zahlenanzeige mit Komma statt Dezimalpunkten
+                 und Trennpunkten nach je 3 Stellen
+MITNULGP.BAS = Gleitpunktzahl mit führenden Nullen anzeigen
+EXPOANZ .BAS = Demo d.Exponentialanzeige v.Gleitpunktzahlen
+
+
+Zufallszahlen
+-----------------------------
+ZUFAELLE.BAS = Zufallszahlen 1..n erzeugen
+RANDOMNO.BAS = Zufallszahlen ohne Wiederholung ermitteln
+ZUFOWI  .BAS = Zufallszahlen ohne Wiederholung erzeugen
+LOTTO   .BAS = Lottozahlengenerator (6 aus 49)
+
+
+Mathematische Probleme
+-----------------------------
+BEHARR  .BAS = Ermittlung der "Beharrlichkeit" einer Zahl
+BERNOULI.BAS = Berechnung der Bernoulliwahrscheinlichkeit
+BINOMI  .BAS = Berechnung d. Binominalkoeffizienten n über k
+BINOMI2 .BAS = Berechnung d. Binominalkoeffizienten n über k
+BINOMKO .BAS = Berechnung d. Binominalkoeffizienten n über k
+FAKULTAT.BAS = Fakultät n! berechnen
+FAKBIG  .BAS = Sehr große Fakultäten n! berechnen
+FAKULREC.BAS = Fakultät n! rekursiv berechnen
+FAKULT  .BAS = Fakultät bis 1754! berechnen mit PowerBASIC
+FAKULT  .EXE = dito, compiliertes EXE-Programm
+FASTFAK .BAS = Schnelle Fakultätsberechnung n!
+FORMEL  .BAS = Formel-Löser in QBasic
+GERSCHNI.BAS = Schnittpunkt zweier Geraden berechnen
+GETPI   .BAS = Berechnet Pi auf 1000 Dezimalstellen genau
+GROEZAHL.BAS = Ermittlung der größten von mehreren Zahlen
+HAPPYNUM.BAS = Berechnung v.Happy Numbers (fröhliche Zahlen)
+HAPYNUM2.BAS = Berechnung v.Happy Numbers (fröhliche Zahlen)
+HERON   .BAS = Wurzelberechnung nach Heron ohne SQR
+NEWTON  .BAS = Wurzelberechnung nach Newton ohne SQR
+WURZELNA.BAS = Wurzelberechnung über ein Näherungsverfahren
+JULIAFRA.BAS = Fraktalgenerator für Julia-Mengen
+MANDEL1 .BAS = Anzeige einer Mandelbrot-Grafik (Fraktal)
+MANDEL2 .BAS = Anzeige einer Mandelbrot-Grafik (Fraktal)
+MATRAIN1.BAS = Einfacher Mathetrainer für das Addieren
+MATRAIN2.BAS = Mathetrainer für die 4 Grundrechenarten
+NUMCHECK.BAS = Prueft, ob ein Eingabewert eine Zahl ist
+OVERFLOW.BAS = Programmabbruch bei Zahlenüberlauf abfangen
+PQFORMEL.BAS = Lösung der Quadratischen pq-Gleichung
+QUADRAT .BAS = Lösung der Quadratischen Gleichung mit der
+                 "Mitternachtsformel"
+POLYNUL .BAS = Nullstellen eines Polynoms berechnen
+POLYNUL2.BAS = Nullstellen eines Polynoms berechnen nach dem
+                 Bairstow-Verfahren
+PARALEL2.BAS = Parallele zu einer Geraden zeichnen
+PARALLEL.BAS = Zeichnen von parallelen Linien
+PRIMEGEN.BAS = Primzahlen-Generator - findet über 3 Mio
+                 Primzahlen
+PRIMTEST.BAS = Testet, ob eine Zahl eine Primzahl ist
+PRIMZAHL.BAS = Ermittelt die Primzahlen bis 1500
+PRIMFAK .BAS = Primfaktorzerlegung
+PRIMZERL.BAS = Primfaktorzerlegung
+PUNGERAD.BAS = Berechnet d.Abstand e.Punktes von e.Geraden
+QUERSUM .BAS = Berechnet die Quersumme einer Zahl
+RUNDUNG1.BAS = Kaufmännische Rundung
+RUNDUNG2.BAS = Wissenschaftliche Rundung
+SCHEITEL.BAS = Scheitelform der Quadratischen Gleichung
+               berechnen (aus ax^2 + bx + c = 0)
+SINKURVE.BAS = Sinuskurve anzeigen
+SINAMPL .BAS = Sinuskurve anzeigen, mit wählbarer Amplitude
+                 und Frequenz
+TANGENT1.BAS = Tangenten an einen Kreis zeichnen
+TANGENT2.BAS = Berechnet gemeinsamen Tangenten an 2 Kreise
+TANGENT3.BAS = Berechnet die Tangenten von einem Punkt an
+                 einen Kreis
+TARECH  .BAS = Einfacher Taschenrechner für die 4 Grund-
+                 rechenarten
+RECHNER .BAS = Taschenrechner für die 4 Grundrechenarten
+TARECH2 .BAS = Taschenrechner
+UNGENAU .BAS = Demo für die Rundungsfehler bei Gleitpunkt-
+                 Verarbeitung
+VZANZEIG.BAS = Vorzeichenrichtige Anzeige von Formel-Termen
+DEZIMAL1.BAS = Zerlegen einer Zahl in ihre Dezimalstellen
+DEZIMAL2.BAS = Zerlegen einer Zahl in ihre Dezimalstellen
+GGTEIL  .BAS = Den größten gemeinsamen Teiler berechnen
+KGV     .BAS = Das kleinste gemeinsame Vielfache berechnen
+KREISNIT.BAS = Die Schnittpunkte zweier Kreise berechnen
+LANGRECH.BAS = Taschenrechner fuer riesenlange Zahlen
+LINIE2P .BAS = Geradengleichung aus 2 Punkten berechnen
+TEILBAR .BAS = Prüft ob 2 Zahlen durcheinander teilbar sind
+VZLOSINT.BAS = Vorzeichenlose 16-Bit INTEGER-Zahl erzeugen
+WORD2BYT.BAS = Die beiden Bytes aus e. 16-Bit-Wort auslesen
+ZAHL2ZIF.BAS = Ziffern einer Ganzzahl isoliert abspeichern
+ZERLEG  .BAS = Zahl in die einzelnen Dezimalstellen zerlegen
+ZINSEN1 .BAS = Kapitalwachstum mit Zinseszins berechnen
+ZINSEN2 .BAS = Kapital-Verdopplung mit Zinseszinz berechnen
+SPLINE  .BAS = Zeichnet eine Spline-Kurve durch 4 Punkte
+
+
+9. Sound
+============================================================
+ENTCHEN .BAS = "Alle meine Entchen" über d. Speaker spielen
+MUSIK   .BAS = Diverse Musikstücke u.Sounds für d.PC-Speaker
+MUSIK2  .BAS = Diverse Musikstücke u.Sounds für d.PC-Speaker
+ON-PLAY .BAS = Spielt lange Musikstücke mit ON PLAY
+SIRENE  .BAS = Erzeugt einen Sirenenklang mit SOUND
+SIRENE2 .BAS = Polizei-Sirene mit SOUND
+STARWARS.BAS = Die Starwars-Melodie mit PLAY abspielen
+FREQUENZ.BAS = Frequenzbereich des PC-Speakers messen
+ZUFSOUND.BAS = Zufalls-Musik mit Grundmelodie erzeugen
+DIRSOUND.BAS = Ton über I/O-Port an den PC-Speaker ausgeben
+WAVPLAY1.BAS = Einfacher Player für WAV-Dateien
+
+
+10. Sortieren, suchen, ersetzen
+============================================================
+SORT_2  .BAS = Sortieren von 2 Zahlen mit SWAP
+SORT_1  .BAS = Einfaches Beispiel zum Sortieren von Zahlen
+                 mit "Bubble-Sort"
+SORT    .BAS = Sortieren von Zahlen mit den beiden Sortier-
+                 Verfahren Bubble-Sort und Quick-Sort
+SORTQUIK.BAS = Sortieren mit QuickSort (rekursiv)
+SORTQIK2.BAS = Sortieren mit QuickSort (nicht-rekursive
+                 Variante)
+SORTREV .BAS = Sortieren von Zahlen in abfallender Reihen-
+                 folge sortieren (mitt BubbleSort)
+SORTSHEL.BAS = Sortieren mit ShellSort
+DOSSORT .BAS = Sortieren mit Hilfe des SORT-Befehls von DOS
+SORT_TXT.BAS = Sortieren von Texten mit korrekter Behandlung
+                 der deutschen Umlaute
+SUCHEN01.BAS = Suche in einem Text mit dem INSTR-Befehl
+SUCHEN02.BAS = Textsuche in einem Wörterbuch
+BISEARCH.BAS = Binäre Suche in sortierten Feldern
+REPLACE .BAS = Suchen und Ersetzen von Text in einer Datei
+TAB2SPC .BAS = Tabulatoren durch Leerzeichen ersetzen
+VISISORT.BAS = Demonstriert 9 Sortieralgorithmen visuell und
+                 misst deren Geschwindigkeit
+
+
+11. Spiele programmieren
+============================================================
+ZAHLRAT .BAS = Zahlenraten in einem wählbaren Zahlenbereich
+ADVENTUR.BAS = Text-Adventure - so könnte es anfangen ...
+QUIZ    .BAS = Ein einfaches Quiz-Programm
+WUERFEL .BAS = Elektronischer Wuerfel
+WUERFEL2.BAS = Würfelspiel mit ASCII-Grafik i.Textbildschirm
+AUTORENN.BAS = Ein einfaches Autorenn-Spiel im Textmodus
+PONG    .BAS = Pong-Clone (Tennisspiel )
+STARWARF.BAS = Star-Wars Intro mit Star-Wars Melodie u.-Font
+WAYFIND .BAS = Wegfinde-Routine
+ELISA   .BAS = Ein Computer-Gespraechspartner (KI / AI)
+LEBEN   .BAS = Das Spiel des Lebens (Wachstums-Simulation)
+
+
+12. Dateien, Verzeichnisse und Laufwerke bearbeiten
+============================================================
+Dateien
+-----------------------------
+SEQFILE .BAS = Datei schreiben und lesen - ganz einfach mit
+                 einer sequentiellen Datei
+VAR2FILE.BAS = Variablen in eine Datei schreiben u.rücklesen
+SEQFILE2.BAS = Schreibt ein Wort in eine Datei und liest es
+                 wieder zurück
+DATEI   .BAS = Schreibt einen kleinen Text in eine Datei
+TXTDATEI.BAS = Eingegebenen Text in eine Datei schreiben
+FILEXIST.BAS = Testet ob eine Datei existiert
+FILEXIS2.BAS = Testet ob eine Datei existiert
+                 (Komfort-Version)
+SEQERROR.BAS = Prüft ob e. sequentielle Datei vorhanden ist
+FILCOPY1.BAS = Kopieren einer Datei, byteweise ohne SHELL
+FILCOPY2.BAS = Schnelles Kopieren einer Datei über e. Puffer
+FILCOPY3.BAS = Schnelles Kopieren einer Datei über e. Puffer
+FILESIZE.BAS = Ermittelt die Größe einer wählbaren Datei
+FILENGTH.BAS = Länge und Zeilenzahl einer Datei ermitteln
+MERGE   .BAS = Merger - fasst mehrere Dateien zusammen
+PATHNAME.BAS = Pfad u. Dateinamen des gerade ausgegefuehrten
+                 EXE-Programms ermitteln
+PATHNAME EXE = dito, compilierte EXE-Datei
+EXEPATH .BAS = Pfad und Namen der eigenen Programmdatei
+                 ermitteln
+EXENAME .BAS = Ein Programm ermittelt seinen eigenen Namen
+READFILE.ZIP = Zugriff auf eine externe Begleitdatei
+SCORE   .ZIP = Highscore-Liste direkt in EXE-Datei einbetten
+VERSCHLU.BAS = Einfache Ver- und Entschluesselung von Text
+ENCRYPT .BAS = Textverschlüsselung 
+CRYPTME .BAS = Textverschlüsselung mit Passwortschutz
+SHOWBIN .BAS = Binär-Viewer - Den Inhalt einer beliebigen
+                 Datei im Binärcode anzeigen
+SHOWHEX .BAS = Hex-Viewer - Den Inhalt einer wählbaren Datei
+                 im Hexadezimalcode anzeigen, mit Adressen
+SHOWTXT1.BAS = Einfacher Text-Viewer - Zeigt den Inhalt
+                 einer wählbaren Datei als ASCII-Text an
+SHOWTXT2.BAS = Textviewer mit seitenweiser Anzeige
+DATEIDAT.BAS = Datei-Erstellungsdatum aendern
+
+
+Verzeichnisse, Ordner
+-----------------------------
+DIR_1   .BAS = Inhalt e. Verzeichnisses auflisten ohne SHELL
+DIR_2   .BAS = Inhalt eines Verzeichnisses auflisten mit
+                 Hilfe des Befehls SHELL "DIR .."
+XDIR    .BAS = Inhalt eines Verzeichnisses auflisten - per
+                 Interrupt-Bearbeitung
+PATH    .BAS = Ermitteln des aktuellen Pfadnamens
+SEARCH1 .BAS = Nach Dateien suchen in einem wählbaren Pfad
+DIRMAKNO.BAS = Erstellen durchnummerierter Verzeichnisse
+
+
+Laufwerke
+-----------------------------
+CHKDRIVE.BAS = Anzeige der vorhandenen Laufwerke
+LW_LISTE.BAS = Ermittlung der vorhandenen Laufwerke inkl.Typ
+DRIVE   .BAS = Funktionen zum Handling von Verzeichnissen
+                 und Laufwerken
+DIR_3   .BAS = Inhalt eines Verzeichnisses auflisten
+DIRLIST .BAS = Listet die Dateien in einem Verzeichnis auf
+                 mit Platzhaltern, z.B. *.BAS
+SHOWDIR .BAS = Inhalt eines Verzeichnisses anzeigen - mit
+                 dem DIR$ Befehl von QB 7.1 und PowerBASIC
+TREE    .BAS = Listet alle Verzeichnisse eines Laufwerks auf
+CDOPEN  .BAS = Öffnet und schließt das CD-ROM-Laufwerk
+MEDICHK .BAS = Prüft ob eine Floppy/CD/DVD im Laufwerk liegt
+DISKCOP1.BAS = Kopieren einer Diskette mit SHELL
+DISKCOP2.BAS = Kopieren einer Diskette BIOS-Interrupt
+
+
+13. Maus, Menüs, Dialogboxen und Fenster
+============================================================
+
+Maus
+-----------------------------
+MOUSE   .BAS = Mausroutinen für QBasic 1.1 und QB 4.5/7.1
+MAUS    .BAS = Einfache Mausroutine für QuickBASIC
+MAUS2   .BAS = Einfache Mausroutine für QuickBASIC
+MAUSCUR2.BAS = Mausroutine für QBasic und QuickBASIC mit
+                 veränderbarem Mauszeiger
+MAUSCURS.BAS = Mausroutine für QBasic und QuickBASIC mit
+                 veränderbarem Mauszeiger
+MOUSE2  .BAS = Maus-Routine, funktioniert unter QBasic und
+                 QuickBASIC in allen SCREEN-Modi
+MOUSEINT.BAS = Mausroutine für QBasic und QuickBASIC
+                  mit Interrupts
+MOUSETXT.BAS = Mausroutine für den Textbildschirm SCREEN 0
+                 (für QuickBASIC, nicht für QBasic)
+
+
+Menüs
+-----------------------------
+MENU1   .BAS = kleines textbasiertes Auswahlmenü
+MENU3   .BAS = Bildschirmmenü mit Scrollfunktion
+MENUUPDN.BAS = Scroll-Menü mit Up/Down-Tasten-Bedienung
+MENUPULL.BAS = Komfortables Pulldown-Menü über die Tastatur
+PULLDOWN.BAS = Pulldown-Menü anzeigen und bearbeiten  
+MENUMAUS.BAS = Maus-gesteuertes Menü
+
+
+Dialogboxen und Fenster
+-----------------------------
+QBASWIN .BAS = Windows-ähnliche Pop-Up-Fenster erzeugen
+PROGRESS.BAS = Einfacher Fortschrittbalken im Textbildschirm
+PROGRES .BAS = Fortschrittbalken im Textbildschirm
+PROGRES2.BAS = Fortschrittbalken im Grafikbildschirm
+RAHMEN  .BAS = Zeichnet einen Rahmen aus Textzeichen
+RAHMFARB.BAS = Zeichnet ein farbiges Fester mit Titeltext
+BUTTON  .BAS = Erstellen eines Klickbuttons
+GUISUBS .BAS = Subroutinen zur Erzeugung von Bedienungsober-
+                 flächen mit Dialogboxen und Menüs
+
+
+14. Subroutinen und Funktionen
+============================================================
+SUBTUTOR.BAS = Englisches Tutorial über SUBs und FUNCTIONs
+FELD2SUB.BAS = Feld an eine SUB/FUNCTION übergeben
+FELDSUB .BAS = Feld an eine SUB/FUNCTION übergeben
+MEHRUECK.BAS = SUB/FUNCTION gibt mehr als einen Wert zurück
+SHARE   .BAS = Variablen in Hauptprogramm und SUB gemeinsam
+                 nutzen mit SHARED
+SHARED  .BAS = Variablen in Hauptprogramm und SUB gemeinsam
+                 nutzen mit SHARED
+TYPE4SUB.BAS = Anwenderdefiniertes Feld an SUB übergeben
+RECURSE .BAS = Rekursion: Eine SUB ruft sich selbst auf
+REKURS  .BAS = Rekursion: Eine SUB ruft sich selbst auf
+REKURS2 .BAS = Rekursion: Zeichnen von Quadraten
+CALLREVA.BAS = Unterschied zwischen "Call by Reference" und
+                 "CALL by Value"
+
+
+15. Bibliotheken, CHAIN- und MAK-Module
+============================================================
+QLB     .ZIP= Beispiel für die Erstellung einer .QLB
+                 QuickLibrary (Hoch2.qlb)        
+LIB     .ZIP = Erstellen und Einbinden von .LIB-Bibliotheken
+CHAIN1  .ZIP = Einfaches Beispiel CHAIN: Aufteilen eines
+                 Programms auf 2 Dateien
+CHAIN2  .ZIP = Beispiel für CHAIN: 2 Pogrammdateien greifen
+                 auf dasselbe Feld zu
+MODULE  .ZIP = Demonstriert die Verwendung von MAK-Modulen
+                 in QuickBASIC
+
+
+16. QBasic unter Windows
+============================================================
+DESKTOP .BAS = Erzeugt eine Desktop-Verknüpfung für ein QB
+                -EXE-Programm mit Icon
+FENTITEL.BAS = Windows-Fenstertitel auslesen und setzen
+LONGNAME.BAS = Unterstützung für lange Datei- u. Ordnernamen
+PCNAME  .BAS = Findet den Namen des eigenen Computers heraus
+REGISTRY.BAS = Zugriff auf Windows Registry
+W95_2DOS.BAS = Lange Windows-Dateinamen in DOS-Dateinamen
+                 umwandeln (8+3)
+
+
+17. Sonstiges
+============================================================
+COMMANDP.BAS = Liefert die einzelnen Parameter der COMMAND$-
+                 Kommandozeile
+AMPLIB  .BAS = Ausschalten des ATX-Netzteils und Auslesen
+                 des Laptop-Akkustandes 
+IP-GET  .BAS = Ermitteln und Anzeigen der eigenen IP-Adresse
+SYSINFO .BAS = Anzeige der Systeminfos
+BSAVE_1 .BAS = Autodemo für die Befehle BSAVE und BLOAD
+ODER    .BAS = Veranschaulichung der OR-Funktion (ODER)
+COMMAND .BAS = Komandozeilen-Interpreter ("Fake-OS")
+JOYTEST .BAS = Joystick-Testprogramm
+STACKFLO.BAS = Erzeugt einen Stack-Überlauf
+CHAT    .BAS = Netzwerk-Chat über serielles Nullmodemkabel
+TERMINAL.BAS = Chat über serielles Nullmodemkabel
+EASYCHAT.BAS = Netzwerk-Chat über serielles Nullmodemkabel
+PBERROR .BAS = Fehlerbearbeitung bei PowerBASIC
+
+
+        ---=== Ende der QB-MonsterFAQ Programme ===---
+
+
+
+
+
+
+
+

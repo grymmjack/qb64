@@ -1,0 +1,95 @@
+:Base CueCards.hlp
+1 Willkommen zu CUEcards2000!=welcome>ProcWnd
+1 Neues in Version 2.12?=whatsnew>ProcWnd
+1 Allgemeines
+2 Was ist CUEcards?=cuecards>ProcWnd
+2 Copyright-Informationen=copyright>ProcWnd
+2 Hinweise zur Datensicherheit=datensicherheit>ProcWnd
+1 Menüs
+2 Das Menü Datei
+3 Befehlsübersicht=menu_file>ProcWnd
+3 Neu=HID_FILE_NEW>ProcWnd
+3 Öffnen=HID_FILE_OPEN>ProcWnd
+3 Speichern=HID_FILE_SAVE>ProcWnd
+3 Speichern unter=HID_FILE_SAVE_AS>ProcWnd
+3 Anlage hinzufügen=HIDM_ANLAGE_HINZUFUEGEN>ProcWnd
+3 Anlagenpfad ändern=HIDM_ANLAGE_AENDERN>ProcWnd
+3 Importieren=HIDM_IMPORTIEREN>ProcWnd
+3 Exportieren=HIDM_EXPORTIEREN>ProcWnd
+3 Seite einrichten=HID_PAGE_SETUP>ProcWnd
+3 Seitenansicht=HID_FILE_PRINT_PREVIEW>ProcWnd
+3 Drucken=HID_FILE_PRINT>ProcWnd
+3 Beenden=HID_APP_EXIT>ProcWnd
+2 Das Menü Bearbeiten
+3 Befehlsübersicht=menu_edit>ProcWnd
+3 Rückgängig=HID_EDIT_UNDO>ProcWnd
+3 Ausschneiden=HID_EDIT_CUT>ProcWnd
+3 Kopieren=HID_EDIT_COPY>ProcWnd
+3 Einfügen=HID_EDIT_PASTE>ProcWnd
+3 Löschen=HID_EDIT_CLEAR>ProcWnd
+3 Alles markieren=HID_EDIT_SELECT_ALL>ProcWnd
+3 Suchen=HID_EDIT_FIND>ProcWnd
+3 Ersetzen=HID_EDIT_REPLACE>ProcWnd
+3 Umbenennen=HIDM_TITEL_AENDERN>ProcWnd
+3 Sortieren=HIDM_SORTIEREN>ProcWnd
+2 Das Menü Ansicht
+3 Befehlsübersicht=menu_view>ProcWnd
+3 Text=HIDM_ANSICHT_TEXT>ProcWnd
+3 Verzeichnis=HIDM_ANSICHT_VERZEICHNIS>ProcWnd
+3 Normalansicht=HIDM_ANSICHT_NORMAL>ProcWnd
+3 Teilen=HID_WINDOW_SPLIT>ProcWnd
+3 Symbolleiste 'Standard'=HID_VIEW_TOOLBAR>ProcWnd
+3 Symbolleiste 'Ansicht'=HID_VIEW_ANSICHT>ProcWnd
+3 Symbolleiste 'Format'=HID_VIEW_FORMAT>ProcWnd
+3 Statusleiste=HID_VIEW_STATUS_BAR>ProcWnd
+3 Banner=HIDM_BANNER>ProcWnd
+3 Anlagen=HIDM_ANLAGEN>ProcWnd
+2 Das Menü Einfügen
+3 Befehlsübersicht=menu_einfuegen>ProcWnd
+3 Neue Kategorie=HIDM_EINFUEGEN_KATEGORIE>ProcWnd
+3 Neuen Eintrag=HIDM_EINFUEGEN_EINTRAG>ProcWnd
+3 QuickNotiz=HIDM_QUICKNOTIZ>ProcWnd
+3 Datum und Uhrzeit=HIDM_EINFUEGEN_ZEIT>ProcWnd
+2 Das Menü Format
+3 Befehlsübersicht=menu_format>ProcWnd
+3 Zeichen=HID_FORMAT_FONT>ProcWnd
+3 Absatz=HIDM_FORMAT_ABSATZ>ProcWnd
+3 Hoch-/tiefstellen=HIDM_HOCHTIEF>ProcWnd
+3 Hintergrundfarbe=HIDM_HINTERGRUND>ProcWnd
+3 Zeilenumbruch=HIDM_WORDBREAK>ProcWnd
+3 Standardschriftart=HIDM_FORMAT_STANDARD>ProcWnd
+2 Das Menü Extras
+3 Befehlsübersicht=menu_extras>ProcWnd
+3 Einträge suchen=HIDM_EINTRAG_SUCHEN>ProcWnd
+3 Gehe zu=HIDM_GEHE_ZU>ProcWnd
+3 Verknüpfung erstellen=HIDM_LINK>ProcWnd
+3 Zeichentabelle=HIDM_ZEICHENTABELLE>ProcWnd
+3 Optionen=HIDM_OPTIONEN>ProcWnd
+2 Das Menü Hilfe (?)
+3 Befehlsübersicht=menu_help>ProcWnd
+3 Inhalt und Index=HID_HELP_INDEX>ProcWnd
+3 Tipps & Tricks=HID_CG_IDS_TIPOFTHEDAY>ProcWnd
+3 CUEcards im Web=HIDM_WEB>ProcWnd
+3 Freeware im Web=HIDM_WEB_FREEWARE>ProcWnd
+3 Info=HID_APP_ABOUT>ProcWnd
+1 Dialoge
+2 Das Dialogfeld Absatz=HIDD_ABSATZ>ProcWnd
+2 Das Dialogfeld Info=HIDD_INFO>ProcWnd
+3 Das Dialogregister CUEcards2000=HIDD_CUECARDS>ProcWnd
+3 Das Dialogregister Anwenderregistrierung=HIDD_FREEWARE>ProcWnd
+3 Das Dialogregister wichtiger Hinweis=HIDD_HINWEIS>ProcWnd
+2 Das Dialogfeld Einträge suchen=HIDD_SUCHEN>ProcWnd
+2 Das Dialogfeld Ersetzen=AFX_HIDD_REPLACE>ProcWnd
+2 Das Dialogfeld Gehe zu=HIDD_GEHE_ZU>ProcWnd
+2 Das Dialogfeld Öffnen=AFX_HIDD_FILEOPEN>ProcWnd
+2 Das Dialogfeld Optionen=HIDD_OPTIONEN>ProcWnd
+3 Das Dialogregister Ansicht=HIDD_ANSICHT_PAGE>ProcWnd
+3 Das Dialogregister Allgemein=HIDD_ALLGEMEIN_PAGE>ProcWnd
+2 Das Dialogfeld QuickNotiz=HIDD_QUICKNOTIZ>ProcWnd
+2 Das Dialogfeld Schriftart=AFX_HIDD_FONT>ProcWnd
+2 Das Dialogfeld Speichern unter=AFX_HIDD_FILESAVE>ProcWnd
+2 Das Dialogfeld Suchen=AFX_HIDD_FIND>ProcWnd
+2 Das Dialogfeld Verknüpfung erstellen=HIDD_LINK>ProcWnd
+1 Sonstiges
+2 Die CUEcards-Symbolleisten=AFX_HIDW_TOOLBAR>ProcWnd
+2 Die Statusleiste=AFX_HIDW_STATUS_BAR>ProcWnd
