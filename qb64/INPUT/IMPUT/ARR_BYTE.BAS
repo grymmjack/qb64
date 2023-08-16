@@ -1,8 +1,26 @@
 '$DYNAMIC
 
-'@todo all: .sort, .rsort, .unique, .shuffle, .find, .not
-'@todo numbers: .sum, .avg, .product, .filter_gt, .filter_lt, .filter_gte, .filter_lte, .filter_between, .filter_odd, .filter_even
-'@todo strings: .filter_starts_with, .filter_contains, .filter_ends_with, .filter_len_gt, .filter_len_lt
+'//TODO: all: .sort
+'//TODO: all: .rsort
+'//TODO: all: .unique
+'//TODO: all: .find
+'//TODO: all: .in
+'//TODO: all: .not_in
+'//TODO: numbers: .sum
+'//TODO: numbers: .avg
+'//TODO: numbers: .product
+'//TODO: numbers: .gt
+'//TODO: numbers: .lt
+'//TODO: numbers: .gte
+'//TODO: numbers: .lte
+'//TODO: numbers: .between
+'//TODO: numbers: .odd
+'//TODO: numbers: .even
+'//TODO: strings: .starts_with
+'//TODO: strings: .contains
+'//TODO: strings: .ends_with
+'//TODO: strings: .len_gt
+'//TODO: strings: .len_lt
 
 DIM CANVAS AS LONG
 DIM temp_str AS STRING
@@ -49,8 +67,12 @@ CALL ARR_BYTE.new(more_bytes%%(), "10,11,12,13")
 CALL ARR_BYTE.join(more_bytes%%(), temp_str$)
 PRINT temp_str$
 PRINT LEN(more_bytes%%)
+
+
+
 ''
 ' Slice an array from source to destination starting at index and count slices
+'
 ' @param BYTE() source_arr%% to slice from
 ' @param BYTE() dest_arr%% to put slices into
 ' @param INTEGER start_idx% starting index to use as slice range
