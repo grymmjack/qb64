@@ -1,6 +1,6 @@
 '$DYNAMIC
 
-'@todo all: .sort, .rsort, .unique, .reverse, .random, .shuffle, .size, .count, .find, .not
+'@todo all: .sort, .rsort, .unique, .shuffle, .find, .not
 '@todo numbers: .sum, .avg, .product, .filter_gt, .filter_lt, .filter_gte, .filter_lte, .filter_between, .filter_odd, .filter_even
 '@todo strings: .filter_starts_with, .filter_contains, .filter_ends_with, .filter_len_gt, .filter_len_lt
 
@@ -17,6 +17,16 @@ CALL ARR_BYTE.push(bytes%%(), 3) '2
 CALL ARR_BYTE.push(bytes%%(), 4) '3
 CALL ARR_BYTE.push(bytes%%(), 5) '4
 CALL ARR_BYTE.push(bytes%%(), 6) '5
+' PRINT(_TRIM$(STR$(ARR_BYTE.count(bytes%%()))))
+' CALL ARR_BYTE.reverse(bytes%%(), dest_bytes%%())
+CALL ARR_BYTE.join(bytes%%(), temp_str$)
+PRINT temp_str$
+' PRINT(_TRIM$(STR$(ARR_BYTE.random%%(bytes%%()))))
+
+' CALL ARR_BYTE.join(dest_bytes%%(), temp_str$)
+' PRINT temp_str$
+SLEEP
+SYSTEM
 ' PRINT bytes%%(0), bytes%%(1), bytes%%(2), bytes%%(3), bytes%%(4), bytes%%(5)
 ' PRINT UBOUND(bytes%%)
 ' CALL ARR_BYTE.shift(bytes%%(), b2%%)
@@ -149,6 +159,7 @@ END SUB
 ' 
 SUB ARR_BYTE.join(arr%%(), s$)
     DIM AS INTEGER ub, lb, i
+    s$ = ""
     lb% = LBOUND(arr%%) : ub% = UBOUND(arr%%)
     FOR i% = lb% TO ub%
         s$ = s$ + _TRIM$(STR$(arr%%(i%))) + ", "
@@ -184,4 +195,65 @@ SUB ARR_BYTE.new(arr%%(), s$)
             t$ = ""
         END IF
     NEXT i%
+END SUB
+
+
+''
+' Return the number of elements in a _BYTE array
+' @param _BYTE ARRAY arr%%() to count
+' @return INTEGER number of elements
+'
+FUNCTION ARR_BYTE.count%(arr%%())
+    ARR_BYTE.count% = UBOUND(arr%%) - LBOUND(arr%%)
+END FUNCTION
+
+
+''
+' Return the size of a _BYTE array
+' @param _BYTE ARRAY arr%%() to get size of
+' @return INTEGER size in bytes
+'
+FUNCTION ARR_BYTE.size%(arr%%())
+    ' Because this is a byte array the number of elements 
+    ' determines the number of bytes as 1 element = 1 byte
+    ARR_BYTE.size% = UBOUND(arr%%) - LBOUND(arr%%)
+END FUNCTION
+
+
+''
+' Reverses the elements of a _BYTE array
+' @param _BYTE ARRAY source_arr%%() to reverse
+' @param _BYTE ARRAY dest_arr%%() to store reversed array in
+'
+SUB ARR_BYTE.reverse(source_arr%%(), dest_arr%%())
+    DIM AS INTEGER lb, ub, i, n
+    lb% = LBOUND(source_arr%%) : ub% = UBOUND(source_arr%%)
+    REDIM dest_arr(0 TO (ub% - lb%)) AS _BYTE
+    n% = 0
+    FOR i% = ub% TO lb% STEP -1
+        dest_arr%%(n%) = source_arr%%(i%)
+        n% = n% + 1
+    NEXT i%
+END SUB
+
+
+''
+' Returns a random byte from a _BYTE array
+' @param _BYTE ARRAY arr%%() array to get randomo element from
+' @return _BYTE random element
+'
+FUNCTION ARR_BYTE.random%%(arr%%())
+    DIM AS INTEGER lb, ub
+    lb% = LBOUND(arr%%) : ub% = UBOUND(arr%%)
+    RANDOMIZE TIMER 
+    ARR_BYTE.random%% = arr%%(INT(RND * (ub% - lb%)) + 1)
+END FUNCTION
+
+
+
+SUB ARR_BYTE.shuffle%%(source_arr%%(), dest_arr%())
+    DIM AS INTEGER lb, ub, i
+    lb% = LBOUND(arr%%) : ub% = UBOUND(arr%%)
+    RANDOMIZE TIMER 
+    
 END SUB
