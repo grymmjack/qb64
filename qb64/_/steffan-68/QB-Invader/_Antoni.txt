@@ -1,0 +1,44 @@
+
+********************************************************************************
+*
+* +----------------+
+* | ENGLISH  INFO  |  (Deutsche Info: Siehe unten)
+* +----------------+
+*
+* QBInvaders - Space Invaders Clone written in QBasic by Tim Truman
+* =============================================================================
+* Battle those pesky little aliens that are trying to conquer earth.
+* Features 256 color graphics, Adlib sound, two graphics sets, and 
+* a high score screen. You won't beleive it was written in Qbasic!
+*
+*-------------------------------------------------------------------------------
+*
+* +---------------+
+* | DEUTSCHE INFO |
+* +---------------+
+*
+* QBInvaders - Space Invaders Clone programmiert in QBasic von Tim Truman
+* ============================================================================
+* Das klassische Spielhöllen-Actionspiel Space Invaders. Rette die Menschheit
+* vor den ekelhaften Alien-Raumschiffen, die die Erde erobern wollen. Die super
+* Grafik wurde weitgehend aus einem alten Atari-Spiel übernommen und ist rasend
+* schnell animierter. Tolle Sound-Effekte aus der Soundkarte (Adlib-Sound).
+* Man glaubt es kaum, dass so etwas mit QBasic möglich ist!!
+*
+*-------------------------------------------------------------------------------
+*
+*   \         (c) Thomas Antoni, 15.11.2000 
+*    \ /\           Mailto:thomas@antonis.de
+*    ( )            http://www.antonis.de   
+*  .( o ).
+*                        ----==== Hottest QBasic Stuff on Earth !!! ====----
+*
+********************************************************************************
+
+
+
+
+
+
+
+
