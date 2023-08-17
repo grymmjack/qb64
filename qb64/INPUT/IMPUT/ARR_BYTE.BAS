@@ -1,3 +1,11 @@
+'//TODO: strings: .starts_with
+'//TODO: strings: .contains
+'//TODO: strings: .ends_with
+'//TODO: strings: .len_gt
+'//TODO: strings: .len_gte
+'//TODO: strings: .len_lt
+'//TODO: strings: .len_lte
+
 '//TODO: numbers: .add
 '//TODO: numbers: .subtract
 '//TODO: numbers: .multiply
@@ -10,11 +18,6 @@
 '//TODO: numbers: .floor
 '//TODO: numbers: .ceil
 
-'//TODO: strings: .starts_with
-'//TODO: strings: .contains
-'//TODO: strings: .ends_with
-'//TODO: strings: .len_gt
-'//TODO: strings: .len_lt
 
 '$DYNAMIC
 DIM CANVAS AS LONG
@@ -35,7 +38,8 @@ CALL ARR_BYTE.join(bytes%%(), temp_str$)
 PRINT temp_str$
 PRINT
 PRINT(ARR_BYTE.shortest(bytes%%()))
-CALL ARR_BYTE.join(bytes%%(), temp_str$)
+' CALL ARR_BYTE.nth(bytes%%(), dest_bytes%%(), 2)
+CALL ARR_BYTE.join(dest_bytes%%(), temp_str$)
 PRINT temp_str$
 PRINT
 ' CALL ARR_BYTE.between(bytes%%(), dest_bytes%%(), 5, 11)
@@ -292,6 +296,27 @@ END FUNCTION
 FUNCTION ARR_BYTE.last%%(arr%%())
     ARR_BYTE.last%% = arr%%(UBOUND(arr%%))
 END FUNCTION
+
+
+''
+' Return every nth array element of a _BYTE array
+' @param _BYTE ARRAY source_arr%%() to get from
+' @param _BYTE ARRAY dest_arr%%() to store in
+' @param INTEGER nth% element
+'
+SUB ARR_BYTE.nth(source_arr%%(), dest_arr%%(), nth%)
+    DIM AS INTEGER lb, ub, i, n
+    lb% = LBOUND(source_arr%%) : ub% = UBOUND(source_arr%%)
+    n% = (ub% - lb%) \ nth%
+    REDIM dest_arr(n%) AS _BYTE
+    n% = 0
+    FOR i% = lb% to ub%
+        IF i% MOD nth% = 0 THEN
+            dest_arr%%(n%) = source_arr%%(i%)
+            n% = n% + 1
+        END IF
+    NEXT i%
+END SUB
 
 
 ''
