@@ -1,3 +1,22 @@
+'//TODO: all: .first
+'//TODO: all: .last
+'//TODO: all: .longest
+'//TODO: all: .shortest
+'//TODO: all: .mostly
+'//TODO: all: .leastly
+
+'//TODO: numbers: .add
+'//TODO: numbers: .subtract
+'//TODO: numbers: .multiply
+'//TODO: numbers: .divide
+'//TODO: numbers: .bit_and
+'//TODO: numbers: .bit_or
+'//TODO: numbers: .bit_xor
+'//TODO: numbers: .bit_shl
+'//TODO: numbers: .bit_shr
+'//TODO: numbers: .floor
+'//TODO: numbers: .ceil
+
 '//TODO: strings: .starts_with
 '//TODO: strings: .contains
 '//TODO: strings: .ends_with
@@ -22,8 +41,8 @@ CALL ARR_BYTE.new(bytes%%(), "1,2,3,4,5,6,7,8,9,10,11,12,1,2,3,4,5,6,7,8,9,10,11
 CALL ARR_BYTE.join(bytes%%(), temp_str$)
 PRINT temp_str$
 PRINT
-CALL ARR_BYTE.mod(bytes%%(), dest_bytes%%(), 3)
-CALL ARR_BYTE.join(dest_bytes%%(), temp_str$)
+CALL ARR_BYTE.remove(bytes%%(), 1)
+CALL ARR_BYTE.join(bytes%%(), temp_str$)
 PRINT temp_str$
 PRINT
 ' CALL ARR_BYTE.between(bytes%%(), dest_bytes%%(), 5, 11)
@@ -47,8 +66,8 @@ PRINT temp_str$
 
 ' CALL ARR_BYTE.join(dest_bytes%%(), temp_str$)
 ' PRINT temp_str$
-SLEEP
-SYSTEM
+' SLEEP
+' SYSTEM
 ' PRINT bytes%%(0), bytes%%(1), bytes%%(2), bytes%%(3), bytes%%(4), bytes%%(5)
 ' PRINT UBOUND(bytes%%)
 ' CALL ARR_BYTE.shift(bytes%%(), b2%%)
@@ -64,11 +83,10 @@ SYSTEM
 ' PRINT UBOUND(dest_bytes%%)
 ' CALL ARR_BYTE.join(bytes%%(), temp_str$)
 ' PRINT temp_str$
-DIM more_bytes(0) AS _BYTE
-CALL ARR_BYTE.new(more_bytes%%(), "10,11,12,13")
-CALL ARR_BYTE.join(more_bytes%%(), temp_str$)
-PRINT temp_str$
-PRINT LEN(more_bytes%%)
+' DIM more_bytes(0) AS _BYTE
+' CALL ARR_BYTE.new(more_bytes%%(), "10,11,12,13")
+' CALL ARR_BYTE.join(more_bytes%%(), temp_str$)
+' PRINT temp_str$
 
 
 
@@ -466,6 +484,76 @@ SUB ARR_BYTE.lte(source_arr%%(), dest_arr%%(), value%%)
     NEXT i%
     CALL ARR_BYTE.shift(work_arr%%(), tmp%%)
     CALL ARR_BYTE.copy(work_arr%%(), dest_arr%%())
+END SUB
+
+
+''
+' Finds and replaces values across all elements in a _BYTE ARRAY
+' @param _BYTE ARRAY arr%%() to check in
+' @param _BYTE find%% value to find
+' @param _BYTE replace%% value to replace with if found
+'
+SUB ARR_BYTE.replace(arr%%(), find%%, replace%%)
+    DIM AS INTEGER lb, ub, i
+    lb% = LBOUND(arr%%) : ub% = UBOUND(arr%%)
+    FOR i% = lb% TO ub%
+        IF arr%%(i%) = find%% THEN
+            arr%%(i%) = replace%%
+        END IF
+    NEXT i%
+END SUB
+
+
+''
+' Inserts a new element into _BYTE array after index
+' @param _BYTE ARRAY arr%%() array to work on
+' @param _BYTE value%% to be less than or equal to be returned
+' @param INTEGER index% of element to insert at
+'
+SUB ARR_BYTE.insert(arr%%(), value%%, index%)
+    DIM AS INTEGER lb, ub, i
+    DIM tmp AS _BYTE
+    DIM work_arr(0) AS _BYTE
+    lb% = LBOUND(arr%%) : ub% = UBOUND(arr%%)
+    IF index% >= lb% AND index% <= ub% THEN
+        ' build new array up to index
+        FOR i% = lb% TO index%
+            CALL ARR_BYTE.push(work_arr%%(), arr%%(i%))
+        NEXT i%
+        ' insert new element
+        CALL ARR_BYTE.push(work_arr%%(), value%%)
+        ' finish building array from index + 1
+        FOR i% = index% + 1 TO ub%
+            CALL ARR_BYTE.push(work_arr%%(), arr%%(i%))
+        NEXT i%
+        CALL ARR_BYTE.shift(work_arr%%(), tmp%%)
+        CALL ARR_BYTE.copy(work_arr%%(), arr%%())
+    END IF
+END SUB
+
+
+''
+' Removes element from a _BYTE array by element index
+' @param _BYTE ARRAY arr%%() array to work on
+' @param INTEGER index% of element to remove
+'
+SUB ARR_BYTE.remove(arr%%(), index%)
+    DIM AS INTEGER lb, ub, i
+    DIM tmp AS _BYTE
+    DIM work_arr(0) AS _BYTE
+    lb% = LBOUND(arr%%) : ub% = UBOUND(arr%%)
+    IF start_index% >= lb% AND end_index% <= ub% THEN
+        ' build new array up to index
+        FOR i% = lb% TO index% - 1
+            CALL ARR_BYTE.push(work_arr%%(), arr%%(i%))
+        NEXT i%
+        ' skip elements
+        FOR i% = index% + 1 TO ub%
+            CALL ARR_BYTE.push(work_arr%%(), arr%%(i%))
+        NEXT i%
+        CALL ARR_BYTE.shift(work_arr%%(), tmp%%)
+        CALL ARR_BYTE.copy(work_arr%%(), arr%%())
+    END IF
 END SUB
 
 
