@@ -1,7 +1,5 @@
 '$DYNAMIC
 
-'//TODO: all: .sort
-'//TODO: all: .rsort
 '//TODO: all: .unique
 '//TODO: all: .find
 '//TODO: all: .in
@@ -29,17 +27,24 @@ SCREEN CANVAS&
 DIM bytes(0) AS _BYTE
 DIM dest_bytes(1) AS _BYTE
 DIM AS _BYTE b1, b2
-                   bytes(0) = 1  '0
-CALL ARR_BYTE.push(bytes%%(), 2) '1
-CALL ARR_BYTE.push(bytes%%(), 3) '2
-CALL ARR_BYTE.push(bytes%%(), 4) '3
-CALL ARR_BYTE.push(bytes%%(), 5) '4
-CALL ARR_BYTE.push(bytes%%(), 6) '5
+                '    bytes(0) = 1  '0
+' CALL ARR_BYTE.push(bytes%%(), 2) '1
+' CALL ARR_BYTE.push(bytes%%(), 3) '2
+' CALL ARR_BYTE.push(bytes%%(), 4) '3
+' CALL ARR_BYTE.push(bytes%%(), 5) '4
+' CALL ARR_BYTE.push(bytes%%(), 6) '5
+CALL ARR_BYTE.new(bytes%%(), "1,2,3,4,5,6,7,8,9,10,11,12")
+CALL ARR_BYTE.shuffle(bytes%%(), dest_bytes%%())
 CALL ARR_BYTE.join(bytes%%(), temp_str$)
 PRINT temp_str$
 ' PRINT(_TRIM$(STR$(ARR_BYTE.count(bytes%%()))))
-CALL ARR_BYTE.shuffle(bytes%%(), dest_bytes%%())
 CALL ARR_BYTE.join(dest_bytes%%(), temp_str$)
+PRINT temp_str$
+CALL ARR_BYTE.sort(dest_bytes%%(), bytes%%())
+CALL ARR_BYTE.join(bytes%%(), temp_str$)
+PRINT temp_str$
+CALL ARR_BYTE.rsort(dest_bytes%%(), bytes%%())
+CALL ARR_BYTE.join(bytes%%(), temp_str$)
 PRINT temp_str$
 ' PRINT(_TRIM$(STR$(ARR_BYTE.random%%(bytes%%()))))
 
@@ -289,4 +294,78 @@ SUB ARR_BYTE.shuffle(source_arr%%(), dest_arr%%())
     FOR i% = 0 TO count%
         SWAP dest_arr%%(i%), dest_arr%%(lb% + RND * (ub% - lb%)) 
     NEXT i%
+END SUB
+
+
+''
+' Sorts _BYTE array in ascending order
+' @param _BYTE ARRAY source_arr%%() array to sort
+' @param _BYTE ARRAY dest_arr%%() array to store sorted in
+'
+SUB ARR_BYTE.sort(source_arr%%(), dest_arr%%())
+    DIM AS INTEGER lb, ub, i, count, n
+    lb% = LBOUND(source_arr%%) : ub% = UBOUND(source_arr%%)
+    count% = ub% - lb%
+    REDIM dest_arr(0 TO count%) AS _BYTE
+    CALL ARR_BYTE.copy(source_arr%%(), dest_arr%%())
+    CALL ARR_BYTE.quicksort(dest_arr%%(), lb%, ub%, 0)
+END SUB
+
+
+''
+' Sorts _BYTE array in descending order
+' @param _BYTE ARRAY source_arr%%() array to sort
+' @param _BYTE ARRAY dest_arr%%() array to store sorted in
+'
+SUB ARR_BYTE.rsort(source_arr%%(), dest_arr%%())
+    DIM AS INTEGER lb, ub, i, count, n
+    lb% = LBOUND(source_arr%%) : ub% = UBOUND(source_arr%%)
+    count% = ub% - lb%
+    REDIM dest_arr(0 TO count%) AS _BYTE
+    CALL ARR_BYTE.copy(source_arr%%(), dest_arr%%())
+    CALL ARR_BYTE.quicksort(dest_arr%%(), lb%, ub%, 1)
+END SUB
+
+
+''
+' Quicksort array with pivot algorithm by logiclrd
+'
+' @link https://www.tek-tips.com/faqs.cfm?fid=336
+' @param _BYTE ARRAY array%%() to sort
+' @param INTEGER start% of range to sort
+' @param INTEGER finish% range of sort
+' @param INTEGER order% to sort by (0 = asc / 1 = desc)
+'
+SUB ARR_BYTE.quicksort(arr%%(), start%, finish%, order%)
+    DIM pivot AS INTEGER
+    DIM pivotvalue AS _BYTE
+
+    'first, partition the array
+    pivot% = start%
+    pivotvalue%% = arr%%(pivot%)
+    FOR i% = start% + 1 TO finish%
+        IF order% = 0 THEN
+            IF arr%%(i%) < pivotvalue%% THEN
+                arr%%(pivot%) = arr%%(i%)
+                arr%%(i%) = arr%%(pivot% + 1)
+                arr%%(pivot% + 1) = pivotvalue%%
+                pivot% = pivot% + 1
+            END IF
+        ELSE
+            IF arr%%(i%) > pivotvalue%% THEN
+                arr%%(pivot%) = arr%%(i%)
+                arr%%(i%) = arr%%(pivot% + 1)
+                arr%%(pivot% + 1) = pivotvalue%%
+                pivot% = pivot% + 1
+            END IF
+        END IF
+    NEXT i%
+
+    'then, sort the subarrays to each side of the pivot
+    IF pivot% - start% >= 2 THEN 
+        CALL ARR_BYTE.quicksort(arr%%(), start%, pivot% - 1, order%)
+    END IF
+    IF finish% - pivot% >= 2 THEN 
+        CALL ARR_BYTE.quicksort(arr%%(), pivot% + 1, finish%, order%)
+    END IF
 END SUB
