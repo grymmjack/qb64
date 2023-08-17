@@ -1,21 +1,10 @@
-'$DYNAMIC
-
-'//TODO: numbers: .sum
-'//TODO: numbers: .avg
-'//TODO: numbers: .product
-'//TODO: numbers: .gt
-'//TODO: numbers: .lt
-'//TODO: numbers: .gte
-'//TODO: numbers: .lte
-'//TODO: numbers: .between
-'//TODO: numbers: .odd
-'//TODO: numbers: .even
 '//TODO: strings: .starts_with
 '//TODO: strings: .contains
 '//TODO: strings: .ends_with
 '//TODO: strings: .len_gt
 '//TODO: strings: .len_lt
 
+'$DYNAMIC
 DIM CANVAS AS LONG
 DIM temp_str AS STRING
 CANVAS& = _NEWIMAGE(800, 600, 32)
@@ -33,11 +22,14 @@ CALL ARR_BYTE.new(bytes%%(), "1,2,3,4,5,6,7,8,9,10,11,12,1,2,3,4,5,6,7,8,9,10,11
 CALL ARR_BYTE.join(bytes%%(), temp_str$)
 PRINT temp_str$
 PRINT
-PRINT ARR_BYTE.find%(bytes%%(), 10)
-PRINT
-CALL ARR_BYTE.shuffle(bytes%%(), dest_bytes%%())
+CALL ARR_BYTE.mod(bytes%%(), dest_bytes%%(), 3)
 CALL ARR_BYTE.join(dest_bytes%%(), temp_str$)
 PRINT temp_str$
+PRINT
+' CALL ARR_BYTE.between(bytes%%(), dest_bytes%%(), 5, 11)
+' CALL ARR_BYTE.shuffle(bytes%%(), dest_bytes%%())
+' CALL ARR_BYTE.join(dest_bytes%%(), temp_str$)
+' PRINT temp_str$
 ' PRINT ARR_BYTE.in%(bytes%%(), 12)
 ' PRINT(_TRIM$(STR$(ARR_BYTE.count(bytes%%()))))
 ' CALL ARR_BYTE.join(dest_bytes%%(), temp_str$)
@@ -312,7 +304,7 @@ END SUB
 
 ''
 ' Returns a random byte from a _BYTE array
-' @param _BYTE ARRAY arr%%() array to get randomo element from
+' @param _BYTE ARRAY arr%%() array to get random element from
 ' @return _BYTE random element
 '
 FUNCTION ARR_BYTE.random%%(arr%%())
@@ -320,6 +312,38 @@ FUNCTION ARR_BYTE.random%%(arr%%())
     lb% = LBOUND(arr%%) : ub% = UBOUND(arr%%)
     RANDOMIZE TIMER 
     ARR_BYTE.random%% = arr%%(INT(RND * (ub% - lb%)) + 1)
+END FUNCTION
+
+
+''
+' Returns the sum of all elements in a _BYTE array
+' @param _BYTE ARRAY arr%%() array to get some for
+' @return SINGLE sum of all elements
+'
+FUNCTION ARR_BYTE.sum!(arr%%())
+    DIM AS INTEGER lb, ub, i
+    DIM sum AS SINGLE
+    lb% = LBOUND(arr%%) : ub% = UBOUND(arr%%)
+    FOR i% = lb% TO ub%
+        sum! = sum! + arr%%(i%)
+    NEXT i%
+    ARR_BYTE.sum! = sum!
+END FUNCTION
+
+
+''
+' Returns the average value of elements in a _BYTE array
+' @param _BYTE ARRAY arr%%() array to get average for
+' @return SINGLE average of elements
+'
+FUNCTION ARR_BYTE.avg!(arr%%())
+    DIM AS INTEGER lb, ub, i
+    DIM sum AS SINGLE
+    lb% = LBOUND(arr%%) : ub% = UBOUND(arr%%)
+    FOR i% = lb% TO ub%
+        sum! = sum! + arr%%(i%)
+    NEXT i%
+    ARR_BYTE.avg! = sum! / (ub% - lb%)
 END FUNCTION
 
 
@@ -338,6 +362,194 @@ SUB ARR_BYTE.shuffle(source_arr%%(), dest_arr%%())
     FOR i% = 0 TO count%
         SWAP dest_arr%%(i%), dest_arr%%(lb% + RND * (ub% - lb%)) 
     NEXT i%
+END SUB
+
+
+''
+' Makes a _BYTE array contain only unique values
+' @param _BYTE ARRAY source_arr%%() array to get uniques for
+' @param _BYTE ARRAY dest_arr%%() array to store uniques in
+'
+SUB ARR_BYTE.unique(source_arr%%(), dest_arr%%())
+    DIM AS INTEGER lb, ub, i
+    DIM tmp AS _BYTE
+    lb% = LBOUND(source_arr%%) : ub% = UBOUND(source_arr%%)
+    DIM work_arr(0) AS _BYTE
+    FOR i% = lb% TO ub%
+        IF NOT ARR_BYTE.in%(work_arr%%(), source_arr%%(i%)) THEN
+            CALL ARR_BYTE.push(work_arr%%(), source_arr%%(i%))
+        END IF
+    NEXT i%
+    CALL ARR_BYTE.shift(work_arr%%(), tmp%%)
+    CALL ARR_BYTE.copy(work_arr%%(), dest_arr%%())
+END SUB
+
+
+''
+' Filters a _BYTE array to only elements greater than value
+' @param _BYTE ARRAY source_arr%%() array to work on
+' @param _BYTE ARRAY dest_arr%%() array to store in
+' @param _BYTE value%% to be greater than to be returned
+'
+SUB ARR_BYTE.gt(source_arr%%(), dest_arr%%(), value%%)
+    DIM AS INTEGER lb, ub, i
+    DIM tmp AS _BYTE
+    lb% = LBOUND(source_arr%%) : ub% = UBOUND(source_arr%%)
+    DIM work_arr(0) AS _BYTE
+    FOR i% = lb% TO ub%
+        IF source_arr%%(i%) > value%% THEN
+            CALL ARR_BYTE.push(work_arr%%(), source_arr%%(i%))
+        END IF
+    NEXT i%
+    CALL ARR_BYTE.shift(work_arr%%(), tmp%%)
+    CALL ARR_BYTE.copy(work_arr%%(), dest_arr%%())
+END SUB
+
+
+''
+' Filters a _BYTE array to only elements greater than or equal to value
+' @param _BYTE ARRAY source_arr%%() array to work on
+' @param _BYTE ARRAY dest_arr%%() array to store in
+' @param _BYTE value%% to be greater than or equal to be returned
+'
+SUB ARR_BYTE.gte(source_arr%%(), dest_arr%%(), value%%)
+    DIM AS INTEGER lb, ub, i
+    DIM tmp AS _BYTE
+    lb% = LBOUND(source_arr%%) : ub% = UBOUND(source_arr%%)
+    DIM work_arr(0) AS _BYTE
+    FOR i% = lb% TO ub%
+        IF source_arr%%(i%) >= value%% THEN
+            CALL ARR_BYTE.push(work_arr%%(), source_arr%%(i%))
+        END IF
+    NEXT i%
+    CALL ARR_BYTE.shift(work_arr%%(), tmp%%)
+    CALL ARR_BYTE.copy(work_arr%%(), dest_arr%%())
+END SUB
+
+
+''
+' Filters a _BYTE array to only elements less than value
+' @param _BYTE ARRAY source_arr%%() array to work on
+' @param _BYTE ARRAY dest_arr%%() array to store in
+' @param _BYTE value%% to be less than to be returned
+'
+SUB ARR_BYTE.lt(source_arr%%(), dest_arr%%(), value%%)
+    DIM AS INTEGER lb, ub, i
+    DIM tmp AS _BYTE
+    lb% = LBOUND(source_arr%%) : ub% = UBOUND(source_arr%%)
+    DIM work_arr(0) AS _BYTE
+    FOR i% = lb% TO ub%
+        IF source_arr%%(i%) < value%% THEN
+            CALL ARR_BYTE.push(work_arr%%(), source_arr%%(i%))
+        END IF
+    NEXT i%
+    CALL ARR_BYTE.shift(work_arr%%(), tmp%%)
+    CALL ARR_BYTE.copy(work_arr%%(), dest_arr%%())
+END SUB
+
+
+''
+' Filters a _BYTE array to only elements less than or equal to value
+' @param _BYTE ARRAY source_arr%%() array to work on
+' @param _BYTE ARRAY dest_arr%%() array to store in
+' @param _BYTE value%% to be less than or equal to be returned
+'
+SUB ARR_BYTE.lte(source_arr%%(), dest_arr%%(), value%%)
+    DIM AS INTEGER lb, ub, i
+    DIM tmp AS _BYTE
+    lb% = LBOUND(source_arr%%) : ub% = UBOUND(source_arr%%)
+    DIM work_arr(0) AS _BYTE
+    FOR i% = lb% TO ub%
+        IF source_arr%%(i%) <= value%% THEN
+            CALL ARR_BYTE.push(work_arr%%(), source_arr%%(i%))
+        END IF
+    NEXT i%
+    CALL ARR_BYTE.shift(work_arr%%(), tmp%%)
+    CALL ARR_BYTE.copy(work_arr%%(), dest_arr%%())
+END SUB
+
+
+''
+' Filters a _BYTE array to only elements that have odd values
+' @param _BYTE ARRAY source_arr%%() array to work on
+' @param _BYTE ARRAY dest_arr%%() array to store in
+'
+SUB ARR_BYTE.odd(source_arr%%(), dest_arr%%())
+    DIM AS INTEGER lb, ub, i
+    DIM tmp AS _BYTE
+    lb% = LBOUND(source_arr%%) : ub% = UBOUND(source_arr%%)
+    DIM work_arr(0) AS _BYTE
+    FOR i% = lb% TO ub%
+        IF source_arr%%(i%) MOD 2 <> 0 THEN
+            CALL ARR_BYTE.push(work_arr%%(), source_arr%%(i%))
+        END IF
+    NEXT i%
+    CALL ARR_BYTE.shift(work_arr%%(), tmp%%)
+    CALL ARR_BYTE.copy(work_arr%%(), dest_arr%%())
+END SUB
+
+
+''
+' Filters a _BYTE array to only elements that have even values
+' @param _BYTE ARRAY source_arr%%() array to work on
+' @param _BYTE ARRAY dest_arr%%() array to store in
+'
+SUB ARR_BYTE.even(source_arr%%(), dest_arr%%())
+    DIM AS INTEGER lb, ub, i
+    DIM tmp AS _BYTE
+    lb% = LBOUND(source_arr%%) : ub% = UBOUND(source_arr%%)
+    DIM work_arr(0) AS _BYTE
+    FOR i% = lb% TO ub%
+        IF source_arr%%(i%) MOD 2 = 0 THEN
+            CALL ARR_BYTE.push(work_arr%%(), source_arr%%(i%))
+        END IF
+    NEXT i%
+    CALL ARR_BYTE.shift(work_arr%%(), tmp%%)
+    CALL ARR_BYTE.copy(work_arr%%(), dest_arr%%())
+END SUB
+
+
+''
+' Filters a _BYTE array to only elements that have values evenly divisible by divisor
+' @param _BYTE ARRAY source_arr%%() array to work on
+' @param _BYTE ARRAY dest_arr%%() array to store in
+' @param _BYTE divisor%% for modulo
+'
+SUB ARR_BYTE.mod(source_arr%%(), dest_arr%%(), divisor%%)
+    DIM AS INTEGER lb, ub, i
+    DIM tmp AS _BYTE
+    lb% = LBOUND(source_arr%%) : ub% = UBOUND(source_arr%%)
+    DIM work_arr(0) AS _BYTE
+    FOR i% = lb% TO ub%
+        IF source_arr%%(i%) MOD divisor%% = 0 THEN
+            CALL ARR_BYTE.push(work_arr%%(), source_arr%%(i%))
+        END IF
+    NEXT i%
+    CALL ARR_BYTE.shift(work_arr%%(), tmp%%)
+    CALL ARR_BYTE.copy(work_arr%%(), dest_arr%%())
+END SUB
+
+
+''
+' Filters a _BYTE array to only elements between min and max
+' @param _BYTE ARRAY source_arr%%() array to work on
+' @param _BYTE ARRAY dest_arr%%() array to store in
+' @param _BYTE min%% to be greater than or equal to be returned
+' @param _BYTE max%% to be less than or equal to be returned
+'
+SUB ARR_BYTE.between(source_arr%%(), dest_arr%%(), min%%, max%%)
+    DIM AS INTEGER lb, ub, i
+    DIM tmp AS _BYTE
+    lb% = LBOUND(source_arr%%) : ub% = UBOUND(source_arr%%)
+    DIM work_arr(0) AS _BYTE
+    FOR i% = lb% TO ub%
+        IF source_arr%%(i%) >= min%% _
+        AND source_arr%%(i%) <= max%% THEN
+            CALL ARR_BYTE.push(work_arr%%(), source_arr%%(i%))
+        END IF
+    NEXT i%
+    CALL ARR_BYTE.shift(work_arr%%(), tmp%%)
+    CALL ARR_BYTE.copy(work_arr%%(), dest_arr%%())
 END SUB
 
 
@@ -370,26 +582,6 @@ SUB ARR_BYTE.rsort(source_arr%%(), dest_arr%%())
     FOR i% = lb% TO ub%
         SWAP dest_arr%%(i%), dest_arr%%(lb% + RND * (ub% - lb%)) 
     NEXT i%
-END SUB
-
-
-''
-' Makes a _BYTE array contain only unique values
-' @param _BYTE ARRAY source_arr%%() array to sort
-' @param _BYTE ARRAY dest_arr%%() array to store sorted in
-'
-SUB ARR_BYTE.unique(source_arr%%(), dest_arr%%())
-    DIM AS INTEGER lb, ub, i
-    DIM tmp AS _BYTE
-    lb% = LBOUND(source_arr%%) : ub% = UBOUND(source_arr%%)
-    DIM work_arr(0) AS _BYTE
-    FOR i% = lb% TO ub%
-        IF NOT ARR_BYTE.in%(work_arr%%(), source_arr%%(i%)) THEN
-            CALL ARR_BYTE.push(work_arr%%(), source_arr%%(i%))
-        END IF
-    NEXT i%
-    CALL ARR_BYTE.shift(work_arr%%(), tmp%%)
-    CALL ARR_BYTE.copy(work_arr%%(), dest_arr%%())
 END SUB
 
 
