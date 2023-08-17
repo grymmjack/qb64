@@ -1,9 +1,5 @@
 '$DYNAMIC
 
-'//TODO: all: .unique
-'//TODO: all: .find
-'//TODO: all: .in
-'//TODO: all: .not_in
 '//TODO: numbers: .sum
 '//TODO: numbers: .avg
 '//TODO: numbers: .product
@@ -33,17 +29,26 @@ DIM AS _BYTE b1, b2
 ' CALL ARR_BYTE.push(bytes%%(), 4) '3
 ' CALL ARR_BYTE.push(bytes%%(), 5) '4
 ' CALL ARR_BYTE.push(bytes%%(), 6) '5
-CALL ARR_BYTE.new(bytes%%(), "1,2,3,4,5,6,7,8,9,10,11,12")
-CALL ARR_BYTE.shuffle(bytes%%(), dest_bytes%%())
+CALL ARR_BYTE.new(bytes%%(), "1,2,3,4,5,6,7,8,9,10,11,12,1,2,3,4,5,6,7,8,9,10,11,12")
 CALL ARR_BYTE.join(bytes%%(), temp_str$)
 PRINT temp_str$
-' PRINT(_TRIM$(STR$(ARR_BYTE.count(bytes%%()))))
+PRINT
+PRINT ARR_BYTE.find%(bytes%%(), 10)
+PRINT
+CALL ARR_BYTE.shuffle(bytes%%(), dest_bytes%%())
 CALL ARR_BYTE.join(dest_bytes%%(), temp_str$)
 PRINT temp_str$
-CALL ARR_BYTE.sort(dest_bytes%%(), bytes%%())
-CALL ARR_BYTE.join(bytes%%(), temp_str$)
-PRINT temp_str$
-CALL ARR_BYTE.rsort(dest_bytes%%(), bytes%%())
+' PRINT ARR_BYTE.in%(bytes%%(), 12)
+' PRINT(_TRIM$(STR$(ARR_BYTE.count(bytes%%()))))
+' CALL ARR_BYTE.join(dest_bytes%%(), temp_str$)
+' PRINT temp_str$
+' CALL ARR_BYTE.sort(dest_bytes%%(), bytes%%())
+' CALL ARR_BYTE.join(bytes%%(), temp_str$)
+' PRINT temp_str$
+' CALL ARR_BYTE.rsort(dest_bytes%%(), bytes%%())
+' CALL ARR_BYTE.join(bytes%%(), temp_str$)
+' PRINT temp_str$
+CALL ARR_BYTE.unique(dest_bytes%%(), bytes%%())
 CALL ARR_BYTE.join(bytes%%(), temp_str$)
 PRINT temp_str$
 ' PRINT(_TRIM$(STR$(ARR_BYTE.random%%(bytes%%()))))
@@ -145,7 +150,7 @@ SUB ARR_BYTE.shift(arr%%(), var%%)
     FOR i% = lb% TO ub% - 1
         arr%%(i%) = arr%%(i% + 1) 
     NEXT i%
-    REDIM _PRESERVE arr(lb% TO (ub% - 1)) AS _BYTE
+    REDIM _PRESERVE arr(lb% + 1 TO ub%) AS _BYTE
 END SUB
 
 
@@ -175,6 +180,7 @@ END SUB
 SUB ARR_BYTE.copy(source_arr%%(), dest_arr%%())
     DIM AS INTEGER ub, lb, i
     lb% = LBOUND(source_arr%%) : ub% = UBOUND(source_arr%%)
+    REDIM dest_arr(lb% TO ub%) AS _BYTE
     FOR i% = lb% TO ub%
         dest_arr%%(i%) = source_arr%%(i%)
     NEXT i%
@@ -225,6 +231,44 @@ SUB ARR_BYTE.new(arr%%(), s$)
         END IF
     NEXT i%
 END SUB
+
+
+''
+' Checks if value exists in _BYTE array
+' @param _BYTE ARRAY arr%%() to check in
+' @param _BYTE value%% value to check for
+' @return INTEGER -1 if found or 0 if not found
+'
+FUNCTION ARR_BYTE.in%(arr%%(), value%%)
+    DIM AS INTEGER lb, ub, i
+    lb% = LBOUND(arr%%) : ub% = UBOUND(arr%%)
+    FOR i% = lb% TO ub%
+        IF arr%%(i%) = value%% THEN
+            ARR_BYTE.in% = -1
+            EXIT FUNCTION
+        END IF
+    NEXT i%
+    ARR_BYTE.in% = 0
+END FUNCTION
+
+
+''
+' Checks if value exists in _BYTE array and returns index if found
+' @param _BYTE ARRAY arr%%() to check in
+' @param _BYTE value%% value to check for
+' @return INTEGER index of element if found or -1 if not found
+'
+FUNCTION ARR_BYTE.find%(arr%%(), value%%)
+    DIM AS INTEGER lb, ub, i
+    lb% = LBOUND(arr%%) : ub% = UBOUND(arr%%)
+    FOR i% = lb% TO ub%
+        IF arr%%(i%) = value%% THEN
+            ARR_BYTE.find% = i%
+            EXIT FUNCTION
+        END IF
+    NEXT i%
+    ARR_BYTE.find% = -1
+END FUNCTION
 
 
 ''
@@ -303,7 +347,7 @@ END SUB
 ' @param _BYTE ARRAY dest_arr%%() array to store sorted in
 '
 SUB ARR_BYTE.sort(source_arr%%(), dest_arr%%())
-    DIM AS INTEGER lb, ub, i, count, n
+    DIM AS INTEGER lb, ub, count
     lb% = LBOUND(source_arr%%) : ub% = UBOUND(source_arr%%)
     count% = ub% - lb%
     REDIM dest_arr(0 TO count%) AS _BYTE
@@ -318,12 +362,34 @@ END SUB
 ' @param _BYTE ARRAY dest_arr%%() array to store sorted in
 '
 SUB ARR_BYTE.rsort(source_arr%%(), dest_arr%%())
-    DIM AS INTEGER lb, ub, i, count, n
+    DIM AS INTEGER lb, ub, count
     lb% = LBOUND(source_arr%%) : ub% = UBOUND(source_arr%%)
     count% = ub% - lb%
     REDIM dest_arr(0 TO count%) AS _BYTE
     CALL ARR_BYTE.copy(source_arr%%(), dest_arr%%())
-    CALL ARR_BYTE.quicksort(dest_arr%%(), lb%, ub%, 1)
+    FOR i% = lb% TO ub%
+        SWAP dest_arr%%(i%), dest_arr%%(lb% + RND * (ub% - lb%)) 
+    NEXT i%
+END SUB
+
+
+''
+' Makes a _BYTE array contain only unique values
+' @param _BYTE ARRAY source_arr%%() array to sort
+' @param _BYTE ARRAY dest_arr%%() array to store sorted in
+'
+SUB ARR_BYTE.unique(source_arr%%(), dest_arr%%())
+    DIM AS INTEGER lb, ub, i
+    DIM tmp AS _BYTE
+    lb% = LBOUND(source_arr%%) : ub% = UBOUND(source_arr%%)
+    DIM work_arr(0) AS _BYTE
+    FOR i% = lb% TO ub%
+        IF NOT ARR_BYTE.in%(work_arr%%(), source_arr%%(i%)) THEN
+            CALL ARR_BYTE.push(work_arr%%(), source_arr%%(i%))
+        END IF
+    NEXT i%
+    CALL ARR_BYTE.shift(work_arr%%(), tmp%%)
+    CALL ARR_BYTE.copy(work_arr%%(), dest_arr%%())
 END SUB
 
 
@@ -344,14 +410,14 @@ SUB ARR_BYTE.quicksort(arr%%(), start%, finish%, order%)
     pivot% = start%
     pivotvalue%% = arr%%(pivot%)
     FOR i% = start% + 1 TO finish%
-        IF order% = 0 THEN
+        IF order% = 0 THEN ' ascending order
             IF arr%%(i%) < pivotvalue%% THEN
                 arr%%(pivot%) = arr%%(i%)
                 arr%%(i%) = arr%%(pivot% + 1)
                 arr%%(pivot% + 1) = pivotvalue%%
                 pivot% = pivot% + 1
             END IF
-        ELSE
+        ELSEIF order% = 1 THEN ' descending order
             IF arr%%(i%) > pivotvalue%% THEN
                 arr%%(pivot%) = arr%%(i%)
                 arr%%(i%) = arr%%(pivot% + 1)
