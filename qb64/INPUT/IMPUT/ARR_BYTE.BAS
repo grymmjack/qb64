@@ -1,10 +1,3 @@
-'//TODO: all: .first
-'//TODO: all: .last
-'//TODO: all: .longest
-'//TODO: all: .shortest
-'//TODO: all: .mostly
-'//TODO: all: .leastly
-
 '//TODO: numbers: .add
 '//TODO: numbers: .subtract
 '//TODO: numbers: .multiply
@@ -41,7 +34,7 @@ CALL ARR_BYTE.new(bytes%%(), "1,2,3,4,5,6,7,8,9,10,11,12,1,2,3,4,5,6,7,8,9,10,11
 CALL ARR_BYTE.join(bytes%%(), temp_str$)
 PRINT temp_str$
 PRINT
-CALL ARR_BYTE.remove(bytes%%(), 1)
+PRINT(ARR_BYTE.shortest(bytes%%()))
 CALL ARR_BYTE.join(bytes%%(), temp_str$)
 PRINT temp_str$
 PRINT
@@ -241,6 +234,64 @@ SUB ARR_BYTE.new(arr%%(), s$)
         END IF
     NEXT i%
 END SUB
+
+
+''
+' Return the visually longest element of a _BYTE array
+' @param _BYTE ARRAY arr%%() to check in
+' @return _BYTE value of visually longest element
+'
+FUNCTION ARR_BYTE.longest%%(arr%%())
+    DIM AS INTEGER lb, ub, i, res, lw
+    lb% = LBOUND(arr%%) : ub% = UBOUND(arr%%)
+    res% = 0 : lw% = 0
+    FOR i% = lb% TO ub%
+        IF LEN(_TRIM$(STR$(arr%%(i%)))) > lw% THEN
+            lw%  = LEN(_TRIM$(STR$(arr%%(i%))))
+            res% = i%
+        END IF
+    NEXT i%
+    ARR_BYTE.longest%% = arr%%(res%)
+END FUNCTION
+
+
+''
+' Return the visually shortest element of a _BYTE array
+' @param _BYTE ARRAY arr%%() to check in
+' @return _BYTE value of visually shortest element
+'
+FUNCTION ARR_BYTE.shortest%%(arr%%())
+    DIM AS INTEGER lb, ub, i, res, sw
+    lb% = LBOUND(arr%%) : ub% = UBOUND(arr%%)
+    res% = 0 : sw% = 0
+    FOR i% = lb% TO ub%
+        IF LEN(_TRIM$(STR$(arr%%(i%)))) < sw% THEN
+            sw%  = LEN(_TRIM$(STR$(arr%%(i%))))
+            res% = i%
+        END IF
+    NEXT i%
+    ARR_BYTE.shortest%% = arr%%(res%)
+END FUNCTION
+
+
+''
+' Return the first element of a _BYTE array
+' @param _BYTE ARRAY arr%%() to check in
+' @return _BYTE value of first element
+'
+FUNCTION ARR_BYTE.first%%(arr%%())
+    ARR_BYTE.first%% = arr%%(LBOUND(arr%%))
+END FUNCTION
+
+
+''
+' Return the last element of a _BYTE array
+' @param _BYTE ARRAY arr%%() to check in
+' @return _BYTE value of last element
+'
+FUNCTION ARR_BYTE.last%%(arr%%())
+    ARR_BYTE.last%% = arr%%(UBOUND(arr%%))
+END FUNCTION
 
 
 ''
