@@ -18,7 +18,7 @@
 '     Released to Public Domain on January 18th, 1997.
 '     Deutscher Kommentar von Thomas Antoni, 9.3.2006
 '- =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-
+_FULLSCREEN 
 CLS : SCREEN 13               'Set Screen 13, of course!
 '
 PSET (25, 71), 31: DRAW "rdld2l2ngr3fnehld3rfrdngulhlg2lh"
