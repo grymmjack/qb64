@@ -1,0 +1,167 @@
+********************************************************************************
+*
+*   \         (c) Thomas Antoni, 3.8.1999 - 18.3.2004
+*    \ /\           Mailto:thomas@antonis.de
+*    ( )            Downloaded from www.antonis.de --- www.qbasic.de   
+*  .( o ).
+*                        ----==== Hottest QBasic Stuff on Earth !!! ====----
+*
+********************************************************************************
+
+********************************************************************************
+*
+* .----------------.
+* | ENGLISH  INFO  |  (Deutsche Info: Siehe unten)
+* '----------------'
+*
+* Download File  : BTUbook - E-Book "PC Magazine BASIC Techniques and Utilities"
+*                  =============================================================
+* Progr.Language : QBasic, QuickBasic 4.x and 7.1 (PDS / QBX), VBDOS
+* Author         : Ethan Winer
+*                  Full Moon Software
+*                  34 Cedar Vale Drive
+*                  New Milford, CT 06776
+*                  voice : 860-350-8188
+*                  fax   : 860-350-6130
+*                  e-mail: ethan@ethanwiner.com
+*
+* E-Book Editor  : Thomas Antoni  (PDF conversion and navigation)
+*   - E-Mail     : thomas@antonis.de
+*   - Webseite   : www.antonis.de
+*
+********************************************************************************
+
+*** Bibliographical information
+"PC Magazine BASIC Techniques and Utilities"
+by Ethan Winer
+Ziff-Davis Press , 1991
+ISBN 1-56276-008-4 / 1562760084 
+
+*** Short Description from Ethan's Website
+Ethan Winer's best-selling book PC Magazine BASIC Techniques and Utilities is 
+now out of print, but it's available here. The download package contains the 
+complete text of this popular book, along with source files for all of the 
+subroutines and example programs that were included in the original printed 
+edition.
+
+Thomas Antoni has converted my entire book into PDF format, and made it 
+available on his web site. This is the version I now recommend. 
+
+*** Opinion from Karl E.Peterson
+In my opinion, Ethan was the original Basic Guru. It was his willingness to 
+share that served as my inspiration for helping out as I do now in online 
+communities. For example, his best-selling book PC Magazine BASIC 
+Techniques and Utilities is now out of print, but it's available at his web 
+site for downloading. Although not as much a part of the Basic community 
+now, as previously, his contributions can never be understated. Swing by 
+his site, and take a listen (do not miss Disco Rainbow!) to some of the 
+music he's composed!
+
+*** another Opinion
+PC Magazine's Basic Techniques and Utilities Or Ethan winners book. For 
+intermediate programmers, not a "learn QB" book. Understand what happens 
+"under the hook". As it was written in 1989, not a word about graphics!!. 
+
+
+*** Rating
++++    (in a range of + to +++)
+
+
+********************************************************************************
+*
+* .---------------.
+* | DEUTSCHE INFO |
+* '---------------'
+*
+* Download-Datei  : BTUBOOK - E-Book "PC Magazine BASIC Techniques and Utilities"
+*                  =============================================================
+* Progr.sprache   : QBasic, QuickBasic 4.x and 7.1 (PDS / QBX), VBDOS
+* Autor           : Ethan Winer
+*                   Full Moon Software
+*                   34 Cedar Vale Drive
+*                   New Milford, CT 06776
+*                   voice  : 860-350-8188
+*                   fax    : 860-350-6130
+*                   e-mail : ethan@ethanwiner.com
+*                   website: www.ethanwiner.com
+*
+* Herausgeber     : Thomas Antoni  (PDF conversion und Navigation)
+*   - E-Mail      : thomas@antonis.de
+*   - Webseite    : www.antonis.de
+*
+********************************************************************************
+
+*** Bibliografische Angaben zu dem Buch
+"PC Magazine BASIC Techniques and Utilities"
+by Ethan Winer
+Ziff-Davis Press , 1991, ca. 580 Seiten
+ISBN 1-56276-008-4 / 1562760084 
+
+Dieses Buch wurde mit Genehmigung des Autors und des Verlages von Thomas Antoni
+in ein E-Book umgewandelt und auf www.qbasic publiziert.
+
+Eine Veröffentlichung auf anderen Webseiten ist nur mit Genehmigung des Autors
+gestattet.
+
+
+*** Kurzbeschreibung
+Riesiges professionelles englischsprachiges QuickASIC-Buch von dem absoluten
+weltweit anerkannten QuickBASIC-Guru Ethan Winer. Nichts für Einsteiger, sondern
+eher für Profis und Wissbegierige, die unter die Haube von QuickBASIC schauen und
+möglichst viel über die Systemprogrammierung lernen wollen.
+
+Schwerpunkt-Themen des Buches sind
+- Dateibearbeitung
+- Datenbanken
+- Netzwerke
+- Systemprogrammierung und Bios-Zugriffe
+- Assemblerprogrammierung
+- Weitere Fortgeschrittenen-Themen wie Debugging, Optimierung und Bibliotheken
+
+Multimedia-Themen wie Sound-Wiedergabe und Grafikanimationen werden
+mit keiner Silbe erwähnt.
+
+Alle Beispielprogramme des Buches sind im Downloadpaket enthalten. Sie finden 
+sie als .BAS und .ASM-Quellsprachedateien im Verzeichnis PROGS/ (über 100 
+Programme!!!) .
+
+
+*** Bewertung
+++   (in einer Skala von + bis +++)
+
+
+
+Hinweise zu weiteren QuickBasic-Materialien von Ethan's Homepage:
+================================================================================
+Folgende Materialien von Ether's Homepage gibt es auch auf der QBasic
+CD-ROM von www.antonis.de:
+- Die BASIC-Tools sind auf der CD unter TOOLS\WINER abgelegt
+- Die zwei Datenbank-Programme sind auf der CD unter BEISPIEL\WINER
+  abgelegt
+
+
+Some background information from Ethan's Homepage:
+================================================================================
+About Ethan Winer and Full Moon Software:
+
+After 20 years as a professional recording engineer and musician, Ethan 
+Winer founded Crescent Software in 1986, quickly building it to become 
+the leading provider of add-on products for use with Microsoft compiled 
+BASIC for DOS. During that time Ethan wrote numerous articles about DOS 
+BASIC and assembly language for all of the major programming magazines, 
+and also served as a contributing editor for PC Magazine. In 1992 Ethan 
+sold Crescent to his partner Don Malin, and retired in order to pursue 
+his musical interests. At that time he built a sophisticated MIDI and 
+audio recording studio in his home, and also started playing the cello. 
+Read the full story on the Audio and Music page.
+Crescent was sold in 1994 to Progress Software, who wanted to focus 
+mainly on Crescent's Windows programming tools. Out of concern for the 
+existing DOS customers, Ethan arranged to take back the sales and 
+support for the original Crescent DOS products--many of which he wrote--
+so those customers would still have a way to get assistance when 
+necessary. Thus was born Full Moon Software and this web page. You can 
+contact Ethan and Full Moon Software as follows:
+
+
+
+

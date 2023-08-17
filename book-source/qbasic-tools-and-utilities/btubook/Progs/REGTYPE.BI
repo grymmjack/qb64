@@ -1,0 +1,16 @@
+'*********** REGTYPE.BAS - Include file for CALL INTERRUPT
+
+'Copyright (c) 1992 Ethan Winer
+
+TYPE RegType
+  AX    AS INTEGER
+  BX    AS INTEGER
+  CX    AS INTEGER
+  DX    AS INTEGER
+  BP    AS INTEGER
+  SI    AS INTEGER
+  DI    AS INTEGER
+  Flags AS INTEGER
+  DS    AS INTEGER
+  ES    AS INTEGER
+END TYPE
