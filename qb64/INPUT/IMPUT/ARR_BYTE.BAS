@@ -6,19 +6,6 @@
 '//TODO: strings: .len_lt
 '//TODO: strings: .len_lte
 
-'//TODO: numbers: .add
-'//TODO: numbers: .subtract
-'//TODO: numbers: .multiply
-'//TODO: numbers: .divide
-'//TODO: numbers: .bit_and
-'//TODO: numbers: .bit_or
-'//TODO: numbers: .bit_xor
-'//TODO: numbers: .bit_shl
-'//TODO: numbers: .bit_shr
-'//TODO: numbers: .floor
-'//TODO: numbers: .ceil
-
-
 '$DYNAMIC
 DIM CANVAS AS LONG
 DIM temp_str AS STRING
@@ -37,8 +24,8 @@ CALL ARR_BYTE.new(bytes%%(), "1,2,3,4,5,6,7,8,9,10,11,12,1,2,3,4,5,6,7,8,9,10,11
 CALL ARR_BYTE.join(bytes%%(), temp_str$)
 PRINT temp_str$
 PRINT
-PRINT(ARR_BYTE.shortest(bytes%%()))
-' CALL ARR_BYTE.nth(bytes%%(), dest_bytes%%(), 2)
+' PRINT(ARR_BYTE.max(bytes%%()))
+CALL ARR_BYTE.math(bytes%%(), dest_bytes%%(), "<<", 2)
 CALL ARR_BYTE.join(dest_bytes%%(), temp_str$)
 PRINT temp_str$
 PRINT
@@ -256,6 +243,82 @@ FUNCTION ARR_BYTE.longest%%(arr%%())
         END IF
     NEXT i%
     ARR_BYTE.longest%% = arr%%(res%)
+END FUNCTION
+
+
+''
+' Perform some math on every element of a _BYTE array
+' @param _BYTE ARRAY source_arr%%() to do math on
+' @param _BYTE ARRAY dest_arr%%() to store results in
+' @param STRING op$ one of:
+'                          and   or    xor   shl   shr 
+' "+", "-", "*", "\", "&&", "||", "!!", "<<", ">>"
+' @param _BYTE value%% to use for operand
+'
+SUB ARR_BYTE.math(source_arr%%(), dest_arr%%(), op$, value%%)
+    DIM AS INTEGER lb, ub, i, s
+    lb% = LBOUND(source_arr%%) : ub% = UBOUND(source_arr%%)
+    REDIM dest_arr(lb% TO ub%) AS _BYTE
+    FOR i% = lb% TO ub%
+        SELECT CASE op$
+            CASE "+":
+                dest_arr%%(i%) = source_arr%%(i%) + value%%
+            CASE "-":
+                dest_arr%%(i%) = source_arr%%(i%) - value%%
+            CASE "*":
+                dest_arr%%(i%) = source_arr%%(i%) * value%%
+            CASE "\":
+                IF value%% > 0 THEN
+                    dest_arr%%(i%) = source_arr%%(i%) \ value%%
+                END IF
+            CASE "&&":
+                dest_arr%%(i%) = source_arr%%(i%) AND value%%
+            CASE "||":
+                dest_arr%%(i%) = source_arr%%(i%) OR value%%
+            CASE "!!":
+                dest_arr%%(i%) = source_arr%%(i%) XOR value%%
+            CASE "<<":
+                dest_arr%%(i%) = _SHL(source_arr%%(i%), value%%)
+            CASE ">>":
+                dest_arr%%(i%) = _SHR(source_arr%%(i%), value%%)
+        END SELECT
+    NEXT i%
+END SUB
+
+
+''
+' Return the minimum element value in _BYTE array
+' @param _BYTE ARRAY arr%%() to check in
+' @return _BYTE minimum value found
+'
+FUNCTION ARR_BYTE.min%%(arr%%())
+    DIM AS INTEGER lb, ub, i, s
+    lb% = LBOUND(arr%%) : ub% = UBOUND(arr%%)
+    s% = 256
+    FOR i% = lb% TO ub%
+        IF arr%%(i%) < s% THEN
+            s% = arr%%(i%)
+        END IF
+    NEXT i%
+    ARR_BYTE.min%% = s%
+END FUNCTION
+
+
+''
+' Return the maximum element value in _BYTE array
+' @param _BYTE ARRAY arr%%() to check in
+' @return _BYTE maximum value found
+'
+FUNCTION ARR_BYTE.max%%(arr%%())
+    DIM AS INTEGER lb, ub, i, s
+    lb% = LBOUND(arr%%) : ub% = UBOUND(arr%%)
+    s% = 0
+    FOR i% = lb% TO ub%
+        IF arr%%(i%) > s% THEN
+            s% = arr%%(i%)
+        END IF
+    NEXT i%
+    ARR_BYTE.max%% = s%
 END FUNCTION
 
 
