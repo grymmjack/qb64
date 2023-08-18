@@ -25,7 +25,7 @@ CALL ARR_BYTE.join(bytes%%(), temp_str$)
 PRINT temp_str$
 PRINT
 ' PRINT(ARR_BYTE.max(bytes%%()))
-CALL ARR_BYTE.math(bytes%%(), dest_bytes%%(), "<<", 2)
+CALL ARR_BYTE.rsort(bytes%%(), dest_bytes%%())
 CALL ARR_BYTE.join(dest_bytes%%(), temp_str$)
 PRINT temp_str$
 PRINT
@@ -33,7 +33,7 @@ PRINT
 ' CALL ARR_BYTE.shuffle(bytes%%(), dest_bytes%%())
 ' CALL ARR_BYTE.join(dest_bytes%%(), temp_str$)
 ' PRINT temp_str$
-' PRINT ARR_BYTE.in%(bytes%%(), 12)
+PRINT ARR_BYTE.size%(bytes%%())
 ' PRINT(_TRIM$(STR$(ARR_BYTE.count(bytes%%()))))
 ' CALL ARR_BYTE.join(dest_bytes%%(), temp_str$)
 ' PRINT temp_str$
@@ -436,9 +436,13 @@ END FUNCTION
 ' @return INTEGER size in bytes
 '
 FUNCTION ARR_BYTE.size%(arr%%())
-    ' Because this is a byte array the number of elements 
-    ' determines the number of bytes as 1 element = 1 byte
-    ARR_BYTE.size% = UBOUND(arr%%) - LBOUND(arr%%)
+    DIM AS INTEGER lb, ub, i, n
+    lb% = LBOUND(arr%%) : ub% = UBOUND(arr%%)
+    n% = 0
+    FOR i% = lb% TO ub%
+        n% = n% + LEN(arr%%)
+    NEXT i%
+    ARR_BYTE.size% = n%
 END FUNCTION
 
 
@@ -646,7 +650,7 @@ END SUB
 ''
 ' Inserts a new element into _BYTE array after index
 ' @param _BYTE ARRAY arr%%() array to work on
-' @param _BYTE value%% to be less than or equal to be returned
+' @param _BYTE value%% to insert
 ' @param INTEGER index% of element to insert at
 '
 SUB ARR_BYTE.insert(arr%%(), value%%, index%)
@@ -806,9 +810,7 @@ SUB ARR_BYTE.rsort(source_arr%%(), dest_arr%%())
     count% = ub% - lb%
     REDIM dest_arr(0 TO count%) AS _BYTE
     CALL ARR_BYTE.copy(source_arr%%(), dest_arr%%())
-    FOR i% = lb% TO ub%
-        SWAP dest_arr%%(i%), dest_arr%%(lb% + RND * (ub% - lb%)) 
-    NEXT i%
+    CALL ARR_BYTE.quicksort(dest_arr%%(), lb%, ub%, 1)
 END SUB
 
 
