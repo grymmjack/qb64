@@ -7,6 +7,7 @@
 '//TODO: strings: .len_lte
 
 '$DYNAMIC
+OPTION _EXPLICIT
 DIM CANVAS AS LONG
 DIM temp_str AS STRING
 CANVAS& = _NEWIMAGE(800, 600, 32)
@@ -33,7 +34,7 @@ PRINT
 ' CALL ARR_BYTE.shuffle(bytes%%(), dest_bytes%%())
 ' CALL ARR_BYTE.join(dest_bytes%%(), temp_str$)
 ' PRINT temp_str$
-PRINT ARR_BYTE.size%(bytes%%())
+PRINT ARR_BYTE.size&(bytes%%())
 ' PRINT(_TRIM$(STR$(ARR_BYTE.count(bytes%%()))))
 ' CALL ARR_BYTE.join(dest_bytes%%(), temp_str$)
 ' PRINT temp_str$
@@ -80,7 +81,7 @@ PRINT temp_str$
 ' @param BYTE() source_arr%% to slice from
 ' @param BYTE() dest_arr%% to put slices into
 ' @param INTEGER start_idx% starting index to use as slice range
-' @param INTEGER count& number of slices - if negative, backwards from index
+' @param INTEGER count% number of slices - if negative, backwards from index
 '
 SUB ARR_BYTE.slice(source_arr%%(), dest_arr%%(), start_idx%, count%)
     DIM AS LONG ub, lb, i, n
@@ -390,16 +391,16 @@ END SUB
 ' @param _BYTE value%% value to check for
 ' @return INTEGER -1 if found or 0 if not found
 '
-FUNCTION ARR_BYTE.in&(arr%%(), value%%)
+FUNCTION ARR_BYTE.in%(arr%%(), value%%)
     DIM AS LONG lb, ub, i
     lb& = LBOUND(arr%%) : ub& = UBOUND(arr%%)
     FOR i& = lb& TO ub&
         IF arr%%(i&) = value%% THEN
-            ARR_BYTE.in& = -1
+            ARR_BYTE.in% = -1
             EXIT FUNCTION
         END IF
     NEXT i&
-    ARR_BYTE.in& = 0
+    ARR_BYTE.in% = 0
 END FUNCTION
 
 
@@ -435,16 +436,10 @@ END FUNCTION
 ''
 ' Return the size of a _BYTE array
 ' @param _BYTE ARRAY arr%%() to get size of
-' @return INTEGER size in bytes
+' @return LONG size in bytes
 '
-FUNCTION ARR_BYTE.size%(arr%%())
-    DIM AS LONG lb, ub, i, n
-    lb& = LBOUND(arr%%) : ub& = UBOUND(arr%%)
-    n& = 0
-    FOR i& = lb& TO ub&
-        n& = n& + LEN(arr%%)
-    NEXT i&
-    ARR_BYTE.size% = n&
+FUNCTION ARR_BYTE.size&(arr%%())
+    ARR_BYTE.size& = LEN(arr%%())
 END FUNCTION
 
 
@@ -481,32 +476,32 @@ END FUNCTION
 ''
 ' Returns the sum of all elements in a _BYTE array
 ' @param _BYTE ARRAY arr%%() array to get some for
-' @return SINGLE sum of all elements
+' @return LONG sum of all elements
 '
-FUNCTION ARR_BYTE.sum!(arr%%())
+FUNCTION ARR_BYTE.sum&(arr%%())
     DIM AS LONG lb, ub, i
-    DIM sum AS SINGLE
+    DIM sum AS LONG
     lb& = LBOUND(arr%%) : ub& = UBOUND(arr%%)
     FOR i& = lb& TO ub&
-        sum! = sum! + arr%%(i&)
+        sum& = sum& + arr%%(i&)
     NEXT i&
-    ARR_BYTE.sum! = sum!
+    ARR_BYTE.sum& = sum&
 END FUNCTION
 
 
 ''
 ' Returns the average value of elements in a _BYTE array
 ' @param _BYTE ARRAY arr%%() array to get average for
-' @return SINGLE average of elements
+' @return LONG average of elements
 '
-FUNCTION ARR_BYTE.avg!(arr%%())
+FUNCTION ARR_BYTE.avg&(arr%%())
     DIM AS LONG lb, ub, i
-    DIM sum AS SINGLE
+    DIM sum AS LONG
     lb& = LBOUND(arr%%) : ub& = UBOUND(arr%%)
     FOR i& = lb& TO ub&
-        sum! = sum! + arr%%(i&)
+        sum& = sum& + arr%%(i&)
     NEXT i&
-    ARR_BYTE.avg! = sum! / (ub& - lb&)
+    ARR_BYTE.avg& = sum& / (ub& - lb&)
 END FUNCTION
 
 
@@ -539,7 +534,7 @@ SUB ARR_BYTE.unique(source_arr%%(), dest_arr%%())
     lb& = LBOUND(source_arr%%) : ub& = UBOUND(source_arr%%)
     DIM work_arr(0) AS _BYTE
     FOR i& = lb& TO ub&
-        IF NOT ARR_BYTE.in&(work_arr%%(), source_arr%%(i&)) THEN
+        IF NOT ARR_BYTE.in%(work_arr%%(), source_arr%%(i&)) THEN
             CALL ARR_BYTE.push(work_arr%%(), source_arr%%(i&))
         END IF
     NEXT i&
@@ -687,7 +682,7 @@ SUB ARR_BYTE.remove(arr%%(), index%)
     DIM tmp AS _BYTE
     DIM work_arr(0) AS _BYTE
     lb& = LBOUND(arr%%) : ub& = UBOUND(arr%%)
-    IF start_index% >= lb& AND end_index% <= ub& THEN
+    IF index% >= lb& AND index% <= ub& THEN
         ' build new array up to index
         FOR i& = lb& TO index% - 1
             CALL ARR_BYTE.push(work_arr%%(), arr%%(i&))
@@ -826,6 +821,7 @@ END SUB
 ' @param INTEGER order% to sort by (0 = asc / 1 = desc)
 '
 SUB ARR_BYTE.quicksort(arr%%(), start%, finish%, order%)
+    DIM i AS LONG
     DIM pivot AS INTEGER
     DIM pivotvalue AS _BYTE
 
