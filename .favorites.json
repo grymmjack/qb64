@@ -1,0 +1,74 @@
+[
+    {
+        "type": "File",
+        "name": "i:\\git\\QB64pe\\internal\\help\\Variable-Types.md",
+        "parent_id": null,
+        "fsPath": "i:\\git\\QB64pe\\internal\\help\\Variable-Types.md",
+        "workspaceRoot": null,
+        "workspacePath": null,
+        "id": "Px5W4UndyTGivFjf"
+    },
+    {
+        "type": "File",
+        "name": "i:\\git\\QB64pe\\internal\\help\\DRAW.md",
+        "parent_id": null,
+        "fsPath": "i:\\git\\QB64pe\\internal\\help\\DRAW.md",
+        "workspaceRoot": null,
+        "workspacePath": null,
+        "id": "bZYP48Wh3QJVfvin"
+    },
+    {
+        "type": "File",
+        "name": "i:\\git\\QB64pe\\internal\\help\\INKEY$.md",
+        "parent_id": null,
+        "fsPath": "i:\\git\\QB64pe\\internal\\help\\INKEY$.md",
+        "workspaceRoot": null,
+        "workspacePath": null,
+        "id": "ykXPnRG8sCd7DtYU"
+    },
+    {
+        "type": "File",
+        "name": "i:\\git\\QB64pe\\internal\\help\\Keyboard-scancodes.md",
+        "parent_id": null,
+        "fsPath": "i:\\git\\QB64pe\\internal\\help\\Keyboard-scancodes.md",
+        "workspaceRoot": null,
+        "workspacePath": null,
+        "id": "z6s7AGNRWkjUo9Mg"
+    },
+    {
+        "type": "File",
+        "name": "i:\\git\\QB64pe\\internal\\help\\Keyword-Reference---Alphabetical.md",
+        "parent_id": null,
+        "fsPath": "i:\\git\\QB64pe\\internal\\help\\Keyword-Reference---Alphabetical.md",
+        "workspaceRoot": null,
+        "workspacePath": null,
+        "id": "y4Kpa62HoFeqd9Nn"
+    },
+    {
+        "type": "File",
+        "name": "i:\\git\\QB64pe\\internal\\help\\Keyword-Reference---By-Usage.md",
+        "parent_id": null,
+        "fsPath": "i:\\git\\QB64pe\\internal\\help\\Keyword-Reference---By-Usage.md",
+        "workspaceRoot": null,
+        "workspacePath": null,
+        "id": "ZkBAUFzqKQLI0rlO"
+    },
+    {
+        "type": "File",
+        "name": "i:\\git\\QB64pe\\internal\\help\\Mathematical-Operations.md",
+        "parent_id": null,
+        "fsPath": "i:\\git\\QB64pe\\internal\\help\\Mathematical-Operations.md",
+        "workspaceRoot": null,
+        "workspacePath": null,
+        "id": "jTL4pQkvVWGy18NO"
+    },
+    {
+        "type": "File",
+        "name": "i:\\git\\QB64pe\\internal\\help\\PLAY.md",
+        "parent_id": null,
+        "fsPath": "i:\\git\\QB64pe\\internal\\help\\PLAY.md",
+        "workspaceRoot": null,
+        "workspacePath": null,
+        "id": "62QpmtDUoWixHlT3"
+    }
+]

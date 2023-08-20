@@ -1,8 +1,8 @@
-DIM canvas AS LONG
-canvas& = _NEWIMAGE(800, 600, 32)
-SCREEN canvas&
-LOCATE ,,1',30,31
-' LOCATE ,,1,0,31
-PRINT "HI";
-LOCATE ,POS(0)-1
-SLEEP
+OPTION _EXPLICIT
+DIM foo AS LONG
+foo = 1
+PRINT foo
+
+foo& = _RGB(255, 255, 255)
+
+PRINT STR$(foo&)
