@@ -1,0 +1,3366 @@
+FUNCTION BinaryMemSearch (search AS _FLOAT, m AS _MEM)
+    'NOTE:  StartRecord and EndRecord does *NOT* refer to the index numbers of our array that we're sorting.
+    '       Instead, it refers to the Record position in our mem array.
+    '       For example:  DIM Array(-10 to 10) AS LONG
+    '                     DIM m as _MEM: m = _MEM(Array())
+    '                     PRINT BinaryMemSearchSome (123, m, 1, 10)
+    '
+    '      The above will *NOT* search Array(1) to Array(10).
+    '      Instead, it will search Array(-9) to Array(0)...
+    '      This is the 1st Record (starting count at 0), to the 10th record after that.
+    '      Do *NOT* mistake this RECORD for the array INDEX.  They may not match at all!
+    '
+    '      If you need to convert, use a simple routine to do so, like:
+    '      MemSortSome m, StartRecord - LBOUND(Array), EndRecord - LBOUND(Array)
+    '      So for the above to sort INDEX 1 to 10, It'd basically be the following:
+    '      PRINT BinaryMemSearchSome(search, m, 1 - LBOUND(Array), 10 - LBOUND(Array))
+    '
+    '      Notice that if your array starts at 0, such as DIM Array(10), then you don't need to worry about this subtle difference.
+    '      The reason being StartRecord - 0 = StartRecord and EndRecord - 0 = EndRecord
+    '      This note is mainly only important for people who use OPTION BASE 1, or index their records as above (say from -10 to 10).
+
+    'NOTE2: This also returns the RECORD, not the INDEX, as described above.
+    '       In the case the search term isn't found in the list, this routine will return a NEGATIVE RECORD number
+    '       to indicate where it belongs, in case you wish to insert the search term into your list.
+
+    '       In a case of the match NOT being found, this returns a NEGATIVE Record Number indicating where it
+    '       WOULD'VE appeared at, if it existed, through the shared variable LastIndex.
+
+    DIM i AS _UNSIGNED LONG
+    $IF 64BIT THEN
+        DIM ES AS _INTEGER64, EC AS _INTEGER64
+    $ELSE
+        DIM ES AS LONG, EC AS LONG
+    $END IF
+    'Convert our offset data over to something we can work with
+    DIM m1 AS _MEM: m1 = _MEMNEW(LEN(ES))
+    _MEMPUT m1, m1.OFFSET, m.ELEMENTSIZE: _MEMGET m1, m1.OFFSET, ES 'Element Size
+    _MEMPUT m1, m1.OFFSET, m.SIZE: _MEMGET m1, m1.OFFSET, EC 'Element Count will temporily hold the WHOLE array size
+    _MEMFREE m1
+
+    EC = EC / ES - 1 'Now we take the whole element size / the size of the elements and get our actual element count.  We subtract 1 so our arrays start at 0 and not 1.
+    'And work with it!
+    BinaryMemSearch = BinaryMemSearchSome(search, m, 0, EC)
+END FUNCTION
+
+
+FUNCTION BinaryMemSearchSome (search AS _FLOAT, m AS _MEM, StartRecord AS LONG, EndRecord AS LONG)
+    'NOTE:  StartRecord and EndRecord does *NOT* refer to the index numbers of our array that we're sorting.
+    '       Instead, it refers to the Record position in our mem array.
+    '       For example:  DIM Array(-10 to 10) AS LONG
+    '                     DIM m as _MEM: m = _MEM(Array())
+    '                     PRINT BinaryMemSearchSome (123, m, 1, 10)
+    '
+    '      The above will *NOT* search Array(1) to Array(10).
+    '      Instead, it will search Array(-9) to Array(0)...
+    '      This is the 1st Record (starting count at 0), to the 10th record after that.
+    '      Do *NOT* mistake this RECORD for the array INDEX.  They may not match at all!
+    '
+    '      If you need to convert, use a simple routine to do so, like:
+    '      MemSortSome m, StartRecord - LBOUND(Array), EndRecord - LBOUND(Array)
+    '      So for the above to sort INDEX 1 to 10, It'd basically be the following:
+    '      PRINT BinaryMemSearchSome(search, m, 1 - LBOUND(Array), 10 - LBOUND(Array))
+    '
+    '      Notice that if your array starts at 0, such as DIM Array(10), then you don't need to worry about this subtle difference.
+    '      The reason being StartRecord - 0 = StartRecord and EndRecord - 0 = EndRecord
+    '      This note is mainly only important for people who use OPTION BASE 1, or index their records as above (say from -10 to 10).
+
+    'NOTE2: This also returns the RECORD, not the INDEX, as described above.
+    '       In the case the search term isn't found in the list, this routine will return a NEGATIVE RECORD number
+    '       to indicate where it belongs, in case you wish to insert the search term into your list.
+
+    '       In a case of the match NOT being found, this returns a NEGATIVE Record Number indicating where it
+    '       WOULD'VE appeared at, if it existed, through the shared variable LastIndex.
+
+    DIM i AS _UNSIGNED LONG
+    $IF 64BIT THEN
+        DIM ES AS _INTEGER64, EC AS _INTEGER64
+    $ELSE
+        DIM ES AS LONG, EC AS LONG
+    $END IF
+
+    IF NOT m.TYPE AND 65536 THEN EXIT SUB 'We won't work without an array
+    IF m.TYPE AND 1024 THEN DataType = 10
+    IF m.TYPE AND 1 THEN DataType = DataType + 1
+    IF m.TYPE AND 2 THEN DataType = DataType + 2
+    IF m.TYPE AND 4 THEN IF m.TYPE AND 128 THEN DataType = DataType + 4 ELSE DataType = 3
+    IF m.TYPE AND 8 THEN IF m.TYPE AND 128 THEN DataType = DataType + 8 ELSE DataType = 5
+    IF m.TYPE AND 32 THEN DataType = 6
+    IF m.TYPE AND 512 THEN DataType = 7: EXIT SUB 'string search; impossible with this routine
+
+    min = StartRecord: max = EndRecord
+
+    SELECT CASE DataType
+        CASE 1 'Byte
+            DO
+                gap = (max + min) \ 2
+                IF search > _MEMGET(m, m.OFFSET + gap * m.ELEMENTSIZE, _BYTE) THEN
+                    min = gap + 1
+                ELSEIF search < _MEMGET(m, m.OFFSET + gap * m.ELEMENTSIZE, _BYTE) THEN
+                    max = gap - 1
+                ELSE
+                    BinaryMemSearchSome = gap
+                    EXIT FUNCTION
+                END IF
+                IF max - min < 1 THEN
+                    IF search = _MEMGET(m, m.OFFSET + min * m.ELEMENTSIZE, LONG) THEN
+                        BinaryMemSearchSome = min
+                    ELSE
+                        BinaryMemSearchSome = -1
+                        IF search < _MEMGET(m, m.OFFSET + min * m.ELEMENTSIZE, LONG) THEN
+                            LastIndex = min - 1
+                        ELSE
+                            LastIndex = min
+                        END IF
+                    END IF
+                    found = -1
+                END IF
+            LOOP UNTIL found
+        CASE 2: 'INTEGER
+            DO
+                gap = (max + min) \ 2
+                IF search > _MEMGET(m, m.OFFSET + gap * m.ELEMENTSIZE, INTEGER) THEN
+                    min = gap + 1
+                ELSEIF search < _MEMGET(m, m.OFFSET + gap * m.ELEMENTSIZE, INTEGER) THEN
+                    max = gap - 1
+                ELSE
+                    BinaryMemSearchSome = gap
+                    EXIT FUNCTION
+                END IF
+                IF max - min < 1 THEN
+                    IF search = _MEMGET(m, m.OFFSET + min * m.ELEMENTSIZE, LONG) THEN
+                        BinaryMemSearchSome = min
+                    ELSE
+                        BinaryMemSearchSome = -1
+                        IF search < _MEMGET(m, m.OFFSET + min * m.ELEMENTSIZE, LONG) THEN
+                            LastIndex = min - 1
+                        ELSE
+                            LastIndex = min
+                        END IF
+                    END IF
+                    found = -1
+                END IF
+            LOOP UNTIL found
+        CASE 3 'SINGLE
+            DO
+                gap = (max + min) \ 2
+                IF search > _MEMGET(m, m.OFFSET + gap * m.ELEMENTSIZE, SINGLE) THEN
+                    min = gap + 1
+                ELSEIF search < _MEMGET(m, m.OFFSET + gap * m.ELEMENTSIZE, SINGLE) THEN
+                    max = gap - 1
+                ELSE
+                    BinaryMemSearchSome = gap
+                    EXIT FUNCTION
+                END IF
+                IF max - min < 1 THEN
+                    IF search = _MEMGET(m, m.OFFSET + min * m.ELEMENTSIZE, LONG) THEN
+                        BinaryMemSearchSome = min
+                    ELSE
+                        BinaryMemSearchSome = -1
+                        IF search < _MEMGET(m, m.OFFSET + min * m.ELEMENTSIZE, LONG) THEN
+                            LastIndex = min - 1
+                        ELSE
+                            LastIndex = min
+                        END IF
+                    END IF
+                    found = -1
+                END IF
+            LOOP UNTIL found
+        CASE 4 'LONG
+            DO
+                gap = (max + min) \ 2
+                IF search > _MEMGET(m, m.OFFSET + gap * m.ELEMENTSIZE, LONG) THEN
+                    min = gap + 1
+                ELSEIF search < _MEMGET(m, m.OFFSET + gap * m.ELEMENTSIZE, LONG) THEN
+                    max = gap - 1
+                ELSE
+                    BinaryMemSearchSome = gap
+                    EXIT FUNCTION
+                END IF
+                IF max - min < 1 THEN
+                    IF search = _MEMGET(m, m.OFFSET + min * m.ELEMENTSIZE, LONG) THEN
+                        BinaryMemSearchSome = min
+                    ELSE
+                        BinaryMemSearchSome = -1
+                        IF search < _MEMGET(m, m.OFFSET + min * m.ELEMENTSIZE, LONG) THEN
+                            LastIndex = min - 1
+                        ELSE
+                            LastIndex = min
+                        END IF
+                    END IF
+                    found = -1
+                END IF
+            LOOP UNTIL found
+        CASE 5 'DOUBLE
+            DO
+                gap = (max + min) \ 2
+                IF search > _MEMGET(m, m.OFFSET + gap * m.ELEMENTSIZE, DOUBLE) THEN
+                    min = gap + 1
+                ELSEIF search < _MEMGET(m, m.OFFSET + gap * m.ELEMENTSIZE, DOUBLE) THEN
+                    max = gap - 1
+                ELSE
+                    BinaryMemSearchSome = gap
+                    EXIT FUNCTION
+                END IF
+                IF max - min < 1 THEN
+                    IF search = _MEMGET(m, m.OFFSET + min * m.ELEMENTSIZE, LONG) THEN
+                        BinaryMemSearchSome = min
+                    ELSE
+                        BinaryMemSearchSome = -1
+                        IF search < _MEMGET(m, m.OFFSET + min * m.ELEMENTSIZE, LONG) THEN
+                            LastIndex = min - 1
+                        ELSE
+                            LastIndex = min
+                        END IF
+                    END IF
+                    found = -1
+                END IF
+            LOOP UNTIL found
+        CASE 6 ' _FLOAT
+            DO
+                gap = (max + min) \ 2
+                IF search > _MEMGET(m, m.OFFSET + gap * m.ELEMENTSIZE, _FLOAT) THEN
+                    min = gap + 1
+                ELSEIF search < _MEMGET(m, m.OFFSET + gap * m.ELEMENTSIZE, _FLOAT) THEN
+                    max = gap - 1
+                ELSE
+                    BinaryMemSearchSome = gap
+                    EXIT FUNCTION
+                END IF
+                IF max - min < 1 THEN
+                    IF search = _MEMGET(m, m.OFFSET + min * m.ELEMENTSIZE, LONG) THEN
+                        BinaryMemSearchSome = min
+                    ELSE
+                        BinaryMemSearchSome = -1
+                        IF search < _MEMGET(m, m.OFFSET + min * m.ELEMENTSIZE, LONG) THEN
+                            LastIndex = min - 1
+                        ELSE
+                            LastIndex = min
+                        END IF
+                    END IF
+                    found = -1
+                END IF
+            LOOP UNTIL found
+        CASE 7 'String
+            'an impossible to get result with this routine.
+            'If you're here, you broke QB64.  :P
+
+        CASE 8 '_INTEGER64
+            DO
+                gap = (max + min) \ 2
+                IF search > _MEMGET(m, m.OFFSET + gap * m.ELEMENTSIZE, _INTEGER64) THEN
+                    min = gap + 1
+                ELSEIF search < _MEMGET(m, m.OFFSET + gap * m.ELEMENTSIZE, _INTEGER64) THEN
+                    max = gap - 1
+                ELSE
+                    BinaryMemSearchSome = gap
+                    EXIT FUNCTION
+                END IF
+                IF max - min < 1 THEN
+                    IF search = _MEMGET(m, m.OFFSET + min * m.ELEMENTSIZE, LONG) THEN
+                        BinaryMemSearchSome = min
+                    ELSE
+                        BinaryMemSearchSome = -1
+                        IF search < _MEMGET(m, m.OFFSET + min * m.ELEMENTSIZE, LONG) THEN
+                            LastIndex = min - 1
+                        ELSE
+                            LastIndex = min
+                        END IF
+                    END IF
+                    found = -1
+                END IF
+            LOOP UNTIL found
+        CASE 11 '_UNSIGNED Byte
+            DO
+                gap = (max + min) \ 2
+                IF search > _MEMGET(m, m.OFFSET + gap * m.ELEMENTSIZE, _UNSIGNED _BYTE) THEN
+                    min = gap + 1
+                ELSEIF search < _MEMGET(m, m.OFFSET + gap * m.ELEMENTSIZE, _UNSIGNED _BYTE) THEN
+                    max = gap - 1
+                ELSE
+                    BinaryMemSearchSome = gap
+                    EXIT FUNCTION
+                END IF
+                IF max - min < 1 THEN
+                    IF search = _MEMGET(m, m.OFFSET + min * m.ELEMENTSIZE, LONG) THEN
+                        BinaryMemSearchSome = min
+                    ELSE
+                        BinaryMemSearchSome = -1
+                        IF search < _MEMGET(m, m.OFFSET + min * m.ELEMENTSIZE, LONG) THEN
+                            LastIndex = min - 1
+                        ELSE
+                            LastIndex = min
+                        END IF
+                    END IF
+                    found = -1
+                END IF
+            LOOP UNTIL found
+        CASE 12: '_UNSIGNED INTEGER
+            DO
+                gap = (max + min) \ 2
+                IF search > _MEMGET(m, m.OFFSET + gap * m.ELEMENTSIZE, _UNSIGNED INTEGER) THEN
+                    min = gap + 1
+                ELSEIF search < _MEMGET(m, m.OFFSET + gap * m.ELEMENTSIZE, _UNSIGNED INTEGER) THEN
+                    max = gap - 1
+                ELSE
+                    BinaryMemSearchSome = gap
+                    EXIT FUNCTION
+                END IF
+                IF max - min < 1 THEN
+                    IF search = _MEMGET(m, m.OFFSET + min * m.ELEMENTSIZE, LONG) THEN
+                        BinaryMemSearchSome = min
+                    ELSE
+                        BinaryMemSearchSome = -1
+                        IF search < _MEMGET(m, m.OFFSET + min * m.ELEMENTSIZE, LONG) THEN
+                            LastIndex = min - 1
+                        ELSE
+                            LastIndex = min
+                        END IF
+                    END IF
+                    found = -1
+                END IF
+            LOOP UNTIL found
+        CASE 14 '_UNSIGNED LONG
+            DO
+                gap = (max + min) \ 2
+                IF search > _MEMGET(m, m.OFFSET + gap * m.ELEMENTSIZE, _UNSIGNED LONG) THEN
+                    min = gap + 1
+                ELSEIF search < _MEMGET(m, m.OFFSET + gap * m.ELEMENTSIZE, _UNSIGNED LONG) THEN
+                    max = gap - 1
+                ELSE
+                    BinaryMemSearchSome = gap
+                    EXIT FUNCTION
+                END IF
+                IF max - min < 1 THEN
+                    IF search = _MEMGET(m, m.OFFSET + min * m.ELEMENTSIZE, LONG) THEN
+                        BinaryMemSearchSome = min
+                    ELSE
+                        BinaryMemSearchSome = -1
+                        IF search < _MEMGET(m, m.OFFSET + min * m.ELEMENTSIZE, LONG) THEN
+                            LastIndex = min - 1
+                        ELSE
+                            LastIndex = min
+                        END IF
+                    END IF
+                    found = -1
+                END IF
+            LOOP UNTIL found
+        CASE 18: '_UNSIGNED _INTEGER64
+            DO
+                gap = (max + min) \ 2
+                IF search > _MEMGET(m, m.OFFSET + gap * m.ELEMENTSIZE, _UNSIGNED _INTEGER64) THEN
+                    min = gap + 1
+                ELSEIF search < _MEMGET(m, m.OFFSET + gap * m.ELEMENTSIZE, _UNSIGNED _INTEGER64) THEN
+                    max = gap - 1
+                ELSE
+                    BinaryMemSearchSome = gap
+                    EXIT FUNCTION
+                END IF
+                IF max - min < 1 THEN
+                    IF search = _MEMGET(m, m.OFFSET + min * m.ELEMENTSIZE, LONG) THEN
+                        BinaryMemSearchSome = min
+                    ELSE
+                        BinaryMemSearchSome = -1
+                        IF search < _MEMGET(m, m.OFFSET + min * m.ELEMENTSIZE, LONG) THEN
+                            LastIndex = min - 1
+                        ELSE
+                            LastIndex = min
+                        END IF
+                    END IF
+                    found = -1
+                END IF
+            LOOP UNTIL found
+    END SELECT
+
+END SUB
+
+
+FUNCTION BinaryStringSearch (search$, Array() AS STRING)
+    'These routines work with actual indexes, so we can search from Array(-10 to 10), if we want to.
+    'When the search string is found, it'll return a value = to the index proper.
+    'When it's not found, it'll return a value LESS THAN the LBOUND limit of the array,
+    'And the point where the string WOULD'VE appeared, if it existed, is after the shared variable LastIndex
+
+    BinaryStringSearch = BinaryStringSearchSome(search$, Array(), LBOUND(array), UBOUND(array))
+END FUNCTION
+
+FUNCTION BinaryStringSearchSome (search$, Array() AS STRING, StartIndex AS LONG, EndIndex AS LONG)
+    'These routines work with actual indexes, so we can search from Array(-10 to 10), if we want to.
+    'When the search string is found, it'll return a value = to the index proper.
+    'When it's not found, it'll return a value LESS THAN the LBOUND limit of the array,
+    'And the point where the string WOULD'VE appeared, if it existed, is after the shared variable LastIndex
+
+    min = StartIndex
+    max = EndIndex
+
+    DO
+        gap = (max + min) \ 2
+        compare = _STRCMP(search$, Array(gap))
+        IF compare > 0 THEN
+            min = gap + 1
+        ELSEIF compare < 0 THEN
+            max = gap - 1
+        ELSE
+            BinaryStringSearchSome = gap
+            EXIT FUNCTION
+        END IF
+        IF max - min < 1 THEN
+            IF search$ = Array(min) THEN
+                BinaryStringSearchSome = min
+            ELSE
+                BinaryStringSearchSome = LBOUND(Array) - 1
+                IF search$ < Array(min) THEN
+                    LastIndex = min - 1
+                ELSE
+                    LastIndex = min
+                END IF
+            END IF
+            found = -1
+        END IF
+    LOOP UNTIL found
+END FUNCTION
+
+SUB StringSortSome (Array() AS STRING, StartIndex AS LONG, EndIndex AS LONG)
+    gap = EndIndex - StartIndex + 1
+    DO
+        gap = 10 * gap \ 13
+        IF gap < 1 THEN gap = 1
+        i = StartIndex
+        swapped = 0
+        DO
+            IF _STRCMP(Array(i), Array(i + gap)) > 0 THEN
+                SWAP Array(i), Array(i + gap)
+                swapped = -1
+            END IF
+            i = i + 1
+        LOOP UNTIL i + gap > EndIndex
+    LOOP UNTIL swapped = 0 AND gap = 1
+END SUB
+
+SUB StringSort (Array() AS STRING)
+    StringSortSome Array(), LBOUND(array), UBOUND(array)
+END SUB
+
+
+SUB MemSort (m AS _MEM)
+    DIM i AS _UNSIGNED LONG
+    $IF 64BIT THEN
+        DIM ES AS _INTEGER64, EC AS _INTEGER64
+    $ELSE
+        DIM ES AS LONG, EC AS LONG
+    $END IF
+
+    IF NOT m.TYPE AND 65536 THEN EXIT SUB 'We won't work without an array
+    IF m.TYPE AND 1024 THEN DataType = 10
+    IF m.TYPE AND 1 THEN DataType = DataType + 1
+    IF m.TYPE AND 2 THEN DataType = DataType + 2
+    IF m.TYPE AND 4 THEN IF m.TYPE AND 128 THEN DataType = DataType + 4 ELSE DataType = 3
+    IF m.TYPE AND 8 THEN IF m.TYPE AND 128 THEN DataType = DataType + 8 ELSE DataType = 5
+    IF m.TYPE AND 32 THEN DataType = 6
+    IF m.TYPE AND 512 THEN DataType = 7
+
+    'Convert our offset data over to something we can work with
+    DIM m1 AS _MEM: m1 = _MEMNEW(LEN(ES))
+    _MEMPUT m1, m1.OFFSET, m.ELEMENTSIZE: _MEMGET m1, m1.OFFSET, ES 'Element Size
+    _MEMPUT m1, m1.OFFSET, m.SIZE: _MEMGET m1, m1.OFFSET, EC 'Element Count will temporily hold the WHOLE array size
+    _MEMFREE m1
+
+    EC = EC / ES - 1 'Now we take the whole element size / the size of the elements and get our actual element count.  We subtract 1 so our arrays start at 0 and not 1.
+    'And work with it!
+    DIM o AS _OFFSET, o1 AS _OFFSET, counter AS _UNSIGNED LONG
+
+    SELECT CASE DataType
+        CASE 1 'BYTE
+            DIM temp1(-128 TO 127) AS _UNSIGNED LONG
+            DIM t1 AS _BYTE
+            i = 0
+            DO
+                _MEMGET m, m.OFFSET + i, t1
+                temp1(t1) = temp1(t1) + 1
+                i = i + 1
+            LOOP UNTIL i > EC
+            i1 = -128
+            DO
+                DO UNTIL temp1(i1) = 0
+                    _MEMPUT m, m.OFFSET + counter, i1 AS _BYTE
+                    counter = counter + 1
+                    temp1(i1) = temp1(i1) - 1
+                    IF counter > EC THEN EXIT SUB
+                LOOP
+                i1 = i1 + 1
+            LOOP UNTIL i1 > 127
+        CASE 2: 'INTEGER
+            DIM temp2(-32768 TO 32767) AS _UNSIGNED LONG
+            DIM t2 AS INTEGER
+            i = 0
+            DO
+                _MEMGET m, m.OFFSET + i * 2, t2
+                temp2(t2) = temp2(t2) + 1
+                i = i + 1
+            LOOP UNTIL i > EC
+            i1 = -32768
+            DO
+                DO UNTIL temp2(i1) = 0
+                    _MEMPUT m, m.OFFSET + counter * 2, i1 AS INTEGER
+                    counter = counter + 1
+                    temp2(i1) = temp2(i1) - 1
+                    IF counter > EC THEN EXIT SUB
+                LOOP
+                i1 = i1 + 1
+            LOOP UNTIL i1 > 32767
+        CASE 3 'SINGLE
+            DIM T3a AS SINGLE, T3b AS SINGLE
+            gap = EC
+            DO
+                gap = 10 * gap \ 13
+                IF gap < 1 THEN gap = 1
+                i = 0
+                swapped = 0
+                DO
+                    o = m.OFFSET + i * 4
+                    o1 = m.OFFSET + (i + gap) * 4
+                    IF _MEMGET(m, o, SINGLE) > _MEMGET(m, o1, SINGLE) THEN
+                        _MEMGET m, o1, T3a
+                        _MEMGET m, o, T3b
+                        _MEMPUT m, o1, T3b
+                        _MEMPUT m, o, T3a
+                        swapped = -1
+                    END IF
+                    i = i + 1
+                LOOP UNTIL i + gap > EC
+            LOOP UNTIL gap = 1 AND swapped = 0
+        CASE 4 'LONG
+            DIM T4a AS LONG, T4b AS LONG
+            gap = EC
+            DO
+                gap = 10 * gap \ 13
+                IF gap < 1 THEN gap = 1
+                i = 0
+                swapped = 0
+                DO
+                    o = m.OFFSET + i * 4
+                    o1 = m.OFFSET + (i + gap) * 4
+                    IF _MEMGET(m, o, LONG) > _MEMGET(m, o1, LONG) THEN
+                        _MEMGET m, o1, T4a
+                        _MEMGET m, o, T4b
+                        _MEMPUT m, o1, T4b
+                        _MEMPUT m, o, T4a
+                        swapped = -1
+                    END IF
+                    i = i + 1
+                LOOP UNTIL i + gap > EC
+            LOOP UNTIL gap = 1 AND swapped = 0
+        CASE 5 'DOUBLE
+            DIM T5a AS DOUBLE, T5b AS DOUBLE
+            gap = EC
+            DO
+                gap = 10 * gap \ 13
+                IF gap < 1 THEN gap = 1
+                i = 0
+                swapped = 0
+                DO
+                    o = m.OFFSET + i * 8
+                    o1 = m.OFFSET + (i + gap) * 8
+                    IF _MEMGET(m, o, DOUBLE) > _MEMGET(m, o1, DOUBLE) THEN
+                        _MEMGET m, o1, T5a
+                        _MEMGET m, o, T5b
+                        _MEMPUT m, o1, T5b
+                        _MEMPUT m, o, T5a
+                        swapped = -1
+                    END IF
+                    i = i + 1
+                LOOP UNTIL i + gap > EC
+            LOOP UNTIL gap = 1 AND swapped = 0
+        CASE 6 ' _FLOAT
+            DIM T6a AS _FLOAT, T6b AS _FLOAT
+            gap = EC
+            DO
+                gap = 10 * gap \ 13
+                IF gap < 1 THEN gap = 1
+                i = 0
+                swapped = 0
+                DO
+                    o = m.OFFSET + i * 32
+                    o1 = m.OFFSET + (i + gap) * 32
+                    IF _MEMGET(m, o, _FLOAT) > _MEMGET(m, o1, _FLOAT) THEN
+                        _MEMGET m, o1, T6a
+                        _MEMGET m, o, T6b
+                        _MEMPUT m, o1, T6b
+                        _MEMPUT m, o, T6a
+                        swapped = -1
+                    END IF
+                    i = i + 1
+                LOOP UNTIL i + gap > EC
+            LOOP UNTIL gap = 1 AND swapped = 0
+        CASE 7 'String
+            DIM T7a AS STRING, T7b AS STRING, T7c AS STRING
+            T7a = SPACE$(ES): T7b = SPACE$(ES): T7c = SPACE$(ES)
+            gap = EC
+            DO
+                gap = INT(gap / 1.247330950103979)
+                IF gap < 1 THEN gap = 1
+                i = 0
+                swapped = 0
+                DO
+                    o = m.OFFSET + i * ES
+                    o1 = m.OFFSET + (i + gap) * ES
+                    _MEMGET m, o, T7a
+                    _MEMGET m, o1, T7b
+                    IF T7a > T7b THEN
+                        T7c = T7b
+                        _MEMPUT m, o1, T7a
+                        _MEMPUT m, o, T7c
+                        swapped = -1
+                    END IF
+                    i = i + 1
+                LOOP UNTIL i + gap > EC
+            LOOP UNTIL gap = 1 AND swapped = false
+        CASE 8 '_INTEGER64
+            DIM T8a AS _INTEGER64, T8b AS _INTEGER64
+            gap = EC
+            DO
+                gap = 10 * gap \ 13
+                IF gap < 1 THEN gap = 1
+                i = 0
+                swapped = 0
+                DO
+                    o = m.OFFSET + i * 8
+                    o1 = m.OFFSET + (i + gap) * 8
+                    IF _MEMGET(m, o, _INTEGER64) > _MEMGET(m, o1, _INTEGER64) THEN
+                        _MEMGET m, o1, T8a
+                        _MEMGET m, o, T8b
+                        _MEMPUT m, o1, T8b
+                        _MEMPUT m, o, T8a
+                        swapped = -1
+                    END IF
+                    i = i + 1
+                LOOP UNTIL i + gap > EC
+            LOOP UNTIL gap = 1 AND swapped = 0
+        CASE 11: '_UNSIGNED _BYTE
+            DIM temp11(0 TO 255) AS _UNSIGNED LONG
+            DIM t11 AS _UNSIGNED _BYTE
+            i = 0
+            DO
+                _MEMGET m, m.OFFSET + i, t11
+                temp11(t11) = temp11(t11) + 1
+                i = i + 1
+            LOOP UNTIL i > EC
+            i1 = 0
+            DO
+                DO UNTIL temp11(i1) = 0
+                    _MEMPUT m, m.OFFSET + counter, i1 AS _UNSIGNED _BYTE
+                    counter = counter + 1
+                    temp11(i1) = temp11(i1) - 1
+                    IF counter > EC THEN EXIT SUB
+                LOOP
+                i1 = i1 + 1
+            LOOP UNTIL i1 > 255
+        CASE 12 '_UNSIGNED INTEGER
+            DIM temp12(0 TO 65535) AS _UNSIGNED LONG
+            DIM t12 AS _UNSIGNED INTEGER
+            i = 0
+            DO
+                _MEMGET m, m.OFFSET + i * 2, t12
+                temp12(t12) = temp12(t12) + 1
+                i = i + 1
+            LOOP UNTIL i > EC
+            i1 = 0
+            DO
+                DO UNTIL temp12(i1) = 0
+                    _MEMPUT m, m.OFFSET + counter * 2, i1 AS _UNSIGNED INTEGER
+                    counter = counter + 1
+                    temp12(i1) = temp12(i1) - 1
+                    IF counter > EC THEN EXIT SUB
+                LOOP
+                i1 = i1 + 1
+            LOOP UNTIL i1 > 65535
+        CASE 14 '_UNSIGNED LONG
+            DIM T14a AS _UNSIGNED LONG, T14b AS _UNSIGNED LONG
+            gap = EC
+            DO
+                gap = 10 * gap \ 13
+                IF gap < 1 THEN gap = 1
+                i = 0
+                swapped = 0
+                DO
+                    o = m.OFFSET + i * 4
+                    o1 = m.OFFSET + (i + gap) * 4
+                    IF _MEMGET(m, o, _UNSIGNED LONG) > _MEMGET(m, o1, _UNSIGNED LONG) THEN
+                        _MEMGET m, o1, T14a
+                        _MEMGET m, o, T14b
+                        _MEMPUT m, o1, T14b
+                        _MEMPUT m, o, T14a
+                        swapped = -1
+                    END IF
+                    i = i + 1
+                LOOP UNTIL i + gap > EC
+            LOOP UNTIL gap = 1 AND swapped = 0
+        CASE 18: '_UNSIGNED _INTEGER64
+            DIM T18a AS _UNSIGNED _INTEGER64, T18b AS _UNSIGNED _INTEGER64
+            gap = EC
+            DO
+                gap = 10 * gap \ 13
+                IF gap < 1 THEN gap = 1
+                i = 0
+                swapped = 0
+                DO
+                    o = m.OFFSET + i * 8
+                    o1 = m.OFFSET + (i + gap) * 8
+                    IF _MEMGET(m, o, _UNSIGNED _INTEGER64) > _MEMGET(m, o1, _UNSIGNED _INTEGER64) THEN
+                        _MEMGET m, o1, T18a
+                        _MEMGET m, o, T18b
+                        _MEMPUT m, o1, T18b
+                        _MEMPUT m, o, T18a
+                        swapped = -1
+                    END IF
+                    i = i + 1
+                LOOP UNTIL i + gap > EC
+            LOOP UNTIL gap = 1 AND swapped = 0
+    END SELECT
+END SUB
+
+SUB MemSortSome (m AS _MEM, StartRecord AS LONG, EndRecord AS LONG)
+    'NOTE:  StartRecord and EndRecord does *NOT* refer to the index numbers of our array that we're sorting.
+    '       Instead, it refers to the Record position in our mem array.
+    '       For example:  DIM Array(-10 to 10) AS LONG
+    '                     DIM m as _MEM: m = _MEM(Array())
+    '                     MemSortSome m, 1, 10
+    '
+    '      The above will *NOT* sort Array(1) to Array(10).
+    '      Instead, it will sort Array(-9) to Array(0)...
+    '      This is the 1st Record (starting count at 0), to the 10th record after that.
+    '      Do *NOT* mistake this RECORD for the array INDEX.  They may not match at all!
+    '
+    '      If you need to convert, use a simple routine to do so, like:
+    '      MemSortSome m, StartRecord - LBOUND(Array), EndRecord - LBOUND(Array)
+    '      So for the above to sort INDEX 1 to 10, It'd basically be the following:
+    '      MemSortSome m, 1 - LBOUND(Array), 10 - LBOUND(Array)
+    '
+    '      Notice that if your array starts at 0, such as DIM Array(10), then you don't need to worry about this subtle difference.
+    '      The reason being StartRecord - 0 = StartRecord and EndRecord - 0 = EndRecord
+    '      This note is mainly only important for people who use OPTION BASE 1, or index their records as above (say from -10 to 10).
+
+    'NOTE2: This also returns the RECORD, not the INDEX, as described above.
+    '       In the case the search term isn't found in the list, this routine will return a NEGATIVE RECORD number
+    '       to indicate where it belongs, in case you wish to insert the search term into your list.
+
+
+    DIM i AS _UNSIGNED LONG
+    $IF 64BIT THEN
+        DIM ES AS _INTEGER64, EC AS _INTEGER64
+    $ELSE
+        DIM ES AS LONG, EC AS LONG
+    $END IF
+
+    IF NOT m.TYPE AND 65536 THEN EXIT SUB 'We won't work without an array
+    IF m.TYPE AND 1024 THEN DataType = 10
+    IF m.TYPE AND 1 THEN DataType = DataType + 1
+    IF m.TYPE AND 2 THEN DataType = DataType + 2
+    IF m.TYPE AND 4 THEN IF m.TYPE AND 128 THEN DataType = DataType + 4 ELSE DataType = 3
+    IF m.TYPE AND 8 THEN IF m.TYPE AND 128 THEN DataType = DataType + 8 ELSE DataType = 5
+    IF m.TYPE AND 32 THEN DataType = 6
+    IF m.TYPE AND 512 THEN DataType = 7
+
+    'Convert our offset data over to something we can work with
+    DIM m1 AS _MEM: m1 = _MEMNEW(LEN(ES))
+    _MEMPUT m1, m1.OFFSET, m.ELEMENTSIZE: _MEMGET m1, m1.OFFSET, ES 'Element Size
+    _MEMPUT m1, m1.OFFSET, m.SIZE: _MEMGET m1, m1.OFFSET, EC 'Element Count will temporily hold the WHOLE array size
+    _MEMFREE m1
+
+    EC = EndRecord 'EC / ES - 1 'Now we take the whole element size / the size of the elements and get our actual element count.  We subtract 1 so our arrays start at 0 and not 1.
+    'And work with it!
+    DIM o AS _OFFSET, o1 AS _OFFSET, counter AS _UNSIGNED LONG
+
+    SELECT CASE DataType
+        CASE 1 'BYTE
+            DIM temp1(-128 TO 127) AS _UNSIGNED LONG
+            DIM t1 AS _BYTE
+            i = StartRecord
+            DO
+                _MEMGET m, m.OFFSET + i, t1
+                temp1(t1) = temp1(t1) + 1
+                i = i + 1
+            LOOP UNTIL i > EC
+            i1 = -128
+            DO
+                DO UNTIL temp1(i1) = 0
+                    _MEMPUT m, m.OFFSET + counter, i1 AS _BYTE
+                    counter = counter + 1
+                    temp1(i1) = temp1(i1) - 1
+                    IF counter > EC THEN EXIT SUB
+                LOOP
+                i1 = i1 + 1
+            LOOP UNTIL i1 > 127
+        CASE 2: 'INTEGER
+            DIM temp2(-32768 TO 32767) AS _UNSIGNED LONG
+            DIM t2 AS INTEGER
+            i = StartRecord
+            DO
+                _MEMGET m, m.OFFSET + i * 2, t2
+                temp2(t2) = temp2(t2) + 1
+                i = i + 1
+            LOOP UNTIL i > EC
+            i1 = -32768
+            DO
+                DO UNTIL temp2(i1) = 0
+                    _MEMPUT m, m.OFFSET + counter * 2, i1 AS INTEGER
+                    counter = counter + 1
+                    temp2(i1) = temp2(i1) - 1
+                    IF counter > EC THEN EXIT SUB
+                LOOP
+                i1 = i1 + 1
+            LOOP UNTIL i1 > 32767
+        CASE 3 'SINGLE
+            DIM T3a AS SINGLE, T3b AS SINGLE
+            gap = EC
+            DO
+                gap = 10 * gap \ 13
+                IF gap < 1 THEN gap = 1
+                i = StartRecord
+                swapped = 0
+                DO
+                    o = m.OFFSET + i * 4
+                    o1 = m.OFFSET + (i + gap) * 4
+                    IF _MEMGET(m, o, SINGLE) > _MEMGET(m, o1, SINGLE) THEN
+                        _MEMGET m, o1, T3a
+                        _MEMGET m, o, T3b
+                        _MEMPUT m, o1, T3b
+                        _MEMPUT m, o, T3a
+                        swapped = -1
+                    END IF
+                    i = i + 1
+                LOOP UNTIL i + gap > EC
+            LOOP UNTIL gap = 1 AND swapped = 0
+        CASE 4 'LONG
+            DIM T4a AS LONG, T4b AS LONG
+            gap = EC
+            DO
+                gap = 10 * gap \ 13
+                IF gap < 1 THEN gap = 1
+                i = StartRecord
+                swapped = 0
+                DO
+                    o = m.OFFSET + i * 4
+                    o1 = m.OFFSET + (i + gap) * 4
+                    IF _MEMGET(m, o, LONG) > _MEMGET(m, o1, LONG) THEN
+                        _MEMGET m, o1, T4a
+                        _MEMGET m, o, T4b
+                        _MEMPUT m, o1, T4b
+                        _MEMPUT m, o, T4a
+                        swapped = -1
+                    END IF
+                    i = i + 1
+                LOOP UNTIL i + gap > EC
+            LOOP UNTIL gap = 1 AND swapped = 0
+        CASE 5 'DOUBLE
+            DIM T5a AS DOUBLE, T5b AS DOUBLE
+            gap = EC
+            DO
+                gap = 10 * gap \ 13
+                IF gap < 1 THEN gap = 1
+                i = StartRecord
+                swapped = 0
+                DO
+                    o = m.OFFSET + i * 8
+                    o1 = m.OFFSET + (i + gap) * 8
+                    IF _MEMGET(m, o, DOUBLE) > _MEMGET(m, o1, DOUBLE) THEN
+                        _MEMGET m, o1, T5a
+                        _MEMGET m, o, T5b
+                        _MEMPUT m, o1, T5b
+                        _MEMPUT m, o, T5a
+                        swapped = -1
+                    END IF
+                    i = i + 1
+                LOOP UNTIL i + gap > EC
+            LOOP UNTIL gap = 1 AND swapped = 0
+        CASE 6 ' _FLOAT
+            DIM T6a AS _FLOAT, T6b AS _FLOAT
+            gap = EC
+            DO
+                gap = 10 * gap \ 13
+                IF gap < 1 THEN gap = 1
+                i = StartRecord
+                swapped = 0
+                DO
+                    o = m.OFFSET + i * 32
+                    o1 = m.OFFSET + (i + gap) * 32
+                    IF _MEMGET(m, o, _FLOAT) > _MEMGET(m, o1, _FLOAT) THEN
+                        _MEMGET m, o1, T6a
+                        _MEMGET m, o, T6b
+                        _MEMPUT m, o1, T6b
+                        _MEMPUT m, o, T6a
+                        swapped = -1
+                    END IF
+                    i = i + 1
+                LOOP UNTIL i + gap > EC
+            LOOP UNTIL gap = 1 AND swapped = 0
+        CASE 7 'String
+            DIM T7a AS STRING, T7b AS STRING, T7c AS STRING
+            T7a = SPACE$(ES): T7b = SPACE$(ES): T7c = SPACE$(ES)
+            gap = EC
+            DO
+                gap = INT(gap / 1.247330950103979)
+                IF gap < 1 THEN gap = 1
+                i = StartRecord
+                swapped = 0
+                DO
+                    o = m.OFFSET + i * ES
+                    o1 = m.OFFSET + (i + gap) * ES
+                    _MEMGET m, o, T7a
+                    _MEMGET m, o1, T7b
+                    IF T7a > T7b THEN
+                        T7c = T7b
+                        _MEMPUT m, o1, T7a
+                        _MEMPUT m, o, T7c
+                        swapped = -1
+                    END IF
+                    i = i + 1
+                LOOP UNTIL i + gap > EC
+            LOOP UNTIL gap = 1 AND swapped = false
+        CASE 8 '_INTEGER64
+            DIM T8a AS _INTEGER64, T8b AS _INTEGER64
+            gap = EC
+            DO
+                gap = 10 * gap \ 13
+                IF gap < 1 THEN gap = 1
+                i = StartRecord
+                swapped = 0
+                DO
+                    o = m.OFFSET + i * 8
+                    o1 = m.OFFSET + (i + gap) * 8
+                    IF _MEMGET(m, o, _INTEGER64) > _MEMGET(m, o1, _INTEGER64) THEN
+                        _MEMGET m, o1, T8a
+                        _MEMGET m, o, T8b
+                        _MEMPUT m, o1, T8b
+                        _MEMPUT m, o, T8a
+                        swapped = -1
+                    END IF
+                    i = i + 1
+                LOOP UNTIL i + gap > EC
+            LOOP UNTIL gap = 1 AND swapped = 0
+        CASE 11: '_UNSIGNED _BYTE
+            DIM temp11(0 TO 255) AS _UNSIGNED LONG
+            DIM t11 AS _UNSIGNED _BYTE
+            i = StartRecord
+            DO
+                _MEMGET m, m.OFFSET + i, t11
+                temp11(t11) = temp11(t11) + 1
+                i = i + 1
+            LOOP UNTIL i > EC
+            i1 = 0
+            DO
+                DO UNTIL temp11(i1) = 0
+                    _MEMPUT m, m.OFFSET + counter, i1 AS _UNSIGNED _BYTE
+                    counter = counter + 1
+                    temp11(i1) = temp11(i1) - 1
+                    IF counter > EC THEN EXIT SUB
+                LOOP
+                i1 = i1 + 1
+            LOOP UNTIL i1 > 255
+        CASE 12 '_UNSIGNED INTEGER
+            DIM temp12(0 TO 65535) AS _UNSIGNED LONG
+            DIM t12 AS _UNSIGNED INTEGER
+            i = StartRecord
+            DO
+                _MEMGET m, m.OFFSET + i * 2, t12
+                temp12(t12) = temp12(t12) + 1
+                i = i + 1
+            LOOP UNTIL i > EC
+            i1 = 0
+            DO
+                DO UNTIL temp12(i1) = 0
+                    _MEMPUT m, m.OFFSET + counter * 2, i1 AS _UNSIGNED INTEGER
+                    counter = counter + 1
+                    temp12(i1) = temp12(i1) - 1
+                    IF counter > EC THEN EXIT SUB
+                LOOP
+                i1 = i1 + 1
+            LOOP UNTIL i1 > 65535
+        CASE 14 '_UNSIGNED LONG
+            DIM T14a AS _UNSIGNED LONG, T14b AS _UNSIGNED LONG
+            gap = EC
+            DO
+                gap = 10 * gap \ 13
+                IF gap < 1 THEN gap = 1
+                i = StartRecord
+                swapped = 0
+                DO
+                    o = m.OFFSET + i * 4
+                    o1 = m.OFFSET + (i + gap) * 4
+                    IF _MEMGET(m, o, _UNSIGNED LONG) > _MEMGET(m, o1, _UNSIGNED LONG) THEN
+                        _MEMGET m, o1, T14a
+                        _MEMGET m, o, T14b
+                        _MEMPUT m, o1, T14b
+                        _MEMPUT m, o, T14a
+                        swapped = -1
+                    END IF
+                    i = i + 1
+                LOOP UNTIL i + gap > EC
+            LOOP UNTIL gap = 1 AND swapped = 0
+        CASE 18: '_UNSIGNED _INTEGER64
+            DIM T18a AS _UNSIGNED _INTEGER64, T18b AS _UNSIGNED _INTEGER64
+            gap = EC
+            DO
+                gap = 10 * gap \ 13
+                IF gap < 1 THEN gap = 1
+                i = StartRecord
+                swapped = 0
+                DO
+                    o = m.OFFSET + i * 8
+                    o1 = m.OFFSET + (i + gap) * 8
+                    IF _MEMGET(m, o, _UNSIGNED _INTEGER64) > _MEMGET(m, o1, _UNSIGNED _INTEGER64) THEN
+                        _MEMGET m, o1, T18a
+                        _MEMGET m, o, T18b
+                        _MEMPUT m, o1, T18b
+                        _MEMPUT m, o, T18a
+                        swapped = -1
+                    END IF
+                    i = i + 1
+                LOOP UNTIL i + gap > EC
+            LOOP UNTIL gap = 1 AND swapped = 0
+    END SELECT
+END SUB
+
+FUNCTION ExtendedTimer~&&
+    d$ = DATE$
+    l = INSTR(d$, "-")
+    l1 = INSTR(l + 1, d$, "-")
+    m = VAL(LEFT$(d$, l))
+    d = VAL(MID$(d$, l + 1))
+    y = VAL(MID$(d$, l1 + 1)) - 1970
+    FOR i = 1 TO m
+        SELECT CASE i 'Add the number of days for each previous month passed
+            CASE 1: d = d 'January doestn't have any carry over days.
+            CASE 2, 4, 6, 8, 9, 11: d = d + 31
+            CASE 3: d = d + 28
+            CASE 5, 7, 10, 12: d = d + 30
+        END SELECT
+    NEXT
+    FOR i = 1 TO y
+        d = d + 365
+    NEXT
+    FOR i = 2 TO y STEP 4
+        IF m > 2 THEN d = d + 1 'add an extra day for leap year every 4 years, starting in 2016
+    NEXT
+    s~&& = d * 24 * 60 * 60 'Seconds are days * 24 hours * 60 minutes * 60 seconds
+    ExtendedTimer~&& = (s~&& + TIMER)
+END FUNCTION
+
+SUB SafeLoadFont (font#)
+    'Safely loads a font without destroying our current print location and making it revert to the top left corner.
+
+    down = CSRLIN: right = POS(0)
+    down = (down - 1) * _FONTHEIGHT
+    IF _FONTWIDTH <> 0 THEN 'weed start with a monospace font
+        right = (right - 1) * _PRINTWIDTH(" ") 'convert the monospace LOC to a graphic X coordinate
+    END IF
+    _FONT font#
+    IF _FONTWIDTH <> 0 THEN 'we swapped to a monospace font
+        right = (right / _PRINTWIDTH(" ")) + 1 'convert the graphic X coordinate back to a monospace LOC column
+    END IF
+    down = (down / _FONTHEIGHT) + 1
+    IF right < 1 THEN right = 1
+    LOCATE down, right
+END SUB
+
+SUB CenterText (toggle, x1, y1, x2, y2, text$)
+    'A quick and simple routine to center text both vertically and hortizonally in a pre-defined area.
+    'x1,y1 is the top left corner of where we want to center the text.
+    'x2,y2 is the bottom right corner of where we want to center the text.
+    'text$ is the text we want to center.
+
+
+    xmax = x2 - x1: ymax = y2 - y1
+    IF toggle = 1 THEN
+        'we're using LOCATION to define where we want to center our text
+        'our locations would look like LOCATE 10, 1
+        textlength = LEN(text$)
+        xpos = xmax / 2
+        ypos = (ymax - textlength) / 2
+        LOCATE x1 + xpos, y1 + ypos: PRINT text$
+    ELSEIF toggle = 2 THEN
+        'we're using location with a custom graphic mode, or have loaded a custom font
+        'our locations would look like LOCATE 10,100
+        textlength = _PRINTWIDTH(text$)
+        xpos = xmax / 2
+        ypos = (ymax - textlength) / 2
+        LOCATE x1 + xpos, y1 + ypos: PRINT text$
+    ELSE
+        'we're using graphic coordinates
+        'our locations would look like X,Y coordinates
+        textlength = _PRINTWIDTH(text$)
+        xpos = (xmax - textlength) / 2
+        ypos = (ymax - _FONTHEIGHT) / 2
+        _PRINTSTRING (x1 + xpos, y1 + ypos), text$
+    END IF
+END SUB
+
+SUB DisplayImage (Image AS LONG, x AS INTEGER, y AS INTEGER, angle AS SINGLE, mode AS _BYTE)
+    'Image is the image handle which we use to reference our image.
+    'x,y is the X/Y coordinates where we want the image to be at on the screen.
+    'angle is the angle which we wish to rotate the image.
+    'mode determines HOW we place the image at point X,Y.
+    'Mode 0 we center the image at point X,Y
+    'Mode 1 we place the Top Left corner of oour image at point X,Y
+    'Mode 2 is Bottom Left
+    'Mode 3 is Top Right
+    'Mode 4 is Bottom Right
+
+
+    DIM px(3) AS INTEGER, py(3) AS INTEGER, w AS INTEGER, h AS INTEGER
+    DIM sinr AS SINGLE, cosr AS SINGLE, i AS _BYTE
+    w = _WIDTH(Image): h = _HEIGHT(Image)
+    SELECT CASE mode
+        CASE 0 'center
+            px(0) = -w \ 2: py(0) = -h \ 2: px(3) = w \ 2: py(3) = -h \ 2
+            px(1) = -w \ 2: py(1) = h \ 2: px(2) = w \ 2: py(2) = h \ 2
+        CASE 1 'top left
+            px(0) = 0: py(0) = 0: px(3) = w: py(3) = 0
+            px(1) = 0: py(1) = h: px(2) = w: py(2) = h
+        CASE 2 'bottom left
+            px(0) = 0: py(0) = -h: px(3) = w: py(3) = -h
+            px(1) = 0: py(1) = 0: px(2) = w: py(2) = 0
+        CASE 3 'top right
+            px(0) = -w: py(0) = 0: px(3) = 0: py(3) = 0
+            px(1) = -w: py(1) = h: px(2) = 0: py(2) = h
+        CASE 4 'bottom right
+            px(0) = -w: py(0) = -h: px(3) = 0: py(3) = -h
+            px(1) = -w: py(1) = 0: px(2) = 0: py(2) = 0
+    END SELECT
+    sinr = SIN(angle / 57.2957795131): cosr = COS(angle / 57.2957795131)
+    FOR i = 0 TO 3
+        x2 = (px(i) * cosr + sinr * py(i)) + x: y2 = (py(i) * cosr - px(i) * sinr) + y
+        px(i) = x2: py(i) = y2
+    NEXT
+    _MAPTRIANGLE (0, 0)-(0, h - 1)-(w - 1, h - 1), Image TO(px(0), py(0))-(px(1), py(1))-(px(2), py(2))
+    _MAPTRIANGLE (0, 0)-(w - 1, 0)-(w - 1, h - 1), Image TO(px(0), py(0))-(px(3), py(3))-(px(2), py(2))
+END SUB
+
+FUNCTION TextToImage& (text$, font&, fc&, bfc&, mode AS _BYTE)
+    'text$ is the text that we wish to transform into an image.
+    'font& is the handle of the font we want to use.
+    'fc& is the color of the font we want to use.
+    'bfc& is the background color of the font.
+
+    'Mode 1 is print forwards
+    'Mode 2 is print backwards
+    'Mode 3 is print from top to bottom
+    'Mode 4 is print from bottom up
+    'Mode 0 got lost somewhere, but it's OK.  We check to see if our mode is < 1 or > 4 and compensate automatically if it is to make it one (default).
+
+    IF mode < 1 OR mode > 4 THEN mode = 1
+    dc& = _DEFAULTCOLOR: bgc& = _BACKGROUNDCOLOR
+    D = _DEST
+    F = _FONT
+    IF font& <> 0 THEN _FONT font&
+    IF mode < 3 THEN
+        'print the text lengthwise
+        w& = _PRINTWIDTH(text$): h& = _FONTHEIGHT
+    ELSE
+        'print the text vertically
+        FOR i = 1 TO LEN(text$)
+            IF w& < _PRINTWIDTH(MID$(text$, i, 1)) THEN w& = _PRINTWIDTH(MID$(text$, i, 1))
+        NEXT
+        h& = _FONTHEIGHT * (LEN(text$))
+    END IF
+
+    TextToImage& = _NEWIMAGE(w&, h&, 32)
+    _DEST TextToImage&
+    IF font& <> 0 THEN _FONT font&
+    COLOR fc&, bfc&
+
+    SELECT CASE mode
+        CASE 1
+            'Print text forward
+            _PRINTSTRING (0, 0), text$
+        CASE 2
+            'Print text backwards
+            temp$ = ""
+            FOR i = 0 TO LEN(text$) - 1
+                temp$ = temp$ + MID$(text$, LEN(text$) - i, 1)
+            NEXT
+            _PRINTSTRING (0, 0), temp$
+        CASE 3
+            'Print text upwards
+            'first lets reverse the text, so it's easy to place
+            temp$ = ""
+            FOR i = 0 TO LEN(text$) - 1
+                temp$ = temp$ + MID$(text$, LEN(text$) - i, 1)
+            NEXT
+            'then put it where it belongs
+            FOR i = 1 TO LEN(text$)
+                fx = (w& - _PRINTWIDTH(MID$(temp$, i, 1))) / 2 + .99 'This is to center any non-monospaced letters so they look better
+                _PRINTSTRING (fx, _FONTHEIGHT * (i - 1)), MID$(temp$, i, 1)
+            NEXT
+        CASE 4
+            'Print text downwards
+            FOR i = 1 TO LEN(text$)
+                fx = (w& - _PRINTWIDTH(MID$(text$, i, 1))) / 2 + .99 'This is to center any non-monospaced letters so they look better
+                _PRINTSTRING (fx, _FONTHEIGHT * (i - 1)), MID$(text$, i, 1)
+            NEXT
+    END SELECT
+    _DEST D
+    COLOR dc&, bgc&
+    _FONT F
+END FUNCTION
+
+FUNCTION TextArrayToImage& (text() AS STRING, font&, fc&, bfc&, mode AS _BYTE)
+    'text is the text array that we wish to transform into an image.
+    'text(0) tells us how many lines of text we wish to use.
+    'font& is the handle of the font we want to use.
+    'fc& is the color of the font we want to use.
+    'bfc& is the background color of the font.
+
+    'Mode 1 is print forwards
+    'Mode 2 is print backwards
+    'Mode 3 is print from top to bottom
+    'Mode 4 is print from bottom up
+    'Mode 0 got lost somewhere, but it's OK.  We check to see if our mode is < 1 or > 4 and compensate automatically if it is to make it one (default).
+
+    NumberOfLines = VAL(text(0))
+
+    IF mode < 1 OR mode > 4 THEN mode = 1
+    dc& = _DEFAULTCOLOR: bgc& = _BACKGROUNDCOLOR
+    D = _DEST
+    F = _FONT
+    IF font& <> 0 THEN _FONT font&
+    IF mode < 3 THEN
+        'print the text lengthwise
+        FOR i = 1 TO NumberOfLines
+            IF _PRINTWIDTH(text(i)) > w& THEN w& = _PRINTWIDTH(text(i))
+        NEXT
+        h& = _FONTHEIGHT
+        TextArrayToImage& = _NEWIMAGE(w&, h& * NumberOfLines, 32)
+    ELSE
+        'print the text vertically
+        FOR j = 1 TO NumberOfLines
+            IF LEN(text(j)) > longestline THEN longestline = LEN(text(j))
+            FOR i = 1 TO LEN(text(j))
+                IF w& < _PRINTWIDTH(MID$(text(j), i, 1)) THEN w& = _PRINTWIDTH(MID$(text(j), i, 1))
+            NEXT
+        NEXT
+        h& = _FONTHEIGHT
+        TextArrayToImage& = _NEWIMAGE(w& * NumberOfLines, h& * longestline, 32)
+    END IF
+
+    _DEST TextArrayToImage&
+    IF font& <> 0 THEN _FONT font&
+    COLOR fc&, bfc&
+
+
+    FOR i = 0 TO NumberOfLines - 1
+        SELECT CASE mode
+            CASE 1
+                'Print text forward
+                _PRINTSTRING (0, i * h&), text(i + 1)
+            CASE 2
+                'Print text backwards
+                temp$ = ""
+                FOR j = 0 TO LEN(text(i + 1)) - 1
+                    temp$ = temp$ + MID$(text(i + 1), LEN(text(i + 1)) - j, 1)
+                NEXT
+                _PRINTSTRING (0, i * h&), temp$
+            CASE 3
+                'Print text upwards
+                'first lets reverse the text, so it's easy to place
+                temp$ = ""
+                FOR j = 0 TO LEN(text(i + 1)) - 1
+                    temp$ = temp$ + MID$(text(i + 1), LEN(text(i + 1)) - j, 1)
+                NEXT
+                'then put it where it belongs
+                FOR j = 1 TO LEN(text(i + 1))
+                    fx = (w& - _PRINTWIDTH(MID$(temp$, j, 1))) / 2 + .99 'This is to center any non-monospaced letters so they look better
+                    _PRINTSTRING (fx + w& * i, _FONTHEIGHT * (j - 1)), MID$(temp$, j, 1)
+                NEXT
+            CASE 4
+                'Print text downwards
+                FOR j = 1 TO LEN(text(i + 1))
+                    fx = (w& - _PRINTWIDTH(MID$(text(i + 1), j, 1))) / 2 + .99 'This is to center any non-monospaced letters so they look better
+                    _PRINTSTRING (fx + w& * i, _FONTHEIGHT * (j - 1)), MID$(text(i + 1), j, 1)
+                NEXT
+        END SELECT
+    NEXT
+    _DEST D
+    COLOR dc&, bgc&
+    _FONT F
+END FUNCTION
+
+FUNCTION BoxImage& (Mode AS INTEGER, X AS INTEGER, Y AS INTEGER, Caption AS STRING, FontColor AS _UNSIGNED LONG, FontBackground AS _UNSIGNED LONG, BoxColor AS _UNSIGNED LONG, BoxHighLight AS _UNSIGNED LONG, XOffset AS INTEGER, YOffset AS INTEGER)
+    'This creates our box as an image so we can manipulate it however we wish before placing it on the screen.
+
+    'Mode 0 will tell the box to draw itself X,Y size, and autocenter the text.
+    'Mode 1 will tell the box to autosize itself according to whatever text is placed within it.
+    'Mode 2 will tell the box to draw itself X,Y size, and place the text at the offsets.
+
+    'Mode otherwise is unused, but available for expanded functionality.
+
+    'Caption is the text that we want our box to contain.
+
+    'FontColor is our font color for our caption
+    'FontBackground is the font background color for our caption
+    'NOTE: IF FONTCOLOR OR FONTBACKGROUND IS SET TO ZERO, THEY WILL **NOT** AFFECT THE COLOR BEHIND THEM.
+    'This can be used to mimic the function of _KEEPBACKGROUND, _FILLBACKGROUND, or _ONLYBACKGROUND
+
+    'BoxColor is our box color
+    'BoxHighlight is our box highligh colors
+    'NOTE: SAME WITH BOXCOLOR AND BOXHIGHLIGHT.  IF SET TO ZERO, THEY WILL HAVE **NO** COLOR AT ALL TO THEM, AND WILL NOT AFFECT THE BACKGROUND OF ANYTHING BEHIND THEM.
+
+    'XOffset is used to offset our text # pixels from the X1 top.
+    'YOffset is used to offset our text # pixels from the Y1 top.
+    'These can be used to place our text wherever we want on our box.
+    'But remember, if Mode = 3 or 4, the box will autocenter the text and ignore these parameters completely.
+
+    DIM BoxBlack AS _UNSIGNED LONG
+
+    dc& = _DEFAULTCOLOR: bg& = _BACKGROUNDCOLOR
+    IF Black <> 0 THEN
+        'We have black either as a CONST or a SHARED color
+        BoxBlack = Black
+    ELSE
+        'We need to define what Black is for our box.
+        BoxBlack = _RGB32(0, 0, 0)
+    END IF
+    cw = _PRINTWIDTH(Caption): ch = _FONTHEIGHT
+
+    X1 = 0: Y1 = 0
+    X2 = X: Y2 = Y
+
+    SELECT CASE Mode
+        CASE 0
+            X2 = X1 + cw + 8
+            Y2 = Y1 + ch + 8
+            XOffset = 5: YOffset = 5
+        CASE 2
+            XOffset = (X2 - cw) \ 2
+            YOffset = (Y2 - ch) \ 2
+    END SELECT
+    BoxImage& = _NEWIMAGE(X, Y, 32)
+    _DEST BoxImage&
+    LINE (X1, Y1)-(X2, Y2), BoxBlack, BF
+    LINE (X1 + 1, Y1 + 1)-(X2 - 1, Y2 - 1), BoxHighLight, B
+    LINE (X1 + 2, Y1 + 2)-(X2 - 2, Y2 - 2), BoxHighLight, B
+    LINE (X1 + 3, Y1 + 3)-(X2 - 3, Y2 - 3), BoxBlack, B
+    LINE (X1, Y1)-(X1 + 3, Y1 + 3), BoxBlack
+    LINE (X2, Y1)-(X2 - 3, Y1 + 3), BoxBlack
+    LINE (X1, Y2)-(X1 + 3, Y2 - 3), BoxBlack
+    LINE (X2, Y2)-(X2 - 3, Y2 - 3), BoxBlack
+    LINE (X1 + 3, Y1 + 3)-(X2 - 3, Y2 - 3), BoxColor, BF
+    COLOR FontColor, FontBackground
+    _PRINTSTRING (X1 + XOffset, Y1 + YOffset), Caption$
+    COLOR dc&, bg&
+    _DEST 0
+END SUB
+
+SUB Box (Mode AS INTEGER, X1 AS INTEGER, Y1 AS INTEGER, X2 AS INTEGER, Y2 AS INTEGER, Caption AS STRING, FontColor AS _UNSIGNED LONG, FontBackground AS _UNSIGNED LONG, BoxColor AS _UNSIGNED LONG, BoxHighLight AS _UNSIGNED LONG, XOffset AS INTEGER, YOffset AS INTEGER)
+    'This is an upgrade version of my original Button routine.
+    'It's more versitile (but complex) than the original.
+    'Mode 0 (or any unsupported number) will tell the box to size itself from X1,Y1 to X2,Y2
+    'Mode 1 will tell the box to autosize itself according to whatever text is placed within it.
+    'Mode 2 will tell the box to use X2 and Y2 as relative coordinates and not absolute coordinates.
+    'Mode 3 will tell the box to autocenter text with X2, Y2 being absolute coordinates.
+    'Mode 4 will tell the box to autocenter text with X2, Y2 being relative coordinates.
+    'Mode otherwise is unused, but available for expanded functionality.
+    'X1 carries the X location of where we want to place our box on the screen.
+    'Y2 carries the Y location of where we want to place our box on the screen.
+    'X2 is the X boundry of our box on the screen, depending on our mode.
+    'Y2 is the Y boundry of our box on the screen, depending on our mode.
+
+    'Caption is the text that we want our box to contain.
+
+    'FontColor is our font color for our caption
+    'FontBackground is the font background color for our caption
+    'NOTE: IF FONTCOLOR OR FONTBACKGROUND IS SET TO ZERO, THEY WILL **NOT** AFFECT THE COLOR BEHIND THEM.
+    'This can be used to mimic the function of _KEEPBACKGROUND, _FILLBACKGROUND, or _ONLYBACKGROUND
+
+
+    'BoxColor is our box color
+    'BoxHighlight is our box highligh colors
+    'NOTE: SAME WITH BOXCOLOR AND BOXHIGHLIGHT.  IF SET TO ZERO, THEY WILL HAVE **NO** COLOR AT ALL TO THEM, AND WILL NOT AFFECT THE BACKGROUND OF ANYTHING BEHIND THEM.
+
+    'XOffset is used to offset our text # pixels from the X1 top.
+    'YOffset is used to offset our text # pixels from the Y1 top.
+    'These can be used to place our text wherever we want on our box.
+    'But remember, if Mode = 3 or 4, the box will autocenter the text and ignore these parameters completely.
+
+    DIM BoxBlack AS _UNSIGNED LONG
+
+    dc& = _DEFAULTCOLOR: bg& = _BACKGROUNDCOLOR
+    IF Black <> 0 THEN
+        'We have black either as a CONST or a SHARED color
+        BoxBlack = Black
+    ELSE
+        'We need to define what Black is for our box.
+        BoxBlack = _RGB32(0, 0, 0)
+    END IF
+    cw = _PRINTWIDTH(Caption): ch = _FONTHEIGHT
+
+    SELECT CASE Mode
+        CASE 0
+            'We use the X2, Y2 coordinates provided as absolute coordinates
+        CASE 1
+            X2 = X1 + cw + 8
+            Y2 = Y1 + ch + 8
+            XOffset = 5: YOffset = 5
+        CASE 2
+            X2 = X1 + X2
+            Y2 = Y1 + Y2
+        CASE 3
+            XOffset = (X2 - X1 - cw) \ 2
+            YOffset = (Y2 - Y1 - ch) \ 2
+        CASE 4
+            X2 = X1 + X2
+            Y2 = Y1 + Y2
+            XOffset = (X2 - X1 - cw) \ 2
+            YOffset = (Y2 - Y1 - ch) \ 2
+    END SELECT
+    LINE (X1, Y1)-(X2, Y2), BoxBlack, BF
+    LINE (X1 + 1, Y1 + 1)-(X2 - 1, Y2 - 1), BoxHighLight, B
+    LINE (X1 + 2, Y1 + 2)-(X2 - 2, Y2 - 2), BoxHighLight, B
+    LINE (X1 + 3, Y1 + 3)-(X2 - 3, Y2 - 3), BoxBlack, B
+    LINE (X1, Y1)-(X1 + 3, Y1 + 3), BoxBlack
+    LINE (X2, Y1)-(X2 - 3, Y1 + 3), BoxBlack
+    LINE (X1, Y2)-(X1 + 3, Y2 - 3), BoxBlack
+    LINE (X2, Y2)-(X2 - 3, Y2 - 3), BoxBlack
+    LINE (X1 + 3, Y1 + 3)-(X2 - 3, Y2 - 3), BoxColor, BF
+    COLOR FontColor, FontBackground
+    _PRINTSTRING (X1 + XOffset, Y1 + YOffset), Caption$
+    COLOR dc&, bg&
+END SUB
+
+SUB ScaleImage (Image AS LONG, xscale AS SINGLE, yscale AS SINGLE)
+    w = _WIDTH(Image): h = _HEIGHT(Image)
+    w2 = w * xscale: h2 = h * yscale
+    NewImage& = _NEWIMAGE(w2, h2, 32)
+    _PUTIMAGE , Image&, NewImage&
+    _FREEIMAGE Image&
+    Image& = NewImage&
+END SUB
+
+SUB GetPrintLocationLOC (down, right)
+    'Gives us the (LOCATE down, right) position of where the cursor is on the screen.
+    down = CSRLIN: right = POS(0)
+END SUB
+
+SUB GetPrintLocationXY (x, y)
+    y = CSRLIN: x = POS(0)
+    y = (y - 1) * _FONTHEIGHT
+    IF _FONTWIDTH <> 0 THEN 'we're using a monospace font
+        x = (x - 1) * _PRINTWIDTH(" ") 'convert the monospace LOC to a graphic X coordinate
+    END IF
+END SUB
+
+
+SUB LOCtoXY (down, right, x, y)
+    'Converts LOCATE text coordinates to graphical ones,
+    'so we know where a point is on the screen.
+    y = (down - 1) * _FONTHEIGHT
+    x = right
+    IF _FONTWIDTH <> 0 THEN 'we're using a monospace font
+        x = (right - 1) * _PRINTWIDTH(" ") 'convert the monospace LOC to a graphic X coordinate
+    END IF
+END SUB
+
+SUB XYtoLOC (x, y, down, right)
+    'Converts graphical X/Y coordinates to LOCATE text coordinates,
+    'so we know where a point is on the screen.
+    down = y / _FONTHEIGHT + 1
+    right = x
+    IF _FONTWIDTH <> 0 THEN 'we're useing a monospace font
+        right = x / _PRINTWIDTH(" ") + 1 'convert back to a loc coordinate
+    END IF
+END SUB
+
+FUNCTION SaveBackground&
+    'Takes a snapshot of our current screen and stores it for use as a background image.
+    SaveBackground& = _COPYIMAGE(0)
+END FUNCTION
+
+SUB UpdateBackground (Image AS LONG)
+    'Takes a snnapshot of what's currently on the screen and updates our background to match.
+    _PUTIMAGE , 0, Image
+END SUB
+
+SUB RestoreBackground (Image AS LONG)
+    'Sets our stored background image as the image on the main screen.
+    _PUTIMAGE , Image, 0
+END SUB
+
+SUB PlaceImage (Image AS LONG, x1 AS INTEGER, y1 AS INTEGER)
+    'Sets a portion of our stored background image as the image on the main screen.
+    'x1,y1 is the top left corner of the screen where we want to quickly place an image
+    _PUTIMAGE (x1, y1)-STEP(_WIDTH(Image), _HEIGHT(Image)), Image, 0
+END SUB
+
+SUB UpdateBackgroundPart (Image AS LONG, x1 AS INTEGER, y1 AS INTEGER)
+    'Takes a snapshot of a part of what's currently on the screen and updates our background to match.
+    'x1,y1 is the top left corner of the background that we wish to save.
+    'x1,y2 are automatically calculated by using the width of the image we're updating.
+    _PUTIMAGE , 0, Image, (x1, y1)-STEP(_WIDTH(Image), _HEIGHT(Image))
+END SUB
+
+FUNCTION SaveBackgroundPart& (x1 AS INTEGER, y1 AS INTEGER, x2 AS INTEGER, y2 AS INTEGER)
+    SaveBackgroundPart& = _NEWIMAGE(x2 - x1 + 1, y2 - y1 + 1, 32)
+    'Takes a snapshot of a part of what's currently on the screen and saves it as a new image
+    'x1,y1 is the top left corner of the background that we wish to save.
+    'x2,y2 is the bottom right corner of the background that we wish to save.
+    _PUTIMAGE , 0, SaveBackgroundPart&, (x1, y1)-(x2, y2)
+END SUB
+
+SUB CircleFill (CX AS LONG, CY AS LONG, R AS LONG, C AS LONG)
+    DIM Radius AS LONG, RadiusError AS LONG
+    DIM X AS LONG, Y AS LONG
+
+    Radius = ABS(R)
+    RadiusError = -Radius
+    X = Radius
+    Y = 0
+
+    IF Radius = 0 THEN PSET (CX, CY), C: EXIT SUB
+
+    ' Draw the middle span here so we don't draw it twice in the main loop,
+    ' which would be a problem with blending turned on.
+    LINE (CX - X, CY)-(CX + X, CY), C, BF
+
+    WHILE X > Y
+        RadiusError = RadiusError + Y * 2 + 1
+        IF RadiusError >= 0 THEN
+            IF X <> Y + 1 THEN
+                LINE (CX - Y, CY - X)-(CX + Y, CY - X), C, BF
+                LINE (CX - Y, CY + X)-(CX + Y, CY + X), C, BF
+            END IF
+            X = X - 1
+            RadiusError = RadiusError - X * 2
+        END IF
+        Y = Y + 1
+        LINE (CX - X, CY - Y)-(CX + X, CY - Y), C, BF
+        LINE (CX - X, CY + Y)-(CX + X, CY + Y), C, BF
+    WEND
+
+END SUB
+
+SUB EllipseFill (cx AS INTEGER, cy AS INTEGER, rx AS INTEGER, ry AS INTEGER, c AS LONG)
+    DIM a AS LONG, b AS LONG
+    DIM x AS LONG, y AS LONG
+    DIM xx AS LONG, yy AS LONG
+    DIM sx AS LONG, sy AS LONG
+    DIM e AS LONG
+
+    a = 2 * rx * rx
+    b = 2 * ry * ry
+    x = rx
+    xx = ry * ry * (1 - rx - rx)
+    yy = rx * rx
+    sx = b * rx
+
+    DO WHILE sx >= sy
+        LINE (cx - x, cy - y)-(cx + x, cy - y), c, BF
+        IF y <> 0 THEN LINE (cx - x, cy + y)-(cx + x, cy + y), c, BF
+
+        y = y + 1
+        sy = sy + a
+        e = e + yy
+        yy = yy + a
+
+        IF (e + e + xx) > 0 THEN
+            x = x - 1
+            sx = sx - b
+            e = e + xx
+            xx = xx + b
+        END IF
+    LOOP
+
+    x = 0
+    y = ry
+    xx = rx * ry
+    yy = rx * rx * (1 - ry - ry)
+    e = 0
+    sx = 0
+    sy = a * ry
+
+    DO WHILE sx <= sy
+        LINE (cx - x, cy - y)-(cx + x, cy - y), c, BF
+        LINE (cx - x, cy + y)-(cx + x, cy + y), c, BF
+
+        DO
+            x = x + 1
+            sx = sx + b
+            e = e + xx
+            xx = xx + b
+        LOOP UNTIL (e + e + yy) > 0
+
+        y = y - 1
+        sy = sy - a
+        e = e + yy
+        yy = yy + a
+
+    LOOP
+
+END SUB
+
+FUNCTION ConvertOffset&& (value AS _OFFSET)
+    $CHECKING:OFF
+    DIM m AS _MEM 'Define a memblock
+    m = _MEM(value) 'Point it to use value
+    $IF 64BIT THEN
+        'On 64 bit OSes, an OFFSET is 8 bytes in size.  We can put it directly into an Integer64
+        _MEMGET m, m.OFFSET, ConvertOffset&& 'Get the contents of the memblock and put the values there directly into ConvertOffset&&
+    $ELSE
+        'However, on 32 bit OSes, an OFFSET is only 4 bytes.  We need to put it into a LONG variable first
+        _MEMGET m, m.OFFSET, temp& 'Like this
+        ConvertOffset&& = temp& 'And then assign that long value to ConvertOffset&&
+    $END IF
+    _MEMFREE m 'Free the memblock
+    $CHECKING:ON
+END FUNCTION
+
+FUNCTION SpellCheck (TestWord$, CorrectWord$)
+    'IF Spellcheck = 100, we have a perfect 100% match for our words
+    'If the value is from -1 to -100, we have a percent match, so the routine "grades" how close the match is.
+    'If the value is 0, the words are just too different for the routine to think it's a match at all.
+    'Personally, I'd consider anything with an 80+ score to be a close enough match  usually.
+
+    IF TestWord$ = CorrectWord$ THEN SpellCheck = 100: EXIT FUNCTION 'It's a perfect match
+
+    DIM alphabit(26), useralphabit(26)
+    FOR j = 0 TO 26: alphabit(j) = 0: useralphabit(j) = 0: NEXT
+    FOR j = 1 TO LEN(CorrectWord$)
+        x = ASC(UCASE$(MID$(CorrectWord$, j, 1)))
+        IF x = 39 THEN alphabit(0) = alphabit(0) + 1: length = length + 1
+        IF x > 64 AND x < 91 THEN ' we have letters to check the spell checker against!
+            alphabit(x - 64) = alphabit(x - 64) + 1
+            length = length + 1
+        END IF
+    NEXT
+    FOR j = 1 TO LEN(TestWord$)
+        x = ASC(UCASE$(MID$(TestWord$, j, 1)))
+        IF x = 39 THEN useralphabit(0) = useralphabit(0) + 1
+        IF x > 64 AND x < 91 THEN useralphabit(x - 64) = useralphabit(x - 64) + 1
+    NEXT
+    wordright = 0: wordwrong = 0
+    FOR j = 0 TO 26
+        IF alphabit(j) <= useralphabit(j) THEN
+            wordright = wordright + alphabit(j)
+            wordwrong = wordwrong + useralphabit(j) - alphabit(j)
+        ELSE
+            wordright = wordright + useralphabit(j)
+        END IF
+    NEXT
+    IF LEN(TestWord$) <= 4 THEN
+        SpellCheck = -wordright / length * 100
+    ELSE
+        SpellCheck = (-ABS(wordright - wordwrong \ 2) / length * 100)
+    END IF
+    IF wordwrong >= wordright THEN SpellCheck = 0 'If we get more letters wrong than we did right, count it bad.
+END FUNCTION
+
+'************************************************
+'  Beginning of SaveImage Library Subs/Functions by SMcNeill
+'************************************************
+
+FUNCTION SaveImage (file$, image&, x1%, y1%, x2%, y2%)
+    'Error Code 13 is for invalid extension, or lack of extension
+    IF x1% < 0 OR y1% < 0 THEN ERROR 5: EXIT FUNCTION
+    IF x2% > _WIDTH(image&) OR y2% > _HEIGHT(image&) THEN ERROR 5: EXIT FUNCTION
+
+    IF _PIXELSIZE(image&) = 0 THEN
+        IF SaveTextAs256Color THEN
+            tempimage& = TextScreenToImage256&(image&)
+        ELSE
+            tempimage& = TextScreenToImage32&(image&)
+        END IF
+        F = _FONT(image&)
+        FW = _FONTWIDTH(F): FH = _FONTHEIGHT(F)
+        SaveImage = SaveImage(file$, tempimage&, x1% * FW, y1% * FH, x2% * FW, y2% * FH)
+        _FREEIMAGE tempimage&
+        EXIT FUNCTION
+    END IF
+    ext$ = UCASE$(RIGHT$(file$, 4))
+    IF ext$ = ".BMP" THEN
+        SaveBMP file$, image&, x1%, y1%, x2%, y2%
+        SaveImage = -1
+    ELSEIF ext$ = ".PNG" THEN
+        $IF WIN THEN
+            SaveImage = PNGExport(file$, image&, x1%, y1%, x2%, y2%)
+        $ELSE
+            SaveImage = 12 'Error message informing that PNG saving is impossible on Linux
+        $END IF
+    ELSE
+        SaveImage = 13
+    END IF
+END SUB
+
+SUB SaveFullImage (filename$)
+    ext$ = UCASE$(RIGHT$(filename$, 4))
+    IF ext$ = ".BMP" THEN
+        SaveBMP filename$, 0, 0, 0, _WIDTH - 1, _HEIGHT - 1
+    ELSEIF ext$ = ".PNG" THEN
+        $IF WIN THEN
+            result = PNGExport(filename$, 0, 0, 0, _WIDTH - 1, _HEIGHT - 1)
+        $END IF
+    END IF
+END SUB
+
+SUB SaveFullBMP (filename$)
+    SaveBMP filename$, 0, 0, 0, _WIDTH - 1, _HEIGHT - 1
+END SUB
+
+FUNCTION SaveFullPNG (filename$)
+    SaveFullPNG = PNGExport(filename$, 0, 0, 0, _WIDTH - 1, _HEIGHT - 1)
+END SUB
+
+
+SUB SaveBMP (filename$, image&, x1%, y1%, x2%, y2%)
+    'Super special STEVE-Approved BMP Export routine for use with any QB64 graphic mode.
+    IF x2% = _WIDTH(image&) THEN x2% = x2% - 1
+    IF y2% = _HEIGHT(image&) THEN y2% = y2% - 1
+
+    IF _PIXELSIZE(image&) = 0 THEN
+        IF SaveTextAs256Color THEN
+            tempimage& = TextScreenToImage256&(image&)
+        ELSE
+            tempimage& = TextScreenToImage32&(image&)
+        END IF
+        F = _FONT(image&)
+        FW = _FONTWIDTH(F): FH = _FONTHEIGHT(F)
+        SaveBMP filename$, tempimage&, x1% * FW, y1% * FH, x2% * FW, y2% * FH
+        _FREEIMAGE tempimage&
+        EXIT FUNCTION
+    END IF
+
+    TYPE BMPFormat
+        ID AS STRING * 2
+        Size AS LONG
+        Blank AS LONG
+        Offset AS LONG
+        Hsize AS LONG
+        PWidth AS LONG
+        PDepth AS LONG
+        Planes AS INTEGER
+        BPP AS INTEGER
+        Compression AS LONG
+        ImageBytes AS LONG
+        Xres AS LONG
+        Yres AS LONG
+        NumColors AS LONG
+        SigColors AS LONG
+    END TYPE
+
+
+    DIM BMP AS BMPFormat
+    DIM x AS LONG, y AS LONG
+    DIM temp AS STRING, t AS STRING * 1
+
+    DIM n AS _MEM, o AS _OFFSET, m AS _MEM
+    m = _MEMIMAGE(image&)
+
+    IF x1% > x2% THEN SWAP x1%, x2%
+    IF y1% > y2% THEN SWAP y1%, y2%
+    IF x2% = _WIDTH(imagehandle%) THEN x2% = _WIDTH(imagehandle%) - 1 'troubleshoot in case user does a common mistake for 0-width instead of 0 - (width-1) for fullscreen
+    IF y2% = _HEIGHT(imagehandle%) THEN y2% = _HEIGHT(imagehandle%) - 1 'troubleshoot in case user does a common mistake for 0-width instead of 0 - (width-1) for fullscreen
+
+    s& = _SOURCE
+    _SOURCE image&
+
+    BMP.PWidth = (x2% - x1%) + 1
+    BMP.PDepth = (y2% - y1%) + 1
+    BMP.ID = "BM"
+    BMP.Blank = 0
+    BMP.Hsize = 40
+    BMP.Planes = 1
+    BMP.Compression = 0
+    BMP.Xres = 0
+    BMP.Yres = 0
+
+    BMP.SigColors = 0
+
+    SELECT CASE _PIXELSIZE(image&)
+        CASE 1
+            temp = SPACE$(x2% - x1% + 1)
+            OffsetBITS& = 54 + 1024 'add palette in 256 color modes
+            BMP.BPP = 8
+            IF BMP.PWidth MOD 4 THEN ZeroPAD$ = SPACE$(4 - (BMP.PWidth MOD 4))
+            ImageSize& = (BMP.PWidth + LEN(ZeroPAD$)) * BMP.PDepth
+            BMP.ImageBytes = ImageSize&
+            BMP.NumColors = 256
+            BMP.Size = ImageSize& + OffsetBITS&
+            BMP.Offset = OffsetBITS&
+        CASE 4
+            temp = SPACE$(3)
+            OffsetBITS& = 54 'no palette in 24/32 bit
+            BMP.BPP = 24
+            IF ((BMP.PWidth * 3) MOD 4) THEN ZeroPAD$ = SPACE$(4 - ((BMP.PWidth * 3) MOD 4))
+            ImageSize& = (BMP.PWidth + LEN(ZeroPAD$)) * BMP.PDepth
+            BMP.ImageBytes = ImageSize&
+            BMP.NumColors = 0
+            BMP.Size = ImageSize& * 3 + OffsetBITS&
+            BMP.Offset = OffsetBITS&
+    END SELECT
+
+    F = FREEFILE
+    n = _MEMNEW(BMP.Size)
+    _MEMPUT n, n.OFFSET, BMP
+    o = n.OFFSET + 54
+    zp& = LEN(ZeroPAD$)
+    $CHECKING:OFF
+
+    IF BMP.BPP = 8 THEN 'Store the Palette for 256 color mode
+        FOR c& = 0 TO 255 ' read BGR color settings from JPG image + 1 byte spacer(CHR$(0))
+            cv& = _PALETTECOLOR(c&, image) ' color attribute to read.
+            b$ = CHR$(_BLUE32(cv&)) + CHR$(_GREEN32(cv&)) + CHR$(_RED32(cv&)) + CHR$(0) 'spacer byte
+            _MEMPUT n, o, b$
+            o = o + 4
+        NEXT
+        y = y2% + 1
+        w& = _WIDTH(image&)
+        x = x2% - x1% + 1
+        DO
+            y = y - 1
+            _MEMGET m, m.OFFSET + (w& * y + x1%), temp
+            _MEMPUT n, o, temp
+            o = o + x
+            _MEMPUT n, o, ZeroPAD$
+            o = o + zp&
+        LOOP UNTIL y = y1%
+    ELSE
+        y = y2% + 1
+        w& = _WIDTH(image&)
+        DO
+            y = y - 1: x = x1% - 1
+            DO
+                x = x + 1
+                _MEMGET m, m.OFFSET + (w& * y + x) * 4, temp
+                _MEMPUT n, o, temp
+                o = o + 3
+            LOOP UNTIL x = x2%
+            _MEMPUT n, o, ZeroPAD$
+            o = o + zp&
+        LOOP UNTIL y = y1%
+    END IF
+    $CHECKING:ON
+    _MEMFREE m
+    OPEN filename$ FOR BINARY AS #F
+    t1$ = SPACE$(BMP.Size)
+    _MEMGET n, n.OFFSET, t1$
+    PUT #F, , t1$
+    _MEMFREE n
+    CLOSE #F
+    _SOURCE s&
+END SUB
+
+FUNCTION TextScreenToImage256& (image&)
+    d& = _DEST: s& = _SOURCE
+    DIM Plt(15) AS LONG
+    _SOURCE image&: _DEST image&
+    FOR i = 0 TO 15: Plt(i) = _PALETTECOLOR(i, image&): NEXT
+    f& = _FONT(image&)
+    _FONT f&
+    fw& = _FONTWIDTH
+    fh& = _FONTHEIGHT
+    w& = _WIDTH * _FONTWIDTH
+    h& = _HEIGHT * _FONTHEIGHT '+ _HEIGHT
+    l& = (_WIDTH * _HEIGHT) * 2 'The screen is width * height in pixels.  (80X25) = 2000 X 2 bytes each = 4000 total bytes to hold a page of screen 0 text and color
+    tempscreen& = _NEWIMAGE(w&, h& + _HEIGHT, 256)
+    Screen0to256& = _NEWIMAGE(w&, h&, 256)
+
+    DIM m AS _MEM, b AS _UNSIGNED _BYTE, t AS STRING * 1
+    DIM o AS _OFFSET
+    m = _MEMIMAGE(image&)
+    o = m.OFFSET
+
+    _DEST (tempscreen&)
+    FOR i = 0 TO 15: _PALETTECOLOR i, Plt(i): NEXT
+    _FONT f&
+
+    FOR i = 0 TO l& - 2 STEP 2
+        _MEMGET m, m.OFFSET + i, t
+        _MEMGET m, m.OFFSET + i + 1, b
+        IF b > 127 THEN b = b - 128
+        COLOR b MOD 16, b \ 16
+        PRINT t;
+    NEXT
+    _PUTIMAGE , tempscreen&, Screen0to256&, (0, 0)-(w&, h&)
+    _FREEIMAGE tempscreen&
+    _DEST d&: _SOURCE s&
+    _MEMFREE m
+    TextScreenToImage256 = Screen0to256&
+END FUNCTION
+
+FUNCTION TextScreenToImage32& (image&)
+    d& = _DEST: s& = _SOURCE
+    DIM Plt(15) AS LONG
+    _SOURCE image&
+    FOR i = 0 TO 15: Plt(i) = _PALETTECOLOR(i, image&): NEXT
+    f& = _FONT(image&)
+    _FONT f&
+    fw& = _FONTWIDTH
+    fh& = _FONTHEIGHT
+    w& = _WIDTH * _FONTWIDTH
+    h& = _HEIGHT * _FONTHEIGHT '+ _HEIGHT
+    l& = (_WIDTH * _HEIGHT) * 2 'The screen is width * height in pixels.  (80X25) = 2000 X 2 bytes each = 4000 total bytes to hold a page of screen 0 text and color
+    tempscreen& = _NEWIMAGE(w&, h& + _HEIGHT, 32)
+    Screen0to32& = _NEWIMAGE(w&, h&, 32)
+    _DEST tempscreen&
+
+    DIM m AS _MEM, b AS _UNSIGNED _BYTE, t AS STRING * 1
+    DIM o AS _OFFSET
+    m = _MEMIMAGE(image&)
+    o = m.OFFSET
+
+    _FONT f&
+
+    FOR i = 0 TO l& - 2 STEP 2
+        _MEMGET m, m.OFFSET + i, t
+        _MEMGET m, m.OFFSET + i + 1, b
+        IF b > 127 THEN b = b - 128
+        fgc = b MOD 16: bgc = b \ 16
+        COLOR _RGB32(_RED(fgc, image&), _GREEN(fgc, image&), _BLUE(fgc, image&)), _RGB32(_RED(bgc, image&), _GREEN(bgc, image&), _BLUE(bgc, image&))
+        PRINT t;
+    NEXT
+    _PUTIMAGE , tempscreen&, Screen0to32&, (0, 0)-(w&, h&)
+    _FREEIMAGE tempscreen&
+    _DEST d&: _SOURCE s&
+    _MEMFREE m
+    TextScreenToImage32 = Screen0to32&
+END FUNCTION
+
+
+
+
+
+$IF WIN THEN
+
+    FUNCTION Deflate$ (text$)
+        $CHECKING:OFF
+        DIM FileSize AS LONG, CompSize AS LONG
+        DIM m AS _MEM
+        FileSize = LEN(text$): CompSize = compressBound(FileSize)
+        m = _MEMNEW(FileSize)
+        _MEMPUT m, m.OFFSET, text$ 'set the variable length text into a memblock so it won't move in memory as we access it.
+        REDIM CompBuff(1 TO CompSize) AS _UNSIGNED _BYTE
+        Result = compress2(_OFFSET(CompBuff(1)), CompSize, m.OFFSET, FileSize, 9)
+        REDIM _PRESERVE CompBuff(1 TO CompSize) AS _UNSIGNED _BYTE
+        _MEMFREE m
+        m = _MEM(CompBuff())
+        Deflate$ = SPACE$(CompSize)
+        _MEMGET m, m.OFFSET, Deflate$
+        _MEMFREE m
+        Deflate$ = MKL$(FileSize) + Deflate$
+        $CHECKING:ON
+    END FUNCTION
+
+    FUNCTION Inflate$ (text$)
+        $CHECKING:OFF
+        DIM m AS _MEM, m1 AS _MEM
+        FileSize& = CVL(LEFT$(text$, 4))
+        text1$ = MID$(text$, 5): temp$ = SPACE$(FileSize&)
+        m = _MEMNEW(FileSize&): m1 = _MEMNEW(LEN(text1$))
+        _MEMPUT m1, m1.OFFSET, text1$
+        Result = uncompress(m.OFFSET, FileSize&, m1.OFFSET, LEN(text1$))
+        _MEMGET m, m.OFFSET, temp$
+        _MEMFREE m
+        _MEMFREE m1
+        Inflate$ = temp$
+        $CHECKING:ON
+    END FUNCTION
+
+    SUB Update_PNGCRC (PNGCRC AS _UNSIGNED LONG, buf AS _MEM)
+        'PNGCRC is updated by reference
+        DIM n AS _UNSIGNED _OFFSET
+        IF 0 = PNGCRC_table_computed THEN Make_PNGCRC_Table
+        n = 0
+        WHILE n < buf.SIZE
+            PNGCRC = PNGCRC_table((PNGCRC XOR _MEMGET(buf, buf.OFFSET + n, _UNSIGNED _BYTE)) AND &HFF) XOR PNGCRC \ 2 ^ 8
+            n = n + 1
+        WEND
+    END FUNCTION
+
+    FUNCTION ConvertUL~& (x AS _UNSIGNED LONG)
+        ConvertUL = x \ 2 ^ 24 OR x * 2 ^ 24 OR (x AND &HFF0000) \ 2 ^ 8 OR (x AND &HFF00~&) * 2 ^ 8
+    END FUNCTION
+
+    SUB Make_PNGCRC_Table
+        DIM c AS _UNSIGNED LONG
+        DIM n AS LONG, k AS LONG
+        FOR n = 0 TO 255
+            c = n
+            FOR k = 0 TO 7
+                IF c AND 1 THEN
+                    c = &HEDB88320 XOR c \ 2
+                ELSE
+                    c = c \ 2
+                END IF
+            NEXT
+            PNGCRC_table(n) = c
+        NEXT
+        PNGCRC_table_computed = 1
+    END SUB
+
+    SUB PNGAutoReset
+        PNGOptions.Alpha = 0
+        PNGOptions.Screen = 0
+        PNGOptions.GrabMode = 0
+        PNGOptions.x1 = 0
+        PNGOptions.y1 = 0
+        PNGOptions.x2 = 0
+        PNGOptions.y2 = 0
+    END SUB
+
+
+
+    FUNCTION PNGExport (file$, imagehandle%, x1%, y1%, x2%, y2%)
+        'file$ is the name of the file we want to save to
+        'imagehandle% is the handle of the image to save
+        'x1,y1,x2,y2 define the screen portion that we want to save to
+        'Alpha is a True/False toggle for 32-bit color modes in case we want to save the screen alpha channels
+
+        DIM PNGImageHeader AS PNGImageHeaderType
+
+        DIM PNGFileSignature AS _UNSIGNED _INTEGER64 ' 727905341920923785
+        DIM PNGChunk AS PNGChunkLayout
+        DIM x AS _UNSIGNED _INTEGER64
+        DIM l AS _UNSIGNED LONG
+        DIM b AS _UNSIGNED _BYTE
+        DIM m AS _MEM
+        DIM FileSize AS _UNSIGNED LONG
+        DIM CompSize AS _UNSIGNED LONG
+        DIM Result AS LONG
+        DIM z AS _UNSIGNED LONG
+
+        PNGOptions.Screen = imagehandle%
+        WorkScreen& = _SOURCE
+        _SOURCE PNGOptions.Screen
+        SELECT CASE _PIXELSIZE(imagehandle%)
+            CASE 0: PNGExport = 11 'Can't export text screen image
+            CASE 1: PNGOptions.Color = 256
+            CASE 4: PNGOptions.Color = 32
+        END SELECT
+
+        PNGExport = 0
+        IF x2% = _WIDTH(imagehandle%) THEN x2% = _WIDTH(imagehandle%) - 1 'troubleshoot in case user does a common mistake for 0-width instead of 0 - (width-1) for fullscreen
+        IF y2% = _HEIGHT(imagehandle%) THEN y2% = _HEIGHT(imagehandle%) - 1 'troubleshoot in case user does a common mistake for 0-width instead of 0 - (width-1) for fullscreen
+        PNGOptions.x1 = x1%
+        PNGOptions.y1 = y1%
+        PNGOptions.x2 = x2%
+        PNGOptions.y2 = y2%
+        PNGOptions.Alpha = 0
+
+
+        IF PNGOptions.Color = 32 THEN '32 bit color mode
+            m = _MEMIMAGE(imagehandle%)
+            i = 0
+            DO
+                check = _MEMGET(m, m.OFFSET + i + 3, _UNSIGNED _BYTE)
+                IF check <> 255 THEN PNGOptions.Alpha = 1: EXIT DO
+                i = i + 4
+            LOOP UNTIL i >= m.SIZE
+            _MEMFREE m
+        END IF
+
+        IF PNGOptions.x1 < 0 OR PNGOptions.x1 >= _WIDTH(imagehandle%) THEN PNGExport = 4
+        IF PNGOptions.y1 < 0 OR PNGOptions.y1 >= _HEIGHT(imagehandle%) THEN PNGExport = 5
+        IF PNGOptions.x2 < 0 OR PNGOptions.x2 >= _WIDTH(imagehandle%) THEN PNGExport = 6
+        IF PNGOptions.y2 < 0 OR PNGOptions.y2 >= _HEIGHT(imagehandle%) THEN PNGExport = 7
+        IF PNGOptions.x2 < PNGOptions.x1 THEN PNGExport = 8
+        IF PNGOptions.y2 < PNGOptions.y1 THEN PNGExport = 9
+        IF PNGOptions.Color <> 256 AND PNGOptions.Color <> 32 THEN PNGExport = 10
+
+        IF PNGExport <> 0 THEN
+            _SOURCE WorkScreen&
+            EXIT FUNCTION
+        END IF
+
+
+
+        'PNGExport results:
+        '-1   All is good.  We think we exported a proper PNG file.
+        ' 0   Compression failed.  File is probably corrupt.
+        ' 1   File Already Exists.  As these are Binary files, we probably don't want to just overwrite the same file.
+        ' 2   Incorrect Alpha settings.  Check for Alpha mode, and Color mode, and look for conflicts.
+        ' 3   Bad GrabMode
+        ' 4   Bad x1 coordinate
+        ' 5   Bad y1 coordinate
+        ' 6   Bad x2 coordinate
+        ' 7   Bad y2 coordinate
+        ' 8   x2 < x1 -- correct this to proceed
+        ' 9   y2 < y1 -- correct this to proceed
+        '10   Bad color mode.  Either use 256 or 32 color mode.
+        '11   Attempted to export a text screen which will not work.
+        '12   PNG save is impossible on non-Windows systems.  Can only use BMP
+
+        'Check to see if we already have a file with the name we want to save as.
+        'If so, return error code #1 -- File Exists
+        IF _FILEEXISTS(file$) THEN PNGExport = 1: EXIT FUNCTION
+
+        f = FREEFILE
+        OPEN file$ FOR BINARY AS #f 'This will be our save file, if all works as it should
+
+        PNGFileSignature = 727905341920923785 '1st 8 bytes are 137 80 78 71 13 10 26 10, this is a PNG file signature.  Without these, it's not a PNG file
+        PUT #f, , PNGFileSignature 'The first 8 bytes of any PNG file.  This identifies it as PNG format.
+        l = ConvertUL~&(13) '13 bytes in the header
+        PUT #f, , l 'Store the length of the header
+        temp$ = "IHDR" 'The name of the header
+        PUT #f, , temp$
+
+        ' the next info is the image header which holds the data specifications of our image
+
+        height = PNGOptions.y2 - PNGOptions.y1 + 1
+        width = PNGOptions.x2 - PNGOptions.x1 + 1
+
+        PNGImageHeader.Width = ConvertUL~&(width)
+        PNGImageHeader.Height = ConvertUL~&(height)
+        PNGImageHeader.Depth = 8
+
+        PNGImageHeader.ColorType = 2
+        IF PNGOptions.Color = 32 THEN
+            m = _MEMIMAGE(imagehandle%)
+            DIM o AS _OFFSET
+            DO UNTIL 0 >= m.SIZE
+                alpha% = _MEMGET(m, m.OFFSET + o, _UNSIGNED _BYTE)
+                IF alpha% <> 255 THEN PNGImageHeader.ColorType = 6: mode = 32: EXIT DO
+                o = o + 4
+            LOOP
+            _MEMFREE m
+        END IF
+        IF PNGOptions.Color = 256 THEN PNGImageHeader.ColorType = 3
+        PNGImageHeader.Compression = 0
+        PNGImageHeader.Filter = 0
+        PNGImageHeader.Interlace = 0
+        PUT #f, , PNGImageHeader
+        m = _MEM(PNGImageHeader)
+        REDIM temparray(0 TO LEN(PNGImageHeader) - 1) AS _UNSIGNED _BYTE
+        FOR mcheck = 0 TO LEN(PNGImageHeader) - 1
+            temparray(mcheck) = _MEMGET(m, m.OFFSET + mcheck, _UNSIGNED _BYTE)
+        NEXT
+        _MEMFREE m
+
+        l = ConvertUL(PNGCRCDataCheck("IHDR", temparray()))
+        PUT #f, , l '                                                                  Our PNGCRC check for IHDR
+
+        'IF we're in 256 color mode in QB64, then we need to get our color palette
+        IF PNGOptions.Color = 256 THEN
+            temp$ = "PLTE"
+            DIM pal(255 * 3 + 2) AS _UNSIGNED _BYTE
+            FOR i = 0 TO 255
+                pal(i * 3) = _RED(i)
+                pal(i * 3 + 1) = _GREEN(i)
+                pal(i * 3 + 2) = _BLUE(i)
+            NEXT
+            l = ConvertUL(255 * 3 + 3) 'length of our data array to hold all 256 colors in our palette
+            PUT #f, , l
+            PUT #f, , temp$
+            PUT #f, , pal()
+            l = ConvertUL(PNGCRCDataCheck("PLTE", pal()))
+            PUT #f, , l
+        END IF
+
+
+
+        temp$ = "IDAT"
+
+
+        IF mode = 0 THEN
+            FileSize = height * (3 * width + 1)
+        ELSE
+            FileSize = height * (4 * width + 1)
+        END IF
+        IF PNGOptions.Color = 256 THEN FileSize = height * (width + 1)
+        DIM FileBuff(0 TO FileSize) AS _UNSIGNED _BYTE
+        z = 0
+        FOR y = PNGOptions.y1 TO PNGOptions.y2
+            z = z + 1
+            FileBuff(z) = 0
+            FOR x = PNGOptions.x1 TO PNGOptions.x2
+                IF PNGOptions.Color = 256 THEN
+                    z = z + 1
+                    FileBuff(z) = POINT(x, y)
+                ELSE
+                    t~& = POINT(x, y)
+                    FileBuff(z + 1) = _RED32(t~&)
+                    FileBuff(z + 2) = _GREEN32(t~&)
+                    FileBuff(z + 3) = _BLUE32(t~&)
+                    IF mode = 0 THEN
+                        z = z + 3 'We don't want to gather any alpha
+                    ELSE
+                        FileBuff(z + 4) = _ALPHA(t~&)
+                        z = z + 4 'We need the alpha channel
+                    END IF
+                END IF
+            NEXT
+        NEXT
+
+        CompSize = compressBound(FileSize)
+        REDIM CompBuff(1 TO CompSize) AS _UNSIGNED _BYTE
+
+        ' Test CRC32 function
+        'PRINT "CRC32 code:"; CRC32(0, _OFFSET(FileBuff(1)), FileSize)
+        'PRINT "Adler32 code:"; adler32(0, _OFFSET(FileBuff(1)), FileSize)
+
+        ' Compress the data
+        Result = compress2(_OFFSET(CompBuff(1)), CompSize, _OFFSET(FileBuff(1)), FileSize, 9)
+        IF Result <> Z_OK THEN
+            ' Bad compression.   Report it as Error #0, then close the open file
+            PNGExport = 0
+            CLOSE #f
+            _SOURCE WorkScreen&
+            EXIT FUNCTION
+            'PRINT "Failed to compress the data!"
+            'PRINT "Error name: "; zError$(Result)
+        END IF
+
+        ' Crop the compressed data buffer then 'PRINT the results
+        REDIM _PRESERVE CompBuff(1 TO CompSize) AS _UNSIGNED _BYTE
+        'PRINT "Data compressed from"; FileSize; "to"; CompSize; "bytes ("; LTRIM$(STR$(100 - INT((CompSize * FileSize) * 100))); "%)"
+
+        l = ConvertUL~&(CompSize)
+        PUT #f, , l
+        temp$ = "IDAT"
+        PUT #f, , temp$
+        PUT #f, , CompBuff()
+
+        l = ConvertUL(PNGCRCDataCheck("IDAT", CompBuff()))
+        PUT #f, , l
+
+
+        l = ConvertUL~&(0) ' a zero length data field goes with IEND.  It's the END of our PNG indicator/
+        PUT #f, , l
+        temp$ = "IEND"
+        PUT #f, , temp$
+        l = ConvertUL(l = ConvertUL(PNGCRCStringCheck("IEND", "")))
+        PUT #f, , l
+
+        CLOSE
+
+        'And we should have now exported a PNG file.
+        IF PNGOptions.Color = 32 THEN
+            temphandle& = _LOADIMAGE(file$)
+            IF temphandle& = -1 THEN
+                PNGExport = 666 'EVIL code.  We exported something, but we can't load it!
+            ELSE
+                PNGExport = -1 'We have good export, but QB64 _LOADIMAGE won't import it.
+                _FREEIMAGE temphandle&
+            END IF
+        ELSE
+            PNGExport = -1 'We can't currently load 256 color images in QB64, so we have to assume that it worked at this point
+        END IF
+        _SOURCE WorkScreen&
+        IF PNGOptions.AutoReset = 1 THEN PNGAutoReset
+    END FUNCTION
+
+
+    FUNCTION PNGCRCStringCheck~& (id AS STRING * 4, dta$)
+        DIM m AS _MEM
+        DIM temp(0 TO 3) AS _UNSIGNED _BYTE
+        DIM text(0 TO LEN(dta$) - 1) AS _UNSIGNED _BYTE
+        PNGCRC = -1
+        FOR z = 1 TO 4: temp(z - 1) = ASC(id, z): NEXT
+        FOR z = 1 TO LEN(dta$): text(z - 1) = ASC(dta$, z): NEXT
+
+        m = _MEM(temp()): Update_PNGCRC PNGCRC, m: _MEMFREE m
+        m = _MEM(text()): Update_PNGCRC PNGCRC, m: _MEMFREE m
+        PNGCRCcheck~& = NOT PNGCRC
+    END FUNCTION
+
+
+    FUNCTION PNGCRCDataCheck~& (id AS STRING * 4, dta() AS _UNSIGNED _BYTE)
+        DIM m AS _MEM
+        DIM temp(0 TO 3) AS _UNSIGNED _BYTE
+        PNGCRC = -1
+        FOR z = 1 TO 4: temp(z - 1) = ASC(id, z): NEXT
+
+        m = _MEM(temp()): Update_PNGCRC PNGCRC, m: _MEMFREE m
+        m = _MEM(dta()): Update_PNGCRC PNGCRC, m: _MEMFREE m
+        PNGCRCDataCheck~& = NOT PNGCRC
+    END FUNCTION
+
+
+    FUNCTION PNGImport& (file$)
+        'My own import routine.  Is currently not updated and probably won't work without some trouble shooting
+        'Not recommended for use other than diagnostic purposes to view PNG chunk information
+        'to help diagnose issues inside corrupt images
+
+        DIM PNGImageHeader AS PNGImageHeaderType
+        DIM PNGFileSignature AS _UNSIGNED _INTEGER64 ' 727905341920923785
+        DIM PNGChunk AS PNGChunkLayout
+        DIM FileSize AS _UNSIGNED LONG '                      To keep things easy to read
+        DIM CompSize AS _UNSIGNED LONG
+        DIM Result AS _UNSIGNED LONG
+
+        f = FREEFILE
+        OPEN file$ FOR BINARY AS #f
+        DIM x AS _UNSIGNED _INTEGER64
+        DIM l AS _UNSIGNED LONG
+        DIM b AS _UNSIGNED _BYTE
+        DIM z AS _UNSIGNED LONG
+
+        GET #f, , PNGFileSignature 'The first 8 bytes of any PNG file
+        IF PNGFileSignature <> 727905341920923785 THEN
+            PRINT "NOT A PNG File!"
+            END
+        ELSE
+            'PRINT "PNG File Format Verified"
+        END IF
+
+        'PNG Files are set up with this basic concept:
+        'Read a chunk of data
+        'Determine what that chunk is:
+        'IHDR is image header
+        'PLTE is used for color palattes
+        'IDAT is image data chunks  (the actual picture!)
+        'IEND is an end of file chunk
+
+        DO
+            GET #f, , PNGChunk
+            x = SEEK(1)
+            temp$ = "    " 'Used to get the title of our chunks so we can see what they are.
+            GET #f, x - 4, temp$
+            SEEK 1, x
+            ''PRINT "Chunk Name:"; temp$
+            PNGChunk.Length = ConvertUL~&(PNGChunk.Length)
+            ''PRINT "Image Data Length: "; PNGChunk.Length
+            ''PRINT "Ancillary:"; PNGChunk.Type.Ancillary AND 32
+            ''PRINT "Private:"; PNGChunk.Type.Private AND 32
+            ''PRINT "Reserved:"; PNGChunk.Type.Reserved AND 32
+            ''PRINT "SafeToCopy:"; PNGChunk.Type.SafeToCopy AND 32
+
+
+            SELECT CASE temp$
+                CASE "IHDR"
+                    ' the next info is the image header
+                    GET #f, , PNGImageHeader
+                    PNGImageHeader.Width = ConvertUL~&(PNGImageHeader.Width)
+                    PNGImageHeader.Height = ConvertUL~&(PNGImageHeader.Height)
+                    ''PRINT "Image Width:"; PNGImageHeader.Width
+                    ''PRINT "Image Height:"; PNGImageHeader.Height
+                    ''PRINT "Bit depth:"; PNGImageHeader.Depth
+                    ''PRINT "Color type:"; PNGImageHeader.ColorType
+                    ''PRINT "Compression Method:"; PNGImageHeader.Compression
+                    ''PRINT "Filter method:"; PNGImageHeader.Filter
+                    ''PRINT "Interlace method:"; PNGImageHeader.Interlace
+                CASE "IDAT"
+                    'We're now getting image data.
+                    'Time for a break for now, as this part looks like it's going to take some study to implement properly.
+
+                    ' Resize the compressed file buffer to the size of the compresed data file
+                    CompSize = PNGChunk.Length
+                    REDIM CompBuff(1 TO CompSize) AS _UNSIGNED _BYTE
+                    ' Load it to the array
+                    GET #f, , CompBuff()
+                    IF PNGImageHeader.ColorType = 2 THEN
+                        FileSize = PNGImageHeader.Height * (3 * (PNGImageHeader.Width) + 1)
+                    ELSE
+                        FileSize = PNGImageHeader.Height * (4 * (PNGImageHeader.Width) + 1)
+                    END IF
+                    REDIM FileBuff(1 TO FileSize) AS _UNSIGNED _BYTE
+
+                    ' Test crc32 function
+                    'PRINT "crc32 code:"; crc32(0, _OFFSET(CompBuff(1)), CompSize)
+                    'PRINT "Adler32 code:"; adler32(0, _OFFSET(CompBuff(1)), CompSize)
+
+                    ' Decompress the data buffer
+                    Result = uncompress(_OFFSET(FileBuff(1)), FileSize, _OFFSET(CompBuff(1)), CompSize)
+                    IF Result <> Z_OK THEN
+                        'PRINT "Failed to decompress the data buffer!"
+                    ELSE
+                        'PRINT "Decompression Successful!  WOOT!!  WOOT!! WOOT!!"
+                        ns& = _NEWIMAGE(PNGImageHeader.Width, PNGImageHeader.Height, 32)
+                        _DEST ns&
+                        '_SCREENMOVE _MIDDLE
+                        '_FULLSCREEN
+                        'OPEN "z:\testdump.txt" FOR OUTPUT AS #2
+                        ''PRINT #2, PNGImageHeader.Height, PNGImageHeader.Width
+
+                        z = 1 'We start reading in the colors from our array at element 1, not zero.  Remember!
+                        IF PNGImageHeader.ColorType = 2 THEN
+                            FOR y = 0 TO PNGImageHeader.Height - 1
+                                z = z + 1 'start of line junk
+                                FOR x = 0 TO PNGImageHeader.Width - 1
+                                    PSET (x, y), _RGB(FileBuff(z), FileBuff(z + 1), FileBuff(z + 2))
+                                    ''PRINT #2, z, FileBuff(z), FileBuff(z + 1), FileBuff(z + 2)
+                                    z = z + 3
+                            NEXT x, y
+                        ELSE
+                            FOR y = 0 TO PNGImageHeader.Height - 1
+                                z = z + 1 'start of line junk
+                                FOR x = 0 TO PNGImageHeader.Width - 1
+                                    PSET (x, y), _RGBA(FileBuff(z), FileBuff(z + 1), FileBuff(z + 2), FileBuff(z + 3))
+                                    ''PRINT #2, z, FileBuff(z), FileBuff(z + 1), FileBuff(z + 2), FileBuff(z+3)
+                                    z = z + 4
+                            NEXT x, y
+                        END IF
+                        'CLOSE #2
+                    END IF
+                CASE "tEXt"
+                    temp1$ = SPACE$(PNGChunk.Length)
+                    GET #f, , temp1$
+
+                    IF LEFT$(temp1$, 9) = ("Software" + CHR$(0)) THEN
+                        temp1$ = RIGHT$(temp1$, LEN(temp1$) - 9)
+
+                        IF temp1$ <> "QB64 PNGExport Routine by SMcNeill" THEN
+                            CLOSE #f
+                            PNGImport& = _LOADIMAGE(file$)
+                            EXIT FUNCTION
+                        ELSE
+                            'Continue on and use this import routine -- the export was a SMcNeill QB64 PNG file, which _LOADIMAGE doesn't like at the moment!  :(
+                            QB64PNG = -1
+                        END IF
+                    END IF
+                CASE ELSE
+                    temp1$ = SPACE$(PNGChunk.Length)
+                    GET #f, , temp1$
+            END SELECT
+            'Get the PNGCRC, which I don't have to decode yet for verification.
+            GET #f, , l
+            ''PRINT "PNGCRC:"; ConvertUL~&(l)
+            'SLEEP
+        LOOP UNTIL temp$ = "IEND"
+        CLOSE #f
+        _DEST 0
+        IF QB64PNG THEN PNGImport& = ns& ELSE PNGImport& = _LOADIMAGE(file$)
+    END FUNCTION
+$END IF
+
+FUNCTION Math$ (e$)
+    STATIC init
+    IF NOT init THEN
+        Set_OrderOfOperations 'This will also make certain our directories are valid, and if not make them.
+        init = -1
+    END IF
+
+    t$ = e$ 'So we preserve our original data, we parse a temp copy of it
+
+    QuickReturn = 0
+    PreParse t$
+    IF QuickReturn THEN Math$ = t$: EXIT FUNCTION
+
+    IF LEFT$(t$, 5) = "ERROR" THEN Math$ = t$: EXIT FUNCTION
+
+    'Deal with brackets first
+    exp$ = "(" + t$ + ")" 'Starting and finishing brackets for our parse routine.
+    DO
+        e = INSTR(exp$, ")")
+        IF e > 0 THEN
+            c = 0
+            DO UNTIL e - c <= 0
+                c = c + 1
+                IF e THEN
+                    IF MID$(exp$, e - c, 1) = "(" THEN EXIT DO
+                END IF
+            LOOP
+            s = e - c + 1
+            IF s < 1 THEN PRINT "ERROR -- BAD () Count": END
+            eval$ = " " + MID$(exp$, s, e - s) + " " 'pad with a space before and after so the parser can pick up the values properly.
+            ParseExpression eval$
+            eval$ = LTRIM$(RTRIM$(eval$))
+            IF LEFT$(eval$, 5) = "ERROR" THEN Math$ = eval$: EXIT SUB
+            exp$ = DWD(LEFT$(exp$, s - 2) + eval$ + MID$(exp$, e + 1))
+            IF MID$(exp$, 1, 1) = "N" THEN MID$(exp$, 1) = "-"
+        END IF
+    LOOP UNTIL e = 0
+
+    c = 0
+    DO
+        c = c + 1
+        SELECT CASE MID$(exp$, c, 1)
+            CASE "0" TO "9", ".", "-" 'At this point, we should only have number values left.
+            CASE ELSE: Math$ = "ERROR - Unknown Diagnosis: (" + exp$ + ") ": EXIT SUB
+        END SELECT
+    LOOP UNTIL c >= LEN(exp$)
+
+    Math$ = exp$
+END FUNCTION
+
+
+
+SUB ParseExpression (exp$)
+    DIM num(10) AS STRING
+    'We should now have an expression with no () to deal with
+    FOR J = 1 TO 250
+        lowest = 0
+        DO UNTIL lowest = LEN(exp$)
+            lowest = LEN(exp$): OpOn = 0
+            FOR P = 1 TO UBOUND(OName)
+                'Look for first valid operator
+                IF J = PL(P) THEN 'Priority levels match
+                    IF LEFT$(exp$, 1) = "-" THEN op = INSTR(2, exp$, OName(P)) ELSE op = INSTR(exp$, OName(P))
+                    IF op > 0 AND op < lowest THEN lowest = op: OpOn = P
+                END IF
+            NEXT
+            IF OpOn = 0 THEN EXIT DO 'We haven't gotten to the proper PL for this OP to be processed yet.
+            IF LEFT$(exp$, 1) = "-" THEN op = INSTR(2, exp$, OName(OpOn)) ELSE op = INSTR(exp$, OName(OpOn))
+            numset = 0
+
+            '*** SPECIAL OPERATION RULESETS
+            IF OName(OpOn) = "-" THEN 'check for BOOLEAN operators before the -
+                SELECT CASE MID$(exp$, op - 3, 3)
+                    CASE "NOT", "XOR", "AND", "EQV", "IMP"
+                        EXIT DO 'Not an operator, it's a negative
+                END SELECT
+                IF MID$(exp$, op - 3, 2) = "OR" THEN EXIT DO 'Not an operator, it's a negative
+            END IF
+
+            IF op THEN
+                c = LEN(OName(OpOn)) - 1
+                DO
+                    SELECT CASE MID$(exp$, op + c + 1, 1)
+                        CASE "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", ".": numset = -1 'Valid digit
+                        CASE "-" 'We need to check if it's a minus or a negative
+                            IF OName(OpOn) = "PI" OR numset THEN EXIT DO
+                        CASE ELSE 'Not a valid digit, we found our separator
+                            EXIT DO
+                    END SELECT
+                    c = c + 1
+                LOOP UNTIL op + c >= LEN(exp$)
+                e = op + c
+
+                c = 0
+                DO
+                    c = c + 1
+                    SELECT CASE MID$(exp$, op - c, 1)
+                        CASE "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", ".", "N" 'Valid digit
+                        CASE "-" 'We need to check if it's a minus or a negative
+                            c1 = c
+                            bad = 0
+                            DO
+                                c1 = c1 + 1
+                                SELECT CASE MID$(exp$, op - c1, 1)
+                                    CASE "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "."
+                                        bad = -1
+                                        EXIT DO 'It's a minus sign
+                                    CASE ELSE
+                                        'It's a negative sign and needs to count as part of our numbers
+                                END SELECT
+                            LOOP UNTIL op - c1 <= 0
+                            IF bad THEN EXIT DO 'We found our seperator
+                        CASE ELSE 'Not a valid digit, we found our separator
+                            EXIT DO
+                    END SELECT
+                LOOP UNTIL op - c <= 0
+                s = op - c
+                num(1) = N2S(MID$(exp$, s + 1, op - s - 1)) 'Get our first number
+                num(2) = N2S(MID$(exp$, op + LEN(OName(OpOn)), e - op - LEN(OName(OpOn)) + 1)) 'Get our second number
+                IF MID$(num(1), 1, 1) = "N" THEN MID$(num(1), 1) = "-"
+                IF MID$(num(2), 1, 1) = "N" THEN MID$(num(2), 1) = "-"
+                num(3) = N2S(EvaluateNumbers(OpOn, num()))
+                IF MID$(num(3), 1, 1) = "-" THEN MID$(num(3), 1) = "N"
+                'PRINT "*************"
+                'PRINT num(1), OName(OpOn), num(2), num(3) ', exp$
+                IF LEFT$(num(3), 5) = "ERROR" THEN exp$ = num(3): EXIT SUB
+                exp$ = LTRIM$(N2S(DWD(LEFT$(exp$, s) + RTRIM$(LTRIM$(num(3))) + MID$(exp$, e + 1))))
+                'PRINT exp$
+            END IF
+            op = 0
+        LOOP
+    NEXT
+
+END SUB
+
+
+
+SUB Set_OrderOfOperations
+    'PL sets our priortity level. 1 is highest to 65535 for the lowest.
+    'I used a range here so I could add in new priority levels as needed.
+    'OName ended up becoming the name of our commands, as I modified things.... Go figure!  LOL!
+
+    'Constants get evaluated first, with a Priority Level of 1
+    i = i + 1: REDIM _PRESERVE OName(i): OName(i) = "_PI"
+    REDIM _PRESERVE PL(i): PL(i) = 10
+    'I'm not certain where exactly percentages should go.  They kind of seem like a special case to me.  COS10% should be COS.1 I'd think...
+    'I'm putting it here for now, and if anyone knows someplace better for it in our order of operations, let me know.
+    i = i + 1: REDIM _PRESERVE OName(i): OName(i) = "%"
+    REDIM _PRESERVE PL(i): PL(i) = 5
+    'Then Functions with PL 10
+    i = i + 1: REDIM _PRESERVE OName(i): OName(i) = "_ACOS"
+    REDIM _PRESERVE PL(i): PL(i) = 10
+    i = i + 1: REDIM _PRESERVE OName(i): OName(i) = "_ASIN"
+    REDIM _PRESERVE PL(i): PL(i) = 10
+    i = i + 1: REDIM _PRESERVE OName(i): OName(i) = "ARCSEC"
+    REDIM _PRESERVE PL(i): PL(i) = 10
+    i = i + 1: REDIM _PRESERVE OName(i): OName(i) = "ARCCSC"
+    REDIM _PRESERVE PL(i): PL(i) = 10
+    i = i + 1: REDIM _PRESERVE OName(i): OName(i) = "ARCCOT"
+    REDIM _PRESERVE PL(i): PL(i) = 10
+    i = i + 1: REDIM _PRESERVE OName(i): OName(i) = "SECH"
+    REDIM _PRESERVE PL(i): PL(i) = 10
+    i = i + 1: REDIM _PRESERVE OName(i): OName(i) = "CSCH"
+    REDIM _PRESERVE PL(i): PL(i) = 10
+    i = i + 1: REDIM _PRESERVE OName(i): OName(i) = "COTH"
+    REDIM _PRESERVE PL(i): PL(i) = 10
+    i = i + 1: REDIM _PRESERVE OName(i): OName(i) = "COS"
+    REDIM _PRESERVE PL(i): PL(i) = 10
+    i = i + 1: REDIM _PRESERVE OName(i): OName(i) = "SIN"
+    REDIM _PRESERVE PL(i): PL(i) = 10
+    i = i + 1: REDIM _PRESERVE OName(i): OName(i) = "TAN"
+    REDIM _PRESERVE PL(i): PL(i) = 10
+    i = i + 1: REDIM _PRESERVE OName(i): OName(i) = "LOG"
+    REDIM _PRESERVE PL(i): PL(i) = 10
+    i = i + 1: REDIM _PRESERVE OName(i): OName(i) = "EXP"
+    REDIM _PRESERVE PL(i): PL(i) = 10
+    i = i + 1: REDIM _PRESERVE OName(i): OName(i) = "ATN"
+    REDIM _PRESERVE PL(i): PL(i) = 10
+    i = i + 1: REDIM _PRESERVE OName(i): OName(i) = "_D2R"
+    REDIM _PRESERVE PL(i): PL(i) = 10
+    i = i + 1: REDIM _PRESERVE OName(i): OName(i) = "_D2G"
+    REDIM _PRESERVE PL(i): PL(i) = 10
+    i = i + 1: REDIM _PRESERVE OName(i): OName(i) = "_R2D"
+    REDIM _PRESERVE PL(i): PL(i) = 10
+    i = i + 1: REDIM _PRESERVE OName(i): OName(i) = "_R2G"
+    REDIM _PRESERVE PL(i): PL(i) = 10
+    i = i + 1: REDIM _PRESERVE OName(i): OName(i) = "_G2D"
+    REDIM _PRESERVE PL(i): PL(i) = 10
+    i = i + 1: REDIM _PRESERVE OName(i): OName(i) = "_G2R"
+    REDIM _PRESERVE PL(i): PL(i) = 10
+    i = i + 1: REDIM _PRESERVE OName(i): OName(i) = "ABS"
+    REDIM _PRESERVE PL(i): PL(i) = 10
+    i = i + 1: REDIM _PRESERVE OName(i): OName(i) = "SGN"
+    REDIM _PRESERVE PL(i): PL(i) = 10
+    i = i + 1: REDIM _PRESERVE OName(i): OName(i) = "INT"
+    REDIM _PRESERVE PL(i): PL(i) = 10
+    i = i + 1: REDIM _PRESERVE OName(i): OName(i) = "_ROUND"
+    REDIM _PRESERVE PL(i): PL(i) = 10
+    i = i + 1: REDIM _PRESERVE OName(i): OName(i) = "FIX"
+    REDIM _PRESERVE PL(i): PL(i) = 10
+    i = i + 1: REDIM _PRESERVE OName(i): OName(i) = "SEC"
+    REDIM _PRESERVE PL(i): PL(i) = 10
+    i = i + 1: REDIM _PRESERVE OName(i): OName(i) = "CSC"
+    REDIM _PRESERVE PL(i): PL(i) = 10
+    i = i + 1: REDIM _PRESERVE OName(i): OName(i) = "COT"
+    REDIM _PRESERVE PL(i): PL(i) = 10
+    'Exponents with PL 20
+    i = i + 1: REDIM _PRESERVE OName(i): OName(i) = "^"
+    REDIM _PRESERVE PL(i): PL(i) = 20
+    i = i + 1: REDIM _PRESERVE OName(i): OName(i) = "SQR"
+    REDIM _PRESERVE PL(i): PL(i) = 20
+    i = i + 1: REDIM _PRESERVE OName(i): OName(i) = "ROOT"
+    REDIM _PRESERVE PL(i): PL(i) = 20
+    'Multiplication and Division PL 30
+    i = i + 1: REDIM _PRESERVE OName(i): OName(i) = "*"
+    REDIM _PRESERVE PL(i): PL(i) = 30
+    i = i + 1: REDIM _PRESERVE OName(i): OName(i) = "/"
+    REDIM _PRESERVE PL(i): PL(i) = 30
+    'Integer Division PL 40
+    i = i + 1: REDIM _PRESERVE OName(i): OName(i) = "\"
+    REDIM _PRESERVE PL(i): PL(i) = 40
+    'MOD PL 50
+    i = i + 1: REDIM _PRESERVE OName(i): OName(i) = "MOD"
+    REDIM _PRESERVE PL(i): PL(i) = 50
+    'Addition and Subtraction PL 60
+    i = i + 1: REDIM _PRESERVE OName(i): OName(i) = "+"
+    REDIM _PRESERVE PL(i): PL(i) = 60
+    i = i + 1: REDIM _PRESERVE OName(i): OName(i) = "-"
+    REDIM _PRESERVE PL(i): PL(i) = 60
+
+    'Relational Operators =, >, <, <>, <=, >=   PL 70
+    i = i + 1: REDIM _PRESERVE OName(i): OName(i) = "<>"
+    REDIM _PRESERVE PL(i): PL(i) = 70
+    i = i + 1: REDIM _PRESERVE OName(i): OName(i) = "><" 'These next three are just reversed symbols as an attempt to help process a common typo
+    REDIM _PRESERVE PL(i): PL(i) = 70
+    i = i + 1: REDIM _PRESERVE OName(i): OName(i) = "<="
+    REDIM _PRESERVE PL(i): PL(i) = 70
+    i = i + 1: REDIM _PRESERVE OName(i): OName(i) = ">="
+    REDIM _PRESERVE PL(i): PL(i) = 70
+    i = i + 1: REDIM _PRESERVE OName(i): OName(i) = "=<" 'I personally can never keep these things straight.  Is it < = or = <...
+    REDIM _PRESERVE PL(i): PL(i) = 70
+    i = i + 1: REDIM _PRESERVE OName(i): OName(i) = "=>" 'Who knows, check both!
+    REDIM _PRESERVE PL(i): PL(i) = 70
+    i = i + 1: REDIM _PRESERVE OName(i): OName(i) = ">"
+    REDIM _PRESERVE PL(i): PL(i) = 70
+    i = i + 1: REDIM _PRESERVE OName(i): OName(i) = "<"
+    REDIM _PRESERVE PL(i): PL(i) = 70
+    i = i + 1: REDIM _PRESERVE OName(i): OName(i) = "="
+    REDIM _PRESERVE PL(i): PL(i) = 70
+    'Logical Operations PL 80+
+    i = i + 1: REDIM _PRESERVE OName(i): OName(i) = "NOT"
+    REDIM _PRESERVE PL(i): PL(i) = 80
+    i = i + 1: REDIM _PRESERVE OName(i): OName(i) = "AND"
+    REDIM _PRESERVE PL(i): PL(i) = 90
+    i = i + 1: REDIM _PRESERVE OName(i): OName(i) = "OR"
+    REDIM _PRESERVE PL(i): PL(i) = 100
+    i = i + 1: REDIM _PRESERVE OName(i): OName(i) = "XOR"
+    REDIM _PRESERVE PL(i): PL(i) = 110
+    i = i + 1: REDIM _PRESERVE OName(i): OName(i) = "EQV"
+    REDIM _PRESERVE PL(i): PL(i) = 120
+    i = i + 1: REDIM _PRESERVE OName(i): OName(i) = "IMP"
+    REDIM _PRESERVE PL(i): PL(i) = 130
+END SUB
+
+FUNCTION EvaluateNumbers$ (p, num() AS STRING)
+    DIM n1 AS _FLOAT, n2 AS _FLOAT, n3 AS _FLOAT
+    SELECT CASE OName(p) 'Depending on our operator..
+        CASE "_PI"
+            IF num(2) = "" THEN num(2) = "1"
+            n1 = _PI * VAL(num(2)) 'Future compatable in case something ever stores extra digits for PI
+        CASE "%" 'Note percent is a special case and works with the number BEFORE the % command and not after
+            IF num(1) = "" THEN EvaluateNumbers$ = "ERROR - Attemping to get percent of NULL string": EXIT FUNCTION
+            n1 = (VAL(num(1))) / 100
+        CASE "_ACOS"
+            IF num(2) = "" THEN EvaluateNumbers$ = "ERROR - Attemping to get ARCCOS of NULL string": EXIT FUNCTION
+            n1 = VAL(num(2))
+            IF n1 > 1 THEN EvaluateNumbers$ = "ERROR - Attemping to get ARCCOS from value >1, which is Invalid": EXIT FUNCTION
+            IF n1 < -1 THEN EvaluateNumbers$ = "ERROR - Attemping to get ARCCOS from value <-1, which is Invalid": EXIT FUNCTION
+            IF n1 = 1 THEN EvaluateNumbers$ = "0": EXIT FUNCTION
+            n1 = _ACOS(n1)
+        CASE "_ASIN"
+            IF num(2) = "" THEN EvaluateNumbers$ = "ERROR - Attemping to get _ASIN of NULL string": EXIT FUNCTION
+            n1 = VAL(num(2))
+            IF n1 > 1 THEN EvaluateNumbers$ = "ERROR - Attemping to get _ASIN from value >1, which is Invalid": EXIT FUNCTION
+            IF n1 < -1 THEN EvaluateNumbers$ = "ERROR - Attemping to get _ASIN from value <-1, which is Invalid": EXIT FUNCTION
+            n1 = _ASIN(n1)
+        CASE "_ARCSEC"
+            IF num(2) = "" THEN EvaluateNumbers$ = "ERROR - Attemping to get ARCSEC of NULL string": EXIT FUNCTION
+            n1 = VAL(num(2))
+            IF n1 > 1 THEN EvaluateNumbers$ = "ERROR - Attemping to get ARCSEC from value > 1, which is Invalid": EXIT FUNCTION
+            IF n1 < -1 THEN EvaluateNumbers$ = "ERROR - Attemping to get ARCSEC from value < -1, which is Invalid": EXIT FUNCTION
+            n1 = _ARCSEC(n1)
+        CASE "ARCCSC"
+            IF num(2) = "" THEN EvaluateNumbers$ = "ERROR - Attemping to get ARCCSC of NULL string": EXIT FUNCTION
+            n1 = VAL(num(2))
+            IF n1 > 1 THEN EvaluateNumbers$ = "ERROR - Attemping to get ARCCSC from value >=1, which is Invalid": EXIT FUNCTION
+            IF n1 < -1 THEN EvaluateNumbers$ = "ERROR - Attemping to get ARCCSC from value <-1, which is Invalid": EXIT FUNCTION
+            n1 = _ARCCSC(n1)
+        CASE "ARCCOT"
+            IF num(2) = "" THEN EvaluateNumbers$ = "ERROR - Attemping to get ARCCOT of NULL string": EXIT FUNCTION
+            n1 = VAL(num(2))
+            n1 = _ARCCOT(n1)
+        CASE "SECH"
+            IF num(2) = "" THEN EvaluateNumbers$ = "ERROR - Attemping to get SECH of NULL string": EXIT FUNCTION
+            n1 = VAL(num(2))
+            IF n1 > 88.02969 OR (EXP(n1) + EXP(-n1)) = 0 THEN EvaluateNumbers$ = "ERROR - Bad SECH command": EXIT FUNCTION
+            n1 = _SECH(n1)
+        CASE "CSCH"
+            IF num(2) = "" THEN EvaluateNumbers$ = "ERROR - Attemping to get CSCH of NULL string": EXIT FUNCTION
+            n1 = VAL(num(2))
+            IF n1 > 88.02969 OR (EXP(n1) - EXP(-n1)) = 0 THEN EvaluateNumbers$ = "ERROR - Bad CSCH command": EXIT FUNCTION
+            n1 = _CSCH(n1)
+        CASE "COTH"
+            IF num(2) = "" THEN EvaluateNumbers$ = "ERROR - Attemping to get COTH of NULL string": EXIT FUNCTION
+            n1 = VAL(num(2))
+            IF 2 * n1 > 88.02969 OR EXP(2 * n1) - 1 = 0 THEN EvaluateNumbers$ = "ERROR - Bad COTH command": EXIT FUNCTION
+            n1 = _COTH(n1)
+        CASE "COS"
+            IF num(2) = "" THEN EvaluateNumbers$ = "ERROR - Attemping to get COS of NULL string": EXIT FUNCTION
+            n1 = COS(VAL(num(2)))
+        CASE "SIN"
+            IF num(2) = "" THEN EvaluateNumbers$ = "ERROR - Attemping to get SIN of NULL string": EXIT FUNCTION
+            n1 = SIN(VAL(num(2)))
+        CASE "TAN"
+            IF num(2) = "" THEN EvaluateNumbers$ = "ERROR - Attemping to get TAN of NULL string": EXIT FUNCTION
+            n1 = TAN(VAL(num(2)))
+        CASE "LOG"
+            IF num(2) = "" THEN EvaluateNumbers$ = "ERROR - Attemping to get LOG of NULL string": EXIT FUNCTION
+            n1 = LOG(VAL(num(2)))
+        CASE "EXP"
+            IF num(2) = "" THEN EvaluateNumbers$ = "ERROR - Attemping to get EXP of NULL string": EXIT FUNCTION
+            n1 = EXP(VAL(num(2)))
+        CASE "ATN"
+            IF num(2) = "" THEN EvaluateNumbers$ = "ERROR - Attemping to get ATN of NULL string": EXIT FUNCTION
+            n1 = ATN(VAL(num(2)))
+        CASE "_D2R"
+            IF num(2) = "" THEN EvaluateNumbers$ = "ERROR - Attemping to get Radian of NULL Degree value": EXIT FUNCTION
+            n1 = _R2D(VAL(num(2)))
+        CASE "_D2G"
+            IF num(2) = "" THEN EvaluateNumbers$ = "ERROR - Attemping to get Grad of NULL Degree string": EXIT FUNCTION
+            n1 = _D2G(VAL(num(2)))
+        CASE "_R2D"
+            IF num(2) = "" THEN EvaluateNumbers$ = "ERROR - Attemping to get Degree of NULL Radian string": EXIT FUNCTION
+            n1 = _R2D(VAL(num(2)))
+        CASE "_R2G"
+            IF num(2) = "" THEN EvaluateNumbers$ = "ERROR - Attemping to get Grad of NULL Radian string": EXIT FUNCTION
+            n1 = _R2G(VAL(num(2)))
+        CASE "_G2D"
+            IF num(2) = "" THEN EvaluateNumbers$ = "ERROR - Attemping to get Degree of NULL Gradian string": EXIT FUNCTION
+            n1 = _G2D(VAL(num(2)))
+        CASE "_G2R"
+            IF num(2) = "" THEN EvaluateNumbers$ = "ERROR - Attemping to get Radian of NULL Grad string": EXIT FUNCTION
+            n1 = _G2R(VAL(num(2)))
+        CASE "ABS"
+            IF num(2) = "" THEN EvaluateNumbers$ = "ERROR - Attemping to get ABS of NULL string": EXIT FUNCTION
+            n1 = ABS(VAL(num(2)))
+        CASE "SGN"
+            IF num(2) = "" THEN EvaluateNumbers$ = "ERROR - Attemping to get SGN of NULL string": EXIT FUNCTION
+            n1 = SGN(VAL(num(2)))
+        CASE "INT"
+            IF num(2) = "" THEN EvaluateNumbers$ = "ERROR - Attemping to get INT of NULL string": EXIT FUNCTION
+            n1 = INT(VAL(num(2)))
+        CASE "_ROUND"
+            IF num(2) = "" THEN EvaluateNumbers$ = "ERROR - Attemping to _ROUND a NULL string": EXIT FUNCTION
+            n1 = _ROUND(VAL(num(2)))
+        CASE "FIX"
+            IF num(2) = "" THEN EvaluateNumbers$ = "ERROR - Attemping to FIX a NULL string": EXIT FUNCTION
+            n1 = FIX(VAL(num(2)))
+        CASE "SEC"
+            IF num(2) = "" THEN EvaluateNumbers$ = "ERROR - Attemping to get SEC of NULL string": EXIT FUNCTION
+            n1 = COS(VAL(num(2)))
+            IF n1 = 0 THEN EvaluateNumbers$ = "ERROR - COS value is 0, thus SEC is 1/0 which is Invalid": EXIT FUNCTION
+            n1 = 1 / n1
+        CASE "CSC"
+            IF num(2) = "" THEN EvaluateNumbers$ = "ERROR - Attemping to get CSC of NULL string": EXIT FUNCTION
+            n1 = SIN(VAL(num(2)))
+            IF n1 = 0 THEN EvaluateNumbers$ = "ERROR - SIN value is 0, thus CSC is 1/0 which is Invalid": EXIT FUNCTION
+            n1 = 1 / n1
+        CASE "COT"
+            IF num(2) = "" THEN EvaluateNumbers$ = "ERROR - Attemping to get COT of NULL string": EXIT FUNCTION
+            n1 = TAN(VAL(num(2)))
+            IF n1 = 0 THEN EvaluateNumbers$ = "ERROR - TAN value is 0, thus COT is 1/0 which is Invalid": EXIT FUNCTION
+            n1 = 1 / n1
+        CASE "^"
+            IF num(1) = "" THEN EvaluateNumbers$ = "ERROR - Attemping to raise NULL string to exponent": EXIT FUNCTION
+            IF num(2) = "" THEN EvaluateNumbers$ = "ERROR - Attemping to raise number to NULL exponent": EXIT FUNCTION
+            n1 = VAL(num(1)) ^ VAL(num(2))
+        CASE "SQR"
+            IF num(2) = "" THEN EvaluateNumbers$ = "ERROR - Attemping to get SQR of NULL string": EXIT FUNCTION
+            IF VAL(num(2)) < 0 THEN EvaluateNumbers$ = "ERROR - Cannot take take SQR of numbers < 0.  I'm a computer, I have a poor imagination.": EXIT FUNCTION
+            n1 = SQR(VAL(num(2)))
+        CASE "ROOT"
+            IF num(1) = "" THEN EvaluateNumbers$ = "ERROR - Attemping to get ROOT of a NULL string": EXIT FUNCTION
+            IF num(2) = "" THEN EvaluateNumbers$ = "ERROR - Attemping to get NULL ROOT of a string": EXIT FUNCTION
+            n1 = VAL(num(1)): n2 = VAL(num(2))
+            IF n2 = 1 THEN EvaluateNumbers$ = RTRIM$(LTRIM$(STR$(n1))): EXIT FUNCTION
+            IF n2 = 0 THEN EvaluateNumbers$ = "ERROR - There is no such thing as a 0 ROOT of a number": EXIT FUNCTION
+            IF n1 < 0 AND n2 MOD 2 = 0 AND n2 > 1 THEN EvaluateNumbers$ = "ERROR - Cannot take take an EVEN ROOT of numbers < 0.  I'm a computer, I have a poor imagination.": EXIT FUNCTION
+            IF n1 < 0 AND n2 >= 1 THEN sign = -1: n1 = -n1 ELSE sign = 1
+            n3 = 1## / n2
+            IF n3 <> INT(n3) AND n2 < 1 THEN sign = SGN(n1): n1 = ABS(n1)
+            n1 = sign * (n1 ^ n3)
+        CASE "*"
+            IF num(1) = "" OR num(2) = "" THEN EvaluateNumbers$ = "ERROR - Attemping to multiply NULL string ": EXIT FUNCTION
+            n1 = VAL(num(1)) * VAL(num(2))
+        CASE "/":
+            IF num(1) = "" OR num(2) = "" THEN EvaluateNumbers$ = "ERROR - Attemping to divide NULL string ": EXIT FUNCTION
+            IF VAL(num(2)) = 0 THEN EvaluateNumbers$ = "ERROR - Division by 0": EXIT FUNCTION
+            n1 = VAL(num(1)) / VAL(num(2))
+        CASE "\"
+            IF num(1) = "" OR num(2) = "" THEN EvaluateNumbers$ = "ERROR - Attemping to divide NULL string ": EXIT FUNCTION
+            IF VAL(num(2)) = 0 THEN EvaluateNumbers$ = "ERROR - Division by 0": EXIT FUNCTION
+            n1 = VAL(num(1)) \ VAL(num(2))
+        CASE "MOD"
+            IF num(1) = "" OR num(2) = "" THEN EvaluateNumbers$ = "ERROR - Attemping to MOD with NULL string ": EXIT FUNCTION
+            IF VAL(num(2)) = 0 THEN EvaluateNumbers$ = "ERROR - Division by 0": EXIT FUNCTION
+            n1 = VAL(num(1)) MOD VAL(num(2))
+        CASE "+": n1 = VAL(num(1)) + VAL(num(2))
+        CASE "-": n1 = VAL(num(1)) - VAL(num(2))
+        CASE "=": n1 = VAL(num(1)) = VAL(num(2))
+        CASE ">": n1 = VAL(num(1)) > VAL(num(2))
+        CASE "<": n1 = VAL(num(1)) < VAL(num(2))
+        CASE "<>", "><": n1 = VAL(num(1)) <> VAL(num(2))
+        CASE "<=", "=<": n1 = VAL(num(1)) <= VAL(num(2))
+        CASE ">=", "=>": n1 = VAL(num(1)) >= VAL(num(2))
+        CASE "NOT": n1 = NOT VAL(num(2))
+        CASE "AND": n1 = VAL(num(1)) AND VAL(num(2))
+        CASE "OR": n1 = VAL(num(1)) OR VAL(num(2))
+        CASE "XOR": n1 = VAL(num(1)) XOR VAL(num(2))
+        CASE "EQV": n1 = VAL(num(1)) EQV VAL(num(2))
+        CASE "IMP": n1 = VAL(num(1)) IMP VAL(num(2))
+        CASE ELSE
+            EvaluateNumbers$ = "ERROR - Bad operation (We shouldn't see this)" 'Let's say we're bad...
+    END SELECT
+    EvaluateNumbers$ = RTRIM$(LTRIM$(STR$(n1)))
+END FUNCTION
+
+FUNCTION DWD$ (exp$) 'Deal With Duplicates
+    'To deal with duplicate operators in our code.
+    'Such as --  becomes a +
+    '++ becomes a +
+    '+- becomes a -
+    '-+ becomes a -
+    t$ = exp$
+    DO
+        bad = 0
+        DO
+            l = INSTR(t$, "++")
+            IF l THEN t$ = LEFT$(t$, l - 1) + "+" + MID$(t$, l + 2): bad = -1
+        LOOP UNTIL l = 0
+        DO
+            l = INSTR(t$, "+-")
+            IF l THEN t$ = LEFT$(t$, l - 1) + "-" + MID$(t$, l + 2): bad = -1
+        LOOP UNTIL l = 0
+        DO
+            l = INSTR(t$, "-+")
+            IF l THEN t$ = LEFT$(t$, l - 1) + "-" + MID$(t$, l + 2): bad = -1
+        LOOP UNTIL l = 0
+        DO
+            l = INSTR(t$, "--")
+            IF l THEN t$ = LEFT$(t$, l - 1) + "+" + MID$(t$, l + 2): bad = -1
+        LOOP UNTIL l = 0
+    LOOP UNTIL NOT bad
+    DWD$ = t$
+    VerifyString t$
+END FUNCTION
+
+SUB PreParse (e$)
+    DIM f AS _FLOAT
+
+    t$ = e$
+    IF QuickReturn THEN EXIT SUB
+    'First strip all spaces
+    t$ = ""
+    FOR i = 1 TO LEN(e$)
+        IF MID$(e$, i, 1) <> " " THEN t$ = t$ + MID$(e$, i, 1)
+    NEXT
+
+    t$ = UCASE$(t$)
+    IF t$ = "" THEN e$ = "ERROR -- NULL string; nothing to evaluate"
+
+    'ERROR CHECK by counting our brackets
+    l = 0
+    DO
+        l = INSTR(l + 1, t$, "("): IF l THEN c = c + 1
+    LOOP UNTIL l = 0
+    l = 0
+    DO
+        l = INSTR(l + 1, t$, ")"): IF l THEN c1 = c1 + 1
+    LOOP UNTIL l = 0
+    IF c <> c1 THEN e$ = "ERROR -- Bad Parenthesis:" + STR$(c) + "( vs" + STR$(c1) + ")": EXIT SUB
+
+    'Modify so that NOT will process properly
+    l = 0
+    DO
+        l = INSTR(l + 1, t$, "NOT")
+        IF l THEN
+            'We need to work magic on the statement so it looks pretty.
+            ' 1 + NOT 2 + 1 is actually processed as 1 + (NOT 2 + 1)
+            'Look for something not proper
+            l1 = INSTR(l + 1, t$, "AND")
+            IF l1 = 0 OR (INSTR(l + 1, t$, "OR") > 0 AND INSTR(l + 1, t$, "OR") < l1) THEN l1 = INSTR(l + 1, t$, "OR")
+            IF l1 = 0 OR (INSTR(l + 1, t$, "XOR") > 0 AND INSTR(l + 1, t$, "XOR") < l1) THEN l1 = INSTR(l + 1, t$, "XOR")
+            IF l1 = 0 OR (INSTR(l + 1, t$, "EQV") > 0 AND INSTR(l + 1, t$, "EQV") < l1) THEN l1 = INSTR(l + 1, t$, "EQV")
+            IF l1 = 0 OR (INSTR(l + 1, t$, "IMP") > 0 AND INSTR(l + 1, t$, "IMP") < l1) THEN l1 = INSTR(l + 1, t$, "IMP")
+            IF l1 = 0 THEN l1 = LEN(t$) + 1
+            t$ = LEFT$(t$, l - 1) + "(" + MID$(t$, l, l1 - l) + ")" + MID$(t$, l + l1 - l)
+            l = l + 3
+            'PRINT t$
+        END IF
+    LOOP UNTIL l = 0
+
+    'Check for bad operators before a ( bracket
+    l = 0
+    DO
+        l = INSTR(l + 1, t$, "(")
+        IF l AND l > 2 THEN 'Don't check the starting bracket; there's nothing before it.
+            good = 0
+            FOR i = 1 TO UBOUND(OName)
+                IF MID$(t$, l - LEN(OName(i)), LEN(OName(i))) = OName(i) AND PL(i) > 1 AND PL(i) <= 250 THEN good = -1: EXIT FOR 'We found an operator after our ), and it's not a CONST (like PI)
+            NEXT
+            IF NOT good THEN e$ = "ERROR - Improper operations before (.": EXIT SUB
+            l = l + 1
+        END IF
+    LOOP UNTIL l = 0
+
+    'Check for bad operators after a ) bracket
+    l = 0
+    DO
+        l = INSTR(l + 1, t$, ")")
+
+        IF l AND l < LEN(t$) THEN
+            good = 0
+            FOR i = 1 TO UBOUND(OName)
+                IF MID$(t$, l + 1, LEN(OName(i))) = OName(i) AND PL(i) > 1 AND PL(i) <= 250 THEN good = -1: EXIT FOR 'We found an operator after our ), and it's not a CONST (like PI)
+            NEXT
+            IF MID$(t$, l + 1, 1) = ")" THEN good = -1
+            IF NOT good THEN e$ = "ERROR - Improper operations after ).": EXIT SUB
+            l = l + 1
+        END IF
+    LOOP UNTIL l = 0 OR l = LEN(t$) 'last symbol is a bracket
+
+    'Turn all &H (hex) numbers into decimal values for the program to process properly
+    l = 0
+    DO
+        l = INSTR(t$, "&H")
+        IF l THEN
+            e = l + 1: finished = 0
+            DO
+                e = e + 1
+                comp$ = MID$(t$, e, 1)
+                SELECT CASE comp$
+                    CASE "0" TO "9", "A" TO "F" 'All is good, our next digit is a number, continue to add to the hex$
+                    CASE ELSE
+                        good = 0
+                        FOR i = 1 TO UBOUND(OName)
+                            IF MID$(t$, e, LEN(OName(i))) = OName(i) AND PL(i) > 1 AND PL(i) <= 250 THEN good = -1: EXIT FOR 'We found an operator after our ), and it's not a CONST (like PI)
+                        NEXT
+                        IF NOT good THEN e$ = "ERROR - Improper &H value. (" + comp$ + ")": EXIT SUB
+                        e = e - 1
+                        finished = -1
+                END SELECT
+            LOOP UNTIL finished OR e = LEN(t$)
+            t$ = LEFT$(t$, l - 1) + LTRIM$(RTRIM$(STR$(VAL(MID$(t$, l, e - l + 1))))) + MID$(t$, e + 1)
+        END IF
+    LOOP UNTIL l = 0
+
+    'Turn all &B (binary) numbers into decimal values for the program to process properly
+    l = 0
+    DO
+        l = INSTR(t$, "&B")
+        IF l THEN
+            e = l + 1: finished = 0
+            DO
+                e = e + 1
+                comp$ = MID$(t$, e, 1)
+                SELECT CASE comp$
+                    CASE "0", "1" 'All is good, our next digit is a number, continue to add to the hex$
+                    CASE ELSE
+                        good = 0
+                        FOR i = 1 TO UBOUND(OName)
+                            IF MID$(t$, e, LEN(OName(i))) = OName(i) AND PL(i) > 1 AND PL(i) <= 250 THEN good = -1: EXIT FOR 'We found an operator after our ), and it's not a CONST (like PI)
+                        NEXT
+                        IF NOT good THEN e$ = "ERROR - Improper &B value. (" + comp$ + ")": EXIT SUB
+                        e = e - 1
+                        finished = -1
+                END SELECT
+            LOOP UNTIL finished OR e = LEN(t$)
+            t$ = LEFT$(t$, l - 1) + LTRIM$(RTRIM$(STR$(VAL(MID$(t$, l, e - l + 1))))) + MID$(t$, e + 1)
+        END IF
+    LOOP UNTIL l = 0
+
+
+    'turn all scientific notation into strings
+    l = 0
+    DO
+        l = INSTR(t$, "D+")
+        IF l = 0 THEN l = INSTR(t$, "D-")
+        IF l = 0 THEN l = INSTR(t$, "E+")
+        IF l = 0 THEN l = INSTR(t$, "E-")
+        IF l THEN
+            before = 1: after = LEN(t$) + 1
+            FOR i = l - 1 TO 1 STEP -1
+                'the only things that should come before are numbers and a single period
+                SELECT CASE MID$(t$, i, 1)
+                    CASE "0" TO "9", ".": 'it's good, keep counting backwards
+                    CASE ELSE
+                        before = i + 1: EXIT FOR
+                END SELECT
+            NEXT
+            FOR i = l + 3 TO LEN(t$)
+                'the only things that should come before are numbers and a single period
+                SELECT CASE MID$(t$, i, 1)
+                    CASE "0" TO "9", ".": 'it's good, keep counting backwards
+                    CASE ELSE
+                        after = i: EXIT FOR
+                END SELECT
+            NEXT
+            m$ = MID$(t$, before, after - before)
+            t$ = LEFT$(t$, before - 1) + N2S$(m$) + MID$(t$, after)
+            'PRINT m$, t$
+        END IF
+    LOOP UNTIL l = 0
+
+    VerifyString t$
+
+    e$ = t$
+END SUB
+
+
+SUB VerifyString (t$)
+    'ERROR CHECK for unrecognized operations
+    j = 1
+    DO
+        comp$ = MID$(t$, j, 1)
+        SELECT CASE comp$
+            CASE "0" TO "9", ".", "(", ")": j = j + 1
+            CASE ELSE
+                good = 0
+                FOR i = 1 TO UBOUND(OName)
+                    IF MID$(t$, j, LEN(OName(i))) = OName(i) THEN good = -1: EXIT FOR 'We found an operator after our ), and it's not a CONST (like PI)
+                NEXT
+                IF NOT good THEN t$ = "ERROR - Bad Operational value. (" + comp$ + ")": EXIT SUB
+                j = j + LEN(OName(i))
+        END SELECT
+    LOOP UNTIL j > LEN(t$)
+END SUB
+
+
+FUNCTION N2S$ (exp$) 'scientific Notation to String
+    t$ = LTRIM$(RTRIM$(exp$))
+    IF LEFT$(t$, 1) = "-" THEN sign$ = "-": t$ = MID$(t$, 2)
+
+    dp = INSTR(t$, "D+"): dm = INSTR(t$, "D-")
+    ep = INSTR(t$, "E+"): em = INSTR(t$, "E-")
+    check1 = SGN(dp) + SGN(dm) + SGN(ep) + SGN(em)
+    IF check1 < 1 OR check1 > 1 THEN N2S = exp$: EXIT SUB 'If no scientic notation is found, or if we find more than 1 type, it's not SN!
+
+    SELECT CASE l 'l now tells us where the SN starts at.
+        CASE IS < dp: l = dp
+        CASE IS < dm: l = dm
+        CASE IS < ep: l = ep
+        CASE IS < em: l = em
+    END SELECT
+
+    l$ = LEFT$(t$, l - 1) 'The left of the SN
+    r$ = MID$(t$, l + 1): r&& = VAL(r$) 'The right of the SN, turned into a workable long
+
+    IF INSTR(l$, ".") THEN 'Location of the decimal, if any
+        IF r&& > 0 THEN
+            r&& = r&& - LEN(l$) + 2
+        ELSE
+            r&& = r&& + 1
+        END IF
+        l$ = LEFT$(l$, 1) + MID$(l$, 3)
+    END IF
+
+    SELECT CASE r&&
+        CASE 0 'what the heck? We solved it already?
+            'l$ = l$
+        CASE IS < 0
+            FOR i = 1 TO -r&&
+                l$ = "0" + l$
+            NEXT
+            l$ = "0." + l$
+        CASE ELSE
+            FOR i = 1 TO r&&
+                l$ = l$ + "0"
+            NEXT
+    END SELECT
+
+    N2S$ = sign$ + l$
+END SUB
+
+
+SUB Set256Palette (handle)
+    D = _DEST: S = _SOURCE
+    _DEST handle: _SOURCE handle
+    _PALETTECOLOR 16, _RGBA32(240, 248, 255, 255)
+    _PALETTECOLOR 17, _RGBA32(239, 222, 205, 255)
+    _PALETTECOLOR 18, _RGBA32(205, 149, 117, 255)
+    _PALETTECOLOR 19, _RGBA32(250, 235, 215, 255)
+    _PALETTECOLOR 20, _RGBA32(253, 217, 181, 255)
+    _PALETTECOLOR 21, _RGBA32(0, 255, 255, 255)
+    _PALETTECOLOR 22, _RGBA32(127, 255, 212, 255)
+    _PALETTECOLOR 23, _RGBA32(135, 169, 107, 255)
+    _PALETTECOLOR 24, _RGBA32(255, 164, 116, 255)
+    _PALETTECOLOR 25, _RGBA32(240, 255, 255, 255)
+    _PALETTECOLOR 26, _RGBA32(250, 231, 181, 255)
+    _PALETTECOLOR 27, _RGBA32(159, 129, 112, 255)
+    _PALETTECOLOR 28, _RGBA32(245, 245, 220, 255)
+    _PALETTECOLOR 29, _RGBA32(255, 228, 196, 255)
+    _PALETTECOLOR 30, _RGBA32(253, 124, 110, 255)
+    _PALETTECOLOR 31, _RGBA32(255, 235, 205, 255)
+    _PALETTECOLOR 32, _RGBA32(172, 229, 238, 255)
+    _PALETTECOLOR 33, _RGBA32(162, 162, 208, 255)
+    _PALETTECOLOR 34, _RGBA32(102, 153, 204, 255)
+    _PALETTECOLOR 35, _RGBA32(13, 152, 186, 255)
+    _PALETTECOLOR 36, _RGBA32(138, 43, 226, 255)
+    _PALETTECOLOR 37, _RGBA32(222, 93, 131, 255)
+    _PALETTECOLOR 38, _RGBA32(203, 65, 84, 255)
+    _PALETTECOLOR 39, _RGBA32(222, 184, 135, 255)
+    _PALETTECOLOR 40, _RGBA32(255, 127, 73, 255)
+    _PALETTECOLOR 41, _RGBA32(234, 126, 93, 255)
+    _PALETTECOLOR 42, _RGBA32(95, 158, 160, 255)
+    _PALETTECOLOR 43, _RGBA32(255, 255, 153, 255)
+    _PALETTECOLOR 44, _RGBA32(28, 211, 162, 255)
+    _PALETTECOLOR 45, _RGBA32(255, 170, 204, 255)
+    _PALETTECOLOR 46, _RGBA32(221, 68, 146, 255)
+    _PALETTECOLOR 47, _RGBA32(29, 172, 214, 255)
+    _PALETTECOLOR 48, _RGBA32(127, 255, 0, 255)
+    _PALETTECOLOR 49, _RGBA32(188, 93, 88, 255)
+    _PALETTECOLOR 50, _RGBA32(210, 105, 30, 255)
+    _PALETTECOLOR 51, _RGBA32(221, 148, 117, 255)
+    _PALETTECOLOR 52, _RGBA32(255, 127, 80, 255)
+    _PALETTECOLOR 53, _RGBA32(154, 206, 235, 255)
+    _PALETTECOLOR 54, _RGBA32(100, 149, 237, 255)
+    _PALETTECOLOR 55, _RGBA32(255, 248, 220, 255)
+    _PALETTECOLOR 56, _RGBA32(255, 188, 217, 255)
+    _PALETTECOLOR 57, _RGBA32(220, 20, 60, 255)
+    _PALETTECOLOR 58, _RGBA32(253, 219, 109, 255)
+    _PALETTECOLOR 59, _RGBA32(0, 0, 139, 255)
+    _PALETTECOLOR 60, _RGBA32(0, 139, 139, 255)
+    _PALETTECOLOR 61, _RGBA32(184, 134, 11, 255)
+    _PALETTECOLOR 62, _RGBA32(169, 169, 169, 255)
+    _PALETTECOLOR 63, _RGBA32(0, 100, 0, 255)
+    _PALETTECOLOR 64, _RGBA32(189, 183, 107, 255)
+    _PALETTECOLOR 65, _RGBA32(139, 0, 139, 255)
+    _PALETTECOLOR 66, _RGBA32(85, 107, 47, 255)
+    _PALETTECOLOR 67, _RGBA32(255, 140, 0, 255)
+    _PALETTECOLOR 68, _RGBA32(153, 50, 204, 255)
+    _PALETTECOLOR 69, _RGBA32(139, 0, 0, 255)
+    _PALETTECOLOR 70, _RGBA32(233, 150, 122, 255)
+    _PALETTECOLOR 71, _RGBA32(143, 188, 143, 255)
+    _PALETTECOLOR 72, _RGBA32(72, 61, 139, 255)
+    _PALETTECOLOR 73, _RGBA32(47, 79, 79, 255)
+    _PALETTECOLOR 74, _RGBA32(0, 206, 209, 255)
+    _PALETTECOLOR 75, _RGBA32(148, 0, 211, 255)
+    _PALETTECOLOR 76, _RGBA32(255, 20, 147, 255)
+    _PALETTECOLOR 77, _RGBA32(0, 191, 255, 255)
+    _PALETTECOLOR 78, _RGBA32(43, 108, 196, 255)
+    _PALETTECOLOR 79, _RGBA32(239, 205, 184, 255)
+    _PALETTECOLOR 80, _RGBA32(105, 105, 105, 255)
+    _PALETTECOLOR 81, _RGBA32(30, 144, 255, 255)
+    _PALETTECOLOR 82, _RGBA32(110, 81, 96, 255)
+    _PALETTECOLOR 83, _RGBA32(206, 255, 29, 255)
+    _PALETTECOLOR 84, _RGBA32(113, 188, 120, 255)
+    _PALETTECOLOR 85, _RGBA32(178, 34, 34, 255)
+    _PALETTECOLOR 86, _RGBA32(255, 250, 240, 255)
+    _PALETTECOLOR 87, _RGBA32(34, 139, 34, 255)
+    _PALETTECOLOR 88, _RGBA32(195, 100, 197, 255)
+    _PALETTECOLOR 89, _RGBA32(204, 102, 102, 255)
+    _PALETTECOLOR 90, _RGBA32(220, 220, 220, 255)
+    _PALETTECOLOR 91, _RGBA32(248, 248, 255, 255)
+    _PALETTECOLOR 92, _RGBA32(255, 215, 0, 255)
+    _PALETTECOLOR 93, _RGBA32(218, 165, 32, 255)
+    _PALETTECOLOR 94, _RGBA32(168, 228, 160, 255)
+    _PALETTECOLOR 95, _RGBA32(17, 100, 180, 255)
+    _PALETTECOLOR 96, _RGBA32(173, 255, 47, 255)
+    _PALETTECOLOR 97, _RGBA32(240, 255, 240, 255)
+    _PALETTECOLOR 98, _RGBA32(255, 29, 206, 255)
+    _PALETTECOLOR 99, _RGBA32(255, 105, 180, 255)
+    _PALETTECOLOR 100, _RGBA32(178, 236, 93, 255)
+    _PALETTECOLOR 101, _RGBA32(205, 92, 92, 255)
+    _PALETTECOLOR 102, _RGBA32(75, 0, 130, 255)
+    _PALETTECOLOR 103, _RGBA32(255, 255, 240, 255)
+    _PALETTECOLOR 104, _RGBA32(202, 55, 103, 255)
+    _PALETTECOLOR 105, _RGBA32(59, 176, 143, 255)
+    _PALETTECOLOR 106, _RGBA32(240, 230, 140, 255)
+    _PALETTECOLOR 107, _RGBA32(254, 254, 34, 255)
+    _PALETTECOLOR 108, _RGBA32(230, 230, 250, 255)
+    _PALETTECOLOR 109, _RGBA32(255, 240, 245, 255)
+    _PALETTECOLOR 110, _RGBA32(124, 252, 0, 255)
+    _PALETTECOLOR 111, _RGBA32(255, 250, 205, 255)
+    _PALETTECOLOR 112, _RGBA32(255, 244, 79, 255)
+    _PALETTECOLOR 113, _RGBA32(240, 128, 128, 255)
+    _PALETTECOLOR 114, _RGBA32(250, 250, 210, 255)
+    _PALETTECOLOR 115, _RGBA32(211, 211, 211, 255)
+    _PALETTECOLOR 116, _RGBA32(144, 238, 144, 255)
+    _PALETTECOLOR 117, _RGBA32(255, 182, 193, 255)
+    _PALETTECOLOR 118, _RGBA32(255, 160, 122, 255)
+    _PALETTECOLOR 119, _RGBA32(32, 178, 170, 255)
+    _PALETTECOLOR 120, _RGBA32(135, 206, 250, 255)
+    _PALETTECOLOR 121, _RGBA32(119, 136, 153, 255)
+    _PALETTECOLOR 122, _RGBA32(176, 196, 222, 255)
+    _PALETTECOLOR 123, _RGBA32(255, 255, 224, 255)
+    _PALETTECOLOR 124, _RGBA32(0, 255, 0, 255)
+    _PALETTECOLOR 125, _RGBA32(50, 205, 50, 255)
+    _PALETTECOLOR 126, _RGBA32(250, 240, 230, 255)
+    _PALETTECOLOR 127, _RGBA32(255, 189, 136, 255)
+    _PALETTECOLOR 128, _RGBA32(170, 240, 209, 255)
+    _PALETTECOLOR 129, _RGBA32(205, 74, 76, 255)
+    _PALETTECOLOR 130, _RGBA32(237, 209, 156, 255)
+    _PALETTECOLOR 131, _RGBA32(151, 154, 170, 255)
+    _PALETTECOLOR 132, _RGBA32(255, 130, 67, 255)
+    _PALETTECOLOR 133, _RGBA32(128, 0, 0, 255)
+    _PALETTECOLOR 134, _RGBA32(239, 152, 170, 255)
+    _PALETTECOLOR 135, _RGBA32(102, 205, 170, 255)
+    _PALETTECOLOR 136, _RGBA32(0, 0, 205, 255)
+    _PALETTECOLOR 137, _RGBA32(186, 85, 211, 255)
+    _PALETTECOLOR 138, _RGBA32(147, 112, 219, 255)
+    _PALETTECOLOR 139, _RGBA32(60, 179, 113, 255)
+    _PALETTECOLOR 140, _RGBA32(123, 104, 238, 255)
+    _PALETTECOLOR 141, _RGBA32(0, 250, 154, 255)
+    _PALETTECOLOR 142, _RGBA32(72, 209, 204, 255)
+    _PALETTECOLOR 143, _RGBA32(199, 21, 133, 255)
+    _PALETTECOLOR 144, _RGBA32(253, 188, 180, 255)
+    _PALETTECOLOR 145, _RGBA32(25, 25, 112, 255)
+    _PALETTECOLOR 146, _RGBA32(245, 255, 250, 255)
+    _PALETTECOLOR 147, _RGBA32(255, 228, 225, 255)
+    _PALETTECOLOR 148, _RGBA32(255, 228, 181, 255)
+    _PALETTECOLOR 149, _RGBA32(48, 186, 143, 255)
+    _PALETTECOLOR 150, _RGBA32(197, 75, 140, 255)
+    _PALETTECOLOR 151, _RGBA32(255, 222, 173, 255)
+    _PALETTECOLOR 152, _RGBA32(0, 0, 128, 255)
+    _PALETTECOLOR 153, _RGBA32(25, 116, 210, 255)
+    _PALETTECOLOR 154, _RGBA32(255, 163, 67, 255)
+    _PALETTECOLOR 155, _RGBA32(253, 245, 230, 255)
+    _PALETTECOLOR 156, _RGBA32(128, 128, 0, 255)
+    _PALETTECOLOR 157, _RGBA32(107, 142, 35, 255)
+    _PALETTECOLOR 158, _RGBA32(186, 184, 108, 255)
+    _PALETTECOLOR 159, _RGBA32(255, 165, 0, 255)
+    _PALETTECOLOR 160, _RGBA32(255, 69, 0, 255)
+    _PALETTECOLOR 161, _RGBA32(248, 213, 104, 255)
+    _PALETTECOLOR 162, _RGBA32(218, 112, 214, 255)
+    _PALETTECOLOR 163, _RGBA32(65, 74, 76, 255)
+    _PALETTECOLOR 164, _RGBA32(255, 110, 74, 255)
+    _PALETTECOLOR 165, _RGBA32(28, 169, 201, 255)
+    _PALETTECOLOR 166, _RGBA32(238, 232, 170, 255)
+    _PALETTECOLOR 167, _RGBA32(152, 251, 152, 255)
+    _PALETTECOLOR 168, _RGBA32(175, 238, 238, 255)
+    _PALETTECOLOR 169, _RGBA32(219, 112, 147, 255)
+    _PALETTECOLOR 170, _RGBA32(255, 239, 213, 255)
+    _PALETTECOLOR 171, _RGBA32(255, 207, 171, 255)
+    _PALETTECOLOR 172, _RGBA32(255, 218, 185, 255)
+    _PALETTECOLOR 173, _RGBA32(197, 208, 230, 255)
+    _PALETTECOLOR 174, _RGBA32(205, 133, 63, 255)
+    _PALETTECOLOR 175, _RGBA32(253, 221, 230, 255)
+    _PALETTECOLOR 176, _RGBA32(21, 128, 120, 255)
+    _PALETTECOLOR 177, _RGBA32(255, 192, 203, 255)
+    _PALETTECOLOR 178, _RGBA32(252, 116, 253, 255)
+    _PALETTECOLOR 179, _RGBA32(247, 143, 167, 255)
+    _PALETTECOLOR 180, _RGBA32(221, 160, 221, 255)
+    _PALETTECOLOR 181, _RGBA32(176, 224, 230, 255)
+    _PALETTECOLOR 182, _RGBA32(128, 0, 128, 255)
+    _PALETTECOLOR 183, _RGBA32(116, 66, 200, 255)
+    _PALETTECOLOR 184, _RGBA32(157, 129, 186, 255)
+    _PALETTECOLOR 185, _RGBA32(254, 78, 218, 255)
+    _PALETTECOLOR 186, _RGBA32(255, 73, 108, 255)
+    _PALETTECOLOR 187, _RGBA32(214, 138, 89, 255)
+    _PALETTECOLOR 188, _RGBA32(113, 75, 35, 255)
+    _PALETTECOLOR 189, _RGBA32(255, 72, 208, 255)
+    _PALETTECOLOR 190, _RGBA32(227, 37, 107, 255)
+    _PALETTECOLOR 191, _RGBA32(255, 83, 73, 255)
+    _PALETTECOLOR 192, _RGBA32(192, 68, 143, 255)
+    _PALETTECOLOR 193, _RGBA32(31, 206, 203, 255)
+    _PALETTECOLOR 194, _RGBA32(188, 143, 143, 255)
+    _PALETTECOLOR 195, _RGBA32(65, 105, 225, 255)
+    _PALETTECOLOR 196, _RGBA32(120, 81, 169, 255)
+    _PALETTECOLOR 197, _RGBA32(139, 69, 19, 255)
+    _PALETTECOLOR 198, _RGBA32(250, 128, 114, 255)
+    _PALETTECOLOR 199, _RGBA32(244, 164, 96, 255)
+    _PALETTECOLOR 200, _RGBA32(252, 40, 71, 255)
+    _PALETTECOLOR 201, _RGBA32(118, 255, 122, 255)
+    _PALETTECOLOR 202, _RGBA32(46, 139, 87, 255)
+    _PALETTECOLOR 203, _RGBA32(255, 245, 238, 255)
+    _PALETTECOLOR 204, _RGBA32(165, 105, 79, 255)
+    _PALETTECOLOR 205, _RGBA32(138, 121, 93, 255)
+    _PALETTECOLOR 206, _RGBA32(69, 206, 162, 255)
+    _PALETTECOLOR 207, _RGBA32(251, 126, 253, 255)
+    _PALETTECOLOR 208, _RGBA32(160, 82, 45, 255)
+    _PALETTECOLOR 209, _RGBA32(192, 192, 192, 255)
+    _PALETTECOLOR 210, _RGBA32(135, 206, 235, 255)
+    _PALETTECOLOR 211, _RGBA32(106, 90, 205, 255)
+    _PALETTECOLOR 212, _RGBA32(112, 128, 144, 255)
+    _PALETTECOLOR 213, _RGBA32(255, 250, 250, 255)
+    _PALETTECOLOR 214, _RGBA32(0, 255, 127, 255)
+    _PALETTECOLOR 215, _RGBA32(70, 130, 180, 255)
+    _PALETTECOLOR 216, _RGBA32(255, 207, 72, 255)
+    _PALETTECOLOR 217, _RGBA32(253, 94, 83, 255)
+    _PALETTECOLOR 218, _RGBA32(210, 180, 140, 255)
+    _PALETTECOLOR 219, _RGBA32(0, 128, 128, 255)
+    _PALETTECOLOR 220, _RGBA32(24, 167, 181, 255)
+    _PALETTECOLOR 221, _RGBA32(216, 191, 216, 255)
+    _PALETTECOLOR 222, _RGBA32(252, 137, 172, 255)
+    _PALETTECOLOR 223, _RGBA32(219, 215, 210, 255)
+    _PALETTECOLOR 224, _RGBA32(255, 99, 71, 255)
+    _PALETTECOLOR 225, _RGBA32(23, 128, 109, 255)
+    _PALETTECOLOR 226, _RGBA32(222, 170, 136, 255)
+    _PALETTECOLOR 227, _RGBA32(64, 224, 208, 255)
+    _PALETTECOLOR 228, _RGBA32(119, 221, 231, 255)
+    _PALETTECOLOR 229, _RGBA32(255, 255, 102, 255)
+    _PALETTECOLOR 230, _RGBA32(238, 130, 238, 255)
+    _PALETTECOLOR 231, _RGBA32(50, 74, 178, 255)
+    _PALETTECOLOR 232, _RGBA32(247, 83, 148, 255)
+    _PALETTECOLOR 233, _RGBA32(255, 160, 137, 255)
+    _PALETTECOLOR 234, _RGBA32(143, 80, 157, 255)
+    _PALETTECOLOR 235, _RGBA32(245, 222, 179, 255)
+    _PALETTECOLOR 236, _RGBA32(245, 245, 245, 255)
+    _PALETTECOLOR 237, _RGBA32(162, 173, 208, 255)
+    _PALETTECOLOR 238, _RGBA32(255, 67, 164, 255)
+    _PALETTECOLOR 239, _RGBA32(252, 108, 133, 255)
+    _PALETTECOLOR 240, _RGBA32(205, 164, 222, 255)
+    _PALETTECOLOR 241, _RGBA32(154, 205, 50, 255)
+    _PALETTECOLOR 242, _RGBA32(255, 174, 66, 255)
+    _DEST D: _SOURCE S
+END SUB
+
+FUNCTION GetDay$ (mm, dd, yyyy) 'use 4 digit year
+    'From Zeller's congruence: https://en.wikipedia.org/wiki/Zeller%27s_congruence
+    IF mm < 3 THEN mm = mm + 12: yyyy = yyyy - 1
+    century = yyyy MOD 100
+    zerocentury = yyyy \ 100
+    result = (dd + INT(13 * (mm + 1) / 5) + century + INT(century / 4) + INT(zerocentury / 4) + 5 * zerocentury) MOD 7
+    SELECT CASE result
+        CASE 0: Day$ = "Saturday"
+        CASE 1: Day$ = "Sunday"
+        CASE 2: Day$ = "Monday"
+        CASE 3: Day$ = "Tuesday"
+        CASE 4: Day$ = "Wednesday"
+        CASE 5: Day$ = "Thursday"
+        CASE 6: Day$ = "Friday"
+    END SELECT
+END FUNCTION

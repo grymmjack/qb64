@@ -1,0 +1,17 @@
+Name: Tania Nabritt
+Age:  52.9    Sex: Female.
+
+Appearance: Handsome/Beautiful.           Skintone: Average
+Eye Color: Brown            Hair Color: Light Brown     Length: Average
+Height:  5 ' 3 "            Weight:  126 lbs.
+
+Social Position: Servant    Wealth: Average
+
+Primary Personalty Trait: Fatalistic
+Secondary Personality Trait: Zealot
+
+ST: 18        KN: 11        WL: 14        HP: 23 
+DX: 17        MY: 13        PR: 17        MM 14 
+CN: 15        SP: 10        LU: 11        SM 13 
+
+*******************************************************************

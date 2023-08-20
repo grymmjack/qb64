@@ -1,0 +1,5 @@
+TYPE MEM_SIMPLE
+    
+END TYPE
+DIM m AS _MEM
+m = _MEMNEW(10)
