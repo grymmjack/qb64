@@ -144,11 +144,14 @@ SUB ARR_STR.new(arr$(), s$)
     count& = 0
     FOR i& = 1 TO LEN(s$)
         t$ = t$ + CHR$(ASC(s$, i&))
-        IF ASC(s$, i&) = ASC(",") OR i& = LEN(s$) THEN 
-            arr$(count&) = t$
+        IF ASC(s$, i&) = ASC(",") THEN 
+            IF i& <> LEN(s$) THEN
+                arr$(count&) = LEFT$(t$, LEN(t$) - 1)
+            END IF
             count& = count& + 1
             t$ = ""
         END IF
+        arr$(count&) = t$
     NEXT i&
 END SUB
 
@@ -180,7 +183,7 @@ END FUNCTION
 FUNCTION ARR_STR.shortest$(arr$())
     DIM AS LONG lb, ub, i, res, sw
     lb& = LBOUND(arr$) : ub& = UBOUND(arr$)
-    res& = 0 : sw& = 0
+    res& = 0 : sw& = 255
     FOR i& = lb& TO ub&
         IF LEN(_TRIM$(arr$(i&))) < sw& THEN
             sw&  = LEN(_TRIM$(arr$(i&)))
@@ -292,6 +295,7 @@ FUNCTION ARR_STR.size&(arr$())
     FOR i& = lb& TO ub&
         n& = n& + LEN(arr$(i&))
     NEXT i&
+    ARR_STR.size& = n&
 END FUNCTION
 
 
@@ -498,17 +502,17 @@ END SUB
 ' Filters a STRING array to only elements between min and max
 ' @param STRING ARRAY source_arr$() array to work on
 ' @param STRING ARRAY dest_arr$() array to store in
-' @param STRING min$ to be greater than or equal to be returned
-' @param STRING max$ to be less than or equal to be returned
+' @param INTEGER min% to be greater than or equal to be returned
+' @param INTEGER max% to be less than or equal to be returned
 '
-SUB ARR_STR.between(source_arr$(), dest_arr$(), min$, max$)
+SUB ARR_STR.between(source_arr$(), dest_arr$(), min%, max%)
     DIM AS LONG lb, ub, i
     DIM tmp AS STRING
     lb& = LBOUND(source_arr$) : ub& = UBOUND(source_arr$)
     DIM work_arr(0) AS STRING
     FOR i& = lb& TO ub&
-        IF source_arr$(i&) >= min$ _
-        AND source_arr$(i&) <= max$ THEN
+        IF VAL(source_arr$(i&)) >= min% _
+        AND VAL(source_arr$(i&)) <= max% THEN
             CALL ARR_STR.push(work_arr$(), source_arr$(i&))
         END IF
     NEXT i&
