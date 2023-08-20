@@ -1,8 +1,8 @@
 
 '{Q} = actual type used in syntax uppercase         _BYTE       _UNSIGNED _BYTE     INTEGER     _UNSIGNED INTEGER   LONG    _UNSIGNED LONG  _INTEGER64  _UNSIGNED _INTEGER64    SINGLE  DOUBLE  _FLOAT
 '{q} = actual type used in syntax as lowercase      _byte       _unsigned _byte     integer     _unsigned integer   long    _unsigned long  _integer64  _unsigned _integer64    single  double  _float
-'{UT} = uppercase type full name                    BYTE        UNSIGNED BYTE       INTEGER     UNSIGNED INTEGER    LONG    UNSIGNED LONG   INTEGER64   UNSIGNED INTEGER64      SINGLE  DOUBLE  FLOAT
-'{LT} = lowercase type full name                    byte        unsigned byte       integer     unsigned integer    long    unsigned long   integer64   unsigned integer64      single  double  float
+'{UT} = uppercase type full name identifier         BYTE        UBYTE               INTEGER     UNSIGNED INTEGER    LONG    ULONG           INTEGER64   UINT64                  SINGLE  DOUBLE  FLOAT
+'{LT} = lowercase type full name identifier         byte        ubyte               integer     unsigned integer    long    ulong           integer64   uint64                  single  double  float
 '{SY} = sigil                                       %%          ~%%                 %           ~%                  &       ~&              &&          ~&&                     !       #       ##
 '{l} = lowercase abbreviation                       byte        ubyte               int         uint                long    ulong           int64       uint64                  sng     dbl     flt
 '{u} = uppercase appreviation                       BYTE        UBYTE               INT         UINT                LONG    ULONG           INT64       UINT64                  SNG     DBL     FLT
@@ -11,8 +11,8 @@
 
 '{Q} = actual type used in syntax uppercase         STRING
 '{q} = actual type used in syntax as lowercase      string
-'{UT} = uppercase type full name                    STRING
-'{LT} = lowercase type full name                    string
+'{UT} = uppercase type full name identifier         STRING
+'{LT} = lowercase type full name identifier         string
 '{SY} = sigil                                       $
 '{l} = lowercase abbreviation                       str
 '{u} = uppercase appreviation                       STR
@@ -21,13 +21,6 @@
 
 '$DYNAMIC
 OPTION _EXPLICIT
-DIM CANVAS AS LONG
-DIM temp_{l} AS {Q}
-CANVAS& = _NEWIMAGE(800, 600, 32)
-SCREEN CANVAS&
-DIM {LT}s(0) AS {UT}
-DIM dest_{LT}s(1) AS {UT}
-DIM AS {UT} {t}1, {t}2
 
 
 
@@ -39,24 +32,24 @@ DIM AS {UT} {t}1, {t}2
 ' @param INTEGER start_idx% starting index to use as slice range
 ' @param INTEGER count% number of slices - if negative, backwards from index
 '
-SUB ARR_BYTE.slice(source_arr%%(), dest_arr%%(), start_idx%, count%)
+SUB ARR_{u}.slice(source_arr{SY}(), dest_arr{SY}(), start_idx%, count%)
     DIM AS LONG ub, lb, i, n
-    lb& = LBOUND(source_arr%%) : ub& = UBOUND(source_arr%%)
+    lb& = LBOUND(source_arr{SY}) : ub& = UBOUND(source_arr{SY})
     IF start_idx% < lb& OR start_idx% + count% > ub& THEN EXIT SUB ' out of range
     IF ub& - lb& < count% THEN EXIT SUB ' too many and not enough
-    REDIM dest_arr(0 TO ABS(count%)) AS _BYTE
+    REDIM dest_arr(0 TO ABS(count%)) AS {Q}
     IF SGN(count%) = -1 THEN
         IF ((start_idx% - 1) - ABS(count%)) < 0 THEN EXIT SUB ' out of range
         n& = 0
         FOR i& = (start_idx% - 1) TO ((start_idx% - 1) - ABS(count%)) STEP -1
-            dest_arr%%(n&) = source_arr%%(i&)
+            dest_arr{SY}(n&) = source_arr{SY}(i&)
             n& = n& + 1
         NEXT i&
     ELSE
         IF ((start_idx% + 1) + ABS(count%)) > (ub& - lb&) THEN EXIT SUB ' out of range
         n& = 0
         FOR i& = start_idx% + 1 TO ((start_idx% + 1) + count%) STEP 1
-            dest_arr%%(n&) = source_arr%%(i&)
+            dest_arr{SY}(n&) = source_arr{SY}(i&)
             n& = n& + 1
         NEXT i&
     END IF
@@ -64,119 +57,119 @@ END SUB
 
 
 ''
-' Push a byte onto the end of a _BYTE array
-' @param _BYTE arr%%() array to push into
-' @param _BYTE value%% of byte to push
+' Push a {LT} onto the end of a {Q} array
+' @param {Q} arr{SY}() array to push into
+' @param {Q} value{SY} of byte to push
 '
-SUB ARR_BYTE.push(arr%%(), value%%)
+SUB ARR_{UT}.push(arr{SY}(), value{SY})
     DIM AS LONG ub, lb
-    lb& = LBOUND(arr%%) : ub& = UBOUND(arr%%)
-    REDIM _PRESERVE arr(lb& TO (ub& + 1)) AS _BYTE
-    arr%%(ub& + 1) = value%%
+    lb& = LBOUND(arr{SY}) : ub& = UBOUND(arr{SY})
+    REDIM _PRESERVE arr(lb& TO (ub& + 1)) AS {Q}
+    arr{SY}(ub& + 1) = value{SY}
 END SUB
 
 
 ''
-' Pop a byte from the end of a _BYTE array
-' @param _BYTE arr%%() array to pop from
-' @param _BYTE var%% of byte to store popped byte
+' Pop a {LT} from the end of a {Q} array
+' @param {Q} arr{SY}() array to pop from
+' @param {Q} var{SY} of {LT} to store popped {LT}
 '
-SUB ARR_BYTE.pop(arr%%(), var%%)
+SUB ARR_{UT}.pop(arr{SY}(), var{SY})
     DIM AS LONG ub, lb
-    lb& = LBOUND(arr%%) : ub& = UBOUND(arr%%)
-    var%% = arr%%(ub&)
-    REDIM _PRESERVE arr(lb& TO (ub& - 1)) AS _BYTE
+    lb& = LBOUND(arr{SY}) : ub& = UBOUND(arr{SY})
+    var{SY} = arr{SY}(ub&)
+    REDIM _PRESERVE arr(lb& TO (ub& - 1)) AS {Q}
 END SUB
 
 
 ''
-' Pop a byte from the beginning of a _BYTE array
-' @param _BYTE arr%%() array to pop from
-' @param _BYTE var%% of byte to store popped byte
+' Pop a {LT} from the beginning of a {Q} array
+' @param {Q} arr{SY}() array to pop from
+' @param {Q} var{SY} of {LT} to store popped {LT}
 '
-SUB ARR_BYTE.shift(arr%%(), var%%)
+SUB ARR_{UT}.shift(arr{SY}(), var{SY})
     DIM AS LONG ub, lb, i
-    lb& = LBOUND(arr%%) : ub& = UBOUND(arr%%)
-    var%% = arr%%(lb&)
+    lb& = LBOUND(arr{SY}) : ub& = UBOUND(arr{SY})
+    var{SY} = arr{SY}(lb&)
     FOR i& = lb& TO ub& - 1
-        arr%%(i&) = arr%%(i& + 1) 
+        arr{SY}(i&) = arr{SY}(i& + 1) 
     NEXT i&
-    REDIM _PRESERVE arr(lb& + 1 TO ub&) AS _BYTE
+    REDIM _PRESERVE arr(lb& + 1 TO ub&) AS {Q}
 END SUB
 
 
 ''
-' Push a byte into the beginning of a _BYTE array
-' @param _BYTE arr%%() array to push into
-' @param _BYTE value%% of byte to push
+' Push a {LT} into the beginning of a {Q} array
+' @param {Q} arr{SY}() array to push into
+' @param {Q} value{SY} of {LT} to push
 '
-SUB ARR_BYTE.unshift(arr%%(), value%%)
+SUB ARR_{UT}.unshift(arr{SY}(), value{SY})
     DIM AS LONG ub, lb, i
-    lb& = LBOUND(arr%%) : ub& = UBOUND(arr%%)
-    DIM work(lb& TO ub&) AS _BYTE
-    CALL ARR_BYTE.copy(arr%%(), work%%())
-    REDIM _PRESERVE arr(lb& TO (ub& + 1)) AS _BYTE
+    lb& = LBOUND(arr{SY}) : ub& = UBOUND(arr{SY})
+    DIM work(lb& TO ub&) AS {Q}
+    CALL ARR_{UT}.copy(arr{SY}(), work{SY}())
+    REDIM _PRESERVE arr(lb& TO (ub& + 1)) AS {Q}
     FOR i& = lb& + 1 TO ub& + 1
-        arr%%(i&) = work%%(i&-1)
+        arr{SY}(i&) = work{SY}(i& - 1)
     NEXT i&
-    arr%%(lb&) = value%%
+    arr{SY}(lb&) = value{SY}
 END SUB
 
 
 ''
-' Copy an array of _BYTEs to another _BYTE array
-' @param _BYTE ARRAY source_arr%() source array to copy
-' @param _BYTE ARRAY dest_arr%() dest array to copy into
+' Copy an array of {UT}s to another {Q} array
+' @param {Q} ARRAY source_arr{SY}() source array to copy
+' @param {Q} ARRAY dest_arr{SY}() dest array to copy into
 '
-SUB ARR_BYTE.copy(source_arr%%(), dest_arr%%())
+SUB ARR_{UT}BYTE.copy(source_arr{SY}(), dest_arr{SY}())
     DIM AS LONG ub, lb, i
-    lb& = LBOUND(source_arr%%) : ub& = UBOUND(source_arr%%)
-    REDIM dest_arr(lb& TO ub&) AS _BYTE
+    lb& = LBOUND(source_arr{SY}) : ub& = UBOUND(source_arr{SY})
+    REDIM dest_arr(lb& TO ub&) AS {Q}
     FOR i& = lb& TO ub&
-        dest_arr%%(i&) = source_arr%%(i&)
+        dest_arr{SY}(i&) = source_arr{SY}(i&)
     NEXT i&
 END SUB
 
 
 ''
-' Joins an array of _BYTEs as a string
-' @param _BYTE ARRAY arr%%() to get as a string
+' Joins an array of {UT}s as a string
+' @param {Q} ARRAY arr{SY}() to get as a string
 ' @param STRING s$ to store stringified array in
 ' 
-SUB ARR_BYTE.join(arr%%(), s$)
+SUB ARR_{UT}.join(arr{SY}(), s$)
     DIM AS LONG ub, lb, i
     s$ = ""
-    lb& = LBOUND(arr%%) : ub& = UBOUND(arr%%)
+    lb& = LBOUND(arr{SY}) : ub& = UBOUND(arr{SY})
     FOR i& = lb& TO ub&
-        s$ = s$ + _TRIM$(STR$(arr%%(i&))) + ", "
+        s$ = s$ + _TRIM$(STR$(arr{SY}(i&))) + ", "
     NEXT i&
     ' remove trailing comma
-    s$ = MID$(s$, 1, (LEN(s$)-LEN(", ")) )
+    s$ = MID$(s$, 1, (LEN(s$)-LEN(", ")))
 END SUB
 
 
 ''
-' Create a new _BYTE array using string of bytes seperated by commas
-' @param _BYTE ARRAY arr%%() to store the bytes in
-' @param STRING s$ string of comma separated bytes
+' Create a new {Q} array using string of {LT}s seperated by commas
+' @param {Q} ARRAY arr{SY}() to store the {LT}s in
+' @param STRING s$ string of comma separated {LT}s
 '
-SUB ARR_BYTE.new(arr%%(), s$)
+SUB ARR_{UT}.new(arr{SY}(), s$)
     DIM AS LONG i, count
     DIM t AS STRING
     count& = 0
     FOR i& = 1 TO LEN(s$)
         IF ASC(s$, i&) = ASC(",") THEN count& = count& + 1
     NEXT i&
-    REDIM arr(0 TO count&) AS _BYTE
+    REDIM arr(0 TO count&) AS {Q}
     IF count& = 0 THEN
-        arr%%(0) = VAL(s$)
+        arr{SY}(0) = VAL(s$)
         EXIT SUB
     END IF
     count& = 0
     FOR i& = 1 TO LEN(s$)
         t$ = t$ + CHR$(ASC(s$, i&))
         IF ASC(s$, i&) = ASC(",") OR i& = LEN(s$) THEN 
-            arr%%(count&) = VAL(t$)
+            arr{SY}(count&) = VAL(t$)
             count& = count& + 1
             t$ = ""
         END IF
@@ -185,156 +178,156 @@ END SUB
 
 
 ''
-' Return the visually longest element of a _BYTE array
-' @param _BYTE ARRAY arr%%() to check in
-' @return _BYTE value of visually longest element
+' Return the visually longest element of a {Q} array
+' @param {Q} ARRAY arr{SY}() to check in
+' @return {Q} value of visually longest element
 '
-FUNCTION ARR_BYTE.longest%%(arr%%())
+FUNCTION ARR_{UT}.longest{SY}(arr{SY}())
     DIM AS LONG lb, ub, i, res, lw
-    lb& = LBOUND(arr%%) : ub& = UBOUND(arr%%)
+    lb& = LBOUND(arr{SY}) : ub& = UBOUND(arr{SY})
     res& = 0 : lw& = 0
     FOR i& = lb& TO ub&
-        IF LEN(_TRIM$(STR$(arr%%(i&)))) > lw& THEN
-            lw&  = LEN(_TRIM$(STR$(arr%%(i&))))
+        IF LEN(_TRIM$(STR$(arr{SY}(i&)))) > lw& THEN
+            lw&  = LEN(_TRIM$(STR$(arr{SY}(i&))))
             res& = i&
         END IF
     NEXT i&
-    ARR_BYTE.longest%% = arr%%(res&)
+    ARR_{UT}.longest{SY} = arr{SY}(res&)
 END FUNCTION
 
 
 ''
-' Perform some math on every element of a _BYTE array
-' @param _BYTE ARRAY source_arr%%() to do math on
-' @param _BYTE ARRAY dest_arr%%() to store results in
+' Perform some math on every element of a {Q} array
+' @param {Q} ARRAY source_arr{SY}() to do math on
+' @param {Q} ARRAY dest_arr{SY}() to store results in
 ' @param STRING op$ one of:
 '                          and   or    xor   shl   shr 
 ' "+", "-", "*", "\", "&&", "||", "!!", "<<", ">>"
-' @param _BYTE value%% to use for operand
+' @param {Q} value{SY} to use for operand
 '
-SUB ARR_BYTE.math(source_arr%%(), dest_arr%%(), op$, value%%)
+SUB ARR_{UT}.math(source_arr{SY}(), dest_arr{SY}(), op$, value{SY})
     DIM AS LONG lb, ub, i
-    lb& = LBOUND(source_arr%%) : ub& = UBOUND(source_arr%%)
-    REDIM dest_arr(lb& TO ub&) AS _BYTE
+    lb& = LBOUND(source_arr{SY}) : ub& = UBOUND(source_arr{SY})
+    REDIM dest_arr(lb& TO ub&) AS {Q}
     FOR i& = lb& TO ub&
         SELECT CASE op$
             CASE "+":
-                dest_arr%%(i&) = source_arr%%(i&) + value%%
+                dest_arr{SY}(i&) = source_arr{SY}(i&) + value{SY}
             CASE "-":
-                dest_arr%%(i&) = source_arr%%(i&) - value%%
+                dest_arr{SY}(i&) = source_arr{SY}(i&) - value{SY}
             CASE "*":
-                dest_arr%%(i&) = source_arr%%(i&) * value%%
+                dest_arr{SY}(i&) = source_arr{SY}(i&) * value{SY}
             CASE "\":
-                IF value%% > 0 THEN
-                    dest_arr%%(i&) = source_arr%%(i&) \ value%%
+                IF value{SY} > 0 THEN
+                    dest_arr{SY}(i&) = source_arr{SY}(i&) \ value{SY}
                 END IF
             CASE "&&":
-                dest_arr%%(i&) = source_arr%%(i&) AND value%%
+                dest_arr{SY}(i&) = source_arr{SY}(i&) AND value{SY}
             CASE "||":
-                dest_arr%%(i&) = source_arr%%(i&) OR value%%
+                dest_arr{SY}(i&) = source_arr{SY}(i&) OR value{SY}
             CASE "!!":
-                dest_arr%%(i&) = source_arr%%(i&) XOR value%%
+                dest_arr{SY}(i&) = source_arr{SY}(i&) XOR value{SY}
             CASE "<<":
-                dest_arr%%(i&) = _SHL(source_arr%%(i&), value%%)
+                dest_arr{SY}(i&) = _SHL(source_arr{SY}(i&), value{SY})
             CASE ">>":
-                dest_arr%%(i&) = _SHR(source_arr%%(i&), value%%)
+                dest_arr{SY}(i&) = _SHR(source_arr{SY}(i&), value{SY})
         END SELECT
     NEXT i&
 END SUB
 
 
 ''
-' Return the minimum element value in _BYTE array
-' @param _BYTE ARRAY arr%%() to check in
-' @return _BYTE minimum value found
+' Return the minimum element value in {Q} array
+' @param {Q} ARRAY arr{SY}() to check in
+' @return {Q} minimum value found
 '
-FUNCTION ARR_BYTE.min%%(arr%%())
+FUNCTION ARR_{UT}.min{SY}(arr{SY}())
     DIM AS LONG lb, ub, i
-    DIM AS _BYTE s
-    lb& = LBOUND(arr%%) : ub& = UBOUND(arr%%)
-    s%% = 127
+    DIM AS {Q} s
+    lb& = LBOUND(arr{SY}) : ub& = UBOUND(arr{SY})
+    s{SY} = 127
     FOR i& = lb& TO ub&
-        IF arr%%(i&) < s%% THEN
-            s%% = arr%%(i&)
+        IF arr{SY}(i&) < s{SY} THEN
+            s{SY} = arr{SY}(i&)
         END IF
     NEXT i&
-    ARR_BYTE.min%% = s%%
+    ARR_{UT}.min{SY} = s{SY}
 END FUNCTION
 
 
 ''
-' Return the maximum element value in _BYTE array
-' @param _BYTE ARRAY arr%%() to check in
-' @return _BYTE maximum value found
+' Return the maximum element value in {Q} array
+' @param {Q} ARRAY arr{SY}() to check in
+' @return {Q} maximum value found
 '
-FUNCTION ARR_BYTE.max%%(arr%%())
+FUNCTION ARR_{UT}.max{SY}(arr{SY}())
     DIM AS LONG lb, ub, i
-    DIM AS _BYTE s
-    lb& = LBOUND(arr%%) : ub& = UBOUND(arr%%)
-    s%% = 0
+    DIM AS {Q} s
+    lb& = LBOUND(arr{SY}) : ub& = UBOUND(arr{SY})
+    s{SY} = 0
     FOR i& = lb& TO ub&
-        IF arr%%(i&) > s%% THEN
-            s%% = arr%%(i&)
+        IF arr{SY}(i&) > s{SY} THEN
+            s{SY} = arr{SY}(i&)
         END IF
     NEXT i&
-    ARR_BYTE.max%% = s%%
+    ARR_{UT}.max{SY} = s{SY}
 END FUNCTION
 
 
 ''
-' Return the visually shortest element of a _BYTE array
-' @param _BYTE ARRAY arr%%() to check in
-' @return _BYTE value of visually shortest element
+' Return the visually shortest element of a {Q} array
+' @param {Q} ARRAY arr{SY}() to check in
+' @return {Q} value of visually shortest element
 '
-FUNCTION ARR_BYTE.shortest%%(arr%%())
+FUNCTION ARR_{UT}.shortest{SY}(arr{SY}())
     DIM AS LONG lb, ub, i, res, sw
-    lb& = LBOUND(arr%%) : ub& = UBOUND(arr%%)
+    lb& = LBOUND(arr{SY}) : ub& = UBOUND(arr{SY})
     res& = 0 : sw& = 0
     FOR i& = lb& TO ub&
-        IF LEN(_TRIM$(STR$(arr%%(i&)))) < sw& THEN
-            sw&  = LEN(_TRIM$(STR$(arr%%(i&))))
+        IF LEN(_TRIM$(STR$(arr{SY}(i&)))) < sw& THEN
+            sw&  = LEN(_TRIM$(STR$(arr{SY}(i&))))
             res& = i&
         END IF
     NEXT i&
-    ARR_BYTE.shortest%% = arr%%(res&)
+    ARR_{UT}.shortest{SY} = arr{SY}(res&)
 END FUNCTION
 
 
 ''
-' Return the first element of a _BYTE array
-' @param _BYTE ARRAY arr%%() to check in
-' @return _BYTE value of first element
+' Return the first element of a {Q} array
+' @param {Q} ARRAY arr{SY}() to check in
+' @return {Q} value of first element
 '
-FUNCTION ARR_BYTE.first%%(arr%%())
-    ARR_BYTE.first%% = arr%%(LBOUND(arr%%))
+FUNCTION ARR_{UT}.first{SY}(arr{SY}())
+    ARR_{UT}.first{SY} = arr{SY}(LBOUND(arr{SY}))
 END FUNCTION
 
 
 ''
-' Return the last element of a _BYTE array
-' @param _BYTE ARRAY arr%%() to check in
-' @return _BYTE value of last element
+' Return the last element of a {Q} array
+' @param {Q} ARRAY arr{SY}() to check in
+' @return {Q} value of last element
 '
-FUNCTION ARR_BYTE.last%%(arr%%())
-    ARR_BYTE.last%% = arr%%(UBOUND(arr%%))
+FUNCTION ARR_{UT}.last{SY}(arr{SY}())
+    ARR_{UT}.last{SY} = arr{SY}(UBOUND(arr{SY}))
 END FUNCTION
 
 
 ''
-' Return every nth array element of a _BYTE array
-' @param _BYTE ARRAY source_arr%%() to get from
-' @param _BYTE ARRAY dest_arr%%() to store in
+' Return every nth array element of a {Q} array
+' @param {Q} ARRAY source_arr{SY}() to get from
+' @param {Q} ARRAY dest_arr{SY}() to store in
 ' @param INTEGER nth% element
 '
-SUB ARR_BYTE.nth(source_arr%%(), dest_arr%%(), nth%)
+SUB ARR_{UT}.nth(source_arr{SY}(), dest_arr{SY}(), nth%)
     DIM AS LONG lb, ub, i, n
-    lb& = LBOUND(source_arr%%) : ub& = UBOUND(source_arr%%)
+    lb& = LBOUND(source_arr{SY}) : ub& = UBOUND(source_arr{SY})
     n& = (ub& - lb&) \ nth%
-    REDIM dest_arr(n&) AS _BYTE
+    REDIM dest_arr(n&) AS {Q}
     n& = 0
     FOR i& = lb& to ub&
         IF i& MOD nth% = 0 THEN
-            dest_arr%%(n&) = source_arr%%(i&)
+            dest_arr{SY}(n&) = source_arr{SY}(i&)
             n& = n& + 1
         END IF
     NEXT i&
@@ -342,428 +335,428 @@ END SUB
 
 
 ''
-' Checks if value exists in _BYTE array
-' @param _BYTE ARRAY arr%%() to check in
-' @param _BYTE value%% value to check for
+' Checks if value exists in {Q} array
+' @param {Q} ARRAY arr{SY}() to check in
+' @param {Q} value{SY} value to check for
 ' @return INTEGER -1 if found or 0 if not found
 '
-FUNCTION ARR_BYTE.in%(arr%%(), value%%)
+FUNCTION ARR_{UT}.in%(arr{SY}(), value{SY})
     DIM AS LONG lb, ub, i
-    lb& = LBOUND(arr%%) : ub& = UBOUND(arr%%)
+    lb& = LBOUND(arr{SY}) : ub& = UBOUND(arr{SY})
     FOR i& = lb& TO ub&
-        IF arr%%(i&) = value%% THEN
-            ARR_BYTE.in% = -1
+        IF arr{SY}(i&) = value{SY} THEN
+            ARR_{UT}.in% = -1
             EXIT FUNCTION
         END IF
     NEXT i&
-    ARR_BYTE.in% = 0
+    ARR_{UT}.in% = 0
 END FUNCTION
 
 
 ''
-' Checks if value exists in _BYTE array and returns index if found
-' @param _BYTE ARRAY arr%%() to check in
-' @param _BYTE value%% value to check for
+' Checks if value exists in {Q} array and returns index if found
+' @param {Q} ARRAY arr{SY}() to check in
+' @param {Q} value{SY} value to check for
 ' @return INTEGER index of element if found or -1 if not found
 '
-FUNCTION ARR_BYTE.find%(arr%%(), value%%)
+FUNCTION ARR_{UT}.find%(arr{SY}(), value{SY})
     DIM AS LONG lb, ub, i
-    lb& = LBOUND(arr%%) : ub& = UBOUND(arr%%)
+    lb& = LBOUND(arr{SY}) : ub& = UBOUND(arr{SY})
     FOR i& = lb& TO ub&
-        IF arr%%(i&) = value%% THEN
-            ARR_BYTE.find% = i&
+        IF arr{SY}(i&) = value{SY} THEN
+            ARR_{UT}.find% = i&
             EXIT FUNCTION
         END IF
     NEXT i&
-    ARR_BYTE.find% = -1
+    ARR_{UT}.find% = -1
 END FUNCTION
 
 
 ''
-' Return the number of elements in a _BYTE array
-' @param _BYTE ARRAY arr%%() to count
+' Return the number of elements in a {Q} array
+' @param {Q} ARRAY arr{SY}() to count
 ' @return INTEGER number of elements
 '
-FUNCTION ARR_BYTE.count&(arr%%())
-    ARR_BYTE.count& = UBOUND(arr%%) - LBOUND(arr%%)
+FUNCTION ARR_{UT}.count&(arr{SY}())
+    ARR_{UT}.count& = UBOUND(arr{SY}) - LBOUND(arr{SY})
 END FUNCTION
 
 
 ''
-' Return the size of a _BYTE array
-' @param _BYTE ARRAY arr%%() to get size of
+' Return the size of a {Q} array
+' @param {Q} ARRAY arr{SY}() to get size of
 ' @return LONG size in bytes
 '
-FUNCTION ARR_BYTE.size&(arr%%())
-    ARR_BYTE.size& = LEN(arr%%())
+FUNCTION ARR_{UT}.size&(arr{SY}())
+    ARR_{UT}.size& = LEN(arr{SY}())
 END FUNCTION
 
 
 ''
-' Reverses the elements of a _BYTE array
-' @param _BYTE ARRAY source_arr%%() to reverse
-' @param _BYTE ARRAY dest_arr%%() to store reversed array in
+' Reverses the elements of a {Q} array
+' @param {Q} ARRAY source_arr{SY}() to reverse
+' @param {Q} ARRAY dest_arr{SY}() to store reversed array in
 '
-SUB ARR_BYTE.reverse(source_arr%%(), dest_arr%%())
+SUB ARR_{UT}.reverse(source_arr{SY}(), dest_arr{SY}())
     DIM AS LONG lb, ub, i, n
-    lb& = LBOUND(source_arr%%) : ub& = UBOUND(source_arr%%)
-    REDIM dest_arr(0 TO (ub& - lb&)) AS _BYTE
+    lb& = LBOUND(source_arr{SY}) : ub& = UBOUND(source_arr{SY})
+    REDIM dest_arr(0 TO (ub& - lb&)) AS {Q}
     n& = 0
     FOR i& = ub& TO lb& STEP -1
-        dest_arr%%(n&) = source_arr%%(i&)
+        dest_arr{SY}(n&) = source_arr{SY}(i&)
         n& = n& + 1
     NEXT i&
 END SUB
 
 
 ''
-' Returns a random byte from a _BYTE array
-' @param _BYTE ARRAY arr%%() array to get random element from
-' @return _BYTE random element
+' Returns a random {LT} from a {Q} array
+' @param {Q} ARRAY arr{SY}() array to get random element from
+' @return {Q} random element
 '
-FUNCTION ARR_BYTE.random%%(arr%%())
+FUNCTION ARR_{UT}.random{SY}(arr{SY}())
     DIM AS LONG lb, ub
-    lb& = LBOUND(arr%%) : ub& = UBOUND(arr%%)
+    lb& = LBOUND(arr{SY}) : ub& = UBOUND(arr{SY})
     RANDOMIZE TIMER 
-    ARR_BYTE.random%% = arr%%(INT(RND * (ub& - lb&)) + 1)
+    ARR_{UT}.random{SY} = arr{SY}(INT(RND * (ub& - lb&)) + 1)
 END FUNCTION
 
 
 ''
-' Returns the sum of all elements in a _BYTE array
-' @param _BYTE ARRAY arr%%() array to get some for
+' Returns the sum of all elements in a {Q} array
+' @param {Q} ARRAY arr{SY}() array to get some for
 ' @return LONG sum of all elements
 '
-FUNCTION ARR_BYTE.sum&(arr%%())
+FUNCTION ARR_{UT}.sum&(arr{SY}())
     DIM AS LONG lb, ub, i
     DIM sum AS LONG
-    lb& = LBOUND(arr%%) : ub& = UBOUND(arr%%)
+    lb& = LBOUND(arr{SY}) : ub& = UBOUND(arr{SY})
     FOR i& = lb& TO ub&
-        sum& = sum& + arr%%(i&)
+        sum& = sum& + arr{SY}(i&)
     NEXT i&
-    ARR_BYTE.sum& = sum&
+    ARR_{UT}.sum& = sum&
 END FUNCTION
 
 
 ''
-' Returns the average value of elements in a _BYTE array
-' @param _BYTE ARRAY arr%%() array to get average for
+' Returns the average value of elements in a {Q} array
+' @param {Q} ARRAY arr{SY}() array to get average for
 ' @return LONG average of elements
 '
-FUNCTION ARR_BYTE.avg&(arr%%())
+FUNCTION ARR_{UT}.avg&(arr{SY}())
     DIM AS LONG lb, ub, i
     DIM sum AS LONG
-    lb& = LBOUND(arr%%) : ub& = UBOUND(arr%%)
+    lb& = LBOUND(arr{SY}) : ub& = UBOUND(arr{SY})
     FOR i& = lb& TO ub&
-        sum& = sum& + arr%%(i&)
+        sum& = sum& + arr{SY}(i&)
     NEXT i&
-    ARR_BYTE.avg& = sum& / (ub& - lb&)
+    ARR_{UT}.avg& = sum& / (ub& - lb&)
 END FUNCTION
 
 
 ''
-' Shuffle the elements of a _BYTE array
-' @param _BYTE ARRAY source_arr%%() to shuffle
-' @param _BYTE ARRAY dest_arr%%() to store shuffled array in
+' Shuffle the elements of a {Q} array
+' @param {Q} ARRAY source_arr{SY}() to shuffle
+' @param {Q} ARRAY dest_arr{SY}() to store shuffled array in
 '
-SUB ARR_BYTE.shuffle(source_arr%%(), dest_arr%%())
+SUB ARR_{UT}.shuffle(source_arr{SY}(), dest_arr{SY}())
     DIM AS LONG lb, ub, i, count
-    lb& = LBOUND(source_arr%%) : ub& = UBOUND(source_arr%%)
+    lb& = LBOUND(source_arr{SY}) : ub& = UBOUND(source_arr{SY})
     count& = ub& - lb&
-    REDIM dest_arr(0 TO count&) AS _BYTE
-    CALL ARR_BYTE.copy(source_arr%%(), dest_arr%%())
+    REDIM dest_arr(0 TO count&) AS {Q}
+    CALL ARR_{UT}.copy(source_arr{SY}(), dest_arr{SY}())
     RANDOMIZE TIMER 
     FOR i& = 0 TO count&
-        SWAP dest_arr%%(i&), dest_arr%%(lb& + RND * (ub& - lb&)) 
+        SWAP dest_arr{SY}(i&), dest_arr{SY}(lb& + RND * (ub& - lb&)) 
     NEXT i&
 END SUB
 
 
 ''
-' Makes a _BYTE array contain only unique values
-' @param _BYTE ARRAY source_arr%%() array to get uniques for
-' @param _BYTE ARRAY dest_arr%%() array to store uniques in
+' Makes a {Q} array contain only unique values
+' @param {Q} ARRAY source_arr{SY}() array to get uniques for
+' @param {Q} ARRAY dest_arr{SY}() array to store uniques in
 '
-SUB ARR_BYTE.unique(source_arr%%(), dest_arr%%())
+SUB ARR_{UT}.unique(source_arr{SY}(), dest_arr{SY}())
     DIM AS LONG lb, ub, i
-    DIM tmp AS _BYTE
-    lb& = LBOUND(source_arr%%) : ub& = UBOUND(source_arr%%)
-    DIM work_arr(0) AS _BYTE
+    DIM tmp AS {Q}
+    lb& = LBOUND(source_arr{SY}) : ub& = UBOUND(source_arr{SY})
+    DIM work_arr(0) AS {Q}
     FOR i& = lb& TO ub&
-        IF NOT ARR_BYTE.in%(work_arr%%(), source_arr%%(i&)) THEN
-            CALL ARR_BYTE.push(work_arr%%(), source_arr%%(i&))
+        IF NOT ARR_{UT}.in%(work_arr{SY}(), source_arr{SY}(i&)) THEN
+            CALL ARR_{UT}.push(work_arr{SY}(), source_arr{SY}(i&))
         END IF
     NEXT i&
-    CALL ARR_BYTE.shift(work_arr%%(), tmp%%)
-    CALL ARR_BYTE.copy(work_arr%%(), dest_arr%%())
+    CALL ARR_{UT}.shift(work_arr{SY}(), tmp{SY})
+    CALL ARR_{UT}.copy(work_arr{SY}(), dest_arr{SY}())
 END SUB
 
 
 ''
-' Filters a _BYTE array to only elements greater than value
-' @param _BYTE ARRAY source_arr%%() array to work on
-' @param _BYTE ARRAY dest_arr%%() array to store in
-' @param _BYTE value%% to be greater than to be returned
+' Filters a {Q} array to only elements greater than value
+' @param {Q} ARRAY source_arr{SY}() array to work on
+' @param {Q} ARRAY dest_arr{SY}() array to store in
+' @param {Q} value{SY} to be greater than to be returned
 '
-SUB ARR_BYTE.gt(source_arr%%(), dest_arr%%(), value%%)
+SUB ARR_{UT}.gt(source_arr{SY}(), dest_arr{SY}(), value{SY})
     DIM AS LONG lb, ub, i
-    DIM tmp AS _BYTE
-    lb& = LBOUND(source_arr%%) : ub& = UBOUND(source_arr%%)
-    DIM work_arr(0) AS _BYTE
+    DIM tmp AS {Q}
+    lb& = LBOUND(source_arr{SY}) : ub& = UBOUND(source_arr{SY})
+    DIM work_arr(0) AS {Q}
     FOR i& = lb& TO ub&
-        IF source_arr%%(i&) > value%% THEN
-            CALL ARR_BYTE.push(work_arr%%(), source_arr%%(i&))
+        IF source_arr{SY}(i&) > value{SY} THEN
+            CALL ARR_{UT}.push(work_arr{SY}(), source_arr{SY}(i&))
         END IF
     NEXT i&
-    CALL ARR_BYTE.shift(work_arr%%(), tmp%%)
-    CALL ARR_BYTE.copy(work_arr%%(), dest_arr%%())
+    CALL ARR_{UT}.shift(work_arr{SY}(), tmp{SY})
+    CALL ARR_{UT}.copy(work_arr{SY}(), dest_arr{SY}())
 END SUB
 
 
 ''
-' Filters a _BYTE array to only elements greater than or equal to value
-' @param _BYTE ARRAY source_arr%%() array to work on
-' @param _BYTE ARRAY dest_arr%%() array to store in
-' @param _BYTE value%% to be greater than or equal to be returned
+' Filters a {Q} array to only elements greater than or equal to value
+' @param {Q} ARRAY source_arr{SY}() array to work on
+' @param {Q} ARRAY dest_arr{SY}() array to store in
+' @param {Q} value{SY} to be greater than or equal to be returned
 '
-SUB ARR_BYTE.gte(source_arr%%(), dest_arr%%(), value%%)
+SUB ARR_{UT}.gte(source_arr{SY}(), dest_arr{SY}(), value{SY})
     DIM AS LONG lb, ub, i
-    DIM tmp AS _BYTE
-    lb& = LBOUND(source_arr%%) : ub& = UBOUND(source_arr%%)
-    DIM work_arr(0) AS _BYTE
+    DIM tmp AS {Q}
+    lb& = LBOUND(source_arr{SY}) : ub& = UBOUND(source_arr{SY})
+    DIM work_arr(0) AS {Q}
     FOR i& = lb& TO ub&
-        IF source_arr%%(i&) >= value%% THEN
-            CALL ARR_BYTE.push(work_arr%%(), source_arr%%(i&))
+        IF source_arr{SY}(i&) >= value{SY} THEN
+            CALL ARR_{UT}.push(work_arr{SY}(), source_arr{SY}(i&))
         END IF
     NEXT i&
-    CALL ARR_BYTE.shift(work_arr%%(), tmp%%)
-    CALL ARR_BYTE.copy(work_arr%%(), dest_arr%%())
+    CALL ARR_{UT}.shift(work_arr{SY}(), tmp{SY})
+    CALL ARR_{UT}.copy(work_arr{SY}(), dest_arr{SY}())
 END SUB
 
 
 ''
-' Filters a _BYTE array to only elements less than value
-' @param _BYTE ARRAY source_arr%%() array to work on
-' @param _BYTE ARRAY dest_arr%%() array to store in
-' @param _BYTE value%% to be less than to be returned
+' Filters a {Q} array to only elements less than value
+' @param {Q} ARRAY source_arr{SY}() array to work on
+' @param {Q} ARRAY dest_arr{SY}() array to store in
+' @param {Q} value{SY} to be less than to be returned
 '
-SUB ARR_BYTE.lt(source_arr%%(), dest_arr%%(), value%%)
+SUB ARR_{UT}.lt(source_arr{SY}(), dest_arr{SY}(), value{SY})
     DIM AS LONG lb, ub, i
-    DIM tmp AS _BYTE
-    lb& = LBOUND(source_arr%%) : ub& = UBOUND(source_arr%%)
-    DIM work_arr(0) AS _BYTE
+    DIM tmp AS {Q}
+    lb& = LBOUND(source_arr{SY}) : ub& = UBOUND(source_arr{SY})
+    DIM work_arr(0) AS {Q}
     FOR i& = lb& TO ub&
-        IF source_arr%%(i&) < value%% THEN
-            CALL ARR_BYTE.push(work_arr%%(), source_arr%%(i&))
+        IF source_arr{SY}(i&) < value{SY} THEN
+            CALL ARR_{UT}.push(work_arr{SY}(), source_arr{SY}(i&))
         END IF
     NEXT i&
-    CALL ARR_BYTE.shift(work_arr%%(), tmp%%)
-    CALL ARR_BYTE.copy(work_arr%%(), dest_arr%%())
+    CALL ARR_{UT}.shift(work_arr{SY}(), tmp{SY})
+    CALL ARR_{UT}.copy(work_arr{SY}(), dest_arr{SY}())
 END SUB
 
 
 ''
-' Filters a _BYTE array to only elements less than or equal to value
-' @param _BYTE ARRAY source_arr%%() array to work on
-' @param _BYTE ARRAY dest_arr%%() array to store in
-' @param _BYTE value%% to be less than or equal to be returned
+' Filters a {Q} array to only elements less than or equal to value
+' @param {Q} ARRAY source_arr{SY}() array to work on
+' @param {Q} ARRAY dest_arr{SY}() array to store in
+' @param {Q} value{SY} to be less than or equal to be returned
 '
-SUB ARR_BYTE.lte(source_arr%%(), dest_arr%%(), value%%)
+SUB ARR_{UT}.lte(source_arr{SY}(), dest_arr{SY}(), value{SY})
     DIM AS LONG lb, ub, i
-    DIM tmp AS _BYTE
-    lb& = LBOUND(source_arr%%) : ub& = UBOUND(source_arr%%)
-    DIM work_arr(0) AS _BYTE
+    DIM tmp AS {Q}
+    lb& = LBOUND(source_arr{SY}) : ub& = UBOUND(source_arr{SY})
+    DIM work_arr(0) AS {Q}
     FOR i& = lb& TO ub&
-        IF source_arr%%(i&) <= value%% THEN
-            CALL ARR_BYTE.push(work_arr%%(), source_arr%%(i&))
+        IF source_arr{SY}(i&) <= value{SY} THEN
+            CALL ARR_{UT}.push(work_arr{SY}(), source_arr{SY}(i&))
         END IF
     NEXT i&
-    CALL ARR_BYTE.shift(work_arr%%(), tmp%%)
-    CALL ARR_BYTE.copy(work_arr%%(), dest_arr%%())
+    CALL ARR_{UT}.shift(work_arr{SY}(), tmp{SY})
+    CALL ARR_{UT}.copy(work_arr{SY}(), dest_arr{SY}())
 END SUB
 
 
 ''
-' Finds and replaces values across all elements in a _BYTE ARRAY
-' @param _BYTE ARRAY arr%%() to check in
-' @param _BYTE find%% value to find
-' @param _BYTE replace%% value to replace with if found
+' Finds and replaces values across all elements in a {Q} ARRAY
+' @param {Q} ARRAY arr{SY}() to check in
+' @param {Q} find{SY} value to find
+' @param {Q} replace{SY} value to replace with if found
 '
-SUB ARR_BYTE.replace(arr%%(), find%%, replace%%)
+SUB ARR_{UT}.replace(arr{SY}(), find{SY}, replace{SY})
     DIM AS LONG lb, ub, i
-    lb& = LBOUND(arr%%) : ub& = UBOUND(arr%%)
+    lb& = LBOUND(arr{SY}) : ub& = UBOUND(arr{SY})
     FOR i& = lb& TO ub&
-        IF arr%%(i&) = find%% THEN
-            arr%%(i&) = replace%%
+        IF arr{SY}(i&) = find{SY} THEN
+            arr{SY}(i&) = replace{SY}
         END IF
     NEXT i&
 END SUB
 
 
 ''
-' Inserts a new element into _BYTE array after index
-' @param _BYTE ARRAY arr%%() array to work on
-' @param _BYTE value%% to insert
+' Inserts a new element into {Q} array after index
+' @param {Q} ARRAY arr{SY}() array to work on
+' @param {Q} value{SY} to insert
 ' @param INTEGER index% of element to insert at
 '
-SUB ARR_BYTE.insert(arr%%(), value%%, index%)
+SUB ARR_{UT}.insert(arr{SY}(), value{SY}, index%)
     DIM AS LONG lb, ub, i
-    DIM tmp AS _BYTE
-    DIM work_arr(0) AS _BYTE
-    lb& = LBOUND(arr%%) : ub& = UBOUND(arr%%)
+    DIM tmp AS {Q}
+    DIM work_arr(0) AS {Q}
+    lb& = LBOUND(arr{SY}) : ub& = UBOUND(arr{SY})
     IF index% >= lb& AND index% <= ub& THEN
         ' build new array up to index
         FOR i& = lb& TO index%
-            CALL ARR_BYTE.push(work_arr%%(), arr%%(i&))
+            CALL ARR_{UT}.push(work_arr{SY}(), arr{SY}(i&))
         NEXT i&
         ' insert new element
-        CALL ARR_BYTE.push(work_arr%%(), value%%)
+        CALL ARR_{UT}.push(work_arr{SY}(), value{SY})
         ' finish building array from index + 1
         FOR i& = index% + 1 TO ub&
-            CALL ARR_BYTE.push(work_arr%%(), arr%%(i&))
+            CALL ARR_{UT}.push(work_arr{SY}(), arr{SY}(i&))
         NEXT i&
-        CALL ARR_BYTE.shift(work_arr%%(), tmp%%)
-        CALL ARR_BYTE.copy(work_arr%%(), arr%%())
+        CALL ARR_{UT}.shift(work_arr{SY}(), tmp{SY})
+        CALL ARR_{UT}.copy(work_arr{SY}(), arr{SY}())
     END IF
 END SUB
 
 
 ''
-' Removes element from a _BYTE array by element index
-' @param _BYTE ARRAY arr%%() array to work on
+' Removes element from a {Q} array by element index
+' @param {Q} ARRAY arr{SY}() array to work on
 ' @param INTEGER index% of element to remove
 '
-SUB ARR_BYTE.remove(arr%%(), index%)
+SUB ARR_{UT}.remove(arr{SY}(), index%)
     DIM AS LONG lb, ub, i
-    DIM tmp AS _BYTE
-    DIM work_arr(0) AS _BYTE
-    lb& = LBOUND(arr%%) : ub& = UBOUND(arr%%)
+    DIM tmp AS {Q}
+    DIM work_arr(0) AS {Q}
+    lb& = LBOUND(arr{SY}) : ub& = UBOUND(arr{SY})
     IF index% >= lb& AND index% <= ub& THEN
         ' build new array up to index
         FOR i& = lb& TO index% - 1
-            CALL ARR_BYTE.push(work_arr%%(), arr%%(i&))
+            CALL ARR_{UT}.push(work_arr{SY}(), arr{SY}(i&))
         NEXT i&
         ' skip elements
         FOR i& = index% + 1 TO ub&
-            CALL ARR_BYTE.push(work_arr%%(), arr%%(i&))
+            CALL ARR_{UT}.push(work_arr{SY}(), arr{SY}(i&))
         NEXT i&
-        CALL ARR_BYTE.shift(work_arr%%(), tmp%%)
-        CALL ARR_BYTE.copy(work_arr%%(), arr%%())
+        CALL ARR_{UT}.shift(work_arr{SY}(), tmp{SY})
+        CALL ARR_{UT}.copy(work_arr{SY}(), arr{SY}())
     END IF
 END SUB
 
 
 ''
-' Filters a _BYTE array to only elements that have odd values
-' @param _BYTE ARRAY source_arr%%() array to work on
-' @param _BYTE ARRAY dest_arr%%() array to store in
+' Filters a {Q} array to only elements that have odd values
+' @param {Q} ARRAY source_arr{SY}() array to work on
+' @param {Q} ARRAY dest_arr{SY}() array to store in
 '
-SUB ARR_BYTE.odd(source_arr%%(), dest_arr%%())
+SUB ARR_{UT}.odd(source_arr{SY}(), dest_arr{SY}())
     DIM AS LONG lb, ub, i
-    DIM tmp AS _BYTE
-    lb& = LBOUND(source_arr%%) : ub& = UBOUND(source_arr%%)
-    DIM work_arr(0) AS _BYTE
+    DIM tmp AS {Q}
+    lb& = LBOUND(source_arr{SY}) : ub& = UBOUND(source_arr{SY})
+    DIM work_arr(0) AS {Q}
     FOR i& = lb& TO ub&
-        IF source_arr%%(i&) MOD 2 <> 0 THEN
-            CALL ARR_BYTE.push(work_arr%%(), source_arr%%(i&))
+        IF source_arr{SY}(i&) MOD 2 <> 0 THEN
+            CALL ARR_{UT}.push(work_arr{SY}(), source_arr{SY}(i&))
         END IF
     NEXT i&
-    CALL ARR_BYTE.shift(work_arr%%(), tmp%%)
-    CALL ARR_BYTE.copy(work_arr%%(), dest_arr%%())
+    CALL ARR_{UT}.shift(work_arr{SY}(), tmp{SY})
+    CALL ARR_{UT}.copy(work_arr{SY}(), dest_arr{SY}())
 END SUB
 
 
 ''
-' Filters a _BYTE array to only elements that have even values
-' @param _BYTE ARRAY source_arr%%() array to work on
-' @param _BYTE ARRAY dest_arr%%() array to store in
+' Filters a {Q} array to only elements that have even values
+' @param {Q} ARRAY source_arr{SY}() array to work on
+' @param {Q} ARRAY dest_arr{SY}() array to store in
 '
-SUB ARR_BYTE.even(source_arr%%(), dest_arr%%())
+SUB ARR_{UT}.even(source_arr{SY}(), dest_arr{SY}())
     DIM AS LONG lb, ub, i
-    DIM tmp AS _BYTE
-    lb& = LBOUND(source_arr%%) : ub& = UBOUND(source_arr%%)
-    DIM work_arr(0) AS _BYTE
+    DIM tmp AS {Q}
+    lb& = LBOUND(source_arr{SY}) : ub& = UBOUND(source_arr{SY})
+    DIM work_arr(0) AS {Q}
     FOR i& = lb& TO ub&
-        IF source_arr%%(i&) MOD 2 = 0 THEN
-            CALL ARR_BYTE.push(work_arr%%(), source_arr%%(i&))
+        IF source_arr{SY}(i&) MOD 2 = 0 THEN
+            CALL ARR_{UT}.push(work_arr{SY}(), source_arr{SY}(i&))
         END IF
     NEXT i&
-    CALL ARR_BYTE.shift(work_arr%%(), tmp%%)
-    CALL ARR_BYTE.copy(work_arr%%(), dest_arr%%())
+    CALL ARR_{UT}.shift(work_arr{SY}(), tmp{SY})
+    CALL ARR_{UT}.copy(work_arr{SY}(), dest_arr{SY}())
 END SUB
 
 
 ''
-' Filters a _BYTE array to only elements that have values evenly divisible by divisor
-' @param _BYTE ARRAY source_arr%%() array to work on
-' @param _BYTE ARRAY dest_arr%%() array to store in
-' @param _BYTE divisor%% for modulo
+' Filters a {Q} array to only elements that have values evenly divisible by divisor
+' @param {Q} ARRAY source_arr{SY}() array to work on
+' @param {Q} ARRAY dest_arr{SY}() array to store in
+' @param {Q} divisor{SY} for modulo
 '
-SUB ARR_BYTE.mod(source_arr%%(), dest_arr%%(), divisor%%)
+SUB ARR_{UT}.mod(source_arr{SY}(), dest_arr{SY}(), divisor{SY})
     DIM AS LONG lb, ub, i
-    DIM tmp AS _BYTE
-    lb& = LBOUND(source_arr%%) : ub& = UBOUND(source_arr%%)
-    DIM work_arr(0) AS _BYTE
+    DIM tmp AS {Q}
+    lb& = LBOUND(source_arr{SY}) : ub& = UBOUND(source_arr{SY})
+    DIM work_arr(0) AS {Q}
     FOR i& = lb& TO ub&
-        IF source_arr%%(i&) MOD divisor%% = 0 THEN
-            CALL ARR_BYTE.push(work_arr%%(), source_arr%%(i&))
+        IF source_arr{SY}(i&) MOD divisor{SY} = 0 THEN
+            CALL ARR_{UT}.push(work_arr{SY}(), source_arr{SY}(i&))
         END IF
     NEXT i&
-    CALL ARR_BYTE.shift(work_arr%%(), tmp%%)
-    CALL ARR_BYTE.copy(work_arr%%(), dest_arr%%())
+    CALL ARR_{UT}.shift(work_arr{SY}(), tmp{SY})
+    CALL ARR_{UT}.copy(work_arr{SY}(), dest_arr{SY}())
 END SUB
 
 
 ''
-' Filters a _BYTE array to only elements between min and max
-' @param _BYTE ARRAY source_arr%%() array to work on
-' @param _BYTE ARRAY dest_arr%%() array to store in
-' @param _BYTE min%% to be greater than or equal to be returned
-' @param _BYTE max%% to be less than or equal to be returned
+' Filters a {Q} array to only elements between min and max
+' @param {Q} ARRAY source_arr{SY}() array to work on
+' @param {Q} ARRAY dest_arr{SY}() array to store in
+' @param {Q} min{SY} to be greater than or equal to be returned
+' @param {Q} max{SY} to be less than or equal to be returned
 '
-SUB ARR_BYTE.between(source_arr%%(), dest_arr%%(), min%%, max%%)
+SUB ARR_{UT}.between(source_arr{SY}(), dest_arr{SY}(), min{SY}, max{SY})
     DIM AS LONG lb, ub, i
-    DIM tmp AS _BYTE
-    lb& = LBOUND(source_arr%%) : ub& = UBOUND(source_arr%%)
-    DIM work_arr(0) AS _BYTE
+    DIM tmp AS {Q}
+    lb& = LBOUND(source_arr{SY}) : ub& = UBOUND(source_arr{SY})
+    DIM work_arr(0) AS {Q}
     FOR i& = lb& TO ub&
-        IF source_arr%%(i&) >= min%% _
-        AND source_arr%%(i&) <= max%% THEN
-            CALL ARR_BYTE.push(work_arr%%(), source_arr%%(i&))
+        IF source_arr{SY}(i&) >= min{SY} _
+        AND source_arr{SY}(i&) <= max{SY} THEN
+            CALL ARR_{UT}.push(work_arr{SY}(), source_arr{SY}(i&))
         END IF
     NEXT i&
-    CALL ARR_BYTE.shift(work_arr%%(), tmp%%)
-    CALL ARR_BYTE.copy(work_arr%%(), dest_arr%%())
+    CALL ARR_{UT}.shift(work_arr{SY}(), tmp{SY})
+    CALL ARR_{UT}.copy(work_arr{SY}(), dest_arr{SY}())
 END SUB
 
 
 ''
-' Sorts _BYTE array in ascending order
-' @param _BYTE ARRAY source_arr%%() array to sort
-' @param _BYTE ARRAY dest_arr%%() array to store sorted in
+' Sorts {Q} array in ascending order
+' @param {Q} ARRAY source_arr{SY}() array to sort
+' @param {Q} ARRAY dest_arr{SY}() array to store sorted in
 '
-SUB ARR_BYTE.sort(source_arr%%(), dest_arr%%())
+SUB ARR_{UT}.sort(source_arr{SY}(), dest_arr{SY}())
     DIM AS LONG lb, ub, count
-    lb& = LBOUND(source_arr%%) : ub& = UBOUND(source_arr%%)
+    lb& = LBOUND(source_arr{SY}) : ub& = UBOUND(source_arr{SY})
     count& = ub& - lb&
-    REDIM dest_arr(0 TO count&) AS _BYTE
-    CALL ARR_BYTE.copy(source_arr%%(), dest_arr%%())
-    CALL ARR_BYTE.quicksort(dest_arr%%(), lb&, ub&, 0)
+    REDIM dest_arr(0 TO count&) AS {Q}
+    CALL ARR_{UT}.copy(source_arr{SY}(), dest_arr{SY}())
+    CALL ARR_{UT}.quicksort(dest_arr{SY}(), lb&, ub&, 0)
 END SUB
 
 
 ''
-' Sorts _BYTE array in descending order
-' @param _BYTE ARRAY source_arr%%() array to sort
-' @param _BYTE ARRAY dest_arr%%() array to store sorted in
+' Sorts {Q} array in descending order
+' @param {Q} ARRAY source_arr{SY}() array to sort
+' @param {Q} ARRAY dest_arr{SY}() array to store sorted in
 '
-SUB ARR_BYTE.rsort(source_arr%%(), dest_arr%%())
+SUB ARR_{UT}.rsort(source_arr{SY}(), dest_arr{SY}())
     DIM AS LONG lb, ub, count
-    lb& = LBOUND(source_arr%%) : ub& = UBOUND(source_arr%%)
+    lb& = LBOUND(source_arr{SY}) : ub& = UBOUND(source_arr{SY})
     count& = ub& - lb&
-    REDIM dest_arr(0 TO count&) AS _BYTE
-    CALL ARR_BYTE.copy(source_arr%%(), dest_arr%%())
-    CALL ARR_BYTE.quicksort(dest_arr%%(), lb&, ub&, 1)
+    REDIM dest_arr(0 TO count&) AS {Q}
+    CALL ARR_{UT}.copy(source_arr{SY}(), dest_arr{SY}())
+    CALL ARR_{UT}.quicksort(dest_arr{SY}(), lb&, ub&, 1)
 END SUB
 
 
@@ -771,32 +764,32 @@ END SUB
 ' Quicksort array with pivot algorithm by logiclrd
 '
 ' @link https://www.tek-tips.com/faqs.cfm?fid=336
-' @param _BYTE ARRAY array%%() to sort
+' @param {Q} ARRAY array{SY}() to sort
 ' @param INTEGER start% of range to sort
 ' @param INTEGER finish% range of sort
 ' @param INTEGER order% to sort by (0 = asc / 1 = desc)
 '
-SUB ARR_BYTE.quicksort(arr%%(), start%, finish%, order%)
+SUB ARR_{UT}.quicksort(arr{SY}(), start%, finish%, order%)
     DIM i AS LONG
     DIM pivot AS INTEGER
-    DIM pivotvalue AS _BYTE
+    DIM pivotvalue AS {Q}
 
     'first, partition the array
     pivot% = start%
-    pivotvalue%% = arr%%(pivot%)
+    pivotvalue{SY} = arr{SY}(pivot%)
     FOR i& = start% + 1 TO finish%
         IF order% = 0 THEN ' ascending order
-            IF arr%%(i&) < pivotvalue%% THEN
-                arr%%(pivot%) = arr%%(i&)
-                arr%%(i&) = arr%%(pivot% + 1)
-                arr%%(pivot% + 1) = pivotvalue%%
+            IF arr{SY}(i&) < pivotvalue{SY} THEN
+                arr{SY}(pivot%) = arr{SY}(i&)
+                arr{SY}(i&) = arr{SY}(pivot% + 1)
+                arr{SY}(pivot% + 1) = pivotvalue{SY}
                 pivot% = pivot% + 1
             END IF
         ELSEIF order% = 1 THEN ' descending order
-            IF arr%%(i&) > pivotvalue%% THEN
-                arr%%(pivot%) = arr%%(i&)
-                arr%%(i&) = arr%%(pivot% + 1)
-                arr%%(pivot% + 1) = pivotvalue%%
+            IF arr{SY}(i&) > pivotvalue{SY} THEN
+                arr{SY}(pivot%) = arr{SY}(i&)
+                arr{SY}(i&) = arr{SY}(pivot% + 1)
+                arr{SY}(pivot% + 1) = pivotvalue{SY}
                 pivot% = pivot% + 1
             END IF
         END IF
@@ -804,9 +797,9 @@ SUB ARR_BYTE.quicksort(arr%%(), start%, finish%, order%)
 
     'then, sort the subarrays to each side of the pivot
     IF pivot% - start% >= 2 THEN 
-        CALL ARR_BYTE.quicksort(arr%%(), start%, pivot% - 1, order%)
+        CALL ARR_{UT}.quicksort(arr{SY}(), start%, pivot% - 1, order%)
     END IF
     IF finish% - pivot% >= 2 THEN 
-        CALL ARR_BYTE.quicksort(arr%%(), pivot% + 1, finish%, order%)
+        CALL ARR_{UT}.quicksort(arr{SY}(), pivot% + 1, finish%, order%)
     END IF
 END SUB
