@@ -4,20 +4,12 @@
 '{UT} = uppercase type full name identifier         BYTE        UBYTE               INTEGER     UNSIGNED INTEGER    LONG    ULONG           INTEGER64   UINT64                  SINGLE  DOUBLE  FLOAT
 '{LT} = lowercase type full name identifier         byte        ubyte               integer     unsigned integer    long    ulong           integer64   uint64                  single  double  float
 '{SY} = sigil                                       %%          ~%%                 %           ~%                  &       ~&              &&          ~&&                     !       #       ##
-'{l} = lowercase abbreviation                       byte        ubyte               int         uint                long    ulong           int64       uint64                  sng     dbl     flt
-'{u} = uppercase appreviation                       BYTE        UBYTE               INT         UINT                LONG    ULONG           INT64       UINT64                  SNG     DBL     FLT
-'{t} = lowercase 1st letter of type                 b           u                   i           u                   l       u               i           u                       s       d       f
-'{T} = uppercase 1st letter of type                 B           U                   I           U                   L       U               I           U                       S       D       F
 
 '{Q} = actual type used in syntax uppercase         STRING
 '{q} = actual type used in syntax as lowercase      string
 '{UT} = uppercase type full name identifier         STRING
 '{LT} = lowercase type full name identifier         string
 '{SY} = sigil                                       $
-'{l} = lowercase abbreviation                       str
-'{u} = uppercase appreviation                       STR
-'{t} = lowercase 1st letter of type                 s
-'{T} = uppercase 1st letter of type                 S
 
 '$DYNAMIC
 OPTION _EXPLICIT
@@ -32,7 +24,7 @@ OPTION _EXPLICIT
 ' @param INTEGER start_idx% starting index to use as slice range
 ' @param INTEGER count% number of slices - if negative, backwards from index
 '
-SUB ARR_{u}.slice(source_arr{SY}(), dest_arr{SY}(), start_idx%, count%)
+SUB ARR_{UT}.slice(source_arr{SY}(), dest_arr{SY}(), start_idx%, count%)
     DIM AS LONG ub, lb, i, n
     lb& = LBOUND(source_arr{SY}) : ub& = UBOUND(source_arr{SY})
     IF start_idx% < lb& OR start_idx% + count% > ub& THEN EXIT SUB ' out of range
