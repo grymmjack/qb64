@@ -4,7 +4,7 @@ CONST ROWS  = 9
 CONST BPP   = 32
 
 DIM CANVAS AS LONG
-CANVAS& = _NEWIMAGE(800, 600, 32)
+CANVAS& = _NEWIMAGE(1280, 720, 32)
 SCREEN CANVAS&
 _DEST CANVAS&
 
@@ -117,10 +117,11 @@ CALL F0NT.make_glyph("I", STARFIGHTER_FONT(5), GD$(5), kolor&)
 CALL F0NT.make_glyph("G", STARFIGHTER_FONT(6), GD$(6), kolor&)
 CALL F0NT.make_glyph("H", STARFIGHTER_FONT(7), GD$(7), kolor&)
 CALL F0NT.make_glyph("E", STARFIGHTER_FONT(8), GD$(8), kolor&)
+
 _DEST CANVAS&
-DIM AS INTEGER x, y, scale, kerning
-x% = 0 : y% = 0 : scale% = 4 : kerning% = 3
-CALL F0NT.print("STARFIGHTER", STARFIGHTER_FONT(), x%, y%, scale%, kerning%)
+DIM AS INTEGER x, y, scale, kerning, spacing
+x% = 0 : y% = 0 : scale% = 4 : kerning% = 0 : spacing% = 1
+CALL F0NT.print("STARFIGHTER", STARFIGHTER_FONT(), x%, y%, scale%, kerning%, spacing%)
 
 SUB F0NT.make_glyph(c$, f AS F0NT, glyph_data$, kolor&)
     DIM AS INTEGER y, x, p, dbg
@@ -164,7 +165,7 @@ FUNCTION F0NT.get_glyph&(c$, f() AS F0NT)
 END FUNCTION
 
 
-SUB F0NT.print(s$, f() AS F0NT, x%, y%, scale%, kerning%)
+SUB F0NT.print(s$, f() AS F0NT, x%, y%, scale%, kerning%, spacing%)
     DIM AS INTEGER i, l, dx1, dy1, dx2, dy2
     DIM c AS STRING
     DIM g AS LONG
@@ -174,10 +175,10 @@ SUB F0NT.print(s$, f() AS F0NT, x%, y%, scale%, kerning%)
         c$ = MID$(s$, i%, 1)
         g& = F0NT.get_glyph(c$, f()) 
         _SOURCE g&
-        dx1% = (i% * (COLS + kerning%)) * scale%
-        dy1% = y%
-        dx2% = scale% * COLS + dx1%
-        dy2% = scale% * ROWS + dy1%
+        dx1%  = (i% * (COLS * scale%)) + (i% * (spacing% * COLS))
+        dy1%  = y%
+        dx2%  = (COLS * scale%) + dx1%
+        dy2%  = (ROWS * scale%) + dy1%
         _PUTIMAGE (dx1%, dy1%)-(dx2%, dy2%)
     NEXT i%
 END SUB
