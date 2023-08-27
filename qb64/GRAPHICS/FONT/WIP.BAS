@@ -135,31 +135,31 @@ CLS
 
 ' test 1
 DIM AS INTEGER x, y, scale, kerning, spacing
-x% = 50 : y% = 50 : scale% = 1 : kerning% = 2 : spacing% = 0
+x% = 0 : y% = 1 : scale% = 1 : kerning% = 1 : spacing% = 0
 CALL F0NT.print("STARFIGHTER", STARFIGHTER_FONT(), x%, y%, scale%, kerning%, spacing%)
 
 ' test 2
-x% = 50 : y% = 150 : scale% = 4 : kerning% = 0 : spacing% = 4
+x% = 0 : y% = 50 : scale% = 4 : kerning% = 0 : spacing% = 0
 CALL F0NT.print("STARFIGHTER", STARFIGHTER_FONT(), x%, y%, scale%, kerning%, spacing%)
 
 ' test 3
-x% = 0 : y% = 450 : scale% = 7 : kerning% = 0 : spacing% = 1
+x% = 0 : y% = 150 : scale% = 7 : kerning% = 0 : spacing% = 0
 CALL F0NT.print("STARFIGHTER", STARFIGHTER_FONT(), x%, y%, scale%, kerning%, spacing%)
 
 ' test 4
-x% = 0 : y% = 600 : scale% = 8 : kerning% = -5 : spacing% = 0
+x% = 0 : y% = 300 : scale% = 10 : kerning% = 0 : spacing% = 0
 CALL F0NT.print("STARFIGHTER", STARFIGHTER_FONT(), x%, y%, scale%, kerning%, spacing%)
 
-SLEEP
+' test 5
+x% = 0 : y% = 500 : scale% = 11 : kerning% = 0 : spacing% = 3
+CALL F0NT.print("STARFIGHTER", STARFIGHTER_FONT(), x%, y%, scale%, kerning%, spacing%)
 
-' clear for more
-_DEST CANVAS&
-COLOR _RGB32(&HFF, &HFF, &HFF), _RGB32(&H00, &H00, &HAA)
-CLS
+' test 6
+x% = 0 : y% = 750 : scale% = 13 : kerning% = 0 : spacing% = 0
+CALL F0NT.print("STARFIGHTER", STARFIGHTER_FONT(), x%, y%, scale%, kerning%, spacing%)
 
 ' scale test
 CALL F0NT.scale("STARFIGHTER", STARFIGHTER_FONT(), STARFIGHTER_BIG_FONT(), 10)
-CALL F0NT.printglyph("STARFIGHTER", STARFIGHTER_BIG_FONT(), 0, 0, 0, 10)
 
 ' save glyphs to disk
 CALL F0NT.save_glyphs_to_disk("STARFIGHTER", STARFIGHTER_BIG_FONT())
@@ -292,8 +292,7 @@ SUB F0NT.print(s$, f() AS F0NT, x%, y%, scale%, kerning%, spacing%)
     DIM c AS STRING
     DIM g AS LONG
     l% = LEN(s$)
-    orig_x% = x%
-    x% = -scale% * (COLS + 1) + orig_x%
+    x% = -(x% + ((1 * (COLS + kerning%) * scale%)) + (1 * (spacing% * COLS)))
     PSET (x%, y%)
     FOR i% = 0 TO l%
         c$ = MID$(s$, i%, 1)
@@ -303,39 +302,7 @@ SUB F0NT.print(s$, f() AS F0NT, x%, y%, scale%, kerning%, spacing%)
         dy1%  = y%
         dx2%  = (COLS * scale%) + dx1%
         dy2%  = (ROWS * scale%) + dy1%
-        _PUTIMAGE (dx1%, dy1%)-(dx2%, dy2%)
-    NEXT i%
-END SUB
-
-
-''
-' Print something using a F0NT using glyphs
-'
-' @param STRING s$ what to print
-' @param F0NT ARRAY f()
-' @param INTEGER x% position
-' @param INTEGER y% position
-' @param INTEGER spacing% number of spaces between chars
-' @param INTEGER kerning% in px between chars
-'
-SUB F0NT.printglyph(s$, f() AS F0NT, x%, y%, spacing%, kerning%)
-    DIM AS INTEGER  i, l, dx1, dy1, dx2, dy2, orig_x
-    DIM c AS STRING
-    DIM AS LONG g, w, h
-    w& = _WIDTH(f(0).img&)
-    h& = _HEIGHT(f(0).img&)
-    l% = LEN(s$)
-    orig_x% = x%
-    x% = -(w& + spacing% + kerning%)
-    FOR i% = 0 TO l%
-        c$ = MID$(s$, i%, 1)
-        g& = F0NT.get_glyph(c$, f()) 
-        _SOURCE g&
-        dx1% = x% + (i% * w&) + (i% * (spacing% * w&)) + (i% * kerning%)
-        dy1% = y%
-        dx2% = dx1% + w&
-        dy2% = dy1% + h&
-        _PUTIMAGE (dx1%, dy1%)-(dx2%, dy2%)
+        _PUTIMAGE (dx1%, dy1%)-(dx2%, dy2%), g&, _DEST, (0, 0)-(COLS, ROWS)
     NEXT i%
 END SUB
 
