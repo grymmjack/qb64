@@ -15,7 +15,7 @@ _DEST CANVAS&
 
 ' glyph data
 DIM GD(CHARS) AS STRING
-         GD$(0) = "XXXXXXXXX"
+GD$(0) = GD$(0) + "XXXXXXXXX"
 GD$(0) = GD$(0) + ".X......."
 GD$(0) = GD$(0) + "..X......"
 GD$(0) = GD$(0) + "...X....."
@@ -25,7 +25,7 @@ GD$(0) = GD$(0) + "......X.."
 GD$(0) = GD$(0) + ".......X."
 GD$(0) = GD$(0) + "XXXXXXXXX"
 
-         GD$(1) = "XXXXXXXXX"
+GD$(1) = GD$(1) + "XXXXXXXXX"
 GD$(1) = GD$(1) + "....X...."
 GD$(1) = GD$(1) + "....X...."
 GD$(1) = GD$(1) + "....X...."
@@ -35,7 +35,7 @@ GD$(1) = GD$(1) + "....X...."
 GD$(1) = GD$(1) + "....X...."
 GD$(1) = GD$(1) + "....X...."
 
-         GD$(2) = "....X...."
+GD$(2) = GD$(2) + "....X...."
 GD$(2) = GD$(2) + "...X.X..."
 GD$(2) = GD$(2) + "..X...X.."
 GD$(2) = GD$(2) + ".X.....X."
@@ -45,7 +45,7 @@ GD$(2) = GD$(2) + "X.......X"
 GD$(2) = GD$(2) + "X.......X"
 GD$(2) = GD$(2) + "X.......X"
 
-         GD$(3) = "XXXXXXXXX"
+GD$(3) = GD$(3) + "XXXXXXXXX"
 GD$(3) = GD$(3) + "X......X."
 GD$(3) = GD$(3) + "X.....X.."
 GD$(3) = GD$(3) + "X....X..."
@@ -55,7 +55,7 @@ GD$(3) = GD$(3) + "X.X......"
 GD$(3) = GD$(3) + "XX......."
 GD$(3) = GD$(3) + "XXXXXXXXX"
 
-         GD$(4) = "XXXXXXXXX"
+GD$(4) = GD$(4) + "XXXXXXXXX"
 GD$(4) = GD$(4) + ".X......."
 GD$(4) = GD$(4) + "..X......"
 GD$(4) = GD$(4) + "...XXXXXX"
@@ -65,7 +65,7 @@ GD$(4) = GD$(4) + "X........"
 GD$(4) = GD$(4) + "X........"
 GD$(4) = GD$(4) + "X........"
 
-         GD$(5) = "XXXXXXXXX"
+GD$(5) = GD$(5) + "XXXXXXXXX"
 GD$(5) = GD$(5) + "....X...."
 GD$(5) = GD$(5) + "....X...."
 GD$(5) = GD$(5) + "....X...."
@@ -75,7 +75,7 @@ GD$(5) = GD$(5) + "....X...."
 GD$(5) = GD$(5) + "....X...."
 GD$(5) = GD$(5) + "XXXXXXXXX"
 
-         GD$(6) = "XXXXXXXXX"
+GD$(6) = GD$(6) + "XXXXXXXXX"
 GD$(6) = GD$(6) + "X........"
 GD$(6) = GD$(6) + "X........"
 GD$(6) = GD$(6) + "X..XXXXXX"
@@ -85,7 +85,7 @@ GD$(6) = GD$(6) + "X.....X.."
 GD$(6) = GD$(6) + "X......X."
 GD$(6) = GD$(6) + "XXXXXXXXX"
 
-         GD$(7) = "X.......X"
+GD$(7) = GD$(7) + "X.......X"
 GD$(7) = GD$(7) + "X.......X"
 GD$(7) = GD$(7) + "X.......X"
 GD$(7) = GD$(7) + "X.......X"
@@ -95,7 +95,7 @@ GD$(7) = GD$(7) + "X.......X"
 GD$(7) = GD$(7) + "X.......X"
 GD$(7) = GD$(7) + "X.......X"
 
-         GD$(8) = "XXXXXXXXX"
+GD$(8) = GD$(8) + "XXXXXXXXX"
 GD$(8) = GD$(8) + ".X......."
 GD$(8) = GD$(8) + "..X......"
 GD$(8) = GD$(8) + "...X....."
@@ -135,28 +135,24 @@ CLS
 
 ' test 1
 DIM AS INTEGER x, y, scale, kerning, spacing
-x% = 0 : y% = 1 : scale% = 1 : kerning% = 1 : spacing% = 0
-CALL F0NT.print("STARFIGHTER", STARFIGHTER_FONT(), x%, y%, scale%, kerning%, spacing%)
-
+COLOR &HFFFFFF00
+_PRINTSTRING (50, 20), "Testing spacing 0 to 4 with scale = 1"
+FOR spacing% = 0 TO 4
+    x% = 200 * spacing% + 50: y% = 50: scale% = 1
+    CALL F0NT.print("STARFIGHTER", STARFIGHTER_FONT(), x%, y%, scale%, spacing%)
+Next
+ 
 ' test 2
-x% = 0 : y% = 50 : scale% = 4 : kerning% = 0 : spacing% = 0
-CALL F0NT.print("STARFIGHTER", STARFIGHTER_FONT(), x%, y%, scale%, kerning%, spacing%)
-
+x% = 50: y% = 100: scale% = 4: kerning% = 0: spacing% = 4
+CALL F0NT.print("STARFIGHTER", STARFIGHTER_FONT(), x%, y%, scale%, spacing%)
+ 
 ' test 3
-x% = 0 : y% = 150 : scale% = 7 : kerning% = 0 : spacing% = 0
-CALL F0NT.print("STARFIGHTER", STARFIGHTER_FONT(), x%, y%, scale%, kerning%, spacing%)
-
+x% = 50: y% = 200: scale% = 7: kerning% = 0: spacing% = 2
+CALL F0NT.print("STARFIGHTER", STARFIGHTER_FONT(), x%, y%, scale%, spacing%)
+ 
 ' test 4
-x% = 0 : y% = 300 : scale% = 10 : kerning% = 0 : spacing% = 0
-CALL F0NT.print("STARFIGHTER", STARFIGHTER_FONT(), x%, y%, scale%, kerning%, spacing%)
-
-' test 5
-x% = 0 : y% = 500 : scale% = 11 : kerning% = 0 : spacing% = 3
-CALL F0NT.print("STARFIGHTER", STARFIGHTER_FONT(), x%, y%, scale%, kerning%, spacing%)
-
-' test 6
-x% = 0 : y% = 750 : scale% = 13 : kerning% = 0 : spacing% = 0
-CALL F0NT.print("STARFIGHTER", STARFIGHTER_FONT(), x%, y%, scale%, kerning%, spacing%)
+x% = 50: y% = 400: scale% = 8: spacing% = 2
+CALL F0NT.print("STARFIGHTER", STARFIGHTER_FONT(), x%, y%, scale%, spacing%)
 
 ' scale test
 CALL F0NT.scale("STARFIGHTER", STARFIGHTER_FONT(), STARFIGHTER_BIG_FONT(), 10)
@@ -284,25 +280,18 @@ END FUNCTION
 ' @param INTEGER x% position
 ' @param INTEGER y% position
 ' @param INTEGER scale% size multiplier
-' @param INTEGER kerning% scaling space between characters
 ' @param INTEGER spacing% spaces between characters
 '
-SUB F0NT.print(s$, f() AS F0NT, x%, y%, scale%, kerning%, spacing%)
+SUB F0NT.print(s$, f() As F0NT, x%, y%, scale%, spacing%)
     DIM AS INTEGER i, l, dx1, dy1, dx2, dy2, orig_x
     DIM c AS STRING
     DIM g AS LONG
     l% = LEN(s$)
-    x% = -(x% + ((1 * (COLS + kerning%) * scale%)) + (1 * (spacing% * COLS)))
-    PSET (x%, y%)
-    FOR i% = 0 TO l%
+    FOR i% = 1 TO l%
         c$ = MID$(s$, i%, 1)
-        g& = F0NT.get_glyph(c$, f()) 
-        _SOURCE g&
-        dx1%  = x% + ((i% * (COLS + kerning%) * scale%)) + (i% * (spacing% * COLS))
-        dy1%  = y%
-        dx2%  = (COLS * scale%) + dx1%
-        dy2%  = (ROWS * scale%) + dy1%
-        _PUTIMAGE (dx1%, dy1%)-(dx2%, dy2%), g&, _DEST, (0, 0)-(COLS, ROWS)
+        dx1% = x% + (i% - 1) * (COLS + spacing%) * scale%
+        dy1% = y%
+        _PUTIMAGE (dx1%, dy1%)-STEP(COLS * scale% - 1, ROWS * scale% - 1), F0NT.get_glyph(c$, f())
     NEXT i%
 END SUB
 
