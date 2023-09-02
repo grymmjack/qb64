@@ -1,3 +1,47 @@
+ExtendedInput "{P}Enter your password =>", a$
+Print
+Print "Your password was =>"; a$
+
+ExtendedInput "{PL08}Enter your password (max 8 digits) =>", a$
+Print
+Print "Your password was =>"; a$
+
+ExtendedInput "{PL05UI}Enter your 5 digit numeric keycode =>", a$
+Print
+Print "Your keycode was =>"; a$
+
+Print
+Print "And without password hiding which makes the * characters:"
+ExtendedInput "Enter your password =>", a$
+Print
+Print "Your password was =>"; a$
+
+ExtendedInput "{L08}Enter your password (max 8 digits) =>", a$
+Print
+Print "Your password was =>"; a$
+
+ExtendedInput "{L05UI}Enter your 5 digit numeric keycode =>", a$
+Print
+Print "Your keycode was =>"; a$
+
+Print
+Print "And now let's clean up after ourselves once we input something!"
+
+ExtendedInput "{H}Enter your password =>", a$
+Print
+Print "Your password was =>"; a$
+
+ExtendedInput "{HL08}Enter your password (max 8 digits) =>", a$
+Print
+Print "Your password was =>"; a$
+
+ExtendedInput "{HL05UI}Enter your 5 digit numeric keycode =>", a$
+Print
+Print "Your keycode was =>"; a$
+
+
+
+
 Sub ExtendedInput (prompt$, result$) 'Over Engineered Input
     'limit VALUES:
     '1 = Unsigned
@@ -58,7 +102,7 @@ Sub ExtendedInput (prompt$, result$) 'Over Engineered Input
     Do
         PCopy 1, 0
         If _KeyDown(100307) Or _KeyDown(100308) Then AltDown = -1 Else AltDown = 0
-        k = KeyHit
+        k = _KeyHit
         If AltDown Then
             Select Case k 'ignore all keypresses except ALT-number presses
                 Case -57 To -48: AltWasDown = -1: alt$ = alt$ + Chr$(-k)
@@ -152,16 +196,21 @@ Sub ExtendedInput (prompt$, result$) 'Over Engineered Input
         End If
         blink = (blink + 1) Mod 30
         Locate Y, X
-        Print prompt$;
+        p$ = prompt$
         If password_protected Then
-            Print String$(Len(Left$(in$, CP)), "*");
-            If blink \ 15 Then Print " "; Else Print "_";
-            Print String$(Len(Mid$(in$, CP + 1)), "*")
+            p$ = p$ + String$(Len(Left$(in$, CP)), "*")
+            If blink \ 15 Then p$ = p$ + " " Else p$ = p$ + "_"
+            p$ = p$ + String$(Len(Mid$(in$, CP + 1)), "*")
         Else
-            Print Left$(in$, CP);
-            If blink \ 15 Then Print " "; Else Print "_";
-            Print Mid$(in$, CP + 1)
+            p$ = p$ + Left$(in$, CP)
+            If blink \ 15 Then p$ = p$ + " " Else p$ = p$ + "_"
+            p$ = p$ + Mid$(in$, CP + 1)
         End If
+        $If FALCON = TRUE Then
+                QPrint p$
+        $Else
+            Print p$
+        $End If 
 
         _Display
         _Limit 30
@@ -172,11 +221,31 @@ Sub ExtendedInput (prompt$, result$) 'Over Engineered Input
     If clean_exit = 0 Then
         Locate Y, X
         If password_protected Then
-            Print prompt$; String$(Len(in$), "*")
+            p$ = prompt$ + String$(Len(in$), "*")
         Else
-            Print prompt$; in$
+            p$ = prompt$ + in$
         End If
+        $If FALCON = TRUE Then
+                QPrint p$
+        $Else
+            Print p$
+        $End If 
     End If
     result$ = in$
     If A Then _AutoDisplay
 End Sub
+
+
+Function KB_GetValue (limiter$, what$)
+    jstart = InStr(limiter$, what$): j = 0
+    If Mid$(limiter$, InStr(limiter$, what$) + 1, 1) = "-" Then
+        GetValue = -1 'unlimited
+        Exit Function
+    End If
+
+    Do
+        j = j + 1
+        m$ = Mid$(limiter$, jstart + j, 1)
+    Loop Until m$ < "0" Or m$ > "9"
+    KB_GetValue = Val(Mid$(limiter$, jstart + 1, j - 1))
+End Function
