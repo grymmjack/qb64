@@ -481,7 +481,7 @@ SHELL                                    Sends STRING commands to the command li
 SHELL (QB64 function)                    Executes an external command or calls another program. Returns codes sent by END or SYSTEM.
 SIGNAL                                   
 SIN                                      Returns the sine of a radian angle.
-SIN (function)                           Returns the sine of a radian angle.                                     .
+SIN (function)                           Returns the sine of a radian angle.
 SINGLE                                   4 byte floating decimal point values up to 7 decimal places.
 SLEEP                                    Pauses the program for a designated number of seconds or until a key is pressed.
 SOUND                                    Creates a sound of a specified frequency and duration.
@@ -496,7 +496,7 @@ STR$                                     Returns a string value of a number with
 STRIG                                    Returns the joystick button press values when read.
 STRIG(n)                                 Returns button press True or False status of game port (&H201) or USB joystick control device(s).
 STRING                                   One byte text variable with ASCII code values from 0 to 255.
-STRING ($ variable type)                 One byte text variable with ASCII code values from 0 to 255. .
+STRING ($ variable type)                 One byte text variable with ASCII code values from 0 to 255.
 STRING$                                  Returns a designated number of string characters.
 SUB                                      Sub-procedure that can calculate and return multiple parameter values.
 SUB _GL                                  
