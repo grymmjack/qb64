@@ -12,7 +12,7 @@ wt% = _WIDTH - w% + 1
 _FULLSCREEN _SQUAREPIXELS
  
 d!   = 0
-lim% = 60
+lim% = 120
 st%  = 1
 x%   = 0
 y%   = 10
@@ -38,19 +38,12 @@ ALIEN_HW& = _COPYIMAGE(ALIEN_32&, 33)
 _DEST CANVAS&
 CLS , _RGB32(0, 0, 255)
 DO
-    FOR x% = 0 TO wt% STEP st%
-        IF lim% > 0 THEN _LIMIT lim%
-        _PUTIMAGE (x%, y%), ALIEN_HW&
-        _DISPLAY
-        ' IF d! > 0 THEN _DELAY d!
-    NEXT x%
-    FOR x% = wt% TO 0 STEP -st%
-        IF lim% > 0 THEN _LIMIT lim%
-        _PUTIMAGE (x%, y%), ALIEN_HW&
-        _DISPLAY
-        ' IF d! > 0 THEN _DELAY d!
-    NEXT
+    x% = x% + st%
+    IF x% <= 0 OR x% >= _WIDTH - w% THEN st% = -st%
+    _PUTIMAGE (x%, y%), ALIEN_HW&
     _DISPLAY
+    IF lim% > 0 THEN _LIMIT lim%
+    CLS , _RGB32(0, 0, 255)
 LOOP UNTIL _KEYHIT = 27
  
 _FREEIMAGE ALIEN_SPRITE&

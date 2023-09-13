@@ -36,20 +36,12 @@ ALIEN_HW& = _COPYIMAGE(ALIEN_32&, 32)
 _DEST CANVAS&
 CLS , _RGB32(0, 0, 255)
 DO
-    FOR x% = 0 TO _WIDTH - w% + 1 STEP st%
-        IF lim% > 0 THEN _LIMIT lim%
-        _PUTIMAGE (x%, y%), ALIEN_HW&
-        _DISPLAY
-        CLS , _RGB32(0, 0, 255)
-        IF d! > 0 THEN _DELAY d!
-    NEXT x%
-    FOR x% = _WIDTH - w% + 1 TO 0 STEP -st%
-        IF lim% > 0 THEN _LIMIT lim%
-        _PUTIMAGE (x%, y%), ALIEN_HW&
-        _DISPLAY
-        CLS , _RGB32(0, 0, 255)
-        IF d! > 0 THEN _DELAY d!
-    NEXT
+    x% = x% + st%
+    IF x% <= 0 OR x% >= _WIDTH - w% THEN st% = -st%
+    _PUTIMAGE (x%, y%), ALIEN_HW&
+    _DISPLAY
+    IF lim% > 0 THEN _LIMIT lim%
+    CLS , _RGB32(0, 0, 255)
 LOOP UNTIL _KEYHIT = 27
  
 _FREEIMAGE ALIEN_SPRITE&
