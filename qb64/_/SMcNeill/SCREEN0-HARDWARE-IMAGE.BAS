@@ -1,4 +1,4 @@
- SCREEN 0 'I'm going to use a text only screen
+SCREEN 0 'I'm going to use a text only screen
 mode = -1
 paused = 0
 tempHWscreen = _NEWIMAGE(64*2, 40*2, 32)
