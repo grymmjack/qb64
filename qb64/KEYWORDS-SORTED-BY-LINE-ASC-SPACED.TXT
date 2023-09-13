@@ -268,7 +268,7 @@ ABSOLUTE                                 Is used to access computer interrupt re
 ACCESS                                   Sets the read and write access of a file when opened.
 ALIAS                                    (DECLARE LIBRARY statement) denotes the actual name of an imported FUNCTION or SUB procedure.
 AND                                      Is used to compare two numerical values bitwise.
-AND (boolean)                            Conditonal operator is used to include another evaluation in an IF..THEN or Boolean statement.
+AND (boolean)                            Conditonal operator is used to include another evaluation in an IF...THEN or Boolean statement.
 APPEND                                   Creates a new file or allows an existing file to have data added using WRITE or PRINT.
 AS                                       Is used to denote a variable type or file number.
 ASC                                      Returns the ASCII code number of a text string character.
@@ -320,13 +320,13 @@ DEFLNG                                   Defines a set of undefined variable nam
 DEFSNG                                   Defines a set of undefined variable name starting letters as SINGLE type numerical values.
 DEFSTR                                   Defines a set of undefined variable name starting letters as STRING type values.
 DIM                                      Defines a variable as a specified type and can size a STATIC  array.
-DO..LOOP                                Sets a recursive procedure loop that can be ignored or exited using conditional arguments.
+DO...LOOP                                Sets a recursive procedure loop that can be ignored or exited using conditional arguments.
 DOUBLE                                   8 byte value limited to values up to 15 decimal places.
 DRAW                                     Uses a special string format that draws graphical lines in specific directions.
-ELSE                                     (IF..THEN statement) is used to direct program flow when no other condition is evaluated as true.
-ELSEIF                                   (IF..THEN statement) is used with THEN to set alternate conditional evaluations.
+ELSE                                     (IF...THEN statement) is used to direct program flow when no other condition is evaluated as true.
+ELSEIF                                   (IF...THEN statement) is used with THEN to set alternate conditional evaluations.
 END                                      Sets the end of a program, sub-procedure, statement block, DECLARE LIBRARY or TYPE definition.
-END IF                                   ENDs an IF..THEN conditional block statement using more than one line of code.
+END IF                                   ENDs an IF...THEN conditional block statement using more than one line of code.
 ENVIRON                                  Temporarily sets an environmental key/pair value.
 ENVIRON$                                 Returns a specified string setting or numerical position as an environmental STRING value.
 EOF                                      Returns -1 when a file INPUT or GET has reached the end of a file.
@@ -337,14 +337,14 @@ ERDEV$                                   Returns the 8 character name of the las
 ERL                                      Returns the closest line number before an error occurred if line numbers are used.
 ERR                                      Returns the ERROR code when a program error occurs.
 ERROR                                    Sets a specific ERROR code to be simulated.
-EXIT                                     Immediately exits a program FOR..NEXT, DO..LOOP, SUB or FUNCTION procedure.
+EXIT                                     Immediately exits a program FOR...NEXT, DO...LOOP, SUB or FUNCTION procedure.
 EXP                                      Returns the value of e to the exponential power specified.
 FIELD                                    Defines the variable sizes to be written or read from a file.
 FILEATTR                                 Returns the current file access mode.
 FILES                                    Returns a list of files in the current directory path to the SCREEN.
 FIX                                      Returns the rounded INTEGER value of a numerical value.
 FOR (file statement)                     Used in an OPEN file or device statement to indicate the access mode.
-FOR..NEXT                               Creates a recursive loop procedure that loop a specified number of times.
+FOR...NEXT                               Creates a recursive loop procedure that loop a specified number of times.
 FRE                                      Returns the number of bytes of Memory available to running programs.
 FREE (QB64 TIMER statement)              Frees a numbered TIMER event in QB64.
 FREEFILE                                 Returns a file number that is currently not in use by the Operating System.
@@ -355,7 +355,7 @@ GET (QB64 TCP/IP statement)              Reads a connection port to return a val
 GOSUB                                    Sends the program to a designated line label procedure in the main program.
 GOTO                                     Sends the program to a designated line number or line label in a procedure.
 HEX$                                     Returns the hexadecimal (base 16) STRING representation of the INTEGER part of any value.
-IF..THEN                                A conditional block statement used control program flow.
+IF...THEN                                A conditional block statement used control program flow.
 IMP                                      Is used to compare two numerical values bitwise.
 INKEY$                                   ASCII returns a string value entry from the keyboard.
 INP                                      Returns a numerical value from a specified port register address. See Keyboard scancodes.
@@ -407,7 +407,7 @@ MKS$                                     Returns a 4 byte ASCII string represent
 MKSMBF$                                  Returns an 8 byte Microsoft Binary Format STRING representation of a DOUBLE numerical value.
 MOD                                      Performs integer remainder division on a numerical value.
 NAME                                     Names an existing file name AS a new file name.
-NEXT                                     Bottom end of a FOR..NEXT counter loop to returns to the start or a RESUME NEXT error.
+NEXT                                     Bottom end of a FOR...NEXT counter loop to returns to the start or a RESUME NEXT error.
 NOT                                      Inverts the value of a logic operation or returns True when a boolean evaluation is False.
 OCT$                                     Returns the octal (base 8) STRING representation of the INTEGER part of any value.
 OFF                                      Turns off all ON event checking.
@@ -419,15 +419,15 @@ ON PLAY(n)                               Sets up a PLAY event procedure call.
 ON STRIG(n)                              Sets up a joystick button event procedure call.
 ON TIMER(n)                              Sets up a timed event procedure call.
 ON UEVENT                                Not implemented in QB64.
-ON..GOSUB                                Sets up a numerical event procedure call.
-ON..GOTO                                 Sets up a numerical event procedure call.
+ON...GOSUB                               Sets up a numerical event procedure call.
+ON...GOTO                                Sets up a numerical event procedure call.
 OPEN                                     Opens a file name for an access mode with a specific file number.
 OPEN COM                                 Opens a serial communication port for access at a certain speed and mode.
 OPTION _EXPLICIT                         Instructs the compiler to require variable declaration with DIM or an equivalent statement.
 OPTION _EXPLICITARRAY                    Instructs the compiler to require array declaration with DIM or an equivalent statement.
 OPTION BASE                              Can set the lower boundary of all arrays to 1.
 OR                                       Is used to compare two numerical values bitwise.
-OR (boolean)                             Conditonal operator is used to include an alternative evaluation in an IF..THEN or Boolean statement.
+OR (boolean)                             Conditonal operator is used to include an alternative evaluation in an IF...THEN or Boolean statement.
 OUT                                      Writes numerical data to a specified register port.
 OUTPUT                                   Creates a new file or clears all data from an existing file to acess the file sequencially.
 PAINT                                    Fills an enclosed area of a graphics screen with a color until it encounters a specific colored border.
@@ -479,7 +479,7 @@ SGN                                      Returns -1 for negative, 0 for zero, an
 SHARED                                   Designates that a variable can be used by other procedures or the main procedure when in a sub-procedure.
 SHELL                                    Sends STRING commands to the command line. SHELL calls will not affect the current path.
 SHELL (QB64 function)                    Executes an external command or calls another program. Returns codes sent by END or SYSTEM.
-SIGNAL                                   .
+SIGNAL                                   
 SIN                                      Returns the sine of a radian angle.
 SIN (function)                           Returns the sine of a radian angle.                                     .
 SINGLE                                   4 byte floating decimal point values up to 7 decimal places.
@@ -489,7 +489,7 @@ SPACE$                                   Returns a designated number of spaces t
 SPC                                      Moves the text cursor a number of spaces on the SCREEN.
 SQR                                      Returns the square root of a non-negative number.
 STATIC                                   Creates a SUB or FUNCTION variable that retains its value.
-STEP                                     Move relatively from one graphic position or change the counting increment in a FOR..NEXT loop.
+STEP                                     Move relatively from one graphic position or change the counting increment in a FOR...NEXT loop.
 STICK                                    Returns the present joystick position.
 STOP                                     Stops a program when troubleshooting or stops an ON event.
 STR$                                     Returns a string value of a number with a leading space when it is positive.
@@ -504,7 +504,7 @@ SWAP                                     Swaps two string or numerical values.
 SYSTEM                                   Ends a program immediately.
 TAB                                      Moves a designated number of columns on the screen.
 TAN                                      Returns the ratio of SINe to COSine or tangent value of an angle measured in radians.
-THEN                                     IF..THEN (keyword) must be used in a one line IF..THEN program flow statement.
+THEN                                     IF...THEN (keyword) must be used in a one line IF...THEN program flow statement.
 TIME$                                    Returns the present time setting of the Operating System as a  format hh:mm:ss STRING.
 TIMER                                    Returns the number of seconds since midnight as a SINGLE value.
 TIMER (statement)                        Events based on the designated time interval and timer number.
@@ -514,7 +514,7 @@ UBOUND                                   Returns the upper-most index number of 
 UCASE$                                   Returns an uppercase representation of a specified STRING.
 UEVENT                                   Not implemented in QB64.
 UNLOCK                                   Unlocks a designated file or portions of it.
-UNTIL                                    Evaluates a DO..LOOP condition until it is True.
+UNTIL                                    Evaluates a DO...LOOP condition until it is True.
 VAL                                      Returns the numerical value of a string number.
 VARPTR                                   Returns the segment pointer address in memory.
 VARPTR$                                  Returns the string value of a numerical value in memory.
@@ -522,9 +522,9 @@ VARSEG                                   Returns the segment address of a value 
 VIEW                                     Sets up a graphic view port area of the screen.
 VIEW PRINT                               Sets up a text viewport area of the screen.
 WAIT                                     Waits until a vertical retrace is started or a screen draw ends.
-WEND                                     The bottom end of a WHILE..WEND loop.
-WHILE                                    Evaluates a DO..LOOP or WHILE..WEND condition until it is False.
-WHILE..WEND                              Sets a recursive procedure loop that can only be exited using the WHILE conditional argument.
+WEND                                     The bottom end of a WHILE...WEND loop.
+WHILE                                    Evaluates a DO...LOOP or WHILE...WEND condition until it is False.
+WHILE...WEND                             Sets a recursive procedure loop that can only be exited using the WHILE conditional argument.
 WIDTH                                    Sets the text column and row sizes in several SCREEN modes.
 WINDOW                                   Maps a window size different from the program's window size.
 WRITE                                    Prints variable values to the screen with commas separating each value.
