@@ -1,0 +1,532 @@
+_ACCEPTFILEDROP                          Turns a program window into a valid drop destination for dragging files from Windows Explorer.
+_ACOS                                    Arccosine function returns the angle in radians based on an input COSine value range from -1 to 1.
+_ACOSH                                   Returns the nonnegative arc hyperbolic cosine of x, expressed in radians.
+_ALLOWFULLSCREEN                         Allows setting the behavior of the ALT+ENTER combo.
+_ALPHA                                   Returns the alpha channel transparency level of a color value used on a screen page or image.
+_ALPHA32                                 Returns the alpha channel transparency level of a color value used on a 32 bit screen page or image.
+_ARCCOT                                  Is the inverse function of the cotangent.
+_ARCCSC                                  Is the inverse function of the cosecant.
+_ARCSEC                                  Is the inverse function of the secant.
+_ASIN                                    Returns the principal value of the arc sine of x, expressed in radians.
+_ASINH                                   Returns the arc hyperbolic sine of x, expressed in radians.
+_ASSERT                                  Performs debug tests.
+_ATAN2                                   Returns the principal value of the arc tangent of y/x, expressed in radians.
+_ATANH                                   Returns the arc hyperbolic tangent of x, expressed in radians.
+_AUTODISPLAY                             Enables the automatic display of the screen image changes previously disabled by _DISPLAY.
+_AUTODISPLAY (function)                  Returns the current display mode as true (-1) if automatic or false (0) if per request using _DISPLAY.
+_AXIS                                    Returns a SINGLE value between -1 and 1 indicating the maximum distance from the device axis center, 0.
+_BACKGROUNDCOLOR                         Returns the current screen page background color.
+_BIN$                                    Returns the binary (base 2) STRING representation of the INTEGER part of any value.
+_BIT                                     Can return only signed values of 0 (bit off) and -1 (bit on). Unsigned 0 or 1.
+_BLEND                                   Statement turns on 32 bit alpha blending for the current image or screen mode and is default.
+_BLEND (function)                        Returns -1 if enabled or 0 if disabled by _DONTBLEND statement.
+_BLINK                                   Statement turns blinking colors on/off in SCREEN 0.
+_BLINK (function)                        Returns -1 if enabled or 0 if disabled by _BLINK statement.
+_BLUE                                    Function returns the palette or the blue component intensity of a 32-bit image color.
+_BLUE32                                  Returns the blue component intensity of a 32-bit color value.
+_BUTTON                                  Returns -1 when a controller device button is pressed and 0 when button is released.
+_BUTTONCHANGE                            Returns -1 when a device button has been pressed and 1 when released. Zero indicates no change.
+_BYTE                                    Can hold signed values from -128 to 127 (one byte or _BIT * 8). Unsigned from 0 to 255.
+_CAPSLOCK                                Sets Caps Lock key state.
+_CAPSLOCK (function)                     Returns -1 when Caps Lock is on.
+_CEIL                                    Rounds x upward, returning the smallest integral value that is not less than x.
+_CINP                                    Returns a key code from $CONSOLE input.
+_CLEARCOLOR                              Sets a specific color index of an image to be transparent.
+_CLEARCOLOR (function)                   Returns the current transparent color of an image.
+_CLIP                                    (PUT graphics option) allows placement of an image partially off of the screen.
+_CLIPBOARD$                              Returns the operating system's clipboard contents as a STRING.
+_CLIPBOARD$ (statement)                  Sets and overwrites the STRING value in the operating system's clipboard.
+_CLIPBOARDIMAGE                          (statement) copies a valid QB64 image to the clipboard.
+_CLIPBOARDIMAGE (function)               Pastes an image from the clipboard into a new QB64 image in memory.
+_COMMANDCOUNT                            Returns the number of arguments passed to the compiled program from the command line.
+_CONNECTED                               Returns the status of a TCP/IP connection handle.
+_CONNECTIONADDRESS$                      Returns a connected user's STRING IP address value using the handle.
+_CONSOLE                                 Used to turn a console window OFF or ON or to designate _DEST _CONSOLE for output.
+_CONSOLEINPUT                            Fetches input data from a $CONSOLE window to be read later (both mouse and keyboard).
+_CONSOLETITLE                            Creates the title of the console window using a literal or variable string.
+_CONTINUE                                Skips the remaining lines in a control block (DO/LOOP, FOR/NEXT or WHILE/WEND).
+_CONTROLCHR                              OFF allows the control characters to be used as text characters. ON (default) can use them as commands.
+_CONTROLCHR (function)                   Returns the current state of _CONTROLCHR as 1 when OFF and 0 when ON.
+_COPYIMAGE                               Copies an image handle value to a new designated handle.
+_COPYPALETTE                             Copies the color palette intensities from one 4 or 8 BPP image to another image.
+_COSH                                    Returns the hyperbolic cosine of x radians.
+_COT                                     The mathematical function cotangent defined by 1/TAN.
+_COTH                                    Returns the hyperbolic cotangent.
+_CSC                                     The mathematical function cosecant defined by 1/SIN.
+_CSCH                                    Returns the hyperbolic cosecant.
+_CV                                      Converts any _MK$ STRING value to the designated numerical type value.
+_CWD$                                    Returns the current working directory  as a STRING value.
+_D2G                                     Converts degrees to gradient angle values.
+_D2R                                     Converts degrees to radian angle values.
+_DEFAULTCOLOR                            Returns the current default text color for an image handle or page.
+_DEFINE                                  Defines a range of variable names according to their first character as a data type.
+_DEFLATE$                                Compresses a string.
+_DELAY                                   Suspends program execution for a SINGLE number of seconds.
+_DEPTHBUFFER                             Enables, disables, locks or clears depth buffering.
+_DESKTOPHEIGHT                           Returns the height of the desktop (not program window).
+_DESKTOPWIDTH                            Returns the width of the desktop (not program window).
+_DEST                                    Sets the current write image or SCREEN page destination for prints or graphics.
+_DEST (function)                         Returns the current destination screen page or image handle value.
+_DEVICE$                                 Returns a STRING expression listing a designated numbered input device name and types of input.
+_DEVICEINPUT                             Returns the _DEVICES number of an _AXIS, _BUTTON or _WHEEL event.
+_DEVICES                                 Returns the number of input devices found on a computer system including the keyboard and mouse.
+_DIR$                                    Returns common paths in Windows only, like My Documents, My Pictures, My Music, Desktop.
+_DIREXISTS                               Returns -1 if the Directory folder name string parameter exists. Zero if it does not.
+_DISPLAY                                 Turns off the automatic display while only displaying the screen changes when called.
+_DISPLAY (function)                      Returns the handle of the current image that is displayed on the screen.
+_DISPLAYORDER                            Designates the order to render software, hardware and custom-opengl-code.
+_DONTBLEND                               Statement turns off default _BLEND 32 bit alpha blending for the current image or screen.
+_DONTWAIT                                (SHELL action) specifies that the program should not wait until the shelled command/program is finished.
+_DROPPEDFILE                             Returns the list of items (files or folders) dropped in a program's window after _ACCEPTFILEDROP is enabled.
+_ECHO                                    Used in conjunction with $IF for the precompiler.
+_ENVIRONCOUNT                            Returns the number of key/value pairs currently exist in the environment table.
+_ERRORLINE                               Returns the source code line number that caused the most recent runtime error.
+_ERRORMESSAGE$                           Returns a human-readable message describing the most recent runtime error.
+_EXIT (function)                         Prevents a user exit and indicates if a user has clicked the close X window button or CTRL + BREAK.
+_FILEEXISTS                              Returns -1 if the file name string parameter exists. Zero if it does not.
+_FINISHDROP                              Resets _TOTALDROPPEDFILES and clears the _DROPPEDFILE list of items (files/folders).
+_FLOAT                                   Offers the maximum floating-point decimal precision available using QB64.
+_FONT                                    Sets the current font handle to be used by PRINT or _PRINTSTRING.
+_FONT (function)                         Creates a new font handle from a designated image handle.
+_FONTHEIGHT                              Returns the current text or font height.
+_FONTWIDTH                               Returns the current text or font width.
+_FREEFONT                                Releases the current font handle from memory.
+_FREEIMAGE                               Releases a designated image handle from memory.
+_FREETIMER                               Returns an unused timer number value to use with ON TIMER(n).
+_FULLSCREEN                              Sets the program window to full screen or OFF. Alt + Enter does it manually.
+_FULLSCREEN (function)                   Returns the fullscreen mode in use by the program.
+_G2D                                     Converts gradient to degree angle values.
+_G2R                                     Converts gradient to radian angle values.
+_glA                                     
+_glAccum (statement)                     Operates on the accumulation buffer.
+_GLRENDER                                Sets whether context is displayed, on top of or behind the software rendering.
+_GREEN                                   Function returns the palette or the green component intensity of a 32-bit image color.
+_GREEN32                                 Returns the green component intensity of a 32-bit color value.
+_HEIGHT                                  Returns the height of a designated image handle.
+_HIDE                                    (SHELL action)  hides the command line display during a shell.
+_HYPOT                                   Returns the hypotenuse of a right-angled triangle whose legs are x and y.
+_ICON                                    Designates a _LOADIMAGE image file handle to be used as the program's icon or loads the embedded icon (see $EXEICON).
+_INCLERRORFILE$                          Returns the name of the original source code $INCLUDE module that caused the most recent error.
+_INCLERRORLINE                           Returns the line number in an included file that caused the most recent error.
+_INFLATE$                                Decompresses a string.
+_INSTRREV                                Allows searching for a substring inside another string, but unlike INSTR it returns the last occurrence instead of the first one.
+_INTEGER64                               Can hold whole numerical values from -9223372036854775808 to 9223372036854775807.
+_KEYCLEAR                                Clears the keyboard buffers for INKEY$, _KEYHIT, and INP.
+_KEYDOWN                                 Returns whether CTRL, ALT, SHIFT, combinations and other keys are pressed.
+_KEYHIT                                  Returns ASCII one and two byte, SDL Virtual Key and Unicode keyboard key press codes.
+_LASTAXIS                                Returns the number of axis available on a specified number device listed by _DEVICE$.
+_LASTBUTTON                              Returns the number of buttons available on a specified number device listed by DEVICE$.
+_LASTWHEEL                               Returns the number of scroll wheels available on a specified number device listed by _DEVICE$.
+_LIMIT                                   Sets the loops per second rate to slow down loops and limit CPU usage.
+_LOADFONT                                Designates a font TTF file to load and returns a handle value.
+_LOADIMAGE                               Designates an image file to load and returns a handle value.
+_MAPTRIANGLE                             Maps a triangular image source area to put on a destination area.
+_MAPUNICODE                              Maps a Unicode value to an ASCII code number.
+_MAPUNICODE (function)                   Returns the Unicode (UTF32) code point value of a mapped ASCII character code.
+_MEM                                     Contains read only dot elements for the OFFSET, SIZE, TYPE and ELEMENTSIZE of a block of memory.
+_MEM (function)                          Returns _MEM block referring to the largest continuous memory region beginning at a designated variable's offset.
+_MEMCOPY                                 Copies a value from a designated OFFSET and SIZE TO a block of memory at a designated OFFSET.
+_MEMELEMENT                              Returns a _MEM block referring to a variable's memory (but not past it).
+_MEMEXISTS                               Verifies that a memory block exists for a memory variable name or returns zero.
+_MEMFILL                                 Fills a designated memory block OFFSET with a certain SIZE and TYPE of value.
+_MEMFREE                                 Frees a designated memory block in a program. Only free memory blocks once.
+_MEMGET                                  Reads a value from a designated memory block at a designated  OFFSET.
+_MEMGET (function)                       Returns a value from a designated memory block and OFFSET using a designated variable TYPE.
+_MEMIMAGE                                Returns a _MEM block referring to a designated image handle's memory.
+_MEMNEW                                  Allocates new memory with a designated SIZE and returns a _MEM block referring to it.
+_MEMPUT                                  Places a designated value into a designated memory block OFFSET.
+_MEMSOUND                                Returns a _MEM block referring to a designated sound handle's memory.
+_MIDDLE                                  Centers the program window on the desktop in any screen resolution.
+_MK$                                     Converts a numerical value to a designated ASCII STRING value.
+_MOUSEBUTTON                             Returns the status of a designated mouse button.
+_MOUSEHIDE                               Hides the mouse pointer from view.
+_MOUSEINPUT                              Returns a value if the mouse status has changed since the last read.
+_MOUSEMOVE                               Moves the mouse pointer to a designated position on the program SCREEN.
+_MOUSEMOVEMENTX                          Returns the relative horizontal position of the mouse cursor compared to the previous position.
+_MOUSEMOVEMENTY                          Returns the relative vertical position of the mouse cursor compared to the previous position.
+_MOUSESHOW                               Displays the mouse cursor after it has been hidden or can change the cursor shape.
+_MOUSEWHEEL                              Returns the number of mouse scroll wheel.
+_MOUSEX                                  Returns the current horizontal position of the mouse cursor.
+_MOUSEY                                  Returns the current vertical position of the mouse cursor.
+_NEWIMAGE                                Creates a designated size program SCREEN or page image and returns a handle value.
+_NUMLOCK                                 Sets Num Lock key state.
+_NUMLOCK (function)                      Returns -1 when Num Lock is on.
+_OFFSET                                  Can be used store the value of an offset in memory when using DECLARE LIBRARY or MEM only.
+_OFFSET (function)                       Returns the memory offset of a variable when used with DECLARE LIBRARY or _MEM only.
+_OPENCLIENT                              Connects to a Host on the Internet as a Client and returns the Client status handle.
+_OPENCONNECTION                          Opens a connection from a client that the host has detected and returns a status handle.
+_OPENHOST                                Opens a Host and returns a Host status handle.
+_OS$                                     Returns the QB64 compiler version in which the program was compiled as [WINDOWS], [LINUX] or [MACOSX] and [32BIT] or [64BIT].
+_PALETTECOLOR                            Sets the color value of a palette entry of an image using 256 colors or less palette modes.
+_PALETTECOLOR (function)                 Return the 32 bit attribute color setting of an image or screen page handle's palette.
+_PI                                      Returns the value of π or parameter multiples for angle or circle calculations.
+_PIXELSIZE                               Returns the pixel palette mode of a designated image handle.
+_PRESERVE                                (REDIM action) preserves the data presently in an array when REDIM is used.
+_PRINTIMAGE                              Sends an image to the printer that is stretched to the current printer paper size.
+_PRINTMODE                               Sets the text or _FONT printing mode on a background when using PRINT or _PRINTSTRING.
+_PRINTMODE (function)                    Returns the present _PRINTMODE value number.
+_PRINTSTRING                             Locates and prints a text string using graphic coordinates.
+_PRINTWIDTH                              Returns the pixel width of a text string to be printed using _PRINTSTRING.
+_PUTIMAGE                                Maps a rectangular image source area to an image destination area.
+_R2D                                     Converts radians to degree angle values.
+_R2G                                     Converts radians to gradient angle values.
+_READBIT                                 Returns the state of the specified bit of an integer variable.
+_RED                                     Function returns the palette or the red component intensity of a 32-bit image color.
+_RED32                                   Returns the red component intensity of a 32-bit color value.
+_RESETBIT                                Is used to set the specified bit of an integer variable to 0.
+_RESIZE                                  Sets resizing of the window ON or OFF and sets the method as _STRETCH or _SMOOTH.
+_RESIZE (function)                       Returns -1 when a program user wants to resize the program screen.
+_RESIZEHEIGHT                            Returns the requested new user screen height when $RESIZE:ON allows it.
+_RESIZEWIDTH                             Returns the requested new user screen width when $RESIZE:ON allows it.
+_RGB                                     Returns the closest palette index OR the LONG 32 bit color value in 32 bit screens.
+_RGB32                                   Returns the LONG 32 bit color value in 32 bit screens only.
+_RGBA                                    Returns the closest palette index OR the LONG 32 bit color value in 32 bit screens with the ALPHA.
+_RGBA32                                  Returns the LONG 32 bit color value in 32 bit screens only with the ALPHA.
+_ROUND                                   Rounds to the closest INTEGER, LONG or _INTEGER64 numerical value.
+_SCREENCLICK                             Simulates clicking on a point on the desktop screen with the left mouse button.
+_SCREENEXISTS                            Returns a -1 value once a screen has been created.
+_SCREENHIDE                              Hides the program window from view.
+_SCREENICON                              Minimizes the program window to an icon on the taskbar.
+_SCREENICON (function)                   Returns -1 or 0 to indicate if the window has been minimized to an icon on the taskbar.
+_SCREENIMAGE                             Creates an image of the current desktop and returns an image handle.
+_SCREENMOVE                              Positions program window on the desktop using designated coordinates or the _MIDDLE option.
+_SCREENPRINT                             Simulates typing text into a Windows program using the keyboard.
+_SCREENSHOW                              Displays the program window after it has been hidden by _SCREENHIDE.
+_SCREENX                                 Returns the program window's upper left corner horizontal position on the desktop.
+_SCREENY                                 Returns the program window's upper left corner vertical position on the desktop.
+_SCROLLLOCK                              Sets Scroll Lock key state.
+_SCROLLLOCK (function)                   Returns -1 when Scroll Lock is on.
+_SEC                                     The mathematical function secant defined by 1/COS.
+_SECH                                    Returns the hyperbolic secant.
+_SETALPHA                                Sets the alpha channel transparency level of some or all of the pixels of an image.
+_SETBIT                                  Is used to set the specified bit of an integer variable to 1.
+_SHELLHIDE                               Returns the code sent by a program exit using END or SYSTEM followed by an INTEGER value.
+_SHL                                     Used to shift the bits of a numerical value to the left.
+_SHR                                     Used to shift the bits of a numerical value to the right.
+_SINH                                    Returns the hyperbolic sine of x radians.
+_SNDBAL                                  Attempts to set the balance or 3D position of a sound file.
+_SNDCLOSE                                Frees and unloads an open sound using the sound handle created by _SNDOPEN.
+_SNDCOPY                                 Copies a sound handle value to a new designated handle.
+_SNDGETPOS                               Returns the current playing position in seconds from a sound file.
+_SNDLEN                                  Returns the length of a sound in seconds from a sound file.
+_SNDLIMIT                                Stops playing a sound after it has been playing for a set number of seconds.
+_SNDLOOP                                 Plays a sound repeatedly until _SNDSTOP is used.
+_SNDOPEN                                 Loads a sound file and returns a sound handle.
+_SNDOPENRAW                              Opens a new channel to shove _SNDRAW content into without mixing.
+_SNDPAUSE                                Stops playing a sound file until resumed.
+_SNDPAUSED                               Returns the current pause status of a sound file handle.
+_SNDPLAY                                 Plays a sound file handle that was created by _SNDOPEN or _SNDCOPY.
+_SNDPLAYCOPY                             Copies a sound handle, plays it and automatically closes the copy when done.
+_SNDPLAYFILE                             Directly plays a designated sound file.
+_SNDPLAYING                              Returns the current playing status of a sound handle.
+_SNDRATE                                 Returns the sound card sample rate to set _SNDRAW durations.
+_SNDRAW                                  Creates mono or stereo sounds from calculated wave frequency values.
+_SNDRAWDONE                              Pads a _SNDRAW stream so the final (partially filled) buffer section is played.
+_SNDRAWLEN                               Returns a value until the _SNDRAW buffer is empty.
+_SNDSETPOS                               Sets the playing position of a sound handle.
+_SNDSTOP                                 Stops playing a sound handle.
+_SNDVOL                                  Sets the volume of a sound file handle.
+_SOURCE                                  Sets the source image handle.
+_SOURCE (function)                       Returns the present source image handle value.
+_STARTDIR$                               Returns the user's program calling path as a STRING.
+_STRCMP                                  Compares the relationship between two strings.
+_STRICMP                                 Compares the relationship between two strings, without regard for case-sensitivity.
+_TANH                                    Returns the hyperbolic tangent of x radians.
+_TITLE                                   Sets the program title string value.
+_TITLE$                                  Gets the program title string value.
+_TOGGLEBIT                               Is used to toggle the specified bit of an integer variable from 1 to 0 or 0 to 1.
+_TOTALDROPPEDFILES                       Returns the number of items (files or folders) dropped in a program's window after _ACCEPTFILEDROP is enabled.
+_TRIM$                                   Shorthand to LTRIM$(RTRIM$()).
+_UNSIGNED                                Expands the positive range of numerical INTEGER, LONG or _INTEGER64 values returned.
+_WHEEL                                   Returns -1 when a control device wheel is scrolled up and 1 when scrolled down. Zero indicates no activity.
+_WIDTH (function)                        Returns the width of a SCREEN or image handle.
+_WINDOWHANDLE                            Returns the window handle assigned to the current program by the OS. Windows-only.
+_WINDOWHASFOCUS                          Returns true (-1) if the current program's window has focus. Windows-only.
+$ASSERTS                                 Enables debug tests with the _ASSERT macro.
+$CHECKING                                (Metacommand) turns event and error checking OFF or ON.
+$COLOR                                   Includes named color constants in a program.
+$CONSOLE                                 (Metacommand) creates a console window that can be used throughout a program.
+$DEBUG                                   Enables debugging features, allowing you to step through your code line by line.
+$DYNAMIC                                 (Metacommand) used at the start of a program to set all program arrays as changeable in size using REDIM.
+$ELSE                                    (Metacommand) used in conjunction with $IF for the precompiler.
+$ELSEIF                                  (Metacommand) used in conjunction with $IF for the precompiler.
+$END IF                                  (Metacommand) used in conjunction with $IF for the precompiler.
+$ERROR                                   (Metacommand) used to trigger compiler errors from within the precompiling pass.
+$EXEICON                                 (Metacommand) used with a .ICO icon file name to embed the image into the QB64 executable.
+$IF                                      (Metacommand) used to set an IF condition for the precompiler.
+$INCLUDE                                 (Metacommand) designates a text code library file to include with the program.
+$LET                                     (Metacommand) used to set a variable for the precompiler.
+$NOPREFIX                                Allows QB64-specific keywords to be used without the underscore prefix.
+$RESIZE                                  (Metacommand) used with ON allows a user to resize the program window where OFF does not.
+$SCREENHIDE                              Hides the program window from view.
+$SCREENSHOW                              (Metacommand) displays the program window after it was hidden.
+$STATIC                                  (Metacommand) used at the start of a program to set all program arrays as unchangeable in size using DIM.
+$VERSIONINFO                             (Metacommand) adds metadata to Windows only binaries for identification purposes across the OS.
+$VIRTUALKEYBOARD                         (Metacommand) (deprecated) turns the virtual keyboard ON or OFF for use in touch-enabled devices.
+ABS                                      Converts any negative numerical value to a positive value.
+ABSOLUTE                                 Is used to access computer interrupt registers.
+ACCESS                                   Sets the read and write access of a file when opened.
+ALIAS                                    (DECLARE LIBRARY statement) denotes the actual name of an imported FUNCTION or SUB procedure.
+AND                                      Is used to compare two numerical values bitwise.
+AND (boolean)                            Conditonal operator is used to include another evaluation in an IF..THEN or Boolean statement.
+APPEND                                   Creates a new file or allows an existing file to have data added using WRITE or PRINT.
+AS                                       Is used to denote a variable type or file number.
+ASC                                      Returns the ASCII code number of a text string character.
+ASC (statement)                          Sets the code value of an ASCII text character at a designated string position.
+ATN                                      Or arctangent returns the angle in radians of a numerical tangent value.
+BEEP                                     Creates an error sound of a fixed duration.
+BINARY                                   Creates or opens an existing file for read and write byte-wise access.
+BLOAD                                    Transfers the contents of a BINARY BSAVE file to a specific array.
+BSAVE                                    Transfers the contents of an array to a specified size BINARY file.
+BYVAL                                    Assigns a numerical variable value by its value, not the name.
+CALL                                     Optional statement that sends the program to a SUB procedure.  Requires parameters be enclosed in brackets(parenthesis).
+CALL ABSOLUTE                            Is used to access computer interrupt registers.
+CASE                                     (SELECT CASE condition) designates specific conditions in a SELECT CASE statement block.
+CASE ELSE                                (SELECT CASE condition) designates an alternative condition to be evaluated in a SELECT CASE statement block.
+CASE IS                                  (SELECT CASE condition) designates specific conditions in a SELECT CASE statement block.
+CDBL                                     Returns the closest DOUBLE value of a number.
+CHAIN                                    Sends a program to another specified program module or compiled program.
+CHDIR                                    Changes the current program path for file access.
+CHR$                                     Returns a text string character by the specified ASCII code number.
+CINT                                     Returns the closest INTEGER value of a numerical value.
+CIRCLE                                   Creates a circle, ellipse or arc at a designated graphical coordinate position.
+CLEAR                                    Sets all variable and array values to zero number values or empty STRINGs.
+CLNG                                     Returns the closest LONG value of a numerical value.
+CLOSE                                    Closes specific file number(s) or all files when a number is not specified.
+CLS                                      Clears a program screen, VIEW port or WINDOW.
+COLOR                                    Sets the current text foreground and/or background color to be used.
+COMMAND$                                 Returns the command line arguments passed when a program is run.
+COMMON                                   Sets a variable name as shared by CHAINed program modules.
+CONST                                    Sets a variable name and its value as a constant value to be used by all procedures.
+COS                                      Returns the cosine of a radian angle value.
+CSNG                                     Returns the closest SINGLE value of a numerical value.
+CSRLIN                                   Returns the present PRINT cursor text row SCREEN coordinate position.
+CVD                                      Returns the DOUBLE numerical value of an 8 byte MKD$ string.
+CVDMBF                                   Returns the DOUBLE numerical value of a Microsoft Binary Format string.
+CVI                                      Returns the INTEGER numerical value of a 2 byte MKI$ string.
+CVL                                      Returns the LONG numerical value of a 4 byte MKL$ string.
+CVS                                      Returns the SINGLE numerical value of a 4 byte MKS$ string.
+CVSMBF                                   Returns the SINGLE numerical value of a Microsoft Binary Format string.
+DATA                                     Creates a line of fixed program information separated by commas.
+DATE$                                    Returns the present Operating System date string formatted as mm-dd-yyyy.
+DECLARE DYNAMIC LIBRARY (QB64 statement) Declares DYNAMIC, CUSTOMTYPE or STATIC  library(DLL) SUB or FUNCTION.
+DECLARE DYNAMIC LIBRARY (QB64 statement) Declares DYNAMIC, CUSTOMTYPE or STATIC library (DLL) SUB or FUNCTION.
+DECLARE LIBRARY (QB64 statement block)   Declares a C++, SDL or Operating System SUB or FUNCTION to be used.
+DECLARE LIBRARY (QB64 statement block)   Declares a C++, SDL or Operating System SUB or FUNCTION to be used.
+DEF SEG                                  Defines a segment in memory to be accessed by a memory procedure.
+DEFDBL                                   Defines a set of undefined variable name starting letters as DOUBLE type numerical values.
+DEFINT                                   Defines a set of undefined variable name starting letters as INTEGER type numerical values.
+DEFLNG                                   Defines a set of undefined variable name starting letters as LONG type numerical values.
+DEFSNG                                   Defines a set of undefined variable name starting letters as SINGLE type numerical values.
+DEFSTR                                   Defines a set of undefined variable name starting letters as STRING type values.
+DIM                                      Defines a variable as a specified type and can size a STATIC  array.
+DO..LOOP                                Sets a recursive procedure loop that can be ignored or exited using conditional arguments.
+DOUBLE                                   8 byte value limited to values up to 15 decimal places.
+DRAW                                     Uses a special string format that draws graphical lines in specific directions.
+ELSE                                     (IF..THEN statement) is used to direct program flow when no other condition is evaluated as true.
+ELSEIF                                   (IF..THEN statement) is used with THEN to set alternate conditional evaluations.
+END                                      Sets the end of a program, sub-procedure, statement block, DECLARE LIBRARY or TYPE definition.
+END IF                                   ENDs an IF..THEN conditional block statement using more than one line of code.
+ENVIRON                                  Temporarily sets an environmental key/pair value.
+ENVIRON$                                 Returns a specified string setting or numerical position as an environmental STRING value.
+EOF                                      Returns -1 when a file INPUT or GET has reached the end of a file.
+EQV                                      Is used to compare two numerical values bitwise.
+ERASE                                    Clears the values from $STATIC arrays and completely removes $DYNAMIC arrays.
+ERDEV                                    Returns an error code from the last device to create an error.
+ERDEV$                                   Returns the 8 character name of the last device to declare an error as a string.
+ERL                                      Returns the closest line number before an error occurred if line numbers are used.
+ERR                                      Returns the ERROR code when a program error occurs.
+ERROR                                    Sets a specific ERROR code to be simulated.
+EXIT                                     Immediately exits a program FOR..NEXT, DO..LOOP, SUB or FUNCTION procedure.
+EXP                                      Returns the value of e to the exponential power specified.
+FIELD                                    Defines the variable sizes to be written or read from a file.
+FILEATTR                                 Returns the current file access mode.
+FILES                                    Returns a list of files in the current directory path to the SCREEN.
+FIX                                      Returns the rounded INTEGER value of a numerical value.
+FOR (file statement)                     Used in an OPEN file or device statement to indicate the access mode.
+FOR..NEXT                               Creates a recursive loop procedure that loop a specified number of times.
+FRE                                      Returns the number of bytes of Memory available to running programs.
+FREE (QB64 TIMER statement)              Frees a numbered TIMER event in QB64.
+FREEFILE                                 Returns a file number that is currently not in use by the Operating System.
+FUNCTION                                 Sub-procedure that can calculate and return one value to a program in its name.
+GET                                      Reads a file sequencially or at a specific position and returns the value as the variable type used.
+GET (graphics statement)                 Maps an area the current screen's video information and places it in an INTEGER array.
+GET (QB64 TCP/IP statement)              Reads a connection port to return a value.
+GOSUB                                    Sends the program to a designated line label procedure in the main program.
+GOTO                                     Sends the program to a designated line number or line label in a procedure.
+HEX$                                     Returns the hexadecimal (base 16) STRING representation of the INTEGER part of any value.
+IF..THEN                                A conditional block statement used control program flow.
+IMP                                      Is used to compare two numerical values bitwise.
+INKEY$                                   ASCII returns a string value entry from the keyboard.
+INP                                      Returns a numerical value from a specified port register address. See Keyboard scancodes.
+INPUT                                    A user input that returns a value to one or more specified variable(s).
+INPUT (file mode)                        OPEN statement that only allows an existing file to be read using INPUT (file statement) or INPUT$.
+INPUT (file statement)                   Reads a file sequentially using the variable types designated.
+INPUT$                                   Returns a designated number of string bytes from the keyboard entry or a file number.
+INSTR                                    Returns the position in a text string where a character sequence match starts.
+INT                                      Rounds a numerical value to an INTEGER value by removing the decimal point fraction.
+INTEGER                                  2 byte whole values from -32768 to 32767.
+INTERRUPT                                Is used to access computer interrupt registers.
+INTERRUPTX                               Is used to access computer interrupt registers.
+IOCTL                                    
+IOCTL$                                   
+IOCTL$ (function)                        
+KEY LIST                                 Lists the 12 Function key soft key string assignments going down left side of screen.
+KEY n                                    Used with ON KEY(n) events to assign a 'softkey' string to a key or create a  user defined key.
+KEY(n)                                   Used with ON KEY(n) events to assign, enable, disable or suspend event trapping.
+KILL                                     Deletes the specified file without a warning. Remove empty folders with RMDIR.
+LBOUND                                   Returns the lower boundary of the specified array.
+LCASE$                                   Returns the lower case value of a STRING.
+LEFT$                                    Returns the specified number of text characters from the left end of a STRING.
+LEN                                      Returns the length or number of characters in a STRING value in bytes.
+LET                                      Assigns a variable a literal value. Not required.
+LINE                                     Creates a graphic line or box on the SCREEN.
+LINE INPUT                               User input can be any text character including commas and quotes as a STRING value only.
+LINE INPUT (file statement)              Returns an entire text file line and returns it as a STRING value.
+LIST                                     Displays the current ON KEY(n) function key (F1 to F10).
+LOC                                      Returns the present file byte position or number of bytes in the OPEN COM buffer.
+LOCATE                                   Sets the text cursor's row and column position for a PRINT or INPUT statement.
+LOCK                                     Restricts access to portions or all of a file by other programs or processes.
+LOF                                      Returns the size of an OPEN file in bytes.
+LOG                                      Returns the natural logarithm of a specified numerical value.
+LONG                                     4 byte whole values from -2147483648 to 2147483647.
+LOOP                                     Bottom end of a recursive DO loop.
+LPOS                                     Returns the printer head position.
+LPRINT                                   Sends STRING data to the default LPT or USB printer.
+LPRINT USING                             Sends template formatted text to the default LPT or USB  printer.
+LSET                                     Left justifies the text in a string so that there are no leading spaces.
+LTRIM$                                   Returns a string value with no leading spaces.
+MID$                                     Returns a designated portion of a STRING.
+MID$ (statement)                         Redefines existing characters in a STRING.
+MKD$                                     Returns an 8 byte ASCII string representation of a DOUBLE numerical value.
+MKDIR                                    Creates a new folder in the current or designated program path.
+MKDMBF$                                  Returns an 8 byte Microsoft Binary Format STRING representation of a DOUBLE numerical value.
+MKI$                                     Returns a 2 byte ASCII string representation of an INTEGER.
+MKL$                                     Returns a 4 byte ASCII string representation of a LONG numerical value.
+MKS$                                     Returns a 4 byte ASCII string representation of a SINGLE numerical value.
+MKSMBF$                                  Returns an 8 byte Microsoft Binary Format STRING representation of a DOUBLE numerical value.
+MOD                                      Performs integer remainder division on a numerical value.
+NAME                                     Names an existing file name AS a new file name.
+NEXT                                     Bottom end of a FOR..NEXT counter loop to returns to the start or a RESUME NEXT error.
+NOT                                      Inverts the value of a logic operation or returns True when a boolean evaluation is False.
+OCT$                                     Returns the octal (base 8) STRING representation of the INTEGER part of any value.
+OFF                                      Turns off all ON event checking.
+ON COM(n)                                Sets up a COM port event procedure call.
+ON ERROR                                 Sets up and activates an error event checking procedure call. Use to avoid program errors.
+ON KEY(n)                                Sets up a keyboard key entry event procedure.
+ON PEN                                   Sets up a pen event procedure call.
+ON PLAY(n)                               Sets up a PLAY event procedure call.
+ON STRIG(n)                              Sets up a joystick button event procedure call.
+ON TIMER(n)                              Sets up a timed event procedure call.
+ON UEVENT                                Not implemented in QB64.
+ON..GOSUB                                Sets up a numerical event procedure call.
+ON..GOTO                                 Sets up a numerical event procedure call.
+OPEN                                     Opens a file name for an access mode with a specific file number.
+OPEN COM                                 Opens a serial communication port for access at a certain speed and mode.
+OPTION _EXPLICIT                         Instructs the compiler to require variable declaration with DIM or an equivalent statement.
+OPTION _EXPLICITARRAY                    Instructs the compiler to require array declaration with DIM or an equivalent statement.
+OPTION BASE                              Can set the lower boundary of all arrays to 1.
+OR                                       Is used to compare two numerical values bitwise.
+OR (boolean)                             Conditonal operator is used to include an alternative evaluation in an IF..THEN or Boolean statement.
+OUT                                      Writes numerical data to a specified register port.
+OUTPUT                                   Creates a new file or clears all data from an existing file to acess the file sequencially.
+PAINT                                    Fills an enclosed area of a graphics screen with a color until it encounters a specific colored border.
+PALETTE                                  Sets the Red, Green and Blue color attribute intensities using a RGB multiplier calculation.
+PALETTE USING                            Sets the color intensity settings using a designated array.
+PCOPY                                    Swaps two designated memory page images when page swapping is enabled in the SCREEN statement.
+PEEK                                     Returns a numerical value from a specified segment address in memory.
+PEN                                      Returns requested information about the lightpen device used.
+PEN (statement)                          Enables/disables or suspends event trapping of a lightpen device.
+PLAY                                     Uses a special string format that can produce musical tones and effects.
+PLAY(n)                                  Returns the number of notes currently in the background music queue.
+PMAP                                     Returns the physical or WINDOW view graphic coordinates.
+POINT                                    Returns the color attribute number or 32 bit _RGB32 value.
+POKE                                     Writes a numerical value to a specified segment address in memory.
+POS                                      Returns the current text column position of the text cursor.
+PRESET                                   Sets a pixel coordinate to the background color unless one is specified.
+PRINT                                    Prints text strings or numerical values to the SCREEN.
+PRINT (file statement)                   Prints text strings or numerical values to a file.
+PRINT USING                              Prints a template formatted string to the SCREEN.
+PRINT USING (file statement)             Prints a template formatted string to a file.
+PSET                                     Sets a pixel coordinate to the current color unless a color is designated.
+PUT                                      Writes data sequencially or to a designated position using a variable value.
+PUT (graphics statement)                 Places pixel data stored in an INTEGER array to a specified area of the SCREEN.
+PUT (QB64 TCP/IP statement)              Sends raw data to a user's connection handle.
+RANDOM                                   Creates a file or opens an existing file to read and write records of a set byte size.
+RANDOMIZE                                Sets the random seed value for a specific sequence of random RND values.
+RANDOMIZE USING (QB64 statement)         Restarts the designated seed value's random sequence of values from the beginning.
+READ                                     Reads values from a DATA field. ACCESS READ is used with the OPEN statement.
+REDIM                                    Creates a new dynamic array or resizes one without losing data when _PRESERVE is used.
+REM                                      Or an apostrophe tells the program to ignore statements following it on the same line.
+RESET                                    Closes all files and writes the directory information to a diskette before it is removed from a disk drive.
+RESTORE                                  Resets the DATA pointer to the start of a designated field of data.
+RESUME                                   An error handling procedure exit that can send the program to a line number or the NEXT code line.
+RETURN                                   Returns the program to the code immediately following a GOSUB call.
+RIGHT$                                   Returns a specific number of text characters from the right end of a STRING.
+RMDIR                                    Removes an empty folder from the current path or the one designated.
+RND                                      Returns a random number value from 0 to .9999999.
+RSET                                     Right justifies a string value so that any end spaces are moved to the beginning.
+RTRIM$                                   Returns a string with all spaces removed from the right end.
+RUN                                      Clears and restarts the program currently in memory or executes another specified program.
+SADD                                     Returns the address of a STRING variable as an offset from the current data segment.
+SCREEN                                   Sets the display mode and size of the program window.
+SCREEN (function)                        Can return the ASCII character code or color of the text at a text designated coordinate.
+SEEK                                     Returns the present byte position in an opened file.
+SEEK (statement)                         Moves to a specified position in an opened file.
+SELECT CASE                              A program flow block that can handle numerous conditional evaluations.
+SETMEM                                   Sets the memory to use.
+SGN                                      Returns -1 for negative, 0 for zero, and 1 for positive numerical values.
+SHARED                                   Designates that a variable can be used by other procedures or the main procedure when in a sub-procedure.
+SHELL                                    Sends STRING commands to the command line. SHELL calls will not affect the current path.
+SHELL (QB64 function)                    Executes an external command or calls another program. Returns codes sent by END or SYSTEM.
+SIGNAL                                   .
+SIN                                      Returns the sine of a radian angle.
+SIN (function)                           Returns the sine of a radian angle.                                     .
+SINGLE                                   4 byte floating decimal point values up to 7 decimal places.
+SLEEP                                    Pauses the program for a designated number of seconds or until a key is pressed.
+SOUND                                    Creates a sound of a specified frequency and duration.
+SPACE$                                   Returns a designated number of spaces to a STRING.
+SPC                                      Moves the text cursor a number of spaces on the SCREEN.
+SQR                                      Returns the square root of a non-negative number.
+STATIC                                   Creates a SUB or FUNCTION variable that retains its value.
+STEP                                     Move relatively from one graphic position or change the counting increment in a FOR..NEXT loop.
+STICK                                    Returns the present joystick position.
+STOP                                     Stops a program when troubleshooting or stops an ON event.
+STR$                                     Returns a string value of a number with a leading space when it is positive.
+STRIG                                    Returns the joystick button press values when read.
+STRIG(n)                                 Returns button press True or False status of game port (&H201) or USB joystick control device(s).
+STRING                                   One byte text variable with ASCII code values from 0 to 255.
+STRING ($ variable type)                 One byte text variable with ASCII code values from 0 to 255. .
+STRING$                                  Returns a designated number of string characters.
+SUB                                      Sub-procedure that can calculate and return multiple parameter values.
+SUB _GL                                  
+SWAP                                     Swaps two string or numerical values.
+SYSTEM                                   Ends a program immediately.
+TAB                                      Moves a designated number of columns on the screen.
+TAN                                      Returns the ratio of SINe to COSine or tangent value of an angle measured in radians.
+THEN                                     IF..THEN (keyword) must be used in a one line IF..THEN program flow statement.
+TIME$                                    Returns the present time setting of the Operating System as a  format hh:mm:ss STRING.
+TIMER                                    Returns the number of seconds since midnight as a SINGLE value.
+TIMER (statement)                        Events based on the designated time interval and timer number.
+TO                                       Indicates a range of numerical values or an assignment of one value to another.
+TYPE                                     Defines a variable type or file record that can include any STRING or numerical types.
+UBOUND                                   Returns the upper-most index number of a designated array.
+UCASE$                                   Returns an uppercase representation of a specified STRING.
+UEVENT                                   Not implemented in QB64.
+UNLOCK                                   Unlocks a designated file or portions of it.
+UNTIL                                    Evaluates a DO..LOOP condition until it is True.
+VAL                                      Returns the numerical value of a string number.
+VARPTR                                   Returns the segment pointer address in memory.
+VARPTR$                                  Returns the string value of a numerical value in memory.
+VARSEG                                   Returns the segment address of a value in memory.
+VIEW                                     Sets up a graphic view port area of the screen.
+VIEW PRINT                               Sets up a text viewport area of the screen.
+WAIT                                     Waits until a vertical retrace is started or a screen draw ends.
+WEND                                     The bottom end of a WHILE..WEND loop.
+WHILE                                    Evaluates a DO..LOOP or WHILE..WEND condition until it is False.
+WHILE..WEND                              Sets a recursive procedure loop that can only be exited using the WHILE conditional argument.
+WIDTH                                    Sets the text column and row sizes in several SCREEN modes.
+WINDOW                                   Maps a window size different from the program's window size.
+WRITE                                    Prints variable values to the screen with commas separating each value.
+WRITE (file statement)                   Writes data to a file with each variable value separated by commas.
+XOR                                      Is used to compare two numerical values bitwise.
