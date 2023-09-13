@@ -7,10 +7,12 @@ DIM AS LONG ALIEN_SPRITE, ALIEN_32, ALIEN_HW, CANVAS
  
 CANVAS& = _NEWIMAGE(320, 200, 32)
 SCREEN CANVAS&
+DIM wt AS INTEGER
+wt% = _WIDTH - w% + 1
 _FULLSCREEN _SQUAREPIXELS
  
 d!   = 0
-lim% = 120
+lim% = 60
 st%  = 1
 x%   = 0
 y%   = 10
@@ -36,18 +38,19 @@ ALIEN_HW& = _COPYIMAGE(ALIEN_32&, 33)
 _DEST CANVAS&
 CLS , _RGB32(0, 0, 255)
 DO
-    FOR x% = 0 TO _WIDTH - w% + 1 STEP st%
+    FOR x% = 0 TO wt% STEP st%
         IF lim% > 0 THEN _LIMIT lim%
         _PUTIMAGE (x%, y%), ALIEN_HW&
         _DISPLAY
-        IF d! > 0 THEN _DELAY d!
+        ' IF d! > 0 THEN _DELAY d!
     NEXT x%
-    FOR x% = _WIDTH - w% + 1 TO 0 STEP -st%
+    FOR x% = wt% TO 0 STEP -st%
         IF lim% > 0 THEN _LIMIT lim%
         _PUTIMAGE (x%, y%), ALIEN_HW&
         _DISPLAY
-        IF d! > 0 THEN _DELAY d!
+        ' IF d! > 0 THEN _DELAY d!
     NEXT
+    _DISPLAY
 LOOP UNTIL _KEYHIT = 27
  
 _FREEIMAGE ALIEN_SPRITE&
