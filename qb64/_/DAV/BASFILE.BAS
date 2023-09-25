@@ -1,7 +1,15 @@
-'==================
-' BASFILE.BAS v0.10
-'==================
-'Coded by Dav for QB64 (c) 2009
+'=================
+'BASFILE.BAS v0.22
+'=================
+'Coded by Dav for QB64PE 3.8, SEP/2023
+
+'v0.22 Chnages: - Uses QB64's File Open/Save Dialogs now.
+'               - Added _INFLATE$ OrigSize& parameter to output code.
+'                 (needed for _INFLATE$ changes in QB64-PE 3.8.0)
+
+'======
+'ABOUT :
+'======
 
 'BASFILE helps you include binary files INSIDE your QB64 compiled programs.
 'It does this by converting file to BAS code that you add to your program
@@ -11,89 +19,114 @@
 
 '=========================================================================
 
-DEFINT A-Z
+DefInt A-Z
 DECLARE FUNCTION E$ (B$)
 
-PRINT
-PRINT "============="
-PRINT "BASFILE v0.10"
-PRINT "============="
-PRINT
+Print
+Print "============="
+Print "BASFILE v0.22"
+Print "============="
+Print
 
-INPUT "INPUT File --> ", IN$: IF IN$ = "" THEN END
-INPUT "OUTPUT File -> ", OUT$: IF OUT$ = "" THEN END
-OPEN IN$ FOR BINARY AS 1
-IF LOF(1) = 0 THEN
-    CLOSE : KILL IN$
-    PRINT UCASE$(IN$); " not found!": END
-END IF
+Print "Input file --> ";
+IN$ = _OpenFileDialog$("Open File to encode...", "", "", "All files", -1)
+If IN$ = "" Then
+    Print "No file selected.  Closing.": End
+Else
+    Print IN$
+End If
 
-OPEN OUT$ FOR OUTPUT AS 2
-PRINT : PRINT "Encoding file...";
 
-Q$ = CHR$(34) 'quotation mark
-PRINT #2, "A$ = "; Q$; Q$
-PRINT #2, "A$ = A$ + "; Q$;
+Print "Output file -> ";
+OUT$ = _SaveFileDialog$("Save Encoded file as ", "", "*.bas", "BAS files")
+If OUT$ = "" Then
+    Print "No filename given.": End
+Else
+    Print OUT$
+End If
 
-DO
-    a$ = INPUT$(3, 1)
+
+'Grab whole file as a string
+Open IN$ For Binary As 1
+INDATA$ = (Input$(LOF(1), 1))
+
+'Original size
+OrigSize& = Len(INDATA$)
+
+'Compress it
+INDATA$ = _Deflate$(INDATA$)
+
+Open OUT$ For Output As 2
+Print: Print "Encoding file...";
+
+Q$ = Chr$(34) 'quotation mark
+Print #2, "A$ = "; Q$; Q$
+Print #2, "A$ = A$ + "; Q$;
+
+BC& = 1
+
+Do
+    a$ = Mid$(INDATA$, BC&, 3)
     BC& = BC& + 3: LL& = LL& + 4
-    IF LL& = 60 THEN
-      LL& = 0
-      PRINT #2, E$(a$); : PRINT #2, Q$
-      PRINT #2, "A$ = A$ + "; Q$;
-    ELSE
-      PRINT #2, E$(a$);
-    END IF
-    IF LOF(1) - BC& < 3 THEN
-      a$ = INPUT$(LOF(1) - BC&, 1): B$ = E$(a$)
-      SELECT CASE LEN(B$)
-        CASE 0: a$ = Q$
-        CASE 1: a$ = "%%%" + B$ + Q$
-        CASE 2: a$ = "%%" + B$ + Q$
-        CASE 3: a$ = "%" + B$ + Q$
-      END SELECT: PRINT #2, a$; : EXIT DO
-    END IF
-LOOP: PRINT #2, "" 
+    If LL& = 60 Then
+        LL& = 0
+        Print #2, E$(a$);: Print #2, Q$
+        Print #2, "A$ = A$ + "; Q$;
+    Else
+        Print #2, E$(a$);
+    End If
+    If Len(INDATA$) - BC& < 3 Then
+        a$ = Mid$(INDATA$, Len(INDATA$) - BC&, 1): B$ = E$(a$)
+        Select Case Len(B$)
+            Case 0: a$ = Q$
+            Case 1: a$ = "%%%" + B$ + Q$
+            Case 2: a$ = "%%" + B$ + Q$
+            Case 3: a$ = "%" + B$ + Q$
+        End Select: Print #2, a$;: Exit Do
+    End If
+Loop: Print #2, ""
 
-PRINT #2, "btemp$="; Q$; Q$
-PRINT #2, "FOR i&=1TO LEN(A$) STEP 4:B$=MID$(A$,i&,4)"
-PRINT #2, "IF INSTR(1,B$,"; Q$; "%"; Q$; ") THEN"
-PRINT #2, "FOR C%=1 TO LEN(B$):F$=MID$(B$,C%,1)"
-PRINT #2, "IF F$<>"; Q$; "%"; Q$; "THEN C$=C$+F$"
-PRINT #2, "NEXT:B$=C$"
-PRINT #2, "END IF:FOR t%=LEN(B$) TO 1 STEP-1"
-PRINT #2, "B&=B&*64+ASC(MID$(B$,t%))-48"
-PRINT #2, "NEXT:X$="; Q$; Q$; ":FOR t%=1 TO LEN(B$)-1"
-PRINT #2, "X$=X$+CHR$(B& AND 255):B&=B&\256"
-PRINT #2, "NEXT:btemp$=btemp$+X$:NEXT"
-PRINT #2, "BASFILE$=btemp$:btemp$="; Q$; Q$
-PRINT #2, "'==================================="
-PRINT #2, "'EXAMPLE: SAVE BASFILE$ TO DISK"
-PRINT #2, "'==================================="
-PRINT #2, "'OPEN "; Q$; IN$; Q$; " FOR OUTPUT AS #1"
-PRINT #2, "'PRINT #1, BASFILE$;"
-PRINT #2, "'CLOSE #1"
+Print #2, "btemp$="; Q$; Q$
+Print #2, "FOR i&=1TO LEN(A$) STEP 4:B$=MID$(A$,i&,4)"
+Print #2, "IF INSTR(1,B$,"; Q$; "%"; Q$; ") THEN"
+Print #2, "FOR C%=1 TO LEN(B$):F$=MID$(B$,C%,1)"
+Print #2, "IF F$<>"; Q$; "%"; Q$; "THEN C$=C$+F$"
+Print #2, "NEXT:B$=C$:END IF:FOR j=1 TO LEN(B$)"
+Print #2, "IF MID$(B$,j,1)="; Q$; "#"; Q$; " THEN"
+Print #2, "MID$(B$,j)="; Q$; "@"; Q$; ":END IF:NEXT"
+Print #2, "FOR t%=LEN(B$) TO 1 STEP-1"
+Print #2, "B&=B&*64+ASC(MID$(B$,t%))-48"
+Print #2, "NEXT:X$="; Q$; Q$; ":FOR t%=1 TO LEN(B$)-1"
+Print #2, "X$=X$+CHR$(B& AND 255):B&=B&\256"
+Print #2, "NEXT:btemp$=btemp$+X$:NEXT"
+Print #2, "BASFILE$=_INFLATE$(btemp$,"; OrigSize&; "):btemp$="; Q$; Q$
+Print #2, "'==================================="
+Print #2, "'EXAMPLE: SAVE BASFILE$ TO DISK"
+Print #2, "'==================================="
+Print #2, "'OPEN "; Q$; IN$; Q$; " FOR OUTPUT AS #1"
+Print #2, "'PRINT #1, BASFILE$;"
+Print #2, "'CLOSE #1"
 
-PRINT "Done!"
-PRINT UCASE$(OUT$); " saved."
-END
+Print "Done!"
+Print
+Print UCase$(OUT$); " saved."
+Close
+End
 
-FUNCTION E$ (B$)
+Function E$ (B$)
 
-FOR T% = LEN(B$) TO 1 STEP -1
-     B& = B& * 256 + ASC(MID$(B$, T%))
-NEXT
+    For T% = Len(B$) To 1 Step -1
+        B& = B& * 256 + Asc(Mid$(B$, T%))
+    Next
 
-a$ = ""
-FOR T% = 1 TO LEN(B$) + 1
-     g$ = CHR$(48 + (B& AND 63)): B& = B& \ 64
-     'If < and > are here, replace them with # and *
-     'Just so there's no HTML tag problems with forums.
-     'They'll be restored during the decoding process..
-     'IF g$ = "<" THEN g$ = "#"
-     'IF g$ = ">" THEN g$ = "*"
-     a$ = a$ + g$
-NEXT: E$ = a$
+    a$ = ""
+    For T% = 1 To Len(B$) + 1
+        g$ = Chr$(48 + (B& And 63)): B& = B& \ 64
+        'If @ is here, replace it with # to fix the
+        'problem posting code with @ in the QB64 forum.
+        'It wil be restored during the decoding process.
+        If g$ = "@" Then g$ = "#"
+        a$ = a$ + g$
+    Next: E$ = a$
 
-END FUNCTION
+End Function

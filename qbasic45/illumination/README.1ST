@@ -1,0 +1,43 @@
+
+                       *************************************
+                       ** ILLUMINATION PRESENTS: QBVGASRC **
+                       *************************************
+
+       One day we found some old VGA-sources, which we had made
+       with QBASIC long time ago, so we put them into this packet.
+     
+       All sources have been made with Quick Basic 4.5, but we have
+       checked that they all work fine with QBASIC too.
+
+       Programs are quite slow with QBASIC, but they run much faster
+       without EMM386.EXE.
+
+       If you want to show PCX-files with PCX.BAS, you must convert them with
+       CONV.EXE.
+       Syntax: CONV [Source-file], [Dest. file].
+       There is also a value in the first line of PCX.BAS, witch you must
+       change depending on how much there is one color in your picture.
+
+       We're sorry that there might be some bugs in these sources and they
+       aren't as ready as they could be (for example CHOPPER.BAS fucks up
+       when you fly over the screen borders), but they should be fixed easily.
+       We just didn't have enough time to fix or change anything, 'cause
+       we have other projects going on.
+
+       You can freely do anything you want with these programs, but if you
+       use for example the PCX-viewer in your own production it would be
+       nice if you send us credits.
+
+       If you have any comments or questions then you can send them to us to
+       the following places:
+
+       E-MAIL: kryo@freenet.hut.fi
+
+       Normal mail: ILLUMINATION
+                    PEURATIE 5
+                    00800 HKI
+                    FINLAND
+
+       or you can also contact us by sending message to
+       SEPPO KOLJONEN to MBNET (Mikrobitti BBS).
+

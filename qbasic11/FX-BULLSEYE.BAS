@@ -1,0 +1,6 @@
+CLS
+SCREEN 12
+FOR i% = 1 TO 200 STEP .5000001
+WINDOW (-160 / i%, -100 / i%)-(160 / i%, 100 / i%)
+CIRCLE (0, 0), 1.5
+NEXT i%
