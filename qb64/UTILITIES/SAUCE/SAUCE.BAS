@@ -157,7 +157,7 @@ DIM AS STRING F, CommentID
 F$ = _OPENFILEDIALOG$( _
     "Choose a scene file", _
     , _
-    "*.jpg|*.png|*.tga|*.bmp|*.psd|*.gif|*.hdr|*.pic|*.pnm|*.pcx|*.svg|*.qoi|*.asc|*.ans|*.rip|*.avt|*.html|*.c|*.cpp|*.bas|*.tnd|*.fli|*.flc|*.gl|*.dl|*.avi|*.dxf|*.mod|*.669|*.stm|*.s3m|*.mtm|*.mid", _
+    "*.jpg|*.png|*.tga|*.bmp|*.psd|*.gif|*.hdr|*.pic|*.pnm|*.pcx|*.svg|*.qoi|*.xb|*.xbin|*.bin|*.asc|*.ans|*.rip|*.avt|*.html|*.c|*.cpp|*.bas|*.tnd|*.fli|*.flc|*.gl|*.dl|*.avi|*.dxf|*.mod|*.669|*.stm|*.s3m|*.mtm|*.mid", _
     "Scene Files", _
     -1 _
 )
@@ -296,12 +296,11 @@ IF SauceRecord.ID$ = "SAUCE" THEN
                 PRINT " Square Pixels - NOT STRETCHED"
             END IF
         CASE "XBin":
-            PRINT "XBin Data Type Detected: "; 
-            PRINT SAUCE_BITMAP_TYPES$(SauceRecord.FileType~%%)
+            PRINT "XBin Data Type Detected." 
             PRINT "Character Width: "; SauceRecord.TInfo1~%
             PRINT "Number of Lines: "; SauceRecord.TInfo2~%
         CASE "Archive":
-            PRINT "Archive Data Type Detected:"
+            PRINT "Archive Data Type Detected: ";
             PRINT SAUCE_ARCHIVE_TYPES$(SauceRecord.FileType~%%)
         CASE "Executable":
             PRINT "Executable Detected."
