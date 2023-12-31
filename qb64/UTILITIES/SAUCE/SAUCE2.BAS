@@ -1,4 +1,23 @@
-' from: https://github.com/grymmjack/sauce
+''
+' Sauce Reader (this will eventually also be a QB64_GJ_LIB module)
+'
+' This module works using 2 shared UDTs: 
+'   SauceRecord - The actual sauce record structure fetched as BINARY with GET
+'   SaucePacket - The filled in packet of sauce with friendly names and vars
+'
+' USAGE:
+'   '$INCLUDE('SAUCE2.BAS') ...
+'   DIM SHARED SauceRecord AS SAUCE
+'   DIM SHARED SaucePacket AS SAUCE_PACKET
+'   SAUCE.InitPacket
+'   SAUCE.GetRecord F$ ' Where F$ = filename to read sauce for
+'   SAUCE.FillPacket
+'   SAUCE.PrintPacket
+' 
+' @see https://github.com/grymmjack/sauce
+' @author Rick Christy <grymmjack@gmail.com>
+'
+
 TYPE SAUCE
     ID       AS STRING * 5
     Version  AS STRING * 2
@@ -313,7 +332,7 @@ SUB SAUCE.PrintPacket
     PRINT "FileType:     "; SauceRecord.FileType~%%
 
     PRINT 
-    
+
     SELECT CASE SAUCE_DATA_TYPE$(SauceRecord.DataType~%%)
         CASE "None":
             PRINT "No Data Type Detected"
@@ -422,26 +441,40 @@ END SUB
 ' @return BYREF SaucePacket fields populated
 '
 SUB SAUCE.ParseTFlags
-    ' PRINT "iCE Colors: "; ABS((SauceRecord.TFlags~%% AND 2^0) > 0)
+    ' PRINT _
+    '   "iCE Colors: "; _
+    '   ABS((SauceRecord.TFlags~%% AND 2^0) > 0)
     IF ABS((SauceRecord.TFlags~%% AND 2^0) = 0) THEN
         SaucePacket.IceColors$ = "OFF"
     ELSE
         SaucePacket.IceColors$ = "ON"
     END IF
-    ' PRINT "Letter Spacing: "; ABS((SauceRecord.TFlags~%% AND 2^1) > 0); ABS((SauceRecord.TFlags~%% AND 2^2) > 0)
-    IF ABS((SauceRecord.TFlags~%% AND 2^1) = 0) AND ABS((SauceRecord.TFlags~%% AND 2^2) = 0) THEN 'no preference / legacy
+    ' PRINT _
+    '   "Letter Spacing: "; _
+    '   ABS((SauceRecord.TFlags~%% AND 2^1) > 0); _
+    '   ABS((SauceRecord.TFlags~%% AND 2^2) > 0)
+    IF ABS((SauceRecord.TFlags~%% AND 2^1) = 0) _
+    AND ABS((SauceRecord.TFlags~%% AND 2^2) = 0) THEN
         SaucePacket.LetterSpacing$ = "Legacy / No preference"
-    ELSEIF ABS((SauceRecord.TFlags~%% AND 2^1) > 0) AND ABS((SauceRecord.TFlags~%% AND 2^2) = 0) THEN '8px font
+    ELSEIF ABS((SauceRecord.TFlags~%% AND 2^1) > 0) _
+    AND ABS((SauceRecord.TFlags~%% AND 2^2) = 0) THEN
         SaucePacket.LetterSpacing$ = "8px"
-    ELSEIF ABS((SauceRecord.TFlags~%% AND 2^1) = 0) AND ABS((SauceRecord.TFlags~%% AND 2^2) > 0) THEN '9px font
+    ELSEIF ABS((SauceRecord.TFlags~%% AND 2^1) = 0) _
+    AND ABS((SauceRecord.TFlags~%% AND 2^2) > 0) THEN
         SaucePacket.LetterSpacing$ = "9px"
     END IF
-    ' PRINT "Aspect Ratio: "; ABS((SauceRecord.TFlags~%% AND 2^3) > 0); ABS((SauceRecord.TFlags~%% AND 2^4) > 0)
-    IF ABS((SauceRecord.TFlags~%% AND 2^3) = 0) AND ABS((SauceRecord.TFlags~%% AND 2^4) = 0) THEN ' no preference / legacy
+    ' PRINT _
+    '   "Aspect Ratio: "; _
+    '   ABS((SauceRecord.TFlags~%% AND 2^3) > 0); _
+    '   ABS((SauceRecord.TFlags~%% AND 2^4) > 0)
+    IF ABS((SauceRecord.TFlags~%% AND 2^3) = 0) _
+    AND ABS((SauceRecord.TFlags~%% AND 2^4) = 0) THEN
         SaucePacket.AspectRatio$ = "No preference / legacy"
-    ELSEIF ABS((SauceRecord.TFlags~%% AND 2^3) = 0) AND ABS((SauceRecord.TFlags~%% AND 2^4) = 0) THEN ' created for legacy device square pixels - stretched
+    ELSEIF ABS((SauceRecord.TFlags~%% AND 2^3) = 0) _
+    AND ABS((SauceRecord.TFlags~%% AND 2^4) = 0) THEN
         SaucePacket.AspectRatio$ = "Square Pixels - STRETCHED"
-    ELSEIF ABS((SauceRecord.TFlags~%% AND 2^3) = 0) AND ABS((SauceRecord.TFlags~%% AND 2^4) > 0) THEN ' created for modern device square pixels - NO STRETCHING
+    ELSEIF ABS((SauceRecord.TFlags~%% AND 2^3) = 0) _
+    AND ABS((SauceRecord.TFlags~%% AND 2^4) > 0) THEN
         SaucePacket.AspectRatio$ = "Square Pixels - NOT STRETCHED"
     END IF
 END SUB
