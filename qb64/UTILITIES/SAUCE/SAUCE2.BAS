@@ -19,7 +19,7 @@ TYPE SAUCE
 END TYPE
 
 TYPE SAUCE_PACKET
-    SauceRecord           AS SAUCE
+    ' SauceRecord           AS SAUCE
     Comments              AS STRING
     DataType              AS STRING
     FileType              AS STRING
@@ -180,16 +180,25 @@ SYSTEM
 ' @return BYREF Empty SaucePacket filled ready to be filled
 '
 SUB SAUCE.InitPacket()
-    SaucePacket.SauceRecord             = SauceRecord
-    SaucePacket.SauceRecord.ID$         = ""
-    SaucePacket.SauceRecord.Version$    = ""
-    SaucePacket.SauceRecord.Title$      = ""
-    SaucePacket.SauceRecord.Author$     = ""
-    SaucePacket.SauceRecord.Group$      = ""
-    SaucePacket.SauceRecord.Date$       = ""
-    SaucePacket.SauceRecord.FileSize~&  = 0
-    SaucePacket.SauceRecord.DataType~%% = 0
-    SaucePacket.SauceRecord.FileType~%% = 0
+    ' SaucePacket.SauceRecord             = SauceRecord
+    ' SaucePacket.SauceRecord.ID$         = ""
+    ' SaucePacket.SauceRecord.Version$    = ""
+    ' SaucePacket.SauceRecord.Title$      = ""
+    ' SaucePacket.SauceRecord.Author$     = ""
+    ' SaucePacket.SauceRecord.Group$      = ""
+    ' SaucePacket.SauceRecord.Date$       = ""
+    ' SaucePacket.SauceRecord.FileSize~&  = 0
+    ' SaucePacket.SauceRecord.DataType~%% = 0
+    ' SaucePacket.SauceRecord.FileType~%% = 0
+    SauceRecord.ID$                     = ""
+    SauceRecord.Version$                = ""
+    SauceRecord.Title$                  = ""
+    SauceRecord.Author$                 = ""
+    SauceRecord.Group$                  = ""
+    SauceRecord.Date$                   = ""
+    SauceRecord.FileSize~&              = 0
+    SauceRecord.DataType~%%             = 0
+    SauceRecord.FileType~%%             = 0
     SaucePacket.Comments$               = ""
     SaucePacket.DataType$               = ""
     SaucePacket.FileType$               = ""
@@ -213,7 +222,7 @@ END SUB
 ' @return BYREF Filled SaucePacket
 '
 SUB SAUCE.FillPacket()
-    SauceRecord = SaucePacket.SauceRecord
+    ' SauceRecord = SaucePacket.SauceRecord
     DIM AS STRING _
         DataType, _
         FileType, _
@@ -304,7 +313,7 @@ END SUB
 ' @return void
 '
 SUB SAUCE.PrintPacket()
-    SauceRecord = SaucePacket.SauceRecord
+    ' SauceRecord = SaucePacket.SauceRecord
 
     PRINT "Sauce ID: "; SauceRecord.ID$
     PRINT "Sauce Version: "; SauceRecord.Version$
@@ -388,7 +397,7 @@ END SUB
 ' @return BYREF SaucePacket.SauceRecord
 '
 SUB SAUCE.GetRecord(F$)
-    SauceRecord = SaucePacket.SauceRecord
+    ' SauceRecord = SaucePacket.SauceRecord
     DIM FileSize AS _UNSIGNED _INTEGER64 
     DIM i AS INTEGER
     DIM CommentID AS STRING * 5
@@ -428,7 +437,7 @@ END SUB
 ' @return BYREF SaucePacket fields populated
 '
 SUB SAUCE.ParseTFlags()
-    SauceRecord = SaucePacket.SauceRecord
+    ' SauceRecord = SaucePacket.SauceRecord
     PRINT "iCE Colors: "; ABS((SauceRecord.TFlags~%% AND 2^0) > 0);
     IF ABS((SauceRecord.TFlags~%% AND 2^0) = 0) THEN
         SaucePacket.IceColors$ = "OFF"
