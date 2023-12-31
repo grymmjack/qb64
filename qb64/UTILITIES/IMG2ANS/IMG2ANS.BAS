@@ -8,6 +8,7 @@
 ' @link https://youtube.com/grymmjack
 ' @version 0.1
 '
+'$INCLUDE('../SAUCE/SAUCE3.BAS')
 
 DIM AS LONG CANVAS, SRC_IMAGE
 DIM AS INTEGER SRC_W, SRC_H, x, y, z
@@ -111,6 +112,28 @@ FOR i%=0 TO l%
             PRINT ans$
             OPEN filename$ + ".ans" FOR OUTPUT AS #1
             PRINT #1, ans$
+            CLOSE #1
+
+            OPEN filename$ + ".ans" FOR BINARY AS #1
+            PUT #1, CHR$(&H1A) ' EOF
+            SauceRecord.ID$         = "SAUCE"
+            SauceRecord.Version$    = "00"
+            SauceRecord.Title$      = "IMG2ANS.BAS Conversion"
+            SauceRecord.Author$     = "grymmjack"
+            SauceRecord.Group$      = "MiSTiGRiS"
+            SaucecRecord.Date       = "20231231"
+            SauceRecord.FileSize~&  = 0
+            SauceRecord.DataType~%% = 1
+            SauceRecord.FileType~%% = 1
+            SauceRecord.TInfo1~%    = SRC_W%
+            SauceRecord.TInfo2~%    = SRC_H%
+            SauceRecord.TInfo3~%    = 0
+            SauceRecord.TInfo4~%    = 0
+            SauceRecord.Comments~%% = 0
+            SauceRecord.TFlags~%%   = 0
+            SauceRecord.TInfoS$     = SPACE$(22)
+            SAUCE.FillPacket
+            PUT #1, SauceRecord
             CLOSE #1
 
             filename$ = ""
