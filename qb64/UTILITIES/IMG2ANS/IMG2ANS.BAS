@@ -1,4 +1,5 @@
 ''
+' TODO: Add Command Line processing support for multiple files. 
 ' IMG2ANS
 ' Convert any QB64 supported image into ANSI block art
 ' (as long as the image is using EGA palette colors)
@@ -60,40 +61,64 @@ SRC_FILE$ = _OPENFILEDIALOG$( _
     , _
     "*.jpg|*.png|*.tga|*.bmp|*.psd|*.gif|*.hdr|*.pic|*.pnm|*.pcx|*.svg|*.qoi", _
     "Image Files", _
-    0 _
+    -1 _
 )
 IF SRC_FILE$ = "" THEN SYSTEM ' image is required...
 
-' Load the image into the canvas at the same size
-SRC_IMAGE& = _LOADIMAGE(SRC_FILE$, 32) 
-SRC_W% = _WIDTH(SRC_IMAGE&) : SRC_H% = _HEIGHT(SRC_IMAGE&)
-CANVAS& = _NEWIMAGE(SRC_W%, SRC_H%, 32)
-SCREEN CANVAS&
-_SOURCE SRC_IMAGE& : _DEST CANVAS& : _PUTIMAGE
+SRC_FILE$ = SRC_FILE$ + "|"
 
-' Parse the image into ansi color blocks
-ans$ = ""
-FOR y% = 0 TO SRC_H% - 1
-    FOR x% = 0 TO SRC_W% - 1
-        c~& = POINT(x%, y%)
-        FOR z% = 0 TO UBOUND(ANSI_MAP)
-            IF c~& = ANSI_MAP(z%).RGBC~& THEN
-                ans$ = ans$ + ANSI_MAP(z%).CODE$ + CHR$(B)
-                EXIT FOR
-            END IF            
-        NEXT z%
-    NEXT x%
-    ans$ = ans$ + CHR$(10) ' line feed
-NEXT y%
+PRINT SRC_FILE$
+SLEEP
 
-SCREEN 0
-CLS
+DIM AS INTEGER i, j, l, ch
+DIM AS STRING filename
+l% = LEN(SRC_FILE$)
+PRINT l%
+SLEEP
+FOR i%=0 TO l%
+    IF i%+1 <= l% THEN ' At end of file list, do nothing
+        ch% = ASC(SRC_FILE$, i%+1)
+        IF CHR$(ch%) = "|" THEN ' File found
+            PRINT "PROCESSING: "; filename$; i%
+            SLEEP
+            
+            ' Load the image into the canvas at the same size
+            SRC_IMAGE& = _LOADIMAGE(filename$, 32) 
+            SRC_W% = _WIDTH(SRC_IMAGE&) : SRC_H% = _HEIGHT(SRC_IMAGE&)
+            CANVAS& = _NEWIMAGE(SRC_W%, SRC_H%, 32)
+            SCREEN CANVAS&
+            _SOURCE SRC_IMAGE& : _DEST CANVAS& : _PUTIMAGE
 
-' Write the output.ans file
-PRINT ans$
-OPEN "output.ans" FOR OUTPUT AS #1
-PRINT #1, ans$
-CLOSE #1
+            ' Parse the image into ansi color blocks
+            ans$ = ""
+            FOR y% = 0 TO SRC_H% - 1
+                FOR x% = 0 TO SRC_W% - 1
+                    c~& = POINT(x%, y%)
+                    FOR z% = 0 TO UBOUND(ANSI_MAP)
+                        IF c~& = ANSI_MAP(z%).RGBC~& THEN
+                            ans$ = ans$ + ANSI_MAP(z%).CODE$ + CHR$(B)
+                            EXIT FOR
+                        END IF            
+                    NEXT z%
+                NEXT x%
+                ans$ = ans$ + CHR$(10) ' line feed
+            NEXT y%
+
+            SCREEN 0
+            CLS
+
+            ' Write the output.ans file
+            PRINT ans$
+            OPEN filename$ + ".ans" FOR OUTPUT AS #1
+            PRINT #1, ans$
+            CLOSE #1
+
+            filename$ = ""
+        ELSE ' Not at end of filename yet concat...
+            filename$ = filename$ + CHR$(ch%)
+        END IF
+    END IF
+NEXT i%
 
 ' Clean up
 _FREEIMAGE SRC_IMAGE&
