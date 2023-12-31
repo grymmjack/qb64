@@ -203,16 +203,54 @@ SELECT CASE SAUCE_DATA_TYPE$(SauceRecord.DataType~%%)
                 PRINT "Character Width: "; SauceRecord.TInfo1~%
                 PRINT "Number of Lines: "; SauceRecord.TInfo2~%
                 PRINT "Font Name: "; SauceRecord.TInfoS$
-                PRINT "iCE Colors: "; ABS((SauceRecord.TFlags AND 2^0) > 0)
-                PRINT "Letter Spacing: "; ABS((SauceRecord.TFlags AND 2^1) > 0); ABS((SauceRecord.TFlags AND 2^2) > 0)
-                PRINT "Aspect Ratio: "; ABS((SauceRecord.TFlags AND 2^3) > 0); ABS((SauceRecord.TFlags AND 2^4) > 0)
+                PRINT "iCE Colors: "; ABS((SauceRecord.TFlags~%% AND 2^0) > 0);
+                IF ABS((SauceRecord.TFlags~%% AND 2^0) = 0) THEN
+                    PRINT " OFF (Background colors > 7 = BLINK)"
+                ELSE
+                    PRINT " ON (Background colors > 7 = DO NOT BLINK)"
+                END IF
+                PRINT "Letter Spacing: "; ABS((SauceRecord.TFlags~%% AND 2^1) > 0); ABS((SauceRecord.TFlags~%% AND 2^2) > 0);
+                IF ABS((SauceRecord.TFlags~%% AND 2^1) = 0) AND ABS((SauceRecord.TFlags~%% AND 2^2) = 0) THEN 'no preference / legacy
+                    PRINT " Legacy / No preference"
+                ELSEIF ABS((SauceRecord.TFlags~%% AND 2^1) = 0) AND ABS((SauceRecord.TFlags~%% AND 2^2) = 1) THEN '8px font
+                    PRINT " 8px"
+                ELSEIF ABS((SauceRecord.TFlags~%% AND 2^1) = 1) AND ABS((SauceRecord.TFlags~%% AND 2^2) = 0) THEN '9px font
+                    PRINT " 9px"
+                END IF
+                PRINT "Aspect Ratio: "; ABS((SauceRecord.TFlags~%% AND 2^3) > 0); ABS((SauceRecord.TFlags~%% AND 2^4) > 0);
+                IF ABS((SauceRecord.TFlags~%% AND 2^3) = 0) AND ABS((SauceRecord.TFlags~%% AND 2^4) = 0) THEN ' no preference / legacy
+                    PRINT " No preference / legacy"
+                ELSEIF ABS((SauceRecord.TFlags~%% AND 2^3) = 0) AND ABS((SauceRecord.TFlags~%% AND 2^4) = 1) THEN ' created for legacy device square pixels - stretched
+                    PRINT " Square Pixels - STRETCHED"
+                ELSEIF ABS((SauceRecord.TFlags~%% AND 2^3) = 0) AND ABS((SauceRecord.TFlags~%% AND 2^4) = 0) THEN ' created for modern device square pixels - NO STRETCHING
+                    PRINT " Square Pixels - NOT STRETCHED"
+                END IF
             CASE "ANSIMation":
                 PRINT "Character Width: "; SauceRecord.TInfo1~%
                 PRINT "Character Screen Height: "; SauceRecord.TInfo2~%
                 PRINT "Font Name: "; SauceRecord.TInfoS$
-                PRINT "iCE Colors: "; ABS((SauceRecord.TFlags AND 2^0) > 0)
-                PRINT "Letter Spacing: "; ABS((SauceRecord.TFlags AND 2^1) > 0); ABS((SauceRecord.TFlags AND 2^2) > 0)
-                PRINT "Aspect Ratio: "; ABS((SauceRecord.TFlags AND 2^3) > 0); ABS((SauceRecord.TFlags AND 2^4) > 0)
+                PRINT "iCE Colors: "; ABS((SauceRecord.TFlags~%% AND 2^0) > 0);
+                IF ABS((SauceRecord.TFlags~%% AND 2^0) = 0) THEN
+                    PRINT " OFF (Background colors > 7 = BLINK)"
+                ELSE
+                    PRINT " ON (Background colors > 7 = DO NOT BLINK)"
+                END IF
+                PRINT "Letter Spacing: "; ABS((SauceRecord.TFlags~%% AND 2^1) > 0); ABS((SauceRecord.TFlags~%% AND 2^2) > 0);
+                IF ABS((SauceRecord.TFlags~%% AND 2^1) = 0) AND ABS((SauceRecord.TFlags~%% AND 2^2) = 0) THEN 'no preference / legacy
+                    PRINT " Legacy / No preference"
+                ELSEIF ABS((SauceRecord.TFlags~%% AND 2^1) = 0) AND ABS((SauceRecord.TFlags~%% AND 2^2) = 1) THEN '8px font
+                    PRINT " 8px"
+                ELSEIF ABS((SauceRecord.TFlags~%% AND 2^1) = 1) AND ABS((SauceRecord.TFlags~%% AND 2^2) = 0) THEN '9px font
+                    PRINT " 9px"
+                END IF
+                PRINT "Aspect Ratio: "; ABS((SauceRecord.TFlags~%% AND 2^3) > 0); ABS((SauceRecord.TFlags~%% AND 2^4) > 0);
+                IF ABS((SauceRecord.TFlags~%% AND 2^3) = 0) AND ABS((SauceRecord.TFlags~%% AND 2^4) = 0) THEN ' no preference / legacy
+                    PRINT " No preference / legacy"
+                ELSEIF ABS((SauceRecord.TFlags~%% AND 2^3) = 0) AND ABS((SauceRecord.TFlags~%% AND 2^4) = 1) THEN ' created for legacy device square pixels - stretched
+                    PRINT " Square Pixels - STRETCHED"
+                ELSEIF ABS((SauceRecord.TFlags~%% AND 2^3) = 0) AND ABS((SauceRecord.TFlags~%% AND 2^4) = 0) THEN ' created for modern device square pixels - NO STRETCHING
+                    PRINT " Square Pixels - NOT STRETCHED"
+                END IF
             CASE "RIP script":
                 PRINT "Pixel width: "; SauceRecord.TInfo1~%
                 PRINT "Pixel height: "; SauceRecord.TInfo2~%
@@ -237,9 +275,28 @@ SELECT CASE SAUCE_DATA_TYPE$(SauceRecord.DataType~%%)
     CASE "BinaryText":
         PRINT "Binary Text Detected: BIN / RAW"; 
         PRINT "Font Name: "; SauceRecord.TInfoS$
-        PRINT "iCE Colors: "; ABS((SauceRecord.TFlags AND 2^0) > 0)
-        PRINT "Letter Spacing: "; ABS((SauceRecord.TFlags AND 2^1) > 0); ABS((SauceRecord.TFlags AND 2^2) > 0)
-        PRINT "Aspect Ratio: "; ABS((SauceRecord.TFlags AND 2^3) > 0); ABS((SauceRecord.TFlags AND 2^4) > 0)
+        PRINT "iCE Colors: "; ABS((SauceRecord.TFlags~%% AND 2^0) > 0);
+        IF ABS((SauceRecord.TFlags~%% AND 2^0) = 0) THEN
+            PRINT " OFF (Background colors > 7 = BLINK)"
+        ELSE
+            PRINT " ON (Background colors > 7 = DO NOT BLINK)"
+        END IF
+        PRINT "Letter Spacing: "; ABS((SauceRecord.TFlags~%% AND 2^1) > 0); ABS((SauceRecord.TFlags~%% AND 2^2) > 0);
+        IF ABS((SauceRecord.TFlags~%% AND 2^1) = 0) AND ABS((SauceRecord.TFlags~%% AND 2^2) = 0) THEN 'no preference / legacy
+            PRINT " Legacy / No preference"
+        ELSEIF ABS((SauceRecord.TFlags~%% AND 2^1) = 0) AND ABS((SauceRecord.TFlags~%% AND 2^2) = 1) THEN '8px font
+            PRINT " 8px"
+        ELSEIF ABS((SauceRecord.TFlags~%% AND 2^1) = 1) AND ABS((SauceRecord.TFlags~%% AND 2^2) = 0) THEN '9px font
+            PRINT " 9px"
+        END IF
+        PRINT "Aspect Ratio: "; ABS((SauceRecord.TFlags~%% AND 2^3) > 0); ABS((SauceRecord.TFlags~%% AND 2^4) > 0);
+        IF ABS((SauceRecord.TFlags~%% AND 2^3) = 0) AND ABS((SauceRecord.TFlags~%% AND 2^4) = 0) THEN ' no preference / legacy
+            PRINT " No preference / legacy"
+        ELSEIF ABS((SauceRecord.TFlags~%% AND 2^3) = 0) AND ABS((SauceRecord.TFlags~%% AND 2^4) = 1) THEN ' created for legacy device square pixels - stretched
+            PRINT " Square Pixels - STRETCHED"
+        ELSEIF ABS((SauceRecord.TFlags~%% AND 2^3) = 0) AND ABS((SauceRecord.TFlags~%% AND 2^4) = 0) THEN ' created for modern device square pixels - NO STRETCHING
+            PRINT " Square Pixels - NOT STRETCHED"
+        END IF
     CASE "XBin":
         PRINT "XBin Data Type Detected: "; 
         PRINT SAUCE_BITMAP_TYPES$(SauceRecord.FileType~%%)
