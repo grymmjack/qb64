@@ -199,11 +199,7 @@ SELECT CASE SAUCE_DATA_TYPE$(SauceRecord.DataType~%%)
         PRINT "Character Data Type Detected: "; 
         PRINT SAUCE_CHARACTER_TYPES$(SauceRecord.FileType~%%)
         SELECT CASE SAUCE_CHARACTER_TYPES$(SauceRecord.FileType~%%)
-            CASE "ASCII":
-            CASE "ANSI":
-            CASE "PCBoard":
-            CASE "Avatar":
-            CASE "TundraDraw":
+            CASE "ASCII", "ANSI", "PCBoard", "Avatar", "TundraDraw":
                 PRINT "Character Width: "; SauceRecord.TInfo1~%
                 PRINT "Number of Lines: "; SauceRecord.TInfo2~%
             CASE "ANSIMation":
@@ -227,10 +223,7 @@ SELECT CASE SAUCE_DATA_TYPE$(SauceRecord.DataType~%%)
         PRINT "Audio Data Type Detected: "; 
         PRINT SAUCE_AUDIO_TYPES$(SauceRecord.FileType~%%)
         SELECT CASE SAUCE_AUDIO_TYPES$(SauceRecord.FileType~%%)
-            CASE "SMP8":
-            CASE "SMP8S":
-            CASE "SMP16":
-            CASE "SMP16S":
+            CASE "SMP8", "SMP8S", "SMP16", "SMP16S":
                 PRINT "Sample Rate: "; SauceRecord.TInfo1~%
         END SELECT
     CASE "BinaryText":
