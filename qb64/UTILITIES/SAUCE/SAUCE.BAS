@@ -162,13 +162,13 @@ F$ = _OPENFILEDIALOG$( _
 )
 IF F$ = "" THEN SYSTEM ' image is required...
 
-PRINT LEN(SauceRecord)
-SLEEP 
+' PRINT LEN(SauceRecord)
+' SLEEP 
 
 OPEN F$ FOR BINARY AS #1
 FileSize~&& = LOF(1)
-PRINT FileSize~&&
-SLEEP
+' PRINT FileSize~&&
+' SLEEP
 
 GET #1, FileSize~&& - 127, SauceRecord
 IF SauceRecord.ID$ = "SAUCE" THEN
@@ -308,6 +308,7 @@ SELECT CASE SAUCE_DATA_TYPE$(SauceRecord.DataType~%%)
     CASE "Executable":
         PRINT "Executable Detected."
 END SELECT
+
 PRINT SauceRecord.TInfo1~%
 PRINT SauceRecord.TInfo2~%
 PRINT SauceRecord.TInfo3~%
