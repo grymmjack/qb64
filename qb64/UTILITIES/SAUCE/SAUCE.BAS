@@ -179,12 +179,12 @@ FileSize~&& = LOF(1)
 GET #1, FileSize~&& - 127, SauceRecord
 IF SauceRecord.ID$ = "SAUCE" THEN
     IF SauceRecord.Comments~%% > 0 THEN
-        PRINT "HAS COMMENTS"
+        ' PRINT "HAS COMMENTS"
         SEEK #1, FileSize~&& - 127 - (SauceRecord.Comments~%% * 64) - 5
         GET #1, FileSize~&& - 127 - (SauceRecord.Comments~%% * 64) - 5, CommentID$
-        PRINT "CommentID: "; CommentID$
+        ' PRINT "CommentID: "; CommentID$
         IF CommentID$ = "COMNT" THEN
-            PRINT "COMMENT FOUND"
+            ' PRINT "COMMENT FOUND"
             FOR i% = SauceRecord.Comments~%% TO 1 STEP - 1
                 DIM Comment AS STRING * 64
                 GET #1, FileSize~&& - 127 - (i% * 64), Comment$
@@ -193,8 +193,6 @@ IF SauceRecord.ID$ = "SAUCE" THEN
         END IF
     END IF
     ' Print stuff about the sauce record
-    PRINT "Comments: "; Comments$
-    PRINT "Comment Count: "; SauceRecord.Comments~%%
     PRINT SauceRecord.ID$
     PRINT SauceRecord.Version$
     PRINT SauceRecord.Title$
@@ -328,7 +326,9 @@ IF SauceRecord.ID$ = "SAUCE" THEN
     PRINT SauceRecord.Comments~%%
     PRINT SauceRecord.TFlags~%%
     PRINT SauceRecord.TInfoS$
-
+    IF SauceRecord.Comments~%% > 0 THEN
+        PRINT : PRINT "Comments: "; Comments$
+    END IF
 ELSE
     PRINT "No sauce or invalid Sauce"
 END IF
