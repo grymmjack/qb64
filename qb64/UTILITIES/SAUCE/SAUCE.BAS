@@ -281,17 +281,17 @@ SUB ParseTFlags
     PRINT "Letter Spacing: "; ABS((SauceRecord.TFlags~%% AND 2^1) > 0); ABS((SauceRecord.TFlags~%% AND 2^2) > 0);
     IF ABS((SauceRecord.TFlags~%% AND 2^1) = 0) AND ABS((SauceRecord.TFlags~%% AND 2^2) = 0) THEN 'no preference / legacy
         PRINT " Legacy / No preference"
-    ELSEIF ABS((SauceRecord.TFlags~%% AND 2^1) > 0) AND ABS((SauceRecord.TFlags~%% AND 2^2) = 0) THEN '9px font
+    ELSEIF ABS((SauceRecord.TFlags~%% AND 2^1) > 0) AND ABS((SauceRecord.TFlags~%% AND 2^2) = 0) THEN '8px font
         PRINT " 8px"
-    ELSEIF ABS((SauceRecord.TFlags~%% AND 2^1) = 0) AND ABS((SauceRecord.TFlags~%% AND 2^2) > 0) THEN '8px font
+    ELSEIF ABS((SauceRecord.TFlags~%% AND 2^1) = 0) AND ABS((SauceRecord.TFlags~%% AND 2^2) > 0) THEN '9px font
         PRINT " 9px"
     END IF
     PRINT "Aspect Ratio: "; ABS((SauceRecord.TFlags~%% AND 2^3) > 0); ABS((SauceRecord.TFlags~%% AND 2^4) > 0);
     IF ABS((SauceRecord.TFlags~%% AND 2^3) = 0) AND ABS((SauceRecord.TFlags~%% AND 2^4) = 0) THEN ' no preference / legacy
         PRINT " No preference / legacy"
-    ELSEIF ABS((SauceRecord.TFlags~%% AND 2^3) = 0) AND ABS((SauceRecord.TFlags~%% AND 2^4) = 0) THEN ' created for modern device square pixels - NO STRETCHING
+    ELSEIF ABS((SauceRecord.TFlags~%% AND 2^3) = 0) AND ABS((SauceRecord.TFlags~%% AND 2^4) = 0) THEN ' created for legacy device square pixels - stretched
         PRINT " Square Pixels - STRETCHED"
-    ELSEIF ABS((SauceRecord.TFlags~%% AND 2^3) = 0) AND ABS((SauceRecord.TFlags~%% AND 2^4) > 0) THEN ' created for legacy device square pixels - stretched
+    ELSEIF ABS((SauceRecord.TFlags~%% AND 2^3) = 0) AND ABS((SauceRecord.TFlags~%% AND 2^4) > 0) THEN ' created for modern device square pixels - NO STRETCHING
         PRINT " Square Pixels - NOT STRETCHED"
     END IF
 
