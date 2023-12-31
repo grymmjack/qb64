@@ -8,7 +8,8 @@
 ' @link https://youtube.com/grymmjack
 ' @version 0.1
 '
-'$INCLUDE('../SAUCE/SAUCE3.BAS')
+
+'$INCLUDE:'../SAUCE/SAUCE.BI'
 
 DIM AS LONG CANVAS, SRC_IMAGE
 DIM AS INTEGER SRC_W, SRC_H, x, y, z
@@ -16,6 +17,7 @@ DIM AS STRING SRC_FILE, ans
 DIM AS _UNSIGNED LONG c
 CONST E = 27  ' ESCAPE - The ANSI escape code
 CONST B = 219 ' BLOCK CHARACTER - Full block foreground
+
 
 ' Maps RGB32 _UNSIGNED LONG colors (from POINT(x,y)) to ANSI Escape Color Codes
 TYPE ANSI_MAP
@@ -68,20 +70,21 @@ IF SRC_FILE$ = "" THEN SYSTEM ' image is required...
 
 SRC_FILE$ = SRC_FILE$ + "|"
 
-PRINT SRC_FILE$
-SLEEP
+' PRINT SRC_FILE$
+' SLEEP
 
-DIM AS INTEGER i, j, l, ch
+DIM AS INTEGER i, l, ch
 DIM AS STRING filename
 l% = LEN(SRC_FILE$)
-PRINT l%
-SLEEP
+' PRINT l%
+' SLEEP
+
 FOR i%=0 TO l%
     IF i%+1 <= l% THEN ' At end of file list, do nothing
         ch% = ASC(SRC_FILE$, i%+1)
         IF CHR$(ch%) = "|" THEN ' File found
-            PRINT "PROCESSING: "; filename$; i%
-            SLEEP
+            ' PRINT "PROCESSING: "; filename$; i%
+            ' SLEEP
             
             ' Load the image into the canvas at the same size
             SRC_IMAGE& = _LOADIMAGE(filename$, 32) 
@@ -114,14 +117,17 @@ FOR i%=0 TO l%
             PRINT #1, ans$
             CLOSE #1
 
+            OPEN filename$ + ".ans" FOR APPEND AS #1
+            PRINT #1, CHR$(&H1A) ' EOF
+            CLOSE #1 
+
             OPEN filename$ + ".ans" FOR BINARY AS #1
-            PUT #1, CHR$(&H1A) ' EOF
             SauceRecord.ID$         = "SAUCE"
             SauceRecord.Version$    = "00"
             SauceRecord.Title$      = "IMG2ANS.BAS Conversion"
             SauceRecord.Author$     = "grymmjack"
             SauceRecord.Group$      = "MiSTiGRiS"
-            SaucecRecord.Date       = "20231231"
+            SauceRecord.Date$       = "20231231"
             SauceRecord.FileSize~&  = 0
             SauceRecord.DataType~%% = 1
             SauceRecord.FileType~%% = 1
@@ -131,9 +137,9 @@ FOR i%=0 TO l%
             SauceRecord.TInfo4~%    = 0
             SauceRecord.Comments~%% = 0
             SauceRecord.TFlags~%%   = 0
-            SauceRecord.TInfoS$     = SPACE$(22)
+            SauceRecord.TInfoS$     = "IBM VGA50"
             SAUCE.FillPacket
-            PUT #1, SauceRecord
+            PUT #1, LOF(1)+1, SauceRecord
             CLOSE #1
 
             filename$ = ""
@@ -146,3 +152,5 @@ NEXT i%
 ' Clean up
 _FREEIMAGE SRC_IMAGE&
 _FREEIMAGE CANVAS&
+
+'$INCLUDE:'../SAUCE/SAUCE.BM'
