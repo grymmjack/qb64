@@ -202,9 +202,17 @@ SELECT CASE SAUCE_DATA_TYPE$(SauceRecord.DataType~%%)
             CASE "ASCII", "ANSI", "PCBoard", "Avatar", "TundraDraw":
                 PRINT "Character Width: "; SauceRecord.TInfo1~%
                 PRINT "Number of Lines: "; SauceRecord.TInfo2~%
+                PRINT "Font Name: "; SauceRecord.TInfoS$
+                PRINT "iCE Colors: "; ABS((SauceRecord.TFlags AND 2^0) > 0)
+                PRINT "Letter Spacing: "; ABS((SauceRecord.TFlags AND 2^1) > 0); ABS((SauceRecord.TFlags AND 2^2) > 0)
+                PRINT "Aspect Ratio: "; ABS((SauceRecord.TFlags AND 2^3) > 0); ABS((SauceRecord.TFlags AND 2^4) > 0)
             CASE "ANSIMation":
                 PRINT "Character Width: "; SauceRecord.TInfo1~%
                 PRINT "Character Screen Height: "; SauceRecord.TInfo2~%
+                PRINT "Font Name: "; SauceRecord.TInfoS$
+                PRINT "iCE Colors: "; ABS((SauceRecord.TFlags AND 2^0) > 0)
+                PRINT "Letter Spacing: "; ABS((SauceRecord.TFlags AND 2^1) > 0); ABS((SauceRecord.TFlags AND 2^2) > 0)
+                PRINT "Aspect Ratio: "; ABS((SauceRecord.TFlags AND 2^3) > 0); ABS((SauceRecord.TFlags AND 2^4) > 0)
             CASE "RIP script":
                 PRINT "Pixel width: "; SauceRecord.TInfo1~%
                 PRINT "Pixel height: "; SauceRecord.TInfo2~%
@@ -228,6 +236,10 @@ SELECT CASE SAUCE_DATA_TYPE$(SauceRecord.DataType~%%)
         END SELECT
     CASE "BinaryText":
         PRINT "Binary Text Detected: BIN / RAW"; 
+        PRINT "Font Name: "; SauceRecord.TInfoS$
+        PRINT "iCE Colors: "; ABS((SauceRecord.TFlags AND 2^0) > 0)
+        PRINT "Letter Spacing: "; ABS((SauceRecord.TFlags AND 2^1) > 0); ABS((SauceRecord.TFlags AND 2^2) > 0)
+        PRINT "Aspect Ratio: "; ABS((SauceRecord.TFlags AND 2^3) > 0); ABS((SauceRecord.TFlags AND 2^4) > 0)
     CASE "XBin":
         PRINT "XBin Data Type Detected: "; 
         PRINT SAUCE_BITMAP_TYPES$(SauceRecord.FileType~%%)
