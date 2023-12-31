@@ -315,5 +315,5 @@ IF SauceRecord.ID$ = "SAUCE" THEN
     PRINT SauceRecord.TInfoS$
 
 ELSE
-    PRINT "Invalid Sauce"
+    PRINT "No sauce or invalid Sauce"
 END IF
