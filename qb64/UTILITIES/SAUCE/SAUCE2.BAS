@@ -6,13 +6,17 @@
 '   SaucePacket - The filled in packet of sauce with friendly names and vars
 '
 ' USAGE:
-'   '$INCLUDE('SAUCE2.BAS') ...
+'   '$INCLUDE('SAUCE2.BAS')
 '   DIM SHARED SauceRecord AS SAUCE
 '   DIM SHARED SaucePacket AS SAUCE_PACKET
 '   SAUCE.InitPacket
-'   SAUCE.GetRecord F$ ' Where F$ = filename to read sauce for
-'   SAUCE.FillPacket
-'   SAUCE.PrintPacket
+'   SAUCE.GetRecord F$
+'   IF SauceRecord.ID$ = "SAUCE" THEN
+'       SAUCE.FillPacket
+'       SAUCE.PrintPacket
+'   ELSE
+'       PRINT "Invalid or no Sauce header found."
+'   END IF
 ' 
 ' @see https://github.com/grymmjack/sauce
 ' @author Rick Christy <grymmjack@gmail.com>
@@ -179,15 +183,16 @@ F$ = _OPENFILEDIALOG$( _
 )
 IF F$ = "" THEN SYSTEM ' image is required...
 
-WIDTH 132, 50
-_FONT 16
-
 DIM SHARED SauceRecord AS SAUCE
 DIM SHARED SaucePacket AS SAUCE_PACKET
 SAUCE.InitPacket
 SAUCE.GetRecord F$
-SAUCE.FillPacket
-SAUCE.PrintPacket
+IF SauceRecord.ID$ = "SAUCE" THEN
+    SAUCE.FillPacket
+    SAUCE.PrintPacket
+ELSE
+    PRINT "Invalid or no Sauce header found."
+END IF
 SLEEP
 SYSTEM
 
