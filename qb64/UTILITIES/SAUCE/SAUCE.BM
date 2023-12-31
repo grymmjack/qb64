@@ -150,30 +150,30 @@ SUB SAUCE.PrintPacket
             PRINT SAUCE_CHARACTER_TYPES$(SauceRecord.FileType~%%)
             SELECT CASE SAUCE_CHARACTER_TYPES$(SauceRecord.FileType~%%)
                 CASE "ASCII", "ANSI", "PCBoard", "Avatar", "TundraDraw":
-                    PRINT "Character Width: "; SaucePacket.CharacterWidth~%
-                    PRINT "Number of Lines: "; SaucePacket.NumberOfLines~%
+                    PRINT "Character Width:"; SaucePacket.CharacterWidth~%
+                    PRINT "Number of Lines:"; SaucePacket.NumberOfLines~%
                     PRINT "Font Name: "; SaucePacket.FontName$
                     PRINT "iCE Colors: "; SaucePacket.IceColors$
                     PRINT "Letter Spacing: "; SaucePacket.LetterSpacing$
                     PRINT "Aspect Ratio: "; SaucePacket.AspectRatio$
                 CASE "ANSIMation":
-                    PRINT "Character Width: "; SaucePacket.CharacterWidth~%
-                    PRINT "Character Screen Height: "; SauceRecord.TInfo2~%
+                    PRINT "Character Width:"; SaucePacket.CharacterWidth~%
+                    PRINT "Character Screen Height:"; SauceRecord.TInfo2~%
                     PRINT "Font Name: "; SaucePacket.FontName$
                     PRINT "iCE Colors: "; SaucePacket.IceColors$
                     PRINT "Letter Spacing: "; SaucePacket.LetterSpacing$
                     PRINT "Aspect Ratio: "; SaucePacket.AspectRatio$
                 CASE "RIP script":
-                    PRINT "Pixel Width: "; SaucePacket.PixelWidth~%
-                    PRINT "Pixel Height: "; SaucePacket.PixelHeight~%
-                    PRINT "# Colors: "; SaucePacket.NumberOfColors~%
+                    PRINT "Pixel Width:"; SaucePacket.PixelWidth~%
+                    PRINT "Pixel Height:"; SaucePacket.PixelHeight~%
+                    PRINT "# Colors:"; SaucePacket.NumberOfColors~%
             END SELECT
         CASE "Bitmap":
             PRINT "Bitmap Data Type Detected: "; 
             PRINT SAUCE_BITMAP_TYPES$(SauceRecord.FileType~%%)
-            PRINT "Pixel Width: "; SaucePacket.PixelWidth~%
-            PRINT "Pixel Height: "; SaucePacket.PixelHeight~%
-            PRINT "Pixel Depth: "; SaucePacket.PixelDepth~%
+            PRINT "Pixel Width:"; SaucePacket.PixelWidth~%
+            PRINT "Pixel Height:"; SaucePacket.PixelHeight~%
+            PRINT "Pixel Depth:"; SaucePacket.PixelDepth~%
         CASE "Vector":
             PRINT "Vector Data Type Detected: "; 
             PRINT SAUCE_VECTOR_TYPES$(SauceRecord.FileType~%%)
@@ -182,15 +182,15 @@ SUB SAUCE.PrintPacket
             PRINT SAUCE_AUDIO_TYPES$(SauceRecord.FileType~%%)
             SELECT CASE SAUCE_AUDIO_TYPES$(SauceRecord.FileType~%%)
                 CASE "SMP8", "SMP8S", "SMP16", "SMP16S":
-                    PRINT "Sample Rate: "; SaucePacket.SampleRate~%
+                    PRINT "Sample Rate:"; SaucePacket.SampleRate~%
             END SELECT
         CASE "BinaryText":
             PRINT "Binary Text Detected: BIN / RAW"; 
             PRINT "Font Name: "; SaucePacket.FontName$
         CASE "XBin":
             PRINT "XBin Data Type Detected." 
-            PRINT "Character Width: "; SaucePacket.CharacterWidth~%
-            PRINT "Number of Lines: "; SaucePacket.NumberOfLines~%
+            PRINT "Character Width:"; SaucePacket.CharacterWidth~%
+            PRINT "Number of Lines:"; SaucePacket.NumberOfLines~%
         CASE "Archive":
             PRINT "Archive Data Type Detected: ";
             PRINT SAUCE_ARCHIVE_TYPES$(SauceRecord.FileType~%%)
