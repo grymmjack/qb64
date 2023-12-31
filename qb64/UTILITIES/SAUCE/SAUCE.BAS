@@ -151,7 +151,9 @@ SAUCE_ARCHIVE_TYPES$(9) = "SQZ"
 
 DIM AS _BYTE Count
 DIM AS _UNSIGNED _INTEGER64 FileSize
-DIM AS STRING F, CommentID
+DIM AS STRING F, Comments
+DIM CommentID AS STRING * 5
+DIM i AS INTEGER
 
 ' Choose an image file with dialog
 F$ = _OPENFILEDIALOG$( _
@@ -163,6 +165,9 @@ F$ = _OPENFILEDIALOG$( _
 )
 IF F$ = "" THEN SYSTEM ' image is required...
 
+WIDTH 132, 50
+_FONT 16
+
 ' PRINT LEN(SauceRecord)
 ' SLEEP 
 
@@ -173,13 +178,23 @@ FileSize~&& = LOF(1)
 
 GET #1, FileSize~&& - 127, SauceRecord
 IF SauceRecord.ID$ = "SAUCE" THEN
-    IF SauceRecord.Comments > 0 THEN
-        GET #1, FileSize~&& - 127 - (SauceRecord.Comments * 64) - 5, CommentID$
+    IF SauceRecord.Comments~%% > 0 THEN
+        PRINT "HAS COMMENTS"
+        SEEK #1, FileSize~&& - 127 - (SauceRecord.Comments~%% * 64) - 5
+        GET #1, FileSize~&& - 127 - (SauceRecord.Comments~%% * 64) - 5, CommentID$
+        PRINT "CommentID: "; CommentID$
         IF CommentID$ = "COMNT" THEN
-
+            PRINT "COMMENT FOUND"
+            FOR i% = SauceRecord.Comments~%% TO 1 STEP - 1
+                DIM Comment AS STRING * 64
+                GET #1, FileSize~&& - 127 - (i% * 64), Comment$
+                Comments$ = Comments$ + Comment$ + CHR$(13)
+            NEXT i%
         END IF
     END IF
     ' Print stuff about the sauce record
+    PRINT "Comments: "; Comments$
+    PRINT "Comment Count: "; SauceRecord.Comments~%%
     PRINT SauceRecord.ID$
     PRINT SauceRecord.Version$
     PRINT SauceRecord.Title$
