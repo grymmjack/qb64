@@ -1,298 +1,77 @@
-' from: https://github.com/grymmjack/sauce
-' struct SAUCE
-' {
-'     char           ID[5];
-'     char           Version[2];
-'     char           Title[35];
-'     char           Author[20];
-'     char           Group[20];
-'     char           Date[8];
-'     unsigned long  FileSize;
-'     unsigned char  DataType;
-'     unsigned char  FileType;
-'     unsigned short TInfo1;
-'     unsigned short TInfo2;
-'     unsigned short TInfo3;
-'     unsigned short TInfo4;
-'     unsigned char  Comments;
-'     unsigned char  TFlags;
-'     char           TInfoS[22];
-' };
-
-TYPE SAUCE
-    ID       AS STRING * 5
-    Version  AS STRING * 2
-    Title    AS STRING * 35
-    Author   AS STRING * 20
-    Group    AS STRING * 20
-    Date     AS STRING * 8
-    FileSize AS _UNSIGNED LONG
-    DataType AS _UNSIGNED _BYTE
-    FileType AS _UNSIGNED _BYTE
-    TInfo1   AS _UNSIGNED INTEGER
-    TInfo2   AS _UNSIGNED INTEGER
-    TInfo3   AS _UNSIGNED INTEGER
-    TInfo4   AS _UNSIGNED INTEGER
-    Comments AS _UNSIGNED _BYTE
-    TFlags   AS _UNSIGNED _BYTE
-    TInfoS   AS STRING * 22
-END TYPE
-DIM SHARED SauceRecord AS SAUCE
-
-DIM SHARED SAUCE_DATA_TYPE(0 TO 8) AS STRING
-SAUCE_DATA_TYPE$(0) = "None"
-SAUCE_DATA_TYPE$(1) = "Character"
-SAUCE_DATA_TYPE$(2) = "Bitmap"
-SAUCE_DATA_TYPE$(3) = "Vector"
-SAUCE_DATA_TYPE$(4) = "Audio"
-SAUCE_DATA_TYPE$(5) = "BinaryText"
-SAUCE_DATA_TYPE$(6) = "XBin"
-SAUCE_DATA_TYPE$(7) = "Archive"
-SAUCE_DATA_TYPE$(8) = "Executable"
-
-DIM SHARED SAUCE_CHARACTER_TYPES(0 TO 8) AS STRING
-SAUCE_CHARACTER_TYPES$(0) = "ASCII"
-SAUCE_CHARACTER_TYPES$(1) = "ANSI"
-SAUCE_CHARACTER_TYPES$(2) = "ANSIMation"
-SAUCE_CHARACTER_TYPES$(3) = "RIP script"
-SAUCE_CHARACTER_TYPES$(4) = "PCBoard"
-SAUCE_CHARACTER_TYPES$(5) = "Avatar"
-SAUCE_CHARACTER_TYPES$(6) = "HTML"
-SAUCE_CHARACTER_TYPES$(7) = "Source"
-SAUCE_CHARACTER_TYPES$(7) = "TundraDraw"
-
-DIM SHARED SAUCE_BITMAP_TYPES(0 TO 13) AS STRING
-SAUCE_BITMAP_TYPES$(0) = "GIF"
-SAUCE_BITMAP_TYPES$(1) = "PCX"
-SAUCE_BITMAP_TYPES$(2) = "LBM/IFF"
-SAUCE_BITMAP_TYPES$(3) = "TGA"
-SAUCE_BITMAP_TYPES$(4) = "FLI"
-SAUCE_BITMAP_TYPES$(5) = "FLC"
-SAUCE_BITMAP_TYPES$(6) = "BMP"
-SAUCE_BITMAP_TYPES$(7) = "GL"
-SAUCE_BITMAP_TYPES$(8) = "DL"
-SAUCE_BITMAP_TYPES$(9) = "WPG"
-SAUCE_BITMAP_TYPES$(10) = "PNG"
-SAUCE_BITMAP_TYPES$(11) = "JPG/JPeg"
-SAUCE_BITMAP_TYPES$(12) = "MPG"
-SAUCE_BITMAP_TYPES$(13) = "AVI"
-
-DIM SHARED SAUCE_VECTOR_TYPES(0 TO 3) AS STRING
-SAUCE_VECTOR_TYPES$(0) = "DXF"
-SAUCE_VECTOR_TYPES$(1) = "DWG"
-SAUCE_VECTOR_TYPES$(2) = "WPG"
-SAUCE_VECTOR_TYPES$(3) = "3DS"
-
-DIM SHARED SAUCE_AUDIO_TYPES(0 TO 24) AS STRING
-SAUCE_AUDIO_TYPES$(0) = "MOD"
-SAUCE_AUDIO_TYPES$(1) = "669"
-SAUCE_AUDIO_TYPES$(2) = "STM"
-SAUCE_AUDIO_TYPES$(3) = "S3M"
-SAUCE_AUDIO_TYPES$(4) = "MTM"
-SAUCE_AUDIO_TYPES$(5) = "FAR"
-SAUCE_AUDIO_TYPES$(6) = "ULT"
-SAUCE_AUDIO_TYPES$(7) = "AMF"
-SAUCE_AUDIO_TYPES$(8) = "DMF"
-SAUCE_AUDIO_TYPES$(9) = "OKT"
-SAUCE_AUDIO_TYPES$(10) = "ROL"
-SAUCE_AUDIO_TYPES$(11) = "CMF"
-SAUCE_AUDIO_TYPES$(12) = "MID"
-SAUCE_AUDIO_TYPES$(13) = "SADT"
-SAUCE_AUDIO_TYPES$(14) = "VOC"
-SAUCE_AUDIO_TYPES$(15) = "WAV"
-SAUCE_AUDIO_TYPES$(16) = "SMP8"
-SAUCE_AUDIO_TYPES$(17) = "SMP8S"
-SAUCE_AUDIO_TYPES$(18) = "SMP16"
-SAUCE_AUDIO_TYPES$(19) = "SMP16S"
-SAUCE_AUDIO_TYPES$(20) = "PATCH8"
-SAUCE_AUDIO_TYPES$(21) = "PATCH16"
-SAUCE_AUDIO_TYPES$(22) = "XM"
-SAUCE_AUDIO_TYPES$(23) = "HSC"
-SAUCE_AUDIO_TYPES$(24) = "IT"
-
-DIM SHARED SAUCE_ARCHIVE_TYPES(0 TO 9) AS STRING
-SAUCE_ARCHIVE_TYPES$(0) = "ZIP"
-SAUCE_ARCHIVE_TYPES$(1) = "ARJ"
-SAUCE_ARCHIVE_TYPES$(2) = "LZH"
-SAUCE_ARCHIVE_TYPES$(3) = "ARC"
-SAUCE_ARCHIVE_TYPES$(4) = "TAR"
-SAUCE_ARCHIVE_TYPES$(5) = "ZOO"
-SAUCE_ARCHIVE_TYPES$(6) = "RAR"
-SAUCE_ARCHIVE_TYPES$(7) = "UC2"
-SAUCE_ARCHIVE_TYPES$(8) = "PAK"
-SAUCE_ARCHIVE_TYPES$(9) = "SQZ"
-
-' Variables:
-'     Byte : Count;
-'     Long : FileSize;
-'     file : F;
-
-' Code:
-'     Open_File(F);                             | Open the file for read access
-'     FileSize = Size_of_file(F);               | Determine file size
-'     Seek_file (F, FileSize-128);              | Seek to start of SAUCE (Eof-128)
-'     Read_File (F, SAUCE);                     | Read the SAUCE record
-'     IF SAUCE.ID="SAUCE" THEN                  | ID bytes match "SAUCE" ?
-'         IF SAUCE.Comments&gt;0 THEN              | Is there a comment block ?
-'             Seek_File(F, FileSize-128-(SAUCE.Comments*64)-5);
-'                                               | Seek to start of Comment block.
-'             Read_File(F, CommentID);          | Read Comment ID.
-'             IF CommentID="COMNT" THEN         | Comment ID matches "COMNT" ?
-'                 FOR Count=1 to SAUCE.Comments |  Read all comment lines.
-'                     Read_File(F, CommentLine) | /
-'                 ENDFOR
-'             ELSE
-'                 Invalid_Comment;              | Non fatal, No comment present.
-'             ENDIF
-'         ENDIF
-'     ELSE
-'         Invalid_SAUCE;                        | No valid SAUCE record was found.
-'     ENDIF
-
-DIM AS _BYTE Count
-DIM AS _UNSIGNED _INTEGER64 FileSize
-DIM AS STRING F, Comments
-DIM CommentID AS STRING * 5
-DIM i AS INTEGER
+''
+' Sauce Reader (this will eventually also be a QB64_GJ_LIB module)
+'
+' This module works using 2 shared UDTs: 
+'   SauceRecord - The actual sauce record structure fetched as BINARY with GET
+'   SaucePacket - The filled in packet of sauce with friendly names and vars
+'
+' USAGE:
+'   '$INCLUDE:'./SAUCE.BI'
+'   SAUCE.InitPacket
+'   SAUCE.GetRecord F$
+'   IF SauceRecord.ID$ = "SAUCE" THEN
+'       SAUCE.FillPacket
+'       SAUCE.PrintPacket
+'   ELSE
+'       PRINT "Invalid or no Sauce header found."
+'   END IF
+'   '$INCLUDE:'./SAUCE.BM'
+' 
+' @see https://github.com/grymmjack/sauce
+' @author Rick Christy <grymmjack@gmail.com>
+'
+'$INCLUDE:'SAUCE.BI'
 
 ' Choose an image file with dialog
+DIM file_exts(1 TO 6) AS STRING
+file_exts$(1) = ""
+file_exts$(2) = ""
+file_exts$(3) = ""
+file_exts$(4) = ""
+file_exts$(5) = ""
+file_exts$(6) = ""
+' bitmap types
+file_exts$(1) = file_exts$(1) + "*.jpg|*.png|*.tga|*.bmp|*.psd|*.gif|"
+file_exts$(1) = file_exts$(1) + "*.hdr|*.pic|*.pnm|*.pcx|*.svg|*.qoi|"
+' character types
+file_exts$(2) = file_exts$(2) + "*.asc|*.ans|*.rip|*.avt|*.html|"
+file_exts$(2) = file_exts$(2) + "*.xb|*.xbin|*.bin|*.tnd|"
+' source types
+file_exts$(3) = file_exts$(3) + "*.c|*.h|*.cpp|*.bas|*.bi|*.bm|*.pas|"
+file_exts$(3) = file_exts$(3) + "*.py|*.js|*.ts|*.rb|*.rs|"
+file_exts$(3) = file_exts$(3) + "*.json|*.yml|*.yaml|*.toml|*.css|*.md|"
+' video bitmap types
+file_exts$(4) = file_exts$(4) + "*.fli|*.flc|*.gl|*.dl|*.avi|"
+' vector types
+file_exts$(5) = file_exts$(5) + "*.dxf|*.dwg|*.wpg|*.3ds|"
+' audio types
+file_exts$(6) = file_exts$(6) + "*.mod|*.669|*.stm|*.s3m|*.mtm|"
+file_exts$(6) = file_exts$(6) + "*.far|*.ult|*.amf|*.dmf|*.okt|*.rol|*.cmf|"
+file_exts$(6) = file_exts$(6) + "*.voc|*.wav|*.smp|*.pat|*.xm|*.it|*.hsc|*.mid"
+DIM file_extensions AS STRING
+file_extensions$ = ""
+file_extensions$ = file_extensions$ + file_exts$(1) + file_exts$(2)
+file_extensions$ = file_extensions$ + file_exts$(3) + file_exts$(4)
+file_extensions$ = file_extensions$ + file_exts$(5) + file_exts$(6)
+
 F$ = _OPENFILEDIALOG$( _
     "Choose a scene file", _
-    , _
-    "*.jpg|*.png|*.tga|*.bmp|*.psd|*.gif|*.hdr|*.pic|*.pnm|*.pcx|*.svg|*.qoi|*.xb|*.xbin|*.bin|*.asc|*.ans|*.rip|*.avt|*.html|*.c|*.cpp|*.bas|*.tnd|*.fli|*.flc|*.gl|*.dl|*.avi|*.dxf|*.mod|*.669|*.stm|*.s3m|*.mtm|*.mid", _
+    file_extensions$, _
+    "|", _
     "Scene Files", _
     -1 _
 )
 IF F$ = "" THEN SYSTEM ' image is required...
 
-WIDTH 132, 50
-_FONT 16
-
-' PRINT LEN(SauceRecord)
-' SLEEP 
-
-OPEN F$ FOR BINARY AS #1
-FileSize~&& = LOF(1)
-' PRINT FileSize~&&
-' SLEEP
-
-GET #1, FileSize~&& - 127, SauceRecord
+SAUCE.InitPacket
+SAUCE.GetRecord F$
 IF SauceRecord.ID$ = "SAUCE" THEN
-    IF SauceRecord.Comments~%% > 0 THEN
-        ' PRINT "HAS COMMENTS"
-        SEEK #1, FileSize~&& - 127 - (SauceRecord.Comments~%% * 64) - 5
-        GET #1, FileSize~&& - 127 - (SauceRecord.Comments~%% * 64) - 5, CommentID$
-        ' PRINT "CommentID: "; CommentID$
-        IF CommentID$ = "COMNT" THEN
-            ' PRINT "COMMENT FOUND"
-            FOR i% = SauceRecord.Comments~%% TO 1 STEP - 1
-                DIM Comment AS STRING * 64
-                GET #1, FileSize~&& - 127 - (i% * 64), Comment$
-                Comments$ = Comments$ + Comment$ + CHR$(13)
-            NEXT i%
-        END IF
-    END IF
-    ' Print stuff about the sauce record
-    PRINT SauceRecord.ID$
-    PRINT SauceRecord.Version$
-    PRINT SauceRecord.Title$
-    PRINT SauceRecord.Author$
-    PRINT SauceRecord.Group$
-    PRINT SauceRecord.Date$
-    PRINT SauceRecord.FileSize~&
-    PRINT SauceRecord.DataType~%%
-    PRINT SAUCE_DATA_TYPE$(SauceRecord.DataType~%%)
-    PRINT SauceRecord.FileType~%%
-    SELECT CASE SAUCE_DATA_TYPE$(SauceRecord.DataType~%%)
-        CASE "None":
-            PRINT "No Data Type Detected"
-        CASE "Character":
-            PRINT "Character Data Type Detected: "; 
-            PRINT SAUCE_CHARACTER_TYPES$(SauceRecord.FileType~%%)
-            SELECT CASE SAUCE_CHARACTER_TYPES$(SauceRecord.FileType~%%)
-                CASE "ASCII", "ANSI", "PCBoard", "Avatar", "TundraDraw":
-                    PRINT "Character Width: "; SauceRecord.TInfo1~%
-                    PRINT "Number of Lines: "; SauceRecord.TInfo2~%
-                    PRINT "Font Name: "; SauceRecord.TInfoS$
-                    ParseTFlags
-                CASE "ANSIMation":
-                    PRINT "Character Width: "; SauceRecord.TInfo1~%
-                    PRINT "Character Screen Height: "; SauceRecord.TInfo2~%
-                    PRINT "Font Name: "; SauceRecord.TInfoS$
-                    ParseTFlags
-                CASE "RIP script":
-                    PRINT "Pixel width: "; SauceRecord.TInfo1~%
-                    PRINT "Pixel height: "; SauceRecord.TInfo2~%
-                    PRINT "# Colors: "; SauceRecord.TInfo3~%
-            END SELECT
-        CASE "Bitmap":
-            PRINT "Bitmap Data Type Detected: "; 
-            PRINT SAUCE_BITMAP_TYPES$(SauceRecord.FileType~%%)
-            PRINT "Pixel Width: "; SauceRecord.TInfo1~%
-            PRINT "Pixel Height: "; SauceRecord.TInfo2~%
-            PRINT "Pixel Depth: "; SauceRecord.TInfo3~%
-        CASE "Vector":
-            PRINT "Vector Data Type Detected: "; 
-            PRINT SAUCE_VECTOR_TYPES$(SauceRecord.FileType~%%)
-        CASE "Audio":
-            PRINT "Audio Data Type Detected: "; 
-            PRINT SAUCE_AUDIO_TYPES$(SauceRecord.FileType~%%)
-            SELECT CASE SAUCE_AUDIO_TYPES$(SauceRecord.FileType~%%)
-                CASE "SMP8", "SMP8S", "SMP16", "SMP16S":
-                    PRINT "Sample Rate: "; SauceRecord.TInfo1~%
-            END SELECT
-        CASE "BinaryText":
-            PRINT "Binary Text Detected: BIN / RAW"; 
-            PRINT "Font Name: "; SauceRecord.TInfoS$
-            ParseTFlags
-        CASE "XBin":
-            PRINT "XBin Data Type Detected." 
-            PRINT "Character Width: "; SauceRecord.TInfo1~%
-            PRINT "Number of Lines: "; SauceRecord.TInfo2~%
-        CASE "Archive":
-            PRINT "Archive Data Type Detected: ";
-            PRINT SAUCE_ARCHIVE_TYPES$(SauceRecord.FileType~%%)
-        CASE "Executable":
-            PRINT "Executable Detected."
-    END SELECT
-
-    PRINT SauceRecord.TInfo1~%
-    PRINT SauceRecord.TInfo2~%
-    PRINT SauceRecord.TInfo3~%
-    PRINT SauceRecord.TInfo4~%
-    PRINT SauceRecord.Comments~%%
-    PRINT SauceRecord.TFlags~%%
-    PRINT SauceRecord.TInfoS$
-    IF SauceRecord.Comments~%% > 0 THEN
-        PRINT : PRINT "Comments: "; Comments$
-    END IF
+    SAUCE.FillPacket
+    SAUCE.PrintPacket
 ELSE
-    PRINT "No sauce or invalid Sauce"
+    PRINT "Invalid or no Sauce header found."
 END IF
+SLEEP
+SYSTEM
 
-
-SUB ParseTFlags
-    PRINT "iCE Colors: "; ABS((SauceRecord.TFlags~%% AND 2^0) > 0);
-    IF ABS((SauceRecord.TFlags~%% AND 2^0) = 0) THEN
-        PRINT " OFF (Background colors > 7 = BLINK)"
-    ELSE
-        PRINT " ON (Background colors > 7 = DO NOT BLINK)"
-    END IF
-    PRINT "Letter Spacing: "; ABS((SauceRecord.TFlags~%% AND 2^1) > 0); ABS((SauceRecord.TFlags~%% AND 2^2) > 0);
-    IF ABS((SauceRecord.TFlags~%% AND 2^1) = 0) AND ABS((SauceRecord.TFlags~%% AND 2^2) = 0) THEN 'no preference / legacy
-        PRINT " Legacy / No preference"
-    ELSEIF ABS((SauceRecord.TFlags~%% AND 2^1) > 0) AND ABS((SauceRecord.TFlags~%% AND 2^2) = 0) THEN '8px font
-        PRINT " 8px"
-    ELSEIF ABS((SauceRecord.TFlags~%% AND 2^1) = 0) AND ABS((SauceRecord.TFlags~%% AND 2^2) > 0) THEN '9px font
-        PRINT " 9px"
-    END IF
-    PRINT "Aspect Ratio: "; ABS((SauceRecord.TFlags~%% AND 2^3) > 0); ABS((SauceRecord.TFlags~%% AND 2^4) > 0);
-    IF ABS((SauceRecord.TFlags~%% AND 2^3) = 0) AND ABS((SauceRecord.TFlags~%% AND 2^4) = 0) THEN ' no preference / legacy
-        PRINT " No preference / legacy"
-    ELSEIF ABS((SauceRecord.TFlags~%% AND 2^3) = 0) AND ABS((SauceRecord.TFlags~%% AND 2^4) = 0) THEN ' created for legacy device square pixels - stretched
-        PRINT " Square Pixels - STRETCHED"
-    ELSEIF ABS((SauceRecord.TFlags~%% AND 2^3) = 0) AND ABS((SauceRecord.TFlags~%% AND 2^4) > 0) THEN ' created for modern device square pixels - NO STRETCHING
-        PRINT " Square Pixels - NOT STRETCHED"
-    END IF
-
-END SUB
+'$INCLUDE:'SAUCE.BM'

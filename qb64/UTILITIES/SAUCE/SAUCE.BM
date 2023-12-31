@@ -267,10 +267,10 @@ SUB SAUCE.ParseTFlags
         SaucePacket.LetterSpacing$ = "Legacy / No preference"
     ELSEIF ABS((SauceRecord.TFlags~%% AND 2^1) = 0) _
     AND ABS((SauceRecord.TFlags~%% AND 2^2) > 0) THEN
-        SaucePacket.LetterSpacing$ = "8px"
+        SaucePacket.LetterSpacing$ = "9px"
     ELSEIF ABS((SauceRecord.TFlags~%% AND 2^1) > 0) _
     AND ABS((SauceRecord.TFlags~%% AND 2^2) = 0) THEN
-        SaucePacket.LetterSpacing$ = "9px"
+        SaucePacket.LetterSpacing$ = "8px"
     END IF
     ' PRINT _
     '   "Aspect Ratio: "; _
@@ -281,9 +281,9 @@ SUB SAUCE.ParseTFlags
         SaucePacket.AspectRatio$ = "No preference / legacy"
     ELSEIF ABS((SauceRecord.TFlags~%% AND 2^3) = 0) _
     AND ABS((SauceRecord.TFlags~%% AND 2^4) > 0) THEN
-        SaucePacket.AspectRatio$ = "Square Pixels - STRETCHED"
+        SaucePacket.AspectRatio$ = "Square Pixels - NOT STRETCHED"
     ELSEIF ABS((SauceRecord.TFlags~%% AND 2^3) > 0) _
     AND ABS((SauceRecord.TFlags~%% AND 2^4) = 0) THEN
-        SaucePacket.AspectRatio$ = "Square Pixels - NOT STRETCHED"
+        SaucePacket.AspectRatio$ = "Square Pixels - STRETCHED"
     END IF
 END SUB

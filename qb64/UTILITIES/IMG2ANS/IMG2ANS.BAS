@@ -126,7 +126,9 @@ FOR i%=0 TO l%
             SAUCE.InitPacket
             SauceRecord.ID$         = "SAUCE"
             SauceRecord.Version$    = "00"
-            s$ = "IMG2ANS.BAS Conversion"
+            DIM slash AS STRING
+            slash$ = "/" : IF _OS$ = "WINDOWS" THEN slash$ = "\"            
+            s$ = MID$(filename$, _INSTRREV(filename$, slash$) + 1)
             MID$(SauceRecord.Title$, 1, LEN(s$)) = s$
             s$ = "grymmjack"
             MID$(SauceRecord.Author$, 1, LEN(s$)) = s$

@@ -6,9 +6,7 @@
 '   SaucePacket - The filled in packet of sauce with friendly names and vars
 '
 ' USAGE:
-'   '$INCLUDE('SAUCE2.BAS')
-'   DIM SHARED SauceRecord AS SAUCE
-'   DIM SHARED SaucePacket AS SAUCE_PACKET
+'   '$INCLUDE:'./SAUCE.BI'
 '   SAUCE.InitPacket
 '   SAUCE.GetRecord F$
 '   IF SauceRecord.ID$ = "SAUCE" THEN
@@ -17,6 +15,7 @@
 '   ELSE
 '       PRINT "Invalid or no Sauce header found."
 '   END IF
+'   '$INCLUDE:'./SAUCE.BM'
 ' 
 ' @see https://github.com/grymmjack/sauce
 ' @author Rick Christy <grymmjack@gmail.com>
