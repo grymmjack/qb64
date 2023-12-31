@@ -105,7 +105,7 @@ FOR i%=0 TO l%
                         END IF            
                     NEXT z%
                 NEXT x%
-                ans$ = ans$ + CHR$(10) ' line feed
+                ' ans$ = ans$ + CHR$(10) ' line feed
             NEXT y%
 
             SCREEN 0
@@ -122,13 +122,19 @@ FOR i%=0 TO l%
             CLOSE #1 
 
             OPEN filename$ + ".ans" FOR BINARY AS #1
+            SEEK #1, LOF(1)
+            SAUCE.InitPacket
             SauceRecord.ID$         = "SAUCE"
             SauceRecord.Version$    = "00"
-            SauceRecord.Title$      = "IMG2ANS.BAS Conversion"
-            SauceRecord.Author$     = "grymmjack"
-            SauceRecord.Group$      = "MiSTiGRiS"
-            SauceRecord.Date$       = "20231231"
-            SauceRecord.FileSize~&  = 0
+            s$ = "IMG2ANS.BAS Conversion"
+            MID$(SauceRecord.Title$, 1, LEN(s$)) = s$
+            s$ = "grymmjack"
+            MID$(SauceRecord.Author$, 1, LEN(s$)) = s$
+            s$ = "MiSTiGRiS"
+            MID$(SauceRecord.Group$, 1, LEN(s$)) = s$
+            s$ = "20231231"
+            MID$(SauceRecord.Date$, 1, LEN(s$)) = s$
+            SauceRecord.FileSize~&  = LOF(1)-1
             SauceRecord.DataType~%% = 1
             SauceRecord.FileType~%% = 1
             SauceRecord.TInfo1~%    = SRC_W%
@@ -136,10 +142,11 @@ FOR i%=0 TO l%
             SauceRecord.TInfo3~%    = 0
             SauceRecord.TInfo4~%    = 0
             SauceRecord.Comments~%% = 0
-            SauceRecord.TFlags~%%   = 0
-            SauceRecord.TInfoS$     = "IBM VGA50"
+            SauceRecord.TFlags~%%   = 2 '8px
+            s$ = "IBM VGA50"
+            MID$(SauceRecord.TInfoS$, 1, LEN(s$)) = s$
             SAUCE.FillPacket
-            PUT #1, LOF(1)+1, SauceRecord
+            PUT #1, LOF(1)-1, SauceRecord
             CLOSE #1
 
             filename$ = ""

@@ -3,12 +3,12 @@
 ' @return BYREF Empty SaucePacket filled ready to be filled
 '
 SUB SAUCE.InitPacket
-    SauceRecord.ID$                     = SPACE$(5)
-    SauceRecord.Version$                = SPACE$(2)
-    SauceRecord.Title$                  = SPACE$(35)
-    SauceRecord.Author$                 = SPACE$(20)
-    SauceRecord.Group$                  = SPACE$(20)
-    SauceRecord.Date$                   = SPACE$(8)
+    SauceRecord.ID$                     = STRING$(5, CHR$(0))
+    SauceRecord.Version$                = STRING$(2, CHR$(0))
+    SauceRecord.Title$                  = STRING$(35, CHR$(0))
+    SauceRecord.Author$                 = STRING$(20, CHR$(0))
+    SauceRecord.Group$                  = STRING$(20, CHR$(0))
+    SauceRecord.Date$                   = STRING$(8, CHR$(0))
     SauceRecord.FileSize~&              = 0
     SauceRecord.DataType~%%             = 0
     SauceRecord.FileType~%%             = 0
@@ -18,7 +18,7 @@ SUB SAUCE.InitPacket
     SauceRecord.TInfo3~%                = 0
     SauceRecord.TInfo4~%                = 0
     SauceRecord.TFlags~%%               = 0
-    SauceRecord.TInfoS$                 = SPACE$(22)
+    SauceRecord.TInfoS$                 = STRING$(22, CHR$(0))
     SaucePacket.Comments$               = ""
     SaucePacket.DataType$               = ""
     SaucePacket.FileType$               = ""
@@ -265,11 +265,11 @@ SUB SAUCE.ParseTFlags
     IF ABS((SauceRecord.TFlags~%% AND 2^1) = 0) _
     AND ABS((SauceRecord.TFlags~%% AND 2^2) = 0) THEN
         SaucePacket.LetterSpacing$ = "Legacy / No preference"
-    ELSEIF ABS((SauceRecord.TFlags~%% AND 2^1) > 0) _
-    AND ABS((SauceRecord.TFlags~%% AND 2^2) = 0) THEN
-        SaucePacket.LetterSpacing$ = "8px"
     ELSEIF ABS((SauceRecord.TFlags~%% AND 2^1) = 0) _
     AND ABS((SauceRecord.TFlags~%% AND 2^2) > 0) THEN
+        SaucePacket.LetterSpacing$ = "8px"
+    ELSEIF ABS((SauceRecord.TFlags~%% AND 2^1) > 0) _
+    AND ABS((SauceRecord.TFlags~%% AND 2^2) = 0) THEN
         SaucePacket.LetterSpacing$ = "9px"
     END IF
     ' PRINT _
@@ -280,10 +280,10 @@ SUB SAUCE.ParseTFlags
     AND ABS((SauceRecord.TFlags~%% AND 2^4) = 0) THEN
         SaucePacket.AspectRatio$ = "No preference / legacy"
     ELSEIF ABS((SauceRecord.TFlags~%% AND 2^3) = 0) _
-    AND ABS((SauceRecord.TFlags~%% AND 2^4) = 0) THEN
-        SaucePacket.AspectRatio$ = "Square Pixels - STRETCHED"
-    ELSEIF ABS((SauceRecord.TFlags~%% AND 2^3) = 0) _
     AND ABS((SauceRecord.TFlags~%% AND 2^4) > 0) THEN
+        SaucePacket.AspectRatio$ = "Square Pixels - STRETCHED"
+    ELSEIF ABS((SauceRecord.TFlags~%% AND 2^3) > 0) _
+    AND ABS((SauceRecord.TFlags~%% AND 2^4) = 0) THEN
         SaucePacket.AspectRatio$ = "Square Pixels - NOT STRETCHED"
     END IF
 END SUB
