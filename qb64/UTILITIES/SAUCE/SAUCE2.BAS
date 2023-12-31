@@ -19,7 +19,6 @@ TYPE SAUCE
 END TYPE
 
 TYPE SAUCE_PACKET
-    ' SauceRecord           AS SAUCE
     Comments              AS STRING
     DataType              AS STRING
     FileType              AS STRING
@@ -179,17 +178,7 @@ SYSTEM
 ' Initialiaze the SaucePacket
 ' @return BYREF Empty SaucePacket filled ready to be filled
 '
-SUB SAUCE.InitPacket()
-    ' SaucePacket.SauceRecord             = SauceRecord
-    ' SaucePacket.SauceRecord.ID$         = ""
-    ' SaucePacket.SauceRecord.Version$    = ""
-    ' SaucePacket.SauceRecord.Title$      = ""
-    ' SaucePacket.SauceRecord.Author$     = ""
-    ' SaucePacket.SauceRecord.Group$      = ""
-    ' SaucePacket.SauceRecord.Date$       = ""
-    ' SaucePacket.SauceRecord.FileSize~&  = 0
-    ' SaucePacket.SauceRecord.DataType~%% = 0
-    ' SaucePacket.SauceRecord.FileType~%% = 0
+SUB SAUCE.InitPacket
     SauceRecord.ID$                     = ""
     SauceRecord.Version$                = ""
     SauceRecord.Title$                  = ""
@@ -221,8 +210,7 @@ END SUB
 ' Fill the SaucePacket with data
 ' @return BYREF Filled SaucePacket
 '
-SUB SAUCE.FillPacket()
-    ' SauceRecord = SaucePacket.SauceRecord
+SUB SAUCE.FillPacket
     DIM AS STRING _
         DataType, _
         FileType, _
@@ -280,7 +268,7 @@ SUB SAUCE.FillPacket()
         CASE "BinaryText":
             FileType$ = "BinaryText"
             FontName$ = SauceRecord.TInfoS$
-            Sauce.ParseTFlags
+            SAUCE.ParseTFlags
         CASE "XBin":
             FileType$        = "XBin"
             CharacterWidth~% = SauceRecord.TInfo1~%
@@ -292,15 +280,14 @@ SUB SAUCE.FillPacket()
     END SELECT
 
     ' Fill the sauce packet...
-    SaucePacket.Comments$        = Comments$
     SaucePacket.DataType$        = DataType$
     SaucePacket.FileType$        = FileType$
     SaucePacket.CharacterWidth~% = CharacterWidth~%
     SaucePacket.NumberOfLines~%  = NumberOfLines~%
-    SaucePacket.IceColors$       = IceColors$
+    SaucePacket.IceColors$       = SaucePacket.IceColors$
     SaucePacket.FontName$        = FontName$
-    SaucePacket.LetterSpacing$   = LetterSpacing$
-    SaucePacket.AspectRatio$     = AspectRatio$
+    SaucePacket.LetterSpacing$   = SaucePacket.LetterSpacing$
+    SaucePacket.AspectRatio$     = SaucePacket.AspectRatio$
     SaucePacket.PixelWidth~%     = PixelWidth~%
     SaucePacket.PixelHeight~%    = PixelHeight~%
     SaucePacket.PixelDepth~%     = PixelDepth~%
@@ -312,22 +299,21 @@ END SUB
 ' Print SaucePacket
 ' @return void
 '
-SUB SAUCE.PrintPacket()
-    ' SauceRecord = SaucePacket.SauceRecord
-
-    PRINT "Sauce ID: "; SauceRecord.ID$
+SUB SAUCE.PrintPacket
+    PRINT "Sauce ID:      "; SauceRecord.ID$
     PRINT "Sauce Version: "; SauceRecord.Version$
+    PRINT  
+    PRINT "Title:         "; SauceRecord.Title$
+    PRINT "Author:        "; SauceRecord.Author$
+    PRINT "Group:         "; SauceRecord.Group$
+    PRINT "Date:          "; SauceRecord.Date$
+    PRINT "FileSize:     "; SauceRecord.FileSize~&
+    PRINT "DataType:     "; SauceRecord.DataType~%%; 
+    PRINT "(" + SAUCE_DATA_TYPE$(SauceRecord.DataType~%%) + ")"
+    PRINT "FileType:     "; SauceRecord.FileType~%%
 
-    PRINT
+    PRINT 
     
-    PRINT "Title:    "; SauceRecord.Title$
-    PRINT "Author:   "; SauceRecord.Author$
-    PRINT "Group:    "; SauceRecord.Group$
-    PRINT "Date:     "; SauceRecord.Date$
-    PRINT "FileSize: "; SauceRecord.FileSize~&
-    PRINT "DataType: "; SauceRecord.DataType~%%; 
-    PRINT "FileType: "; SauceRecord.FileType~%%
-
     SELECT CASE SAUCE_DATA_TYPE$(SauceRecord.DataType~%%)
         CASE "None":
             PRINT "No Data Type Detected"
@@ -397,28 +383,27 @@ END SUB
 ' @return BYREF SaucePacket.SauceRecord
 '
 SUB SAUCE.GetRecord(F$)
-    ' SauceRecord = SaucePacket.SauceRecord
     DIM FileSize AS _UNSIGNED _INTEGER64 
     DIM i AS INTEGER
     DIM CommentID AS STRING * 5
 
     OPEN F$ FOR BINARY AS #1
     FileSize~&& = LOF(1)
-    PRINT FileSize~&&
-    SLEEP
+    ' PRINT FileSize~&&
+    ' SLEEP
 
     GET #1, FileSize~&& - 127, SauceRecord
     IF SauceRecord.ID$ = "SAUCE" THEN
         IF SauceRecord.Comments~%% > 0 THEN
-            PRINT "HAS COMMENTS"
+            ' PRINT "HAS COMMENTS"
             SEEK #1, _
                 FileSize~&& - 127 - (SauceRecord.Comments~%% * 64) - 5
             GET #1, _
                 FileSize~&& - 127 - (SauceRecord.Comments~%% * 64) - 5, _
                 CommentID$
-            PRINT "CommentID: "; CommentID$
+            ' PRINT "CommentID: "; CommentID$
             IF CommentID$ = "COMNT" THEN
-                PRINT "COMMENT FOUND"
+                ' PRINT "COMMENT FOUND"
                 FOR i% = SauceRecord.Comments~%% TO 1 STEP - 1
                     DIM Comment AS STRING * 64
                     GET #1, FileSize~&& - 127 - (i% * 64), Comment$
@@ -436,15 +421,14 @@ END SUB
 ' iCE Colors, Letter Spacing, and Aspect Ratio
 ' @return BYREF SaucePacket fields populated
 '
-SUB SAUCE.ParseTFlags()
-    ' SauceRecord = SaucePacket.SauceRecord
-    PRINT "iCE Colors: "; ABS((SauceRecord.TFlags~%% AND 2^0) > 0);
+SUB SAUCE.ParseTFlags
+    ' PRINT "iCE Colors: "; ABS((SauceRecord.TFlags~%% AND 2^0) > 0)
     IF ABS((SauceRecord.TFlags~%% AND 2^0) = 0) THEN
         SaucePacket.IceColors$ = "OFF"
     ELSE
         SaucePacket.IceColors$ = "ON"
     END IF
-    PRINT "Letter Spacing: "; ABS((SauceRecord.TFlags~%% AND 2^1) > 0); ABS((SauceRecord.TFlags~%% AND 2^2) > 0);
+    ' PRINT "Letter Spacing: "; ABS((SauceRecord.TFlags~%% AND 2^1) > 0); ABS((SauceRecord.TFlags~%% AND 2^2) > 0)
     IF ABS((SauceRecord.TFlags~%% AND 2^1) = 0) AND ABS((SauceRecord.TFlags~%% AND 2^2) = 0) THEN 'no preference / legacy
         SaucePacket.LetterSpacing$ = "Legacy / No preference"
     ELSEIF ABS((SauceRecord.TFlags~%% AND 2^1) > 0) AND ABS((SauceRecord.TFlags~%% AND 2^2) = 0) THEN '8px font
@@ -452,7 +436,7 @@ SUB SAUCE.ParseTFlags()
     ELSEIF ABS((SauceRecord.TFlags~%% AND 2^1) = 0) AND ABS((SauceRecord.TFlags~%% AND 2^2) > 0) THEN '9px font
         SaucePacket.LetterSpacing$ = "9px"
     END IF
-    PRINT "Aspect Ratio: "; ABS((SauceRecord.TFlags~%% AND 2^3) > 0); ABS((SauceRecord.TFlags~%% AND 2^4) > 0);
+    ' PRINT "Aspect Ratio: "; ABS((SauceRecord.TFlags~%% AND 2^3) > 0); ABS((SauceRecord.TFlags~%% AND 2^4) > 0)
     IF ABS((SauceRecord.TFlags~%% AND 2^3) = 0) AND ABS((SauceRecord.TFlags~%% AND 2^4) = 0) THEN ' no preference / legacy
         SaucePacket.AspectRatio$ = "No preference / legacy"
     ELSEIF ABS((SauceRecord.TFlags~%% AND 2^3) = 0) AND ABS((SauceRecord.TFlags~%% AND 2^4) = 0) THEN ' created for legacy device square pixels - stretched
