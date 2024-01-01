@@ -18,8 +18,8 @@ DIM AS LONG CANVAS, SRC_IMAGE
 DIM AS INTEGER SRC_W, SRC_H, x, y, z, xx, yy
 DIM AS STRING SRC_FILE, ans
 DIM AS _UNSIGNED LONG c
-CONST E  = 27   ' ESCAPE - The ANSI escape code
-CONST B  = 219  '█ BLOCK CHARACTER - Full block foreground
+CONST E  = 27  ' ESCAPE - The ANSI escape code
+CONST B  = 219 '█ BLOCK CHARACTER - Full block foreground
 CONST FT = 223 '▀ HALF BLOCK Top FG Bottom BG
 CONST FB = 220 '▄ HALF BLOCK Top BG Bottom FG 
 
@@ -31,21 +31,21 @@ TYPE ANSI_MAP
 END TYPE
 DIM ANSI_MAP(15) AS ANSI_MAP
 ' BLACK
-ANSI_MAP(0).FG_CODE$  = CHR$(E)+"[0;30m" : ANSI_MAP(0).RGBC~&  = &HFF000000 : ANSI_MAP(0).BG_CODE$ = CHR$(E)+"[0;30m"
+ANSI_MAP(0).FG_CODE$  = CHR$(E)+"[0;30m" : ANSI_MAP(0).RGBC~&  = &HFF000000 : ANSI_MAP(0).BG_CODE$ = CHR$(E)+"[40m"
 ' BLUE
-ANSI_MAP(1).FG_CODE$  = CHR$(E)+"[0;34m" : ANSI_MAP(1).RGBC~&  = &HFF0000AA : ANSI_MAP(1).BG_CODE$ = CHR$(E)+"[0;44m"
+ANSI_MAP(1).FG_CODE$  = CHR$(E)+"[0;34m" : ANSI_MAP(1).RGBC~&  = &HFF0000AA : ANSI_MAP(1).BG_CODE$ = CHR$(E)+"[44m"
 ' GREEN
-ANSI_MAP(2).FG_CODE$  = CHR$(E)+"[0;32m" : ANSI_MAP(2).RGBC~&  = &HFF00AA00 : ANSI_MAP(2).BG_CODE$ = CHR$(E)+"[0;42m"
+ANSI_MAP(2).FG_CODE$  = CHR$(E)+"[0;32m" : ANSI_MAP(2).RGBC~&  = &HFF00AA00 : ANSI_MAP(2).BG_CODE$ = CHR$(E)+"[42m"
 ' CYAN
-ANSI_MAP(3).FG_CODE$  = CHR$(E)+"[0;36m" : ANSI_MAP(3).RGBC~&  = &HFF00AAAA : ANSI_MAP(3).BG_CODE$ = CHR$(E)+"[0;46m"
+ANSI_MAP(3).FG_CODE$  = CHR$(E)+"[0;36m" : ANSI_MAP(3).RGBC~&  = &HFF00AAAA : ANSI_MAP(3).BG_CODE$ = CHR$(E)+"[46m"
 ' RED
-ANSI_MAP(4).FG_CODE$  = CHR$(E)+"[0;31m" : ANSI_MAP(4).RGBC~&  = &HFFAA0000 : ANSI_MAP(4).BG_CODE$ = CHR$(E)+"[0;41m"
+ANSI_MAP(4).FG_CODE$  = CHR$(E)+"[0;31m" : ANSI_MAP(4).RGBC~&  = &HFFAA0000 : ANSI_MAP(4).BG_CODE$ = CHR$(E)+"[41m"
 ' PURPLE
-ANSI_MAP(5).FG_CODE$  = CHR$(E)+"[0;35m" : ANSI_MAP(5).RGBC~&  = &HFFAA00AA : ANSI_MAP(5).BG_CODE$ = CHR$(E)+"[0;45m"
+ANSI_MAP(5).FG_CODE$  = CHR$(E)+"[0;35m" : ANSI_MAP(5).RGBC~&  = &HFFAA00AA : ANSI_MAP(5).BG_CODE$ = CHR$(E)+"[45m"
 ' BROWN
-ANSI_MAP(6).FG_CODE$  = CHR$(E)+"[0;33m" : ANSI_MAP(6).RGBC~&  = &HFFAA5500 : ANSI_MAP(6).BG_CODE$ = CHR$(E)+"[0;43m"
+ANSI_MAP(6).FG_CODE$  = CHR$(E)+"[0;33m" : ANSI_MAP(6).RGBC~&  = &HFFAA5500 : ANSI_MAP(6).BG_CODE$ = CHR$(E)+"[43m"
 ' WHITE
-ANSI_MAP(7).FG_CODE$  = CHR$(E)+"[0;37m" : ANSI_MAP(7).RGBC~&  = &HFFAAAAAA : ANSI_MAP(7).BG_CODE$ = CHR$(E)+"[0;47m"
+ANSI_MAP(7).FG_CODE$  = CHR$(E)+"[0;37m" : ANSI_MAP(7).RGBC~&  = &HFFAAAAAA : ANSI_MAP(7).BG_CODE$ = CHR$(E)+"[47m"
 ' BRIGHT BLACK
 ANSI_MAP(8).FG_CODE$  = CHR$(E)+"[1;30m" : ANSI_MAP(8).RGBC~&  = &HFF555555 : ANSI_MAP(8).BG_CODE$ = CHR$(E)+"[5;40m"
 ' BRIGHT BLUE
@@ -107,15 +107,18 @@ FOR i%=0 TO l%
                         DIM AS _UNSIGNED LONG TopColor, BottomColor
                         TopColor~& = POINT(x%, y%) ' top pixel
                         BottomColor~& = POINT(x%, y%+1) ' pixel under
-                        IF TopColor~& = BottomColor~& THEN ' Solid block
-                            FOR z% = 0 TO UBOUND(ANSI_MAP)
-                                IF TopColor~& = ANSI_MAP(z%).RGBC~& THEN
-                                    ans$ = ans$ + ANSI_MAP(z%).FG_CODE$ + CHR$(B)
-                                    EXIT FOR
-                                END IF            
-                            NEXT z%
-                        ELSE ' Half block
+                        ' IF TopColor~& = BottomColor~& THEN ' Solid block
+                        '     FOR z% = 0 TO UBOUND(ANSI_MAP)
+                        '         IF TopColor~& = ANSI_MAP(z%).RGBC~& THEN
+                        '             ans$ = ans$ + ANSI_MAP(z%).FG_CODE$ + CHR$(B)
+                        '             EXIT FOR
+                        '         END IF            
+                        '     NEXT z%
+                        ' ELSE ' Half block
                             DIM AS STRING FG_CODE, BG_CODE
+                            ' Set defaults in case not found
+                            FG_CODE$ = ANSI_MAP(0).FG_CODE$
+                            BG_CODE$ = ANSI_MAP(0).BG_CODE$
                             FOR z% = 0 TO UBOUND(ANSI_MAP) ' Get FG Color Code
                                 IF TopColor~& = ANSI_MAP(z%).RGBC~& THEN
                                     FG_CODE$ = ANSI_MAP(z%).FG_CODE$
@@ -129,9 +132,10 @@ FOR i%=0 TO l%
                                 END IF            
                             NEXT z%
                             ans$ = ans$ + FG_CODE$ + BG_CODE$ + CHR$(FT)
-                        END IF
+                        ' END IF
                     NEXT x%
                 END IF
+                ans$ = ans$ + CHR$(E) + "[0m" ' reset on each line
                 ' ans$ = ans$ + CHR$(10) ' line feed
             NEXT y%
 
