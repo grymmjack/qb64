@@ -31,7 +31,7 @@ TYPE ANSI_MAP
 END TYPE
 DIM ANSI_MAP(15) AS ANSI_MAP
 ' BLACK
-ANSI_MAP(0).FG_CODE$  = CHR$(E)+"[0;30m" : ANSI_MAP(0).RGBC~&  = &HFF000000 : ANSI_MAP(0).BG_CODE$ = CHR$(E)+"[0;30m"
+ANSI_MAP(0).FG_CODE$  = CHR$(E)+"[0;30m" : ANSI_MAP(0).RGBC~&  = &HFF000000 : ANSI_MAP(0).BG_CODE$ = CHR$(E)+"[0;40m"
 ' BLUE
 ANSI_MAP(1).FG_CODE$  = CHR$(E)+"[0;34m" : ANSI_MAP(1).RGBC~&  = &HFF0000AA : ANSI_MAP(1).BG_CODE$ = CHR$(E)+"[0;44m"
 ' GREEN
@@ -101,11 +101,12 @@ FOR i%=0 TO l%
             ' Parse the image into ansi color blocks
             ans$ = ""
             FOR y% = 0 TO SRC_H% - 1
-                FOR x% = 0 TO SRC_W% - 1
-                    DIM AS _UNSIGNED LONG TopColor, BottomColor
-                    TopColor~& = POINT(x%, y%)
-                    BottomColor~& = POINT(x%, y%+1)
-                    IF y% > 0 AND y% MOD 2 = 0 THEN
+                IF y% MOD 2 <> 0 THEN
+                    ans$ = ans$ + CHR$(E) + "[0m" ' reset on each line
+                    FOR x% = 0 TO SRC_W% - 1
+                        DIM AS _UNSIGNED LONG TopColor, BottomColor
+                        TopColor~& = POINT(x%, y%) ' top pixel
+                        BottomColor~& = POINT(x%, y%+1) ' pixel under
                         IF TopColor~& = BottomColor~& THEN ' Solid block
                             FOR z% = 0 TO UBOUND(ANSI_MAP)
                                 IF TopColor~& = ANSI_MAP(z%).RGBC~& THEN
@@ -129,8 +130,8 @@ FOR i%=0 TO l%
                             NEXT z%
                             ans$ = ans$ + FG_CODE$ + BG_CODE$ + CHR$(FT)
                         END IF
-                    END IF
-                NEXT x%
+                    NEXT x%
+                END IF
                 ' ans$ = ans$ + CHR$(10) ' line feed
             NEXT y%
 

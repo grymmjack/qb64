@@ -101,6 +101,7 @@ FOR i%=0 TO l%
             ' Parse the image into ansi color blocks
             ans$ = ""
             FOR y% = 0 TO SRC_H% - 1
+                ans$ = ans$ + CHR$(E) + "[0m" ' reset on each line
                 FOR x% = 0 TO SRC_W% - 1
                     DIM AS _UNSIGNED LONG TopColor, BottomColor
                     TopColor~& = POINT(x%, y%)
