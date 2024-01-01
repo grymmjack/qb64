@@ -1,10 +1,11 @@
 ''
 ' TODO: Add Command Line processing support for multiple files. 
-' IMG2ANS
+' IMG2ANS-25
 ' Convert any QB64 supported image into ANSI block art
 ' (as long as the image is using EGA palette colors)
 '
-' This version saves as a IBM VGA50 8px Font.
+' This version skips every other row to change the aspect ratio to support 9px
+' in a really lossy way.
 '
 ' @author Rick Christy (grymmjack@gmail.com)
 ' @link https://youtube.com/grymmjack
@@ -102,8 +103,10 @@ FOR i%=0 TO l%
                     c~& = POINT(x%, y%)
                     FOR z% = 0 TO UBOUND(ANSI_MAP)
                         IF c~& = ANSI_MAP(z%).RGBC~& THEN
-                            ans$ = ans$ + ANSI_MAP(z%).CODE$ + CHR$(B)
-                            EXIT FOR
+                            IF y% > 0 AND y% MOD 2 = 0 THEN
+                                ans$ = ans$ + ANSI_MAP(z%).CODE$ + CHR$(B)
+                                EXIT FOR
+                            END IF
                         END IF            
                     NEXT z%
                 NEXT x%
@@ -115,15 +118,15 @@ FOR i%=0 TO l%
 
             ' Write the output.ans file
             PRINT ans$
-            OPEN filename$ + ".ans" FOR OUTPUT AS #1
+            OPEN filename$ + "-25.ans" FOR OUTPUT AS #1
             PRINT #1, ans$
             CLOSE #1
 
-            OPEN filename$ + ".ans" FOR APPEND AS #1
+            OPEN filename$ + "-25.ans" FOR APPEND AS #1
             PRINT #1, CHR$(&H1A) ' EOF
             CLOSE #1 
 
-            OPEN filename$ + ".ans" FOR BINARY AS #1
+            OPEN filename$ + "-25.ans" FOR BINARY AS #1
             SEEK #1, LOF(1)
             SAUCE.InitPacket
             SauceRecord.ID$         = "SAUCE"
@@ -142,12 +145,12 @@ FOR i%=0 TO l%
             SauceRecord.DataType~%% = 1
             SauceRecord.FileType~%% = 1
             SauceRecord.TInfo1~%    = SRC_W%
-            SauceRecord.TInfo2~%    = SRC_H%
+            SauceRecord.TInfo2~%    = SRC_H% \ 2
             SauceRecord.TInfo3~%    = 0
             SauceRecord.TInfo4~%    = 0
             SauceRecord.Comments~%% = 0
-            SauceRecord.TFlags~%%   = 2 '8px
-            s$ = "IBM VGA50"
+            SauceRecord.TFlags~%%   = 1 '9px
+            s$ = "IBM VGA"
             MID$(SauceRecord.TInfoS$, 1, LEN(s$)) = s$
             SAUCE.FillPacket
             PUT #1, LOF(1)-1, SauceRecord
