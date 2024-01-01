@@ -1,10 +1,10 @@
 ''
 ' TODO: Add Command Line processing support for multiple files. 
-' IMG2ANS
+' IMG2ANS-50
 ' Convert any QB64 supported image into ANSI block art
 ' (as long as the image is using EGA palette colors)
 '
-' This version saves as a IBM VGA50 8px Font.
+' This version saves as a IBM VGA50 8px Font lossless.
 '
 ' @author Rick Christy (grymmjack@gmail.com)
 ' @link https://youtube.com/grymmjack
@@ -108,7 +108,8 @@ FOR i%=0 TO l%
                         END IF            
                     NEXT z%
                 NEXT x%
-                ' ans$ = ans$ + CHR$(10) ' line feed
+                ans$ = ans$ + CHR$(E) + "[0m" ' reset on each line
+
             NEXT y%
 
             SCREEN 0
@@ -116,15 +117,15 @@ FOR i%=0 TO l%
 
             ' Write the output.ans file
             PRINT ans$
-            OPEN filename$ + ".ans" FOR OUTPUT AS #1
+            OPEN filename$ + "-50.ans" FOR OUTPUT AS #1
             PRINT #1, ans$
             CLOSE #1
 
-            OPEN filename$ + ".ans" FOR APPEND AS #1
+            OPEN filename$ + "-50.ans" FOR APPEND AS #1
             PRINT #1, CHR$(&H1A) ' EOF
             CLOSE #1 
 
-            OPEN filename$ + ".ans" FOR BINARY AS #1
+            OPEN filename$ + "-50.ans" FOR BINARY AS #1
             SEEK #1, LOF(1)
             SAUCE.InitPacket
             SauceRecord.ID$         = "SAUCE"

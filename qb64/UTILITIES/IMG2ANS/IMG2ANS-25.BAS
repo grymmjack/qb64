@@ -4,8 +4,8 @@
 ' Convert any QB64 supported image into ANSI block art
 ' (as long as the image is using EGA palette colors)
 '
-' This version skips every other row to change the aspect ratio to support 9px
-' in a really lossy way.
+' This version attempts to support 9px font with half block colors in addition
+' to full blocks so it's slightly less lossy than IMG2ANS-25.BAS :)
 '
 ' @author Rick Christy (grymmjack@gmail.com)
 ' @link https://youtube.com/grymmjack
@@ -15,51 +15,53 @@
 '$INCLUDE:'../SAUCE/SAUCE.BI'
 
 DIM AS LONG CANVAS, SRC_IMAGE
-DIM AS INTEGER SRC_W, SRC_H, x, y, z
+DIM AS INTEGER SRC_W, SRC_H, x, y, z, xx, yy
 DIM AS STRING SRC_FILE, ans
 DIM AS _UNSIGNED LONG c
-CONST E = 27  ' ESCAPE - The ANSI escape code
-CONST B = 219 ' BLOCK CHARACTER - Full block foreground
-
+CONST E  = 27  ' ESCAPE - The ANSI escape code
+CONST B  = 219 '█ BLOCK CHARACTER - Full block foreground
+CONST FT = 223 '▀ HALF BLOCK Top FG Bottom BG
+CONST FB = 220 '▄ HALF BLOCK Top BG Bottom FG 
 
 ' Maps RGB32 _UNSIGNED LONG colors (from POINT(x,y)) to ANSI Escape Color Codes
 TYPE ANSI_MAP
-    RGBC AS _UNSIGNED LONG
-    CODE AS STRING
+    RGBC    AS _UNSIGNED LONG
+    FG_CODE AS STRING
+    BG_CODE AS STRING
 END TYPE
 DIM ANSI_MAP(15) AS ANSI_MAP
 ' BLACK
-ANSI_MAP(0).CODE$  = CHR$(E)+"[0;30m" : ANSI_MAP(0).RGBC~&  = &HFF000000
+ANSI_MAP(0).FG_CODE$  = "0;30" : ANSI_MAP(0).RGBC~&  = &HFF000000 : ANSI_MAP(0).BG_CODE$ = "40"
 ' BLUE
-ANSI_MAP(1).CODE$  = CHR$(E)+"[0;34m" : ANSI_MAP(1).RGBC~&  = &HFF0000AA
+ANSI_MAP(1).FG_CODE$  = "0;34" : ANSI_MAP(1).RGBC~&  = &HFF0000AA : ANSI_MAP(1).BG_CODE$ = "44"
 ' GREEN
-ANSI_MAP(2).CODE$  = CHR$(E)+"[0;32m" : ANSI_MAP(2).RGBC~&  = &HFF00AA00
+ANSI_MAP(2).FG_CODE$  = "0;32" : ANSI_MAP(2).RGBC~&  = &HFF00AA00 : ANSI_MAP(2).BG_CODE$ = "42"
 ' CYAN
-ANSI_MAP(3).CODE$  = CHR$(E)+"[0;36m" : ANSI_MAP(3).RGBC~&  = &HFF00AAAA
+ANSI_MAP(3).FG_CODE$  = "0;36" : ANSI_MAP(3).RGBC~&  = &HFF00AAAA : ANSI_MAP(3).BG_CODE$ = "46"
 ' RED
-ANSI_MAP(4).CODE$  = CHR$(E)+"[0;31m" : ANSI_MAP(4).RGBC~&  = &HFFAA0000
+ANSI_MAP(4).FG_CODE$  = "0;31" : ANSI_MAP(4).RGBC~&  = &HFFAA0000 : ANSI_MAP(4).BG_CODE$ = "41"
 ' PURPLE
-ANSI_MAP(5).CODE$  = CHR$(E)+"[0;35m" : ANSI_MAP(5).RGBC~&  = &HFFAA00AA
+ANSI_MAP(5).FG_CODE$  = "0;35" : ANSI_MAP(5).RGBC~&  = &HFFAA00AA : ANSI_MAP(5).BG_CODE$ = "45"
 ' BROWN
-ANSI_MAP(6).CODE$  = CHR$(E)+"[0;33m" : ANSI_MAP(6).RGBC~&  = &HFFAA5500
+ANSI_MAP(6).FG_CODE$  = "0;33" : ANSI_MAP(6).RGBC~&  = &HFFAA5500 : ANSI_MAP(6).BG_CODE$ = "43"
 ' WHITE
-ANSI_MAP(7).CODE$  = CHR$(E)+"[0;37m" : ANSI_MAP(7).RGBC~&  = &HFFAAAAAA
+ANSI_MAP(7).FG_CODE$  = "0;37" : ANSI_MAP(7).RGBC~&  = &HFFAAAAAA : ANSI_MAP(7).BG_CODE$ = "47"
 ' BRIGHT BLACK
-ANSI_MAP(8).CODE$  = CHR$(E)+"[1;30m" : ANSI_MAP(8).RGBC~&  = &HFF555555
+ANSI_MAP(8).FG_CODE$  = "1;30" : ANSI_MAP(8).RGBC~&  = &HFF555555 : ANSI_MAP(8).BG_CODE$ = "5;40"
 ' BRIGHT BLUE
-ANSI_MAP(9).CODE$  = CHR$(E)+"[1;34m" : ANSI_MAP(9).RGBC~&  = &HFF5555FF
+ANSI_MAP(9).FG_CODE$  = "1;34" : ANSI_MAP(9).RGBC~&  = &HFF5555FF : ANSI_MAP(9).BG_CODE$ = "5;44"
 ' BRIGHT GREEN
-ANSI_MAP(10).CODE$ = CHR$(E)+"[1;32m" : ANSI_MAP(10).RGBC~& = &HFF55FF55
+ANSI_MAP(10).FG_CODE$ = "1;32" : ANSI_MAP(10).RGBC~& = &HFF55FF55 : ANSI_MAP(10).BG_CODE$ = "5;42"
 ' BRIGHT CYAN
-ANSI_MAP(11).CODE$ = CHR$(E)+"[1;36m" : ANSI_MAP(11).RGBC~& = &HFF55FFFF
+ANSI_MAP(11).FG_CODE$ = "1;36" : ANSI_MAP(11).RGBC~& = &HFF55FFFF : ANSI_MAP(11).BG_CODE$ = "5;46"
 ' BRIGHT RED
-ANSI_MAP(12).CODE$ = CHR$(E)+"[1;31m" : ANSI_MAP(12).RGBC~& = &HFFFF5555
+ANSI_MAP(12).FG_CODE$ = "1;31" : ANSI_MAP(12).RGBC~& = &HFFFF5555 : ANSI_MAP(12).BG_CODE$ = "5;41"
 ' BRIGHT PURPLE
-ANSI_MAP(13).CODE$ = CHR$(E)+"[1;35m" : ANSI_MAP(13).RGBC~& = &HFFFF55FF
+ANSI_MAP(13).FG_CODE$ = "1;35" : ANSI_MAP(13).RGBC~& = &HFFFF55FF : ANSI_MAP(13).BG_CODE$ = "5;45"
 ' BRIGHT YELLOW
-ANSI_MAP(14).CODE$ = CHR$(E)+"[1;33m" : ANSI_MAP(14).RGBC~& = &HFFFFFF55
+ANSI_MAP(14).FG_CODE$ = "1;33" : ANSI_MAP(14).RGBC~& = &HFFFFFF55 : ANSI_MAP(14).BG_CODE$ = "5;43"
 ' BRIGHT WHITE
-ANSI_MAP(15).CODE$ = CHR$(E)+"[1;37m" : ANSI_MAP(15).RGBC~& = &HFFFFFFFF
+ANSI_MAP(15).FG_CODE$ = "1;37" : ANSI_MAP(15).RGBC~& = &HFFFFFFFF : ANSI_MAP(15).BG_CODE$ = "5;47"
 
 ' Choose an image file with dialog
 SRC_FILE$ = _OPENFILEDIALOG$( _
@@ -99,19 +101,33 @@ FOR i%=0 TO l%
             ' Parse the image into ansi color blocks
             ans$ = ""
             FOR y% = 0 TO SRC_H% - 1
-                ans$ = ans$ + CHR$(E) + "[0m" ' reset on each line
-                FOR x% = 0 TO SRC_W% - 1
-                    c~& = POINT(x%, y%)
-                    FOR z% = 0 TO UBOUND(ANSI_MAP)
-                        IF c~& = ANSI_MAP(z%).RGBC~& THEN
-                            IF y% > 0 AND y% MOD 2 = 0 THEN
-                                ans$ = ans$ + ANSI_MAP(z%).CODE$ + CHR$(B)
+                IF y% MOD 2 <> 0 THEN
+                    ans$ = ans$ + CHR$(E) + "[0m" ' reset on each line
+                    FOR x% = 0 TO SRC_W% - 1
+                    DIM AS _UNSIGNED LONG TopColor, BottomColor
+                    TopColor~& = POINT(x%, y%) ' top pixel
+                    BottomColor~& = POINT(x%, y%+1) ' pixel under
+                        DIM AS STRING FG_CODE, BG_CODE
+                        ' Set defaults in case not found
+                        FG_CODE$ = ANSI_MAP(0).FG_CODE$
+                        BG_CODE$ = ANSI_MAP(0).BG_CODE$
+                        FOR z% = 0 TO UBOUND(ANSI_MAP) ' Get FG Color Code
+                            IF TopColor~& = ANSI_MAP(z%).RGBC~& THEN
+                                FG_CODE$ = ANSI_MAP(z%).FG_CODE$
                                 EXIT FOR
-                            END IF
-                        END IF            
-                    NEXT z%
-                NEXT x%
-                ' ans$ = ans$ + CHR$(10) ' line feed
+                            END IF            
+                        NEXT z%
+                        FOR z% = 0 TO UBOUND(ANSI_MAP) ' Get BG Color Code
+                            IF BottomColor~& = ANSI_MAP(z%).RGBC~& THEN
+                                BG_CODE$ = ANSI_MAP(z%).BG_CODE$
+                                EXIT FOR
+                            END IF            
+                        NEXT z%
+                        ans$ = ans$ + CHR$(E) + "[" + FG_CODE$ + ";" + BG_CODE$ + "m" + CHR$(FT)
+                    NEXT x%
+                END IF
+                ans$ = ans$ + CHR$(E) + "[0m" ' reset on each line
+
             NEXT y%
 
             SCREEN 0
@@ -146,11 +162,11 @@ FOR i%=0 TO l%
             SauceRecord.DataType~%% = 1
             SauceRecord.FileType~%% = 1
             SauceRecord.TInfo1~%    = SRC_W%
-            SauceRecord.TInfo2~%    = SRC_H% \ 2
+            SauceRecord.TInfo2~%    = SRC_H%' \ 2
             SauceRecord.TInfo3~%    = 0
             SauceRecord.TInfo4~%    = 0
             SauceRecord.Comments~%% = 0
-            SauceRecord.TFlags~%%   = 1 '9px
+            SauceRecord.TFlags~%%   = 5 '9px iCE Color
             s$ = "IBM VGA"
             MID$(SauceRecord.TInfoS$, 1, LEN(s$)) = s$
             SAUCE.FillPacket
