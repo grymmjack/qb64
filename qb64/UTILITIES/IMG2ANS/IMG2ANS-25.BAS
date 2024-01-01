@@ -4,8 +4,10 @@
 ' Convert any QB64 supported image into ANSI block art
 ' (as long as the image is using EGA palette colors)
 '
-' This version attempts to support 9px font with half block colors in addition
+' This version attempts to support 8px font with half block colors in addition
 ' to full blocks so it's slightly less lossy than IMG2ANS-25.BAS :)
+'
+' So it is a condensed format that will render properly on 80x25, etc.
 '
 ' @author Rick Christy (grymmjack@gmail.com)
 ' @link https://youtube.com/grymmjack
@@ -67,7 +69,7 @@ ANSI_MAP(15).FG_CODE$ = "1;37" : ANSI_MAP(15).RGBC~& = &HFFFFFFFF : ANSI_MAP(15)
 SRC_FILE$ = _OPENFILEDIALOG$( _
     "Choose an image", _
     , _
-    "*.jpg|*.jpeg|*.png|*.tga|*.bmp|*.psd|*.gif|*.hdr|*.pic|*.pnm|*.pcx|*.svg|*.qoi", _
+    "*.jpg|*.jpeg|*.png|*.tga|*.bmp|*.psd|*.gif|*.pcx|*.svg|*.qoi", _
     "Image Files", _
     -1 _
 )
@@ -75,22 +77,14 @@ IF SRC_FILE$ = "" THEN SYSTEM ' image is required...
 
 SRC_FILE$ = SRC_FILE$ + "|"
 
-' PRINT SRC_FILE$
-' SLEEP
-
 DIM AS INTEGER i, l, ch
 DIM AS STRING filename
 l% = LEN(SRC_FILE$)
-' PRINT l%
-' SLEEP
 
 FOR i%=0 TO l%
     IF i%+1 <= l% THEN ' At end of file list, do nothing
         ch% = ASC(SRC_FILE$, i%+1)
         IF CHR$(ch%) = "|" THEN ' File found
-            ' PRINT "PROCESSING: "; filename$; i%
-            ' SLEEP
-            
             ' Load the image into the canvas at the same size
             SRC_IMAGE& = _LOADIMAGE(filename$, 32) 
             SRC_W% = _WIDTH(SRC_IMAGE&) : SRC_H% = _HEIGHT(SRC_IMAGE&)
@@ -100,8 +94,8 @@ FOR i%=0 TO l%
 
             ' Parse the image into ansi color blocks
             ans$ = ""
-            FOR y% = 0 TO SRC_H% - 1
-                IF y% MOD 2 <> 0 THEN
+            FOR y% = 0 TO SRC_H% - 2
+                IF (y% = 0) OR (y% MOD 2 = 0) THEN
                     ans$ = ans$ + CHR$(E) + "[0m" ' reset on each line
                     FOR x% = 0 TO SRC_W% - 1
                     DIM AS _UNSIGNED LONG TopColor, BottomColor
@@ -123,11 +117,19 @@ FOR i%=0 TO l%
                                 EXIT FOR
                             END IF            
                         NEXT z%
-                        ans$ = ans$ + CHR$(E) + "[" + FG_CODE$ + ";" + BG_CODE$ + "m" + CHR$(FT)
+                        ans$ = ans$ _
+                             + CHR$(E) _
+                             + "[0m" _
+                             + CHR$(E) _
+                             + "[" _
+                             + FG_CODE$ _
+                             + ";" _
+                             + BG_CODE$ _
+                             + "m" _
+                             + CHR$(FT)
                     NEXT x%
                 END IF
                 ans$ = ans$ + CHR$(E) + "[0m" ' reset on each line
-
             NEXT y%
 
             SCREEN 0
@@ -162,11 +164,11 @@ FOR i%=0 TO l%
             SauceRecord.DataType~%% = 1
             SauceRecord.FileType~%% = 1
             SauceRecord.TInfo1~%    = SRC_W%
-            SauceRecord.TInfo2~%    = SRC_H%' \ 2
+            SauceRecord.TInfo2~%    = SRC_H% \ 2
             SauceRecord.TInfo3~%    = 0
             SauceRecord.TInfo4~%    = 0
             SauceRecord.Comments~%% = 0
-            SauceRecord.TFlags~%%   = 5 '9px iCE Color
+            SauceRecord.TFlags~%%   = 3 '8px iCE Color
             s$ = "IBM VGA"
             MID$(SauceRecord.TInfoS$, 1, LEN(s$)) = s$
             SAUCE.FillPacket

@@ -20,7 +20,6 @@ DIM AS _UNSIGNED LONG c
 CONST E = 27  ' ESCAPE - The ANSI escape code
 CONST B = 219 ' BLOCK CHARACTER - Full block foreground
 
-
 ' Maps RGB32 _UNSIGNED LONG colors (from POINT(x,y)) to ANSI Escape Color Codes
 TYPE ANSI_MAP
     RGBC AS _UNSIGNED LONG
@@ -64,7 +63,7 @@ ANSI_MAP(15).CODE$ = CHR$(E)+"[1;37m" : ANSI_MAP(15).RGBC~& = &HFFFFFFFF
 SRC_FILE$ = _OPENFILEDIALOG$( _
     "Choose an image", _
     , _
-    "*.jpg|*.jpeg|*.png|*.tga|*.bmp|*.psd|*.gif|*.hdr|*.pic|*.pnm|*.pcx|*.svg|*.qoi", _
+    "*.jpg|*.jpeg|*.png|*.tga|*.bmp|*.psd|*.gif|*.pcx|*.svg|*.qoi", _
     "Image Files", _
     -1 _
 )
@@ -72,22 +71,14 @@ IF SRC_FILE$ = "" THEN SYSTEM ' image is required...
 
 SRC_FILE$ = SRC_FILE$ + "|"
 
-' PRINT SRC_FILE$
-' SLEEP
-
 DIM AS INTEGER i, l, ch
 DIM AS STRING filename
 l% = LEN(SRC_FILE$)
-' PRINT l%
-' SLEEP
 
 FOR i%=0 TO l%
     IF i%+1 <= l% THEN ' At end of file list, do nothing
         ch% = ASC(SRC_FILE$, i%+1)
         IF CHR$(ch%) = "|" THEN ' File found
-            ' PRINT "PROCESSING: "; filename$; i%
-            ' SLEEP
-            
             ' Load the image into the canvas at the same size
             SRC_IMAGE& = _LOADIMAGE(filename$, 32) 
             SRC_W% = _WIDTH(SRC_IMAGE&) : SRC_H% = _HEIGHT(SRC_IMAGE&)
