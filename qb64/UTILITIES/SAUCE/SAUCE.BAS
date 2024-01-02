@@ -56,8 +56,8 @@ file_extensions$ = file_extensions$ + file_exts$(5) + file_exts$(6)
 
 F$ = _OPENFILEDIALOG$( _
     "Choose a scene file", _
+    , _
     file_extensions$, _
-    "|", _
     "Scene Files", _
     -1 _
 )
