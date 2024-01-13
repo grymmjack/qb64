@@ -103,9 +103,6 @@ FOR i%=0 TO l%
                         DIM AS _UNSIGNED LONG TopColor, BottomColor
                         TopColor~& = POINT(x%, y%) ' top pixel
                         BottomColor~& = POINT(x%, y%+1) ' pixel under
-                        IF TopColor~& = BottomColor~& THEN
-                            char$ = CHR$(B)
-                        END IF
                         DIM AS STRING FG_CODE, BG_CODE
                         ' Set defaults in case not found
                         FG_CODE$ = ANSI_MAP(0).FG_CODE$
@@ -130,6 +127,11 @@ FOR i%=0 TO l%
                             char$ = CHR$(FB)
                         END IF
                         IF bz% > 7 AND bz% = fz% THEN ' iCE colors not needed
+                            BG_CODE$ = ANSI_MAP(0).BG_CODE$
+                            char$ = CHR$(B)
+                        END IF
+                        IF fz% = bz% THEN
+                            FG_CODE$ = ANSI_MAP(fz%).FG_CODE$
                             BG_CODE$ = ANSI_MAP(0).BG_CODE$
                             char$ = CHR$(B)
                         END IF
