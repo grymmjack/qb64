@@ -17,7 +17,7 @@
 '$INCLUDE:'../SAUCE/SAUCE.BI'
 
 DIM AS LONG CANVAS, SRC_IMAGE
-DIM AS INTEGER SRC_W, SRC_H, x, y, z, xx, yy
+DIM AS INTEGER SRC_W, SRC_H, x, y, z, fz, bz, xx, yy
 DIM AS STRING SRC_FILE, ans
 DIM AS _UNSIGNED LONG c
 CONST E  = 27  ' ESCAPE - The ANSI escape code
@@ -78,7 +78,8 @@ IF SRC_FILE$ = "" THEN SYSTEM ' image is required...
 SRC_FILE$ = SRC_FILE$ + "|"
 
 DIM AS INTEGER i, l, ch
-DIM AS STRING filename
+DIM AS _UNSIGNED LONG rv, gv, bv
+DIM AS STRING filename, char
 l% = LEN(SRC_FILE$)
 
 FOR i%=0 TO l%
@@ -98,9 +99,13 @@ FOR i%=0 TO l%
                 IF (y% = 0) OR (y% MOD 2 = 0) THEN
                     ans$ = ans$ + CHR$(E) + "[0m" ' reset on each line
                     FOR x% = 0 TO SRC_W% - 1
-                    DIM AS _UNSIGNED LONG TopColor, BottomColor
-                    TopColor~& = POINT(x%, y%) ' top pixel
-                    BottomColor~& = POINT(x%, y%+1) ' pixel under
+                        char$ = CHR$(FT)
+                        DIM AS _UNSIGNED LONG TopColor, BottomColor
+                        TopColor~& = POINT(x%, y%) ' top pixel
+                        BottomColor~& = POINT(x%, y%+1) ' pixel under
+                        IF TopColor~& = BottomColor~& THEN
+                            char$ = CHR$(B)
+                        END IF
                         DIM AS STRING FG_CODE, BG_CODE
                         ' Set defaults in case not found
                         FG_CODE$ = ANSI_MAP(0).FG_CODE$
@@ -108,15 +113,26 @@ FOR i%=0 TO l%
                         FOR z% = 0 TO UBOUND(ANSI_MAP) ' Get FG Color Code
                             IF TopColor~& = ANSI_MAP(z%).RGBC~& THEN
                                 FG_CODE$ = ANSI_MAP(z%).FG_CODE$
+                                fz% = z%
                                 EXIT FOR
                             END IF            
                         NEXT z%
                         FOR z% = 0 TO UBOUND(ANSI_MAP) ' Get BG Color Code
                             IF BottomColor~& = ANSI_MAP(z%).RGBC~& THEN
                                 BG_CODE$ = ANSI_MAP(z%).BG_CODE$
+                                bz% = z%
                                 EXIT FOR
                             END IF            
                         NEXT z%
+                        IF bz% > 7 AND fz% < 8 THEN ' iCE colors not needed
+                            FG_CODE$ = ANSI_MAP(bz%).FG_CODE$
+                            BG_CODE$ = ANSI_MAP(fz%).BG_CODE$
+                            char$ = CHR$(FB)
+                        END IF
+                        IF bz% > 7 AND bz% = fz% THEN ' iCE colors not needed
+                            BG_CODE$ = ANSI_MAP(0).BG_CODE$
+                            char$ = CHR$(B)
+                        END IF
                         ans$ = ans$ _
                              + CHR$(E) _
                              + "[0m" _
@@ -126,7 +142,7 @@ FOR i%=0 TO l%
                              + ";" _
                              + BG_CODE$ _
                              + "m" _
-                             + CHR$(FT)
+                             + char$
                     NEXT x%
                 END IF
                 ans$ = ans$ + CHR$(E) + "[0m" ' reset on each line
@@ -185,5 +201,19 @@ NEXT i%
 ' Clean up
 _FREEIMAGE SRC_IMAGE&
 _FREEIMAGE CANVAS&
+
+
+FUNCTION is_high_intensity~%%(value~&)
+    DIM AS _UNSIGNED LONG rv, gv, bv
+    rv~& = _RED32(value~&)
+    gv~& = _GREEN32(value~&)
+    bv~& = _BLUE32(value~&)
+    IF rv~& > 0 AND gv~& > 0 AND bv~& > 0 THEN
+        is_high_intensity~%% = -1
+    ELSE
+        is_high_intensity~%% = 0
+    END IF
+END FUNCTION
+                    
 
 '$INCLUDE:'../SAUCE/SAUCE.BM'
