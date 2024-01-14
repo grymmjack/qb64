@@ -2,6 +2,24 @@
 ' TODO: Add Command Line processing support for multiple files. 
 ' IMG2ANS-25-NOICE
 '
+' CLI OPTIONS (WIP)
+'
+'   img2ans input-file {options} 
+'   input-file1, (input-file2, input-file3, ...)
+'
+'   --output-colors     rgb     Output RGB codes
+'   --output-colors     cga     Output CGA palette
+'   --output-height     25      Use 9px font and half blocks
+'   --output-height     50      Use 8px font and full blocks only
+'   --no-ice                    Do not output iCE colors (high intensity bg)
+'   --no-sauce                  Do not include sauce record in output
+'   --verbose                   Show commands and processing
+'   --sauce-title               Title for sauce
+'   --sauce-author              Author for sauce
+'   --sauce-group               Group for sauce
+'   --sauce-comments            Comments for sauce
+'   --sauce-date                YYYYMMDD Date for sauce
+'
 ' Convert any QB64 supported image into ANSI block art
 ' (as long as the image is using EGA palette colors)
 '
