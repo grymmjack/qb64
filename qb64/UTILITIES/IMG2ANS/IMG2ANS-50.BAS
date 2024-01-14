@@ -1,6 +1,7 @@
 ''
 ' TODO: Add Command Line processing support for multiple files. 
 ' IMG2ANS-50
+'
 ' Convert any QB64 supported image into ANSI block art
 ' (as long as the image is using EGA palette colors)
 '
@@ -139,7 +140,7 @@ FOR i%=0 TO l%
             SauceRecord.TInfo3~%    = 0
             SauceRecord.TInfo4~%    = 0
             SauceRecord.Comments~%% = 0
-            SauceRecord.TFlags~%%   = 2 '8px
+            SauceRecord.TFlags~%%   = 3 '8px iCE Color
             s$ = "IBM VGA50"
             MID$(SauceRecord.TInfoS$, 1, LEN(s$)) = s$
             SAUCE.FillPacket

@@ -1,9 +1,8 @@
 ''
 ' TODO: Add Command Line processing support for multiple files. 
 ' IMG2ANS-50-RGB
-' Convert any QB64 supported image into ANSI block art
 '
-' This version attempts to support 8px font.
+' Convert any QB64 supported image into ANSI block art
 '
 ' This version exports RGB color codes. So it can take any image as input!
 '
@@ -51,13 +50,18 @@ FOR i%=0 TO l%
 
 			' Parse the image into ansi color blocks
 			ans$ = ""
-			FOR y% = 0 TO SRC_H% - 2
+			FOR y% = 0 TO SRC_H% - 1
 				FOR x% = 0 TO SRC_W% - 1
 					DIM AS _UNSIGNED LONG TopColor, BottomColor
 					DIM AS STRING FG_CODE, BG_CODE
 					DIM AS STRING bR, bG, bB, fR, fG, fB
 					TopColor~& = POINT(x%, y%) ' top pixel
-					BottomColor~& = POINT(x%, y%+1) ' pixel under
+					' IF y%+1 < SRC_H% THEN
+					' 	BottomColor~& = POINT(x%, y%+1) ' pixel under
+					' ELSE
+					' 	BottomColor~& = _RGB32(0, 0, 0)
+					' 	TopColor~& = _RGB32(0, 0, 0)
+					' END IF
 
 					' Extract RGB values from each color
 					bR$ = _TRIM$(STR$(_RED32(BottomColor~&)))
@@ -124,7 +128,7 @@ FOR i%=0 TO l%
 			SauceRecord.TInfo3~%	= 0
 			SauceRecord.TInfo4~%	= 0
 			SauceRecord.Comments~%% = 0
-			SauceRecord.TFlags~%%   = 5 '9px iCE Color
+			SauceRecord.TFlags~%%   = 3 '8px iCE Color
 			s$ = "IBM VGA50"
 			MID$(SauceRecord.TInfoS$, 1, LEN(s$)) = s$
 			SAUCE.FillPacket
