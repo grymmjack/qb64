@@ -39,10 +39,12 @@ EGA~&(15) = &HFFFFFFFF
 REDIM indexedColors(0 TO 0, 0 TO 2) AS _UNSIGNED _BYTE
 
 'Setup screen
-DIM CANVAS AS LONG
-CANVAS& = _NEWIMAGE(800, 600, 32)
+DIM SHARED CANVAS AS LONG
+CANVAS& = _NEWIMAGE(1280, 960, 32)
 _DEST CANVAS&
 SCREEN CANVAS&
+
+DIM SHARED AS LONG img_orig, img_paletted
 
 'Populate indexedColors from EGA array and display indexes and components
 ' DIM i AS INTEGER
@@ -53,48 +55,93 @@ SCREEN CANVAS&
 CALL load_gpl_palette_to_array("./HW_CGA.gpl", indexedColors~%%())
 ' CALL load_gpl_palette_to_array("./ansi32.gpl", indexedColors~%%())
 
-'Create random components to test matching algorithm
-DIM k AS STRING
+DIM SHARED AS _UNSIGNED _BYTE orig, palettized
+orig~%% = 0 : palettized~%% = 0
+DIM AS STRING k, img_file, pal_file
 DO:
     k$ = INKEY$
     IF k$ = CHR$(27) THEN END
-    RANDOMIZE TIMER
-    DIM AS INTEGER cr, cg, cb', ca
-    cr% = INT(RND * 255)
-    cg% = INT(RND * 255)
-    cb% = INT(RND * 255)
-
-    'Display matching index in indexedColors color which was found
-    FOR i% = 0 TO UBOUND(indexedColors~%%)
-        COLOR _RGB32( _
-            indexedColors~%%(i%, 0), _
-            indexedColors~%%(i%, 1), _
-            indexedColors~%%(i%, 2) _
-        )
-        PRINT i%, 
-        PRINT indexedColors~%%(i%, 0), 
-        PRINT indexedColors~%%(i%, 1), 
-        PRINT indexedColors~%%(i%, 2)
-    NEXT i%
-    PRINT
-    COLOR _RGB32(255, 255, 255)
-    PRINT "Closest to (";cr%;",";cg%;",";cb%;") = "; 
-    COLOR _RGB32(cr%, cg%, cb%)
-    PRINT CHR$(219);
-    DIM closest AS INTEGER
-    closest% = closest_color_index%(cr%, cg%, cb%, indexedColors~%%())
-    COLOR _RGB32( _
-        indexedColors~%%(closest%, 0), _
-        indexedColors~%%(closest%, 1), _
-        indexedColors~%%(closest%, 2) _
-    )
-    PRINT CHR$(219);
-    PRINT closest%
-    COLOR _RGB32(255, 255, 255)
     PRINT "SPACE=TOGGLE ORIGINAL/PALETTE, L=LOAD IMAGE, P=LOAD PALETTE, ESC=QUIT"
+    SELECT CASE LCASE$(k$)
+        CASE " ":
+            IF orig~%% = 0 THEN
+                display_paletted
+            ELSE
+                display_original
+            END IF
+        CASE "l":
+            ' Choose an image file with dialog
+            img_file$ = _OPENFILEDIALOG$( _
+                "Choose an image", _
+                , _
+                "*.jpg|*.jpeg|*.png|*.tga|*.bmp|*.psd|*.gif|*.pcx|*.svg|*.qoi", _
+                "Image Files", _
+                0 _
+            )
+            IF img_file$ <> "" THEN
+                img_orig& = _LOADIMAGE(img_file$, 32)
+                img_paletted& = _COPYIMAGE(img_orig&, 256)
+                display_original
+            END IF
+        CASE "p":
+            ' Choose a palette file with dialog
+            img_file$ = _OPENFILEDIALOG$( _
+                "Choose a GPL (GIMP) palette", _
+                , _
+                "*.gpl", _
+                "GPL (GIMP) Palette", _
+                0 _
+            )
+            IF pal_file$ <> "" THEN
+                CALL load_gpl_palette_to_array(pal_file$, indexedColors~%%())
+                display_paletted
+            END IF
+    END SELECT
+    COLOR _RGB32(255, 255, 255)
     SLEEP
     CLS
 LOOP
+
+
+
+SUB display_original()
+    orig~%% = 1
+    _DEST CANVAS
+    _PUTIMAGE (0, 16), img_orig&
+END SUB
+
+
+
+SUB display_paletted()
+    orig~%% = 0
+    IF paletted~%% = 0 THEN
+        palettize(img_orig&)
+    END IF
+    _DEST CANVAS
+    _PUTIMAGE (0, 16), img_paletted&
+END SUB
+
+
+
+SUB palettize(img&)
+    _SOURCE img_orig&
+    _DEST img_paletted&
+    DIM AS INTEGER w, h, i, y, x, closest, cr, cg, cb
+    w% = _WIDTH(img_orig&)
+    h% = _HEIGHT(img_orig&)
+    FOR y%=0 TO h%
+        FOR x%=0 TO w%
+            cr% = _RED32(POINT(x%, y%))
+            cg% = _GREEN32(POINT(x%, y%))
+            cb% = _BLUE32(POINT(x%, y%))
+
+            closest% = closest_color_index%(cr%, cg%, cb%, indexedColors~%%())
+
+        NEXT x%
+    NEXT y%
+    paletted~%% = 1
+END SUB
+
 
 
 ''
