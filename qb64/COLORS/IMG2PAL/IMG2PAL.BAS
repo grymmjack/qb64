@@ -36,7 +36,7 @@ EGA~&(13) = &HFFFF55FF
 EGA~&(14) = &HFFFFFF55
 EGA~&(15) = &HFFFFFFFF
 '0 = RED, 1 = GREEN, 2 = BLUE, 3 = ALPHA
-DIM indexedColors(UBOUND(EGA~&), 3) AS _UNSIGNED _BYTE
+DIM indexedColors(UBOUND(EGA~&), 2) AS _UNSIGNED _BYTE
 
 'Setup screen
 DIM CANVAS AS LONG
@@ -56,39 +56,38 @@ DO:
     k$ = INKEY$
     IF k$ = CHR$(27) THEN END
     RANDOMIZE TIMER
-    DIM AS INTEGER cr, cg, cb, ca
+    DIM AS INTEGER cr, cg, cb', ca
     cr% = INT(RND * 255)
     cg% = INT(RND * 255)
     cb% = INT(RND * 255)
-    ca% = 255
 
     'Display matching index in indexedColors color which was found
     FOR i% = LBOUND(EGA~&) TO UBOUND(EGA~&)
         COLOR _RGB32( _
-            indexedColors~%%(i% ,0), _
-            indexedColors~%%(i% ,1), _
-            indexedColors~%%(i% ,2), _
-            indexedColors~%%(i% ,3) _
+            indexedColors~%%(i%, 0), _
+            indexedColors~%%(i%, 1), _
+            indexedColors~%%(i%, 2) _
         )
         PRINT i%, 
-        PRINT indexedColors~%%(i% ,0), 
+        PRINT indexedColors~%%(i%, 0), 
         PRINT indexedColors~%%(i%, 1), 
-        PRINT indexedColors~%%(i%, 2),
-        PRINT indexedColors~%%(i%, 3)
+        PRINT indexedColors~%%(i%, 2)
     NEXT i%
     PRINT
-    PRINT "Closest to (";cr%;",";cg%;",";cb%;",";ca%;") ="; 
+    PRINT "Closest to (";cr%;",";cg%;",";cb%;") = "; 
+    COLOR _RGB32(cr%, cg%, cb%)
+    PRINT CHR$(219);
     DIM closest AS INTEGER
-    closest% = closest_color_index%(cr%, cg%, cb%, ca%, indexedColors~%%())
+    closest% = closest_color_index%(cr%, cg%, cb%, indexedColors~%%())
     COLOR _RGB32( _
         indexedColors~%%(closest%, 0), _
         indexedColors~%%(closest%, 1), _
-        indexedColors~%%(closest%, 2), _
-        indexedColors~%%(closest%, 3) _
+        indexedColors~%%(closest%, 2) _
     )
+    PRINT CHR$(219);
     PRINT closest%
-    COLOR _RGB32(255, 255, 255, 255)
-    PRINT "Press any key to randomize another color, or ESC to quit."
+    COLOR _RGB32(255, 255, 255)
+    PRINT "Press SPACE to randomize another match, or ESC to quit."
     SLEEP
     CLS
 LOOP
@@ -123,7 +122,6 @@ SUB hex_to_rgb(src_pal~&(), dest_pal~%%(), idx%)
     dest_pal~%%(idx%, 0) = _RED32(c~&)
     dest_pal~%%(idx%, 1) = _GREEN32(c~&)
     dest_pal~%%(idx%, 2) = _BLUE32(c~&)
-    dest_pal~%%(idx%, 3) = _ALPHA32(c~&)
 END SUB
 
 
@@ -141,16 +139,15 @@ END SUB
 ' @param ARRAY _UNSIGNED _BYTE pal Palette to search for matches in
 ' @return INTEGER index of the closest color in palette to passed in RGB color
 '
-FUNCTION closest_color_index%(r%, g%, b%, a%, pal~%%())
-    DIM AS INTEGER i, found, rr, gg, bb, aa, first
+FUNCTION closest_color_index%(r%, g%, b%, pal~%%())
+    DIM AS INTEGER i, found, rr, gg, bb, first
     DIM AS LONG dist, mindist
     dist& = 0 : mindist& = 0 : first% = 1
     FOR i% = LBOUND(pal~%%) TO UBOUND(pal~%%)
         rr% = pal~%%(i%, 0) - r%
         gg% = pal~%%(i%, 1) - g%
         bb% = pal~%%(i%, 2) - b%
-        aa% = pal~%%(i%, 3) - a%
-        dist& = rr% * rr% + gg% * gg% + bb% * bb% + aa% * aa%
+        dist& = rr% * rr% + gg% * gg% + bb% * bb%
         IF first% OR (dist& < mindist&) THEN
             mindist& = dist&
             found% = i%
