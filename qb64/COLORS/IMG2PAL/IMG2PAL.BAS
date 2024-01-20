@@ -4,7 +4,8 @@
 ' Converts any QB64 supported image to a fixed color palette by calculating
 ' the closest Euclidean Distance matching indexed color to RGB components.
 '
-' EGA is currently used to support conversion of pixel art with IMG2ANS
+' EGA is currently used to support conversion of pixel art with IMG2ANS, but
+' I will also support loading .PAL files for indexed palettes besides EGA.
 '
 ' @author Rick Christy <grymmjack@gmail.com>
 '
@@ -47,40 +48,50 @@ SCREEN CANVAS&
 DIM i AS INTEGER
 FOR i% = LBOUND(EGA~&) TO UBOUND(EGA~&)
     CALL hex_to_rgb(EGA~&(), indexedColors~%%(), i%)
-    COLOR _RGB32( _
-        indexedColors~%%(i% ,0), _
-        indexedColors~%%(i% ,1), _
-        indexedColors~%%(i% ,2), _
-        indexedColors~%%(i% ,3) _
-    )
-    PRINT i%, 
-    PRINT indexedColors~%%(i% ,0), 
-    PRINT indexedColors~%%(i%, 1), 
-    PRINT indexedColors~%%(i%, 2),
-    PRINT indexedColors~%%(i%, 3)
 NEXT i%
 
 'Create random components to test matching algorithm
-RANDOMIZE TIMER
-DIM AS INTEGER cr, cg, cb, ca
-cr% = INT(RND * 255)
-cg% = INT(RND * 255)
-cb% = INT(RND * 255)
-ca% = 255
+DIM k AS STRING
+DO:
+    k$ = INKEY$
+    IF k$ = CHR$(27) THEN END
+    RANDOMIZE TIMER
+    DIM AS INTEGER cr, cg, cb, ca
+    cr% = INT(RND * 255)
+    cg% = INT(RND * 255)
+    cb% = INT(RND * 255)
+    ca% = 255
 
-'Display matching index in indexedColors color which was found
-PRINT
-PRINT "Closest to (";cr%;",";cg%;",";cb%;",";ca%;") ="; 
-DIM closest AS INTEGER
-closest% = closest_color_index%(cr%, cg%, cb%, ca%, indexedColors~%%())
-COLOR _RGB32( _
-    indexedColors~%%(closest%, 0), _
-    indexedColors~%%(closest%, 1), _
-    indexedColors~%%(closest%, 2), _
-    indexedColors~%%(closest%, 3) _
-)
-PRINT closest%
-
+    'Display matching index in indexedColors color which was found
+    FOR i% = LBOUND(EGA~&) TO UBOUND(EGA~&)
+        COLOR _RGB32( _
+            indexedColors~%%(i% ,0), _
+            indexedColors~%%(i% ,1), _
+            indexedColors~%%(i% ,2), _
+            indexedColors~%%(i% ,3) _
+        )
+        PRINT i%, 
+        PRINT indexedColors~%%(i% ,0), 
+        PRINT indexedColors~%%(i%, 1), 
+        PRINT indexedColors~%%(i%, 2),
+        PRINT indexedColors~%%(i%, 3)
+    NEXT i%
+    PRINT
+    PRINT "Closest to (";cr%;",";cg%;",";cb%;",";ca%;") ="; 
+    DIM closest AS INTEGER
+    closest% = closest_color_index%(cr%, cg%, cb%, ca%, indexedColors~%%())
+    COLOR _RGB32( _
+        indexedColors~%%(closest%, 0), _
+        indexedColors~%%(closest%, 1), _
+        indexedColors~%%(closest%, 2), _
+        indexedColors~%%(closest%, 3) _
+    )
+    PRINT closest%
+    COLOR _RGB32(255, 255, 255, 255)
+    PRINT "Press any key to randomize another color, or ESC to quit."
+    SLEEP
+    CLS
+LOOP
 
 
 ''
