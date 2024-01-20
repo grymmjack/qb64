@@ -42,7 +42,7 @@ REDIM SHARED indexedColors(0 TO 15, 0 TO 2) AS _UNSIGNED _BYTE
 
 'Setup screen
 DIM SHARED CANVAS AS LONG
-CANVAS& = _NEWIMAGE(1280, 960, 32)
+CANVAS& = _NEWIMAGE(1920, 1080, 32)
 _DEST CANVAS&
 SCREEN CANVAS&
 
@@ -53,10 +53,6 @@ FOR i% = LBOUND(EGA~&) TO UBOUND(EGA~&)
     CALL hex_to_rgb(EGA~&(), indexedColors~%%(), i%)
 NEXT i%
 
-' CALL load_gpl_palette_to_array("./HW_CGA.gpl", indexedColors~%%())
-' CALL load_gpl_palette_to_array("./ansi32.gpl", indexedColors~%%())
-
-
 DIM SHARED AS LONG img_orig, img_pal
 DIM SHARED AS _UNSIGNED _BYTE orig, palettized
 DIM AS STRING k, img_file, pal_file
@@ -64,6 +60,7 @@ DIM AS STRING k, img_file, pal_file
 orig~%% = 0 : palettized~%% = 0
 
 DO:
+    _LIMIT 30
     k$ = INKEY$
     IF k$ = CHR$(27) THEN END
     _DEST CANVAS&
@@ -110,6 +107,9 @@ LOOP
 
 
 
+''
+' Displays the original image
+'
 SUB display_original()
     orig~%% = 1
     _DEST CANVAS
@@ -118,6 +118,9 @@ END SUB
 
 
 
+''
+' Displays the paletted image
+' and palletizes it if not already done so.
 SUB display_paletted()
     orig~%% = 0
     IF paletted~%% = 0 THEN
@@ -129,6 +132,9 @@ END SUB
 
 
 
+''
+' Palletize an image using indexedColors~%%
+'
 SUB palettize(img&)
     _SOURCE img_orig&
     _DEST img_pal&
@@ -141,14 +147,6 @@ SUB palettize(img&)
             cg% = _GREEN32(POINT(x%, y%))
             cb% = _BLUE32(POINT(x%, y%))
             closest% = closest_color_index%(cr%, cg%, cb%, indexedColors~%%())
-            ' _ECHO _
-            '     " y=" + _TRIM$(STR$(y%)) _
-            '   + " x=" + _TRIM$(STR$(x%)) _
-            '   + " r=" + _TRIM$(STR$(cr%)) _
-            '   + " g=" + _TRIM$(STR$(cg%)) _
-            '   + " b=" + _TRIM$(STR$(cb%)) _
-            '   + " closest=" + _TRIM$(STR$(closest%))
-            ' SLEEP
             PSET(x%+1, y%+1), _RGB32( _
                 indexedColors~%%(closest%, 0), _
                 indexedColors~%%(closest%, 1), _
