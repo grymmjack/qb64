@@ -1,5 +1,23 @@
+''
+' IMG2PAL
+'
+' Converts any QB64 supported image to a fixed color palette by calculating
+' the closest Euclidean Distance matching indexed color to RGB components.
+'
+' EGA is currently used to support conversion of pixel art with IMG2ANS
+'
+' @author Rick Christy <grymmjack@gmail.com>
+'
+' @see https://en.wikipedia.org/wiki/Euclidean_distance
+' @see https://stackoverflow.com/questions/57862060/finding-the-closest-indexed-color-value-to-the-current-color-in-javascript-p5
+' @see https://github.com/libgd/libgd/blob/58d25665be1c146e7284f253fa679e8256afa6cb/src/gd.c#L460
+'
+' @version 0.1
+'
 '$DYNAMIC
-DIM SHARED EGA(0 TO 15) AS _UNSIGNED LONG
+
+'EGA palette is easy to use in hex color value format
+DIM EGA(0 TO 15) AS _UNSIGNED LONG
 EGA~&(0)  = &HFF000000
 EGA~&(1)  = &HFF0000AA
 EGA~&(2)  = &HFF00AA00
@@ -17,13 +35,15 @@ EGA~&(13) = &HFFFF55FF
 EGA~&(14) = &HFFFFFF55
 EGA~&(15) = &HFFFFFFFF
 '0 = RED, 1 = GREEN, 2 = BLUE, 3 = ALPHA
-REDIM SHARED indexedColors(UBOUND(EGA~&), 3) AS _UNSIGNED _BYTE
+DIM indexedColors(UBOUND(EGA~&), 3) AS _UNSIGNED _BYTE
 
+'Setup screen
 DIM CANVAS AS LONG
 CANVAS& = _NEWIMAGE(800, 600, 32)
 _DEST CANVAS&
 SCREEN CANVAS&
 
+'Populate indexedColors from EGA array and display indexes and components
 DIM i AS INTEGER
 FOR i% = LBOUND(EGA~&) TO UBOUND(EGA~&)
     CALL hex_to_rgb(EGA~&(), indexedColors~%%(), i%)
@@ -40,12 +60,15 @@ FOR i% = LBOUND(EGA~&) TO UBOUND(EGA~&)
     PRINT indexedColors~%%(i%, 3)
 NEXT i%
 
+'Create random components to test matching algorithm
 RANDOMIZE TIMER
 DIM AS INTEGER cr, cg, cb, ca
 cr% = INT(RND * 255)
 cg% = INT(RND * 255)
 cb% = INT(RND * 255)
 ca% = 255
+
+'Display matching index in indexedColors color which was found
 PRINT
 PRINT "Closest to (";cr%;",";cg%;",";cb%;",";ca%;") ="; 
 DIM closest AS INTEGER
@@ -58,6 +81,14 @@ COLOR _RGB32( _
 )
 PRINT closest%
 
+
+
+''
+' Creates a _RGB32 color from a passed in hex color string
+'
+' @param STRING hexColor 
+' @return _UNSIGNED LONG _RGB32 color
+'
 FUNCTION RGBHEX~&(hexColor$)
     RGBHEX~& = _RGB32( _
         VAL("&H" + LEFT$(hexColor$, 2)), _
@@ -66,6 +97,15 @@ FUNCTION RGBHEX~&(hexColor$)
     )
 END FUNCTION
 
+
+
+''
+' Populates a destionation multidimensional palette array using hex color values
+' 
+' @param ARRAY _UNSIGNED LONG src_pal source palette of hex color values
+' @param ARRAY _UNSIGNED _BYTE dest_pal destination palette for components
+' @param INTEGER idx Index of arrays to work on
+'
 SUB hex_to_rgb(src_pal~&(), dest_pal~%%(), idx%)
     DIM c AS _UNSIGNED LONG
     c~& = src_pal~&(idx%)
@@ -75,8 +115,21 @@ SUB hex_to_rgb(src_pal~&(), dest_pal~%%(), idx%)
     dest_pal~%%(idx%, 3) = _ALPHA32(c~&)
 END SUB
 
-'https://github.com/libgd/libgd/blob/58d25665be1c146e7284f253fa679e8256afa6cb/src/gd.c#L460
 
+
+''
+' Finds closest color index in palette for passed in RGB color
+'
+' Ported from gd's gdImageColorClosestAlpha function here:
+' https://github.com/libgd/libgd/blob/58d25665be1c146e7284f253fa679e8256afa6cb/src/gd.c#L460
+'
+' @param INTEGER r Red component of color to match
+' @param INTEGER g Green component of color to match
+' @param INTEGER b Blue component of color to match
+' @param INTEGER a Alpha component of color to match
+' @param ARRAY _UNSIGNED _BYTE pal Palette to search for matches in
+' @return INTEGER index of the closest color in palette to passed in RGB color
+'
 FUNCTION closest_color_index%(r%, g%, b%, a%, pal~%%())
     DIM AS INTEGER i, found, rr, gg, bb, aa, first
     DIM AS LONG dist, mindist
@@ -87,14 +140,11 @@ FUNCTION closest_color_index%(r%, g%, b%, a%, pal~%%())
         bb% = pal~%%(i%, 2) - b%
         aa% = pal~%%(i%, 3) - a%
         dist& = rr% * rr% + gg% * gg% + bb% * bb% + aa% * aa%
-        ' PRINT dist&, mindist&
         IF first% OR (dist& < mindist&) THEN
             mindist& = dist&
             found% = i%
-            ' PRINT "found: "; found%
             first% = 0
         END IF
     NEXT i%
-    ' PRINT "final closest index: "; found%
     closest_color_index% = found%
 END FUNCTION
