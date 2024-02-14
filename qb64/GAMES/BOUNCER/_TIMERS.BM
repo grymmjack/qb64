@@ -1,3 +1,5 @@
+$INCLUDEONCE
+
 SUB timers_init
     DPRINT "timers_init", DEBUG_AVG
     TICKS_TIMER.STARTED#   = TIMER

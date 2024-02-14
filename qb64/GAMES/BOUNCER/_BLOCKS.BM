@@ -1,3 +1,5 @@
+$INCLUDEONCE
+
 SUB block_init
     DPRINT "block_init", DEBUG_AVG
     BLOCK.X%       = 1

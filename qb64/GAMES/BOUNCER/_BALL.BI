@@ -1,3 +1,5 @@
+$INCLUDEONCE
+
 TYPE BALL_OBJECT
     X          AS INTEGER
     Y          AS INTEGER

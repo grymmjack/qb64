@@ -1,3 +1,5 @@
+$INCLUDEONCE
+
 SUB debug_init
     DPRINT "debug_init", DEBUG_MAX
     DEBUG.ENABLED%         = FALSE

@@ -1,3 +1,5 @@
+$INCLUDEONCE
+
 SUB level_init
     DPRINT "level_init", DEBUG_AVG
     LEVEL.START_X% = 1

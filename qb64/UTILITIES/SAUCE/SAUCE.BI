@@ -20,6 +20,7 @@
 ' @see https://github.com/grymmjack/sauce
 ' @author Rick Christy <grymmjack@gmail.com>
 '
+$INCLUDEONCE
 
 TYPE SAUCE
     ID       AS STRING * 5

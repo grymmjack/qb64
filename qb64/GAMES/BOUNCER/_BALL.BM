@@ -1,3 +1,5 @@
+$INCLUDEONCE
+
 SUB ball_init
     DPRINT "ball_init", DEBUG_AVG
     BALL.X%          = rand_in_range(LEVEL.START_X%, LEVEL.END_X%)

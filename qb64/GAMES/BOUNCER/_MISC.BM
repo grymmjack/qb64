@@ -1,3 +1,5 @@
+$INCLUDEONCE
+
 FUNCTION n$ (integ%)
     DPRINT "n$(integ%=" + _TRIM$(STR$(integ%)) + ")", DEBUG_WTF
     n$ = _TRIM$(STR$(integ%))

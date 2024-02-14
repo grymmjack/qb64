@@ -1,3 +1,5 @@
+$INCLUDEONCE
+
 SUB stats_init
     DPRINT "stats_init", DEBUG_AVG
     STATS.TOP_BOUNCES%   = 0

@@ -1,3 +1,5 @@
+$INCLUDEONCE
+
 SUB screen_init 
     DPRINT "screen_init", DEBUG_AVG
     screen_reset

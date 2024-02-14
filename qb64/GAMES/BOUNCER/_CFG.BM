@@ -1,3 +1,5 @@
+$INCLUDEONCE
+
 SUB configure
     DPRINT "configure", DEBUG_AVG
     CFG.FULLSCREEN%        = TRUE
