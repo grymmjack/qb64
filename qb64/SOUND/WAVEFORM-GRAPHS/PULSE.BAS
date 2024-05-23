@@ -11,6 +11,7 @@ screenHeight = 600
 SCREEN _NEWIMAGE(screenWidth, screenHeight, 32)
 COLOR _RGB32(255, 255, 255), _RGB32(0, 0, 0)
 CLS
+PRINT "PULSE WAVEFORM"
 
 ' Center of the screen
 centerX = screenWidth / 2
