@@ -37,5 +37,5 @@ FOR x = 1 TO screenWidth
 NEXT x
 
 FUNCTION sawtooth# (t AS DOUBLE, f AS DOUBLE)
-    sawtooth# = 2 * ((t * f) - INT(t * f)) - 1
+    sawtooth = 2 * ((t * f) - INT(t * f)) - 1
 END FUNCTION

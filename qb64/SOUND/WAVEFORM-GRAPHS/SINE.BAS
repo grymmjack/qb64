@@ -37,5 +37,5 @@ FOR x = 1 TO screenWidth
 NEXT x
 
 FUNCTION sine_wave# (t AS DOUBLE, f AS DOUBLE)
-    sine_wave# = SIN(2 * _PI * f * t)
+    sine_wave = SIN(2 * _PI * f * t)
 END FUNCTION

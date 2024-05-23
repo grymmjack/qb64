@@ -37,5 +37,5 @@ FOR x = 1 TO screenWidth
 NEXT x
 
 FUNCTION inverse_sawtooth# (t AS DOUBLE, f AS DOUBLE)
-    inverse_sawtooth# = 1 - 2 * ((t * f) - INT(t * f))
+    inverse_sawtooth = 1 - 2 * ((t * f) - INT(t * f))
 END FUNCTION

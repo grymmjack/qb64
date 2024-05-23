@@ -38,8 +38,8 @@ NEXT x
 
 FUNCTION square_wave# (t AS DOUBLE, f AS DOUBLE)
     IF (t * f) - INT(t * f) < 0.5 THEN
-        square_wave# = 1
+        square_wave = 1
     ELSE
-        square_wave# = -1
+        square_wave = -1
     END IF
 END FUNCTION

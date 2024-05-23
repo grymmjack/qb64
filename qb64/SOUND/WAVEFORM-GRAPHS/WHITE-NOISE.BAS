@@ -36,5 +36,6 @@ FOR x = 1 TO screenWidth
 NEXT x
 
 FUNCTION white_noise# ()
-    white_noise# = RND * 2 - 1
+    RANDOMIZE TIMER
+    white_noise = RND * 2 - 1
 END FUNCTION

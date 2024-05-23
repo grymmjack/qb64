@@ -39,8 +39,8 @@ NEXT x
 
 FUNCTION pulse_wave# (t AS DOUBLE, f AS DOUBLE, duty_cycle AS DOUBLE)
     IF (t * f) - INT(t * f) < duty_cycle THEN
-        pulse_wave# = 1
+        pulse_wave = 1
     ELSE
-        pulse_wave# = -1
+        pulse_wave = -1
     END IF
 END FUNCTION

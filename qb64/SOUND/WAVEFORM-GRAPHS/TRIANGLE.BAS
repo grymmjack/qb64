@@ -37,5 +37,5 @@ FOR x = 1 TO screenWidth
 NEXT x
 
 FUNCTION triangle_wave# (t AS DOUBLE, f AS DOUBLE)
-    triangle_wave# = 2 * ABS(2 * ((t * f) - INT(t * f + 0.5))) - 1
+    triangle_wave = 2 * ABS(2 * ((t * f) - INT(t * f + 0.5))) - 1
 END FUNCTION
