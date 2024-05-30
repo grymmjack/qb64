@@ -12,7 +12,7 @@ wt% = _WIDTH - w% + 1
 _FULLSCREEN _SQUAREPIXELS
  
 d!   = 0
-lim% = 120
+lim% = 60
 st%  = 1
 x%   = 0
 y%   = 10

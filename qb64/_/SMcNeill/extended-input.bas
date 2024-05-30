@@ -1,47 +1,34 @@
 ExtendedInput "{P}Enter your password =>", a$
 Print
 Print "Your password was =>"; a$
-
 ExtendedInput "{PL08}Enter your password (max 8 digits) =>", a$
 Print
 Print "Your password was =>"; a$
-
 ExtendedInput "{PL05UI}Enter your 5 digit numeric keycode =>", a$
 Print
 Print "Your keycode was =>"; a$
-
 Print
 Print "And without password hiding which makes the * characters:"
 ExtendedInput "Enter your password =>", a$
 Print
 Print "Your password was =>"; a$
-
 ExtendedInput "{L08}Enter your password (max 8 digits) =>", a$
 Print
 Print "Your password was =>"; a$
-
 ExtendedInput "{L05UI}Enter your 5 digit numeric keycode =>", a$
 Print
 Print "Your keycode was =>"; a$
-
 Print
 Print "And now let's clean up after ourselves once we input something!"
-
 ExtendedInput "{H}Enter your password =>", a$
 Print
 Print "Your password was =>"; a$
-
 ExtendedInput "{HL08}Enter your password (max 8 digits) =>", a$
 Print
 Print "Your password was =>"; a$
-
 ExtendedInput "{HL05UI}Enter your 5 digit numeric keycode =>", a$
 Print
 Print "Your keycode was =>"; a$
-
-
-
-
 Sub ExtendedInput (prompt$, result$) 'Over Engineered Input
     'limit VALUES:
     '1 = Unsigned
@@ -58,14 +45,12 @@ Sub ExtendedInput (prompt$, result$) 'Over Engineered Input
     'D = Disable paste option
     'V = Move CTRL-V to AFTER paste
     'H = Hide Input after finished.  (Won't leave prompt, or user input on the screen.)
-
     PCopy 0, 1
     A = _AutoDisplay: X = Pos(0): Y = CsrLin
     OX = X: OY = Y 'original x and y positions
     CP = 0: OldCP = 0 'Cursor Position
     _KeyClear
     length_limit = -1 'unlimited length input, by default
-
     If Left$(prompt$, 1) = "{" Then 'possible limiter
         i = InStr(prompt$, "}")
         If i Then 'yep, we have something!
@@ -97,8 +82,6 @@ Sub ExtendedInput (prompt$, result$) 'Over Engineered Input
         If InStr(limiter$, "H") Then clean_exit = -1: limit = limit Or 8 'hide after finished
     End If
     If limit <> 0 Then prompt$ = Mid$(prompt$, i + 1)
-
-
     Do
         PCopy 1, 0
         If _KeyDown(100307) Or _KeyDown(100308) Then AltDown = -1 Else AltDown = 0
@@ -165,7 +148,6 @@ Sub ExtendedInput (prompt$, result$) 'Over Engineered Input
                         good_input:
                         If CP < length_limit Or length_limit < 0 Then
                             in$ = Left$(in$, CP) + Chr$(k) + Mid$(in$, CP + 1) 'add input to our string
-
                             OldCP = CP
                             CP = CP + 1
                         End If
@@ -210,12 +192,10 @@ Sub ExtendedInput (prompt$, result$) 'Over Engineered Input
                 QPrint p$
         $Else
             Print p$
-        $End If 
-
+        $End If
         _Display
         _Limit 30
     Loop Until k = 13
-
     PCopy 1, 0
     Locate OY, OX
     If clean_exit = 0 Then
@@ -229,20 +209,17 @@ Sub ExtendedInput (prompt$, result$) 'Over Engineered Input
                 QPrint p$
         $Else
             Print p$
-        $End If 
+        $End If
     End If
     result$ = in$
     If A Then _AutoDisplay
 End Sub
-
-
 Function KB_GetValue (limiter$, what$)
     jstart = InStr(limiter$, what$): j = 0
     If Mid$(limiter$, InStr(limiter$, what$) + 1, 1) = "-" Then
         GetValue = -1 'unlimited
         Exit Function
     End If
-
     Do
         j = j + 1
         m$ = Mid$(limiter$, jstart + j, 1)
