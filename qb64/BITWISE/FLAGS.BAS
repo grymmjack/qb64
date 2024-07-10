@@ -29,106 +29,108 @@
 ' 
 ' @author Rick Christy <grymmjack@gmail.com>
 '
+OPTION _EXPLICIT
 SCREEN _NEWIMAGE(1200, 320, 256)
 
-CONST ALIVE     = 2^0
-CONST WEAPON    = 2^1
-CONST ARMOR     = 2^2
-CONST AMMO      = 2^3
-CONST STANDING  = 2^4
-CONST WALKING   = 2^5
-CONST RUNNING   = 2^6
-CONST ATTACKING = 2^7
+CONST ALIVE     = 2^0~%%
+CONST WEAPON    = 2^1~%%
+CONST ARMOR     = 2^2~%%
+CONST AMMO      = 2^3~%%
+CONST STANDING  = 2^4~%%
+CONST WALKING   = 2^5~%%
+CONST RUNNING   = 2^6~%%
+CONST ATTACKING = 2^7~%%
 ShowFlagValues
 
 ' Initialize status
-PLAYER_STATUS = 0
+DIM PLAYER_STATUS AS _UNSIGNED _BYTE
+PLAYER_STATUS~%% = 0
 
 PRINT "RESET (0)";
-ResetAllFlags PLAYER_STATUS
-ShowPlayerFlags PLAYER_STATUS
+ResetAllFlags PLAYER_STATUS~%%
+ShowPlayerFlags PLAYER_STATUS~%%
 
 PRINT "SET ALIVE (OR" + STR$(ALIVE) + ")";
-SetFlag PLAYER_STATUS, ALIVE
-ShowPlayerFlags PLAYER_STATUS
+SetFlag PLAYER_STATUS~%%, ALIVE
+ShowPlayerFlags PLAYER_STATUS~%%
 
 PRINT "SET ATTACKING (OR" + STR$(ATTACKING) + ")";
-SetFlag PLAYER_STATUS, ATTACKING
-ShowPlayerFlags PLAYER_STATUS
+SetFlag PLAYER_STATUS~%%, ATTACKING
+ShowPlayerFlags PLAYER_STATUS~%%
 
 PRINT "CLEAR ATTACKING (AND NOT" + STR$(ATTACKING) + ")";
-ClearFlag PLAYER_STATUS, ATTACKING
-ShowPlayerFlags PLAYER_STATUS
+ClearFlag PLAYER_STATUS~%%, ATTACKING
+ShowPlayerFlags PLAYER_STATUS~%%
 
 PRINT "RESET (0)";
-ResetAllFlags PLAYER_STATUS
-ShowPlayerFlags PLAYER_STATUS
+ResetAllFlags PLAYER_STATUS~%%
+ShowPlayerFlags PLAYER_STATUS~%%
 
 PRINT "SET ALIVE (OR" + STR$(ALIVE) + ")";
-SetFlag PLAYER_STATUS, ALIVE
-ShowPlayerFlags PLAYER_STATUS
+SetFlag PLAYER_STATUS~%%, ALIVE
+ShowPlayerFlags PLAYER_STATUS~%%
 
 PRINT "SET RUNNING (OR" + STR$(RUNNING) + ")";
-SetFlag PLAYER_STATUS, RUNNING
-ShowPlayerFlags PLAYER_STATUS
+SetFlag PLAYER_STATUS~%%, RUNNING
+ShowPlayerFlags PLAYER_STATUS~%%
 
 PRINT "SET ATTACKING (OR" + STR$(ATTACKING) + ")";
-SetFlag PLAYER_STATUS, ATTACKING
-ShowPlayerFlags PLAYER_STATUS
+SetFlag PLAYER_STATUS~%%, ATTACKING
+ShowPlayerFlags PLAYER_STATUS~%%
 
 PRINT "SET WEAPON (OR" + STR$(WEAPON) + ")";
-SetFlag PLAYER_STATUS, WEAPON
-ShowPlayerFlags PLAYER_STATUS
+SetFlag PLAYER_STATUS~%%, WEAPON
+ShowPlayerFlags PLAYER_STATUS~%%
 
 PRINT "CLEAR ATTACKING (AND NOT" + STR$(ATTACKING) + ")";
-ClearFlag PLAYER_STATUS, ATTACKING
-ShowPlayerFlags PLAYER_STATUS
+ClearFlag PLAYER_STATUS~%%, ATTACKING
+ShowPlayerFlags PLAYER_STATUS~%%
 
 PRINT "CLEAR RUNNING (AND NOT" + STR$(RUNNING) + ")";
-ClearFlag PLAYER_STATUS, RUNNING
-ShowPlayerFlags PLAYER_STATUS
+ClearFlag PLAYER_STATUS~%%, RUNNING
+ShowPlayerFlags PLAYER_STATUS~%%
 
 PRINT "TOGGLE WEAPON (XOR" + STR$(WEAPON) + ")";
-ToggleFlag PLAYER_STATUS, WEAPON
-ShowPlayerFlags PLAYER_STATUS
+ToggleFlag PLAYER_STATUS~%%, WEAPON
+ShowPlayerFlags PLAYER_STATUS~%%
 
 PRINT "TOGGLE ALIVE (XOR" + STR$(ALIVE) + ")";
-ToggleFlag PLAYER_STATUS, ALIVE
-ShowPlayerFlags PLAYER_STATUS
+ToggleFlag PLAYER_STATUS~%%, ALIVE
+ShowPlayerFlags PLAYER_STATUS~%%
 
 PRINT "TOGGLE ALIVE (XOR" + STR$(ALIVE) + ")";
-ToggleFlag PLAYER_STATUS, ALIVE
-ShowPlayerFlags PLAYER_STATUS
+ToggleFlag PLAYER_STATUS~%%, ALIVE
+ShowPlayerFlags PLAYER_STATUS~%%
 
 
 
-SUB ResetAllFlags(status)
-    status = 0
+SUB ResetAllFlags(status~%%)
+    status~%% = 0
 END SUB
 
 
-SUB ClearFlag(status, flag)
-    status = status AND NOT(flag)
+SUB ClearFlag(status~%%, flag~%%)
+    status~%% = status~%% AND NOT(flag~%%)
 END SUB
 
 
-SUB SetFlag(status, flag)
-    status = status OR flag
+SUB SetFlag(status~%%, flag~%%)
+    status~%% = status~%% OR flag~%%
 END SUB
 
 
-SUB ToggleFlag(status, flag)
-    status = status XOR flag
+SUB ToggleFlag(status~%%, flag~%%)
+    status~%% = status~%% XOR flag~%%
 END SUB
 
 
-FUNCTION FlagValue$(flag)
-    FlagValue = MID$(STR$(flag), 2)
+FUNCTION FlagValue$(flag~%%)
+    FlagValue = MID$(STR$(flag~%%), 2)
 END FUNCTION
 
 
-FUNCTION FlagStatus$(status, flag)
-    IF IsFlagSet(status, flag) THEN
+FUNCTION FlagStatus$(status~%%, flag~%%)
+    IF IsFlagSet(status~%%, flag~%%) THEN
         FlagStatus$ = "X"
     ELSE
         FlagStatus$ = "-"
@@ -136,54 +138,56 @@ FUNCTION FlagStatus$(status, flag)
 END FUNCTION
 
 
-FUNCTION FlagsAsBinary$(status)
-    binary$ = ""
-    FOR i = 0 TO 7
-        IF ABS((status AND 2^i) > 0) THEN
-            binary$ = binary$ + "1"
+FUNCTION FlagsAsBinary$(status~%%)
+    DIM bin AS STRING
+    DIM i AS INTEGER
+    bin$ = ""
+    FOR i% = 0 TO 7
+        IF ABS((status~%% AND 2^i%) > 0) THEN
+            bin$ = bin$ + "1"
         ELSE
-            binary$ = binary$ + "0"
+            bin$ = bin$ + "0"
         END IF
-    NEXT i
-    FlagsAsBinary$ = binary$
+    NEXT i%
+    FlagsAsBinary$ = bin$
 END FUNCTION
 
 
-FUNCTION IsFlagSet(status, flag)
-    IsFlagSet = ABS((status AND flag) > 0)
+FUNCTION IsFlagSet%(status~%%, flag~%%)
+    IsFlagSet% = ABS((status~%% AND flag~%%) > 0)
 END FUNCTION
 
 
-SUB ShowPlayerFlags(status)
-    PRINT TAB(40); FlagStatus$(status, ALIVE);
-    PRINT TAB(50); FlagStatus$(status, WEAPON);
-    PRINT TAB(60); FlagStatus$(status, ARMOR);
-    PRINT TAB(70); FlagStatus$(status, AMMO);
-    PRINT TAB(80); FlagStatus$(status, STANDING);
-    PRINT TAB(90); FlagStatus$(status, WALKING);
-    PRINT TAB(100); FlagStatus$(status, RUNNING);
-    PRINT TAB(110); FlagStatus$(status, ATTACKING);
-    PRINT TAB(120); FlagsAsBinary$(status)
+SUB ShowPlayerFlags(status~%%)
+    PRINT TAB(40);  FlagStatus$(status~%%, ALIVE);
+    PRINT TAB(50);  FlagStatus$(status~%%, WEAPON);
+    PRINT TAB(60);  FlagStatus$(status~%%, ARMOR);
+    PRINT TAB(70);  FlagStatus$(status~%%, AMMO);
+    PRINT TAB(80);  FlagStatus$(status~%%, STANDING);
+    PRINT TAB(90);  FlagStatus$(status~%%, WALKING);
+    PRINT TAB(100); FlagStatus$(status~%%, RUNNING);
+    PRINT TAB(110); FlagStatus$(status~%%, ATTACKING);
+    PRINT TAB(120); FlagsAsBinary$(status~%%)
 END SUB
 
 
 SUB ShowFlagValues()
-    PRINT TAB(32); "FLAGS:"; 
-    PRINT TAB(40); "ALIVE";
-    PRINT TAB(50); "WEAPON";
-    PRINT TAB(60); "ARMOR";
-    PRINT TAB(70); "AMMO";
-    PRINT TAB(80); "STANDING";
-    PRINT TAB(90); "WALKING";
+    PRINT TAB(32);  "FLAGS:"; 
+    PRINT TAB(40);  "ALIVE";
+    PRINT TAB(50);  "WEAPON";
+    PRINT TAB(60);  "ARMOR";
+    PRINT TAB(70);  "AMMO";
+    PRINT TAB(80);  "STANDING";
+    PRINT TAB(90);  "WALKING";
     PRINT TAB(100); "RUNNING";
     PRINT TAB(110); "ATTACKING"
-    PRINT TAB(31); "VALUES: "; 
-    PRINT TAB(40); FlagValue$(ALIVE);
-    PRINT TAB(50); FlagValue$(WEAPON);
-    PRINT TAB(60); FlagValue$(ARMOR);
-    PRINT TAB(70); FlagValue$(AMMO);
-    PRINT TAB(80); FlagValue$(STANDING);
-    PRINT TAB(90); FlagValue$(WALKING);
+    PRINT TAB(31);  "VALUES: "; 
+    PRINT TAB(40);  FlagValue$(ALIVE);
+    PRINT TAB(50);  FlagValue$(WEAPON);
+    PRINT TAB(60);  FlagValue$(ARMOR);
+    PRINT TAB(70);  FlagValue$(AMMO);
+    PRINT TAB(80);  FlagValue$(STANDING);
+    PRINT TAB(90);  FlagValue$(WALKING);
     PRINT TAB(100); FlagValue$(RUNNING);
     PRINT TAB(110); FlagValue$(ATTACKING)
     PRINT TAB(120); "STATUS IN BINARY"
