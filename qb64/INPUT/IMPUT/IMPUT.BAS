@@ -51,6 +51,8 @@ END SUB
 ' - Accepts any visible characters (ASC(32)+)
 ' - Use ENTER to complete input
 ' - Can backspace, when backspace replaces with blank or empty_char$
+' - Clear with CTRL-K, CTRL-X, CTRL-Y
+' - Abort with ESC (optional)
 ' - +Can use delete, when pressing delete, removes from the right side
 ' - +Can use insert or overwrite mode
 ' - +Can use CTRL-LEFT and CTRL-RIGHT to move between words
@@ -58,8 +60,6 @@ END SUB
 ' - +Can use TAB to insert spaces
 ' - +Configure to use sound or not (new param)
 ' - +Configure to use cursor or not (new param)
-' - Abort with ESC (optional)
-' - Clear with CTRL-K, CTRL-X, CTRL-Y
 '
 ' @param INTEGER min% minimum length of input required
 ' @param INTEGER max% maximum length of input allowed
