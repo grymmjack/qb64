@@ -51,7 +51,7 @@
             }
         },
         {
-            "label": "HELP: OLD QB64 Wiki",
+            "label": "HELP: OLD QB64 Forums",
             "command": "OpenWebPage",
             "type": "shell",
             "linux": {
