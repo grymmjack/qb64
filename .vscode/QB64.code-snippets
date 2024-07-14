@@ -1,4 +1,18 @@
 {
+    "gjlib-header": {
+        "prefix": "''GJLH",
+        "body": [
+            "''",
+            "' QB64_GJ_LIB",
+            "' GRYMMJACK'S ${TM_FILENAME/[\\.-]/_/g} LIB",
+            "'",
+            "' ${1:description}",
+            "'",
+            "' @author Rick Christy <grymmjack@gmail.com>",
+            "'",
+            ""
+        ]
+    },    
     "comment": {
         "prefix": "''B",
         "body": [
