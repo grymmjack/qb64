@@ -1,0 +1,64 @@
+// grass_block
+grass_side_carried.png
+grass_side_carried.png
+grass_carried.png
+dirt.png
+grass_side_carried.png
+grass_side_carried.png
+
+// dirt block
+dirt.png
+dirt.png
+dirt.png
+dirt.png
+dirt.png
+dirt.png
+
+// stone
+stone.png
+stone.png
+stone.png
+stone.png
+stone.png
+stone.png
+
+// water
+//b:59
+/n
+/n
+water_still.png
+/n
+/n
+/n
+
+// sand
+sand.png
+sand.png
+sand.png
+sand.png
+sand.png
+sand.png
+
+// snow
+grass_block_snow.png
+grass_block_snow.png
+snow.png
+dirt.png
+grass_block_snow.png
+grass_block_snow.png
+
+// oak_log
+oak_log.png
+oak_log.png
+oak_log_top.png
+oak_log_top.png
+oak_log.png
+oak_log.png
+
+// oak_leaves
+oak_leaves.png
+oak_leaves.png
+oak_leaves.png
+oak_leaves.png
+oak_leaves.png
+oak_leaves.png
