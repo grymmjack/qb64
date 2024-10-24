@@ -176,7 +176,7 @@ NEXT
 
 '-----load digital number fonts
 '--------------------------
-Filename$ = "8X7DIG.SPR"                 'load target graphics
+Filename$ = "8x7dig.spr"                 'load target graphics
 OPEN Filename$ FOR BINARY AS #1          'open file
 filesize& = LOF(1)                       'get file size
 CLOSE #1                                 'close the file
