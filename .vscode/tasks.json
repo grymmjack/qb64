@@ -165,13 +165,13 @@
             "label": "EXECUTE: Selected File",
             "type": "shell",
             "windows": {
-                "command": "${fileDirname}\\${fileBasenameNoExtension}.exe",
+                "command": "\"${fileDirname}\\${fileBasenameNoExtension}.exe\"",
             },
             "osx": {
-                "command": "${fileDirname}/${fileBasenameNoExtension}.run",
+                "command": "\"${fileDirname}/${fileBasenameNoExtension}.run\"",
             },
             "linux": {
-                "command": "setsid --fork ${fileDirname}/${fileBasenameNoExtension}.run",
+                "command": "setsid --fork \"${fileDirname}/${fileBasenameNoExtension}.run\"",
             },
             "presentation": {
                 "echo": false,
