@@ -1,0 +1,33 @@
+CLS: PRINT "Frosty the Snow Man"
+FOR X = 1 TO 2
+    PRINT
+    IF X = 1 THEN PRINT "Fros-ty the Snow man was a jolly happy soul,"
+    IF X = 2 THEN PRINT "Fros-ty the Snow man knew the sun was hot that day"
+    PLAY "t140o2p4g2e4.f8g4o3c2o2b8o3c8d4c4o2b4a8g2." 'MB removed to print song one line at a time
+    IF X = 1 THEN PRINT "with a corn cob pipe and a button nose and two eyes made out of coal."
+    IF X = 2 THEN PRINT "so he said Let's run and we'll have some fun now before I melt away."
+    PLAY "o2b8o3c8d4c4o2b4a8a8g8o3c4o2e8e4g8a8g4f4e4f4g2."
+    IF X = 1 THEN PRINT "Fros-ty the Snow Man is a fair-y tale, they say,"
+    IF X = 2 THEN PRINT "Down to the vil-lage, with a broom-stick in his hand,"
+    PLAY "g2e4.f8g4o3c2o2b8o3c8d4c4o2b4a8g2."
+    IF X = 1 THEN PRINT "He was made of snow but the chil-dren knew how he come to life one day."
+    IF X = 2 THEN PRINT "run-ning here and there all a-round the square, say-in' catch me if you can."
+    PLAY "o2b8o3c8d4c4o2b4a8a8g8o3c4o2e8e4g8a8g4f4e4d4c2."
+    IF X = 1 THEN PRINT "There must have been some magic in that old silk hat they found."
+    IF X = 2 THEN PRINT "He led them down the streets of town right to the traffic cop."
+    PLAY "c4a4a4o3c4c4o2b4a4g4e4f4a4g4f4e2."
+    IF X = 1 THEN PRINT "For when they placed it on his head he be-gan to dance a round."
+    IF X = 2 THEN PRINT "And he on-ly paused a moment when he heard him hol-ler Stop!"
+    PLAY "e8e8d4d4g4g4b4b4o3d4d8o2b8o3d4c4o2b4a4g4p4"
+    IF X = 1 THEN PRINT "Oh, Fros-ty the Snow Man was a-live as he could be,"
+    IF X = 2 THEN PRINT "For, Fros-ty the Snow Man had to hur-ry on his way"
+    PLAY "g2g2e4.f8g4o3c2o2b8o3c8d4c4o2b4a8g8g2."
+    IF X = 1 THEN PRINT "and the chil-dren say he could laugh and play just the same as you and me."
+    IF X = 2 THEN PRINT "but he waved good-bye say-in' Don't you cry, I'll be back a-gain some day."
+    PLAY "o2b8o3c8d4c4o2b4a8a8g8o3c4o2e8e4g8a8g4f4e4d4c2.p4"
+NEXT X
+PRINT: PRINT "Thump-et-y thump thump, thump-et-y thump thump, look at Fros-ty go."
+PLAY "t180g8g8g4g4g4a8g8g4g4g4a4g4e4g4d1"
+PRINT "Thump-et-y thump thump, thump-et-y thump thump, ov-er the hills of snow."
+PLAY "t180g8g8g4g4g4a8g8g4g4g4g8g8g4a4b4o3c2c4p1"
+END

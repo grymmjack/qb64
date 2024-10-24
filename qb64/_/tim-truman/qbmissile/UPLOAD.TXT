@@ -1,0 +1,19 @@
+Short : QB Missle
+Type  : Game/Qbasic Programming source
+Uploader : TimTruman@aol.com 
+Replaces : NONE
+
+
+Fully playable, unfinished version of Qbasic Missle 
+Command clone. Defend your citys against a barrage of 
+nuclear missle attacks. Features sprite graphics, 
+FX sounds, mouse control and unlimited levels. 
+
+
+
+   
+
+
+
+
+
