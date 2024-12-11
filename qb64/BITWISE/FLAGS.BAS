@@ -102,6 +102,8 @@ PRINT "TOGGLE ALIVE (XOR" + STR$(ALIVE) + ")";
 ToggleFlag PLAYER_STATUS~%%, ALIVE
 ShowPlayerFlags PLAYER_STATUS~%%
 
+PRINT
+
 
 
 SUB ResetAllFlags(status~%%)
