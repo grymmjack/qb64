@@ -4,10 +4,10 @@
 ' https://en.wikipedia.org/wiki/ANSI.SYS
 
 ' Replace with Common.bi once prototyping is done
-'$NoPrefix removed here
+$NoPrefix
 DefLng A-Z
-Option _Explicit
-Option _ExplicitArray
+Option Explicit
+Option ExplicitArray
 Option Base 1
 '$Static
 $Resize:Smooth
@@ -73,14 +73,14 @@ Const ANSI_ESC_CSI_RCP = 117 ' Restore Saved Cursor Position
 Width 80, 40
 
 Do
-    Dim ansFile As String: ansFile = _OpenFileDialog$("Open", "", "*.ans", "ANSI Files")
-    If Not _FileExists(ansFile) Then Exit Do
+    Dim ansFile As String: ansFile = OpenFileDialog$("Open", "", "*.ans", "ANSI Files")
+    If Not FileExists(ansFile) Then Exit Do
 
     Dim fh As Long: fh = FreeFile
     Open ansFile For Binary Access Read As fh
     Cls: RenderANSI Input$(LOF(fh), fh), 1000 ' put a -ve number here for superfast rendering
     Close fh
-    _Title "Press any key to open another file...": Sleep 3600
+    Title "Press any key to open another file...": Sleep 3600
 Loop
 
 System
@@ -99,20 +99,20 @@ Sub RenderANSI (sStr As String, nCPS As Long)
     Next
 
     ' Save some stuff that we might be changing
-    oldControlChr = _ControlChr
+    oldControlChr = ControlChr
     oldCursorX = Pos(0)
     oldCursorY = CsrLin
-    oldForegroundColor = _DefaultColor
-    oldBackgroundColor = _BackgroundColor
-    oldPrintMode = _PrintMode
-    oldBlink = _Blink
+    oldForegroundColor = DefaultColor
+    oldBackgroundColor = BackgroundColor
+    oldPrintMode = PrintMode
+    oldBlink = Blink
 
     ' Now we are free to change whatever we saved above
-    _ControlChr On ' get assist from QB64's control character handling (only for tabs; we are pretty much doing the rest ourselves)
+    ControlChr On ' get assist from QB64's control character handling (only for tabs; we are pretty much doing the rest ourselves)
     Locate 1, 1, 1 ' reset cursor to top-left of the screen. TODO: How do we check if the cursor is visible
     Color 15, 0 ' reset the foreground and background color
-    _PrintMode _FillBackground ' set the print mode to fill the character background
-    _Blink Off
+    PrintMode FillBackground ' set the print mode to fill the character background
+    Blink Off
 
     For i = 1 To Len(sStr)
         ch = Asc(sStr, i)
@@ -172,7 +172,7 @@ Sub RenderANSI (sStr As String, nCPS As Long)
 
                                     Case 30 To 37 ' foreground colors
                                         Color colorTable(nCSIParam(2) - 30)
-                                        If isBold Then Color _DefaultColor + 8
+                                        If isBold Then Color DefaultColor + 8
 
                                     Case 90 To 97 ' bright foreground colors
                                         Color colorTable(nCSIParam(2) - 82)
@@ -184,7 +184,7 @@ Sub RenderANSI (sStr As String, nCPS As Long)
 
                                     Case 40 To 47 ' background colors
                                         Color , colorTable(nCSIParam(3) - 40)
-                                        If isBold Then Color , _BackgroundColor + 8
+                                        If isBold Then Color , BackgroundColor + 8
 
                                     Case 100 To 107 ' bright background colors
                                         Color , colorTable(nCSIParam(3) - 92)
@@ -209,11 +209,11 @@ Sub RenderANSI (sStr As String, nCPS As Long)
 
                                     Case 40 To 47 ' handle regular backgrounds
                                         Color , colorTable(nCSIParam(1) - 40)
-                                        If isBold Then Color , _BackgroundColor + 8
+                                        If isBold Then Color , BackgroundColor + 8
 
                                     Case 30 To 37 ' handle regular foreground
                                         Color colorTable(nCSIParam(1) - 30)
-                                        If isBold Then Color _DefaultColor + 8
+                                        If isBold Then Color DefaultColor + 8
 
                                     Case 90 To 97 ' bright foreground colors
                                         Color colorTable(nCSIParam(2) - 82)
@@ -228,7 +228,7 @@ Sub RenderANSI (sStr As String, nCPS As Long)
 
                                     Case 30 To 37 ' foreground colors
                                         Color colorTable(nCSIParam(2) - 30)
-                                        If isBold Then Color _DefaultColor + 8
+                                        If isBold Then Color DefaultColor + 8
 
                                     Case 90 To 97 ' bright foreground colors
                                         Color colorTable(nCSIParam(2) - 82)
@@ -238,7 +238,7 @@ Sub RenderANSI (sStr As String, nCPS As Long)
 
                                     Case 40 To 47 ' background colors
                                         Color , colorTable(nCSIParam(2) - 40)
-                                        If isBold Then Color , _BackgroundColor + 8
+                                        If isBold Then Color , BackgroundColor + 8
 
                                     Case 100 To 107 ' bright background colors
                                         Color , colorTable(nCSIParam(2) - 92)
@@ -386,14 +386,14 @@ Sub RenderANSI (sStr As String, nCPS As Long)
             End Select
         End If
 
-        If nCPS > 0 Then _Limit nCPS ' limit the loop speed if char/sec is a positive value
+        If nCPS > 0 Then Limit nCPS ' limit the loop speed if char/sec is a positive value
     Next
 
     ' Set stuff the way we found them
     If oldControlChr Then
-        _ControlChr Off
+        ControlChr Off
     Else
-        _ControlChr On
+        ControlChr On
     End If
 
     Locate oldCursorY, oldCursorX
@@ -401,17 +401,17 @@ Sub RenderANSI (sStr As String, nCPS As Long)
 
     Select Case oldPrintMode
         Case 1
-            _PrintMode _KeepBackground
+            PrintMode KeepBackground
         Case 2
-            _PrintMode _OnlyBackground
+            PrintMode OnlyBackground
         Case 3
-            _PrintMode _FillBackground
+            PrintMode FillBackground
     End Select
 
     If oldBlink Then
-        _Blink On
+        Blink On
     Else
-        _Blink Off
+        Blink Off
     End If
 
     ColorTableData:
