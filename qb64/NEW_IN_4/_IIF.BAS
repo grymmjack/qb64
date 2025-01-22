@@ -45,12 +45,12 @@ PRINT "I have "; _TOSTR$(num_fruits~%%); " "; fruit$; "."
 ' First we have 1 apple so don't pluralize with "appleS"
 num_fruits~%% = 1
 PRINT "I have "; _TOSTR$(num_fruits~%%); " "; _
-    plural$(fruit$, num_fruits~%%); "."
+    plural$(thing$, num_fruits~%%); "."
 
 ' Second we have more than 1 apple so pluralize with "appleS"
 num_fruits~%% = 2
 PRINT "I have "; _TOSTR$(num_fruits~%%); " "; _
-    plural$(fruit$, num_fruits~%%); "."
+    plural$(thing$, num_fruits~%%); "."
 
 ''
 ' Function to simplify pluralization of a thing
