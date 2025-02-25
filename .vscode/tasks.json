@@ -100,6 +100,46 @@
             }
         },
         {
+            "label": "QB64PE: Format",
+            "type": "shell",
+            "windows": {
+                "command": "${config:qb64pe.compilerPath}",
+                "args": [
+                    "-y",
+                    "-f:MaxCompilerProcesses=8",
+                    "${fileDirname}\\${fileBasename}",
+                    "-o",
+                    "${fileDirname}\\${fileBasename}"
+                ]
+            },
+            "osx": {
+                "command": "${config:qb64pe.compilerPath}",
+                "args": [
+                    "-y",
+                    "-f:MaxCompilerProcesses=8",
+                    "${fileDirname}/${fileBasename}",
+                    "-o",
+                    "${fileDirname}/${fileBasename}"
+                ]
+            },
+            "linux": {
+                "command": "${config:qb64pe.compilerPath}",
+                "args": [
+                    "-y",
+                    "-f:MaxCompilerProcesses=8",
+                    "${fileDirname}/${fileBasename}",
+                    "-o",
+                    "${fileDirname}/${fileBasename}"
+                ]
+            },
+            "presentation": {
+                "reveal": "always",
+                "clear": true,
+                "panel": "shared",
+                "focus": false
+            }
+        },        
+        {
             "label": "QB64PE: Open Selected in InForm",
             "type": "shell",
             "windows": {
