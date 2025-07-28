@@ -17,3 +17,6 @@
 *.bi-bak
 *.bm-bak
 *.cmp-out
+
+# ignore symlinked help
+./_help/
