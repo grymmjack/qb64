@@ -579,6 +579,11 @@
                   "\"/home/grymmjack/git/QB64_GJ_LIB\""
               ]
           },
+          "presentation": {
+              "reveal": "never",
+              "panel": "shared",
+              "focus": false,
+          },
           "problemMatcher": []
         }
     ]
