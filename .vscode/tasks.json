@@ -550,6 +550,36 @@
                 "panel": "shared",
                 "focus": false
             }
+        },
+        {
+          "label": "Add QB64_GJ_LIB to workspace",
+          "icon": {
+            "id": "add",
+            "color": "terminal.ansiYellow"
+          },
+          "type": "shell",
+          "windows": {
+              "command": "code",
+              "args": [
+                  "--add",
+                  "\"C:\\Users\\grymmjack\\git\\QB64_GJ_LIB\""
+              ]
+          },
+          "osx": {
+              "command": "code",
+              "args": [
+                  "--add",
+                  "\"/Users/grymmjack/git/QB64_GJ_LIB\""
+              ]
+          },
+          "linux": {
+              "command": "code",
+              "args": [
+                  "--add",
+                  "\"/home/grymmjack/git/QB64_GJ_LIB\""
+              ]
+          },
+          "problemMatcher": []
         }
     ]
 }
