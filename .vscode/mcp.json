@@ -4,6 +4,10 @@
             "command": "node",
             "args": ["C:/Users/grymmjack/git/qb64pe-mcp-server/build/index.js"],
             "env": {}
-        }
+        },
+        "d2": {
+            "command": "C:\\Users\\grymmjack\\go\\bin\\d2-mcp.EXE",
+            "args": ["--image-type", "png", "--write-files"]
+        }        
     },
 }

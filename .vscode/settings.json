@@ -1,6 +1,6 @@
 {
   "chat.mcp.serverSampling": {
-    "qb64/.vscode/mcp.json: qb64pe": {
+    "qb64/.vscode/mcp.json: d2": {
       "allowedModels": [
         "copilot/gpt-4.1",
         "copilot/claude-3.5-sonnet",
@@ -12,6 +12,7 @@
         "copilot/gpt-4o",
         "copilot/gpt-5",
         "copilot/gpt-5-mini",
+        "copilot/grok-code-fast-1",
         "copilot/o3-mini",
         "copilot/o4-mini"
       ]
