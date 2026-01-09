@@ -1,0 +1,419 @@
+$INCLUDEONCE
+ 
+'------------------------------------------------------------------------------
+' layoutUtils Library
+'
+' Overview:
+'   The layoutUtils library provides a simple framework for creating, loading,
+'   parsing, and manipulating layout data structures represented as strings.
+'   Layouts can be built directly from in-memory strings, loaded from external
+'   files, or defined in DATA statements. The library supports placeholder
+'   references within layouts that can be dynamically resolved or replaced, and
+'   allows retrieval of the final resolved content.
+'
+' Key Features:
+'   1. Layout Creation & Loading
+'      - layoutUtils_build%: Create a new layout directly from a string, assign
+'        it a name, and prepare it for reference resolution.
+'      - layoutUtils_load%: Load layout content from an external file.
+'      - layoutUtils_loadData%: Load layout content from embedded DATA statements.
+'      - Internally manages all layouts in layoutUtils_layoutList.
+'
+'   2. Reference Extraction & Tracking
+'      - Scan layout content for placeholder patterns "<&reference>".
+'      - Record each placeholder’s layout index, position, length, and name in
+'        layoutUtils_elementList for subsequent processing.
+'
+'   3. Reference Resolution & Replacement
+'      - layoutUtils_populateIndex: Replace a named reference in a layout by index.
+'      - layoutUtils_populate: Replace a named reference in a layout by name.
+'      - Automatically preserves field width by padding or truncating the replacement.
+'
+'   4. Layout Retrieval
+'      - layoutUtils_getPopulatedIndex$: Return the fully resolved content
+'        of a layout by its numeric index.
+'      - layoutUtils_getPopulated$: Return the fully resolved content of a
+'        layout by its name.
+'
+'   5. Utility Functions
+'      - layoutUtils_find: Locate a layout by name and return its index.
+'      - layoutUtils_reset / layoutUtils_resetIndex: Restore a layout’s
+'        resolved content back to its original raw content.
+'      - layoutUtils_getNext$: Extract the next placeholder substring from layout
+'        content between the markers "<&" and ">".
+'
+' Usage Workflow:
+'   1. Create or load a layout:
+'        idx1 = layoutUtils_build("intro", rawStringContent, "")
+'        idx2 = layoutUtils_load("level1", "C:\layouts\level1.layout")
+'        idx3 = layoutUtils_loadData("level2", 5)
+'
+'   2. Layout preparation (automatic during build/load):
+'        success = layoutUtils_prepare(idx1)
+'
+'   3. Populate references:
+'        layoutUtils_populate("level1", "playerStart", "X:10,Y:20")
+'
+'   4. Retrieve the final resolved layout content:
+'        final$. = layoutUtils_getPopulated("level1")
+'        final$. = layoutUtils_getPopulatedIndex(idx1)
+'
+'   5. Reset to original content (if needed):
+'        layoutUtils_reset("level1")
+'
+'------------------------------------------------------------------------------
+ 
+'------------------------------------------------------------------------------
+' Function: layoutUtils_build%
+' Purpose : Adds a new layout to the layoutUtils_layoutList array and prepares it.
+'
+' Parameters:
+'   layoutName  - (string) The name of the layout to be added.
+'   content  - (string) The content/data of the layout.
+'   fullpath - (string) The full file path associated with the layout.
+'
+' Returns:
+'   (integer) The index of the newly added layout in the layoutUtils_layoutList array.
+'
+' Description:
+'   This function creates a new layoutUtils_layoutType object, assigns it an ID,
+'   sets its properties (layoutName, fullpath, content), and appends it to the
+'   layoutUtils_layoutList array. It then prepares the layout using layoutUtils_prepare
+'   and stores the result in the 'prepared' field. The function returns the index
+'   of the newly added layout.
+'------------------------------------------------------------------------------
+function layoutUtils_build% (layoutName as string, content as string, fullpath as string)
+    dim res as layoutUtils_layoutType
+    dim last%
+    last% = ubound(layoutUtils_layoutList) + 1
+    redim _preserve layoutUtils_layoutList(last%) as layoutUtils_layoutType
+    dim layout as layoutUtils_layoutType
+    layout.id = last%
+    layout.layoutName = layoutName
+    layout.fullpath = fullpath
+    layout.content = content$
+    layoutUtils_layoutList(last%) = layout
+    layoutUtils_layoutList(last%).prepared = layoutUtils_prepare(last%)
+    layoutUtils_build = last%
+end function
+ 
+'------------------------------------------------------------------------------
+' Function: layoutUtils_load%
+' Purpose : Loads a layout from a file and adds it to the layoutUtils_layoutList array.
+'
+' Parameters:
+'   layoutName  - (string) The name to assign to the loaded layout.
+'   fullpath - (string) The full file path to load the layout content from.
+'
+' Returns:
+'   (integer) The index of the newly added layout in the layoutUtils_layoutList array.
+'
+' Description:
+'   This function opens the specified file in binary mode, reads its content,
+'   and creates a new layout entry using layoutUtils_build. The layout is then
+'   prepared and stored in the layoutUtils_layoutList array.
+'------------------------------------------------------------------------------
+function layoutUtils_load% (layoutName as string, fullpath as string)
+    open fullpath for binary as #1
+    dim content$, c as _unsigned _byte
+    do until eof(1)
+        get #1,,c
+        content$ = content$ + chr$(c)
+    loop
+    close #1
+    layoutUtils_load = layoutUtils_build (layoutName, content$, fullpath)
+end function
+ 
+'------------------------------------------------------------------------------
+' Function: layoutUtils_loadData%
+' Purpose : Loads a layout from DATA statements and adds it to the layoutUtils_layoutList array.
+'
+' Parameters:
+'   layoutName - (string) The name to assign to the loaded layout.
+'   length  - (integer) The number of DATA lines to read for the layout content.
+'
+' Returns:
+'   (integer) The index of the newly added layout in the layoutUtils_layoutList array.
+'
+' Description:
+'   This function reads the specified number of lines from DATA statements,
+'   concatenates them with line breaks, and creates a new layout entry using
+'   layoutUtils_build. The layout is then prepared and stored in the
+'   layoutUtils_layoutList array.
+'------------------------------------------------------------------------------
+function layoutUtils_loadData% (layoutName as string, length as integer)
+    dim content$, i%, c$
+    for i% = 1 to length
+        read c$
+        content$ = content$ + c$ + _STR_NAT_EOL
+    next i%
+    layoutUtils_loadData = layoutUtils_build (layoutName, content$, "")
+end function
+ 
+'------------------------------------------------------------------------------
+' Function: layoutUtils_prepare%
+' Purpose : Scans the layout content for references and populates the layoutUtils_elementList array.
+'
+' Parameters:
+'   index - (integer) The index of the layout in layoutUtils_layoutList to prepare.
+'
+' Returns:
+'   (integer) 1 if preparation is successful.
+'
+' Description:
+'   This function searches the layout content for reference patterns (e.g., <&reference>)
+'   and records their positions, lengths, and reference names in the layoutUtils_elementList array.
+'   Each found reference is stored as a layoutUtils_elementType object.
+'------------------------------------------------------------------------------
+function layoutUtils_prepare% (index as integer)
+    layoutUtils_prepare = 0
+    dim position%
+    position% = 1
+    dim ref as string
+    do
+        ref = layoutUtils_getNext (index, position%)
+        if ref = "" then exit do
+        dim length%
+        length% = len(ref) + 3
+        dim n%
+        n% = instr(,ref,".")
+        dim reference$
+        if n% > 0 then
+            reference$ = left$(ref,n%-1)
+        else
+            reference$ = ref
+        end if
+        dim res as layoutUtils_elementType
+        res.index = index
+        res.position = position% - 2
+        res.length = length%
+        res.reference = reference$
+        dim last%
+        last% = ubound(layoutUtils_elementList) + 10
+        redim _preserve layoutUtils_elementList(last%) as layoutUtils_elementType
+        layoutUtils_elementList(last%).index = res.index
+        layoutUtils_elementList(last%).position = res.position
+        layoutUtils_elementList(last%).length = res.length
+        layoutUtils_elementList(last%).reference = res.reference
+    loop
+    layoutUtils_prepare = 1
+end function
+ 
+'------------------------------------------------------------------------------
+' Function: layoutUtils_find
+' Purpose : Finds the index of a layout in the layoutUtils_layoutList array by its name.
+'
+' Parameters:
+'   layoutName - (string) The name of the layout to search for.
+'
+' Returns:
+'   (integer) The index of the layout if found, otherwise 0.
+'
+' Description:
+'   This function iterates through the layoutUtils_layoutList array and compares
+'   each layout's name to the provided name. If a match is found, it returns
+'   the index of the layout. If no match is found, it returns 0.
+'------------------------------------------------------------------------------
+function layoutUtils_find (layoutName as string)
+    layoutUtils_find = 0
+    dim i%, maxi%
+    maxi% = ubound(layoutUtils_layoutList)
+    for i% = 1 to maxi% + 1
+        if i% > maxi% then exit sub
+        if layoutUtils_layoutList(i%).layoutName = layoutName then exit for
+    next i%
+    layoutUtils_find = i%
+end function
+ 
+'------------------------------------------------------------------------------
+' Subroutine: layoutUtils_resetIndex
+' Purpose   : Resets the resolved content of a layout to its original content.
+'
+' Parameters:
+'   index - (integer) The index of the layout in layoutUtils_layoutList to reset.
+'
+' Description:
+'   This subroutine sets the 'resolved' field of the specified layout to its
+'   original 'content', effectively undoing any replacements or modifications.
+'------------------------------------------------------------------------------
+sub layoutUtils_resetIndex (index as integer)
+    layoutUtils_layoutList(index).resolved = layoutUtils_layoutList(index).content
+end sub
+ 
+'------------------------------------------------------------------------------
+' Subroutine: layoutUtils_reset
+' Purpose   : Resets the resolved content of a layout (by name) to its original content.
+'
+' Parameters:
+'   layoutName - (string) The name of the layout to reset.
+'
+' Description:
+'   This subroutine finds the layout index by name and calls layoutUtils_resetIndex
+'   to restore the 'resolved' field to its original 'content'.
+'------------------------------------------------------------------------------
+sub layoutUtils_reset (layoutName as string)
+    dim i%
+    i% = layoutUtils_find(layoutName)
+    if i% > 0 then
+        layoutUtils_resetIndex(i%)
+    end if
+end sub
+ 
+'------------------------------------------------------------------------------
+' Function: layoutUtils_findReference
+' Purpose : Finds the index of a reference in the layoutUtils_elementList array for a given layout.
+'
+' Parameters:
+'   index  - (integer) The index of the layout in layoutUtils_layoutList.
+'   reference - (string) The reference name to search for.
+'
+' Returns:
+'   (integer) The index of the reference in layoutUtils_elementList if found, otherwise 0.
+'
+' Description:
+'   This function iterates through the layoutUtils_elementList array and compares
+'   each element's index and reference name to the provided values. If a match
+'   is found, it returns the index of the reference. If no match is found, it returns 0.
+'------------------------------------------------------------------------------
+function layoutUtils_findReference (index as integer, reference as string)
+    layoutUtils_findReference = 0
+    dim i%, maxi%
+    maxi% = ubound(layoutUtils_elementList)
+    for i% = 1 to maxi% + 1
+        if i% > maxi% then exit sub
+        if layoutUtils_elementList(i%).index = index and layoutUtils_elementList(i%).reference = reference then exit for
+    next i%
+    layoutUtils_findReference = i%
+end function
+ 
+'------------------------------------------------------------------------------
+' Subroutine: layoutUtils_populateIndex
+' Purpose   : Replaces a reference in the resolved layout content with a replacement string.
+'
+' Parameters:
+'   index         - (integer) The index of the layout in layoutUtils_layoutList.
+'   reference        - (string) The reference name to replace.
+'   replacementString- (string) The string to insert in place of the reference.
+'
+' Description:
+'   This subroutine finds the reference in the layoutUtils_elementList for the given layout.
+'   It then replaces the corresponding substring in the 'resolved' field of the layout with
+'   the replacement string, padded or truncated to match the reference length.
+'------------------------------------------------------------------------------
+sub layoutUtils_populateIndex (index as integer, reference as string, replacementString as string)
+    dim refIndex%
+    refIndex% = layoutUtils_findReference(index%, reference)
+    mid$( _
+            layoutUtils_layoutList(index%).resolved, _
+            layoutUtils_elementList(refIndex%).position _
+        ) = _
+    left$( _
+            replacementString$ + space$( layoutUtils_elementList(refIndex%).length ), _
+            layoutUtils_elementList(refIndex%).length _
+        )
+end sub
+ 
+'------------------------------------------------------------------------------
+' Subroutine: layoutUtils_populate
+' Purpose   : Replaces a reference in the resolved layout content (by layout name) with a replacement string.
+'
+' Parameters:
+'   layoutName       - (string) The name of the layout in layoutUtils_layoutList.
+'   reference        - (string) The reference name to replace.
+'   replacementString- (string) The string to insert in place of the reference.
+'
+' Description:
+'   This subroutine finds the layout index by name and calls layoutUtils_populateIndex
+'   to replace the specified reference in the resolved content with the replacement string.
+'------------------------------------------------------------------------------
+sub layoutUtils_populate (layoutName as string, reference as string, replacementString as string)
+    dim index%
+    index% = layoutUtils_find(layoutName)
+    layoutUtils_populateIndex index%, reference, replacementString
+end sub
+ 
+'------------------------------------------------------------------------------
+' Function: layoutUtils_getPopulatedIndex$
+' Purpose : Returns the resolved (populated) content of a layout by its index.
+'
+' Parameters:
+'   index - (integer) The index of the layout in layoutUtils_layoutList.
+'
+' Returns:
+'   (string) The resolved content of the layout if the index is valid, otherwise an empty string.
+'
+' Description:
+'   This function checks if the provided index is within the valid range of layoutUtils_layoutList.
+'   If valid, it returns the 'resolved' field of the layout, which contains the content with all
+'   references replaced. If the index is invalid, it returns an empty string.
+'------------------------------------------------------------------------------
+function layoutUtils_getPopulatedIndex$ (index as integer)
+    if index > 0 and index <= ubound(layoutUtils_layoutList) then
+        layoutUtils_getPopulatedIndex = layoutUtils_layoutList(index).resolved
+    else
+        layoutUtils_getPopulatedIndex = ""
+    end if
+end function
+ 
+'------------------------------------------------------------------------------
+' Function: layoutUtils_getPopulated$
+' Purpose : Returns the resolved (populated) content of a layout by its name.
+'
+' Parameters:
+'   layoutName - (string) The name of the layout in layoutUtils_layoutList.
+'
+' Returns:
+'   (string) The resolved content of the layout if found, otherwise an empty string.
+'
+' Description:
+'   This function finds the layout index by name and returns the 'resolved' field,
+'   which contains the content with all references replaced. If the layout is not
+'   found, it returns an empty string.
+'------------------------------------------------------------------------------
+function layoutUtils_getPopulated$ (layoutName as string)
+    dim index%
+    index% = layoutUtils_find(layoutName)
+    layoutUtils_getPopulated = layoutUtils_getPopulatedIndex(index%)
+end function
+ 
+'------------------------------------------------------------------------------
+' Function: layoutUtils_getNext$ (layoutNumber%, position%)
+'
+' Description:
+'   Extracts the next substring found between the markers "<&" and ">" from the
+'   content of a layout identified by layoutNumber%, starting the search at position%.
+'
+' Parameters:
+'   layoutNumber%  - The index of the layout in layoutUtils_layoutList to search within.
+'   position%   - The position in the content string to start searching from.
+'
+' Returns:
+'   A string containing the substring found between "<&" and ">" markers.
+'   Returns an empty string if no such substring is found.
+'
+' Example Usage:
+'   nextValue$ = layoutUtils_getNext$(1, 10)
+'
+' Notes:
+'   - The function updates position% to the start of the found substring.
+'   - If no marker is found, the function returns an empty string.
+'------------------------------------------------------------------------------
+function layoutUtils_getNext$ (layoutNumber%, position%)
+    dim beginning$, middle$, ending$
+    dim l%, b%, e%, m%
+    dim content$
+    content$ = layoutUtils_layoutList(layoutNumber%).content
+    beginning$ = "<&"
+    middle$ = ""
+    ending$ = ">"
+    l% = len(beginning$)
+    b% = instr(position%,content$,beginning$)
+    if b% = 0 then
+        layoutUtils_getNext = ""
+        exit sub
+    end if
+    e% = instr(b%+l%,content$,ending$)
+    position% = b%+l%
+    middle$ = mid$(content$,position%,e%-b%-l%)
+    layoutUtils_getNext = middle$
+end function
