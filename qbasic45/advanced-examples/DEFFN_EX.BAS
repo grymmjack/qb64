@@ -1,15 +1,16 @@
 '
-' *** DEFFN_EX.BAS - DEF FN function programming example
+' *** DEFFN_EX.BAS - DEF FN function programming example (Converted to QB64PE)
 '
-DEF FNFactorial#(X)
-   STATIC Tmp#, I
-   Tmp#=1
-   FOR I=2 TO X
-      Tmp#=Tmp#*I
-   NEXT I
-   FNFactorial#=Tmp#
-END DEF
+INPUT "Enter a number: ", Num
+PRINT Num; "factorial is"; Factorial#(Num)
 
-INPUT "Enter a number: ",Num
-PRINT Num "factorial is" FNFactorial#(Num)
+FUNCTION Factorial# (X)
+   DIM Tmp AS DOUBLE
+   DIM I AS LONG
+   Tmp = 1
+   FOR I = 2 TO X
+      Tmp = Tmp * I
+   NEXT I
+   Factorial# = Tmp
+END FUNCTION
 

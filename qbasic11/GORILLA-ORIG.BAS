@@ -102,7 +102,6 @@ DIM SHARED SunHt
 DIM SHARED GHeight
 DIM SHARED MachSpeed AS SINGLE
 
-  DEF FnRan (x) = INT(RND(1) * x) + 1
   DEF SEG = 0                         ' Set NumLock to ON
   KeyFlags = PEEK(1047)
   IF (KeyFlags AND 32) = 0 THEN
@@ -110,7 +109,7 @@ DIM SHARED MachSpeed AS SINGLE
   END IF
   DEF SEG
 
-  GOSUB InitVars
+  InitVars
   Intro
   GetInputs Name1$, Name2$, NumGames
   GorillaIntro Name1$, Name2$
@@ -119,9 +118,9 @@ DIM SHARED MachSpeed AS SINGLE
   DEF SEG = 0                         ' Restore NumLock state
   POKE 1047, KeyFlags
   DEF SEG
-END
+SYSTEM
 
-
+'Data for banana graphics
 CGABanana:
   'BananaLeft
   DATA 327686, -252645316, 60
@@ -142,16 +141,14 @@ EGABanana:
   'BananaRight
   DATA 458758, -1061109760, -522133504, 1886416896, 1886416896, 1886416896,-522133504,-1061109760,0
 
-InitVars:
+'InitVars:
+'  Initializes variables and graphics mode
+SUB InitVars
   pi# = 4 * ATN(1#)
 
   'This is a clever way to pick the best graphics mode available
-  ON ERROR GOTO ScreenModeError
   Mode = 9
   SCREEN Mode
-  ON ERROR GOTO PaletteError
-  IF Mode = 9 THEN PALETTE 4, 0   'Check for 64K EGA
-  ON ERROR GOTO 0
 
   MachSpeed = CalcDelay
 
@@ -205,22 +202,7 @@ InitVars:
     MachSpeed = MachSpeed * 1.3
     SunHt = 20
   END IF
-RETURN
-
-ScreenModeError:
-  IF Mode = 1 THEN
-    CLS
-    LOCATE 10, 5
-    PRINT "Sorry, you must have CGA, EGA color, or VGA graphics to play GORILLA.BAS"
-    END
-  ELSE
-    Mode = 1
-    RESUME
-  END IF
-
-PaletteError:
-  Mode = 1            '64K EGA cards will run in CGA mode.
-  RESUME NEXT
+END SUB
 
 REM $STATIC
 'CalcDelay:
@@ -1132,4 +1114,12 @@ SUB VictoryDance (Player)
     Rest .2
   NEXT
 END SUB
+
+'FnRan:
+'  Random number generator function (converted from DEF FN)
+'Parameters:
+'  x - upper limit for random number
+FUNCTION FnRan (x)
+  FnRan = INT(RND(1) * x) + 1
+END FUNCTION
 
