@@ -1,0 +1,219 @@
+'=======================================================================
+'  PANEL.BM -- the control panel
+'
+'  The original had this as a second Pane with its own Mproc, sitting
+'  alongside the painting window. Same idea here: the screen is split
+'  into a paint window (top) and a panel (bottom), and the main loop
+'  sends events to one or the other depending on where the mouse is.
+'
+'  Nothing in here touches the paint state machine directly except
+'  through NewIMode / curcol / curbgcol, which is the point.
+'=======================================================================
+
+'--- geometry, all derived from CPH in inc/GLOBALS.BI ------------------
+SUB InitPanel
+    pwX = 0
+    pwY = 0
+    pwW = SCRW
+    pwH = SCRH - CPH
+    cpY = pwH
+END SUB
+
+'  Is a screen point inside the painting window?
+FUNCTION InPW% (x AS INTEGER, y AS INTEGER)
+    InPW% = (x >= pwX AND x < pwX + pwW AND y >= pwY AND y < pwY + pwH)
+END FUNCTION
+
+'=======================================================================
+'  Tool buttons. A table would need a DIM SHARED array; two SELECT
+'  CASEs are less machinery for the same result, and adding a tool is
+'  still a one-line change in each.
+'=======================================================================
+FUNCTION ToolIM% (i AS INTEGER)
+    SELECT CASE i
+        CASE 0: ToolIM% = IM_draw
+        CASE 1: ToolIM% = IM_vect
+        CASE 2: ToolIM% = IM_curve1
+        CASE 3: ToolIM% = IM_rect
+        CASE 4: ToolIM% = IM_frect
+        CASE 5: ToolIM% = IM_circ
+        CASE 6: ToolIM% = IM_fcirc
+        CASE 7: ToolIM% = IM_oval
+        CASE 8: ToolIM% = IM_fill
+        CASE 9: ToolIM% = IM_readPix
+        CASE ELSE: ToolIM% = IM_none
+    END SELECT
+END FUNCTION
+
+'  Label glyph -- deliberately the same character as the key binding
+'  in CHPROC.BM, so the panel teaches the keyboard.
+FUNCTION ToolCh$ (i AS INTEGER)
+    SELECT CASE i
+        CASE 0: ToolCh$ = "d"
+        CASE 1: ToolCh$ = "v"
+        CASE 2: ToolCh$ = "q"
+        CASE 3: ToolCh$ = "r"
+        CASE 4: ToolCh$ = "R"
+        CASE 5: ToolCh$ = "c"
+        CASE 6: ToolCh$ = "C"
+        CASE 7: ToolCh$ = "e"
+        CASE 8: ToolCh$ = "f"
+        CASE 9: ToolCh$ = ","
+        CASE ELSE: ToolCh$ = "?"
+    END SELECT
+END FUNCTION
+
+'=======================================================================
+'  Drawing. Called from Compose every frame, straight onto screenH
+'  after the picture has been blitted, so it never touches hidbm --
+'  the panel can't end up saved into the artwork or the undo buffer.
+'=======================================================================
+SUB DrawPanel
+    DIM i AS INTEGER, sxx AS INTEGER, syy AS INTEGER
+    DIM by AS INTEGER
+
+    by = cpY + CP_BTNY
+
+    LINE (0, cpY)-(SCRW - 1, SCRH - 1), UIC_PANEL, BF
+    LINE (0, cpY)-(SCRW - 1, cpY), UIC_LIGHT
+
+    '--- all buttons come from the widget table ------------------------
+    DrawWidgets
+
+    '--- palette grid: 64 across, 4 down, no gaps ----------------------
+    FOR i = 0 TO NCOLORS - 1
+        sxx = (i MOD CP_SWCOLS) * CP_SWW
+        syy = cpY + CP_SWY + (i \ CP_SWCOLS) * CP_SWH
+        LINE (sxx, syy)-(sxx + CP_SWW - 1, syy + CP_SWH - 1), i, BF
+    NEXT
+
+    '  A swatch is only 10x8, so mark fg/bg with a frame rather than
+    '  anything that would obscure the colour itself.
+    sxx = (curcol MOD CP_SWCOLS) * CP_SWW
+    syy = cpY + CP_SWY + (curcol \ CP_SWCOLS) * CP_SWH
+    LINE (sxx, syy)-(sxx + CP_SWW - 1, syy + CP_SWH - 1), UIC_TEXT, B
+    sxx = (curbgcol MOD CP_SWCOLS) * CP_SWW
+    syy = cpY + CP_SWY + (curbgcol \ CP_SWCOLS) * CP_SWH
+    LINE (sxx, syy)-(sxx + CP_SWW - 1, syy + CP_SWH - 1), 0, B
+
+    '--- current fg over bg -------------------------------------------
+    BevelBox CP_FGX, by, CP_FGW, CP_BTNH, curbgcol, -1
+    LINE (CP_FGX + 6, by + 5)-(CP_FGX + CP_FGW - 7, by + CP_BTNH - 6), curcol, BF
+
+    COLOR UIC_TEXT, 0
+END SUB
+
+'=======================================================================
+'  Event entry point. The main loop only calls this on the press edge,
+'  so nothing here has to debounce.
+'=======================================================================
+SUB CPMproc (but AS INTEGER, x AS INTEGER, y AS INTEGER)
+    DIM i AS INTEGER
+
+    '--- widgets first: they own their own bounds ----------------------
+    i = WidAt%(x, y)
+    IF i >= 0 THEN
+        DoWid i, but
+        EXIT SUB
+    END IF
+
+    '--- palette grid --------------------------------------------------
+    IF y >= cpY + CP_SWY AND y < cpY + CP_SWY + CP_SWROWS * CP_SWH THEN
+        IF x < 0 THEN EXIT SUB
+        i = ((y - (cpY + CP_SWY)) \ CP_SWH) * CP_SWCOLS + (x \ CP_SWW)
+        IF i < 0 OR i >= NCOLORS THEN EXIT SUB
+        IF but = 2 THEN curbgcol = i ELSE curcol = i
+    END IF
+END SUB
+
+'=======================================================================
+'  Modal yes/no, drawn over the panel. Runs its own key loop, so like
+'  AskFile$ it must not call back into MainCproc -- it is invoked from
+'  there.
+'=======================================================================
+FUNCTION Confirm% (msg AS STRING)
+    DIM k AS LONG, res AS INTEGER, done AS INTEGER
+    res = 0: done = 0
+    DO
+        Compose
+        LINE (0, cpY)-(SCRW - 1, SCRH - 1), 16, BF
+        LINE (0, cpY)-(SCRW - 1, cpY), 31
+        COLOR 31, 16
+        _PRINTSTRING (4, cpY + CP_BTNY), LEFT$(msg, 76)
+        _PRINTSTRING (4, cpY + CP_BTNY + 22), "Y = yes,  any other key = no"
+        _DISPLAY
+        k = _KEYHIT
+        IF k > 0 THEN
+            IF k = 89 OR k = 121 THEN res = -1
+            done = -1
+        END IF
+        _LIMIT 60
+    LOOP UNTIL done
+    COLOR 31, 0
+    Confirm% = res
+END FUNCTION
+
+SUB ReqQuit
+    IF picDirty THEN
+        IF Confirm%("Picture not saved. Quit anyway?") = 0 THEN EXIT SUB
+    END IF
+    quitFlag = -1
+END SUB
+
+'=======================================================================
+'  Display mode. Three states rather than a toggle, because neither
+'  fullscreen option is simply "right":
+'
+'    _SQUAREPIXELS -- crisp integer scaling, genuinely square pixels.
+'                     Pillarboxed on a 16:9 monitor.
+'    _STRETCH      -- fills the display. On a 4:3 screen this reproduces
+'                     the original 1.2:1 pixel aspect the artwork was
+'                     drawn for; on 16:9 it comes out too wide.
+'
+'  No _SMOOTH on either: bilinear filtering on pixel art is exactly
+'  what you do not want.
+'=======================================================================
+SUB TogFullScreen
+    fsMode = fsMode + 1
+    IF fsMode > 2 THEN fsMode = 0
+    SELECT CASE fsMode
+        CASE 0: _FULLSCREEN _OFF
+        CASE 1: _FULLSCREEN _SQUAREPIXELS
+        CASE 2: _FULLSCREEN _STRETCH
+    END SELECT
+END SUB
+
+'=======================================================================
+'  Coordinate readout. R is what _MOUSEX/_MOUSEY reported; P is the
+'  picture coordinate the state machine derived from it.
+'
+'  In a 320x200 screen these should be identical, and both should track
+'  the cursor, in windowed AND fullscreen alike -- QB64 is supposed to
+'  report mouse position in image space regardless of display scaling.
+'  If R stops matching where the pointer actually is once fullscreen is
+'  on, that assumption is wrong and the fix is a scale factor applied
+'  to rawX/rawY in the main loop.
+'=======================================================================
+SUB DrawCoords
+    DIM s AS STRING
+    IF dispCoords = 0 THEN EXIT SUB
+    s = "R" + LTRIM$(STR$(mouseRX)) + "," + LTRIM$(STR$(mouseRY)) + _
+        " P" + LTRIM$(STR$(mx)) + "," + LTRIM$(STR$(my))
+    LINE (0, 0)-(LEN(s) * 8 + 3, 17), 0, BF
+    COLOR 31, 0
+    _PRINTSTRING (2, 1), s
+END SUB
+
+'=======================================================================
+'  Window title: name, current file, and whether it has unsaved changes.
+'  Rebuilt only on the events that can change it -- not per frame, which
+'  would mean assembling a string sixty times a second to say the same
+'  thing.
+'=======================================================================
+SUB SetTitle
+    DIM t AS STRING
+    t = APPNAME + " " + APPVER
+    IF LEN(curFile) THEN t = t + "  -  " + curFile
+    IF picDirty THEN t = t + "  *"
+    _TITLE t
+END SUB

@@ -1,0 +1,154 @@
+'=======================================================================
+'  CHPROC.BM -- keyboard dispatch
+'  Ported from chproc.c. These bindings are the DPaint muscle memory --
+'  keep them exactly as they are.
+'=======================================================================
+
+SUB MainCproc (k AS LONG)
+    DIM svpnt AS INTEGER
+    DIM c AS STRING * 1
+
+    svpnt = Painting
+    ClearFB
+
+    '--- function / special keys first -------------------------------
+    SELECT CASE k
+        CASE 15104: DispAndSetMode 0: GOTO chpDone   ' F1
+        CASE 15360: DispAndSetMode 1: GOTO chpDone   ' F2
+        CASE 15616: DispAndSetMode 2: GOTO chpDone   ' F3
+        CASE 15872: DispAndSetMode 3: GOTO chpDone   ' F4
+        CASE 16128: DispAndSetMode 4: GOTO chpDone   ' F5
+        CASE 16384: DispAndSetMode 5: GOTO chpDone   ' F6
+        CASE 16640: DispAndSetMode 6: GOTO chpDone   ' F7
+        CASE 19200: ScrollKeys 1, 0: GOTO chpDone    ' left
+        CASE 19712: ScrollKeys -1, 0: GOTO chpDone   ' right
+        CASE 18432: ScrollKeys 0, 1: GOTO chpDone    ' up
+        CASE 20480: ScrollKeys 0, -1: GOTO chpDone   ' down
+    END SELECT
+
+    IF k < 0 OR k > 255 THEN GOTO chpDone
+    c = CHR$(k)
+
+    SELECT CASE c
+        '--- palette nudge, keypad ----------------------------------
+        CASE "7": IncRGB -1, 0, 0
+        CASE "8": IncRGB 1, 0, 0
+        CASE "4": IncRGB 0, -1, 0
+        CASE "5": IncRGB 0, 1, 0
+        CASE "1": IncRGB 0, 0, -1
+        CASE "2": IncRGB 0, 0, 1
+
+        '--- pen size -----------------------------------------------
+        CASE ".": CPChgPen 0                       ' one-pixel pen
+        CASE "-": IF curIMode = IM_airBrush THEN ChgABRadius -1 ELSE DecPen
+        CASE "=": IF curIMode = IM_airBrush THEN ChgABRadius 1 ELSE IncPen
+
+        '--- colour cycling through the palette ---------------------
+        CASE "[": IncFG -1
+        CASE "]": IncFG 1
+        CASE "{": IncBG -1
+        CASE "}": IncBG 1
+
+        CASE "/": TogSymSt                          ' symmetry on/off
+        CASE " ": AbortIMode                        ' kill any action
+        CASE ",": NewIMode IM_readPix               ' pick colour
+        CASE CHR$(9): TogColCyc                     ' TAB
+        CASE "j": SwapSpare                         ' swap spare page
+
+        '--- tools ---------------------------------------------------
+        CASE "a": NewIMode IM_airBrush
+        CASE "A": SizeAirBrush
+        CASE "b": NewIMode IM_selBrush              ' select brush
+        CASE "B": UserBr                            ' reuse last brush
+        CASE "c": NewIMode IM_circ
+        CASE "C": NewIMode IM_fcirc
+        CASE "d": NewIMode IM_draw
+        CASE "D": CPChgPen 0: NewIMode IM_draw
+        CASE "e": NewIMode IM_oval
+        CASE "E": NewIMode IM_foval
+        CASE "f": NewIMode IM_fill
+        CASE "g": TogGridSt
+        CASE "G": IF CtrlKey THEN NewIMode IM_gridSpec ELSE TogGridFixed
+        CASE "h": HalfPen
+        CASE "H": DublPen
+        CASE "K": mClearToBg
+        CASE "m": ToggleMag
+        CASE "n": CenterPoint mx, my
+        CASE "q": NewIMode IM_curve1
+        CASE "r": NewIMode IM_rect
+        CASE "R": NewIMode IM_frect
+        CASE "s": NewIMode IM_shade
+        CASE "i": dispCoords = NOT dispCoords
+        CASE "F": TogFullScreen
+        CASE "Q": ReqQuit
+        CASE "S": DoSaveLBM
+        CASE "L": DoLoadLBM
+        CASE "u": Undo
+        CASE "U": Redo
+        CASE "v": NewIMode IM_vect
+        CASE "x": BrFlipX
+        CASE "y": BrFlipY
+        CASE "z": BrRot90
+        CASE ">": MWZoom 1
+        CASE "<": MWZoom -1
+    END SELECT
+
+chpDone:
+    IF svpnt THEN UpdtON ELSE UpdtOFF
+    ShowFB
+END SUB
+
+SUB IncFG (inc AS INTEGER)
+    curcol = (curcol + inc) AND (NCOLORS - 1)
+END SUB
+
+SUB IncBG (inc AS INTEGER)
+    curbgcol = (curbgcol + inc) AND (NCOLORS - 1)
+END SUB
+
+'  USERBRUSH is a sentinel, not a size -- incrementing it yields
+'  &H8000, which is a nonsense pen. Route +/- to the brush scaler.
+SUB IncPen
+    IF curpen = USERBRUSH THEN BrDubl: EXIT SUB
+    IF curpen THEN CPChgPen curpen + 1 ELSE CPChgPen RoundB&(1)
+END SUB
+
+SUB DecPen
+    IF curpen = USERBRUSH THEN BrHalf: EXIT SUB
+    IF (curpen AND &HFFF) > 1 THEN CPChgPen curpen - 1 ELSE CPChgPen 0
+END SUB
+
+SUB HalfPen
+    IF curpen = USERBRUSH THEN
+        BrHalf
+    ELSE
+        CPChgPen (curpen AND &HF000) OR ((curpen AND &HFFF) \ 2)
+    END IF
+END SUB
+
+SUB DublPen
+    DIM s AS LONG
+    IF curpen = USERBRUSH THEN
+        BrDubl
+    ELSE
+        s = (curpen AND &HFFF) * 2
+        IF s < 1 THEN s = 1
+        CPChgPen (curpen AND &HF000) OR s
+    END IF
+END SUB
+
+' toggle grid but shift the origin so the brush doesn't jump
+SUB TogGridFixed
+    DIM tx AS INTEGER, ty AS INTEGER
+    TogGridSt
+    IF gridON THEN
+        tx = mx: ty = my
+        Gridify tx, ty
+        gridOrgX = gridOrgX + (mx - tx)
+        gridOrgY = gridOrgY + (my - ty)
+    END IF
+END SUB
+
+FUNCTION RoundB& (n AS INTEGER)
+    RoundB& = (ROUND_B * 4096) OR n
+END FUNCTION

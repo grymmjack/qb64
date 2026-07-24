@@ -1,0 +1,212 @@
+'=======================================================================
+'  IMODE.BM -- mode table + mode switching
+'  From paintw.c (imodes[], NewIMode, IModeProcs) and modes.c (prefabs)
+'=======================================================================
+
+'--- Build the mode table. Was a static C initialiser in paintw.c. -----
+SUB InitModes
+    SetMode IM_null, F_NOBR OR F_NOGR OR F_NOSYM, DEFC, 1, IM_none
+    SetMode IM_shade, F_PERM, DEFC, 1, IM_none
+    SetMode IM_draw, F_PERM, DEFC, 1, IM_none
+    SetMode IM_vect, F_SYMALL, DEFC, 2, IM_none
+    SetMode IM_curve1, F_NOSYM, DEFC, 1, IM_curve2
+    SetMode IM_curve2, F_SYMALL OR F_SLAVE, DEFC, 3, IM_none
+    SetMode IM_circ, F_NOBR OR F_SYMALL, DEFC, 2, IM_none
+    SetMode IM_fcirc, F_NOBR OR F_SYMALL, DEFC, 2, IM_none
+    SetMode IM_rect, F_NOBR OR F_SYMALL, DEFC, 3, IM_none
+    SetMode IM_frect, F_NOBR OR F_SYMALL, DEFC, 3, IM_none
+    SetMode IM_oval, F_NOBR OR F_SYMALL, DEFC, 3, IM_none
+    SetMode IM_foval, F_NOBR OR F_SYMALL, DEFC, 3, IM_none
+    SetMode IM_selBrush, F_NOSYM OR F_NOLOCK, DEFC, 1, IM_none
+    SetMode IM_fill, F_NOBR OR F_NOGR OR F_SYMALL, FILLCURSOR, 1, IM_none
+    SetMode IM_gridSpec, F_NOBR OR F_NOGR OR F_NOSYM OR F_NOLOCK, DEFC, 1, IM_none
+    SetMode IM_symCent, F_NOBR OR F_NOSYM OR F_NOLOCK, DEFC, 1, IM_none
+    SetMode IM_readPix, F_NOBR OR F_NOGR OR F_NOSYM OR F_NOLOCK, PICKCURSOR, 1, IM_none
+    SetMode IM_sizePen, F_NOERASE OR F_NOSYM OR F_NOGR OR F_NOLOCK, SIZECURSOR, 1, IM_none
+    SetMode IM_airBrush, F_PERM OR F_SYMUP OR F_NOGR OR F_PNTWDN OR F_EVTIM, DEFC, 1, IM_none
+    ' ...remaining modes (text, poly, brush transforms) go here
+END SUB
+
+SUB SetMode (im AS INTEGER, fl AS LONG, cur AS INTEGER, np AS INTEGER, nxt AS INTEGER)
+    imodes(im).flags = fl
+    imodes(im).cursor = cur
+    imodes(im).activity = 0
+    imodes(im).symNpoints = np
+    imodes(im).nextIMode = nxt
+END SUB
+
+'--- Plug the eight slots. Was IModeProcs() in paintw.c. ---------------
+SUB IModeProcs (uSh AS INTEGER, uMv AS INTEGER, uCl AS INTEGER, wdn AS INTEGER, _
+                dSh AS INTEGER, dMv AS INTEGER, dCl AS INTEGER, wup AS INTEGER)
+    upShow = uSh: upMove = uMv: upClear = uCl: WentDn = wdn
+    dnShow = dSh: dnMove = dMv: dnClear = dCl: WentUp = wup
+END SUB
+
+'--- Change mode. Faithful to NewIMode() in paintw.c. ------------------
+SUB NewIMode (im AS INTEGER)
+    IF im = IM_none THEN EXIT SUB
+    abortFlag = 0
+    everyTime = 0
+    DoAction killModeAct
+
+    curIMFlags = imodes(im).flags
+
+    IF (curIMFlags AND F_SLAVE) = 0 THEN
+        IF (curIMFlags AND F_PERM) <> 0 OR _
+           ((im = curIMode OR allPerm) AND (curIMFlags AND F_NOLOCK) = 0) THEN
+            lastPermMode = im
+        END IF
+    END IF
+
+    curIMFlags = curIMFlags AND (NOT F_RIGHTBUT)
+    gridded = ((curIMFlags AND F_NOGR) = 0)
+    npts = imodes(im).symNpoints
+
+    ' every slot defaults to nop; the start proc plugs only what it needs
+    completeAct = ACT_NOP: killModeAct = ACT_NOP
+    IModeProcs ACT_NOP, ACT_NOP, ACT_NOP, ACT_NOP, ACT_NOP, ACT_NOP, ACT_NOP, ACT_NOP
+
+    curIMode = im
+    SetPaintCursor imodes(im).cursor
+    FixUsePen
+    StartMode im, 0
+END SUB
+
+SUB LoadIMode
+    StartMode curIMode, -1
+END SUB
+
+SUB RevertIMode
+    NewIMode lastPermMode
+END SUB
+
+SUB NextIMode
+    DIM nxt AS INTEGER
+    nxt = imodes(curIMode).nextIMode
+    killModeAct = ACT_NOP
+    IF goToPerm = 0 AND nxt <> IM_none THEN
+        NewIMode nxt
+    ELSE
+        goToPerm = 0
+        RevertIMode
+    END IF
+END SUB
+
+SUB SetNextIMode (m AS INTEGER)
+    lastPermMode = m
+END SUB
+
+SUB AbortIMode
+    abortFlag = 0
+    IF button <> 0 THEN
+        NewIMode IM_null
+    ELSE
+        IF (curIMFlags AND F_COMPLETE) <> 0 THEN
+            DoAction completeAct
+            completeAct = ACT_NOP
+        ELSE
+            DoAction killModeAct
+            goToPerm = -1
+        END IF
+        NextIMode
+    END IF
+END SUB
+
+'=======================================================================
+'  StartMode -- was the `startProc` function pointer in IModeDesc.
+'  Since there is exactly one start proc per mode, the mode ID is a
+'  perfectly good selector and the pointer disappears entirely.
+'=======================================================================
+SUB StartMode (im AS INTEGER, reloading AS INTEGER)
+    SELECT CASE im
+        CASE IM_null:     SimpleOps ACT_NOP
+        CASE IM_draw:     PaintWith ACT_INCLINE
+        CASE IM_shade:    PaintWith ACT_OBSPLAT
+        '  The mode table already gives IM_airBrush F_EVTIM, so the main
+        '  loop keeps feeding EV_LOOPED while the button is held and the
+        '  spray continues without the mouse moving. Nothing else needed.
+        CASE IM_airBrush: PaintWith ACT_AIRBRUSH
+        CASE IM_vect:     VTypeOps ACT_VEC, ACT_ERASEFB, ACT_VEC
+        CASE IM_curve1
+            IModeProcs ACT_OBMV, ACT_OBMV, ACT_OBCLR, ACT_NOP, _
+                       ACT_VEC, ACT_NOP, ACT_ERASEFB, ACT_NOP
+        CASE IM_curve2
+            curDoAct = ACT_CRV
+            IModeProcs ACT_CRV, ACT_NOP, ACT_CLRCRV, ACT_NOP, _
+                       ACT_CRV, ACT_NOP, ACT_CLRCRV, ACT_SYMPTS
+        CASE IM_circ:     CircTypeOps ACT_CIR, ACT_ERASEFB, ACT_CIR
+        CASE IM_fcirc:    FCircTypeOps ACT_FCIR, ACT_ERASEFB, ACT_FCIR
+        CASE IM_rect:     CircTypeOps ACT_FRBOX, ACT_ERASEFB, ACT_FRBOX
+        CASE IM_frect:    FCircTypeOps ACT_FILBOX, ACT_ERASEFB, ACT_FILBOX
+        CASE IM_oval:     CircTypeOps ACT_OVAL, ACT_ERASEFB, ACT_OVAL
+        CASE IM_foval:    FCircTypeOps ACT_FOVAL, ACT_ERASEFB, ACT_FOVAL
+        CASE IM_fill
+            curDoAct = ACT_AFILL
+            WentUp = ACT_SYMPTS
+        CASE IM_readPix:  SimpleOps ACT_DOREAD
+        CASE IM_selBrush: XHTypeOps ACT_SBFRBOX, ACT_DOSELBR
+        CASE IM_symCent
+            IModeProcs ACT_INVXH, ACT_NOP, ACT_CLRXH, ACT_SYMCENTER, _
+                       ACT_NOP, ACT_NOP, ACT_NOP, ACT_NOP
+        CASE IM_gridSpec
+            killModeAct = ACT_NOP
+            '  The grid itself is drawn every frame by DrawGrid now, so
+            '  the show slots are free for the cell rubber-band.
+            IModeProcs ACT_NOP, ACT_NOP, ACT_ERASEFB, ACT_SETGRORG, _
+                       ACT_STRGRID, ACT_NOP, ACT_ERASEFB, ACT_DOGRID
+        CASE IM_sizePen
+            IModeProcs ACT_PNUPMV, ACT_NOP, ACT_ERASEFB, ACT_NOP, _
+                       ACT_PNDNMV, ACT_NOP, ACT_ERASEFB, ACT_SZSET
+        CASE ELSE:        SimpleOps ACT_NOP
+    END SELECT
+END SUB
+
+'=======================================================================
+'  The "pre-fabricated" mode types from modes.c.
+'  These are the whole vocabulary of DPaint tools -- almost every tool
+'  is one line calling one of these five.
+'=======================================================================
+
+' is up: nothing;  is down: run atproc once
+SUB SimpleOps (atproc AS INTEGER)
+    WentDn = atproc
+END SUB
+
+' is up: brush cursor;  is down: paint continuously
+SUB PaintWith (atproc AS INTEGER)
+    curDoAct = atproc
+    IModeProcs ACT_OBMV, ACT_OBMV, ACT_OBCLR, ACT_SYMPTS, _
+               ACT_NOP, ACT_SYMPTS, ACT_NOP, ACT_NOP
+END SUB
+
+' is up: brush;  is down: rubber-band geometry;  goes up: commit
+SUB VTypeOps (shof AS INTEGER, clrf AS INTEGER, dof AS INTEGER)
+    curDoAct = dof
+    UpdtOFF
+    IModeProcs ACT_OBMV, ACT_OBMV, ACT_OBCLR, ACT_NOP, _
+               shof, ACT_NOP, clrf, ACT_SYMPTS
+END SUB
+
+' is up: crosshair;  is down: XOR feedback;  goes up: commit
+SUB XHTypeOps (xorf AS INTEGER, dof AS INTEGER)
+    DIM afunc AS INTEGER
+    IF (curIMFlags AND F_NOSYM) <> 0 THEN afunc = ACT_PAINTIT ELSE afunc = ACT_SYMPTS
+    curDoAct = dof
+    curXorAct = xorf
+    IModeProcs ACT_INVXH, ACT_NOP, ACT_CLRXH, ACT_NOP, _
+               ACT_FLIPIT, ACT_NOP, ACT_FLIPIT, afunc
+END SUB
+
+' shows object AND crosshairs while the button is up
+SUB CircTypeOps (shof AS INTEGER, clrf AS INTEGER, dof AS INTEGER)
+    curDoAct = dof
+    UpdtOFF
+    IModeProcs ACT_SHOWXHANDOB, ACT_MOVXHANDOB, ACT_CLRXHANDOB, ACT_NOP, _
+               shof, ACT_NOP, clrf, ACT_SYMPTS
+END SUB
+
+SUB FCircTypeOps (shof AS INTEGER, clrf AS INTEGER, dof AS INTEGER)
+    curDoAct = dof
+    IModeProcs ACT_INVXH, ACT_NOP, ACT_CLRXH, ACT_NOP, _
+               shof, ACT_NOP, clrf, ACT_SYMPTS
+END SUB

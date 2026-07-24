@@ -1,0 +1,410 @@
+'=======================================================================
+'  IFF.BM -- ILBM / PBM load and save
+'
+'  Writes FORM ILBM: planar, 5 bitplanes, ByteRun1 compressed -- which
+'  is exactly what DeluxePaint I wrote on the Amiga at 320x200x32.
+'  Reads both ILBM (planar, Amiga) and PBM (chunky, DPaint II on DOS).
+'
+'  Three things about IFF that bite every first implementation:
+'    - it is big-endian, and x86 is not
+'    - a chunk with an odd length is followed by a pad byte that is NOT
+'      counted in the length field, so missing it desyncs the NEXT
+'      chunk and the failure surfaces nowhere near its cause
+'    - rows are padded to 16-bit words: (w+15)/16 WORDS, so a 320-wide
+'      plane row is 20 words = 40 bytes, not 20
+'=======================================================================
+
+'--- big-endian scalars ------------------------------------------------
+FUNCTION BE16$ (v AS LONG)
+    BE16$ = CHR$((v \ 256&) AND 255) + CHR$(v AND 255)
+END FUNCTION
+
+FUNCTION BE32$ (v AS LONG)
+    BE32$ = CHR$((v \ 16777216&) AND 255) + CHR$((v \ 65536&) AND 255) + _
+            CHR$((v \ 256&) AND 255) + CHR$(v AND 255)
+END FUNCTION
+
+FUNCTION RdBE16& (s AS STRING)
+    RdBE16& = ASC(s, 1) * 256& + ASC(s, 2)
+END FUNCTION
+
+FUNCTION RdBE32& (s AS STRING)
+    RdBE32& = ((ASC(s, 1) * 256& + ASC(s, 2)) * 256& + ASC(s, 3)) * 256& + ASC(s, 4)
+END FUNCTION
+
+'--- ByteRun1 (PackBits) -----------------------------------------------
+'  Note the loop shapes: QB64 does not short-circuit AND, so a test of
+'  the form `j < n AND ASC(r, j + 1) = ...` evaluates the ASC even when
+'  j = n and faults. Every scan below exits explicitly instead.
+FUNCTION PackRow$ (r AS STRING)
+    DIM o AS STRING, lit AS STRING
+    DIM n AS INTEGER, i AS INTEGER, j AS INTEGER, runl AS INTEGER
+
+    n = LEN(r): i = 1: o = ""
+    DO WHILE i <= n
+        j = i
+        DO
+            IF j >= n THEN EXIT DO
+            IF ASC(r, j + 1) <> ASC(r, i) THEN EXIT DO
+            IF (j - i + 1) >= 128 THEN EXIT DO
+            j = j + 1
+        LOOP
+        runl = j - i + 1
+
+        IF runl >= 3 THEN
+            '  replicate: count c stores as 257 - c
+            o = o + CHR$(257 - runl) + CHR$(ASC(r, i))
+            i = j + 1
+        ELSE
+            lit = "": j = i
+            DO
+                IF j > n THEN EXIT DO
+                IF LEN(lit) >= 128 THEN EXIT DO
+                IF j + 2 <= n THEN
+                    IF ASC(r, j) = ASC(r, j + 1) AND ASC(r, j + 1) = ASC(r, j + 2) THEN EXIT DO
+                END IF
+                lit = lit + CHR$(ASC(r, j))
+                j = j + 1
+            LOOP
+            o = o + CHR$(LEN(lit) - 1) + lit
+            i = j
+        END IF
+    LOOP
+    PackRow$ = o
+END FUNCTION
+
+'  Consumes from dat starting at p (1-based), produces exactly outN
+'  bytes, and advances p past what it used.
+FUNCTION UnpackRow$ (dat AS STRING, p AS LONG, outN AS INTEGER)
+    DIM o AS STRING
+    DIM n AS INTEGER, c AS INTEGER, lim AS LONG
+
+    o = "": lim = LEN(dat)
+    DO WHILE LEN(o) < outN
+        IF p > lim THEN EXIT DO
+        n = ASC(dat, p): p = p + 1
+        IF n <= 127 THEN
+            o = o + MID$(dat, p, n + 1)
+            p = p + n + 1
+        ELSEIF n > 128 THEN
+            c = 257 - n
+            IF p > lim THEN EXIT DO
+            o = o + STRING$(c, ASC(dat, p))
+            p = p + 1
+        END IF
+        '  n = 128 is a documented no-op
+    LOOP
+    IF LEN(o) < outN THEN o = o + STRING$(outN - LEN(o), CHR$(0))
+    UnpackRow$ = LEFT$(o, outN)
+END FUNCTION
+
+'--- chunky <-> planar -------------------------------------------------
+'  Plane 0 is the LOW order bit of the colour index, and within a row
+'  the most significant bit of each byte is the leftmost pixel.
+FUNCTION C2P$ (row AS STRING, w AS INTEGER, npl AS INTEGER, rb AS INTEGER)
+    DIM pl AS STRING
+    DIM msk(7) AS INTEGER
+    DIM p AS INTEGER, x AS INTEGER, k AS INTEGER
+    DIM v AS INTEGER, pw AS INTEGER, cur AS INTEGER
+    DIM bidx AS LONG
+
+    msk(0) = 128: msk(1) = 64: msk(2) = 32: msk(3) = 16
+    msk(4) = 8: msk(5) = 4: msk(6) = 2: msk(7) = 1
+
+    pl = STRING$(rb * npl, CHR$(0))
+    pw = 1
+    FOR p = 0 TO npl - 1
+        FOR x = 0 TO w - 1
+            v = ASC(row, x + 1)
+            IF (v \ pw) AND 1 THEN
+                bidx = CLNG(p) * rb + (x \ 8) + 1
+                cur = ASC(pl, bidx)
+                k = cur OR msk(x AND 7)
+                MID$(pl, bidx, 1) = CHR$(k)
+            END IF
+        NEXT
+        pw = pw * 2
+    NEXT
+    C2P$ = pl
+END FUNCTION
+
+FUNCTION P2C$ (pl AS STRING, w AS INTEGER, npl AS INTEGER, rb AS INTEGER)
+    DIM row AS STRING
+    DIM msk(7) AS INTEGER
+    DIM p AS INTEGER, x AS INTEGER
+    DIM v AS INTEGER, pw AS INTEGER
+    DIM bidx AS LONG
+
+    msk(0) = 128: msk(1) = 64: msk(2) = 32: msk(3) = 16
+    msk(4) = 8: msk(5) = 4: msk(6) = 2: msk(7) = 1
+
+    row = STRING$(w, CHR$(0))
+    FOR x = 0 TO w - 1
+        v = 0: pw = 1
+        FOR p = 0 TO npl - 1
+            bidx = CLNG(p) * rb + (x \ 8) + 1
+            IF ASC(pl, bidx) AND msk(x AND 7) THEN v = v + pw
+            pw = pw * 2
+        NEXT
+        MID$(row, x + 1, 1) = CHR$(v)
+    NEXT
+    P2C$ = row
+END FUNCTION
+
+'=======================================================================
+'  SAVE -- FORM ILBM, 5 planes, ByteRun1
+'=======================================================================
+SUB SaveLBM (fnam AS STRING)
+    DIM bmhd AS STRING, cmap AS STRING, body AS STRING, iffbuf AS STRING
+    DIM row AS STRING, pl AS STRING
+    DIM npl AS INTEGER, rb AS INTEGER, ncol AS INTEGER
+    DIM x AS INTEGER, y AS INTEGER, p AS INTEGER, i AS INTEGER
+    DIM m AS _MEM
+    DIM f AS INTEGER
+
+    npl = NPLANES
+    ncol = NCOLORS
+    rb = ((SCRW + 15) \ 16) * 2   ' 40 bytes for a 320-wide plane row
+
+    '--- BMHD: 20 bytes, fields in spec order --------------------------
+    bmhd = BE16$(SCRW) + BE16$(SCRH)          ' w, h
+    bmhd = bmhd + BE16$(0) + BE16$(0)         ' x, y
+    bmhd = bmhd + CHR$(npl)                   ' nPlanes
+    bmhd = bmhd + CHR$(0)                     ' masking = mskNone
+    bmhd = bmhd + CHR$(1)                     ' compression = cmpByteRun1
+    bmhd = bmhd + CHR$(0)                     ' pad1
+    bmhd = bmhd + BE16$(0)                    ' transparentColour
+    bmhd = bmhd + CHR$(10) + CHR$(11)         ' aspect, Amiga lo-res
+    bmhd = bmhd + BE16$(SCRW) + BE16$(SCRH)   ' page size
+
+    '--- CMAP: 3 bytes per entry, 2^nPlanes entries --------------------
+    cmap = ""
+    FOR i = 0 TO ncol - 1
+        cmap = cmap + CHR$(palR(i)) + CHR$(palG(i)) + CHR$(palB(i))
+    NEXT
+
+    '--- BODY: rows of interleaved planes, each row packed alone -------
+    m = _MEMIMAGE(hidbm)
+    body = ""
+    FOR y = 0 TO SCRH - 1
+        row = STRING$(SCRW, CHR$(0))
+        FOR x = 0 TO SCRW - 1
+            MID$(row, x + 1, 1) = CHR$(_MEMGET(m, m.OFFSET + CLNG(y) * SCRW + x, _UNSIGNED _BYTE))
+        NEXT
+        pl = C2P$(row, SCRW, npl, rb)
+        '  Compression is per row per plane, never across rows.
+        FOR p = 0 TO npl - 1
+            body = body + PackRow$(MID$(pl, CLNG(p) * rb + 1, rb))
+        NEXT
+    NEXT
+    _MEMFREE m
+
+    '--- assemble, padding every odd-length chunk ----------------------
+    iffbuf = "BMHD" + BE32$(LEN(bmhd)) + bmhd
+    IF LEN(bmhd) AND 1 THEN iffbuf = iffbuf + CHR$(0)
+    iffbuf = iffbuf + "CMAP" + BE32$(LEN(cmap)) + cmap
+    IF LEN(cmap) AND 1 THEN iffbuf = iffbuf + CHR$(0)
+    iffbuf = iffbuf + "BODY" + BE32$(LEN(body)) + body
+    IF LEN(body) AND 1 THEN iffbuf = iffbuf + CHR$(0)
+
+    iffbuf = "FORM" + BE32$(LEN(iffbuf) + 4) + "ILBM" + iffbuf
+
+    f = FREEFILE
+    OPEN fnam FOR OUTPUT AS #f: CLOSE #f      ' truncate any existing file
+    OPEN fnam FOR BINARY AS #f
+    PUT #f, 1, iffbuf
+    CLOSE #f
+    picDirty = 0
+    curFile = fnam
+    SetTitle
+END SUB
+
+'=======================================================================
+'  LOAD -- accepts FORM ILBM (planar) and FORM PBM (chunky)
+'=======================================================================
+SUB LoadLBM (fnam AS STRING)
+    DIM dat AS STRING, id AS STRING, ftype AS STRING
+    DIM row AS STRING, pl AS STRING
+    DIM sz AS LONG, p AS LONG, clen AS LONG, bp AS LONG
+    DIM w AS INTEGER, h AS INTEGER
+    DIM npl AS INTEGER, masking AS INTEGER, compr AS INTEGER
+    DIM rb AS INTEGER, ncol AS INTEGER, isPBM AS INTEGER
+    DIM x AS INTEGER, y AS INTEGER, i AS INTEGER, k AS INTEGER
+    DIM gotHdr AS INTEGER, lo4 AS INTEGER
+    DIM cr AS INTEGER, cg AS INTEGER, cb AS INTEGER
+    DIM m AS _MEM
+    DIM f AS INTEGER
+
+    f = FREEFILE
+    OPEN fnam FOR BINARY AS #f
+    sz = LOF(f)
+    IF sz < 12 THEN CLOSE #f: EXIT SUB
+    dat = SPACE$(sz)
+    GET #f, 1, dat
+    CLOSE #f
+
+    IF LEFT$(dat, 4) <> "FORM" THEN EXIT SUB
+    ftype = MID$(dat, 9, 4)
+    isPBM = (ftype = "PBM ")
+    IF ftype <> "ILBM" AND (NOT isPBM) THEN EXIT SUB
+
+    npl = 0: masking = 0: compr = 0: gotHdr = 0
+    w = 0: h = 0
+
+    p = 13
+    DO WHILE p + 8 <= sz + 1
+        id = MID$(dat, p, 4)
+        clen = RdBE32&(MID$(dat, p + 4, 4))
+        bp = p + 8
+        IF clen < 0 OR bp + clen > sz + 1 THEN EXIT DO
+
+        SELECT CASE id
+            CASE "BMHD"
+                w = RdBE16&(MID$(dat, bp, 2))
+                h = RdBE16&(MID$(dat, bp + 2, 2))
+                npl = ASC(dat, bp + 8)
+                masking = ASC(dat, bp + 9)
+                compr = ASC(dat, bp + 10)
+                gotHdr = -1
+
+            CASE "CMAP"
+                ncol = clen \ 3
+                IF ncol > 256 THEN ncol = 256
+
+                '  Amiga OCS had 4-bit guns. The spec says CMAP bytes are
+                '  0..255, but plenty of early writers stored only the low
+                '  nibble -- if nothing exceeds 15, scale by 17.
+                lo4 = -1
+                FOR i = 0 TO ncol * 3 - 1
+                    IF ASC(dat, bp + i) > 15 THEN
+                        lo4 = 0
+                        EXIT FOR
+                    END IF
+                NEXT
+
+                k = 1
+                IF lo4 THEN k = 17
+
+                '  Into explicitly-typed INTEGER temporaries first.
+                '  SetPal takes its arguments AS INTEGER by reference,
+                '  and QB64 will not bind a widened expression temporary
+                '  to a byref INTEGER parameter.
+                FOR i = 0 TO ncol - 1
+                    cr = ASC(dat, bp + i * 3) * k
+                    cg = ASC(dat, bp + i * 3 + 1) * k
+                    cb = ASC(dat, bp + i * 3 + 2) * k
+                    SetPal i, cr, cg, cb
+                NEXT
+
+            CASE "BODY"
+                IF gotHdr = 0 OR npl < 1 OR npl > 8 THEN EXIT SUB
+                rb = ((w + 15) \ 16) * 2
+
+                m = _MEMIMAGE(hidbm)
+                '  Start from a clean canvas: a smaller image must not
+                '  leave the previous picture showing around it.
+                '  One _MEMFILL, not a loop: the pixel count is 64000,
+                '  which overflows an INTEGER counter and walks the
+                '  offset off the front of the buffer.
+                _MEMFILL m, m.OFFSET, CLNG(SCRW) * SCRH, 0 AS _UNSIGNED _BYTE
+
+                p = bp
+                FOR y = 0 TO h - 1
+                    IF isPBM THEN
+                        IF compr = 1 THEN
+                            row = UnpackRow$(dat, p, w)
+                        ELSE
+                            row = MID$(dat, p, w): p = p + w
+                        END IF
+                    ELSE
+                        pl = ""
+                        FOR i = 0 TO npl - 1
+                            IF compr = 1 THEN
+                                pl = pl + UnpackRow$(dat, p, rb)
+                            ELSE
+                                pl = pl + MID$(dat, p, rb): p = p + rb
+                            END IF
+                        NEXT
+                        '  A mask plane follows the colour planes and is
+                        '  read purely to stay in step with the stream.
+                        IF masking = 1 THEN
+                            IF compr = 1 THEN
+                                row = UnpackRow$(dat, p, rb)
+                            ELSE
+                                p = p + rb
+                            END IF
+                        END IF
+                        row = P2C$(pl, w, npl, rb)
+                    END IF
+
+                    IF y < SCRH THEN
+                        FOR x = 0 TO w - 1
+                            IF x < SCRW THEN
+                                cr = ASC(row, x + 1)
+                                _MEMPUT m, m.OFFSET + CLNG(y) * SCRW + x, cr AS _UNSIGNED _BYTE
+                            END IF
+                        NEXT
+                    END IF
+                NEXT
+                _MEMFREE m
+                picDirty = 0
+                EXIT SUB
+        END SELECT
+
+        '  Odd-length chunks carry a pad byte that the length excludes.
+        p = bp + clen
+        IF clen AND 1 THEN p = p + 1
+    LOOP
+END SUB
+
+'=======================================================================
+'  Modal filename prompt. Runs its own key loop, so it must not call
+'  back into MainCproc -- it is invoked FROM there.
+'=======================================================================
+FUNCTION AskFile$ (prompt AS STRING, dflt AS STRING)
+    DIM s AS STRING, k AS LONG, done AS INTEGER
+
+    s = dflt: done = 0
+    DO
+        Compose
+        LINE (0, cpY)-(SCRW - 1, SCRH - 1), 16, BF
+        LINE (0, cpY)-(SCRW - 1, cpY), 31
+        COLOR 31, 16
+        _PRINTSTRING (2, cpY + 4), LEFT$(prompt, 38)
+        _PRINTSTRING (2, cpY + 14), LEFT$(s + "_", 38)
+        _DISPLAY
+
+        k = _KEYHIT
+        IF k > 0 THEN
+            SELECT CASE k
+                CASE 13: done = -1
+                CASE 27: s = "": done = -1
+                CASE 8: IF LEN(s) THEN s = LEFT$(s, LEN(s) - 1)
+                CASE 32 TO 126: IF LEN(s) < 38 THEN s = s + CHR$(k)
+            END SELECT
+        END IF
+        _LIMIT 60
+    LOOP UNTIL done
+
+    COLOR 31, 0
+    AskFile$ = s
+END FUNCTION
+
+SUB DoSaveLBM
+    DIM fnam AS STRING
+    fnam = AskFile$("Save as (ESC cancels):", "OUT.LBM")
+    IF LEN(fnam) THEN SaveLBM fnam
+END SUB
+
+SUB DoLoadLBM
+    DIM fnam AS STRING
+    fnam = AskFile$("Load file (ESC cancels):", "OUT.LBM")
+    IF LEN(fnam) = 0 THEN EXIT SUB
+    IF _FILEEXISTS(fnam) THEN
+        UndoSave
+        LoadLBM fnam
+        curFile = fnam
+        picDirty = 0
+        SetTitle
+    END IF
+END SUB

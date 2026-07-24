@@ -1,0 +1,183 @@
+'=======================================================================
+'  BRUSH.BM -- the user brush
+'
+'  Replaces the BMOB half of bmob.c plus rot90.c / stretch.c, and is
+'  the thing that turns this from a shape tool into DeluxePaint: you
+'  cut a rectangle out of the picture and then it IS your pen.
+'
+'  Because StampPenM is what every geometry primitive calls, adding a
+'  USERBRUSH path there means lines, circles, ovals and freehand all
+'  paint with the brush without any of them knowing it exists.
+'=======================================================================
+
+'--- capture -----------------------------------------------------------
+'  Rubber-band frame while the button is down. Runs through FlipIt, so
+'  it lands on the overlay and never touches the picture it is
+'  selecting from -- which matters, because a frame burned into hidbm
+'  would be inside the brush you just grabbed.
+SUB DoSelBrFrame
+    DIM bx AS INTEGER, by AS INTEGER, bw AS INTEGER, bh AS INTEGER
+    ConstBoxFromSM bx, by, bw, bh
+    mFrame bx, by, bw, bh
+END SUB
+
+SUB DoSelBr
+    DIM bx AS INTEGER, by AS INTEGER, bw AS INTEGER, bh AS INTEGER
+    DIM x2 AS INTEGER, y2 AS INTEGER
+
+    ConstBoxFromSM bx, by, bw, bh
+
+    '  Clip to the canvas: dragging off the edge is normal and must not
+    '  produce a brush full of garbage.
+    x2 = bx + bw: y2 = by + bh
+    IF bx < 0 THEN bx = 0
+    IF by < 0 THEN by = 0
+    IF x2 > SCRW - 1 THEN x2 = SCRW - 1
+    IF y2 > SCRH - 1 THEN y2 = SCRH - 1
+    IF x2 < bx OR y2 < by THEN EXIT SUB
+
+    IF brushbm <> 0 THEN _FREEIMAGE brushbm
+    brW = x2 - bx + 1
+    brH = y2 - by + 1
+    brushbm = _NEWIMAGE(brW, brH, 256)
+    _PUTIMAGE (0, 0)-(brW - 1, brH - 1), hidbm, brushbm, (bx, by)-(x2, y2)
+
+    '  Handle at the centre, as DPaint does.
+    brHX = brW \ 2
+    brHY = brH \ 2
+    brValid = -1
+
+    CPChgPen USERBRUSH
+END SUB
+
+'  'B' -- go back to the last brush without re-selecting it.
+SUB UserBr
+    IF brValid THEN CPChgPen USERBRUSH
+END SUB
+
+'--- stamping ----------------------------------------------------------
+'  Transparency is a function of the paint mode, which is what makes
+'  F1/F2 mean something:
+'     Matte   -- background-coloured pixels drop out (the DPaint default)
+'     Color   -- the brush is a stencil; curcol is painted through it
+'     others  -- copy every pixel as-is
+SUB StampBrushM (m AS _MEM, x AS INTEGER, y AS INTEGER)
+    DIM b AS _MEM
+    DIM ix AS INTEGER, iy AS INTEGER, c AS INTEGER
+
+    IF brValid = 0 OR brushbm = 0 THEN EXIT SUB
+
+    b = _MEMIMAGE(brushbm)
+    FOR iy = 0 TO brH - 1
+        FOR ix = 0 TO brW - 1
+            c = _MEMGET(b, b.OFFSET + CLNG(iy) * brW + ix, _UNSIGNED _BYTE)
+            SELECT CASE paintMode
+                CASE PM_Matte
+                    IF c <> curbgcol THEN PutPixM m, x - brHX + ix, y - brHY + iy, c
+                CASE PM_Color
+                    IF c <> curbgcol THEN PutPixM m, x - brHX + ix, y - brHY + iy, curcol
+                CASE ELSE
+                    PutPixM m, x - brHX + ix, y - brHY + iy, c
+            END SELECT
+        NEXT
+    NEXT
+    _MEMFREE b
+END SUB
+
+'--- transforms --------------------------------------------------------
+'  All of these build a new surface and swap it in. Editing in place
+'  would need a scratch copy anyway, so there is nothing to save by it.
+
+SUB BrFlipX
+    DIM nb AS LONG, s AS _MEM, d AS _MEM
+    DIM ix AS INTEGER, iy AS INTEGER, c AS INTEGER
+    IF brValid = 0 THEN EXIT SUB
+    nb = _NEWIMAGE(brW, brH, 256)
+    s = _MEMIMAGE(brushbm): d = _MEMIMAGE(nb)
+    FOR iy = 0 TO brH - 1
+        FOR ix = 0 TO brW - 1
+            c = _MEMGET(s, s.OFFSET + CLNG(iy) * brW + ix, _UNSIGNED _BYTE)
+            _MEMPUT d, d.OFFSET + CLNG(iy) * brW + (brW - 1 - ix), c AS _UNSIGNED _BYTE
+        NEXT
+    NEXT
+    _MEMFREE s: _MEMFREE d
+    _FREEIMAGE brushbm: brushbm = nb
+    brHX = brW - 1 - brHX
+END SUB
+
+SUB BrFlipY
+    DIM nb AS LONG, s AS _MEM, d AS _MEM
+    DIM ix AS INTEGER, iy AS INTEGER, c AS INTEGER
+    IF brValid = 0 THEN EXIT SUB
+    nb = _NEWIMAGE(brW, brH, 256)
+    s = _MEMIMAGE(brushbm): d = _MEMIMAGE(nb)
+    FOR iy = 0 TO brH - 1
+        FOR ix = 0 TO brW - 1
+            c = _MEMGET(s, s.OFFSET + CLNG(iy) * brW + ix, _UNSIGNED _BYTE)
+            _MEMPUT d, d.OFFSET + CLNG(brH - 1 - iy) * brW + ix, c AS _UNSIGNED _BYTE
+        NEXT
+    NEXT
+    _MEMFREE s: _MEMFREE d
+    _FREEIMAGE brushbm: brushbm = nb
+    brHY = brH - 1 - brHY
+END SUB
+
+'  Clockwise. Destination is brH wide and brW tall, so the row stride
+'  changes -- that is the whole trick, and the reason it needs its own
+'  sub rather than sharing the flip code.
+SUB BrRot90
+    DIM nb AS LONG, s AS _MEM, d AS _MEM
+    DIM ix AS INTEGER, iy AS INTEGER, c AS INTEGER
+    DIM nw AS INTEGER, nh AS INTEGER, t AS INTEGER
+    IF brValid = 0 THEN EXIT SUB
+    nw = brH: nh = brW
+    nb = _NEWIMAGE(nw, nh, 256)
+    s = _MEMIMAGE(brushbm): d = _MEMIMAGE(nb)
+    FOR iy = 0 TO brH - 1
+        FOR ix = 0 TO brW - 1
+            c = _MEMGET(s, s.OFFSET + CLNG(iy) * brW + ix, _UNSIGNED _BYTE)
+            _MEMPUT d, d.OFFSET + CLNG(ix) * nw + (brH - 1 - iy), c AS _UNSIGNED _BYTE
+        NEXT
+    NEXT
+    _MEMFREE s: _MEMFREE d
+    _FREEIMAGE brushbm: brushbm = nb
+    brW = nw: brH = nh
+    t = brHX: brHX = brH - 1 - brHY: brHY = t
+END SUB
+
+'  Nearest-neighbour resample (stretch.c does this properly with
+'  Bresenham error terms; this is the honest cheap version).
+SUB BrScale (nw AS INTEGER, nh AS INTEGER)
+    DIM nb AS LONG, s AS _MEM, d AS _MEM
+    DIM ix AS INTEGER, iy AS INTEGER, c AS INTEGER
+    DIM sxp AS INTEGER, syp AS INTEGER
+    IF brValid = 0 THEN EXIT SUB
+    IF nw < 1 OR nh < 1 THEN EXIT SUB
+    IF nw > SCRW THEN nw = SCRW
+    IF nh > SCRH THEN nh = SCRH
+
+    nb = _NEWIMAGE(nw, nh, 256)
+    s = _MEMIMAGE(brushbm): d = _MEMIMAGE(nb)
+    FOR iy = 0 TO nh - 1
+        syp = (CLNG(iy) * brH) \ nh
+        FOR ix = 0 TO nw - 1
+            sxp = (CLNG(ix) * brW) \ nw
+            c = _MEMGET(s, s.OFFSET + CLNG(syp) * brW + sxp, _UNSIGNED _BYTE)
+            _MEMPUT d, d.OFFSET + CLNG(iy) * nw + ix, c AS _UNSIGNED _BYTE
+        NEXT
+    NEXT
+    _MEMFREE s: _MEMFREE d
+    _FREEIMAGE brushbm: brushbm = nb
+
+    brHX = (CLNG(brHX) * nw) \ brW
+    brHY = (CLNG(brHY) * nh) \ brH
+    brW = nw: brH = nh
+END SUB
+
+SUB BrHalf
+    BrScale brW \ 2, brH \ 2
+END SUB
+
+SUB BrDubl
+    BrScale brW * 2, brH * 2
+END SUB

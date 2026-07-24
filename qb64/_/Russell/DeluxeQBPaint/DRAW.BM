@@ -1,0 +1,919 @@
+'=======================================================================
+'  DRAW.BM -- drawing primitives (stubs)
+'
+'  This file replaces blitops.c, maskblit.c, pgraph.c, bitmaps.c,
+'  bmob.c and dalloc.c -- roughly 50K of Amiga blitter and bitplane
+'  code -- with chunky 8-bit access through _MEMIMAGE.
+'
+'  The algorithmic files DO port across almost verbatim, and should be
+'  brought over rather than rewritten:
+'     conic.c    -> mCircle / mOval / mFillOval  (Bresenham conics)
+'     fill.c     -> mFillArea                    (scanline flood fill)
+'     polyf.c    -> polygon fill
+'     rotate.c shear.c bend.c stretch.c rot90.c  -> brush transforms
+'     hsv.c remap.c distance.c random.c          -> straight arithmetic
+'  Those are Dan Silva's actual work and the reason to do this at all.
+'=======================================================================
+
+'--- feedback layer ----------------------------------------------------
+'  The Amiga drew XOR feedback straight onto the visible bitmap and
+'  undrew it. With a composited backbuffer you can instead keep a
+'  separate feedback overlay and just not persist it. Both work; the
+'  overlay approach removes a whole class of flicker bugs.
+'  (tempXORon / savedMode / updating now live in inc/GLOBALS.BI --
+'   a .BM file may contain SUB/FUNCTION bodies only.)
+
+'  TempXOR no longer means "switch the rasterop to XOR". It means
+'  "everything drawn until RestoreMode goes to the feedback overlay
+'  instead of the picture". Undrawing is then just wiping the overlay,
+'  which is what kills the whole class of flicker/smear bugs.
+'
+'  It nests: ShowFB brackets the whole feedback pass, and SymShowOb
+'  brackets again inside it. Without the depth count the inner
+'  RestoreMode would end the outer one early and symmetry feedback
+'  would paint itself into the picture.
+Sub TempXOR
+    If fbDepth = 0 Then savedMode = paintMode
+    fbDepth = fbDepth + 1
+    tempXORon = -1
+End Sub
+
+Sub RestoreMode
+    fbDepth = fbDepth - 1
+    If fbDepth <= 0 Then
+        fbDepth = 0
+        paintMode = savedMode
+        tempXORon = 0
+    End If
+End Sub
+
+'  Which surface do the primitives write to right now?
+Function DrawBM&
+    If tempXORon Then DrawBM& = fbbm Else DrawBM& = hidbm
+End Function
+
+'  Wipe the overlay back to transparent. RecTempChg exists to narrow
+'  this to a dirty rect; at 320x200 a full wipe is 64K a frame and not
+'  worth the bookkeeping, so it is currently whole-surface.
+Sub FBWipe
+    Dim d As Long
+    d = _Dest
+    _Dest fbbm
+    Line (0, 0)-(SCRW - 1, SCRH - 1), FBCLEAR, BF
+    _Dest d
+End Sub
+
+Sub UpdtON
+    updating = -1: Painting = -1
+End Sub
+
+Sub UpdtOFF
+    updating = 0: Painting = 0
+End Sub
+
+'--- pixel access ------------------------------------------------------
+'  One byte per pixel. This is the single biggest simplification in
+'  the whole port: xword(), wrdsrqd(), colForY() and the entire
+'  MXLWRD line-buffer machinery from grdefs.h all disappear.
+'  Pixel writes take the memory handle as a PARAMETER -- documented,
+'  and avoids relying on DIM SHARED ... AS _MEM working at all.
+'  The handle is acquired once per drawing operation, not per pixel.
+Sub PutPixM (m As _MEM, x As Integer, y As Integer, c As Integer)
+    If x < 0 Or y < 0 Or x >= SCRW Or y >= SCRH Then Exit Sub
+    _MemPut m, m.OFFSET + CLng(y) * SCRW + x, c As _Unsigned _Byte
+End Sub
+
+'  Convenience wrapper for one-off writes outside a loop.
+Sub PutPix (x As Integer, y As Integer, c As Integer)
+    Dim m As _MEM
+    m = _MemImage(DrawBM&)
+    PutPixM m, x, y, c
+    _MemFree m
+End Sub
+
+Sub StampPenM (m As _MEM, x As Integer, y As Integer)
+    Dim r As Integer, ix As Integer, iy As Integer, t As Integer
+    '  Must come first: USERBRUSH is &H7FFF, so `usePen And &HFFF` would
+    '  otherwise read as a 4095-pixel disc.
+    If usePen = USERBRUSH Then
+        StampBrushM m, x, y
+        Exit Sub
+    End If
+
+    r = usePen And &HFFF
+    If usePen = 0 Or r < 1 Then
+        PutPixM m, x, y, curcol
+        Exit Sub
+    End If
+    t = (usePen \ 4096) And 15
+    For iy = -r To r
+        For ix = -r To r
+            If t = SQUARE_B Then
+                PutPixM m, x + ix, y + iy, curcol
+            Else
+                If ix * ix + iy * iy <= r * r Then PutPixM m, x + ix, y + iy, curcol
+            End If
+        Next
+    Next
+End Sub
+
+Function mReadPix% (x As Integer, y As Integer)
+
+    Dim m As _MEM
+
+    If x < 0 Or y < 0 Or x >= SCRW Or y >= SCRH Then
+        mReadPix% = 0
+        Exit Function
+    End If
+
+    m = _MemImage(hidbm)
+
+    mReadPix% = _MemGet(m, _
+        m.OFFSET + (CLng(y) * SCRW) + x, _
+        _Unsigned _Byte)
+
+    _MemFree m
+
+End Function
+
+'  Out-of-bounds reads return -1, which can never equal a seed colour
+'  (0..255), so edge tests fall out of the comparison for free.
+Function GetPixM% (m As _MEM, x As Integer, y As Integer)
+    If x < 0 Or y < 0 Or x >= SCRW Or y >= SCRH Then
+        GetPixM% = -1
+        Exit Function
+    End If
+    GetPixM% = _MemGet(m, m.OFFSET + CLng(y) * SCRW + x, _Unsigned _Byte)
+End Function
+
+'--- primitives to fill in ---------------------------------------------
+Sub mLine (x0 As Integer, y0 As Integer, x1 As Integer, y1 As Integer)
+
+    '  NOTE: the step variables used to be called sx/sy -- which are the
+    '  DIM SHARED start-point globals from GLOBALS.BI. Renamed to stpx/stpy.
+    Dim x As Integer, y As Integer
+    Dim dx As Integer, dy As Integer
+    Dim stpx As Integer, stpy As Integer
+    Dim eerr As Integer, e2 As Integer
+    Dim m As _MEM
+
+    m = _MemImage(DrawBM&)
+
+    x = x0
+    y = y0
+
+    dx = Abs(x1 - x0)
+    dy = Abs(y1 - y0)
+
+    If x0 < x1 Then stpx = 1 Else stpx = -1
+    If y0 < y1 Then stpy = 1 Else stpy = -1
+
+    eerr = dx - dy
+
+    Do
+        StampPenM m, x, y
+
+        If x = x1 And y = y1 Then Exit Do
+
+        '  ERR is QB64's error-code function and is always 0 here --
+        '  using it pinned e2 at 0, fired both branches every pass, and
+        '  walked a 45-degree diagonal that never met the exit test.
+        e2 = 2 * eerr
+
+        If e2 > -dy Then
+            eerr = eerr - dy
+            x = x + stpx
+        End If
+
+        If e2 < dx Then
+            eerr = eerr + dx
+            y = y + stpy
+        End If
+
+    Loop
+
+    _MemFree m
+
+End Sub
+
+'  Midpoint circle, pen-stamped, eight-way symmetric (conic.c).
+Sub mCircle (cx As Integer, cy As Integer, r As Integer)
+    Dim px As Integer, py As Integer, d As Integer
+    Dim m As _MEM
+    If r < 0 Then Exit Sub
+    m = _MemImage(DrawBM&)
+    px = 0: py = r: d = 1 - r
+    Do While px <= py
+        StampPenM m, cx + px, cy + py
+        StampPenM m, cx - px, cy + py
+        StampPenM m, cx + px, cy - py
+        StampPenM m, cx - px, cy - py
+        StampPenM m, cx + py, cy + px
+        StampPenM m, cx - py, cy + px
+        StampPenM m, cx + py, cy - px
+        StampPenM m, cx - py, cy - px
+        If d < 0 Then
+            d = d + 2 * px + 3
+        Else
+            d = d + 2 * (px - py) + 5
+            py = py - 1
+        End If
+        px = px + 1
+    Loop
+    _MemFree m
+End Sub
+
+'  Filled shapes lay down curcol flat -- the pen is an outline tool.
+Sub mFillCircle (cx As Integer, cy As Integer, r As Integer)
+    Dim ix As Integer, iy As Integer, w As Integer
+    Dim m As _MEM
+    If r < 0 Then Exit Sub
+    m = _MemImage(DrawBM&)
+    For iy = -r To r
+        w = Int(Sqr(CLng(r) * r - CLng(iy) * iy))   ' 320*320 overflows INTEGER
+        For ix = -w To w
+            PutPixM m, cx + ix, cy + iy, curcol
+        Next
+    Next
+    _MemFree m
+End Sub
+
+'  Midpoint ellipse (conic.c). Like mCircle, (x0,y0) is the centre and
+'  (x1,y1) gives the radii -- consistent with ACT_OVAL passing sx,sy,mx,my.
+Sub mOval (x0 As Integer, y0 As Integer, x1 As Integer, y1 As Integer)
+    Dim rx As Integer, ry As Integer
+    Dim px As Integer, py As Integer
+    Dim a2 As Long, b2 As Long, dx As Long, dy As Long
+    Dim d1 As Double, d2 As Double
+    Dim m As _MEM
+
+    rx = Abs(x1 - x0): ry = Abs(y1 - y0)
+
+    '  Degenerate: a zero radius is a straight line, not an ellipse.
+    If rx = 0 Or ry = 0 Then
+        mLine x0 - rx, y0 - ry, x0 + rx, y0 + ry
+        Exit Sub
+    End If
+
+    m = _MemImage(DrawBM&)
+    a2 = CLng(rx) * rx: b2 = CLng(ry) * ry
+    px = 0: py = ry
+    dx = 0: dy = 2 * a2 * py
+    d1 = b2 - a2 * ry + 0.25 * a2
+
+    Do While dx < dy
+        StampPenM m, x0 + px, y0 + py
+        StampPenM m, x0 - px, y0 + py
+        StampPenM m, x0 + px, y0 - py
+        StampPenM m, x0 - px, y0 - py
+        If d1 < 0 Then
+            px = px + 1: dx = dx + 2 * b2: d1 = d1 + dx + b2
+        Else
+            px = px + 1: py = py - 1
+            dx = dx + 2 * b2: dy = dy - 2 * a2
+            d1 = d1 + dx - dy + b2
+        End If
+    Loop
+
+    d2 = CDbl(b2) * (px + 0.5) * (px + 0.5) + CDbl(a2) * (py - 1) * (py - 1) - CDbl(a2) * b2
+    Do While py >= 0
+        StampPenM m, x0 + px, y0 + py
+        StampPenM m, x0 - px, y0 + py
+        StampPenM m, x0 + px, y0 - py
+        StampPenM m, x0 - px, y0 - py
+        If d2 > 0 Then
+            py = py - 1: dy = dy - 2 * a2: d2 = d2 + a2 - dy
+        Else
+            py = py - 1: px = px + 1
+            dx = dx + 2 * b2: dy = dy - 2 * a2
+            d2 = d2 + dx - dy + a2
+        End If
+    Loop
+
+    _MemFree m
+End Sub
+
+Sub mFillOval (x0 As Integer, y0 As Integer, x1 As Integer, y1 As Integer)
+    Dim rx As Integer, ry As Integer
+    Dim ix As Integer, iy As Integer, w As Integer
+    Dim m As _MEM
+
+    rx = Abs(x1 - x0): ry = Abs(y1 - y0)
+    If rx = 0 Or ry = 0 Then
+        mLine x0 - rx, y0 - ry, x0 + rx, y0 + ry
+        Exit Sub
+    End If
+
+    m = _MemImage(DrawBM&)
+    Dim t As Double
+    For iy = -ry To ry
+        t = 1 - (CDbl(iy) / ry) * (CDbl(iy) / ry)
+        If t < 0 Then t = 0          ' Sqr of a negative is a runtime error
+        w = Int(rx * Sqr(t))
+        For ix = -w To w
+            PutPixM m, x0 + ix, y0 + iy, curcol
+        Next
+    Next
+    _MemFree m
+End Sub
+
+'  DPaint's curve: draw a line, then bend it. So (ax,ay) and (cx,cy)
+'  are the committed endpoints and (bx,by) is wherever the mouse is --
+'  and the curve has to pass THROUGH that point, which is not what a
+'  Bezier control point does. Solving P(0.5) = M for the control point
+'  gives C = 2M - P0/2 - P2/2, which interpolates the bend exactly and
+'  leaves both endpoints untouched.
+Sub mCurve (ax As Integer, ay As Integer, bx As Integer, by As Integer, cx As Integer, cy As Integer)
+    Dim ctlx As Double, ctly As Double
+    Dim t As Double, omt As Double
+    Dim px As Integer, py As Integer
+    Dim lpx As Integer, lpy As Integer
+    Dim i As Integer, nseg As Integer
+
+    ctlx = 2 * CDbl(bx) - 0.5 * ax - 0.5 * cx
+    ctly = 2 * CDbl(by) - 0.5 * ay - 0.5 * cy
+
+    '  Segment count from the control polygon's extent: enough to stay
+    '  gapless on a long curve, without stamping the pen 500 times on a
+    '  10-pixel one.
+    nseg = Abs(ax - bx) + Abs(ay - by) + Abs(bx - cx) + Abs(by - cy)
+    If nseg < 8 Then nseg = 8
+    If nseg > 512 Then nseg = 512
+
+    lpx = ax: lpy = ay
+    For i = 1 To nseg
+        t = CDbl(i) / nseg
+        omt = 1 - t
+        px = Int(omt * omt * ax + 2 * omt * t * ctlx + t * t * cx + 0.5)
+        py = Int(omt * omt * ay + 2 * omt * t * ctly + t * t * cy + 0.5)
+        If px <> lpx Or py <> lpy Then
+            mLine lpx, lpy, px, py
+            lpx = px: lpy = py
+        End If
+    Next
+End Sub
+
+Sub mRect (x As Integer, y As Integer, w As Integer, h As Integer)
+    Dim ix As Integer, iy As Integer
+    Dim m As _MEM
+    m = _MemImage(DrawBM&)
+    For iy = y To y + h
+        For ix = x To x + w
+            PutPixM m, ix, iy, curcol
+        Next
+    Next
+    _MemFree m
+End Sub
+
+'  "OB" frame: drawn with the current pen, so it thickens with it.
+Sub mOBFrame (x As Integer, y As Integer, w As Integer, h As Integer)
+    mLine x, y, x + w, y
+    mLine x + w, y, x + w, y + h
+    mLine x + w, y + h, x, y + h
+    mLine x, y + h, x, y
+End Sub
+
+Sub mFrame (x As Integer, y As Integer, w As Integer, h As Integer)
+    Dim i As Integer
+    Dim m As _MEM
+    m = _MemImage(DrawBM&)
+    For i = x To x + w
+        PutPixM m, i, y, curcol
+        PutPixM m, i, y + h, curcol
+    Next
+    For i = y To y + h
+        PutPixM m, x, i, curcol
+        PutPixM m, x + w, i, curcol
+    Next
+    _MemFree m
+End Sub
+
+'=======================================================================
+'  Scanline flood fill (fill.c). Span-based and iterative -- a
+'  per-pixel recursive fill would blow the stack on a 320x200 region.
+'  Each pop claims a whole horizontal run, paints it, then seeds only
+'  the START of each maximal run on the rows above and below, which is
+'  what keeps the stack shallow (measured peak: single digits).
+'=======================================================================
+Sub mFillArea (useBg As Integer, x As Integer, y As Integer)
+    Dim stkX(STKMAX) As Integer, stkY(STKMAX) As Integer
+    Dim sp As Integer, guard As Integer
+    Dim cx As Integer, cy As Integer, nrow As Integer
+    Dim x1 As Integer, x2 As Integer, i As Integer
+    Dim seed As Integer, fc As Integer
+    Dim m As _MEM
+
+    If x < 0 Or y < 0 Or x >= SCRW Or y >= SCRH Then Exit Sub
+
+    '  Right button fills with the background colour, as DPaint does.
+    If useBg Or butwas = 2 Then fc = curbgcol Else fc = curcol
+
+    m = _MemImage(DrawBM&)
+    seed = GetPixM%(m, x, y)
+
+    '  Filling a region with the colour it already is would never
+    '  terminate -- the seed test can never go false.
+    If seed = fc Then _MemFree m: Exit Sub
+
+    sp = 0: stkX(0) = x: stkY(0) = y: sp = 1
+    guard = 0
+
+    Do While sp > 0
+        sp = sp - 1
+        cx = stkX(sp): cy = stkY(sp)
+        If GetPixM%(m, cx, cy) = seed Then
+
+            x1 = cx
+            Do While GetPixM%(m, x1 - 1, cy) = seed
+                x1 = x1 - 1
+            Loop
+            x2 = cx
+            Do While GetPixM%(m, x2 + 1, cy) = seed
+                x2 = x2 + 1
+            Loop
+
+            For i = x1 To x2
+                PutPixM m, i, cy, fc
+            Next
+
+            For nrow = cy - 1 To cy + 1 Step 2
+                i = x1
+                Do While i <= x2
+                    If GetPixM%(m, i, nrow) = seed Then
+                        If sp <= STKMAX Then
+                            stkX(sp) = i: stkY(sp) = nrow: sp = sp + 1
+                        End If
+                        Do While i <= x2 And GetPixM%(m, i, nrow) = seed
+                            i = i + 1
+                        Loop
+                    Else
+                        i = i + 1
+                    End If
+                Loop
+            Next
+        End If
+
+        '  Let ESC out of a fill that is eating the whole canvas.
+        guard = guard + 1
+        If guard >= 64 Then
+            guard = 0
+            If CheckAbort% Then Exit Do
+        End If
+    Loop
+
+    _MemFree m
+End Sub
+
+'  Draw-only. It used to be an XOR toggle that erased itself on the
+'  second call; on an overlay the erase is FBWipe's job instead, and
+'  the four ACT_*XHANDOB combinations in ACTIONS.BM still come out
+'  right because mMoveOB/mClearOB wipe before they draw.
+'  Scatter abFlow pixels inside the radius, rejection-sampled so the
+'  distribution is round rather than square. Radius 0 would spin the
+'  rejection loop forever, hence the guard.
+Sub mAirBrush (x As Integer, y As Integer)
+    Dim m As _MEM
+    Dim i As Integer, dx As Integer, dy As Integer, r As Integer
+    r = abRadius
+    If r < 1 Then
+        PutPix x, y, curcol
+        Exit Sub
+    End If
+    m = _MemImage(DrawBM&)
+    For i = 1 To abFlow
+        Do
+            dx = Int(Rnd * (r * 2 + 1)) - r
+            dy = Int(Rnd * (r * 2 + 1)) - r
+        Loop Until dx * dx + dy * dy <= r * r
+        PutPixM m, x + dx, y + dy, curcol
+    Next
+    _MemFree m
+End Sub
+
+Sub mInvXHair (x As Integer, y As Integer)
+    Dim i As Integer
+    Dim m As _MEM
+    m = _MemImage(DrawBM&)
+    For i = -4 To 4
+        If i < -1 Or i > 1 Then
+            PutPixM m, x + i, y, XHCOL
+            PutPixM m, x, y + i, XHCOL
+        End If
+    Next
+    _MemFree m
+End Sub
+
+Sub mClearToBg
+    Dim ix As Integer, iy As Integer
+    Dim m As _MEM
+    m = _MemImage(DrawBM&)
+    For iy = 0 To SCRH - 1
+        For ix = 0 To SCRW - 1
+            PutPixM m, ix, iy, curbgcol
+        Next
+    Next
+    _MemFree m
+End Sub
+
+'--- brush / pen object (was BMOB in prism.h) --------------------------
+'  Was a save-under sprite (BMOB): save background, draw, restore.
+'  The overlay makes the save-under unnecessary -- draw, and wipe.
+'  mDispOB stays draw-only because IM_shade uses it as curDoAct to
+'  splat the brush down permanently.
+Sub mDispOB (x As Integer, y As Integer)
+    Dim m As _MEM
+    m = _MemImage(DrawBM&)
+    StampPenM m, x, y
+    _MemFree m
+End Sub
+
+Sub mMoveOB (x As Integer, y As Integer)
+    mClearOB x, y
+    mDispOB x, y
+End Sub
+
+Sub mClearOB (x As Integer, y As Integer)
+    If tempXORon Then FBWipe
+End Sub
+
+'--- temp-change recording (used to erase rubber-band feedback) --------
+'  Dirty-rect hook, kept for API compatibility with the call in
+'  ACTIONS.BM. EraseTempChg wipes the whole overlay for now.
+Sub RecTempChg (x As Integer, y As Integer, w As Integer, h As Integer)
+End Sub
+
+Sub EraseTempChg
+    FBWipe
+End Sub
+
+'  The right button paints in the background colour. Every primitive
+'  already draws in curcol, so swapping curcol for the duration of the
+'  stroke makes the whole toolset erase without a single one of them
+'  needing to know about it.
+'
+'  The guard matters: releasing the button outside the window means
+'  GoUp never runs, so a second TempErase would otherwise overwrite
+'  savedCol with the background colour and strand it there.
+Sub TempErase
+    If erasing Then Exit Sub
+    savedCol = curcol
+    curcol = curbgcol
+    erasing = -1
+End Sub
+
+Sub ClearErase
+    If erasing = 0 Then Exit Sub
+    curcol = savedCol
+    erasing = 0
+End Sub
+
+Sub UnDisplay
+End Sub
+
+'--- undo / spare page -------------------------------------------------
+Sub ClearRedo
+    Dim i As Integer
+    For i = 0 To redoN - 1
+        If redoBuf(i) <> 0 Then _FreeImage redoBuf(i)
+        redoBuf(i) = 0
+    Next
+    redoN = 0
+End Sub
+
+'  Called from GoDown, i.e. before every change to the picture.
+Sub UndoSave
+    Dim i As Integer
+    If undoN = NUNDO Then
+        '  Full: drop the oldest. Shifting ten handles is cheaper than
+        '  the bookkeeping a true ring would need.
+        If undoBuf(0) <> 0 Then _FreeImage undoBuf(0)
+        For i = 0 To NUNDO - 2
+            undoBuf(i) = undoBuf(i + 1)
+        Next
+        undoN = NUNDO - 1
+    End If
+    undoBuf(undoN) = _NewImage(SCRW, SCRH, 256)
+    _PutImage , hidbm, undoBuf(undoN)
+    undoN = undoN + 1
+
+    '  A new action makes any redo history unreachable.
+    ClearRedo
+
+    If picDirty = 0 Then
+        picDirty = -1
+        SetTitle
+    End If
+End Sub
+
+Sub Undo
+    If undoN = 0 Then Exit Sub
+    If redoN < NUNDO Then
+        redoBuf(redoN) = _NewImage(SCRW, SCRH, 256)
+        _PutImage , hidbm, redoBuf(redoN)
+        redoN = redoN + 1
+    End If
+    undoN = undoN - 1
+    _PutImage , undoBuf(undoN), hidbm
+    _FreeImage undoBuf(undoN)
+    undoBuf(undoN) = 0
+    picDirty = -1
+    SetTitle
+End Sub
+
+Sub Redo
+    If redoN = 0 Then Exit Sub
+    If undoN < NUNDO Then
+        undoBuf(undoN) = _NewImage(SCRW, SCRH, 256)
+        _PutImage , hidbm, undoBuf(undoN)
+        undoN = undoN + 1
+    End If
+    redoN = redoN - 1
+    _PutImage , redoBuf(redoN), hidbm
+    _FreeImage redoBuf(redoN)
+    redoBuf(redoN) = 0
+    picDirty = -1
+    SetTitle
+End Sub
+
+Sub SwapSpare
+    Dim t As Long
+    t = hidbm: hidbm = sparebm: sparebm = t
+End Sub
+
+'--- palette / colour cycling ------------------------------------------
+'  The placeholder ramp made index 1 = RGB(8,8,8) -- invisible against
+'  index 0. Slot 1 is the startup foreground colour, so the canvas
+'  looked black even once drawing worked. Real spread instead.
+'  Every palette change goes through here, so palR/G/B and the actual
+'  screen palette can never drift apart.
+Sub SetPal (i As Integer, r As Integer, g As Integer, b As Integer)
+    Dim rr As Integer, gg As Integer, bb As Integer
+    If i < 0 Or i > 255 Then Exit Sub
+    rr = r: gg = g: bb = b
+    If rr < 0 Then rr = 0
+    If rr > 255 Then rr = 255
+    If gg < 0 Then gg = 0
+    If gg > 255 Then gg = 255
+    If bb < 0 Then bb = 0
+    If bb > 255 Then bb = 255
+    palR(i) = rr: palG(i) = gg: palB(i) = bb
+    _PaletteColor i, _RGB32(rr, gg, bb), screenH
+End Sub
+
+Sub InitPalette
+    Dim i As Integer, v As Integer, n As Integer
+    Dim r As Integer, g As Integer, b As Integer
+    SetPal 0, 0, 0, 0
+    SetPal 1, 255, 255, 255
+    SetPal 2, 224, 32, 32
+    SetPal 3, 32, 224, 32
+    SetPal 4, 48, 80, 240
+    SetPal 5, 240, 224, 32
+    SetPal 6, 224, 48, 224
+    SetPal 7, 32, 224, 224
+    '  8..31 stays a 24-step grey ramp, so artwork and files made when
+    '  this was a 32-colour program still look right.
+    For i = 8 To 31
+        v = ((i - 8) * 255) \ 23
+        SetPal i, v, v, v
+    Next
+
+    '  32..247 is a 6x6x6 RGB cube; anything above it is spare.
+    For i = 32 To NCOLORS - 1
+        n = i - 32
+        If n < 216 Then
+            r = ((n \ 36) Mod 6) * 51
+            g = ((n \ 6) Mod 6) * 51
+            b = (n Mod 6) * 51
+        Else
+            r = 0: g = 0: b = 0
+        End If
+        SetPal i, r, g, b
+    Next
+End Sub
+
+'  Step of 17 = one notch of a 4-bit Amiga colour gun (255/15), so a
+'  nudged palette still lands on values a 4-bit CMAP can represent.
+Sub IncRGB (dr As Integer, dg As Integer, db As Integer)
+    SetPal curcol, palR(curcol) + dr * GUNSTEP, _
+                   palG(curcol) + dg * GUNSTEP, _
+                   palB(curcol) + db * GUNSTEP
+End Sub
+
+'  Cycle-draw (F7 / PM_Cycle): each painted step advances the colour
+'  through the cycle range. This is the mode, not the palette animation.
+Sub CycPaint
+    If paintMode <> PM_Cycle Then Exit Sub
+    If cycHi <= cycLo Then Exit Sub
+    curcol = curcol + 1
+    If curcol > cycHi Or curcol < cycLo Then curcol = cycLo
+End Sub
+
+Sub EndCycPaint
+End Sub
+
+Sub TogColCyc
+    cycOn = Not cycOn
+End Sub
+
+'  Palette animation: rotate cycLo..cycHi one step per cycRate frames.
+'  Walked high-to-low so each entry is read before it is overwritten.
+Sub CycleStep
+    Dim i As Integer
+    Dim tr As Integer, tg As Integer, tb As Integer
+    Dim pr As Integer, pg As Integer, pb As Integer
+    If cycOn = 0 Then Exit Sub
+    If cycHi <= cycLo Then Exit Sub
+    cycTick = cycTick + 1
+    If cycTick < cycRate Then Exit Sub
+    cycTick = 0
+
+    tr = palR(cycHi): tg = palG(cycHi): tb = palB(cycHi)
+    For i = cycHi To cycLo + 1 Step -1
+        pr = palR(i - 1): pg = palG(i - 1): pb = palB(i - 1)
+        SetPal i, pr, pg, pb
+    Next
+    SetPal cycLo, tr, tg, tb
+End Sub
+
+'--- compose the visible frame -----------------------------------------
+'  Blit only the viewport's worth of picture, then let the panel draw
+'  over the rest. The panel is composited onto screenH and never onto
+'  hidbm, so it can't be captured by UndoSave or SwapSpare.
+Sub Compose
+    Dim vw As Integer, vh As Integer
+    '  Shrink the SOURCE rect by the zoom factor and let _PUTIMAGE
+    '  scale it up to fill the paint window. That plus one division in
+    '  the main loop is the entire magnify feature.
+    vw = pwW \ magZ: vh = pwH \ magZ
+    _PutImage (pwX, pwY)-(pwX + pwW - 1, pwY + pwH - 1), hidbm, screenH, _
+              (xorg, yorg)-(xorg + vw - 1, yorg + vh - 1)
+    _PutImage (pwX, pwY)-(pwX + pwW - 1, pwY + pwH - 1), fbbm, screenH, _
+              (xorg, yorg)-(xorg + vw - 1, yorg + vh - 1)
+    DrawGrid
+    DrawPanel
+    DrawTip
+    DrawCoords
+End Sub
+
+'--- control-panel and cursor hooks (rebuild, don't port) --------------
+Sub CPChgPen (p As Long)
+    curpen = p: FixUsePen
+END SUB
+
+SUB SetPaintCursor (c AS INTEGER)
+END SUB
+
+SUB ResetCursor
+END SUB
+
+SUB SetCursor (c AS INTEGER)
+END SUB
+
+SUB DispAndSetMode (m AS INTEGER)
+    paintMode = m
+END SUB
+
+'  Keep the view window inside the picture. At 1x the paint window is
+'  shorter than the canvas -- 64 rows sit behind the panel -- so
+'  vertical scrolling is meaningful even unmagnified.
+SUB ClampView
+    DIM vw AS INTEGER, vh AS INTEGER
+    vw = pwW \ magZ: vh = pwH \ magZ
+    IF vw > SCRW THEN vw = SCRW
+    IF vh > SCRH THEN vh = SCRH
+    IF xorg > SCRW - vw THEN xorg = SCRW - vw
+    IF yorg > SCRH - vh THEN yorg = SCRH - vh
+    IF xorg < 0 THEN xorg = 0
+    IF yorg < 0 THEN yorg = 0
+END SUB
+
+SUB ScrollKeys (i AS INTEGER, j AS INTEGER)
+    DIM st AS INTEGER
+    st = 32 \ magZ
+    IF st < 1 THEN st = 1
+    xorg = xorg - i * st
+    yorg = yorg - j * st
+    ClampView
+END SUB
+
+SUB ToggleMag
+    IF magZ = 1 THEN magZ = magLast ELSE magZ = 1
+    ClampView
+END SUB
+
+SUB CenterPoint (x AS INTEGER, y AS INTEGER)
+    xorg = x - (pwW \ magZ) \ 2
+    yorg = y - (pwH \ magZ) \ 2
+    ClampView
+END SUB
+
+'  Zoom toward the cursor, not the origin -- zooming into the top-left
+'  corner of the picture is almost never what is wanted.
+SUB MWZoom (d AS INTEGER)
+    DIM tx AS INTEGER, ty AS INTEGER
+    tx = mx: ty = my
+    IF d > 0 THEN
+        IF magZ < 8 THEN magZ = magZ * 2
+    ELSE
+        IF magZ > 1 THEN magZ = magZ \ 2
+    END IF
+    IF magZ > 1 THEN magLast = magZ
+    CenterPoint tx, ty
+END SUB
+
+'--- brush transforms now live in src/BRUSH.BM -------------------------
+'  Cycle a few sensible radii rather than opening a sizing mode.
+SUB SizeAirBrush
+    SELECT CASE abRadius
+        CASE IS < 6: abRadius = 8
+        CASE IS < 12: abRadius = 16
+        CASE IS < 20: abRadius = 24
+        CASE ELSE: abRadius = 4
+    END SELECT
+END SUB
+
+SUB ChgABRadius (d AS INTEGER)
+    abRadius = abRadius + d
+    IF abRadius < 1 THEN abRadius = 1
+    IF abRadius > 64 THEN abRadius = 64
+END SUB
+
+'--- pen sizing (modes.c IMSizePen) ------------------------------------
+SUB PnUpMv
+END SUB
+
+SUB PnDnMv
+END SUB
+
+SUB SzSet
+END SUB
+
+'--- grid spec (modes.c IMGridSpec) ------------------------------------
+'  The visible grid. Drawn on screenH after the picture blit, so it is
+'  never part of the artwork, and in SCREEN space so it stays one pixel
+'  thick at any magnification.
+'
+'  Colour is chosen per dot against what is underneath: a fixed colour
+'  vanishes on any picture that happens to match it.
+SUB DrawGrid
+    DIM vw AS INTEGER, vh AS INTEGER
+    DIM px AS INTEGER, py AS INTEGER
+    DIM sxp AS INTEGER, syp AS INTEGER
+    DIM stx AS INTEGER, sty AS INTEGER
+    DIM c AS INTEGER
+
+    IF gridON = 0 THEN EXIT SUB
+    stx = gridx * magZ: sty = gridy * magZ
+    IF stx < 4 OR sty < 4 THEN EXIT SUB     ' too dense to read
+
+    vw = pwW \ magZ: vh = pwH \ magZ
+
+    py = gridOrgY
+    DO WHILE py > yorg
+        py = py - gridy
+    LOOP
+    DO WHILE py < yorg
+        py = py + gridy
+    LOOP
+
+    DO WHILE py < yorg + vh
+        syp = pwY + (py - yorg) * magZ
+        px = gridOrgX
+        DO WHILE px > xorg
+            px = px - gridx
+        LOOP
+        DO WHILE px < xorg
+            px = px + gridx
+        LOOP
+        DO WHILE px < xorg + vw
+            sxp = pwX + (px - xorg) * magZ
+            c = POINT(sxp, syp)
+            IF palR(c) + palG(c) + palB(c) < 384 THEN
+                PSET (sxp, syp), 1
+            ELSE
+                PSET (sxp, syp), 0
+            END IF
+            px = px + gridx
+        LOOP
+        py = py + gridy
+    LOOP
+END SUB
+
+'--- interactive grid setup (IM_gridSpec) ------------------------------
+SUB SetGrOrg
+    SetGridOrg mx, my
+END SUB
+
+'  Rubber-band one grid cell. Runs inside the feedback bracket, so it
+'  lands on the overlay.
+SUB StretchGrid
+    mFrame sx, sy, ABS(mx - sx), ABS(my - sy)
+END SUB
+
+SUB CommitGrid
+    SetGridXY ABS(mx - sx), ABS(my - sy)
+    SetGridOrg sx, sy
+    SetGridSt -1
+END SUB
+

@@ -1,0 +1,184 @@
+'=======================================================================
+'  ACTIONS.BM -- the dispatcher
+'
+'  Every `(*upShow)()` in the C becomes `DoAction upShow` here.
+'  This one SELECT CASE is the load-bearing wall of the whole port.
+'=======================================================================
+
+SUB DoAction (act AS INTEGER)
+    SELECT CASE act
+        CASE ACT_NOP
+            ' nada() -- deliberately empty
+
+        '--- object display (pen or brush at a point) -----------------
+        CASE ACT_OBSPLAT:      mDispOB mx, my
+        CASE ACT_OBMV:         mMoveOB mx, my
+        CASE ACT_OBCLR:        mClearOB mx, my
+
+        '--- geometry -------------------------------------------------
+        CASE ACT_INCLINE:      mLine lx, ly, mx, my
+        CASE ACT_VEC:          mLine sx, sy, mx, my
+        CASE ACT_CRV:          mCurve psx, psy, mx, my, pex, pey
+        CASE ACT_CIR:          mCircle sx, sy, RadSM%
+        CASE ACT_FCIR:         mFillCircle sx, sy, RadSM%
+        CASE ACT_OVAL:         mOval sx, sy, mx, my
+        CASE ACT_FOVAL:        mFillOval sx, sy, mx, my
+        CASE ACT_FRBOX:        DoFrBox
+        CASE ACT_FILBOX:       DoFilBox
+        CASE ACT_AFILL:        mFillArea 0, mx, my
+        CASE ACT_AIRBRUSH:     mAirBrush mx, my
+
+        '--- crosshair combinations -----------------------------------
+        CASE ACT_INVXH:        mInvXHair mx, my
+        CASE ACT_CLRXH:        FBWipe
+        CASE ACT_SHOWXHANDOB:  mMoveOB mx, my: mInvXHair mx, my
+        CASE ACT_CLRXHANDOB:   mInvXHair mx, my: mClearOB mx, my
+        CASE ACT_MOVXHANDOB:   mInvXHair lx, ly: mMoveOB mx, my: mInvXHair mx, my
+
+        '--- the functionals (modes.c) --------------------------------
+        CASE ACT_PAINTIT:      PaintIt
+        CASE ACT_SYMPTS:       SymPts
+        CASE ACT_FLIPIT:       FlipIt
+        CASE ACT_ERASEFB:      EraseTempChg
+        CASE ACT_CLRCRV:       RecTempChg 0, 0, SCRW, SCRH: EraseTempChg
+
+        '--- tool specific --------------------------------------------
+        CASE ACT_DOREAD:       DoReadPix
+        CASE ACT_SBFRBOX:      DoSelBrFrame
+        CASE ACT_DOSELBR:      DoSelBr
+        CASE ACT_SYMCENTER:    SymCenter mx, my
+        CASE ACT_SETGRORG:     SetGrOrg
+        CASE ACT_STRGRID:      StretchGrid
+        CASE ACT_DOGRID:       CommitGrid
+        CASE ACT_PNUPMV:       PnUpMv
+        CASE ACT_PNDNMV:       PnDnMv
+        CASE ACT_SZSET:        SzSet
+    END SELECT
+END SUB
+
+'=======================================================================
+'  The "misc functionals" from modes.c. Note how each one calls back
+'  into DoAction with an indirect slot -- this is the exact shape of
+'  the original's (*doit)() / (*xorit)() indirection.
+'=======================================================================
+
+SUB PaintIt
+    UpdtON
+    DoAction curDoAct
+    UpdtOFF
+    CycPaint
+END SUB
+
+SUB SymPts
+    abortFlag = 0
+    IF symON THEN SymDo npts, curDoAct ELSE DoAction curDoAct
+    CycPaint
+END SUB
+
+'  Was "draw it again in XOR to undraw it". On the overlay a second
+'  draw is a second mark, so the undraw becomes an explicit wipe. This
+'  is what lets dnShow and dnClear both be ACT_FLIPIT, as XHTypeOps
+'  plugs them, without the rubber-band frame accumulating.
+SUB FlipIt
+    TempXOR
+    FBWipe
+    DoAction curXorAct
+    RestoreMode
+END SUB
+
+'--- radius from start point to current point (modes.c RadSM) ----------
+FUNCTION RadSM%
+    RadSM% = INT(SQR((mx - sx) * (mx - sx) + (my - sy) * (my - sy)) + 0.5)
+END FUNCTION
+
+'--- box from start point to current point, with shift-constrain -------
+SUB ConstBoxFromSM (bx AS INTEGER, by AS INTEGER, bw AS INTEGER, bh AS INTEGER)
+    DIM s AS INTEGER
+    bx = sx: by = sy
+    bw = mx - sx: bh = my - sy
+    IF bw < 0 THEN bx = mx: bw = -bw
+    IF bh < 0 THEN by = my: bh = -bh
+    IF wasShift THEN
+        s = bw: IF bh > s THEN s = bh
+        bw = s: bh = s
+    END IF
+END SUB
+
+SUB DoFrBox
+    DIM bx AS INTEGER, by AS INTEGER, bw AS INTEGER, bh AS INTEGER
+    ConstBoxFromSM bx, by, bw, bh
+    mOBFrame bx, by, bw, bh
+END SUB
+
+SUB DoFilBox
+    DIM bx AS INTEGER, by AS INTEGER, bw AS INTEGER, bh AS INTEGER
+    ConstBoxFromSM bx, by, bw, bh
+    mRect bx, by, bw, bh
+END SUB
+
+SUB DoReadPix
+    DIM px AS INTEGER
+    px = mReadPix%(mx, my)
+    IF butwas = 2 THEN curbgcol = px ELSE curcol = px
+END SUB
+
+'--- abort handling (modes.c) ------------------------------------------
+SUB DisableAbort
+    abortable = 0
+END SUB
+
+SUB EnableAbort
+    abortable = -1
+END SUB
+
+FUNCTION CheckAbort%
+    IF _KEYDOWN(27) AND abortable THEN
+        UnDisplay
+        abortFlag = -1
+    END IF
+    CheckAbort% = abortFlag
+END FUNCTION
+
+'--- symmetry ----------------------------------------------------------
+SUB TogSymSt
+    symON = NOT symON
+END SUB
+
+SUB SymState (s AS INTEGER)
+    IF symON <> s THEN TogSymSt
+END SUB
+
+'  Reflect/rotate the current point n ways about (symCX,symCY) and run
+'  the action at each. Original: SymDo(npts, &pnts, doit) in PSYM.C.
+SUB SymDo (n AS INTEGER, act AS INTEGER)
+    DIM i AS INTEGER
+    DIM smx AS INTEGER, smy AS INTEGER, slx AS INTEGER, sly AS INTEGER
+    DIM ssx AS INTEGER, ssy AS INTEGER
+    DIM ang AS SINGLE, ca AS SINGLE, sa AS SINGLE
+
+    smx = mx: smy = my: slx = lx: sly = ly: ssx = sx: ssy = sy
+
+    FOR i = 0 TO n - 1
+        ang = 6.283185 * i / n
+        ca = COS(ang): sa = SIN(ang)
+        RotPt smx, smy, ca, sa, mx, my
+        RotPt slx, sly, ca, sa, lx, ly
+        RotPt ssx, ssy, ca, sa, sx, sy
+        DoAction act
+        IF CheckAbort% THEN EXIT FOR
+    NEXT
+
+    mx = smx: my = smy: lx = slx: ly = sly: sx = ssx: sy = ssy
+END SUB
+
+SUB RotPt (px AS INTEGER, py AS INTEGER, ca AS SINGLE, sa AS SINGLE, _
+           ox AS INTEGER, oy AS INTEGER)
+    DIM dx AS SINGLE, dy AS SINGLE
+    dx = px - symCX: dy = py - symCY
+    ox = symCX + INT(dx * ca - dy * sa + 0.5)
+    oy = symCY + INT(dx * sa + dy * ca + 0.5)
+END SUB
+
+SUB SymCenter (x AS INTEGER, y AS INTEGER)
+    symCX = x: symCY = y
+END SUB

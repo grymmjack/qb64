@@ -1,0 +1,282 @@
+'=======================================================================
+'  PAINTW.BM -- the painting window state machine
+'  Ported from paintw.c. This logic is unchanged from the original;
+'  only the function-pointer calls became DoAction calls.
+'=======================================================================
+
+Sub InitPaintState
+    gridx = 8: gridy = 8: gridx2 = 4: gridy2 = 4
+    gridON = 0: gridded = 0
+    symON = 0: npts = 6
+    symCX = SCRW \ 2: symCY = SCRH \ 2
+    curcol = 1: curbgcol = 0
+    curpen = 0: usePen = 0
+    paintMode = PM_Matte
+    allPerm = -1
+    abortable = -1
+    updn = UPSTATE
+    lastPermMode = IM_draw
+    curIMode = IM_none
+    killModeAct = ACT_NOP
+    completeAct = ACT_NOP
+
+    abRadius = 8: abFlow = 6
+    cycOn = 0: cycLo = 8: cycHi = 31: cycRate = 4: cycTick = 0   ' the grey ramp
+    picDirty = 0
+    magZ = 1: magLast = 2
+    xorg = 0: yorg = 0
+    dispCoords = -1        ' on by default; 'i' toggles it
+End Sub
+
+'--- the entry point from the main loop (was mainMproc) ----------------
+Sub MainMproc (why As Integer, but As Integer, x As Integer, y As Integer)
+    nx = x
+    ny = y
+    button = but
+    Gridify nx, ny
+    Constrain nx, ny
+
+    Select Case why
+        Case EV_ENTER: EnterW
+        Case EV_LOOPED: If but Then TrackDown Else TrackUp
+        Case EV_MOVED: If but Then TrackDown Else TrackUp
+        Case EV_BDOWN: GoDown
+        Case EV_BUP: GoUp
+        Case EV_LEAVE: LeaveW
+    End Select
+
+    IF periodicAct <> ACT_NOP THEN DoAction periodicAct
+END SUB
+
+SUB NxtPoint
+    lx = mx: ly = my
+    mx = nx: my = ny
+END SUB
+
+'--- grid snap (paintw.c Gridify) --------------------------------------
+SUB Gridify (x AS INTEGER, y AS INTEGER)
+    DIM rx AS INTEGER, ry AS INTEGER
+    IF gridded AND gridON THEN
+        rx = x - gridOrgX + gridx2
+        IF rx < 0 THEN rx = rx - gridx
+        x = gridOrgX + (rx \ gridx) * gridx
+        ry = y - gridOrgY + gridy2
+        IF ry < 0 THEN ry = ry - gridy
+        y = gridOrgY + (ry \ gridy) * gridy
+    END IF
+END SUB
+
+SUB SetGridXY (gx AS INTEGER, gy AS INTEGER)
+    IF gx < 1 THEN gx = 1
+    IF gy < 1 THEN gy = 1
+    gridx = gx: gridy = gy
+    gridx2 = gx \ 2: gridy2 = gy \ 2
+END SUB
+
+SUB SetGridOrg (ox AS INTEGER, oy AS INTEGER)
+    gridOrgX = ox: gridOrgY = oy
+END SUB
+
+SUB TogGridSt
+    gridON = NOT gridON
+END SUB
+
+SUB SetGridSt (g AS INTEGER)
+    IF gridON <> g THEN TogGridSt
+END SUB
+
+'--- shift-key constrain state machine (paintw.c Constrain) ------------
+SUB Constrain (px AS INTEGER, py AS INTEGER)
+    DIM dx AS INTEGER, dy AS INTEGER
+
+    IF (curIMFlags AND F_NOCON) <> 0 THEN
+        consState = CONS_NOT
+        EXIT SUB
+    END IF
+
+    SELECT CASE consState
+        CASE CONS_NOT
+            IF ShiftKey THEN
+                conStartX = px: conStartY = py
+                consState = CONS_INIT
+            END IF
+        CASE CONS_INIT
+            dx = px - conStartX: dy = py - conStartY
+            IF dx <> 0 OR dy <> 0 THEN
+                IF dx = 0 THEN
+                    consState = CONS_VERT
+                ELSEIF dy = 0 THEN
+                    consState = CONS_HORIZ
+                ELSE
+                    consState = CONS_NOT
+                END IF
+            END IF
+        CASE ELSE
+            IF NOT ShiftKey THEN
+                consState = CONS_NOT
+            ELSE
+                IF consState = CONS_HORIZ THEN py = conStartY
+                IF consState = CONS_VERT THEN px = conStartX
+            END IF
+    END SELECT
+END SUB
+
+'--- feedback show/clear -----------------------------------------------
+'  ShowFB/ClearFB are feedback by definition, whichever slot they
+'  dispatch -- so bracket the whole body and let TempXOR route every
+'  primitive underneath to the overlay.
+SUB ShowFB
+    IF fbOn OR (NOT inside) THEN EXIT SUB
+    TempXOR
+    IF updn = UPSTATE THEN
+        DoAction upShow: SymShowOb F_SYMUP
+    ELSE
+        DoAction dnShow: SymShowOb F_SYMDN
+    END IF
+    RestoreMode
+    fbOn = -1
+END SUB
+
+SUB ClearFB
+    IF NOT fbOn THEN EXIT SUB
+    TempXOR
+    IF updn = UPSTATE THEN
+        SymShowOb F_SYMUP: DoAction upClear
+    ELSE
+        SymShowOb F_SYMDN: DoAction dnClear
+    END IF
+    RestoreMode
+    '  fbOn = 0 means "no feedback is showing", so make that literally
+    '  true. Every clear slot then only has to draw nothing, rather
+    '  than perfectly undo whatever its matching show slot drew.
+    FBWipe
+    fbOn = 0
+END SUB
+
+SUB SymShowOb (upOrDn AS LONG)
+    DIM saveUsePen AS LONG
+    IF (curIMFlags AND upOrDn) <> 0 AND symON THEN
+        TempXOR
+        saveUsePen = usePen
+        IF (curIMFlags AND F_NOBR) <> 0 THEN usePen = 0
+        symcount = 0
+        DisableAbort
+        SymDo 1, ACT_OBSPLAT
+        EnableAbort
+        usePen = saveUsePen
+        RestoreMode
+    END IF
+END SUB
+
+'--- window enter / leave ----------------------------------------------
+SUB EnterW
+    inside = -1
+    '  If the button was released outside the window, GoUp never ran and
+    '  the erase swap is still in force. Re-entering with the button up
+    '  is the moment to undo it.
+    IF button = 0 THEN ClearErase
+    LoadIMode
+    ResetCursor
+    Gridify nx, ny
+    updn = button
+    NxtPoint
+    NxtPoint
+    sx = mx: sy = my
+    ShowFB
+END SUB
+
+SUB LeaveW
+    ClearFB
+    SetCursor DEFCURSOR
+    inside = 0
+END SUB
+
+'--- tracking ----------------------------------------------------------
+'  Button is up: nothing here is ever permanent, so the whole tracking
+'  body is feedback.
+SUB TrackUp
+    IF NOT fbOn THEN
+        NxtPoint: ShowFB
+    ELSEIF nx <> mx OR ny <> my OR everyTime THEN
+        TempXOR
+        SymShowOb F_SYMUP
+        IF upMove <> ACT_NOP THEN
+            NxtPoint: DoAction upMove
+        ELSE
+            DoAction upClear: NxtPoint: DoAction upShow
+        END IF
+        SymShowOb F_SYMUP
+        RestoreMode
+    END IF
+END SUB
+
+'  Button is down, and here the two branches differ in kind -- this is
+'  the one place the feedback/permanent split does NOT follow the sub
+'  boundary, so do NOT bracket this whole body.
+'
+'    dnMove set     -> PaintWith: dnMove is ACT_SYMPTS, i.e. the actual
+'                      stroke. Permanent. Must reach hidbm.
+'    dnMove ACT_NOP -> VType/CircType: dnClear+dnShow are the rubber
+'                      band. Feedback. Must reach the overlay.
+SUB TrackDown
+    IF NOT fbOn THEN
+        NxtPoint: ShowFB
+    ELSEIF nx <> mx OR ny <> my OR everyTime THEN
+        IF dnMove <> ACT_NOP THEN
+            SymShowOb F_SYMDN
+            NxtPoint: DoAction dnMove
+            SymShowOb F_SYMDN
+        ELSE
+            TempXOR
+            SymShowOb F_SYMDN
+            DoAction dnClear: NxtPoint: DoAction dnShow
+            SymShowOb F_SYMDN
+            RestoreMode
+        END IF
+    END IF
+END SUB
+
+SUB GoDown
+    ClearFB
+    updn = DNSTATE
+    FixUsePen
+    butwas = button
+    wasShift = ShiftKey
+    wasCtrl = CtrlKey
+    NxtPoint
+    sx = mx: sy = my
+    IF button = 2 AND (curIMFlags AND F_NOERASE) = 0 THEN TempErase
+    UndoSave
+    firstDown = -1
+    IF (curIMFlags AND F_EVTIM) <> 0 THEN everyTime = -1
+    IF (curIMFlags AND F_PNTWDN) <> 0 THEN UpdtON
+    DoAction WentDn
+    ShowFB
+END SUB
+
+SUB GoUp
+    everyTime = 0
+    ClearFB
+    updn = UPSTATE
+    ex = mx: ey = my
+    DoAction WentUp
+    UpdtOFF
+    ClearErase
+    EndCycPaint
+    psx = sx: psy = sy
+    pex = ex: pey = ey
+    NextIMode
+    ShowFB
+END SUB
+
+'--- pen selection for feedback (paintw.c FixUsePen) -------------------
+SUB FixUsePen
+    usePen = curpen
+    IF (NOT Painting) AND fastFB THEN
+        IF updn = DNSTATE OR (curIMFlags AND (F_NOBR OR F_SLAVE)) <> 0 THEN usePen = 0
+    END IF
+END SUB
+
+SUB SetUsePen (p AS LONG)
+    usePen = p
+END SUB
