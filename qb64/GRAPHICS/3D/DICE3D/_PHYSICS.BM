@@ -65,8 +65,14 @@ SUB dice3d_step (di AS DICE3D_DIE, cfg AS DICE3D_CONFIG)
     IF di.PX > cfg.BOX_W - r THEN di.PX = cfg.BOX_W - r: di.VX = -di.VX * cfg.RESTITUTION: di.HIT_WALL = -1
     IF di.PY < r THEN di.PY = r: di.VY = -di.VY * cfg.RESTITUTION: di.HIT_WALL = -1
     IF di.PY > cfg.BOX_H - r THEN di.PY = cfg.BOX_H - r: di.VY = -di.VY * cfg.RESTITUTION: di.HIT_WALL = -1
-    IF di.HIT_WALL AND cfg.SOUND_ENABLED AND cfg.SND_EDGE_H <> 0 THEN
-        IF ABS(di.VX) + ABS(di.VY) > 1.5 THEN _SNDPLAYCOPY cfg.SND_EDGE_H
+    IF di.HIT_WALL AND cfg.SOUND_ENABLED THEN
+        IF ABS(di.VX) + ABS(di.VY) > 1.5 THEN
+            IF cfg.SND_EDGE_H <> 0 THEN
+                _SNDPLAYCOPY cfg.SND_EDGE_H
+            ELSEIF DICE3D_SND_VOL > 0 THEN
+                SOUND 620 + INT(RND * 660), 0.016, DICE3D_SND_VOL   ' beep! -- a wall-bounce click
+            END IF
+        END IF
     END IF
 
     '--- linear friction (stronger once it's on the floor) ---
@@ -111,7 +117,13 @@ SUB dice3d_step (di AS DICE3D_DIE, cfg AS DICE3D_CONFIG)
         di.VX = di.VX * 0.8: di.VY = di.VY * 0.8
         IF ang < DICE3D_SETTLE_ANG AND spin < 1.5 AND di.PZ <= 0 THEN
             di.SETTLED = -1
-            IF cfg.SOUND_ENABLED AND cfg.SND_SETTLE_H <> 0 THEN _SNDPLAYCOPY cfg.SND_SETTLE_H
+            IF cfg.SOUND_ENABLED THEN
+                IF cfg.SND_SETTLE_H <> 0 THEN
+                    _SNDPLAYCOPY cfg.SND_SETTLE_H
+                ELSEIF DICE3D_SND_VOL > 0 THEN
+                    SOUND 300, 0.05, DICE3D_SND_VOL: SOUND 175, 0.07, DICE3D_SND_VOL   ' boop -- landed
+                END IF
+            END IF
         END IF
     END IF
 END SUB
@@ -130,6 +142,29 @@ SUB dice3d_read_value (di AS DICE3D_DIE)
         IF wn.Z * tz > dotv THEN dotv = wn.Z * tz: best = f
     NEXT
     IF best >= 0 THEN di.VALUE = DICE3D_FACE_VAL(best)
+END SUB
+
+''
+' Readable-result showcase (DICE3D_UPRIGHT): each die turns from its physics rest to
+' DICE3D_FACE_Q(winning face) -- the pose that shows that face flat-on with its number
+' upright -- over a short slerp, so the result is never left sideways or upside-down.
+' Runs after values are read (inside the roll loop, while the box buffer still exists).
+SUB dice3d_showcase (cfg AS DICE3D_CONFIG)
+    DIM AS INTEGER i, f, lo, hi, fr
+    CONST NFR = 12
+    lo = LBOUND(DICE3D_DICE): hi = UBOUND(DICE3D_DICE)
+    REDIM AS DICE3D_QUAT sq(lo TO hi)
+    FOR i = lo TO hi: sq(i) = DICE3D_DICE(i).Q: NEXT
+    FOR fr = 1 TO NFR
+        FOR i = lo TO hi
+            IF DICE3D_DICE(i).VALUE >= LBOUND(DICE3D_VAL2FACE) AND DICE3D_DICE(i).VALUE <= UBOUND(DICE3D_VAL2FACE) THEN
+                f = DICE3D_VAL2FACE(DICE3D_DICE(i).VALUE)
+                IF f >= 0 AND f < DICE3D_NF THEN dice3d_qslerp sq(i), DICE3D_FACE_Q(f), fr / NFR, DICE3D_DICE(i).Q
+            END IF
+        NEXT
+        dice3d_present cfg
+        IF cfg.FPS > 0 THEN _LIMIT cfg.FPS
+    NEXT fr
 END SUB
 
 ''

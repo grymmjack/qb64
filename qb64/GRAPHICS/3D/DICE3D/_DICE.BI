@@ -92,6 +92,38 @@ DIM SHARED DICE3D_LAST_SIDES AS INTEGER '  die type rolled (100 = percentile)
 REDIM SHARED DICE3D_LAST_VALUE(0) AS INTEGER '   per-entry value (1-based)
 REDIM SHARED DICE3D_LAST_DROPPED(0) AS INTEGER '  per-entry dropped flag (1-based)
 
+'--- Optional supersample anti-aliasing: render the box buffer at N x the on-screen
+'    size, then smooth-downscale in dice3d_present. 0/1 = off. The caller sizes the
+'    box (BOX_W/H, DIE_SIZE, physics) at N x and sets BOX_X/Y to the on-screen origin.
+DIM SHARED DICE3D_SSDIV AS INTEGER
+
+'--- Optional readable-result showcase: after the physics settle, turn each die so its
+'    winning face is flat-on with the number UPRIGHT (physics can leave it sideways or
+'    upside-down). 0 = off (pure physics rest). Set by the caller before dice3d_roll.
+DIM SHARED DICE3D_UPRIGHT AS INTEGER
+
+'--- Optional HARDWARE render: present the dice via 3D _MAPTRIANGLE on the OpenGL layer
+'    (native display resolution, hardware texture filtering = genuinely smooth, unaffected
+'    by any software-canvas fullscreen scaling). The caller draws the tray/background on
+'    the software screen, sets these params + a hardware-copy atlas, then rolls. 0 = the
+'    software box-buffer renderer. present() branches on this.
+DIM SHARED DICE3D_HW AS INTEGER
+DIM SHARED DICE3D_HWATLAS AS LONG   ' hardware (_COPYIMAGE ,33) atlas; built lazily, freed by the caller
+DIM SHARED DICE3D_HW_S AS SINGLE    ' GPU units per model unit (die on-screen size)
+DIM SHARED DICE3D_HW_Z AS SINGLE    ' base view depth (negative; ~-5)
+DIM SHARED DICE3D_HW_CX AS SINGLE   ' GPU x of the tray centre (0 = screen centre)
+DIM SHARED DICE3D_HW_CY AS SINGLE   ' GPU y of the tray centre (0 = screen centre; +up)
+DIM SHARED DICE3D_HW_PXK AS SINGLE  ' GPU units per box-pixel (maps die scatter positions)
+
+'--- Fallback sound: when SOUND_ENABLED but no SND_EDGE_H / SND_SETTLE_H file is given,
+'    the physics plays built-in tone beeps/boops at this volume (0..1). 0 = silent fallback.
+DIM SHARED DICE3D_SND_VOL AS SINGLE
+
+'--- Optional atlas resolution override: bake the face texture at this DIE_SIZE (px) even
+'    if the die renders smaller (e.g. hardware dice render small but want a crisp hi-res
+'    atlas so numbers stay sharp). 0 = bake at the config's DIE_SIZE.
+DIM SHARED DICE3D_ATLAS_DIE AS SINGLE
+
 '--- Optional frame capture (debugging / recording; 0 = off) -------------------
 DIM SHARED DICE3D_SHOT_EVERY AS INTEGER '  save box buffer every N frames
 DIM SHARED DICE3D_SHOT_DIR AS STRING
