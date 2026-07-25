@@ -1,0 +1,2742 @@
+2026-07-24T12:46:44-0400  NOTICE   prompt        I want to create a 3D polyhedron dice module that can be added to games - 
+  > I want to create a 3D polyhedron dice module that can be added to games - 
+  > 
+  > how it will work - you specify the dice to roll: XdY where X = how many and Y = num sides/which dice.
+  > 
+  > I want this to render 3D dice and show them rolling with physics in a dice "box" a configurable area that is transparent - the edges of which the dice bounce off of, settling eventually - I want the dimension of the box to be top down and x/y/w/h specific. 
+  > 
+  > then the idea is when the dice module takes control, it renders the dice frame by frame on top of whatever is already on the screen - only the dice box is taken over for that short time.
+  > 
+  > i want the ability to have sounds for the dice on or off, for edges, and settling, and I want the ability to drop the lowest Z dice - so 4D6 drop lowest, etc. when the dice is dropped, it should fade out, or explode or something.
+  > 
+  > I want the dice to have configurable materials:
+  > 
+  > Solid, Crystal, Texture (Marbled), Noise
+  > 
+  > Color of dice body
+  > Color of number faces
+  > Color of edges or transparent
+  > Beveled edge of roundness for dice edges or sharp
+  > 
+  > Custom configuration for Dice numbers where it can take a sprite sheet map, so for D20 it could have a map where 1 shows a Smiley face, and 20 shows a skull, etc. but any number customizable with a face on it. any dice too. Default to numeric or not.
+  > 
+  > For D6 i want the option for pips or not, the pips should be dots, squares, or a sprite of choosing.
+  > 
+  > Plan this out and do it up!
+  > 
+  > QB64PE has full gl 3d, i think this is 100% doable. Let's go!
+  > 
+  > Create it in my ~/git/qb64/qb64/GRAPHICS/3D area for now but it will later be added to QB64_GJ_LIB :) 
+  > 
+  > Once the dice are rolled, control is handed back to the program calling it.
+  > 
+  > Start with a bright blue background for testing, and a dice box that has a simple outline and a background color of deep blue.
+2026-07-24T12:47:38-0400  INFO     bash_start    List GRAPHICS/3D and GRAPHICS directories — echo "=== GRAPHICS/3D area ===" && ls -la qb64/GRAPHICS/3D/ 2>/dev/null | head -60; echo; echo "=== GRAPHICS top ===" && ls qb64/GRAPHICS/ 2>/dev/null | he…
+  > cwd: /home/grymmjack/git/qb64
+  $ echo "=== GRAPHICS/3D area ===" && ls -la qb64/GRAPHICS/3D/ 2>/dev/null | head -60; echo; echo "=== GRAPHICS top ===" && ls qb64/GRAPHICS/ 2>/dev/null | head -40
+2026-07-24T12:47:39-0400  INFO     bash_end      [ok] 26L stdout — List GRAPHICS/3D and GRAPHICS directories
+  | === GRAPHICS/3D area ===
+  | 
+  | === GRAPHICS top ===
+  | _PUTIMAGE.BAS
+  | ASSETS
+  | CIRCLE-PIECES.BAS
+  | COPYIMAGE-HW.BAS
+  | DRAW-HARDWARE-STEVE.BAS
+  | DRAW-HARDWARE.BAS
+  | DRAW-SOFTWARE.BAS
+  | DRAW-STEVE.BAS
+  | FONT
+  | matrix.bas
+  | moving-matrix-rain-ashish.bas
+  | nyan-cat-export.gif
+  | PARALLAX.BAS
+  | PCOPY.BAS
+  | POSTERFRAME-a740g-mod.BAS
+  | POSTERFRAME-a740g.BAS
+  | POSTERFRAME.BAS
+  | POSTERFRAME2.zip
+  | PSET-MANDEL-MAG.BAS
+  | QB64PEBANNER
+  | SHAPES
+  | STARS.BAS
+  | ULTIMA1-MAPS
+2026-07-24T12:47:40-0400  INFO     bash_start    Locate QB64_GJ_LIB and repo layout — echo "=== find GJ_LIB ===" && find . -iname "*GJ_LIB*" -o -iname "*gj_lib*" 2>/dev/null | head -20; echo; echo "=== find any .BI/.BM libs referenced ===" && ls qb…
+  > cwd: /home/grymmjack/git/qb64
+  $ echo "=== find GJ_LIB ===" && find . -iname "*GJ_LIB*" -o -iname "*gj_lib*" 2>/dev/null | head -20; echo; echo "=== find any .BI/.BM libs referenced ===" && ls qb64/ 2>/dev/null | head -40
+2026-07-24T12:47:40-0400  INFO     bash_end      [ok] 28L stdout — Locate QB64_GJ_LIB and repo layout
+  | === find GJ_LIB ===
+  | 
+  | === find any .BI/.BM libs referenced ===
+  | _
+  | BITWISE
+  | COLORS
+  | CTYPE
+  | GAMES
+  | GRAPHICS
+  | IMAGE-TESTS
+  | INFORM
+  | INPUT
+  | JOYSTICK
+  | KEYWORDS-SORTED-BY-LINE-ASC-SPACED.TXT
+  | KEYWORDS-SORTED-SPACED.TXT
+  | KEYWORDS-SORTED.TXT
+  | MATHS
+  | MEM
+  | MOUSE-TESTS
+  | MUSIC
+  | NEW_IN_4
+  | SOUND
+  | SQLLITE
+  | STARFIGHTER
+  | TEMP
+  | TEXTMODE-TESTS
+  | TIME
+  | UTILITIES
+2026-07-24T12:47:51-0400  INFO     agent_start   Find 3D and MAPTRIANGLE examples (Explore)
+  > I'm working in the QB64 repository at /home/grymmjack/git/qb64. I need to understand existing conventions for a new 3D graphics module I'm writing in QB64PE (BASIC).
+  > 
+  > Please search the repository (focus on the qb64/GRAPHICS/ directory and any QB64_GJ_LIB library folder, but search broadly) and report back on:
+  > 
+  > 1. **_MAPTRIANGLE usage**: Any .BAS files that use `_MAPTRIANGLE` — especially the 3D form with Z coordinates like `_MAPTRIANGLE (x,y)-(x,y)-(x,y), src TO (x,y,z)-(x,y,z)-(x,y,z)`. Show me a representative code snippet and the file path.
+  > 
+  > 2. **3D math / rotation**: Any existing code doing 3D rotation, projection, vertex transforms, matrices, or `_DEPTHBUFFER`. Report file paths and short snippets.
+  > 
+  > 3. **Overlay / off-screen rendering**: Examples using `_NEWIMAGE`, `_PUTIMAGE` to render to an off-screen image handle and blit it, `_DEST`, `_SOURCE`. Show how they structure it.
+  > 
+  > 4. **Coding conventions in this repo's .BAS files**: How are subs/functions named? Do they use `OPTION _EXPLICIT`? Do they use TYPE definitions for structs? Do they split code into .BI (declarations/types) and .BM (implementations) include files? Are there header comment blocks? Show me a representative well-structured example file (paths + short excerpts).
+  > 
+  > 5. **The QB64_GJ_LIB library structure** if it exists in this repo — how modules are organized, naming, include patterns.
+  > 
+  > 6. Any existing **sound** usage (`_SNDOPEN`, `_SNDPLAY`, `SOUND`, `PLAY`) and **sprite sheet** handling patterns.
+  > 
+  > Report concise findings with file paths (relative to repo root) and short representative snippets. Do not modify anything — read only. Prioritize breadth; I want to know what building blocks and conventions already exist.
+2026-07-24T12:47:51-0400  INFO     agent_end     [ok] 10L response — Find 3D and MAPTRIANGLE examples
+  | {
+  |   "isAsync": true,
+  |   "status": "async_launched",
+  |   "agentId": "af1451259f33a51c6",
+  |   "description": "Find 3D and MAPTRIANGLE examples",
+  |   "resolvedModel": "claude-opus-4-8[1m]",
+  |   "prompt": "I'm working in the QB64 repository at /home/grymmjack/git/qb64. I need to understand existing conventions for a new 3D graphics module I'm writing in QB64PE (BASIC).\n\nPlease search the repository (focus on the qb64/GRAPHICS/ directory and any QB64_GJ_LIB library folder, but search broadly) and report back on:\n\n1. **_MAPTRIANGLE usage**: Any .BAS files that use `_MAPTRIANGLE` — especially the 3D form with Z coordinates like `_MAPTRIANGLE (x,y)-(x,y)-(x,y), src TO (x,y,z)-(x,y,z)-(x,y,z)`. Show me a representative code snippet and the file path.\n\n2. **3D math / rotation**: Any existing code doing 3D rotation, projection, vertex transforms, matrices, or `_DEPTHBUFFER`. Report file paths and short snippets.\n\n3. **Overlay / off-screen rendering**: Examples using `_NEWIMAGE`, `_PUTIMAGE` to render to an off-screen image handle and blit it, `_DEST`, `_SOURCE`. Show how they structure it.\n\n4. **Coding conventions in this repo's .BAS files**: How are subs/functions named? Do they use `OPTION _EXPLICIT`? Do they use TYPE definitions for structs? Do they split code into .BI (declarations/types) and .BM (implementations) include files? Are there header comment blocks? Show me a representative well-structured example file (paths + short excerpts).\n\n5. **The QB64_GJ_LIB library structure** if it exists in this repo — how modules are organized, naming, include patterns.\n\n6. Any existing **sound** usage (`_SNDOPEN`, `_SNDPLAY`, `SOUND`, `PLAY`) and **sprite sheet** handling patterns.\n\nReport concise findings with file paths (relative to repo root) and short representative snippets. Do not modify anything — read only. Prioritize breadth; I want to know what building blocks and conventions already exist.",
+  |   "outputFile": "/tmp/claude-1000/-home-grymmjack-git-qb64/0bd9f361-6ce1-4370-b677-2720aa6365d7/tasks/af1451259f33a51c6.output",
+  |   "canReadOutputFile": true
+  | }
+2026-07-24T12:47:56-0400  INFO     bash_start    List repo root, GRAPHICS dir, find GJ_LIB — ls -la /home/grymmjack/git/qb64/ && echo "---GRAPHICS---" && ls -la /home/grymmjack/git/qb64/GRAPHICS/ 2>/dev/null && echo "---GJ_LIB search---" && find /h…
+  > cwd: /home/grymmjack/git/qb64
+  $ ls -la /home/grymmjack/git/qb64/ && echo "---GRAPHICS---" && ls -la /home/grymmjack/git/qb64/GRAPHICS/ 2>/dev/null && echo "---GJ_LIB search---" && find /home/grymmjack/git/qb64 -type d -iname "*GJ_LIB*" 2>/dev/null
+2026-07-24T12:47:57-0400  INFO     bash_start    Find files using _MAPTRIANGLE — grep -rIl "_MAPTRIANGLE" /home/grymmjack/git/qb64 --include="*.BAS" --include="*.bas" --include="*.BI" --include="*.bi" --include="*.BM" --include="*.bm" 2>/dev/null
+  > cwd: /home/grymmjack/git/qb64
+  $ grep -rIl "_MAPTRIANGLE" /home/grymmjack/git/qb64 --include="*.BAS" --include="*.bas" --include="*.BI" --include="*.bi" --include="*.BM" --include="*.bm" 2>/dev/null
+2026-07-24T12:47:57-0400  INFO     bash_end      [ok] 14L stdout — Find files using _MAPTRIANGLE
+  | /home/grymmjack/git/qb64/qb64/_/QB64COM-SAMPLES/maptriangle-in-3d/src/maptriangle3d.bas
+  | /home/grymmjack/git/qb64/qb64/_/QB64COM-SAMPLES/mycraft/src/mycraft_0_001.bas
+  | /home/grymmjack/git/qb64/qb64/_/SMcNeill/SET (Steve's Extended Toolset)/SET.BM
+  | /home/grymmjack/git/qb64/qb64/_/QB64COM-SAMPLES/rotozoom3/src/another-rotozoom-demo.bas
+  | /home/grymmjack/git/qb64/qb64/_/TERRY RITCHIE/SPRITE_LIB/sprite.bi
+  | /home/grymmjack/git/qb64/qb64/_/TERRY RITCHIE/SPRITE_LIB/sprite_noerror.bi
+  | /home/grymmjack/git/qb64/qb64/_/RhoSigmaQB/IMG-Support/example/ColorSpin.bas
+  | /home/grymmjack/git/qb64/qb64/_/Petr/3d-fonts.bas
+  | /home/grymmjack/git/qb64/qb64/_/Petr/dice.bas
+  | /home/grymmjack/git/qb64/qb64/_/TERRY-RITCHIE-TUTORIALS/task19/ZombieRotate.bas
+  | /home/grymmjack/git/qb64/qb64/_/DAV/qb64/googley-eyes.bas
+  | /home/grymmjack/git/qb64/qb64/_/NakedApe/ROID2/rockJockey.bas
+  | /home/grymmjack/git/qb64/qb64/_/NakedApe/RockJockey/RockJockey.bas
+  | /home/grymmjack/git/qb64/qb64/GRAPHICS/COPYIMAGE-HW.BAS
+2026-07-24T12:47:59-0400  INFO     bash_start    Find 3D math related files — grep -rIl -e "_DEPTHBUFFER" -e "rotate" -e "projection" -e "vertex" -e "matrix" /home/grymmjack/git/qb64 --include="*.BAS" --include="*.bas" --include="*.BI" --include="*…
+  > cwd: /home/grymmjack/git/qb64
+  $ grep -rIl -e "_DEPTHBUFFER" -e "rotate" -e "projection" -e "vertex" -e "matrix" /home/grymmjack/git/qb64 --include="*.BAS" --include="*.bas" --include="*.BI" --include="*.bi" --include="*.BM" --include="*.bm" 2>/dev/null | head -50
+2026-07-24T12:47:59-0400  INFO     bash_end      [ok] 50L stdout — Find 3D math related files
+  | /home/grymmjack/git/qb64/qb64/COLORS/DRAW/ROTATE.BAS
+  | /home/grymmjack/git/qb64/qb64/MATHS/VECTORS/VECTLAB.BAS
+  | /home/grymmjack/git/qb64/qb64/TEMP/test-draw-gpt.bas
+  | /home/grymmjack/git/qb64/qb64/GAMES/wolf3d-like-russel.bas
+  | /home/grymmjack/git/qb64/qb64/_/PEForum/draw-thick-line-rotozoom2.bas
+  | /home/grymmjack/git/qb64/qb64/_/temple.bas
+  | /home/grymmjack/git/qb64/qb64/_/SMcNeill/SaveImage/SaveImage.BM
+  | /home/grymmjack/git/qb64/qb64/_/SMcNeill/TRANSITIONS.BAS
+  | /home/grymmjack/git/qb64/qb64/_/PEForum/text-drawing-routes.bas
+  | /home/grymmjack/git/qb64/qb64/_/SMcNeill/SET (Steve's Extended Toolset)/SET.BM
+  | /home/grymmjack/git/qb64/qb64/_/QB64COM-SAMPLES/deedlines-sax/src/deedsaks.bas
+  | /home/grymmjack/git/qb64/qb64/_/QB64COM-SAMPLES/3ds-viewer/src/3dsviewer.bas
+  | /home/grymmjack/git/qb64/qb64/_/QB64COM-SAMPLES/torus-demo/src/torus.bas
+  | /home/grymmjack/git/qb64/qb64/_/QB64COM-SAMPLES/ghost-wizard/src/ghostwiz.bas
+  | /home/grymmjack/git/qb64/qb64/_/QB64COM-SAMPLES/maptriangle-in-3d/src/maptriangle3d.bas
+  | /home/grymmjack/git/qb64/qb64/_/QB64COM-SAMPLES/pixelplus/src/usersubs.bas
+  | /home/grymmjack/git/qb64/qb64/_/QB64COM-SAMPLES/plasma-non-pal/src/npplasma.bas
+  | /home/grymmjack/git/qb64/qb64/_/QB64COM-SAMPLES/mycraft/src/mycraft_0_001.bas
+  | /home/grymmjack/git/qb64/qb64/_/QB64COM-SAMPLES/3d-engine-prototypes/src/3dctrwgraph_fb64.bas
+  | /home/grymmjack/git/qb64/qb64/_/QB64COM-SAMPLES/chess/src/chess.bas
+  | /home/grymmjack/git/qb64/qb64/_/QB64COM-SAMPLES/rotozoom3/src/another-rotozoom-demo.bas
+  | /home/grymmjack/git/qb64/qb64/_/QB64COM-SAMPLES/globe/src/globe.bas
+  | /home/grymmjack/git/qb64/qb64/_/QB64COM-SAMPLES/qblocks/src/qblocks.bas
+  | /home/grymmjack/git/qb64/qb64/_/QB64COM-SAMPLES/cloned-shades/src/shades.bas
+  | /home/grymmjack/git/qb64/qb64/_/QB64COM-SAMPLES/3d-wireframe/src/3dexp2.bas
+  | /home/grymmjack/git/qb64/qb64/_/QB64COM-SAMPLES/chess-rf/src/chess.bas
+  | /home/grymmjack/git/qb64/qb64/_/QB64COM-SAMPLES/pipes-puzzle/src/pipes.bas
+  | /home/grymmjack/git/qb64/qb64/_/Russell/DeluxeQBPaint/ACTIONS.BM
+  | /home/grymmjack/git/qb64/qb64/_/Russell/DeluxeQBPaint/DRAW.BM
+  | /home/grymmjack/git/qb64/qb64/_/TERRY RITCHIE/SPRITE_LIB/spritetop.bi
+  | /home/grymmjack/git/qb64/qb64/_/TERRY RITCHIE/SPRITE_LIB/sprite_noerror.bi
+  | /home/grymmjack/git/qb64/qb64/_/TERRY RITCHIE/SPRITE_LIB/sprite.bi
+  | /home/grymmjack/git/qb64/qb64/_/RhoSigmaQB/IMG-Support/imageprocess.bm
+  | /home/grymmjack/git/qb64/qb64/_/RhoSigmaQB/IMG-Support/example/RotatePolygon.bas
+  | /home/grymmjack/git/qb64/qb64/_/RhoSigmaQB/IMG-Support/example/ColorSpin.bas
+  | /home/grymmjack/git/qb64/qb64/_/RhoSigmaQB/DRF-Polygons/polygons.bm
+  | /home/grymmjack/git/qb64/qb64/_/Petr/3d-fonts.bas
+  | /home/grymmjack/git/qb64/qb64/_/Petr/dice.bas
+  | /home/grymmjack/git/qb64/qb64/_/TERRY-RITCHIE-TUTORIALS/task11/LEDSign.bas
+  | /home/grymmjack/git/qb64/qb64/_/TERRY-RITCHIE-TUTORIALS/task19/ZombieRotate.bas
+  | /home/grymmjack/git/qb64/qb64/_/herve/layoutUtils/layoutUtilsTesterFunctional.bas
+  | /home/grymmjack/git/qb64/qb64/_/p5js.bas-master/p5js.bas
+  | /home/grymmjack/git/qb64/qb64/_/Alan Peaden/BOXBASH.bas
+  | /home/grymmjack/git/qb64/qb64/_/p5js.bas-master/Samples/2D Rendering/polygon.bas
+  | /home/grymmjack/git/qb64/qb64/_/p5js.bas-master/Samples/2D Rendering/shape_1.bas
+  | /home/grymmjack/git/qb64/qb64/_/p5js.bas-master/Samples/2D Rendering/shape_3.bas
+  | /home/grymmjack/git/qb64/qb64/_/p5js.bas-master/Samples/2D Rendering/circles, mouse and complex shapes.bas
+  | /home/grymmjack/git/qb64/qb64/_/p5js.bas-master/Samples/2D Rendering/shape_2.bas
+  | /home/grymmjack/git/qb64/qb64/_/p5js.bas-master/Samples/Demos/processing network.bas
+  | /home/grymmjack/git/qb64/qb64/_/p5js.bas-master/Samples/Demos/Blobby.bas
+2026-07-24T12:48:02-0400  INFO     bash_start    Find recent files and inspect house style — echo "=== recent .BAS files (layout util + neon breakout mentioned in git log) ===" && find . -iname "*layout*" -o -iname "*neon*breakout*" 2>/dev/null | h…
+  > cwd: /home/grymmjack/git/qb64
+  $ echo "=== recent .BAS files (layout util + neon breakout mentioned in git log) ===" && find . -iname "*layout*" -o -iname "*neon*breakout*" 2>/dev/null | head; echo; echo "=== DRAW-HARDWARE-STEVE head ===" && sed -n '1,40p' qb64/GRAPHICS/DRAW-HARDWARE-STEVE.BAS 2>/dev/null
+2026-07-24T12:48:02-0400  INFO     bash_end      [ok] 47L stdout — Find recent files and inspect house style
+  | === recent .BAS files (layout util + neon breakout mentioned in git log) ===
+  | ./qb64/_/herve/layoutUtils
+  | ./qb64/_/herve/layoutUtils/layoutUtilsTesterFunctional.bas
+  | ./qb64/_/herve/layoutUtils/layoutUtils.bm
+  | ./qb64/_/herve/layoutUtils/layoutUtils.bi
+  | 
+  | === DRAW-HARDWARE-STEVE head ===
+  | Option _Explicit
+  | 
+  | Dim As Integer lim, st, x, y, w, h
+  | Dim As Single d
+  | Dim As String FGC, BGC, T, M, B, F, ALIEN
+  | Dim As Long ALIEN_SPRITE, ALIEN_32, ALIEN_HW, CANVAS
+  | 
+  | CANVAS& = _NewImage(320, 200, 32)
+  | Screen CANVAS&
+  | _FullScreen _SquarePixels
+  | 
+  | d! = 0
+  | lim% = 60
+  | st% = 1
+  | x% = 0
+  | y% = 10
+  | w% = 50
+  | h% = 50
+  | 
+  | FGC$ = "12": BGC$ = "8"
+  | T$ = "C" + FGC$ + " R10 E5 R20 F5 R10 BL50"
+  | M$ = "D20 BR50 BU20 D20               BL50"
+  | B$ = "D10 E10 U10 R30 D10 F10 U10     BL50"
+  | F$ = "BU20 BF5 P " + BGC$ + "," + FGC$
+  | ALIEN$ = T$ + M$ + B$ + F$
+  | 
+  | ALIEN_SPRITE& = _NewImage(w% + 1, h% + 1, 256)
+  | _Dest ALIEN_SPRITE&
+  | PSet (0, 10)
+  | Draw ALIEN$
+  | _ClearColor 0, ALIEN_SPRITE&
+  | ALIEN_32& = _NewImage(w% + 1, h% + 1, 32)
+  | _Source ALIEN_SPRITE&: _Dest ALIEN_32&: _PutImage
+  | ALIEN_HW& = _CopyImage(ALIEN_32&, 33)
+  | 
+  | Dim BG As Long
+  | 
+  | 
+  | 
+  | _Dest CANVAS&
+2026-07-24T12:48:05-0400  INFO     bash_start    List GRAPHICS dir and find lib directories — echo "===GRAPHICS DIR===" && ls /home/grymmjack/git/qb64/qb64/GRAPHICS/ 2>/dev/null && echo "" && echo "===GJ_LIB dirs===" && find /home/grymmjack/git/qb6…
+  > cwd: /home/grymmjack/git/qb64
+  $ echo "===GRAPHICS DIR===" && ls /home/grymmjack/git/qb64/qb64/GRAPHICS/ 2>/dev/null && echo "" && echo "===GJ_LIB dirs===" && find /home/grymmjack/git/qb64 -type d -iname "*GJ*" 2>/dev/null; echo "" && echo "===Any *_LIB dirs===" && find /home/grymmjack/git/qb64 -type d -iname "*LIB*" 2>/dev/null | head -40
+2026-07-24T12:48:05-0400  INFO     bash_end      [ok] 32L stdout — List GRAPHICS dir and find lib directories
+  | ===GRAPHICS DIR===
+  | _PUTIMAGE.BAS
+  | ASSETS
+  | CIRCLE-PIECES.BAS
+  | COPYIMAGE-HW.BAS
+  | DRAW-HARDWARE-STEVE.BAS
+  | DRAW-HARDWARE.BAS
+  | DRAW-SOFTWARE.BAS
+  | DRAW-STEVE.BAS
+  | FONT
+  | matrix.bas
+  | moving-matrix-rain-ashish.bas
+  | nyan-cat-export.gif
+  | PARALLAX.BAS
+  | PCOPY.BAS
+  | POSTERFRAME-a740g-mod.BAS
+  | POSTERFRAME-a740g.BAS
+  | POSTERFRAME.BAS
+  | POSTERFRAME2.zip
+  | PSET-MANDEL-MAG.BAS
+  | QB64PEBANNER
+  | SHAPES
+  | STARS.BAS
+  | ULTIMA1-MAPS
+  | 
+  | ===GJ_LIB dirs===
+  | 
+  | ===Any *_LIB dirs===
+  | /home/grymmjack/git/qb64/qb64/MUSIC/a740g-audio-lib-fixes-tests
+  | /home/grymmjack/git/qb64/qb64/_/TERRY RITCHIE/QB64-OGLInputLib
+  | /home/grymmjack/git/qb64/qb64/_/TERRY RITCHIE/SPRITE_LIB
+  | /home/grymmjack/git/qb64/qb64/_/RhoSigmaQB/QB-StdLibs
+2026-07-24T12:48:06-0400  INFO     bash_start    Survey shapes, MAPTRIANGLE, GL, depthbuffer usage — echo "=== SHAPES dir ===" && ls qb64/GRAPHICS/SHAPES/ 2>/dev/null | head; echo; echo "=== grep _MAPTRIANGLE across repo (count) ===" && grep -rli "…
+  > cwd: /home/grymmjack/git/qb64
+  $ echo "=== SHAPES dir ===" && ls qb64/GRAPHICS/SHAPES/ 2>/dev/null | head; echo; echo "=== grep _MAPTRIANGLE across repo (count) ===" && grep -rli "_maptriangle" --include=*.BAS --include=*.bas . 2>/dev/null | head -20; echo; echo "=== grep _GL sub usage ===" && grep -rli "SUB _GL" --include=*.BAS --include=*.bas . 2>/dev/null | head -20; echo; echo "=== grep _DEPTHBUFFER ===" && grep -rli "_depthbuffer" --include=*.BAS --include=*.bas . 2>/dev/null | head
+2026-07-24T12:48:06-0400  INFO     bash_end      [ok] 12L stdout — Survey shapes, MAPTRIANGLE, GL, depthbuffer usage
+  | === SHAPES dir ===
+  | ROUNDED-RECT.BAS
+  | snprintf.bas
+  | 
+  | === grep _MAPTRIANGLE across repo (count) ===
+  | (eval):1: no matches found: --include=*.BAS
+  | 
+  | === grep _GL sub usage ===
+  | (eval):1: no matches found: --include=*.BAS
+  | 
+  | === grep _DEPTHBUFFER ===
+  | (eval):1: no matches found: --include=*.BAS
+2026-07-24T12:48:07-0400  INFO     bash_start    Grep MAPTRIANGLE in 3d sample — grep -rn "_MAPTRIANGLE" "/home/grymmjack/git/qb64/qb64/_/QB64COM-SAMPLES/maptriangle-in-3d/src/maptriangle3d.bas" 2>/dev/null | head -20; echo "---FILE LEN---"; wc -l …
+  > cwd: /home/grymmjack/git/qb64
+  $ grep -rn "_MAPTRIANGLE" "/home/grymmjack/git/qb64/qb64/_/QB64COM-SAMPLES/maptriangle-in-3d/src/maptriangle3d.bas" 2>/dev/null | head -20; echo "---FILE LEN---"; wc -l "/home/grymmjack/git/qb64/qb64/_/QB64COM-SAMPLES/maptriangle-in-3d/src/maptriangle3d.bas"
+2026-07-24T12:48:07-0400  INFO     bash_end      [ok] 16L stdout — Grep MAPTRIANGLE in 3d sample
+  | /home/grymmjack/git/qb64/qb64/_/QB64COM-SAMPLES/maptriangle-in-3d/src/maptriangle3d.bas:129:    _MAPTRIANGLE (0, h)-(w, h)-(0, 0), i TO(x1, y1, z1)-(x2, y2, z2)-(x3, y3, z3) 'podlaha                 floor
+  | /home/grymmjack/git/qb64/qb64/_/QB64COM-SAMPLES/maptriangle-in-3d/src/maptriangle3d.bas:130:    _MAPTRIANGLE (w, h)-(0, 0)-(w, 0), i TO(x2, y2, z2)-(x3, y3, z3)-(x4, y4, z4) 'podlaha
+  | /home/grymmjack/git/qb64/qb64/_/QB64COM-SAMPLES/maptriangle-in-3d/src/maptriangle3d.bas:133:    _MAPTRIANGLE (0, h)-(w, h)-(0, 0), i TO(x1, y5, z1)-(x2, y6, z2)-(x3, y7, z3) 'strop                   roof
+  | /home/grymmjack/git/qb64/qb64/_/QB64COM-SAMPLES/maptriangle-in-3d/src/maptriangle3d.bas:134:    _MAPTRIANGLE (w, h)-(0, 0)-(w, 0), i TO(x2, y6, z2)-(x3, y7, z3)-(x4, y8, z4) 'strop
+  | /home/grymmjack/git/qb64/qb64/_/QB64COM-SAMPLES/maptriangle-in-3d/src/maptriangle3d.bas:136:    _MAPTRIANGLE (0, h)-(w, h)-(0, 0), i TO(x1, y1, z1)-(x2, y2, z2)-(x1, y5, z1) 'prava stena             right wall
+  | /home/grymmjack/git/qb64/qb64/_/QB64COM-SAMPLES/maptriangle-in-3d/src/maptriangle3d.bas:137:    _MAPTRIANGLE (w, h)-(0, 0)-(w, 0), i TO(x2, y2, z2)-(x1, y5, z1)-(x2, y6, z2) 'prava stena
+  | /home/grymmjack/git/qb64/qb64/_/QB64COM-SAMPLES/maptriangle-in-3d/src/maptriangle3d.bas:140:    _MAPTRIANGLE (w, h)-(0, h)-(w, 0), i TO(x3, y3, z3)-(x4, y4, z4)-(x3, y7, z3) 'leva stena              left wall
+  | /home/grymmjack/git/qb64/qb64/_/QB64COM-SAMPLES/maptriangle-in-3d/src/maptriangle3d.bas:141:    _MAPTRIANGLE (0, h)-(w, 0)-(0, 0), i TO(x4, y4, z4)-(x3, y7, z3)-(x4, y8, z4) 'leva stena
+  | /home/grymmjack/git/qb64/qb64/_/QB64COM-SAMPLES/maptriangle-in-3d/src/maptriangle3d.bas:144:    _MAPTRIANGLE (w, h)-(0, h)-(w, 0), i TO(x1, y1, z1)-(x3, y3, z3)-(x1, y5, z1) 'zadni stena             back wall
+  | /home/grymmjack/git/qb64/qb64/_/QB64COM-SAMPLES/maptriangle-in-3d/src/maptriangle3d.bas:145:    _MAPTRIANGLE (0, h)-(w, 0)-(0, 0), i TO(x3, y3, z3)-(x1, y5, z1)-(x3, y7, z3) 'zadni stena
+  | /home/grymmjack/git/qb64/qb64/_/QB64COM-SAMPLES/maptriangle-in-3d/src/maptriangle3d.bas:148:    _MAPTRIANGLE (0, h)-(w, h)-(0, 0), i TO(x2, y2, z2)-(x4, y4, z4)-(x2, y6, z2) 'predni stena            front wall
+  | /home/grymmjack/git/qb64/qb64/_/QB64COM-SAMPLES/maptriangle-in-3d/src/maptriangle3d.bas:149:    _MAPTRIANGLE (w, h)-(0, 0)-(w, 0), i TO(x4, y4, z4)-(x2, y6, z2)-(x4, y8, z4) 'zadni stena
+  | /home/grymmjack/git/qb64/qb64/_/QB64COM-SAMPLES/maptriangle-in-3d/src/maptriangle3d.bas:182:    _MAPTRIANGLE (0, 0)-(W, 0)-(0, H), texture& TO(x1, y1, z1)-(x2, y2, z2)-(x3, y3, z3)
+  | /home/grymmjack/git/qb64/qb64/_/QB64COM-SAMPLES/maptriangle-in-3d/src/maptriangle3d.bas:183:    _MAPTRIANGLE (W, 0)-(0, H)-(W, H), texture& TO(x2, y2, z2)-(x3, y3, z3)-(x4, y4, z4)
+  | ---FILE LEN---
+  | 261 /home/grymmjack/git/qb64/qb64/_/QB64COM-SAMPLES/maptriangle-in-3d/src/maptriangle3d.bas
+2026-07-24T12:48:08-0400  INFO     bash_start    Find 3D-form MAPTRIANGLE with TO — grep -rIn "TO (" /home/grymmjack/git/qb64/qb64 --include="*.bas" --include="*.BAS" 2>/dev/null | grep -i "_MAPTRIANGLE" | head -30
+  > cwd: /home/grymmjack/git/qb64
+  $ grep -rIn "TO (" /home/grymmjack/git/qb64/qb64 --include="*.bas" --include="*.BAS" 2>/dev/null | grep -i "_MAPTRIANGLE" | head -30
+2026-07-24T12:48:08-0400  INFO     bash_end      [ok] 0L stdout — Find 3D-form MAPTRIANGLE with TO
+2026-07-24T12:48:14-0400  INFO     bash_start    Search for any GJ_LIB references — echo "===any GJ references anywhere==="; grep -rIl -i "gj_lib\|QB64_GJ" /home/grymmjack/git/qb64 2>/dev/null | head; find /home/grymmjack/git/qb64 -iname "*gj*" 2>/…
+  > cwd: /home/grymmjack/git/qb64
+  $ echo "===any GJ references anywhere==="; grep -rIl -i "gj_lib\|QB64_GJ" /home/grymmjack/git/qb64 2>/dev/null | head; find /home/grymmjack/git/qb64 -iname "*gj*" 2>/dev/null | head; echo "===DONE==="
+2026-07-24T12:48:14-0400  INFO     bash_start    Proper recursive grep for 3D primitives and lib pairs — cd /home/grymmjack/git/qb64 | echo "=== _MAPTRIANGLE occurrences ===" && grep -rli "_maptriangle" . 2>/dev/null | head | echo "=== _GL / glVert…
+  > cwd: /home/grymmjack/git/qb64
+  $ cd /home/grymmjack/git/qb64
+  $ echo "=== _MAPTRIANGLE occurrences ===" && grep -rli "_maptriangle" . 2>/dev/null | head
+  $ echo "=== _GL / glVertex occurrences ===" && grep -rli "glvertex\|_glbegin\|sub _gl " . 2>/dev/null | head
+  $ echo "=== _DEPTHBUFFER ===" && grep -rli "_depthbuffer" . 2>/dev/null | head
+  $ echo "=== .bi/.bm library pairs ===" && find . -name "*.bi" 2>/dev/null | head -20
+2026-07-24T12:48:15-0400  INFO     bash_end      [ok] 22L stdout — Search for any GJ_LIB references
+  | ===any GJ references anywhere===
+  | /home/grymmjack/git/qb64/qb64/COLORS/GET-PAL.BAS
+  | /home/grymmjack/git/qb64/qb64/IMAGE-TESTS/GRAFX2-GIF.BAS
+  | /home/grymmjack/git/qb64/qb64/GAMES/BOUNCER/BOUNCER.BAS
+  | /home/grymmjack/git/qb64/qb64/TEXTMODE-TESTS/LOSPEC-HEX-TO-RGB-CONSOLE.BAS
+  | /home/grymmjack/git/qb64/qb64/TEXTMODE-TESTS/LIGHTBAR.BAS
+  | /home/grymmjack/git/qb64/qb64/UTILITIES/SAUCE/SAUCE.BI
+  | /home/grymmjack/git/qb64/qb64/UTILITIES/SAUCE/SAUCE.BAS
+  | /home/grymmjack/git/qb64/.vscode/keybindings.json
+  | /home/grymmjack/git/qb64/.vscode/QB64.code-snippets
+  | /home/grymmjack/git/qb64/.vscode/tasks.json
+  | /home/grymmjack/git/qb64/qb64/_/gjtk.pas
+  | /home/grymmjack/git/qb64/qb64/TEXTMODE-TESTS/GJ-HWN.BAS
+  | /home/grymmjack/git/qb64/qb64/GAMES/GJ-BOUNCER_v4.zip
+  | /home/grymmjack/git/qb64/qb64/GAMES/GJ-BOUNCER_v1.zip
+  | /home/grymmjack/git/qb64/qb64/GAMES/GJ-BOUNCER_v2.zip
+  | /home/grymmjack/git/qb64/qb64/GAMES/GJ-BOUNCER_v5.zip
+  | /home/grymmjack/git/qb64/qb64/GAMES/GJ-BOUNCER_v3.zip
+  | /home/grymmjack/git/qb64/qb64/TIME/GJ-TIMER-TEST.BAS
+  | /home/grymmjack/git/qb64/qb64/GRAPHICS/QB64PEBANNER/GJ-QB64PE-FALL-2023-BANNER.zip
+  | /home/grymmjack/git/qb64/qb64/COLORS/ASSETS/gj-STARFIGHTER-ANSI.png
+  | ===DONE===
+2026-07-24T12:48:15-0400  INFO     bash_end      [ok] 54L stdout — Proper recursive grep for 3D primitives and lib pairs
+  | === _MAPTRIANGLE occurrences ===
+  | qb64/KEYWORDS-SORTED-SPACED.TXT
+  | qb64/KEYWORDS-SORTED.TXT
+  | qb64/KEYWORDS-SORTED-BY-LINE-ASC-SPACED.TXT
+  | qb64/_/SMcNeill/TRANSITIONS.BAS
+  | qb64/_/Sierraken/PaintPixels/Paint Pixels 8.bas
+  | qb64/_/SMcNeill/SET (Steve's Extended Toolset)/SET.BM
+  | qb64/_/PEForum/draw-thick-line-rotozoom2.bas
+  | qb64/_/QB64COM-SAMPLES/amongst/src/amongst.bas
+  | qb64/_/QB64COM-SAMPLES/maptriangle-in-3d/index.md
+  | qb64/_/QB64COM-SAMPLES/maptriangle-in-3d/src/maptriangle3d.bas
+  | === _GL / glVertex occurrences ===
+  | qb64/KEYWORDS-SORTED.TXT
+  | qb64/KEYWORDS-SORTED-SPACED.TXT
+  | qb64/KEYWORDS-SORTED-BY-LINE-ASC-SPACED.TXT
+  | qb64/_/QB64COM-SAMPLES/3d-grapher/src/3d-grapher---parametric.bas
+  | qb64/_/QB64COM-SAMPLES/3d-grapher/src/3d-grapher---legacy.bas
+  | qb64/_/aaityap0901/minecraft-clone/QB_Blocks_2.bas
+  | qb64/_/OLD-WIKI/Keyword_Reference_-_Alphabetical.html
+  | qb64/_/OLD-WIKI/Arrays/Keyword_Reference_-_Alphabetical.html
+  | qb64/_/OLD-WIKI/ASCII/Keyword_Reference_-_Alphabetical.html
+  | qb64/_/OLD-WIKI/BINARY/Keyword_Reference_-_Alphabetical.html
+  | === _DEPTHBUFFER ===
+  | qb64/KEYWORDS-SORTED-BY-LINE-ASC-SPACED.TXT
+  | qb64/KEYWORDS-SORTED-SPACED.TXT
+  | qb64/KEYWORDS-SORTED.TXT
+  | qb64/_/QB64COM-SAMPLES/mycraft/src/mycraft_0_001.bas
+  | qb64/_/Petr/3d-fonts.bas
+  | qb64/_/OLD-WIKI/Keyword_Reference_-_Alphabetical.html
+  | qb64/_/OLD-WIKI/Arrays/Keyword_Reference_-_Alphabetical.html
+  | qb64/_/OLD-WIKI/ASCII/Keyword_Reference_-_Alphabetical.html
+  | qb64/_/OLD-WIKI/BINARY/Keyword_Reference_-_Alphabetical.html
+  | .claude/activity.log
+  | === .bi/.bm library pairs ===
+  | ./qb64/_/TERRY RITCHIE/SPRITE_LIB/sprite.bi
+  | ./qb64/_/TERRY RITCHIE/SPRITE_LIB/sprite_noerror.bi
+  | ./qb64/_/TERRY RITCHIE/SPRITE_LIB/spritetop.bi
+  | ./qb64/_/TERRY RITCHIE/QB64-OGLInputLib/glinput_noerror.bi
+  | ./qb64/_/TERRY RITCHIE/QB64-OGLInputLib/glinputtop.bi
+  | ./qb64/_/TERRY RITCHIE/QB64-OGLInputLib/glinput.bi
+  | ./qb64/_/herve/layoutUtils/layoutUtils.bi
+  | ./qb64/_/RhoSigmaQB/QB-StdLibs/qbstdarg.bi
+  | ./qb64/_/RhoSigmaQB/QB-StdLibs/qbstdio.bi
+  | ./qb64/_/RhoSigmaQB/QB-StdLibs/qbtime.bi
+  | ./qb64/_/RhoSigmaQB/QB-Debug/qbdebug.bi
+  | ./qb64/_/RhoSigmaQB/SHA2-Hash/sha2.bi
+  | ./qb64/_/RhoSigmaQB/MD5-Hash/md5.bi
+  | ./qb64/_/RhoSigmaQB/SB-Storage/simplebuffer.bi
+  | ./qb64/_/RhoSigmaQB/DES56-Crypt/des56.bi
+  | ./qb64/_/RhoSigmaQB/RS-Includes/types.bi
+  | ./qb64/_/RhoSigmaQB/RS-Includes/memory.bi
+  | ./qb64/_/RhoSigmaQB/RS-Includes/lists.bi
+  | ./qb64/_/RhoSigmaQB/B64-Coding/base64.bi
+  | ./qb64/_/a740g/QB-Invaders/adlib.bi
+2026-07-24T12:48:16-0400  INFO     bash_start    Inspect library .bi/.bm convention — cd /home/grymmjack/git/qb64 | echo "=== layoutUtils.bi head (library convention) ===" && sed -n '1,50p' qb64/_/herve/layoutUtils/layoutUtils.bi 2>/dev/null | echo…
+  > cwd: /home/grymmjack/git/qb64
+  $ cd /home/grymmjack/git/qb64
+  $ echo "=== layoutUtils.bi head (library convention) ===" && sed -n '1,50p' qb64/_/herve/layoutUtils/layoutUtils.bi 2>/dev/null
+  $ echo "=== layoutUtils.bm head ===" && sed -n '1,30p' qb64/_/herve/layoutUtils/layoutUtils.bm 2>/dev/null
+2026-07-24T12:48:16-0400  INFO     bash_end      [ok] 51L stdout — Inspect library .bi/.bm convention
+  | === layoutUtils.bi head (library convention) ===
+  | $INCLUDEONCE
+  |  
+  | type layoutUtils_layoutType
+  |     id as integer
+  |     layoutName as string
+  |     fullpath as string
+  |     content as string
+  |     resolved as string
+  |     prepared as integer
+  | end type
+  |  
+  | type layoutUtils_elementType
+  |     index as integer
+  |     position as integer
+  |     length as integer
+  |     reference as string
+  | end type
+  |  
+  | redim shared layoutUtils_layoutList(0) as layoutUtils_layoutType
+  | redim shared layoutUtils_elementList(0) as layoutUtils_elementType=== layoutUtils.bm head ===
+  | $INCLUDEONCE
+  |  
+  | '------------------------------------------------------------------------------
+  | ' layoutUtils Library
+  | '
+  | ' Overview:
+  | '   The layoutUtils library provides a simple framework for creating, loading,
+  | '   parsing, and manipulating layout data structures represented as strings.
+  | '   Layouts can be built directly from in-memory strings, loaded from external
+  | '   files, or defined in DATA statements. The library supports placeholder
+  | '   references within layouts that can be dynamically resolved or replaced, and
+  | '   allows retrieval of the final resolved content.
+  | '
+  | ' Key Features:
+  | '   1. Layout Creation & Loading
+  | '      - layoutUtils_build%: Create a new layout directly from a string, assign
+  | '        it a name, and prepare it for reference resolution.
+  | '      - layoutUtils_load%: Load layout content from an external file.
+  | '      - layoutUtils_loadData%: Load layout content from embedded DATA statements.
+  | '      - Internally manages all layouts in layoutUtils_layoutList.
+  | '
+  | '   2. Reference Extraction & Tracking
+  | '      - Scan layout content for placeholder patterns "<&reference>".
+  | '      - Record each placeholder’s layout index, position, length, and name in
+  | '        layoutUtils_elementList for subsequent processing.
+  | '
+  | '   3. Reference Resolution & Replacement
+  | '      - layoutUtils_populateIndex: Replace a named reference in a layout by index.
+  | '      - layoutUtils_populate: Replace a named reference in a layout by name.
+  | '      - Automatically preserves field width by padding or truncating the replacement.
+2026-07-24T12:48:18-0400  INFO     bash_start    Count OPTION _EXPLICIT and list BI/BM files — echo "===OPTION _EXPLICIT count==="; grep -rIl "OPTION _EXPLICIT" /home/grymmjack/git/qb64/qb64 --include="*.BAS" --include="*.bas" 2>/dev/null | wc -l; …
+  > cwd: /home/grymmjack/git/qb64
+  $ echo "===OPTION _EXPLICIT count==="; grep -rIl "OPTION _EXPLICIT" /home/grymmjack/git/qb64/qb64 --include="*.BAS" --include="*.bas" 2>/dev/null | wc -l; echo "===.BI files==="; find /home/grymmjack/git/qb64/qb64 -iname "*.bi" 2>/dev/null | head -30; echo "===.BM files==="; find /home/grymmjack/git/qb64/qb64 -iname "*.bm" 2>/dev/null | head -30
+2026-07-24T12:48:18-0400  INFO     bash_end      [ok] 64L stdout — Count OPTION _EXPLICIT and list BI/BM files
+  | ===OPTION _EXPLICIT count===
+  | 41
+  | ===.BI files===
+  | /home/grymmjack/git/qb64/qb64/GAMES/BOUNCER/_CFG.BI
+  | /home/grymmjack/git/qb64/qb64/GAMES/BOUNCER/_STATS.BI
+  | /home/grymmjack/git/qb64/qb64/GAMES/BOUNCER/_BALL.BI
+  | /home/grymmjack/git/qb64/qb64/GAMES/BOUNCER/_LEVEL.BI
+  | /home/grymmjack/git/qb64/qb64/GAMES/BOUNCER/_TIMERS.BI
+  | /home/grymmjack/git/qb64/qb64/GAMES/BOUNCER/_ALL.BI
+  | /home/grymmjack/git/qb64/qb64/GAMES/BOUNCER/_SCREEN.BI
+  | /home/grymmjack/git/qb64/qb64/GAMES/BOUNCER/_BLOCKS.BI
+  | /home/grymmjack/git/qb64/qb64/GAMES/BOUNCER/_DEBUG.BI
+  | /home/grymmjack/git/qb64/qb64/_/KrisAsick/QB.BI
+  | /home/grymmjack/git/qb64/qb64/UTILITIES/SAUCE/SAUCE.BI
+  | /home/grymmjack/git/qb64/qb64/UTILITIES/QB64CLI/HELP.BI
+  | /home/grymmjack/git/qb64/qb64/UTILITIES/QB64CLI/_ALL.BI
+  | /home/grymmjack/git/qb64/qb64/_/SMcNeill/SaveImage/SaveImage.BI
+  | /home/grymmjack/git/qb64/qb64/_/SMcNeill/SET (Steve's Extended Toolset)/SET.BI
+  | /home/grymmjack/git/qb64/qb64/_/RhoSigmaQB/QB-StdLibs/qbstdarg.bi
+  | /home/grymmjack/git/qb64/qb64/_/RhoSigmaQB/QB-StdLibs/qbstdio.bi
+  | /home/grymmjack/git/qb64/qb64/_/RhoSigmaQB/QB-StdLibs/qbtime.bi
+  | /home/grymmjack/git/qb64/qb64/_/RhoSigmaQB/QB-Debug/qbdebug.bi
+  | /home/grymmjack/git/qb64/qb64/_/TERRY RITCHIE/QB64-OGLInputLib/glinput_noerror.bi
+  | /home/grymmjack/git/qb64/qb64/_/TERRY RITCHIE/QB64-OGLInputLib/glinputtop.bi
+  | /home/grymmjack/git/qb64/qb64/_/TERRY RITCHIE/QB64-OGLInputLib/glinput.bi
+  | /home/grymmjack/git/qb64/qb64/_/TERRY RITCHIE/SPRITE_LIB/sprite.bi
+  | /home/grymmjack/git/qb64/qb64/_/TERRY RITCHIE/SPRITE_LIB/sprite_noerror.bi
+  | /home/grymmjack/git/qb64/qb64/_/TERRY RITCHIE/SPRITE_LIB/spritetop.bi
+  | /home/grymmjack/git/qb64/qb64/_/herve/layoutUtils/layoutUtils.bi
+  | /home/grymmjack/git/qb64/qb64/_/RhoSigmaQB/SHA2-Hash/sha2.bi
+  | /home/grymmjack/git/qb64/qb64/_/RhoSigmaQB/MD5-Hash/md5.bi
+  | /home/grymmjack/git/qb64/qb64/_/RhoSigmaQB/SB-Storage/simplebuffer.bi
+  | /home/grymmjack/git/qb64/qb64/_/RhoSigmaQB/DES56-Crypt/des56.bi
+  | ===.BM files===
+  | /home/grymmjack/git/qb64/qb64/GAMES/BOUNCER/_TIMERS.BM
+  | /home/grymmjack/git/qb64/qb64/GAMES/BOUNCER/_ALL.BM
+  | /home/grymmjack/git/qb64/qb64/GAMES/BOUNCER/_MISC.BM
+  | /home/grymmjack/git/qb64/qb64/GAMES/BOUNCER/_BALL.BM
+  | /home/grymmjack/git/qb64/qb64/GAMES/BOUNCER/_STATS.BM
+  | /home/grymmjack/git/qb64/qb64/GAMES/BOUNCER/_CFG.BM
+  | /home/grymmjack/git/qb64/qb64/GAMES/BOUNCER/_LEVEL.BM
+  | /home/grymmjack/git/qb64/qb64/GAMES/BOUNCER/_SCREEN.BM
+  | /home/grymmjack/git/qb64/qb64/GAMES/BOUNCER/_BLOCKS.BM
+  | /home/grymmjack/git/qb64/qb64/GAMES/BOUNCER/_DEBUG.BM
+  | /home/grymmjack/git/qb64/qb64/_/Balderdash - SQLite/MessageBox.BM
+  | /home/grymmjack/git/qb64/qb64/_/herve/layoutUtils/layoutUtils.bm
+  | /home/grymmjack/git/qb64/qb64/UTILITIES/QB64CLI/_ALL.BM
+  | /home/grymmjack/git/qb64/qb64/UTILITIES/QB64CLI/HELP.BM
+  | /home/grymmjack/git/qb64/qb64/_/RhoSigmaQB/SHA2-Hash/sha2.bm
+  | /home/grymmjack/git/qb64/qb64/_/RhoSigmaQB/MD5-Hash/md5.bm
+  | /home/grymmjack/git/qb64/qb64/UTILITIES/SAUCE/SAUCE.BM
+  | /home/grymmjack/git/qb64/qb64/_/RhoSigmaQB/QB-Debug/qbdebug.bm
+  | /home/grymmjack/git/qb64/qb64/_/RhoSigmaQB/SB-Storage/simplebuffer.bm
+  | /home/grymmjack/git/qb64/qb64/_/RhoSigmaQB/DES56-Crypt/des56.bm
+  | /home/grymmjack/git/qb64/qb64/_/RhoSigmaQB/RS-Includes/types.bm
+  | /home/grymmjack/git/qb64/qb64/_/RhoSigmaQB/RS-Includes/memory.bm
+  | /home/grymmjack/git/qb64/qb64/_/RhoSigmaQB/RS-Includes/lists.bm
+  | /home/grymmjack/git/qb64/qb64/_/RhoSigmaQB/LZW-Compress/lzwpacker.bm
+  | /home/grymmjack/git/qb64/qb64/_/RhoSigmaQB/B64-Coding/base64.bm
+  | /home/grymmjack/git/qb64/qb64/_/RhoSigmaQB/IMG-Support/converthelper.bm
+  | /home/grymmjack/git/qb64/qb64/_/RhoSigmaQB/IMG-Support/imageprocess.bm
+  | /home/grymmjack/git/qb64/qb64/_/RhoSigmaQB/QB-StdLibs/qbstdarg.bm
+  | /home/grymmjack/git/qb64/qb64/_/RhoSigmaQB/QB-StdLibs/qbtime.bm
+  | /home/grymmjack/git/qb64/qb64/_/RhoSigmaQB/QB-StdLibs/qbstdio.bm
+2026-07-24T12:48:28-0400  INFO     bash_start    List BOUNCER project files — echo "===BOUNCER dir==="; ls -la /home/grymmjack/git/qb64/qb64/GAMES/BOUNCER/; echo "===BOUNCER main BAS (find)==="; find /home/grymmjack/git/qb64/qb64/GAMES/BOUNCER -max…
+  > cwd: /home/grymmjack/git/qb64
+  $ echo "===BOUNCER dir==="; ls -la /home/grymmjack/git/qb64/qb64/GAMES/BOUNCER/; echo "===BOUNCER main BAS (find)==="; find /home/grymmjack/git/qb64/qb64/GAMES/BOUNCER -maxdepth 1 -iname "*.bas"
+2026-07-24T12:48:29-0400  INFO     bash_end      [ok] 27L stdout — List BOUNCER project files
+  | ===BOUNCER dir===
+  | .rw-rw-r--  189 grymmjack 17 Jan 13:54 _ALL.BI
+  | .rw-rw-r--  210 grymmjack 17 Jan 13:54 _ALL.BM
+  | .rw-rw-r--  515 grymmjack 17 Jan 13:54 _BALL.BI
+  | .rw-rw-r--  27k grymmjack 17 Jan 13:54 _BALL.BM
+  | .rw-rw-r--  314 grymmjack 17 Jan 13:54 _BLOCKS.BI
+  | .rw-rw-r-- 4.4k grymmjack 17 Jan 13:54 _BLOCKS.BM
+  | .rw-rw-r--  556 grymmjack 17 Jan 13:54 _CFG.BI
+  | .rw-rw-r--  590 grymmjack 17 Jan 13:54 _CFG.BM
+  | .rw-rw-r--  568 grymmjack 17 Jan 13:54 _DEBUG.BI
+  | .rw-rw-r-- 3.6k grymmjack 17 Jan 13:54 _DEBUG.BM
+  | .rw-rw-r--  167 grymmjack 17 Jan 13:54 _LEVEL.BI
+  | .rw-rw-r--  179 grymmjack 17 Jan 13:54 _LEVEL.BM
+  | .rw-rw-r-- 2.9k grymmjack 17 Jan 13:54 _MISC.BM
+  | .rw-rw-r--  325 grymmjack 17 Jan 13:54 _SCREEN.BI
+  | .rw-rw-r-- 1.7k grymmjack 17 Jan 13:54 _SCREEN.BM
+  | .rw-rw-r--  278 grymmjack 17 Jan 13:54 _STATS.BI
+  | .rw-rw-r-- 2.3k grymmjack 17 Jan 13:54 _STATS.BM
+  | .rw-rw-r--  384 grymmjack 17 Jan 13:54 _TIMERS.BI
+  | .rw-rw-r-- 1.4k grymmjack 17 Jan 13:54 _TIMERS.BM
+  | .rw-rw-r-- 4.4k grymmjack 17 Jan 13:54 BOUNCER.BAS
+  | .rw-rw-r-- 2.5k grymmjack 17 Jan 13:54 BOUNCER.ico
+  | .rw-rw-r-- 6.8k grymmjack 17 Jan 13:54 BOUNCER.xcf
+  | .rw-rw-r-- 2.5k grymmjack 17 Jan 13:54 FLATTEN.BAS
+  | ===BOUNCER main BAS (find)===
+  | /home/grymmjack/git/qb64/qb64/GAMES/BOUNCER/FLATTEN.BAS
+  | /home/grymmjack/git/qb64/qb64/GAMES/BOUNCER/BOUNCER.BAS
+2026-07-24T12:48:29-0400  INFO     bash_start    Read 3D sample doc and depthbuffer usage — cd /home/grymmjack/git/qb64 | echo "=== maptriangle-in-3d index.md ===" && sed -n '1,80p' "qb64/_/QB64COM-SAMPLES/maptriangle-in-3d/index.md" 2>/dev/null | …
+  > cwd: /home/grymmjack/git/qb64
+  $ cd /home/grymmjack/git/qb64
+  $ echo "=== maptriangle-in-3d index.md ===" && sed -n '1,80p' "qb64/_/QB64COM-SAMPLES/maptriangle-in-3d/index.md" 2>/dev/null
+  $ echo; echo "=== Petr 3d-fonts.bas: depthbuffer context ===" && grep -n "_DEPTHBUFFER\|_glRender\|_MAPTRIANGLE\|SCREEN _NEWIMAGE\|_DEST\|_PUTIMAGE" "qb64/_/Petr/3d-fonts.bas" 2>/dev/null | head -30
+2026-07-24T12:48:29-0400  INFO     bash_end      [ok] 46L stdout — Read 3D sample doc and depthbuffer usage
+  | === maptriangle-in-3d index.md ===
+  | [Home](https://qb64.com) • [News](../../news.md) • [GitHub](https://github.com/QB64Official/qb64) • [Wiki](https://github.com/QB64Official/qb64/wiki) • [Samples](../../samples.md) • [InForm](../../inform.md) • [GX](../../gx.md) • [QBjs](../../qbjs.md) • [Community](../../community.md) • [More...](../../more.md)
+  | 
+  | ## SAMPLE: MAPTRIANGLE IN 3D
+  | 
+  | ![maptriangle3d.jpg](img/maptriangle3d.jpg)
+  | 
+  | ### Author
+  | 
+  | [🐝 Petr](../petr.md) 
+  | 
+  | ### Description
+  | 
+  | ```text
+  | A demo to show rotation in 3D using MAPTRIANGLE 3D, without direct OpenGL statements.
+  | 
+  | Librarian's Note: The sample given here is just one of a number of _MAPTRIANGLE(3D) examples which appear in Petr's post. That post is a good learning resource for anyone wanting to learn 3D graphics using _MAPTRIANGLE(3D). See https://qb64forum.alephc.xyz/index.php?topic=300.msg101478#msg101478
+  | ```
+  | 
+  | ### QBjs
+  | 
+  | > Please note that QBjs is still in early development and support for these examples is extremely experimental (meaning will most likely not work). With that out of the way, give it a try!
+  | 
+  | * [LOAD "maptriangle3d.bas"](https://qbjs.org/index.html?src=https://qb64.com/samples/maptriangle-in-3d/src/maptriangle3d.bas)
+  | * [RUN "maptriangle3d.bas"](https://qbjs.org/index.html?mode=auto&src=https://qb64.com/samples/maptriangle-in-3d/src/maptriangle3d.bas)
+  | * [PLAY "maptriangle3d.bas"](https://qbjs.org/index.html?mode=play&src=https://qb64.com/samples/maptriangle-in-3d/src/maptriangle3d.bas)
+  | 
+  | ### File(s)
+  | 
+  | * [maptriangle3d.bas](src/maptriangle3d.bas)
+  | 
+  | 🔗 [3d](../3d.md), [maptriangle](../maptriangle.md)
+  | 
+  | 
+  | <sub>Reference: [qb64forum](https://qb64forum.alephc.xyz/index.php?topic=2405.0) </sub>
+  | 
+  | === Petr 3d-fonts.bas: depthbuffer context ===
+  | 13:'  Render a 3D "extruded" letter (or text) using _MAPTRIANGLE(3D).
+  | 20:'    4) Each rectangle becomes a quad => 2 triangles => drawn with _MAPTRIANGLE(3D).
+  | 34:'  - Use hardware textures ONLY as sources for _MAPTRIANGLE / _PUTIMAGE.
+  | 35:'  - Do NOT rely on _DEST to a hardware image for "rendering into it".
+  | 39:'  - _MAPTRIANGLE(3D) draws to the OpenGL layer over the screen.
+  | 41:'      * Clear depth buffer: _DEPTHBUFFER _CLEAR
+  | 171:_Title "3D Font (_MAPTRIANGLE 3D) - scanline extrude (QB64PE-safe)"
+  | 175:'  _MAPTRIANGLE(3D) uses a normalized-ish view where X/Y are affected by aspect.
+  | 915:    ' Draws a quad as 2 triangles using _MAPTRIANGLE(3D).
+2026-07-24T12:48:54-0400  INFO     bash_start    Search sound, sprite sheet, depthbuffer — echo "===SOUND usage (_SNDOPEN/_SNDPLAY/PLAY/SOUND)==="; grep -rIln -e "_SNDOPEN" -e "_SNDPLAY" -e "_SNDLOOP" /home/grymmjack/git/qb64/qb64 --include="*.bas"…
+  > cwd: /home/grymmjack/git/qb64
+  $ echo "===SOUND usage (_SNDOPEN/_SNDPLAY/PLAY/SOUND)==="; grep -rIln -e "_SNDOPEN" -e "_SNDPLAY" -e "_SNDLOOP" /home/grymmjack/git/qb64/qb64 --include="*.bas" --include="*.BAS" --include="*.bm" --include="*.BM" 2>/dev/null | head -25
+  $ echo ""
+  $ echo "===SPRITE SHEET patterns==="; grep -rIln -i "sprite.*sheet\|spritesheet\|sheet.*sprite\|_PUTIMAGE.*STEP\|frame.*=.*_NEWIMAGE" /home/grymmjack/git/qb64/qb64 --include="*.bas" --include="*.BAS" 2>/dev/null | head -20
+  $ echo ""
+  $ echo "===_DEPTHBUFFER usage==="; grep -rIln "_DEPTHBUFFER" /home/grymmjack/git/qb64/qb64 --include="*.bas" --include="*.BAS" 2>/dev/null
+2026-07-24T12:48:55-0400  INFO     bash_end      [ok] 52L stdout — Search sound, sprite sheet, depthbuffer
+  | ===SOUND usage (_SNDOPEN/_SNDPLAY/PLAY/SOUND)===
+  | /home/grymmjack/git/qb64/qb64/_/SMcNeill/CONST Reference/const-reference-lookup.bas
+  | /home/grymmjack/git/qb64/qb64/_/QB64COM-SAMPLES/pendulum-game/src/pendulum.bas
+  | /home/grymmjack/git/qb64/qb64/_/TERRY RITCHIE/SPRITE_LIB/SInvaders/QB64Invaders.bas
+  | /home/grymmjack/git/qb64/qb64/_/TERRY RITCHIE/SPRITE_LIB/Asteroids/QB64Asteroids.bas
+  | /home/grymmjack/git/qb64/qb64/_/QB64COM-SAMPLES/flappy-bird/src/fbird.bas
+  | /home/grymmjack/git/qb64/qb64/_/QB64COM-SAMPLES/audio/src/audio.bas
+  | /home/grymmjack/git/qb64/qb64/_/QB64COM-SAMPLES/frostbite/src/frostbite.bas
+  | /home/grymmjack/git/qb64/qb64/_/a740g/QB-Invaders/adltest.bas
+  | /home/grymmjack/git/qb64/qb64/_/a740g/QB-Invaders/QBINVADE.BAS
+  | /home/grymmjack/git/qb64/qb64/_/TERRY-RITCHIE-TUTORIALS/task15/CloneTrooper.bas
+  | /home/grymmjack/git/qb64/qb64/_/TERRY-RITCHIE-TUTORIALS/task15/PutimageDemo5.bas
+  | /home/grymmjack/git/qb64/qb64/_/TERRY-RITCHIE-TUTORIALS/task15/WavingFlag.bas
+  | /home/grymmjack/git/qb64/qb64/_/TERRY-RITCHIE-TUTORIALS/task15/ScreenimagePrank.bas
+  | /home/grymmjack/git/qb64/qb64/_/TERRY-RITCHIE-TUTORIALS/task19/ZombieRotate.bas
+  | /home/grymmjack/git/qb64/qb64/_/TERRY-RITCHIE-TUTORIALS/task14/SNDPOSDemo.bas
+  | /home/grymmjack/git/qb64/qb64/_/TERRY-RITCHIE-TUTORIALS/task14/Piano.bas
+  | /home/grymmjack/git/qb64/qb64/_/TERRY-RITCHIE-TUTORIALS/task14/SNDLOOPDemo.bas
+  | /home/grymmjack/git/qb64/qb64/_/TERRY-RITCHIE-TUTORIALS/task14/VolumeControl.bas
+  | /home/grymmjack/git/qb64/qb64/_/TERRY-RITCHIE-TUTORIALS/task14/SNDPLAYCOPYDemo.bas
+  | /home/grymmjack/git/qb64/qb64/_/TERRY-RITCHIE-TUTORIALS/task14/EchoDemo.bas
+  | /home/grymmjack/git/qb64/qb64/_/TERRY-RITCHIE-TUTORIALS/task14/SNDLIMITDemo.bas
+  | /home/grymmjack/git/qb64/qb64/_/TERRY-RITCHIE-TUTORIALS/task14/WTOBetter.bas
+  | /home/grymmjack/git/qb64/qb64/_/TERRY-RITCHIE-TUTORIALS/task16/HocusPocus.bas
+  | /home/grymmjack/git/qb64/qb64/_/ROKCoder/galaga/galaga.bas
+  | /home/grymmjack/git/qb64/qb64/_/ROKCoder/scramble/scramble.bas
+  | 
+  | ===SPRITE SHEET patterns===
+  | /home/grymmjack/git/qb64/qb64/_/SMcNeill/TRANSITIONS.BAS
+  | /home/grymmjack/git/qb64/qb64/_/PEForum/jamesdjarvis-minimonster.bas
+  | /home/grymmjack/git/qb64/qb64/IMAGE-TESTS/ANIMGIF.BAS
+  | /home/grymmjack/git/qb64/qb64/_/SMcNeill/CONST Reference/const-reference-lookup.bas
+  | /home/grymmjack/git/qb64/qb64/_/QB64COM-SAMPLES/hunters-revenge/src/main.bas
+  | /home/grymmjack/git/qb64/qb64/_/QB64COM-SAMPLES/lightson/src/lightson.bas
+  | /home/grymmjack/git/qb64/qb64/_/QB64COM-SAMPLES/amongst/src/amongst.bas
+  | /home/grymmjack/git/qb64/qb64/_/QB64COM-SAMPLES/frostbite/src/frostbite.bas
+  | /home/grymmjack/git/qb64/qb64/_/QB64COM-SAMPLES/chess/src/chess.bas
+  | /home/grymmjack/git/qb64/qb64/_/QB64COM-SAMPLES/cloned-shades/src/shades.bas
+  | /home/grymmjack/git/qb64/qb64/_/QB64COM-SAMPLES/flappy-bird/src/fbird.bas
+  | /home/grymmjack/git/qb64/qb64/_/QB64COM-SAMPLES/chess-rf/src/chess.bas
+  | /home/grymmjack/git/qb64/qb64/_/QB64COM-SAMPLES/super-mario-jump/src/supermariojump.bas
+  | /home/grymmjack/git/qb64/qb64/_/QB64COM-SAMPLES/tic-tac-toe-rings/src/tictactoering.bas
+  | /home/grymmjack/git/qb64/qb64/_/TERRY RITCHIE/SPRITE_LIB/barrels.bas
+  | /home/grymmjack/git/qb64/qb64/_/TERRY RITCHIE/SPRITE_LIB/mario.bas
+  | /home/grymmjack/git/qb64/qb64/_/TERRY RITCHIE/SPRITE_LIB/mario2.bas
+  | /home/grymmjack/git/qb64/qb64/_/TERRY RITCHIE/SPRITE_LIB/collision.bas
+  | /home/grymmjack/git/qb64/qb64/_/TERRY RITCHIE/SPRITE_LIB/barrels2.bas
+  | /home/grymmjack/git/qb64/qb64/_/TERRY RITCHIE/SPRITE_LIB/Asteroids/QB64Asteroids.bas
+  | 
+  | ===_DEPTHBUFFER usage===
+  | /home/grymmjack/git/qb64/qb64/_/QB64COM-SAMPLES/mycraft/src/mycraft_0_001.bas
+  | /home/grymmjack/git/qb64/qb64/_/Petr/3d-fonts.bas
+2026-07-24T12:48:57-0400  INFO     bash_start    List 3d engine prototypes and grep structure — echo "===3d-engine-prototypes dir==="; ls -R "/home/grymmjack/git/qb64/qb64/_/QB64COM-SAMPLES/3d-engine-prototypes/" 2>/dev/null | head -40 | echo ""; e…
+  > cwd: /home/grymmjack/git/qb64
+  $ echo "===3d-engine-prototypes dir==="; ls -R "/home/grymmjack/git/qb64/qb64/_/QB64COM-SAMPLES/3d-engine-prototypes/" 2>/dev/null | head -40
+  $ echo ""; echo "===3dctrwgraph_fb64 head==="; grep -n "SUB \|FUNCTION \|_DEPTHBUFFER\|TYPE \|DIM SHARED\|matrix\|rotate\|project" "/home/grymmjack/git/qb64/qb64/_/QB64COM-SAMPLES/3d-engine-prototypes/src/3dctrwgraph_fb64.bas" 2>/dev/null | head -40
+2026-07-24T12:48:57-0400  INFO     bash_end      [ok] 54L stdout — List 3d engine prototypes and grep structure
+  | ===3d-engine-prototypes dir===
+  | img
+  | index.md
+  | src
+  | 
+  | /home/grymmjack/git/qb64/qb64/_/QB64COM-SAMPLES/3d-engine-prototypes/img:
+  | 3dengineqb.png
+  | 3dengineqb2.png
+  | 
+  | /home/grymmjack/git/qb64/qb64/_/QB64COM-SAMPLES/3d-engine-prototypes/src:
+  | 3dctrwgraph_fb64.bas
+  | 3dctrwgraph_fb64.zip
+  | 
+  | ===3dctrwgraph_fb64 head===
+  | 52:' Basis vectors projected into uv two-space.
+  | 66:' Particle vectors projected onto infinite uv two-space.
+  | 72:' Particle projections adjusted for screen uv two-space.
+  | 91:' Doublet vectors clipped and projected onto infinite uv two-space.
+  | 101:' Doublet vectors snipped and projected onto infinite uv two-space.
+  | 108:' Doublet projections adjusted for screen uv two-space.
+  | 132:' Triplet vectors clipped and projected onto infinite uv two-space.
+  | 148:' Triplet vectors snipped and projected onto infinite uv two-space.
+  | 158:' Triplet projections adjusted for screen uv two-space.
+  | 323:        GOSUB genscheme.curve
+  | 328:        GOSUB genscheme.simplepoints
+  | 342:        GOSUB genscheme.3denvparticles.init
+  | 373:        GOSUB genscheme.molecule
+  | 375:        GOSUB genscheme.neighbortile
+  | 385:        GOSUB genscheme.3denvdoublets
+  | 396:        GOSUB genscheme.3denvtriplets
+  | 406:        GOSUB genscheme.animatedsurface.init
+  | 409:        GOSUB genschemeUSAcolors
+  | 415:        GOSUB genscheme.animatedpretzel.init
+  | 418:        GOSUB genscheme.sphericalharmonics
+  | 426:        GOSUB genscheme.laplace2d.init
+  | 431:        GOSUB genscheme.laplace2d.gridinit
+  | 438:        GOSUB genscheme.planet.init
+  | 443:        GOSUB genscheme.planet.gridinit
+  | 450:        GOSUB genscheme.wave2d.init
+  | 455:        GOSUB genschemeUSAcolors
+  | 456:        GOSUB genscheme.wave2d.gridinit
+  | 464:        GOSUB genscheme.wave2dinf.init
+  | 470:        GOSUB genscheme.wave2dinf.gridinit
+  | 480:        GOSUB genscheme.bacteria.init
+  | 494:        GOSUB genscheme.neuron.init
+  | 526:GOSUB redraw
+  | 531:        GOSUB timeanimate
+  | 535:        GOSUB redraw
+  | 538:    'GOSUB mouseprocess
+  | 539:    GOSUB keyprocess
+  | 553:'        GOSUB rotate.uhat.plus: GOSUB normalize.screen.vectors: flagredraw = 1
+  | 557:'        GOSUB rotate.uhat.minus: GOSUB normalize.screen.vectors: flagredraw = 1
+  | 561:'        GOSUB rotate.vhat.plus: GOSUB normalize.screen.vectors: flagredraw = 1
+  | 565:'       GOSUB rotate.vhat.minus: GOSUB normalize.screen.vectors: flagredraw = 1
+2026-07-24T12:49:09-0400  INFO     bash_start    Grep 3D rotation/projection structure — echo "===wolf3d-like rotation/projection==="; grep -n -i "rotat\|project\|cos\|sin\|SUB \|FUNCTION " /home/grymmjack/git/qb64/qb64/GAMES/wolf3d-like-russel.bas…
+  > cwd: /home/grymmjack/git/qb64
+  $ echo "===wolf3d-like rotation/projection==="; grep -n -i "rotat\|project\|cos\|sin\|SUB \|FUNCTION " /home/grymmjack/git/qb64/qb64/GAMES/wolf3d-like-russel.bas 2>/dev/null | head -25
+  $ echo ""
+  $ echo "===3d-wireframe 3dexp2 structure==="; grep -n -i "SUB \|FUNCTION \|rotat\|project\|TYPE \|matrix" "/home/grymmjack/git/qb64/qb64/_/QB64COM-SAMPLES/3d-wireframe/src/3dexp2.bas" 2>/dev/null | head -30
+2026-07-24T12:49:09-0400  INFO     bash_end      [ok] 34L stdout — Grep 3D rotation/projection structure
+  | ===wolf3d-like rotation/projection===
+  | 7:' Function Declarations Section
+  | 9:DECLARE SUB InitializeWindow()
+  | 10:DECLARE SUB HandleInput(deltaTime AS _Float)
+  | 11:DECLARE SUB Update(deltaTime AS _Float)
+  | 12:DECLARE SUB RenderWallProjection()
+  | 13:DECLARE SUB RenderSpriteProjection()
+  | 14:DECLARE SUB CastRay(rayAngle AS _Float, stripId AS INTEGER)
+  | 15:DECLARE SUB CastAllRays()
+  | 16:DECLARE SUB RenderMapGrid()
+  | 17:DECLARE SUB RenderMapPlayer()
+  | 18:DECLARE SUB RenderMapSprites()
+  | 19:DECLARE SUB NormalizeAngle(angle AS _Float)
+  | 30:Dim Shared distanceProjPlane As _Float ' Distance from player to projection plane
+  | 86:      ' Calculate current time and delta time (time elapsed since last frame)
+  | 93:      ' Update game logic for this frame using delta time for smooth animation
+  | 97:      RenderWallProjection ' Draw wall projections (3D walls based on raycasting)
+  | 98:      RenderSpriteProjection ' Draw sprites in 3D space with proper sorting
+  | 113:Sub InitializeWindow ()
+  | 124:      ' Calculate the distance from player's eye point to projection plane
+  | 165:      walls(8 * mapWidth + 10) = 1 ' Single wall at position (8,10)
+  | 166:      walls(9 * mapWidth + 10) = 1 ' Single wall at position (9,10)
+  | 167:      walls(9 * mapWidth + 11) = 1 ' Single wall at position (9,11)
+  | 193:Sub CastRay (rayAngle As _Float, stripId As Integer)
+  | 200:      rayDirX = Cos(rayAngle) ' X component of ray direction vector
+  | 201:      rayDirY = Sin(rayAngle) ' Y component of ray direction vector
+  | 
+  | ===3d-wireframe 3dexp2 structure===
+  | 14:TYPE LineType
+  | 38:PRINT "Arrow keys......Controls the rotation of the craft"
+  | 44:PRINT "C...............Stops the craft's rotation"
+  | 77:'points 2 and 3 are really at the sample place? Why rotate them twice,
+  | 119:'that tells us which points to actually rotate...
+  | 125:                        'has to be rotated
+2026-07-24T12:49:10-0400  INFO     bash_start    Grep mycraft depthbuffer usage — echo "===mycraft depthbuffer context==="; grep -n "_DEPTHBUFFER\|_MAPTRIANGLE\|_NEWIMAGE\|SUB \|FUNCTION " "/home/grymmjack/git/qb64/qb64/_/QB64COM-SAMPLES/mycraft/sr…
+  > cwd: /home/grymmjack/git/qb64
+  $ echo "===mycraft depthbuffer context==="; grep -n "_DEPTHBUFFER\|_MAPTRIANGLE\|_NEWIMAGE\|SUB \|FUNCTION " "/home/grymmjack/git/qb64/qb64/_/QB64COM-SAMPLES/mycraft/src/mycraft_0_001.bas" 2>/dev/null | head -30
+2026-07-24T12:49:10-0400  INFO     bash_end      [ok] 21L stdout — Grep mycraft depthbuffer usage
+  | ===mycraft depthbuffer context===
+  | 14:SCREEN _NEWIMAGE(1024, 600, 32)
+  | 131:darken = _NEWIMAGE(1, 1)
+  | 402:    bgImage = _NEWIMAGE(1, 1, 32)
+  | 467:I = _NEWIMAGE(w + 2, h + 2, 32)
+  | 688:    '_DEPTHBUFFER LOCK
+  | 734:    _DEPTHBUFFER _CLEAR
+  | 735:    _DEPTHBUFFER ON
+  | 1151:        SCREEN _NEWIMAGE(_RESIZEWIDTH, _RESIZEHEIGHT, 32)
+  | 1157:SUB DrawCube (x AS SINGLE, y AS SINGLE, z AS SINGLE, typ AS LONG, lit AS LONG)
+  | 1273:        _MAPTRIANGLE _CLOCKWISE (0, 0)-(63, 0)-(63, 63), t TO(side(i).p1.p.x, side(i).p1.p.y, side(i).p1.p.z)-(side(i).p2.p.x, side(i).p2.p.y, side(i).p2.p.z)-(side(i).p3.p.x, side(i).p3.p.y, side(i).p3.p.z), , _SMOOTHSHRUNK
+  | 1274:        _MAPTRIANGLE _CLOCKWISE (0, 0)-(63, 63)-(0, 63), t TO(side(i).p1.p.x, side(i).p1.p.y, side(i).p1.p.z)-(side(i).p3.p.x, side(i).p3.p.y, side(i).p3.p.z)-(side(i).p4.p.x, side(i).p4.p.y, side(i).p4.p.z), , _SMOOTHSHRUNK
+  | 1283:        _MAPTRIANGLE (0, 0)-(63, 0)-(63, 63), t TO(side(i).p1.p.x, side(i).p1.p.y, side(i).p1.p.z)-(side(i).p2.p.x, side(i).p2.p.y, side(i).p2.p.z)-(side(i).p3.p.x, side(i).p3.p.y, side(i).p3.p.z), , _SMOOTHSHRUNK
+  | 1284:        _MAPTRIANGLE (0, 0)-(63, 63)-(0, 63), t TO(side(i).p1.p.x, side(i).p1.p.y, side(i).p1.p.z)-(side(i).p3.p.x, side(i).p3.p.y, side(i).p3.p.z)-(side(i).p4.p.x, side(i).p4.p.y, side(i).p4.p.z), , _SMOOTHSHRUNK
+  | 1295:FUNCTION LoadTexture (filename$)
+  | 1316:SUB MapOffset (x, y, z)
+  | 1338:FUNCTION Bump% (Alt%, Rank%, BumpFactor, Bias)
+  | 1354:SUB VertexTranslate (x, y, z)
+  | 1366:SUB VertexScale (s)
+  | 1379:SUB VertexRotateXZ_YZ (a1, a2)
+  | 1410:SUB CopyModel (m)
+2026-07-24T12:49:30-0400  INFO     bash_start    Grep audio and sprite sheet patterns — echo "===audio sample _SND usage==="; grep -n "_SNDOPEN\|_SNDPLAY\|_SNDLOOP\|_SNDVOL\|_SNDSETPOS\|SUB \|FUNCTION " "/home/grymmjack/git/qb64/qb64/_/QB64COM-SAMP…
+  > cwd: /home/grymmjack/git/qb64
+  $ echo "===audio sample _SND usage==="; grep -n "_SNDOPEN\|_SNDPLAY\|_SNDLOOP\|_SNDVOL\|_SNDSETPOS\|SUB \|FUNCTION " "/home/grymmjack/git/qb64/qb64/_/QB64COM-SAMPLES/audio/src/audio.bas" 2>/dev/null | head -25
+  $ echo ""
+  $ echo "===Terry Ritchie sprite sheet (mario.bas) frame extraction==="; grep -n "_NEWIMAGE\|_PUTIMAGE\|_LOADIMAGE\|SUB \|FUNCTION \|sheet\|frame" "/home/grymmjack/git/qb64/qb64/_/TERRY RITCHIE/SPRITE_LIB/mario.bas" 2>/dev/null | head -25
+2026-07-24T12:49:30-0400  INFO     bash_end      [ok] 29L stdout — Grep audio and sprite sheet patterns
+  | ===audio sample _SND usage===
+  | 28:PRINT "handle=_SNDOPEN(filename$,[requirements$])"
+  | 29:INPUT ; "handle=_SNDOPEN(", f$, r$
+  | 32:h=_SNDOPEN(f$, r$)
+  | 47:PRINT "_SNDPLAY"; h
+  | 48:_SNDPLAY h
+  | 57:PRINT "_SNDLOOP"; h
+  | 58:_SNDLOOP h
+  | 62:PRINT "_SNDVOL handle&,volume!{0-1}"
+  | 63:PRINT "_SNDVOL"; h; ",";
+  | 65:_SNDVOL h, volume!
+  | 81:PRINT "_SNDSETPOS handle&,offsetinseconds!"
+  | 82:PRINT "_SNDSETPOS"; h; ",";
+  | 84:_SNDSETPOS h, offset!
+  | 100:PRINT _SNDPLAYING(h)
+  | 116:PRINT "_SNDPLAYFILE filename$,sync%{0/1},volume!{0-1}"
+  | 117:INPUT "_SNDPLAYFILE ", filename$, sync%, volume!
+  | 118:_SNDPLAYFILE filename$, sync%, volume!
+  | 122:PRINT "_SNDPLAYCOPY"; h
+  | 123:_SNDPLAYCOPY h
+  | 
+  | ===Terry Ritchie sprite sheet (mario.bas) frame extraction===
+  | 3:DIM dksheet%
+  | 9:SCREEN _NEWIMAGE(800, 600, 32)
+  | 12:dksheet% = SPRITESHEETLOAD("dkong.png", 64, 64, _RGB(0, 255, 0))
+  | 13:mario% = SPRITENEW(dksheet%, 1, SAVE)
+  | 14:barrel% = SPRITENEW(dksheet%, 67, SAVE)
+  | 20:background& = _LOADIMAGE("backg.png", 32)
+  | 21:_PUTIMAGE (0, 0), background&
+2026-07-24T12:49:39-0400  INFO     bash_start    Grep sprite lib API signatures — grep -n "FUNCTION SPRITESHEETLOAD\|FUNCTION SPRITENEW\|SUB SPRITEDRAW\|FUNCTION SPRITELOAD\|SUB SPRITEPUT" "/home/grymmjack/git/qb64/qb64/_/TERRY RITCHIE/SPRITE_LIB/s…
+  > cwd: /home/grymmjack/git/qb64
+  $ grep -n "FUNCTION SPRITESHEETLOAD\|FUNCTION SPRITENEW\|SUB SPRITEDRAW\|FUNCTION SPRITELOAD\|SUB SPRITEPUT" "/home/grymmjack/git/qb64/qb64/_/TERRY RITCHIE/SPRITE_LIB/sprite.bi" 2>/dev/null | head; echo "---file size---"; wc -l "/home/grymmjack/git/qb64/qb64/_/TERRY RITCHIE/SPRITE_LIB/sprite.bi"
+2026-07-24T12:49:39-0400  INFO     bash_end      [ok] 7L stdout — Grep sprite lib API signatures
+  | 42:'FUNCTION SPRITENEW          (sheet%, cell%, behavior%)                             Creates a new sprite given the sheet and images that make up the sprite.
+  | 43:'FUNCTION SPRITESHEETLOAD    (filename$, spritewidth%, spriteheight%, transparent&) Loads a sprite sheet into the sprite sheet array and assigns an integer handle value pointing to the sheet.
+  | 624:SUB SPRITEPUT (x!, y!, handle%)
+  | 1598:FUNCTION SPRITENEW (sheet%, cell%, behavior%)
+  | 1687:FUNCTION SPRITESHEETLOAD (filename$, spritewidth%, spriteheight%, transparent&)
+  | ---file size---
+  | 1844 /home/grymmjack/git/qb64/qb64/_/TERRY RITCHIE/SPRITE_LIB/sprite.bi
+2026-07-24T12:52:00-0400  INFO     bash_start    List BOUNCER dir and aggregators — cd /home/grymmjack/git/qb64/qb64/GAMES/BOUNCER 2>/dev/null && echo "=== BOUNCER dir ===" && ls -1 && echo && echo "=== _ALL.BI ===" && cat _ALL.BI 2>/dev/null && ec…
+  > cwd: /home/grymmjack/git/qb64
+  $ cd /home/grymmjack/git/qb64/qb64/GAMES/BOUNCER 2>/dev/null && echo "=== BOUNCER dir ===" && ls -1 && echo && echo "=== _ALL.BI ===" && cat _ALL.BI 2>/dev/null && echo && echo "=== _ALL.BM ===" && cat _ALL.BM 2>/dev/null
+2026-07-24T12:52:00-0400  INFO     bash_end      [ok] 25L stdout — List BOUNCER dir and aggregators
+  | === BOUNCER dir ===
+  | 
+  | === _ALL.BI ===
+  | $INCLUDEONCE
+  | 
+  | '$INCLUDE:'_CFG.BI'
+  | '$INCLUDE:'_SCREEN.BI'
+  | '$INCLUDE:'_BALL.BI'
+  | '$INCLUDE:'_BLOCKS.BI'
+  | '$INCLUDE:'_LEVEL.BI'
+  | '$INCLUDE:'_STATS.BI'
+  | '$INCLUDE:'_TIMERS.BI'
+  | '$INCLUDE:'_DEBUG.BI'
+  | === _ALL.BM ===
+  | $INCLUDEONCE
+  | 
+  | '$INCLUDE:'_CFG.BM'
+  | '$INCLUDE:'_SCREEN.BM'
+  | '$INCLUDE:'_BALL.BM'
+  | '$INCLUDE:'_BLOCKS.BM'
+  | '$INCLUDE:'_LEVEL.BM'
+  | '$INCLUDE:'_STATS.BM'
+  | '$INCLUDE:'_TIMERS.BM'
+  | '$INCLUDE:'_MISC.BM'
+  | '$INCLUDE:'_DEBUG.BM'
+2026-07-24T12:52:02-0400  INFO     bash_start    Read BOUNCER main header and init — cd /home/grymmjack/git/qb64/qb64/GAMES/BOUNCER 2>/dev/null | echo "=== BOUNCER.BAS (head 90) ===" && sed -n '1,90p' BOUNCER.BAS 2>/dev/null
+  > cwd: /home/grymmjack/git/qb64/qb64/GAMES/BOUNCER
+  $ cd /home/grymmjack/git/qb64/qb64/GAMES/BOUNCER 2>/dev/null
+  $ echo "=== BOUNCER.BAS (head 90) ===" && sed -n '1,90p' BOUNCER.BAS 2>/dev/null
+2026-07-24T12:52:02-0400  INFO     bash_end      [ok] 91L stdout — Read BOUNCER main header and init
+  | === BOUNCER.BAS (head 90) ===
+  | ''
+  | ' BOUNCER
+  | ' 
+  | ' A little sandbox prototype to help me master the logic and physics for
+  | ' ball and paddle stuff. Mostly figuring out collisions and reflections.
+  | '
+  | ' Press F5 to start the debugger. This is something that will also wind up
+  | ' going into my QB64_GJ_LIB for sure. Also a bunch of the _MISC.BM funcs
+  | ' and subs will be added too.
+  | '
+  | ' @author Rick Christy <grymmjack@gmail.com>
+  | '
+  | $CONSOLE
+  | OPTION _EXPLICIT
+  | OPTION _EXPLICITARRAY
+  | $IF FALSE = UNDEFINED AND TRUE = UNDEFINED THEN
+  |     CONST FALSE = 0 : CONST TRUE = NOT FALSE
+  | $END IF
+  | 
+  | $EXEICON:'./BOUNCER.ico'
+  | _TITLE "BOUNCER"
+  | _CONSOLETITLE "BOUNCER"
+  | 
+  | '$INCLUDE:'_ALL.BI'
+  | 
+  | configure
+  | ball_init
+  | level_init
+  | block_init
+  | blocks_init
+  | timers_init
+  | debug_init
+  | screen_init
+  | 
+  | DIM AS STRING k, dmsg
+  | DO:
+  |     IF CFG.LIM% > 0 THEN _LIMIT CFG.LIM%
+  |     k$ = INKEY$
+  |     IF k$ <> "" THEN DPRINT "INKEY$", DEBUG_MIN
+  |     SELECT CASE k$
+  |         CASE LCASE$("s"): 'S = Toggle sound
+  |             DPRINT "INKEY$: 'S' TOGGLE SOUND", DEBUG_AVG
+  |             ball_toggle_sound : stats_update
+  |         CASE LCASE$("b"): 'B = Toggle breakpoints
+  |             DPRINT "INKEY$: 'B' TOGGLE BREAKPOINTS", DEBUG_AVG
+  |             debug_toggle_do_breakpoints : stats_update
+  |         CASE "=": '+/ = Increase speed by increasing limit
+  |             DPRINT "INKEY$: '=' INCREASE LIMIT", DEBUG_AVG
+  |             CFG.LIM% = CFG.LIM% + 1 : stats_update
+  |         CASE "-": '- = Decrease speed by decreasing limit  
+  |             DPRINT "INKEY$: '-' DECREASE LIMIT", DEBUG_AVG
+  |             CFG.LIM% = CFG.LIM% - 1 : stats_update
+  |         CASE " ": 'SPACE = randomize blocks
+  |             DPRINT "INKEY$: ' ' RANDOMIZE BLOCKS", DEBUG_AVG
+  |             blocks_init : game_step
+  |         CASE ",": ', = increment total blocks
+  |             DPRINT "INKEY$: ',' INCREMENT BLOCKS", DEBUG_AVG
+  |             blocks_dec : game_step
+  |         CASE ".": '. = decrement total blocks
+  |             DPRINT "INKEY$: '.' DECREMENT BLOCKS", DEBUG_AVG
+  |             blocks_inc : game_step
+  |         CASE CHR$(0) + "G": 'HOME = Show console explicit
+  |             DPRINT "INKEY$: 'HOME' SHOW DEBUG CONSOLE EXPLICIT", DEBUG_AVG
+  |             debug_console_show
+  |         CASE CHR$(0) + "O": 'END = Hide console explicit
+  |             DPRINT "INKEY$: 'END' HIDE DEBUG CONSOLE EXPLICIT", DEBUG_AVG
+  |             debug_console_hide
+  |         CASE CHR$(0) + ";": 'F1 = toggle ball trace path
+  |             DPRINT "INKEY$: 'F1' TOGGLE BALL TRACE PATH", DEBUG_AVG
+  |             ball_toggle_trace_path
+  |         CASE CHR$(0) + "<": 'F2 = clear debug console
+  |             DPRINT "INKEY$: 'F2' CLEAR CONSOLE", DEBUG_AVG
+  |             console_clear
+  |         CASE CHR$(0) + "=": 'F3 = mark console
+  |             DPRINT "INKEY$: 'F3' MARK CONSOLE", DEBUG_AVG
+  |             console_mark
+  |         CASE CHR$(0) + ">": 'F4 = toggle ball char
+  |             DPRINT "INKEY$: 'F4' toggle ball char", DEBUG_AVG
+  |             ball_toggle_char
+  | ...[truncated]
+2026-07-24T12:52:12-0400  INFO     bash_start    Read CFG and BALL BI type definitions — cd /home/grymmjack/git/qb64/qb64/GAMES/BOUNCER 2>/dev/null | echo "=== _CFG.BI ===" && cat _CFG.BI 2>/dev/null | echo; echo "=== _BALL.BI ===" && cat _BALL.BI …
+  > cwd: /home/grymmjack/git/qb64/qb64/GAMES/BOUNCER
+  $ cd /home/grymmjack/git/qb64/qb64/GAMES/BOUNCER 2>/dev/null
+  $ echo "=== _CFG.BI ===" && cat _CFG.BI 2>/dev/null
+  $ echo; echo "=== _BALL.BI ===" && cat _BALL.BI 2>/dev/null
+2026-07-24T12:52:12-0400  INFO     bash_end      [ok] 46L stdout — Read CFG and BALL BI type definitions
+  | === _CFG.BI ===
+  | $INCLUDEONCE
+  | 
+  | TYPE CONFIG
+  |     FULLSCREEN        AS INTEGER
+  |     FULLSCREEN_SMOOTH AS INTEGER
+  |     RANDOM_BG         AS INTEGER
+  |     RANDOM_FG         AS INTEGER
+  |     SOUND_ENABLED     AS INTEGER
+  |     BALL_CHAOS_TIMER  AS INTEGER
+  |     RAND_NUM_BLOCKS   AS INTEGER
+  |     CHAOS_SECS        AS INTEGER
+  |     NUM_BLOCKS        AS INTEGER
+  |     ORIG_NUM_BLOCKS   AS INTEGER
+  |     PREV_NUM_BLOCKS   AS INTEGER
+  |     BLOCK_MAX_W       AS INTEGER
+  |     BLOCK_MAX_H       AS INTEGER
+  |     LIM               AS INTEGER
+  |     AUTO_BLOCKS_SECS  AS INTEGER
+  | END TYPE
+  | 
+  | DIM SHARED CFG AS CONFIG
+  | 
+  | === _BALL.BI ===
+  | $INCLUDEONCE
+  | 
+  | TYPE BALL_OBJECT
+  |     X          AS INTEGER
+  |     Y          AS INTEGER
+  |     X_DIR      AS INTEGER
+  |     Y_DIR      AS INTEGER
+  |     SPEED      AS INTEGER
+  |     KOLOR      AS LONG
+  |     TRACE_PATH AS INTEGER
+  |     HIT_90_NUM AS INTEGER
+  |     DISPLAY    AS STRING * 1
+  | END TYPE
+  | 
+  | DIM SHARED BALL AS BALL_OBJECT
+  | DIM SHARED BALL_9GRID(1 TO 3, 1 TO 3) AS INTEGER
+  | DIM SHARED BALL_25GRID(1 TO 5, 1 TO 5) AS INTEGER
+  | 
+  | DIM SHARED BALL_ROUND AS STRING
+  | DIM SHARED BALL_SOLID AS STRING
+  | BALL_ROUND$ = CHR$(9)
+  | BALL_SOLID$ = CHR$(10)
+2026-07-24T12:52:12-0400  INFO     bash_start    Read reusable MISC helpers — cd /home/grymmjack/git/qb64/qb64/GAMES/BOUNCER 2>/dev/null | echo "=== _MISC.BM ===" && cat _MISC.BM 2>/dev/null | head -160
+  > cwd: /home/grymmjack/git/qb64/qb64/GAMES/BOUNCER
+  $ cd /home/grymmjack/git/qb64/qb64/GAMES/BOUNCER 2>/dev/null
+  $ echo "=== _MISC.BM ===" && cat _MISC.BM 2>/dev/null | head -160
+2026-07-24T12:52:12-0400  INFO     bash_end      [ok] 106L stdout — Read reusable MISC helpers
+  | === _MISC.BM ===
+  | $INCLUDEONCE
+  | 
+  | FUNCTION n$ (integ%)
+  |     DPRINT "n$(integ%=" + _TRIM$(STR$(integ%)) + ")", DEBUG_WTF
+  |     n$ = _TRIM$(STR$(integ%))
+  | END FUNCTION
+  | 
+  | FUNCTION b$ (integ%)
+  |     DPRINT "b$(integ%=" + _TRIM$(STR$(integ%)) + ")", DEBUG_MAX
+  |     IF integ% = -1 THEN
+  |         b$ = "TRUE"
+  |     ELSEIF integ% = 0 THEN
+  |         b$ = "FALSE"
+  |     ENDIF
+  | END FUNCTION
+  | 
+  | FUNCTION ln$ (longval!)
+  |     DPRINT "ln$(longval!=" + _TRIM$(STR$(longval!)) + ")", DEBUG_MAX
+  |     ln$ = _TRIM$(STR$(longval!))
+  | END FUNCTION
+  | 
+  | FUNCTION inc% (value%)
+  |     DPRINT "inc(value%=" + n$(value%) + ")", DEBUG_MAX
+  |     inc% = value% + 1
+  | END FUNCTION
+  | 
+  | FUNCTION dec% (value%)
+  |     DPRINT "dec(value%=" + n$(value%) + ")", DEBUG_MAX
+  |     dec% = value% - 1
+  | END FUNCTION
+  | 
+  | FUNCTION inv% (value%)
+  |     DPRINT "inv(value%=" + n$(value%) + ")", DEBUG_MAX
+  |     inv% = value% * -1
+  | END FUNCTION
+  | 
+  | FUNCTION min% (value%, minimum%)
+  |     DPRINT _
+  |         "min(value%=" + n$(value%) + _
+  |         ", minimum%=" + n$(minimum%) + ")", DEBUG_MAX
+  |     IF value% < minimum% THEN value% = minimum%
+  |     min% = value%
+  | END FUNCTION
+  | 
+  | FUNCTION max% (value%, maximum%)
+  |     DPRINT _
+  |         "max(value%=" + n$(value%) + _
+  |         ", maximum%=" + n$(maximum%) + ")", DEBUG_MAX
+  |     IF value% > maximum% THEN value% = maximum%
+  |     max% = value%
+  | END FUNCTION
+  | 
+  | FUNCTION clamp% (value%, minimum%, maximum%)
+  |     DPRINT _
+  |         "clamp(value%=" + n$(value%) + _
+  |         ", minimum%=" + n$(minimum%) + _
+  |         ", maximum%=" + n$(maximum%) + ")", DEBUG_MAX
+  |     IF value% > maximum% THEN
+  |         clamp% = maximum%
+  |     ELSEIF value% < minimum% THEN
+  |         clamp% = minimum%
+  |     ELSE
+  |         clamp% = value%
+  |     END IF
+  | END FUNCTION
+  | 
+  | FUNCTION in_range% (value%, minimum%, maximum%)
+  |     DPRINT _
+  |         "in_range(value%=" + n$(value%) + _
+  |         ", minimum%=" + n$(minimum%) + _
+  |         ", maximum%=" + n$(maximum%) + ")", DEBUG_MAX
+  |     IF value% >= minimum% AND value% <= maximum% THEN 
+  |         in_range% = TRUE
+  |     ELSE
+  |         in_range% = FALSE
+  |     END IF
+  | END FUNCTION
+  | 
+  | FUNCTION rand_sign% ()
+  | ...[truncated]
+2026-07-24T12:53:12-0400  INFO     bash_start    Peek at Petr dice.bas for geometry reference — cd /home/grymmjack/git/qb64 | echo "=== Petr dice.bas (first 80 lines) ===" && sed -n '1,80p' "qb64/_/Petr/dice.bas" 2>/dev/null | head -80 | echo; echo…
+  > cwd: /home/grymmjack/git/qb64/qb64/GAMES/BOUNCER
+  $ cd /home/grymmjack/git/qb64
+  $ echo "=== Petr dice.bas (first 80 lines) ===" && sed -n '1,80p' "qb64/_/Petr/dice.bas" 2>/dev/null | head -80
+  $ echo; echo "=== size ===" && wc -l "qb64/_/Petr/dice.bas" 2>/dev/null
+2026-07-24T12:53:12-0400  INFO     bash_end      [ok] 84L stdout — Peek at Petr dice.bas for geometry reference
+  | === Petr dice.bas (first 80 lines) ===
+  | 
+  | 
+  | 
+  | Option _Explicit
+  | 
+  | '===============================================================
+  | ' Dice meshes + UV atlas + wire overlay
+  | 
+  | ' High-level pipeline (data flow):
+  | '  1) Build a convex polyhedron (primal) as:
+  | '        - vertex list v()
+  | '        - face list as index soup: pfStart(f), pfSize(f), pfIdx(...)
+  | '  2) Fix face winding so outward normals are consistent (EnsureFacesOutward).
+  | '  3) Normalize size: compute the minimum edge length and scale to DICE_EDGE.
+  | '  4) Generate per-face UV polygons by projecting each real 3D face into a local
+  | '      2D coordinate system (BuildUVForFaces). Each face lands into one atlas tile.
+  | '      This is crucial: UVs are derived from actual face geometry, so text warping
+  | '      is minimized compared to ad-hoc planar mapping.
+  | '  5) Render the atlas texture (BuildAtlas):
+  | '        - purple vignette + deterministic micro-noise per tile
+  | '        - draw the exact UV polygon outline used for mapping
+  | '        - stamp number sprites into the tile (manual blit + optional rotation)
+  | '  6) Render each die (RenderMesh):
+  | '        - apply Euler rotations and translation in 3D
+  | '        - painter-sort triangles by average Z (cheap visibility ordering)
+  | '        - call _MAPTRIANGLE to project textured triangles to the screen
+  | '
+  | '
+  | '  - QB64PE _MAPTRIANGLE consumes source UVs in *source image pixel coordinates*
+  | '    and destination vertices in *3D space*. QB64PE handles the final projection.
+  | '  - All custom drawing into images relies on _Dest/_Source global state. Any sub
+  | '    that changes _Dest or _Source should restore it (or at least be explicit).
+  | '  - Text stamping is done with nearest-neighbor sampling (PSet) to keep crisp
+  | '    glyph edges. The rotation step uses deterministic pixel rounding to avoid
+  | '    "striping" artifacts caused by bankers rounding (see StampSpriteRot).
+  | '
+  | ' Key upgrades in this version:
+  | ' - UVs are generated by projecting each real 3D face to 2D (much less text warping).
+  | ' - Atlas tiles use a purple vignette + subtle noise (not flat color).
+  | ' - Numbers are assigned consistently (opposites: D8=9, D12=13, D20=21, D10=0..9 opposite=9).
+  | ' - D4 has 3 numbers per face, rotated toward corners (pyramid style).
+  | ' - Edges are drawn from the exact UV polygon used by mapping (edges stay crisp).
+  | '===============================================================
+  | 
+  | Const PI! = 3.14159265358979323846!
+  | Const DICE_EDGE! = .6!
+  | Const D10_SQUASH! = 0.65!
+  | 
+  | '--- Screen
+  | Const SW& = 800
+  | Const SH& = 800
+  | 
+  | '--- Wire triangle texture (source triangle in pixels)
+  | Const TEXW& = 256
+  | Const TEXH& = 256
+  | Const TSX1! = 32!: Const TSY1! = 224!
+  | Const TSX2! = 224!: Const TSY2! = 224!
+  | Const TSX3! = 128!: Const TSY3! = 32!
+  | 
+  | '--- UV atlas / tile settings
+  | Const TILE& = 192
+  | Const MARGIN& = 5
+  | 
+  | ' Flip toggles inside each tile (set to -1 if needed)
+  | ' These flips are applied in *tile-local* UV space before adding tile origin.
+  | Const FLIP_U& = 0
+  | Const FLIP_V& = 0
+  | 
+  | '--- Die kind tags
+  | Const DIE_D4& = 4
+  | Const DIE_D6& = 6
+  | Const DIE_D8& = 8
+  | Const DIE_D10& = 10
+  | Const DIE_D12& = 12
+  | Const DIE_D20& = 20
+  | 
+  | ' ---- die kind ids (index for selection; separate from number of sides)
+  | Const KIND_D4& = 0
+  | Const KIND_D6& = 1
+  | ...[truncated]
+2026-07-24T12:53:15-0400  INFO     bash_start    Locate QB64PE compiler binary — cd /home/grymmjack/git/qb64 | echo "=== qb64 compiler binaries ===" && ls -la qb64pe qb64 2>/dev/null; which qb64pe qb64 2>/dev/null | echo "--- search common location…
+  > cwd: /home/grymmjack/git/qb64
+  $ cd /home/grymmjack/git/qb64
+  $ echo "=== qb64 compiler binaries ===" && ls -la qb64pe qb64 2>/dev/null; which qb64pe qb64 2>/dev/null
+  $ echo "--- search common locations ---"
+  $ find . -maxdepth 2 -type f \( -name "qb64pe" -o -name "qb64" -o -name "qb64pe.exe" \) 2>/dev/null | head
+  $ ls -d ~/qb64* /opt/qb64* 2>/dev/null | head
+  $ echo "--- is repo root the qb64pe source tree? ---" && ls -1 *.h source 2>/dev/null | head
+2026-07-24T12:53:15-0400  INFO     bash_end      [ok] 32L stdout — Locate QB64PE compiler binary
+  | === qb64 compiler binaries ===
+  | drwxrwxr-x   - grymmjack 24 Jul 11:03 _
+  | drwxrwxr-x   - grymmjack 17 Jan 13:54 BITWISE
+  | drwxrwxr-x   - grymmjack 17 Jan 13:54 COLORS
+  | drwxrwxr-x   - grymmjack 17 Jan 13:54 CTYPE
+  | drwxrwxr-x   - grymmjack 19 Apr 15:56 GAMES
+  | drwxrwxr-x   - grymmjack 17 Jan 13:54 GRAPHICS
+  | drwxrwxr-x   - grymmjack 17 Jan 13:54 IMAGE-TESTS
+  | drwxrwxr-x   - grymmjack 17 Jan 13:54 INFORM
+  | drwxrwxr-x   - grymmjack 17 Jan 13:54 INPUT
+  | drwxrwxr-x   - grymmjack 17 Jan 13:54 JOYSTICK
+  | .rw-rw-r-- 57k grymmjack 17 Jan 13:54 KEYWORDS-SORTED-BY-LINE-ASC-SPACED.TXT
+  | .rw-rw-r-- 57k grymmjack 17 Jan 13:54 KEYWORDS-SORTED-SPACED.TXT
+  | .rw-rw-r-- 43k grymmjack 17 Jan 13:54 KEYWORDS-SORTED.TXT
+  | drwxrwxr-x   - grymmjack 17 Jan 13:54 MATHS
+  | drwxrwxr-x   - grymmjack 17 Jan 13:54 MEM
+  | drwxrwxr-x   - grymmjack 17 Jan 13:54 MOUSE-TESTS
+  | drwxrwxr-x   - grymmjack 17 Jan 13:54 MUSIC
+  | drwxrwxr-x   - grymmjack 17 Jan 13:54 NEW_IN_4
+  | drwxrwxr-x   - grymmjack 17 Jan 13:54 SOUND
+  | drwxrwxr-x   - grymmjack 17 Jan 13:54 SQLLITE
+  | drwxrwxr-x   - grymmjack 17 Jan 13:54 STARFIGHTER
+  | drwxrwxr-x   - grymmjack 17 Jan 13:54 TEMP
+  | drwxrwxr-x   - grymmjack  2 May 15:16 TEXTMODE-TESTS
+  | drwxrwxr-x   - grymmjack 17 Jan 13:54 TIME
+  | drwxrwxr-x   - grymmjack 17 Jan 13:54 UTILITIES
+  | qb64pe: aliased to /home/grymmjack/git/QB64pe/qb64pe
+  | qb64 not found
+  | --- search common locations ---
+  | (eval):5: no matches found: /opt/qb64*
+  | --- is repo root the qb64pe source tree? ---
+  | (eval):6: no matches found: *.h
+2026-07-24T12:53:50-0400  INFO     bash_start    Check qb64pe CLI flags — /home/grymmjack/git/QB64pe/qb64pe --help 2>&1 | head -40 || echo "no --help"; echo "---version?---"; /home/grymmjack/git/QB64pe/qb64pe --version 2>&1 | head -5
+  > cwd: /home/grymmjack/git/qb64
+  $ /home/grymmjack/git/QB64pe/qb64pe --help 2>&1 | head -40 || echo "no --help"; echo "---version?---"; /home/grymmjack/git/QB64pe/qb64pe --version 2>&1 | head -5
+2026-07-24T12:53:50-0400  INFO     bash_end      [ok] 3L stdout — Check qb64pe CLI flags
+  | (eval):1: no such file or directory: /home/grymmjack/git/QB64pe/qb64pe
+  | ---version?---
+  | (eval):1: no such file or directory: /home/grymmjack/git/QB64pe/qb64pe
+2026-07-24T12:53:52-0400  INFO     bash_start    Map Petr dice.bas subs/functions — cd /home/grymmjack/git/qb64 | echo "=== SUB/FUNCTION list in Petr dice.bas ===" | grep -niE "^[[:space:]]*(sub|function) " "qb64/_/Petr/dice.bas" 2>/dev/null | head…
+  > cwd: /home/grymmjack/git/qb64
+  $ cd /home/grymmjack/git/qb64
+  $ echo "=== SUB/FUNCTION list in Petr dice.bas ===" 
+  $ grep -niE "^[[:space:]]*(sub|function) " "qb64/_/Petr/dice.bas" 2>/dev/null | head -80
+2026-07-24T12:53:52-0400  INFO     bash_end      [ok] 58L stdout — Map Petr dice.bas subs/functions
+  | === SUB/FUNCTION list in Petr dice.bas ===
+  | 357:Sub PrintMeshInfo (jmeno As String, tri() As Vertex3D)
+  | 371:Function VDot! (a As Vertex3D, b As Vertex3D)
+  | 375:Function VLen! (a As Vertex3D)
+  | 384:Sub VSet (r As Vertex3D, x As Single, y As Single, z As Single)
+  | 388:Sub VSub (a As Vertex3D, b As Vertex3D, r As Vertex3D)
+  | 394:Sub VScale (a As Vertex3D, s As Single, r As Vertex3D)
+  | 400:Sub VCross (a As Vertex3D, b As Vertex3D, r As Vertex3D)
+  | 406:Sub VNorm (a As Vertex3D, r As Vertex3D)
+  | 423:Sub ReverseFace (pfIdx() As Long, startOff As Long, cnt As Long)
+  | 450:Sub EnsureFacesOutward (v() As Vertex3D, pfStart() As Long, pfSize() As Long, pfIdx() As Long)
+  | 491:Function MinEdgeLen! (v() As Vertex3D, pfStart() As Long, pfSize() As Long, pfIdx() As Long)
+  | 518:Sub ScaleVertices (v() As Vertex3D, s As Single)
+  | 565:Sub BuildDual (pv() As Vertex3D, pfStart() As Long, pfSize() As Long, pfIdx() As Long, dv() As Vertex3D, dfStart() As Long, dfSize() As Long, dfIdx() As Long)
+  | 706:Sub SquashLongestAxis (v() As Vertex3D, squash As Single)
+  | 748:Sub InitFonts
+  | 779:Sub PrepareLabelsD4 (pfStart() As Long, pfSize() As Long, pfIdx() As Long)
+  | 803:Sub PrepareLabelsD6 (v() As Vertex3D, pfStart() As Long, pfSize() As Long, pfIdx() As Long)
+  | 856:Sub PrepareLabelsPairs (v() As Vertex3D, pfStart() As Long, pfSize() As Long, pfIdx() As Long, baseVal As Long, sumConst As Long)
+  | 920:Sub ComputeFaceNormals (v() As Vertex3D, pfStart() As Long, pfSize() As Long, pfIdx() As Long, nrm() As Vertex3D)
+  | 950:Sub FindOppPairs (nrm() As Vertex3D, pair() As Long)
+  | 995:Function FaceGreater& (a As Vertex3D, b As Vertex3D)
+  | 1016:Sub FillTileGradient (ox As Single, oy As Single, baseCol As _Unsigned Long, darkCol As _Unsigned Long, seed As Long)
+  | 1051:Function ClampByte% (v As Long)
+  | 1057:Function LerpCol~& (c0 As _Unsigned Long, c1 As _Unsigned Long, t As Single)
+  | 1086:Sub DrawPolyOutlineSeg (pts() As Vertex2D, startOff As Long, cnt As Long, col As _Unsigned Long)
+  | 1095:Sub PolyCentroidSeg (pts() As Vertex2D, startOff As Long, cnt As Long, cx As Single, cy As Single)
+  | 1133:SUB BuildUVForFaces (v() AS Vertex3D, pfStart() AS LONG, pfSize() AS LONG, pfIdx() AS LONG, _
+  | 1313:Sub BuildAtlas (atlasTex As Long, faceCount As Long, cols As Long, rows As Long, dieKind As Long)
+  | 1406:Sub MakeWireTriTexture (tex As Long)
+  | 1434:Function MakeTextSprite& (s As String, fontH As Long, fg As _Unsigned Long, outline As _Unsigned Long, shadow As _Unsigned Long)
+  | 1534:SUB RenderMesh (tri() AS Vertex3D, uv() AS Vertex2D, atlasTex AS LONG, wireTex AS LONG, _
+  | 1637:Sub BuildD4 (tri() As Vertex3D, uv() As Vertex2D, triFace() As Long, atlasTex As Long)
+  | 1664:Sub BuildD6 (tri() As Vertex3D, uv() As Vertex2D, triFace() As Long, atlasTex As Long)
+  | 1697:Sub BuildD8 (tri() As Vertex3D, uv() As Vertex2D, triFace() As Long, atlasTex As Long)
+  | 1731:Sub BuildD20 (tri() As Vertex3D, uv() As Vertex2D, triFace() As Long, atlasTex As Long)
+  | 1796:Sub BuildD12 (tri() As Vertex3D, uv() As Vertex2D, triFace() As Long, atlasTex As Long)
+  | 1871:Sub BuildD10 (tri() As Vertex3D, uv() As Vertex2D, triFace() As Long, atlasTex As Long)
+  | 1976:Sub StampSpriteRot (dstImg As Long, spr As Long, cx As Single, cy As Single, ang As Single, scale As Single, keyCol As _Unsigned Long)
+  | 2031:Sub PrepareLabelsD10Tens (v() As Vertex3D, pfStart() As Long, pfSize() As Long, pfIdx() As Long)
+  | 2051:Sub BuildD10Tens (tri() As Vertex3D, uv() As Vertex2D, triFace() As Long, atlasTex As Long)
+  | 2123:Sub BuildTable (tri() As Vertex3D, uv() As Vertex2D, tex As Long)
+  | 2164:Sub MakeTableTexture (tex As Long)
+  | 2212:Sub AddBox (tri() As Vertex3D, uv() As Vertex2D, outV As Long, _
+  | 2252:Sub AddQuad (tri() As Vertex3D, uv() As Vertex2D, outV As Long, _
+  | 2285:Function MeshRadius! (tri() As Vertex3D)
+  | 2297:Function MeshHalfExtent! (tri() As Vertex3D)
+  | 2309:Sub BuildUniqueVertsFromTri (tri() As Vertex3D, verts() As Vertex3D)
+  | 2338:Sub BuildFaceNormalsFromTri (tri() As Vertex3D, triFace() As Long, faceCount As Long, faceN() As Vertex3D)
+  | 2372:Sub InitBodyFromMesh (b As RigidBody, tri() As Vertex3D)
+  | 2385:Sub SelectDieKind (k As Long, die As RigidBody)
+  | 2406:Sub ResetThrow (b As RigidBody, x As Single, y As Single, z As Single)
+  | 2427:Sub AxesFromEuler (rx As Single, ry As Single, rz As Single, ax As Vertex3D, ay As Vertex3D, az As Vertex3D)
+  | 2448:Sub EulerFromAxes (ax As Vertex3D, ay As Vertex3D, az As Vertex3D, rx As Single, ry As Single, rz As Single)
+  | 2477:Sub RotateVecAroundAxis (v As Vertex3D, axis As Vertex3D, ang As Single, outV As Vertex3D)
+  | 2499:Sub SnapDieToTable (b As RigidBody, verts() As Vertex3D, faceN() As Vertex3D, tableTopY As Single)
+  | 2567:Sub StepDieVsTableGame (b As RigidBody, dt As Single, tableTopY As Single, verts() As Vertex3D, faceN() As Vertex3D)
+  | 2739:Sub ClampToTableTopRect (b As RigidBody, halfW As Single, halfD As Single)
+2026-07-24T12:54:13-0400  INFO     bash_start    Locate the real qb64pe compiler binary — echo "=== QB64pe dir ===" && ls -la /home/grymmjack/git/QB64pe/ 2>/dev/null | head -40 | echo "=== find qb64pe binary anywhere reasonable ===" | find /home/gr…
+  > cwd: /home/grymmjack/git/qb64
+  $ echo "=== QB64pe dir ===" && ls -la /home/grymmjack/git/QB64pe/ 2>/dev/null | head -40
+  $ echo "=== find qb64pe binary anywhere reasonable ==="
+  $ find /home/grymmjack/git/QB64pe -maxdepth 1 -type f -name "qb64*" 2>/dev/null
+  $ find /home/grymmjack -maxdepth 3 -type f -name "qb64pe" 2>/dev/null | head
+  $ echo "=== alias source ===" && grep -rn "qb64pe" ~/.zshrc ~/.zshenv ~/.zprofile ~/.aliases 2>/dev/null | head
+2026-07-24T12:54:13-0400  INFO     bash_end      [ok] 26L stdout — Locate the real qb64pe compiler binary
+  | === QB64pe dir ===
+  | drwxrwxr-x    - grymmjack  1 Feb 12:30 .ci
+  | .rw-rw-r-- 4.7k grymmjack  1 Feb 12:30 .clang-format
+  | drwxrwxr-x    - grymmjack  1 Feb 12:30 .git
+  | drwxrwxr-x    - grymmjack  1 Feb 12:30 .github
+  | .rw-rw-r--  282 grymmjack  1 Feb 12:30 .gitignore
+  | .rw-rw-r--   58 grymmjack  1 Feb 12:30 COPYING.txt
+  | drwxrwxr-x    - grymmjack  1 Feb 12:30 docs
+  | drwxrwxr-x    - grymmjack  1 Feb 12:30 internal
+  | drwxrwxr-x    - grymmjack  1 Feb 12:30 licenses
+  | .rw-rw-r--  11k grymmjack  1 Feb 12:30 Makefile
+  | .rw-rw-r-- 1.2k grymmjack  1 Feb 12:30 qb64pe.1
+  | .rw-rw-r-- 2.4k grymmjack  1 Feb 12:30 README.md
+  | .rw-rw-r--  252 grymmjack  1 Feb 12:30 SAMPLES.txt
+  | .rwxrwxr-x 5.2k grymmjack  1 Feb 12:30 setup_lnx.sh
+  | .rw-rw-r-- 4.1k grymmjack  1 Feb 12:30 setup_mingw.cmd
+  | .rwxrwxr-x 1.0k grymmjack  1 Feb 12:30 setup_osx.command
+  | .rw-rw-r-- 2.2k grymmjack  1 Feb 12:30 setup_win.cmd
+  | drwxrwxr-x    - grymmjack  1 Feb 12:30 source
+  | drwxrwxr-x    - grymmjack  1 Feb 12:30 tests
+  | === find qb64pe binary anywhere reasonable ===
+  | /home/grymmjack/git/QB64pe/qb64pe.1
+  | /home/grymmjack/git/qb64pe/qb64pe
+  | /home/grymmjack/git/qb64pe-a740g-test/qb64pe
+  | /home/grymmjack/git/qb64pe-450/qb64pe
+  | === alias source ===
+2026-07-24T12:54:22-0400  INFO     bash_start    Read compile flags and test binary — echo "=== manpage flags ===" && sed -n '1,60p' /home/grymmjack/git/QB64pe/qb64pe.1 2>/dev/null | grep -iA1 -- "-c\|-x\|compile\|\.B" | head -40 | echo "=== quick …
+  > cwd: /home/grymmjack/git/qb64
+  $ echo "=== manpage flags ===" && sed -n '1,60p' /home/grymmjack/git/QB64pe/qb64pe.1 2>/dev/null | grep -iA1 -- "-c\|-x\|compile\|\.B" | head -40
+  $ echo "=== quick binary sanity (version) ==="
+  $ /home/grymmjack/git/qb64pe/qb64pe -? 2>&1 | head -20 || true
+2026-07-24T12:54:22-0400  INFO     bash_end      [ok] 29L stdout — Read compile flags and test binary
+  | === manpage flags ===
+  | .TH qb64pe "1" "August 2022" "QB64 IDE AND COMPILER (Phoenix Edition)" "User Commands"
+  | .SH NAME
+  | --
+  | QB64 COMPILER (Phoenix Edition)
+  | .PP
+  | --
+  | \fB\-c\fR
+  | Compile instead of edit
+  | .TP
+  | \fB\-x\fR
+  | Compile instead of edit and output the result to the
+  | console
+  | --
+  | Purge all pre\-compiled content first
+  | .TP
+  | --
+  | mandatory (per\-compilation; doesn't affect the
+  | source file or global settings)
+  | --
+  | View/edit compiler settings
+  | .TP
+  | --
+  | Configure compiler settings for this run of the compiler
+  | .TP
+  | --
+  | .B https://qb64phoenix.com
+  | === quick binary sanity (version) ===
+  | (eval):3: no matches found: -?
+2026-07-24T12:54:32-0400  INFO     bash_start    Smoke-test headless qb64pe compile — cd "/tmp/claude-1000/-home-grymmjack-git-qb64/0bd9f361-6ce1-4370-b677-2720aa6365d7/scratchpad" | printf 'PRINT "hello"\nSYSTEM\n' > hello.bas | echo "=== compilin…
+  > cwd: /home/grymmjack/git/qb64
+  $ cd "/tmp/claude-1000/-home-grymmjack-git-qb64/0bd9f361-6ce1-4370-b677-2720aa6365d7/scratchpad"
+  $ printf 'PRINT "hello"\nSYSTEM\n' > hello.bas
+  $ echo "=== compiling hello.bas with -x ===" 
+  $ /home/grymmjack/git/qb64pe/qb64pe -x hello.bas 2>&1 | head -20
+  $ echo "=== exit: $? ==="
+  $ ls -la hello 2>/dev/null && echo "EXECUTABLE PRODUCED OK"
+2026-07-24T12:54:40-0400  INFO     bash_start    Compile hello and verify executable output — cd "/tmp/claude-1000/-home-grymmjack-git-qb64/0bd9f361-6ce1-4370-b677-2720aa6365d7/scratchpad" | rm -f hello | /home/grymmjack/git/qb64pe/qb64pe -x hello.…
+  > cwd: /home/grymmjack/git/qb64
+  $ cd "/tmp/claude-1000/-home-grymmjack-git-qb64/0bd9f361-6ce1-4370-b677-2720aa6365d7/scratchpad"
+  $ rm -f hello
+  $ /home/grymmjack/git/qb64pe/qb64pe -x hello.bas > compile.log 2>&1
+  $ echo "qb64pe exit: $?"
+  $ echo "=== last 8 lines of log (strip progress bars) ==="
+  $ tr '\r' '\n' < compile.log | grep -v '^\[' | tail -8
+  $ echo "=== executable? ==="
+  $ ls -la hello 2>/dev/null && echo "OK: executable produced"
+2026-07-24T12:54:41-0400  WARNING  bash_end      [stderr] 11L stdout / 2L stderr — Compile hello and verify executable output
+  | qb64pe exit: 0
+  | === last 8 lines of log (strip progress bars) ===
+  | QB64-PE Compiler V4.4.0-UNKNOWN
+  | 
+  | Beginning C++ output from QB64 code... 
+  | 
+  | Compiling C++ code into executable...
+  | Output: /tmp/claude-1000/-home-grymmjack-git-qb64/0bd9f361-6ce1-4370-b677-2720aa6365d7/scratchpad/hello
+  | === executable? ===
+  | .rwxrwxr-x 1.2M grymmjack 24 Jul 12:54 hello
+  | OK: executable produced
+  ! 
+  ! Shell cwd was reset to /home/grymmjack/git/qb64
+2026-07-24T13:04:30-0400  INFO     bash_start    Create module directory, make check.sh executable — mkdir -p /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D && chmod +x "/tmp/claude-1000/-home-grymmjack-git-qb64/0bd9f361-6ce1-4370-b677-2720aa6365…
+  > cwd: /home/grymmjack/git/qb64
+  $ mkdir -p /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D && chmod +x "/tmp/claude-1000/-home-grymmjack-git-qb64/0bd9f361-6ce1-4370-b677-2720aa6365d7/scratchpad/check.sh" && echo "dir + check.sh ready"
+2026-07-24T13:04:30-0400  INFO     bash_end      [ok] 1L stdout — Create module directory, make check.sh executable
+  | dir + check.sh ready
+2026-07-24T13:08:31-0400  INFO     bash_start    Compile-check the M1 test harness — cd /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D | "/tmp/claude-1000/-home-grymmjack-git-qb64/0bd9f361-6ce1-4370-b677-2720aa6365d7/scratchpad/check.sh" "$(pwd)/…
+  > cwd: /home/grymmjack/git/qb64
+  $ cd /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D
+  $ "/tmp/claude-1000/-home-grymmjack-git-qb64/0bd9f361-6ce1-4370-b677-2720aa6365d7/scratchpad/check.sh" "$(pwd)/DICE3D-TEST.BAS"
+2026-07-24T13:08:43-0400  INFO     bash_start    Recompile after clampf fix — cd /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D | "/tmp/claude-1000/-home-grymmjack-git-qb64/0bd9f361-6ce1-4370-b677-2720aa6365d7/scratchpad/check.sh" "$(pwd)/DICE3D-…
+  > cwd: /home/grymmjack/git/qb64
+  $ cd /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D
+  $ "/tmp/claude-1000/-home-grymmjack-git-qb64/0bd9f361-6ce1-4370-b677-2720aa6365d7/scratchpad/check.sh" "$(pwd)/DICE3D-TEST.BAS"
+2026-07-24T13:08:55-0400  INFO     bash_start    Recompile after val rename — cd /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D | "/tmp/claude-1000/-home-grymmjack-git-qb64/0bd9f361-6ce1-4370-b677-2720aa6365d7/scratchpad/check.sh" "$(pwd)/DICE3D-…
+  > cwd: /home/grymmjack/git/qb64
+  $ cd /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D
+  $ "/tmp/claude-1000/-home-grymmjack-git-qb64/0bd9f361-6ce1-4370-b677-2720aa6365d7/scratchpad/check.sh" "$(pwd)/DICE3D-TEST.BAS"
+2026-07-24T13:08:56-0400  INFO     bash_end      [ok] 5L stdout — Recompile after val rename
+  | QB64-PE Compiler V4.4.0-UNKNOWN
+  | Beginning C++ output from QB64 code... 
+  | Compiling C++ code into executable...
+  | Output: /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D/DICE3D-TEST
+  | ----- COMPILE: PASS (/home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D/DICE3D-TEST) -----
+2026-07-24T13:09:32-0400  INFO     bash_start    Check for headless display + image tooling — echo "xvfb-run: $(command -v xvfb-run || echo MISSING)" | echo "convert/magick: $(command -v convert || command -v magick || echo MISSING)" | echo "glxinf…
+  > cwd: /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D
+  $ echo "xvfb-run: $(command -v xvfb-run || echo MISSING)"
+  $ echo "convert/magick: $(command -v convert || command -v magick || echo MISSING)"
+  $ echo "glxinfo: $(command -v glxinfo || echo MISSING)"
+  $ echo "mesa (libGL): $(ldconfig -p 2>/dev/null | grep -m1 libGL.so || echo MISSING)"
+2026-07-24T13:09:32-0400  INFO     bash_end      [ok] 4L stdout — Check for headless display + image tooling
+  | xvfb-run: /usr/bin/xvfb-run
+  | convert/magick: /home/linuxbrew/.linuxbrew/bin/convert
+  | glxinfo: /usr/bin/glxinfo
+  | mesa (libGL): MISSING
+2026-07-24T13:10:08-0400  INFO     bash_start    Run harness under Xvfb and capture frames — cd "/tmp/claude-1000/-home-grymmjack-git-qb64/0bd9f361-6ce1-4370-b677-2720aa6365d7/scratchpad" | chmod +x shoot.sh | ./shoot.sh "/home/grymmjack/git/qb64/q…
+  > cwd: /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D
+  $ cd "/tmp/claude-1000/-home-grymmjack-git-qb64/0bd9f361-6ce1-4370-b677-2720aa6365d7/scratchpad"
+  $ chmod +x shoot.sh
+  $ ./shoot.sh "/home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D/DICE3D-TEST" "$(pwd)/shots"
+2026-07-24T13:10:41-0400  INFO     bash_start    Diagnose GL libs and program launch under Xvfb — EXE="/home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D/DICE3D-TEST" | echo "=== ldd GL-related ===" && ldd "$EXE" 2>/dev/null | grep -iE "gl|x11|not fo…
+  > cwd: /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D
+  $ EXE="/home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D/DICE3D-TEST"
+  $ echo "=== ldd GL-related ===" && ldd "$EXE" 2>/dev/null | grep -iE "gl|x11|not found" | head -20
+  $ echo "=== libGL present on system? ===" && find /usr/lib /usr/lib/x86_64-linux-gnu -maxdepth 1 -iname "libGL.so*" 2>/dev/null | head
+  $ echo "=== start Xvfb + probe ==="
+  $ export DISPLAY=:99
+  $ Xvfb :99 -screen 0 1280x1024x24 >/tmp/xvfb.log 2>&1 &
+  $ sleep 2
+  $ echo "xdpyinfo: $(xdpyinfo >/dev/null 2>&1 && echo OK || echo FAIL)"
+  $ echo "=== run program 2s, capture output ==="
+  $ timeout 3 "$EXE" 2>&1 | head -15
+  $ echo "exit=$?"
+  $ pkill Xvfb 2>/dev/null; true
+2026-07-24T13:10:46-0400  INFO     bash_end      [ok] 15L stdout — Diagnose GL libs and program launch under Xvfb
+  | === ldd GL-related ===
+  | 	libGL.so.1 => /lib/x86_64-linux-gnu/libGL.so.1 (0x00007fdf922f8000)
+  | 	libGLU.so.1 => /lib/x86_64-linux-gnu/libGLU.so.1 (0x00007fdf92280000)
+  | 	libX11.so.6 => /lib/x86_64-linux-gnu/libX11.so.6 (0x00007fdf92138000)
+  | 	libGLdispatch.so.0 => /lib/x86_64-linux-gnu/libGLdispatch.so.0 (0x00007fdf91a63000)
+  | 	libGLX.so.0 => /lib/x86_64-linux-gnu/libGLX.so.0 (0x00007fdf920d5000)
+  | 	libOpenGL.so.0 => /lib/x86_64-linux-gnu/libOpenGL.so.0 (0x00007fdf920aa000)
+  | === libGL present on system? ===
+  | /usr/lib/x86_64-linux-gnu/libGL.so
+  | /usr/lib/x86_64-linux-gnu/libGL.so.1
+  | /usr/lib/x86_64-linux-gnu/libGL.so.1.7.0
+  | === start Xvfb + probe ===
+  | xdpyinfo: OK
+  | === run program 2s, capture output ===
+  | exit=0
+2026-07-24T13:12:11-0400  INFO     bash_start    Compile the shot harness — cd /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D | "/tmp/claude-1000/-home-grymmjack-git-qb64/0bd9f361-6ce1-4370-b677-2720aa6365d7/scratchpad/check.sh" "$(pwd)/DICE3D-SH…
+  > cwd: /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D
+  $ cd /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D
+  $ "/tmp/claude-1000/-home-grymmjack-git-qb64/0bd9f361-6ce1-4370-b677-2720aa6365d7/scratchpad/check.sh" "$(pwd)/DICE3D-SHOT.BAS" 2>&1 | tail -4
+2026-07-24T13:12:12-0400  INFO     bash_end      [ok] 4L stdout — Compile the shot harness
+  | Beginning C++ output from QB64 code... 
+  | Compiling C++ code into executable...
+  | Output: /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D/DICE3D-SHOT
+  | ----- COMPILE: PASS (/home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D/DICE3D-SHOT) -----
+2026-07-24T13:12:20-0400  INFO     bash_start    Run shot harness under Xvfb, save frames — SHOTDIR="/tmp/claude-1000/-home-grymmjack-git-qb64/0bd9f361-6ce1-4370-b677-2720aa6365d7/scratchpad/shots" | rm -rf "$SHOTDIR"; mkdir -p "$SHOTDIR" | export …
+  > cwd: /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D
+  $ SHOTDIR="/tmp/claude-1000/-home-grymmjack-git-qb64/0bd9f361-6ce1-4370-b677-2720aa6365d7/scratchpad/shots"
+  $ rm -rf "$SHOTDIR"; mkdir -p "$SHOTDIR"
+  $ export DISPLAY=:99
+  $ Xvfb :99 -screen 0 1280x1024x24 >/tmp/xvfb.log 2>&1 &
+  $ XPID=$!; sleep 2
+  $ cd /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D
+  $ DICE3D_SHOT_DIR="$SHOTDIR" timeout 12 ./DICE3D-SHOT >"$SHOTDIR/run.log" 2>&1
+  $ echo "exit=$?"
+  $ kill $XPID 2>/dev/null
+  $ echo "=== PNGs ===" && ls -la "$SHOTDIR"/*.png 2>/dev/null
+  $ echo "=== run.log ===" && cat "$SHOTDIR/run.log" 2>/dev/null | head
+2026-07-24T13:12:24-0400  INFO     bash_end      [ok] 17L stdout — Run shot harness under Xvfb, save frames
+  | exit=0
+  | === PNGs ===
+  | .rw-rw-r-- 4.8k grymmjack 24 Jul 13:12 /tmp/claude-1000/-home-grymmjack-git-qb64/0bd9f361-6ce1-4370-b677-2720aa6365d7/scratchpad/shots/f0005.png
+  | .rw-rw-r-- 5.4k grymmjack 24 Jul 13:12 /tmp/claude-1000/-home-grymmjack-git-qb64/0bd9f361-6ce1-4370-b677-2720aa6365d7/scratchpad/shots/f0010.png
+  | .rw-rw-r-- 5.5k grymmjack 24 Jul 13:12 /tmp/claude-1000/-home-grymmjack-git-qb64/0bd9f361-6ce1-4370-b677-2720aa6365d7/scratchpad/shots/f0015.png
+  | .rw-rw-r-- 5.2k grymmjack 24 Jul 13:12 /tmp/claude-1000/-home-grymmjack-git-qb64/0bd9f361-6ce1-4370-b677-2720aa6365d7/scratchpad/shots/f0020.png
+  | .rw-rw-r-- 4.6k grymmjack 24 Jul 13:12 /tmp/claude-1000/-home-grymmjack-git-qb64/0bd9f361-6ce1-4370-b677-2720aa6365d7/scratchpad/shots/f0025.png
+  | .rw-rw-r-- 4.4k grymmjack 24 Jul 13:12 /tmp/claude-1000/-home-grymmjack-git-qb64/0bd9f361-6ce1-4370-b677-2720aa6365d7/scratchpad/shots/f0030.png
+  | .rw-rw-r-- 4.8k grymmjack 24 Jul 13:12 /tmp/claude-1000/-home-grymmjack-git-qb64/0bd9f361-6ce1-4370-b677-2720aa6365d7/scratchpad/shots/f0035.png
+  | .rw-rw-r-- 5.3k grymmjack 24 Jul 13:12 /tmp/claude-1000/-home-grymmjack-git-qb64/0bd9f361-6ce1-4370-b677-2720aa6365d7/scratchpad/shots/f0040.png
+  | .rw-rw-r-- 5.5k grymmjack 24 Jul 13:12 /tmp/claude-1000/-home-grymmjack-git-qb64/0bd9f361-6ce1-4370-b677-2720aa6365d7/scratchpad/shots/f0045.png
+  | .rw-rw-r-- 5.4k grymmjack 24 Jul 13:12 /tmp/claude-1000/-home-grymmjack-git-qb64/0bd9f361-6ce1-4370-b677-2720aa6365d7/scratchpad/shots/f0050.png
+  | .rw-rw-r-- 4.7k grymmjack 24 Jul 13:12 /tmp/claude-1000/-home-grymmjack-git-qb64/0bd9f361-6ce1-4370-b677-2720aa6365d7/scratchpad/shots/f0055.png
+  | .rw-rw-r-- 4.2k grymmjack 24 Jul 13:12 /tmp/claude-1000/-home-grymmjack-git-qb64/0bd9f361-6ce1-4370-b677-2720aa6365d7/scratchpad/shots/f0060.png
+  | .rw-rw-r-- 4.0k grymmjack 24 Jul 13:12 /tmp/claude-1000/-home-grymmjack-git-qb64/0bd9f361-6ce1-4370-b677-2720aa6365d7/scratchpad/shots/f0065.png
+  | .rw-rw-r--  20k grymmjack 24 Jul 13:12 /tmp/claude-1000/-home-grymmjack-git-qb64/0bd9f361-6ce1-4370-b677-2720aa6365d7/scratchpad/shots/screen_final.png
+  | === run.log ===
+2026-07-24T13:12:33-0400  INFO     bash_start    Build a tumble contact sheet — SHOTDIR="/tmp/claude-1000/-home-grymmjack-git-qb64/0bd9f361-6ce1-4370-b677-2720aa6365d7/scratchpad/shots" | cd "$SHOTDIR" | # montage the box-buffer tumble frames into …
+  > cwd: /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D
+  $ SHOTDIR="/tmp/claude-1000/-home-grymmjack-git-qb64/0bd9f361-6ce1-4370-b677-2720aa6365d7/scratchpad/shots"
+  $ cd "$SHOTDIR"
+  $ # montage the box-buffer tumble frames into one contact sheet for quick review
+  $ convert f0005.png f0015.png f0025.png f0035.png f0045.png f0055.png f0065.png -background black -bordercolor "#444" -border 2 +append tumble_strip.png 2>&1 | head
+  $ ls -la tumble_strip.png 2>/dev/null
+  $ identify screen_final.png f0010.png 2>/dev/null | head
+2026-07-24T13:12:33-0400  WARNING  bash_end      [stderr] 5L stdout / 2L stderr — Build a tumble contact sheet
+  | WARNING: The convert command is deprecated in IMv7, use "magick" instead of "convert" or "magick convert"
+  | 
+  | .rw-rw-r-- 8.2k grymmjack 24 Jul 13:12 tumble_strip.png
+  | screen_final.png PNG 800x600 800x600+0+0 8-bit sRGB 20203B 0.000u 0:00.000
+  | f0010.png PNG 300x300 300x300+0+0 8-bit sRGB 5380B 0.000u 0:00.000
+  ! 
+  ! Shell cwd was reset to /home/grymmjack/git/qb64
+2026-07-24T13:30:51-0400  INFO     bash_start    Compile M2 shot harness — cd /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D | "/tmp/claude-1000/-home-grymmjack-git-qb64/0bd9f361-6ce1-4370-b677-2720aa6365d7/scratchpad/check.sh" "$(pwd)/DICE3D-SHO…
+  > cwd: /home/grymmjack/git/qb64
+  $ cd /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D
+  $ "/tmp/claude-1000/-home-grymmjack-git-qb64/0bd9f361-6ce1-4370-b677-2720aa6365d7/scratchpad/check.sh" "$(pwd)/DICE3D-SHOT.BAS" 2>&1 | tail -6
+2026-07-24T13:30:52-0400  INFO     bash_end      [ok] 6L stdout — Compile M2 shot harness
+  | QB64-PE Compiler V4.4.0-UNKNOWN
+  | Beginning C++ output from QB64 code... 
+  | [38;5;9mName already in use (key) in line 62 of /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D/_DICE.BM included (through /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D/_ALL.BM)
+  | [38;5;7mCaused by (or after):FUNCTION DICE3D_MODVAL% ( T AS STRING , KEY AS STRING )
+  | [38;5;8mLINE [38;5;15m57:[38;5;7mFUNCTION dice3d_modval% (t AS STRING, key AS STRING)
+  | ----- COMPILE: PASS (/home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D/DICE3D-SHOT) -----
+2026-07-24T13:31:16-0400  INFO     bash_start    Recompile M2 after key rename + check.sh fix — cd /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D | "/tmp/claude-1000/-home-grymmjack-git-qb64/0bd9f361-6ce1-4370-b677-2720aa6365d7/scratchpad/check.s…
+  > cwd: /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D
+  $ cd /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D
+  $ "/tmp/claude-1000/-home-grymmjack-git-qb64/0bd9f361-6ce1-4370-b677-2720aa6365d7/scratchpad/check.sh" "$(pwd)/DICE3D-SHOT.BAS" 2>&1 | tail -6
+2026-07-24T13:31:17-0400  INFO     bash_end      [ok] 5L stdout — Recompile M2 after key rename + check.sh fix
+  | QB64-PE Compiler V4.4.0-UNKNOWN
+  | Beginning C++ output from QB64 code... 
+  | Compiling C++ code into executable...
+  | Output: /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D/DICE3D-SHOT
+  | ----- COMPILE: PASS (/home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D/DICE3D-SHOT) -----
+2026-07-24T13:31:33-0400  INFO     bash_start    Run M2 shot harness, montage frames — cd "/tmp/claude-1000/-home-grymmjack-git-qb64/0bd9f361-6ce1-4370-b677-2720aa6365d7/scratchpad" | chmod +x runshot.sh | ./runshot.sh "/home/grymmjack/git/qb64/qb6…
+  > cwd: /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D
+  $ cd "/tmp/claude-1000/-home-grymmjack-git-qb64/0bd9f361-6ce1-4370-b677-2720aa6365d7/scratchpad"
+  $ chmod +x runshot.sh
+  $ ./runshot.sh "/home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D/DICE3D-SHOT" "$(pwd)/shots2"
+  $ echo "=== montage tumble ==="
+  $ cd shots2 && magick f0005.png f0015.png f0030.png f0050.png f0075.png -background black -bordercolor "#555" -border 2 +append tumble2.png 2>/dev/null && echo montaged
+2026-07-24T13:31:37-0400  WARNING  bash_end      [stderr] 4L stdout / 2L stderr — Run M2 shot harness, montage frames
+  | exit=0
+  | f0005.png f0010.png f0015.png f0020.png f0025.png f0030.png f0035.png f0040.png f0045.png f0050.png f0055.png f0060.png f0065.png f0070.png f0075.png f0080.png f0085.png f0090.png screen_final.png 
+  | === montage tumble ===
+  | montaged
+  ! 
+  ! Shell cwd was reset to /home/grymmjack/git/qb64
+2026-07-24T13:42:42-0400  INFO     bash_start    Compile M3 refactor — cd /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D | "/tmp/claude-1000/-home-grymmjack-git-qb64/0bd9f361-6ce1-4370-b677-2720aa6365d7/scratchpad/check.sh" "$(pwd)/DICE3D-SHOT.BA…
+  > cwd: /home/grymmjack/git/qb64
+  $ cd /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D
+  $ "/tmp/claude-1000/-home-grymmjack-git-qb64/0bd9f361-6ce1-4370-b677-2720aa6365d7/scratchpad/check.sh" "$(pwd)/DICE3D-SHOT.BAS" 2>&1 | tail -8
+2026-07-24T13:42:43-0400  INFO     bash_end      [ok] 6L stdout — Compile M3 refactor
+  | QB64-PE Compiler V4.4.0-UNKNOWN
+  | Beginning C++ output from QB64 code... 
+  | [38;5;9mName already in use (base) in line 92 of /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D/_GEO.BM included (through /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D/_ALL.BM)
+  | [38;5;7mCaused by (or after):DIM AS INTEGER I , J , K , M , F , G , P , S , NF , NTOP , BASE , T , NEXTVAL
+  | [38;5;8mLINE [38;5;15m57:[38;5;7mDIM AS INTEGER i, j, k, m, f, g, p, s, nf, ntop, base, t, nextval
+  | ----- COMPILE: FAIL -----
+2026-07-24T13:42:56-0400  INFO     bash_start    Find all base occurrences — cd /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D | grep -n "base" _GEO.BM
+  > cwd: /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D
+  $ cd /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D
+  $ grep -n "base" _GEO.BM
+2026-07-24T13:42:56-0400  INFO     bash_end      [ok] 7L stdout — Find all base occurrences
+  | 89:' for `sides`. Uses the number labels in labels() (1-based value -> string); if
+  | 92:    DIM AS INTEGER i, j, k, m, f, g, p, s, nf, ntop, base, t, nextval
+  | 186:        s = fSize(f): base = fStart(f)
+  | 193:            cen.X = cen.X + DICE3D_MV(fIdx(base + p)).X: cen.Y = cen.Y + DICE3D_MV(fIdx(base + p)).Y: cen.Z = cen.Z + DICE3D_MV(fIdx(base + p)).Z
+  | 196:        dice3d_vsub DICE3D_MV(fIdx(base)), cen, e0
+  | 205:            dice3d_vsub DICE3D_MV(fIdx(base + p)), cen, rel
+  | 223:            DICE3D_TA(t) = fIdx(base): DICE3D_TB(t) = fIdx(base + p): DICE3D_TC(t) = fIdx(base + p + 1)
+2026-07-24T13:43:00-0400  INFO     bash_start    Rename base to fbase — cd /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D | sed -i 's/\bbase\b/fbase/g' _GEO.BM | echo "--- verify ---"; grep -n "fbase" _GEO.BM | head | echo "--- ensure no lone 'ba…
+  > cwd: /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D
+  $ cd /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D
+  $ sed -i 's/\bbase\b/fbase/g' _GEO.BM
+  $ echo "--- verify ---"; grep -n "fbase" _GEO.BM | head
+  $ echo "--- ensure no lone 'base' remains as var (line 89 comment '1-based' ok) ---"; grep -n "base" _GEO.BM
+2026-07-24T13:43:00-0400  INFO     bash_end      [ok] 15L stdout — Rename base to fbase
+  | --- verify ---
+  | 92:    DIM AS INTEGER i, j, k, m, f, g, p, s, nf, ntop, fbase, t, nextval
+  | 186:        s = fSize(f): fbase = fStart(f)
+  | 193:            cen.X = cen.X + DICE3D_MV(fIdx(fbase + p)).X: cen.Y = cen.Y + DICE3D_MV(fIdx(fbase + p)).Y: cen.Z = cen.Z + DICE3D_MV(fIdx(fbase + p)).Z
+  | 196:        dice3d_vsub DICE3D_MV(fIdx(fbase)), cen, e0
+  | 205:            dice3d_vsub DICE3D_MV(fIdx(fbase + p)), cen, rel
+  | 223:            DICE3D_TA(t) = fIdx(fbase): DICE3D_TB(t) = fIdx(fbase + p): DICE3D_TC(t) = fIdx(fbase + p + 1)
+  | --- ensure no lone 'base' remains as var (line 89 comment '1-based' ok) ---
+  | 89:' for `sides`. Uses the number labels in labels() (1-based value -> string); if
+  | 92:    DIM AS INTEGER i, j, k, m, f, g, p, s, nf, ntop, fbase, t, nextval
+  | 186:        s = fSize(f): fbase = fStart(f)
+  | 193:            cen.X = cen.X + DICE3D_MV(fIdx(fbase + p)).X: cen.Y = cen.Y + DICE3D_MV(fIdx(fbase + p)).Y: cen.Z = cen.Z + DICE3D_MV(fIdx(fbase + p)).Z
+  | 196:        dice3d_vsub DICE3D_MV(fIdx(fbase)), cen, e0
+  | 205:            dice3d_vsub DICE3D_MV(fIdx(fbase + p)), cen, rel
+  | 223:            DICE3D_TA(t) = fIdx(fbase): DICE3D_TB(t) = fIdx(fbase + p): DICE3D_TC(t) = fIdx(fbase + p + 1)
+2026-07-24T13:43:06-0400  INFO     bash_start    Recompile after base rename — cd /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D | "/tmp/claude-1000/-home-grymmjack-git-qb64/0bd9f361-6ce1-4370-b677-2720aa6365d7/scratchpad/check.sh" "$(pwd)/DICE3D…
+  > cwd: /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D
+  $ cd /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D
+  $ "/tmp/claude-1000/-home-grymmjack-git-qb64/0bd9f361-6ce1-4370-b677-2720aa6365d7/scratchpad/check.sh" "$(pwd)/DICE3D-SHOT.BAS" 2>&1 | tail -8
+2026-07-24T13:43:06-0400  INFO     bash_end      [ok] 6L stdout — Recompile after base rename
+  | QB64-PE Compiler V4.4.0-UNKNOWN
+  | Beginning C++ output from QB64 code... 
+  | [38;5;9mName already in use (pos) in line 118 of /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D/_GEO.BM included (through /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D/_ALL.BM)
+  | [38;5;7mCaused by (or after):DIM AS INTEGER POS , NEG , MC
+  | [38;5;8mLINE [38;5;15m57:[38;5;7mDIM AS INTEGER pos, neg, mc
+  | ----- COMPILE: FAIL -----
+2026-07-24T13:43:25-0400  INFO     bash_start    Hoist DIM and rename pos to pcnt — cd /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D | # remove the inner DIM line, add pcnt/neg/mc to the top DIM line, rename pos->pcnt | perl -0pi -e 's/^\s*DIM A…
+  > cwd: /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D
+  $ cd /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D
+  $ # remove the inner DIM line, add pcnt/neg/mc to the top DIM line, rename pos->pcnt
+  $ perl -0pi -e 's/^\s*DIM AS INTEGER pos, neg, mc\n//m' _GEO.BM
+  $ perl -pi -e 's/DIM AS INTEGER i, j, k, m, f, g, p, s, nf, ntop, fbase, t, nextval/DIM AS INTEGER i, j, k, m, f, g, p, s, nf, ntop, fbase, t, nextval, pcnt, neg, mc/' _GEO.BM
+  $ perl -pi -e 's/\bpos\b/pcnt/g' _GEO.BM
+  $ echo "--- checks ---"; grep -n "pcnt\|DIM AS INTEGER i, j" _GEO.BM | head
+2026-07-24T13:43:25-0400  INFO     bash_end      [ok] 5L stdout — Hoist DIM and rename pos to pcnt
+  | --- checks ---
+  | 92:    DIM AS INTEGER i, j, k, m, f, g, p, s, nf, ntop, fbase, t, nextval, pcnt, neg, mc
+  | 118:                pcnt = 0: neg = 0
+  | 121:                    IF dd > eps THEN pcnt = pcnt + 1
+  | 124:                IF pcnt > 0 AND neg > 0 THEN _CONTINUE
+2026-07-24T13:43:33-0400  INFO     bash_start    Recompile after pos rename — cd /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D | "/tmp/claude-1000/-home-grymmjack-git-qb64/0bd9f361-6ce1-4370-b677-2720aa6365d7/scratchpad/check.sh" "$(pwd)/DICE3D-…
+  > cwd: /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D
+  $ cd /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D
+  $ "/tmp/claude-1000/-home-grymmjack-git-qb64/0bd9f361-6ce1-4370-b677-2720aa6365d7/scratchpad/check.sh" "$(pwd)/DICE3D-SHOT.BAS" 2>&1 | tail -8
+2026-07-24T13:43:33-0400  INFO     bash_end      [ok] 6L stdout — Recompile after pos rename
+  | QB64-PE Compiler V4.4.0-UNKNOWN
+  | Beginning C++ output from QB64 code... 
+  | [38;5;9mName already in use (val) in line 248 of /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D/_GEO.BM included (through /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D/_ALL.BM)
+  | [38;5;7mCaused by (or after):FUNCTION DICE3D_IDX_IN% ( FIDX ( ) AS INTEGER , START AS INTEGER , CNT AS INTEGER , VAL AS INTEGER )
+  | [38;5;8mLINE [38;5;15m57:[38;5;7mFUNCTION dice3d_idx_in% (fIdx() AS INTEGER, start AS INTEGER, cnt AS INTEGER, val AS INTEGER)
+  | ----- COMPILE: FAIL -----
+2026-07-24T13:43:48-0400  INFO     bash_start    Recompile after val/start rename — cd /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D | "/tmp/claude-1000/-home-grymmjack-git-qb64/0bd9f361-6ce1-4370-b677-2720aa6365d7/scratchpad/check.sh" "$(pwd)/D…
+  > cwd: /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D
+  $ cd /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D
+  $ "/tmp/claude-1000/-home-grymmjack-git-qb64/0bd9f361-6ce1-4370-b677-2720aa6365d7/scratchpad/check.sh" "$(pwd)/DICE3D-SHOT.BAS" 2>&1 | tail -8
+2026-07-24T13:43:50-0400  INFO     bash_end      [ok] 5L stdout — Recompile after val/start rename
+  | QB64-PE Compiler V4.4.0-UNKNOWN
+  | Beginning C++ output from QB64 code... 
+  | Compiling C++ code into executable...
+  | Output: /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D/DICE3D-SHOT
+  | ----- COMPILE: PASS (/home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D/DICE3D-SHOT) -----
+2026-07-24T13:43:56-0400  INFO     bash_start    Run D6 under new pipeline, montage — cd "/tmp/claude-1000/-home-grymmjack-git-qb64/0bd9f361-6ce1-4370-b677-2720aa6365d7/scratchpad" | ./runshot.sh "/home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D/DI…
+  > cwd: /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D
+  $ cd "/tmp/claude-1000/-home-grymmjack-git-qb64/0bd9f361-6ce1-4370-b677-2720aa6365d7/scratchpad"
+  $ ./runshot.sh "/home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D/DICE3D-SHOT" "$(pwd)/shots3" 12 >/dev/null 2>&1
+  $ cd shots3 && magick f0010.png f0030.png f0055.png f0080.png -background black -bordercolor "#555" -border 2 +append t3.png 2>/dev/null; echo done
+2026-07-24T13:44:00-0400  WARNING  bash_end      [stderr] 1L stdout / 2L stderr — Run D6 under new pipeline, montage
+  | done
+  ! 
+  ! Shell cwd was reset to /home/grymmjack/git/qb64
+2026-07-24T13:45:03-0400  INFO     bash_start    Compile env-driven shot harness — cd /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D | "/tmp/claude-1000/-home-grymmjack-git-qb64/0bd9f361-6ce1-4370-b677-2720aa6365d7/scratchpad/check.sh" "$(pwd)/DI…
+  > cwd: /home/grymmjack/git/qb64
+  $ cd /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D
+  $ "/tmp/claude-1000/-home-grymmjack-git-qb64/0bd9f361-6ce1-4370-b677-2720aa6365d7/scratchpad/check.sh" "$(pwd)/DICE3D-SHOT.BAS" 2>&1 | tail -3
+2026-07-24T13:45:05-0400  INFO     bash_end      [ok] 3L stdout — Compile env-driven shot harness
+  | Compiling C++ code into executable...
+  | Output: /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D/DICE3D-SHOT
+  | ----- COMPILE: PASS (/home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D/DICE3D-SHOT) -----
+2026-07-24T13:45:19-0400  INFO     bash_start    Sweep all die types, montage cropped boxes — cd "/tmp/claude-1000/-home-grymmjack-git-qb64/0bd9f361-6ce1-4370-b677-2720aa6365d7/scratchpad" | EXE="/home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D/DIC…
+  > cwd: /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D
+  $ cd "/tmp/claude-1000/-home-grymmjack-git-qb64/0bd9f361-6ce1-4370-b677-2720aa6365d7/scratchpad"
+  $ EXE="/home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D/DICE3D-SHOT"
+  $ OUT="$(pwd)/sweep"; rm -rf "$OUT"; mkdir -p "$OUT"
+  $ export DISPLAY=:99
+  $ pkill Xvfb 2>/dev/null; sleep 0.3
+  $ Xvfb :99 -screen 0 1280x1024x24 >/tmp/xvfb.log 2>&1 & XPID=$!; sleep 1.5
+  $ for roll in 1d4 1d6 1d8 1d12 1d20; do
+  $   d="$OUT/$roll"; mkdir -p "$d"
+  $   DICE3D_ROLL="$roll" DICE3D_SHOT_DIR="$d" timeout 10 "$EXE" >"$d/log" 2>&1
+  $   # crop to the box region (box at 250,150 size 320x320) for a tight comparison
+  $   magick "$d/screen_final.png" -crop 340x360+240+140 +repage "$OUT/${roll}.png" 2>/dev/null
+  $ done
+  $ kill $XPID 2>/dev/null
+  $ cd "$OUT"
+  $ magick 1d4.png 1d6.png 1d8.png 1d12.png 1d20.png -background "#111" -bordercolor "#666" -border 2 +append alldice.png 2>/dev/null
+  $ ls -la alldice.png 2>/dev/null && echo OK
+2026-07-24T13:45:29-0400  WARNING  bash_end      [stderr] 2L stdout / 2L stderr — Sweep all die types, montage cropped boxes
+  | .rw-rw-r-- 4.7k grymmjack 24 Jul 13:45 alldice.png
+  | OK
+  ! 
+  ! Shell cwd was reset to /home/grymmjack/git/qb64
+2026-07-24T13:50:19-0400  INFO     bash_start    Compile M3c (D10 + percentile) — cd /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D | "/tmp/claude-1000/-home-grymmjack-git-qb64/0bd9f361-6ce1-4370-b677-2720aa6365d7/scratchpad/check.sh" "$(pwd)/DIC…
+  > cwd: /home/grymmjack/git/qb64
+  $ cd /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D
+  $ "/tmp/claude-1000/-home-grymmjack-git-qb64/0bd9f361-6ce1-4370-b677-2720aa6365d7/scratchpad/check.sh" "$(pwd)/DICE3D-SHOT.BAS" 2>&1 | tail -6
+2026-07-24T13:50:21-0400  INFO     bash_end      [ok] 5L stdout — Compile M3c (D10 + percentile)
+  | QB64-PE Compiler V4.4.0-UNKNOWN
+  | Beginning C++ output from QB64 code... 
+  | Compiling C++ code into executable...
+  | Output: /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D/DICE3D-SHOT
+  | ----- COMPILE: PASS (/home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D/DICE3D-SHOT) -----
+2026-07-24T13:50:32-0400  INFO     bash_start    Sweep d10, 2d10, d100 percentile — cd "/tmp/claude-1000/-home-grymmjack-git-qb64/0bd9f361-6ce1-4370-b677-2720aa6365d7/scratchpad" | EXE="/home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D/DICE3D-SHOT" …
+  > cwd: /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D
+  $ cd "/tmp/claude-1000/-home-grymmjack-git-qb64/0bd9f361-6ce1-4370-b677-2720aa6365d7/scratchpad"
+  $ EXE="/home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D/DICE3D-SHOT"
+  $ OUT="$(pwd)/sweep2"; rm -rf "$OUT"; mkdir -p "$OUT"
+  $ export DISPLAY=:99
+  $ pkill Xvfb 2>/dev/null; sleep 0.3
+  $ Xvfb :99 -screen 0 1280x1024x24 >/tmp/xvfb.log 2>&1 & XPID=$!; sleep 1.5
+  $ for roll in 1d10 2d10 1d100; do
+  $   d="$OUT/$roll"; mkdir -p "$d"
+  $   DICE3D_ROLL="$roll" DICE3D_SHOT_DIR="$d" timeout 10 "$EXE" >"$d/log" 2>&1
+  $   magick "$d/screen_final.png" -crop 350x380+240+140 +repage "$OUT/${roll}.png" 2>/dev/null
+  $   echo "$roll -> $(grep -ao 'dice:.*' "$d/screen_final.png" 2>/dev/null | head -1)"
+  $ done
+  $ kill $XPID 2>/dev/null
+  $ cd "$OUT"; magick 1d10.png 2d10.png 1d100.png -background "#111" -bordercolor "#666" -border 2 +append d10s.png 2>/dev/null && echo OK
+2026-07-24T13:50:40-0400  WARNING  bash_end      [stderr] 4L stdout / 2L stderr — Sweep d10, 2d10, d100 percentile
+  | 1d10 -> 
+  | 2d10 -> 
+  | 1d100 -> 
+  | OK
+  ! 
+  ! Shell cwd was reset to /home/grymmjack/git/qb64
+2026-07-24T13:52:38-0400  INFO     bash_start    Compile with camera tilt — cd /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D | "/tmp/claude-1000/-home-grymmjack-git-qb64/0bd9f361-6ce1-4370-b677-2720aa6365d7/scratchpad/check.sh" "$(pwd)/DICE3D-SH…
+  > cwd: /home/grymmjack/git/qb64
+  $ cd /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D
+  $ "/tmp/claude-1000/-home-grymmjack-git-qb64/0bd9f361-6ce1-4370-b677-2720aa6365d7/scratchpad/check.sh" "$(pwd)/DICE3D-SHOT.BAS" 2>&1 | tail -3
+2026-07-24T13:52:39-0400  INFO     bash_end      [ok] 3L stdout — Compile with camera tilt
+  | Compiling C++ code into executable...
+  | Output: /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D/DICE3D-SHOT
+  | ----- COMPILE: PASS (/home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D/DICE3D-SHOT) -----
+2026-07-24T13:52:48-0400  INFO     bash_start    Sweep all dice with tilt, 2-row montage — cd "/tmp/claude-1000/-home-grymmjack-git-qb64/0bd9f361-6ce1-4370-b677-2720aa6365d7/scratchpad" | EXE="/home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D/DICE3D…
+  > cwd: /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D
+  $ cd "/tmp/claude-1000/-home-grymmjack-git-qb64/0bd9f361-6ce1-4370-b677-2720aa6365d7/scratchpad"
+  $ EXE="/home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D/DICE3D-SHOT"
+  $ OUT="$(pwd)/sweep3"; rm -rf "$OUT"; mkdir -p "$OUT"
+  $ export DISPLAY=:99
+  $ pkill Xvfb 2>/dev/null; sleep 0.3
+  $ Xvfb :99 -screen 0 1280x1024x24 >/tmp/xvfb.log 2>&1 & XPID=$!; sleep 1.5
+  $ for roll in 1d4 1d6 1d8 1d10 1d12 1d20 1d100; do
+  $   d="$OUT/$roll"; mkdir -p "$d"
+  $   DICE3D_ROLL="$roll" DICE3D_SHOT_DIR="$d" timeout 10 "$EXE" >"$d/log" 2>&1
+  $   magick "$d/screen_final.png" -crop 340x370+240+140 +repage "$OUT/${roll}.png" 2>/dev/null
+  $ done
+  $ kill $XPID 2>/dev/null
+  $ cd "$OUT"
+  $ magick 1d4.png 1d6.png 1d8.png 1d10.png +append row1.png 2>/dev/null
+  $ magick 1d12.png 1d20.png 1d100.png +append row2.png 2>/dev/null
+  $ magick row1.png row2.png -background "#111" -append tilted.png 2>/dev/null && echo OK
+2026-07-24T13:53:02-0400  WARNING  bash_end      [stderr] 1L stdout / 2L stderr — Sweep all dice with tilt, 2-row montage
+  | OK
+  ! 
+  ! Shell cwd was reset to /home/grymmjack/git/qb64
+2026-07-24T13:57:15-0400  INFO     bash_start    Compile M4 texture features — cd /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D | "/tmp/claude-1000/-home-grymmjack-git-qb64/0bd9f361-6ce1-4370-b677-2720aa6365d7/scratchpad/check.sh" "$(pwd)/DICE3D…
+  > cwd: /home/grymmjack/git/qb64
+  $ cd /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D
+  $ "/tmp/claude-1000/-home-grymmjack-git-qb64/0bd9f361-6ce1-4370-b677-2720aa6365d7/scratchpad/check.sh" "$(pwd)/DICE3D-SHOT.BAS" 2>&1 | tail -6
+2026-07-24T13:57:17-0400  INFO     bash_end      [ok] 5L stdout — Compile M4 texture features
+  | QB64-PE Compiler V4.4.0-UNKNOWN
+  | Beginning C++ output from QB64 code... 
+  | Compiling C++ code into executable...
+  | Output: /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D/DICE3D-SHOT
+  | ----- COMPILE: PASS (/home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D/DICE3D-SHOT) -----
+2026-07-24T13:57:45-0400  INFO     bash_start    Sweep materials, pips, bevel — cd /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D | "/tmp/claude-1000/-home-grymmjack-git-qb64/0bd9f361-6ce1-4370-b677-2720aa6365d7/scratchpad/check.sh" "$(pwd)/DICE3…
+  > cwd: /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D
+  $ cd /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D
+  $ "/tmp/claude-1000/-home-grymmjack-git-qb64/0bd9f361-6ce1-4370-b677-2720aa6365d7/scratchpad/check.sh" "$(pwd)/DICE3D-SHOT.BAS" 2>&1 | tail -2
+  $ cd "/tmp/claude-1000/-home-grymmjack-git-qb64/0bd9f361-6ce1-4370-b677-2720aa6365d7/scratchpad"
+  $ EXE="/home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D/DICE3D-SHOT"
+  $ OUT="$(pwd)/sweep4"; rm -rf "$OUT"; mkdir -p "$OUT"
+  $ export DISPLAY=:99
+  $ pkill Xvfb 2>/dev/null; sleep 0.3
+  $ Xvfb :99 -screen 0 1280x1024x24 >/tmp/xvfb.log 2>&1 & XPID=$!; sleep 1.5
+  $ # materials on a d20 (mat 0..3), plus a pip d6 and a bevel d6
+  $ run() { local tag="$1"; shift; local d="$OUT/$tag"; mkdir -p "$d"; env "$@" DICE3D_SHOT_DIR="$d" timeout 10 "$EXE" >"$d/log" 2>&1; magick "$d/screen_final.png" -crop 340x360+240+140 +repage "$OUT/$tag.png" 2>/dev/null; }
+  $ run solid   DICE3D_ROLL=1d20 DICE3D_MAT=0
+  $ run crystal DICE3D_ROLL=1d20 DICE3D_MAT=1
+  $ run marble  DICE3D_ROLL=1d20 DICE3D_MAT=2
+  $ run noise   DICE3D_ROLL=1d20 DICE3D_MAT=3
+  $ run pips    DICE3D_ROLL=4d6  DICE3D_PIPS=1
+  $ run bevel   DICE3D_ROLL=1d6  DICE3D_BEVEL=90 DICE3D_SIZE=70
+  $ kill $XPID 2>/dev/null
+  $ cd "$OUT"
+  $ magick solid.png crystal.png marble.png noise.png +append r1.png 2>/dev/null
+  $ magick pips.png bevel.png +append r2.png 2>/dev/null
+  $ magick r1.png -resize 1020x r1b.png 2>/dev/null
+  $ echo done
+2026-07-24T13:57:59-0400  WARNING  bash_end      [stderr] 3L stdout / 2L stderr — Sweep materials, pips, bevel
+  | Output: /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D/DICE3D-SHOT
+  | ----- COMPILE: PASS (/home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D/DICE3D-SHOT) -----
+  | done
+  ! 
+  ! Shell cwd was reset to /home/grymmjack/git/qb64
+2026-07-24T13:59:35-0400  INFO     bash_start    Compile+run custom face-map demo — cd /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D | "/tmp/claude-1000/-home-grymmjack-git-qb64/0bd9f361-6ce1-4370-b677-2720aa6365d7/scratchpad/check.sh" "$(pwd)/D…
+  > cwd: /home/grymmjack/git/qb64
+  $ cd /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D
+  $ "/tmp/claude-1000/-home-grymmjack-git-qb64/0bd9f361-6ce1-4370-b677-2720aa6365d7/scratchpad/check.sh" "$(pwd)/DICE3D-FACES.BAS" 2>&1 | tail -3
+  $ cd "/tmp/claude-1000/-home-grymmjack-git-qb64/0bd9f361-6ce1-4370-b677-2720aa6365d7/scratchpad"
+  $ EXE="/home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D/DICE3D-FACES"
+  $ OUT="$(pwd)/faces"; rm -rf "$OUT"; mkdir -p "$OUT"
+  $ export DISPLAY=:99
+  $ pkill Xvfb 2>/dev/null; sleep 0.3
+  $ Xvfb :99 -screen 0 1280x1024x24 >/tmp/xvfb.log 2>&1 & XPID=$!; sleep 1.5
+  $ DICE3D_SHOT_DIR="$OUT" timeout 10 "$EXE" >"$OUT/log" 2>&1
+  $ kill $XPID 2>/dev/null
+  $ magick "$OUT/screen_final.png" -crop 360x400+240+140 +repage "$OUT/faces_crop.png" 2>/dev/null; echo done
+2026-07-24T13:59:40-0400  WARNING  bash_end      [stderr] 4L stdout / 2L stderr — Compile+run custom face-map demo
+  | Compiling C++ code into executable...
+  | Output: /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D/DICE3D-FACES
+  | ----- COMPILE: PASS (/home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D/DICE3D-FACES) -----
+  | done
+  ! 
+  ! Shell cwd was reset to /home/grymmjack/git/qb64
+2026-07-24T14:02:22-0400  INFO     bash_start    Compile M5 sounds + drop FX — cd /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D | "/tmp/claude-1000/-home-grymmjack-git-qb64/0bd9f361-6ce1-4370-b677-2720aa6365d7/scratchpad/check.sh" "$(pwd)/DICE3D…
+  > cwd: /home/grymmjack/git/qb64
+  $ cd /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D
+  $ "/tmp/claude-1000/-home-grymmjack-git-qb64/0bd9f361-6ce1-4370-b677-2720aa6365d7/scratchpad/check.sh" "$(pwd)/DICE3D-SHOT.BAS" 2>&1 | tail -5
+2026-07-24T14:02:23-0400  INFO     bash_end      [ok] 5L stdout — Compile M5 sounds + drop FX
+  | Beginning C++ output from QB64 code... 
+  | [38;5;9mNEXT without FOR in line 196 of /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D/_DICE.BM included (through /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D/_ALL.BM)
+  | [38;5;7mCaused by (or after):NEXT
+  | [38;5;8mLINE [38;5;15m65:[38;5;7mFOR hold = 1 TO 24: dice3d_present cfg: IF cfg.FPS > 0 THEN _LIMIT cfg.FPS: NEXT
+  | ----- COMPILE: FAIL -----
+2026-07-24T14:02:38-0400  INFO     bash_start    Recompile M5 — cd /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D | "/tmp/claude-1000/-home-grymmjack-git-qb64/0bd9f361-6ce1-4370-b677-2720aa6365d7/scratchpad/check.sh" "$(pwd)/DICE3D-SHOT.BAS" 2>&1…
+  > cwd: /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D
+  $ cd /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D
+  $ "/tmp/claude-1000/-home-grymmjack-git-qb64/0bd9f361-6ce1-4370-b677-2720aa6365d7/scratchpad/check.sh" "$(pwd)/DICE3D-SHOT.BAS" 2>&1 | tail -3
+2026-07-24T14:02:40-0400  INFO     bash_end      [ok] 3L stdout — Recompile M5
+  | Compiling C++ code into executable...
+  | Output: /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D/DICE3D-SHOT
+  | ----- COMPILE: PASS (/home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D/DICE3D-SHOT) -----
+2026-07-24T14:03:02-0400  INFO     bash_start    Run explode drop FX, montage the tail — cd /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D | "/tmp/claude-1000/-home-grymmjack-git-qb64/0bd9f361-6ce1-4370-b677-2720aa6365d7/scratchpad/check.sh" "$(p…
+  > cwd: /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D
+  $ cd /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D
+  $ "/tmp/claude-1000/-home-grymmjack-git-qb64/0bd9f361-6ce1-4370-b677-2720aa6365d7/scratchpad/check.sh" "$(pwd)/DICE3D-SHOT.BAS" 2>&1 | tail -2
+  $ cd "/tmp/claude-1000/-home-grymmjack-git-qb64/0bd9f361-6ce1-4370-b677-2720aa6365d7/scratchpad"
+  $ EXE="/home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D/DICE3D-SHOT"
+  $ OUT="$(pwd)/dropfx"; rm -rf "$OUT"; mkdir -p "$OUT"
+  $ export DISPLAY=:99
+  $ pkill Xvfb 2>/dev/null; sleep 0.3
+  $ Xvfb :99 -screen 0 1280x1024x24 >/tmp/xvfb.log 2>&1 & XPID=$!; sleep 1.5
+  $ # explode FX on 5d6dl2 so two dice explode; big dice; deterministic-ish
+  $ d="$OUT/expl"; mkdir -p "$d"
+  $ DICE3D_ROLL=5d6dl2 DICE3D_DROPFX=1 DICE3D_SIZE=40 DICE3D_SHOT_DIR="$d" timeout 12 "$EXE" >"$d/log" 2>&1
+  $ kill $XPID 2>/dev/null
+  $ # the explode frames are the last ~15 captured; montage a few
+  $ cd "$d"
+  $ ls f*.png | tail -8
+  $ LAST=$(ls f*.png | tail -1)
+  $ echo "last=$LAST"
+  $ # grab 4 frames spanning the explode tail
+  $ FR=($(ls f*.png | tail -14))
+  $ n=${#FR[@]}
+  $ magick "${FR[$((n-11))]}" "${FR[$((n-7))]}" "${FR[$((n-3))]}" "$OUT/expl/screen_final.png" -background black -bordercolor "#555" -border 2 +append "$OUT/explode.png" 2>/dev/null
+  $ echo montaged
+2026-07-24T14:03:08-0400  WARNING  bash_end      [stderr] 12L stdout / 2L stderr — Run explode drop FX, montage the tail
+  | Output: /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D/DICE3D-SHOT
+  | ----- COMPILE: PASS (/home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D/DICE3D-SHOT) -----
+  | f0095.png
+  | f0100.png
+  | f0105.png
+  | f0110.png
+  | f0115.png
+  | f0120.png
+  | f0125.png
+  | f0130.png
+  | last=f0130.png
+  | montaged
+  ! 
+  ! Shell cwd was reset to /home/grymmjack/git/qb64
+2026-07-24T14:04:42-0400  INFO     bash_start    Compile interactive showcase — cd /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D | "/tmp/claude-1000/-home-grymmjack-git-qb64/0bd9f361-6ce1-4370-b677-2720aa6365d7/scratchpad/check.sh" "$(pwd)/DICE3…
+  > cwd: /home/grymmjack/git/qb64
+  $ cd /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D
+  $ "/tmp/claude-1000/-home-grymmjack-git-qb64/0bd9f361-6ce1-4370-b677-2720aa6365d7/scratchpad/check.sh" "$(pwd)/DICE3D-TEST.BAS" 2>&1 | tail -5
+2026-07-24T14:04:44-0400  INFO     bash_end      [ok] 5L stdout — Compile interactive showcase
+  | QB64-PE Compiler V4.4.0-UNKNOWN
+  | Beginning C++ output from QB64 code... 
+  | Compiling C++ code into executable...
+  | Output: /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D/DICE3D-TEST
+  | ----- COMPILE: PASS (/home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D/DICE3D-TEST) -----
+2026-07-24T14:05:03-0400  INFO     bash_start    Smoke-test interactive demo, drive a key — echo "xdotool: $(command -v xdotool || echo MISSING)" | cd "/tmp/claude-1000/-home-grymmjack-git-qb64/0bd9f361-6ce1-4370-b677-2720aa6365d7/scratchpad" | EXE…
+  > cwd: /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D
+  $ echo "xdotool: $(command -v xdotool || echo MISSING)"
+  $ cd "/tmp/claude-1000/-home-grymmjack-git-qb64/0bd9f361-6ce1-4370-b677-2720aa6365d7/scratchpad"
+  $ EXE="/home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D/DICE3D-TEST"
+  $ OUT="$(pwd)/interactive"; rm -rf "$OUT"; mkdir -p "$OUT"
+  $ export DISPLAY=:99
+  $ pkill Xvfb 2>/dev/null; sleep 0.3
+  $ Xvfb :99 -screen 0 1280x1024x24 >/tmp/xvfb.log 2>&1 & XPID=$!; sleep 1.5
+  $ "$EXE" >"$OUT/log" 2>&1 & PPID_=$!
+  $ sleep 2.5
+  $ if command -v xdotool >/dev/null; then
+  $   WID=$(xdotool search --name "DICE3D" | head -1)
+  $   xdotool key --window "$WID" 2 2>/dev/null   # roll 1d20
+  $   sleep 3
+  $ fi
+  $ # capture via xwd (works without IM X-support)
+  $ xwd -root -silent 2>/dev/null | magick xwd:- "$OUT/live.png" 2>/dev/null && echo "captured live.png"
+  $ tail -3 "$OUT/log" 2>/dev/null
+  $ kill $PPID_ 2>/dev/null; kill $XPID 2>/dev/null
+  $ ls -la "$OUT"/*.png 2>/dev/null
+2026-07-24T14:05:25-0400  INFO     bash_start    Capture live interactive roll via xwd — cd "/tmp/claude-1000/-home-grymmjack-git-qb64/0bd9f361-6ce1-4370-b677-2720aa6365d7/scratchpad" | EXE="/home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D/DICE3D-T…
+  > cwd: /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D
+  $ cd "/tmp/claude-1000/-home-grymmjack-git-qb64/0bd9f361-6ce1-4370-b677-2720aa6365d7/scratchpad"
+  $ EXE="/home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D/DICE3D-TEST"
+  $ OUT="$(pwd)/interactive"; mkdir -p "$OUT"
+  $ export DISPLAY=:99
+  $ pkill Xvfb 2>/dev/null; sleep 0.3
+  $ Xvfb :99 -screen 0 1024x768x24 >/tmp/xvfb.log 2>&1 & XPID=$!; sleep 1.5
+  $ "$EXE" >"$OUT/log" 2>&1 & PPID_=$!
+  $ sleep 2.5
+  $ WID=$(xdotool search --name "DICE3D" | head -1); echo "WID=$WID"
+  $ xdotool key --window "$WID" 2; sleep 1.2
+  $ xdotool key --window "$WID" m; sleep 0.2
+  $ xdotool key --window "$WID" 6; sleep 3.5   # material change + roll 4d6
+  $ xwd -root -silent -out "$OUT/live.xwd" 2>/dev/null && magick "$OUT/live.xwd" "$OUT/live.png" 2>/dev/null && echo "captured"
+  $ echo "log:"; cat "$OUT/log" 2>/dev/null | head -3
+  $ kill $PPID_ 2>/dev/null; kill $XPID 2>/dev/null
+  $ ls -la "$OUT/live.png" 2>/dev/null && magick "$OUT/live.png" -crop 820x640+0+0 +repage "$OUT/live_crop.png" 2>/dev/null && echo cropped
+2026-07-24T14:05:50-0400  INFO     bash_start    Capture initial UI of interactive demo — cd "/tmp/claude-1000/-home-grymmjack-git-qb64/0bd9f361-6ce1-4370-b677-2720aa6365d7/scratchpad" | EXE="/home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D/DICE3D-…
+  > cwd: /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D
+  $ cd "/tmp/claude-1000/-home-grymmjack-git-qb64/0bd9f361-6ce1-4370-b677-2720aa6365d7/scratchpad"
+  $ EXE="/home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D/DICE3D-TEST"
+  $ OUT="$(pwd)/interactive"; mkdir -p "$OUT"
+  $ export DISPLAY=:99
+  $ pkill Xvfb 2>/dev/null; sleep 0.3
+  $ Xvfb :99 -screen 0 1024x768x24 >/tmp/xvfb.log 2>&1 & XPID=$!; sleep 1.5
+  $ "$EXE" >"$OUT/log" 2>&1 & PPID_=$!
+  $ sleep 2.5
+  $ xwd -root -silent -out "$OUT/ui.xwd" 2>/dev/null
+  $ magick "$OUT/ui.xwd" -crop 820x640+0+0 +repage "$OUT/ui.png" 2>/dev/null
+  $ kill $PPID_ 2>/dev/null; kill $XPID 2>/dev/null
+  $ ls -la "$OUT/ui.png" 2>/dev/null && echo "ok" || echo "no capture"
+2026-07-24T14:05:54-0400  WARNING  bash_end      [stderr] 1L stdout / 2L stderr — Capture initial UI of interactive demo
+  | no capture
+  ! 
+  ! Shell cwd was reset to /home/grymmjack/git/qb64
+2026-07-24T14:06:32-0400  INFO     bash_start    Capture interactive demo UI via _SAVEIMAGE — cd /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D | "/tmp/claude-1000/-home-grymmjack-git-qb64/0bd9f361-6ce1-4370-b677-2720aa6365d7/scratchpad/check.sh"…
+  > cwd: /home/grymmjack/git/qb64
+  $ cd /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D
+  $ "/tmp/claude-1000/-home-grymmjack-git-qb64/0bd9f361-6ce1-4370-b677-2720aa6365d7/scratchpad/check.sh" "$(pwd)/DICE3D-TEST.BAS" 2>&1 | tail -2
+  $ cd "/tmp/claude-1000/-home-grymmjack-git-qb64/0bd9f361-6ce1-4370-b677-2720aa6365d7/scratchpad"
+  $ EXE="/home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D/DICE3D-TEST"
+  $ OUT="$(pwd)/ui"; rm -rf "$OUT"; mkdir -p "$OUT"
+  $ export DISPLAY=:99; pkill Xvfb 2>/dev/null; sleep 0.3
+  $ Xvfb :99 -screen 0 1024x768x24 >/tmp/xvfb.log 2>&1 & XPID=$!; sleep 1.5
+  $ DICE3D_SHOT_DIR="$OUT" timeout 12 "$EXE" >"$OUT/log" 2>&1
+  $ kill $XPID 2>/dev/null
+  $ ls -la "$OUT/ui.png" 2>/dev/null && echo OK
+2026-07-24T14:06:37-0400  WARNING  bash_end      [stderr] 4L stdout / 2L stderr — Capture interactive demo UI via _SAVEIMAGE
+  | Output: /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D/DICE3D-TEST
+  | ----- COMPILE: PASS (/home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D/DICE3D-TEST) -----
+  | .rw-rw-r-- 22k grymmjack 24 Jul 14:06 /tmp/claude-1000/-home-grymmjack-git-qb64/0bd9f361-6ce1-4370-b677-2720aa6365d7/scratchpad/ui/ui.png
+  | OK
+  ! 
+  ! Shell cwd was reset to /home/grymmjack/git/qb64
+2026-07-24T14:07:07-0400  INFO     bash_start    Grep dangling refs, inventory files — cd /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D | echo "=== dangling references to removed symbols? ===" | grep -rn "build_d6\|make_atlas_num\|D6_ORI\|init_t…
+  > cwd: /home/grymmjack/git/qb64
+  $ cd /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D
+  $ echo "=== dangling references to removed symbols? ==="
+  $ grep -rn "build_d6\|make_atlas_num\|D6_ORI\|init_tables\|dice3d_setori\|di\.RX\|di\.RY\|di\.RZ\|\.TRX\|\.TRY\|\.TRZ" *.BM *.BI *.BAS 2>/dev/null || echo "  (none - clean)"
+  $ echo "=== file inventory ==="
+  $ wc -l *.BI *.BM *.BAS | sort -n
+2026-07-24T14:07:07-0400  INFO     bash_end      [ok] 17L stdout — Grep dangling refs, inventory files
+  | === dangling references to removed symbols? ===
+  |   (none - clean)
+  | === file inventory ===
+  |     7 _ALL.BI
+  |    11 _ALL.BM
+  |    66 DICE3D-SHOT.BAS
+  |    76 DICE3D-FACES.BAS
+  |    90 _DICE.BI
+  |    91 _RENDER.BM
+  |   100 _CFG.BI
+  |   124 DICE3D-TEST.BAS
+  |   140 _PHYSICS.BM
+  |   199 _MISC.BM
+  |   220 _TEX.BM
+  |   303 _DICE.BM
+  |   321 _GEO.BM
+  |  1748 total
+2026-07-24T14:08:14-0400  INFO     bash_start    Add README image, list final tree — SRC="/tmp/claude-1000/-home-grymmjack-git-qb64/0bd9f361-6ce1-4370-b677-2720aa6365d7/scratchpad/sweep3/tilted.png" | DST="/home/grymmjack/git/qb64/qb64/GRAPHICS/3D/…
+  > cwd: /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D
+  $ SRC="/tmp/claude-1000/-home-grymmjack-git-qb64/0bd9f361-6ce1-4370-b677-2720aa6365d7/scratchpad/sweep3/tilted.png"
+  $ DST="/home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D/docs"
+  $ mkdir -p "$DST"
+  $ cp "$SRC" "$DST/alldice.png" 2>/dev/null && echo "copied alldice.png ($(du -h "$DST/alldice.png" | cut -f1))"
+  $ echo "=== final module tree ==="
+  $ ls -R | head -40
+2026-07-24T14:08:14-0400  INFO     bash_end      [ok] 2L stdout — Add README image, list final tree
+  | copied alldice.png (8.0K)
+  | === final module tree ===
+2026-07-24T14:08:17-0400  INFO     bash_start    List final module directory — ls -1
+  > cwd: /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D
+  $ ls -1
+2026-07-24T14:08:17-0400  INFO     bash_end      [ok] 0L stdout — List final module directory
+2026-07-24T14:08:22-0400  INFO     bash_start    Final directory listing + compile check — ls -1 && echo "---" && du -sh . && echo "--- final full-build compile check ---" && "/tmp/claude-1000/-home-grymmjack-git-qb64/0bd9f361-6ce1-4370-b677-2720aa…
+  > cwd: /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D
+  $ ls -1 && echo "---" && du -sh . && echo "--- final full-build compile check ---" && "/tmp/claude-1000/-home-grymmjack-git-qb64/0bd9f361-6ce1-4370-b677-2720aa6365d7/scratchpad/check.sh" "$(pwd)/DICE3D-TEST.BAS" 2>&1 | tail -2
+2026-07-24T14:08:24-0400  INFO     bash_end      [ok] 5L stdout — Final directory listing + compile check
+  | ---
+  | 11M	.
+  | --- final full-build compile check ---
+  | Output: /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D/DICE3D-TEST
+  | ----- COMPILE: PASS (/home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D/DICE3D-TEST) -----
+2026-07-24T14:08:36-0400  INFO     bash_start    Clean build artifacts, show final tree — cd /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D | # remove compiled executables (regenerated by F5 in the IDE) | rm -f DICE3D-TEST DICE3D-SHOT DICE3D-FACE…
+  > cwd: /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D
+  $ cd /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D
+  $ # remove compiled executables (regenerated by F5 in the IDE)
+  $ rm -f DICE3D-TEST DICE3D-SHOT DICE3D-FACES
+  $ rm -rf internal 2>/dev/null
+  $ echo "=== final DICE3D module (source only) ==="
+  $ ls -1
+  $ echo
+  $ echo "=== line counts ==="
+  $ wc -l *.BI *.BM *.BAS | tail -1
+2026-07-24T14:08:36-0400  INFO     bash_end      [ok] 4L stdout — Clean build artifacts, show final tree
+  | === final DICE3D module (source only) ===
+  | 
+  | === line counts ===
+  |  1748 total
+2026-07-24T14:08:41-0400  INFO     bash_start    List final module files (absolute path) — ls -1 /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D/
+  > cwd: /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D
+  $ ls -1 /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D/
+2026-07-24T14:08:41-0400  INFO     bash_end      [ok] 15L stdout — List final module files (absolute path)
+  | _ALL.BI
+  | _ALL.BM
+  | _CFG.BI
+  | _DICE.BI
+  | _DICE.BM
+  | _GEO.BM
+  | _MISC.BM
+  | _PHYSICS.BM
+  | _RENDER.BM
+  | _TEX.BM
+  | DICE3D-FACES.BAS
+  | DICE3D-SHOT.BAS
+  | DICE3D-TEST.BAS
+  | docs
+  | README.md
+2026-07-24T14:11:26-0400  NOTICE   prompt        <ide_opened_file>The user opened the file /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D/DICE3D-TEST.BAS in the IDE. This may or may not be related to the current task.</ide_opened_file>
+  > <ide_opened_file>The user opened the file /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D/DICE3D-TEST.BAS in the IDE. This may or may not be related to the current task.</ide_opened_file>
+  > can you make the dice bodies bigger and the font smaller and make the font antialias? antialias is nicer. also thi sis awesome - how do i change the colors? can you make the demo also let me change the dice angle, physics, etc. ? all configurable?
+2026-07-24T14:13:23-0400  INFO     bash_start    Locate a TTF font for antialiased numbers — echo "=== system TTFs ===" | for f in \ | /usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf \ | /usr/share/fonts/truetype/dejavu/DejaVuSans.ttf \ | /usr…
+  > cwd: /home/grymmjack/git/qb64
+  $ echo "=== system TTFs ==="
+  $ for f in \
+  $   /usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf \
+  $   /usr/share/fonts/truetype/dejavu/DejaVuSans.ttf \
+  $   /usr/share/fonts/truetype/liberation/LiberationSans-Bold.ttf \
+  $   /usr/share/fonts/TTF/DejaVuSans-Bold.ttf ; do
+  $   [ -f "$f" ] && echo "FOUND $f"
+  $ done
+  $ echo "--- broad search ---"
+  $ find /usr/share/fonts -iname "*.ttf" 2>/dev/null | grep -iE "dejavu|liberation|sans" | head -8
+  $ echo "=== QB64PE bundled fonts ==="
+  $ find /home/grymmjack/git/qb64pe -iname "*.ttf" 2>/dev/null | head
+2026-07-24T14:13:23-0400  INFO     bash_end      [ok] 19L stdout — Locate a TTF font for antialiased numbers
+  | === system TTFs ===
+  | FOUND /usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf
+  | FOUND /usr/share/fonts/truetype/dejavu/DejaVuSans.ttf
+  | FOUND /usr/share/fonts/truetype/liberation/LiberationSans-Bold.ttf
+  | --- broad search ---
+  | /usr/share/fonts/truetype/dejavu/DejaVuSansCondensed-Bold.ttf
+  | /usr/share/fonts/truetype/dejavu/DejaVuMathTeXGyre.ttf
+  | /usr/share/fonts/truetype/dejavu/DejaVuSansMono-BoldOblique.ttf
+  | /usr/share/fonts/truetype/dejavu/DejaVuSansCondensed.ttf
+  | /usr/share/fonts/truetype/dejavu/DejaVuSansCondensed-Oblique.ttf
+  | /usr/share/fonts/truetype/dejavu/DejaVuSansMono.ttf
+  | /usr/share/fonts/truetype/dejavu/DejaVuSerif-BoldItalic.ttf
+  | /usr/share/fonts/truetype/dejavu/DejaVuSerifCondensed-Bold.ttf
+  | === QB64PE bundled fonts ===
+  | /home/grymmjack/git/qb64pe/Duck Shoot/cyberbit.ttf
+  | /home/grymmjack/git/qb64pe/Duck Shoot/segoeui.ttf
+  | /home/grymmjack/git/qb64pe/tests/compile_tests/font/LiberationSerif-Regular.ttf
+  | /home/grymmjack/git/qb64pe/tests/compile_tests/font/LiberationSans-Regular.ttf
+  | /home/grymmjack/git/qb64pe/tests/compile_tests/font/LiberationMono-Regular.ttf
+2026-07-24T14:18:03-0400  INFO     bash_start    Compile all three harnesses after font+config changes — cd /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D | for f in DICE3D-TEST DICE3D-SHOT DICE3D-FACES; do | echo "=== $f ===" | "/tmp/claude-1000…
+  > cwd: /home/grymmjack/git/qb64
+  $ cd /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D
+  $ for f in DICE3D-TEST DICE3D-SHOT DICE3D-FACES; do
+  $   echo "=== $f ==="
+  $   "/tmp/claude-1000/-home-grymmjack-git-qb64/0bd9f361-6ce1-4370-b677-2720aa6365d7/scratchpad/check.sh" "$(pwd)/$f.BAS" 2>&1 | tail -2
+  $ done
+2026-07-24T14:18:08-0400  INFO     bash_end      [ok] 9L stdout — Compile all three harnesses after font+config changes
+  | === DICE3D-TEST ===
+  | Output: /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D/DICE3D-TEST
+  | ----- COMPILE: PASS (/home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D/DICE3D-TEST) -----
+  | === DICE3D-SHOT ===
+  | Output: /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D/DICE3D-SHOT
+  | ----- COMPILE: PASS (/home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D/DICE3D-SHOT) -----
+  | === DICE3D-FACES ===
+  | Output: /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D/DICE3D-FACES
+  | ----- COMPILE: PASS (/home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D/DICE3D-FACES) -----
+2026-07-24T14:18:32-0400  INFO     bash_start    Capture configurator UI with antialiased d20 and d6 — cd /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D | "/tmp/claude-1000/-home-grymmjack-git-qb64/0bd9f361-6ce1-4370-b677-2720aa6365d7/scratchpad/…
+  > cwd: /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D
+  $ cd /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D
+  $ "/tmp/claude-1000/-home-grymmjack-git-qb64/0bd9f361-6ce1-4370-b677-2720aa6365d7/scratchpad/check.sh" "$(pwd)/DICE3D-TEST.BAS" 2>&1 | tail -1
+  $ cd "/tmp/claude-1000/-home-grymmjack-git-qb64/0bd9f361-6ce1-4370-b677-2720aa6365d7/scratchpad"
+  $ EXE="/home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D/DICE3D-TEST"
+  $ OUT="$(pwd)/cfg"; rm -rf "$OUT"; mkdir -p "$OUT"
+  $ export DISPLAY=:99; pkill Xvfb 2>/dev/null; sleep 0.3
+  $ Xvfb :99 -screen 0 1024x768x24 >/tmp/xvfb.log 2>&1 & XPID=$!; sleep 1.5
+  $ run(){ local tag=$1; shift; local d="$OUT/$tag"; mkdir -p "$d"; env "$@" DICE3D_SHOT_DIR="$d" timeout 12 "$EXE" >"$d/log" 2>&1; cp "$d/ui.png" "$OUT/$tag.png" 2>/dev/null; }
+  $ run d20   DICE3D_ROLL=1d20
+  $ run d6    DICE3D_ROLL=4d6
+  $ kill $XPID 2>/dev/null
+  $ ls -la "$OUT"/*.png 2>/dev/null && echo OK
+2026-07-24T14:18:39-0400  WARNING  bash_end      [stderr] 4L stdout / 2L stderr — Capture configurator UI with antialiased d20 and d6
+  | ----- COMPILE: PASS (/home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D/DICE3D-TEST) -----
+  | .rw-rw-r-- 30k grymmjack 24 Jul 14:18 /tmp/claude-1000/-home-grymmjack-git-qb64/0bd9f361-6ce1-4370-b677-2720aa6365d7/scratchpad/cfg/d6.png
+  | .rw-rw-r-- 32k grymmjack 24 Jul 14:18 /tmp/claude-1000/-home-grymmjack-git-qb64/0bd9f361-6ce1-4370-b677-2720aa6365d7/scratchpad/cfg/d20.png
+  | OK
+  ! 
+  ! Shell cwd was reset to /home/grymmjack/git/qb64
+2026-07-24T14:19:25-0400  INFO     bash_start    Capture Ruby/Gold/Amethyst themes — cd /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D | "/tmp/claude-1000/-home-grymmjack-git-qb64/0bd9f361-6ce1-4370-b677-2720aa6365d7/scratchpad/check.sh" "$(pwd)/…
+  > cwd: /home/grymmjack/git/qb64
+  $ cd /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D
+  $ "/tmp/claude-1000/-home-grymmjack-git-qb64/0bd9f361-6ce1-4370-b677-2720aa6365d7/scratchpad/check.sh" "$(pwd)/DICE3D-TEST.BAS" 2>&1 | tail -1
+  $ cd "/tmp/claude-1000/-home-grymmjack-git-qb64/0bd9f361-6ce1-4370-b677-2720aa6365d7/scratchpad"
+  $ EXE="/home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D/DICE3D-TEST"
+  $ OUT="$(pwd)/themes"; rm -rf "$OUT"; mkdir -p "$OUT"
+  $ export DISPLAY=:99; pkill Xvfb 2>/dev/null; sleep 0.3
+  $ Xvfb :99 -screen 0 1024x768x24 >/tmp/xvfb.log 2>&1 & XPID=$!; sleep 1.5
+  $ run(){ local tag=$1; shift; local d="$OUT/$tag"; mkdir -p "$d"; env "$@" DICE3D_SHOT_DIR="$d" timeout 12 "$EXE" >"$d/log" 2>&1; magick "$d/ui.png" -crop 400x400+320+70 +repage "$OUT/$tag.png" 2>/dev/null; }
+  $ run ruby     DICE3D_ROLL=1d20 DICE3D_THEME=1
+  $ run gold     DICE3D_ROLL=1d12 DICE3D_THEME=3 DICE3D_MAT=2
+  $ run amethyst DICE3D_ROLL=1d20 DICE3D_THEME=5
+  $ kill $XPID 2>/dev/null
+  $ cd "$OUT"; magick ruby.png gold.png amethyst.png -background "#111" -bordercolor "#555" -border 2 +append themes.png 2>/dev/null && echo OK
+2026-07-24T14:19:34-0400  WARNING  bash_end      [stderr] 2L stdout / 2L stderr — Capture Ruby/Gold/Amethyst themes
+  | ----- COMPILE: PASS (/home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D/DICE3D-TEST) -----
+  | OK
+  ! 
+  ! Shell cwd was reset to /home/grymmjack/git/qb64
+2026-07-24T14:19:52-0400  INFO     bash_start    Remove compiled binaries — cd /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D && rm -f DICE3D-TEST DICE3D-SHOT DICE3D-FACES && echo "cleaned" && ls -1 *.BAS
+  > cwd: /home/grymmjack/git/qb64
+  $ cd /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D && rm -f DICE3D-TEST DICE3D-SHOT DICE3D-FACES && echo "cleaned" && ls -1 *.BAS
+2026-07-24T14:19:52-0400  INFO     bash_end      [ok] 4L stdout — Remove compiled binaries
+  | cleaned
+  | DICE3D-FACES.BAS
+  | DICE3D-SHOT.BAS
+  | DICE3D-TEST.BAS
+2026-07-24T15:46:22-0400  NOTICE   prompt        <ide_selection>The user selected the lines 1 to 29 from /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D/TODO.md:
+  > <ide_selection>The user selected the lines 1 to 29 from /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D/TODO.md:
+  > this is fantastic!!!
+  > 
+  > i need to use the demo to configure my dice set - it should store all the settings for all the dice i have configured - i want to be able to have different configurations for the font and size for each of the dice but governed by the global that way we can edit our sets and save them to file, and or load them back when we are ready to use them from our programs.
+  > 
+  > also why does it spin as it lands - it should just use physics to determine it's face, not spin at the end after it hits... that's weird.
+  > 
+  > also i want full control over the color of the face of the dice and its background - the theme is cool but i want both.
+  > 
+  > then being able to save a theme and load it by name would be great too.
+  > 
+  > so i can create orange translucent dice with white markings, and d6 pips etc. or such.
+  > 
+  > and each dice shape should have a configurable font size and size of dice too.
+  > 
+  > and also for the materials like marble i want to be able to adjust the opacity of the texture itself and the color of the marble, and for crystal to set transparency of crystal... 
+  > 
+  > also how do i change the field of view? i see angle, but it is moving only 1 at a time, and too slow to test, make it go up or down by 5? also make it so i hit enter on a setting to change it with keyboard value.
+  > 
+  > ideally i'd be able to just use my left click and drag to change the dice perspective and orientation? 
+  > 
+  > also wireframe color and opacity overlaid on top of the body.
+  > 
+  > also it looks like the D4 isn't landing properly on it's base... it's landing on a point, not a flat side.
+  > 
+  > also i would like to be able to determine how many dice to roll as well as how large the box should be
+  > 
+  > also i want to be able to tell the rotation and shake of the dice to make them more dynamic - right now they just drop and spin at the end, but i want to determine shake strength, etc.
+  > 
+  > also for the API in use in programs we need to know all the settings, at run time, including how many dice, what types, their values, etc. after the roll completes.
+  > 
+  > This may or may not be related to the current task.</ide_selection>
+  > this is fantastic!!!
+  > 
+  > i need to use the demo to configure my dice set - it should store all the settings for all the dice i have configured - i want to be able to have different configurations for the font and size for each of the dice but governed by the global that way we can edit our sets and save them to file, and or load them back when we are ready to use them from our programs.
+  > 
+  > also why does it spin as it lands - it should just use physics to determine it's face, not spin at the end after it hits... that's weird.
+  > 
+  > also i want full control over the color of the face of the dice and its background - the theme is cool but i want both.
+  > 
+  > then being able to save a theme and load it by name would be great too.
+  > 
+  > so i can create orange translucent dice with white markings, and d6 pips etc. or such.
+  > 
+  > and each dice shape should have a configurable font size and size of dice too.
+  > 
+  > and also for the materials like marble i want to be able to adjust the opacity of the texture itself and the color of the marble, and for crystal to set transparency of crystal... 
+  > 
+  > also how do i change the field of view? i see angle, but it is moving only 1 at a time, and too slow to test, make it go up or down by 5? also make it so i hit enter on a setting to change it with keyboard value.
+  > 
+  > ideally i'd be able to just use my left click and drag to change the dice perspective and orientation? 
+  > 
+  > also wireframe color and opacity overlaid on top of the body.
+  > 
+  > also it looks like the D4 isn't landing properly on it's base... it's landing on a point, not a flat side.
+  > 
+  > also i would like to be able to determine how many dice to roll as well as how large the box should be
+  > 
+  > also i want to be able to tell the rotation and shake of the dice to make them more dynamic - right now they just drop and spin at the end, but i want to determine shake strength, etc.
+  > 
+  > also for the API in use in programs we need to know all the settings, at run time, including how many dice, what types, their values, etc. after the roll completes.
+2026-07-24T15:54:46-0400  INFO     bash_start    Read TODO.md and current throw code — cd /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D | echo "=== TODO.md (if any) ===" && cat TODO.md 2>/dev/null | head -40 || echo "(no TODO.md)" | echo "=== cu…
+  > cwd: /home/grymmjack/git/qb64
+  $ cd /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D
+  $ echo "=== TODO.md (if any) ===" && cat TODO.md 2>/dev/null | head -40 || echo "(no TODO.md)"
+  $ echo "=== current dice3d_throw + roll init ===" && grep -n "SPIN\|THROW\|dice3d_throw\|WX = \|qrandom\|PZ = \|VX = " _DICE.BM | head
+2026-07-24T15:54:46-0400  INFO     bash_end      [ok] 39L stdout — Read TODO.md and current throw code
+  | === TODO.md (if any) ===
+  | this is fantastic!!!
+  | 
+  | i need to use the demo to configure my dice set - it should store all the settings for all the dice i have configured - i want to be able to have different configurations for the font and size for each of the dice but governed by the global that way we can edit our sets and save them to file, and or load them back when we are ready to use them from our programs.
+  | 
+  | also why does it spin as it lands - it should just use physics to determine it's face, not spin at the end after it hits... that's weird.
+  | 
+  | also i want full control over the color of the face of the dice and its background - the theme is cool but i want both.
+  | 
+  | then being able to save a theme and load it by name would be great too.
+  | 
+  | so i can create orange translucent dice with white markings, and d6 pips etc. or such.
+  | 
+  | and each dice shape should have a configurable font size and size of dice too.
+  | 
+  | and also for the materials like marble i want to be able to adjust the opacity of the texture itself and the color of the marble, and for crystal to set transparency of crystal... 
+  | 
+  | also how do i change the field of view? i see angle, but it is moving only 1 at a time, and too slow to test, make it go up or down by 5? also make it so i hit enter on a setting to change it with keyboard value.
+  | 
+  | ideally i'd be able to just use my left click and drag to change the dice perspective and orientation? 
+  | 
+  | also wireframe color and opacity overlaid on top of the body.
+  | 
+  | also it looks like the D4 isn't landing properly on it's base... it's landing on a point, not a flat side.
+  | 
+  | also i would like to be able to determine how many dice to roll as well as how large the box should be
+  | 
+  | also i want to be able to tell the rotation and shake of the dice to make them more dynamic - right now they just drop and spin at the end, but i want to determine shake strength, etc.
+  | 
+  | also for the API in use in programs we need to know all the settings, at run time, including how many dice, what types, their values, etc. after the roll completes.=== current dice3d_throw + roll init ===
+  | 88:SUB dice3d_throw (di AS DICE3D_DIE, cfg AS DICE3D_CONFIG, r AS SINGLE)
+  | 92:    di.PZ = dice3d_randf(cfg.BOX_H * 0.3, cfg.BOX_H * 0.55)
+  | 93:    di.VX = dice3d_randf(-7, 7): di.VY = dice3d_randf(-7, 7): di.VZ = 0
+  | 94:    dice3d_qrandom di.Q
+  | 95:    di.WX = dice3d_randf(-30, 30): di.WY = dice3d_randf(-30, 30): di.WZ = dice3d_randf(-30, 30)
+  | 210:                IF cfg.DROP_FX = DICE3D_DROPFX_EXPLODE THEN DICE3D_DICE(i).PZ = DICE3D_DICE(i).PZ + 2.5
+  | 249:        dice3d_throw DICE3D_DICE(i), cfg, r
+  | 284:        dice3d_throw DICE3D_DICE(2 * i), cfg, r
+  | 288:        dice3d_throw DICE3D_DICE(2 * i + 1), cfg, r
+2026-07-24T16:02:35-0400  INFO     bash_start    Compile Batch A physics/API changes — cd /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D | "/tmp/claude-1000/-home-grymmjack-git-qb64/0bd9f361-6ce1-4370-b677-2720aa6365d7/scratchpad/check.sh" "$(pwd…
+  > cwd: /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D
+  $ cd /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D
+  $ "/tmp/claude-1000/-home-grymmjack-git-qb64/0bd9f361-6ce1-4370-b677-2720aa6365d7/scratchpad/check.sh" "$(pwd)/DICE3D-SHOT.BAS" 2>&1 | tail -6
+2026-07-24T16:02:37-0400  INFO     bash_end      [ok] 5L stdout — Compile Batch A physics/API changes
+  | QB64-PE Compiler V4.4.0-UNKNOWN
+  | Beginning C++ output from QB64 code... 
+  | Compiling C++ code into executable...
+  | Output: /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D/DICE3D-SHOT
+  | ----- COMPILE: PASS (/home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D/DICE3D-SHOT) -----
+2026-07-24T16:02:53-0400  INFO     bash_start    Capture d20 settle tail + d4/d20 finals — cd "/tmp/claude-1000/-home-grymmjack-git-qb64/0bd9f361-6ce1-4370-b677-2720aa6365d7/scratchpad" | EXE="/home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D/DICE3D…
+  > cwd: /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D
+  $ cd "/tmp/claude-1000/-home-grymmjack-git-qb64/0bd9f361-6ce1-4370-b677-2720aa6365d7/scratchpad"
+  $ EXE="/home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D/DICE3D-SHOT"
+  $ OUT="$(pwd)/physA"; rm -rf "$OUT"; mkdir -p "$OUT"
+  $ export DISPLAY=:99; pkill Xvfb 2>/dev/null; sleep 0.3
+  $ Xvfb :99 -screen 0 1280x1024x24 >/tmp/xvfb.log 2>&1 & XPID=$!; sleep 1.5
+  $ # d20 settle tail (watch for end-spin) + d4 final (watch base landing)
+  $ for roll in 1d20 1d4; do
+  $   d="$OUT/$roll"; mkdir -p "$d"
+  $   DICE3D_ROLL="$roll" DICE3D_SHOT_DIR="$d" timeout 12 "$EXE" >"$d/log" 2>&1
+  $ done
+  $ kill $XPID 2>/dev/null
+  $ # d20: montage last 5 captured frames to inspect the settle motion
+  $ cd "$OUT/1d20"; FR=($(ls f*.png)); n=${#FR[@]}
+  $ magick "${FR[$((n-5))]}" "${FR[$((n-4))]}" "${FR[$((n-3))]}" "${FR[$((n-2))]}" "${FR[$((n-1))]}" -background black -bordercolor "#555" -border 1 +append "$OUT/d20_settle.png" 2>/dev/null
+  $ # crops of finals
+  $ magick "$OUT/1d20/screen_final.png" -crop 340x360+240+140 +repage "$OUT/d20_final.png" 2>/dev/null
+  $ magick "$OUT/1d4/screen_final.png" -crop 340x360+240+140 +repage "$OUT/d4_final.png" 2>/dev/null
+  $ magick "$OUT/d4_final.png" "$OUT/d20_final.png" +append "$OUT/finals.png" 2>/dev/null
+  $ echo done; grep -ao "dice:.*" "$OUT/1d4/log" 2>/dev/null | head -1
+2026-07-24T16:02:57-0400  WARNING  bash_end      [stderr] 1L stdout / 2L stderr — Capture d20 settle tail + d4/d20 finals
+  | done
+  ! 
+  ! Shell cwd was reset to /home/grymmjack/git/qb64
+2026-07-24T16:03:23-0400  INFO     bash_start    Zoom into the d4 — cd "/tmp/claude-1000/-home-grymmjack-git-qb64/0bd9f361-6ce1-4370-b677-2720aa6365d7/scratchpad/physA" | magick 1d4/screen_final.png -crop 200x200+300+270 +repage -filter point -resi…
+  > cwd: /home/grymmjack/git/qb64
+  $ cd "/tmp/claude-1000/-home-grymmjack-git-qb64/0bd9f361-6ce1-4370-b677-2720aa6365d7/scratchpad/physA"
+  $ magick 1d4/screen_final.png -crop 200x200+300+270 +repage -filter point -resize 400x400 d4_zoom.png 2>/dev/null && echo ok
+2026-07-24T16:03:23-0400  WARNING  bash_end      [stderr] 1L stdout / 2L stderr — Zoom into the d4
+  | ok
+  ! 
+  ! Shell cwd was reset to /home/grymmjack/git/qb64
+2026-07-24T16:06:06-0400  INFO     bash_start    Compile expanded demo — cd /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D | "/tmp/claude-1000/-home-grymmjack-git-qb64/0bd9f361-6ce1-4370-b677-2720aa6365d7/scratchpad/check.sh" "$(pwd)/DICE3D-TEST.…
+  > cwd: /home/grymmjack/git/qb64
+  $ cd /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D
+  $ "/tmp/claude-1000/-home-grymmjack-git-qb64/0bd9f361-6ce1-4370-b677-2720aa6365d7/scratchpad/check.sh" "$(pwd)/DICE3D-TEST.BAS" 2>&1 | tail -5
+2026-07-24T16:06:08-0400  INFO     bash_end      [ok] 5L stdout — Compile expanded demo
+  | QB64-PE Compiler V4.4.0-UNKNOWN
+  | Beginning C++ output from QB64 code... 
+  | Compiling C++ code into executable...
+  | Output: /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D/DICE3D-TEST
+  | ----- COMPILE: PASS (/home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D/DICE3D-TEST) -----
+2026-07-24T16:06:18-0400  INFO     bash_start    Capture new configurator panel + d4 zoom — cd "/tmp/claude-1000/-home-grymmjack-git-qb64/0bd9f361-6ce1-4370-b677-2720aa6365d7/scratchpad" | EXE="/home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D/DICE3…
+  > cwd: /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D
+  $ cd "/tmp/claude-1000/-home-grymmjack-git-qb64/0bd9f361-6ce1-4370-b677-2720aa6365d7/scratchpad"
+  $ EXE="/home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D/DICE3D-TEST"
+  $ OUT="$(pwd)/cfg2"; rm -rf "$OUT"; mkdir -p "$OUT"
+  $ export DISPLAY=:99; pkill Xvfb 2>/dev/null; sleep 0.3
+  $ Xvfb :99 -screen 0 1280x1024x24 >/tmp/xvfb.log 2>&1 & XPID=$!; sleep 1.5
+  $ run(){ local tag=$1; shift; local d="$OUT/$tag"; mkdir -p "$d"; env "$@" DICE3D_SHOT_DIR="$d" timeout 12 "$EXE" >"$d/log" 2>&1; cp "$d/ui.png" "$OUT/$tag.png" 2>/dev/null; }
+  $ run panel DICE3D_ROLL=d6
+  $ run d4    DICE3D_ROLL=d4
+  $ kill $XPID 2>/dev/null
+  $ magick "$OUT/d4.png" -crop 260x260+380+120 +repage -filter point -resize 360x360 "$OUT/d4zoom.png" 2>/dev/null
+  $ echo done
+2026-07-24T16:06:23-0400  WARNING  bash_end      [stderr] 1L stdout / 2L stderr — Capture new configurator panel + d4 zoom
+  | done
+  ! 
+  ! Shell cwd was reset to /home/grymmjack/git/qb64
+2026-07-24T16:07:11-0400  INFO     bash_start    Remove build artifacts — cd /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D && rm -f DICE3D-TEST DICE3D-SHOT DICE3D-FACES && echo cleaned
+  > cwd: /home/grymmjack/git/qb64
+  $ cd /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D && rm -f DICE3D-TEST DICE3D-SHOT DICE3D-FACES && echo cleaned
+2026-07-24T16:07:11-0400  INFO     bash_end      [ok] 1L stdout — Remove build artifacts
+  | cleaned
+2026-07-24T16:14:35-0400  INFO     bash_start    Rename to->texop in fill_tile — cd /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D | perl -pi -e 's/\bto\b/texop/g if /DIM AS SINGLE tv, mv, fct, to|to = cfg\.TEX_OPACITY|dice3d_mix~&\(bodyKol, pat,…
+  > cwd: /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D
+  $ cd /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D
+  $ perl -pi -e 's/\bto\b/texop/g if /DIM AS SINGLE tv, mv, fct, to|to = cfg\.TEX_OPACITY|dice3d_mix~&\(bodyKol, pat, to\)/' _TEX.BM
+  $ grep -n "texop\|, to\b\| to =" _TEX.BM | head
+2026-07-24T16:14:35-0400  INFO     bash_end      [ok] 4L stdout — Rename to->texop in fill_tile
+  | 74:    DIM AS SINGLE tv, mv, fct, texop
+  | 76:    texop = cfg.TEX_OPACITY
+  | 98:                    col = dice3d_mix~&(bodyKol, pat, texop)
+  | 107:                    col = dice3d_mix~&(bodyKol, pat, texop)
+2026-07-24T16:15:47-0400  INFO     bash_start    Compile Batch B core (materials + wireframe) — cd /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D | "/tmp/claude-1000/-home-grymmjack-git-qb64/0bd9f361-6ce1-4370-b677-2720aa6365d7/scratchpad/check.s…
+  > cwd: /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D
+  $ cd /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D
+  $ "/tmp/claude-1000/-home-grymmjack-git-qb64/0bd9f361-6ce1-4370-b677-2720aa6365d7/scratchpad/check.sh" "$(pwd)/DICE3D-SHOT.BAS" 2>&1 | tail -6
+2026-07-24T16:15:49-0400  INFO     bash_end      [ok] 5L stdout — Compile Batch B core (materials + wireframe)
+  | QB64-PE Compiler V4.4.0-UNKNOWN
+  | Beginning C++ output from QB64 code... 
+  | Compiling C++ code into executable...
+  | Output: /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D/DICE3D-SHOT
+  | ----- COMPILE: PASS (/home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D/DICE3D-SHOT) -----
+2026-07-24T16:19:27-0400  INFO     bash_start    Compile Batch B demo — cd /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D | "/tmp/claude-1000/-home-grymmjack-git-qb64/0bd9f361-6ce1-4370-b677-2720aa6365d7/scratchpad/check.sh" "$(pwd)/DICE3D-TEST.B…
+  > cwd: /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D
+  $ cd /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D
+  $ "/tmp/claude-1000/-home-grymmjack-git-qb64/0bd9f361-6ce1-4370-b677-2720aa6365d7/scratchpad/check.sh" "$(pwd)/DICE3D-TEST.BAS" 2>&1 | tail -6
+2026-07-24T16:19:29-0400  INFO     bash_end      [ok] 5L stdout — Compile Batch B demo
+  | QB64-PE Compiler V4.4.0-UNKNOWN
+  | Beginning C++ output from QB64 code... 
+  | Compiling C++ code into executable...
+  | Output: /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D/DICE3D-TEST
+  | ----- COMPILE: PASS (/home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D/DICE3D-TEST) -----
+2026-07-24T16:19:40-0400  INFO     bash_start    Capture orange translucent, marble, crystal — cd "/tmp/claude-1000/-home-grymmjack-git-qb64/0bd9f361-6ce1-4370-b677-2720aa6365d7/scratchpad" | EXE="/home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D/DI…
+  > cwd: /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D
+  $ cd "/tmp/claude-1000/-home-grymmjack-git-qb64/0bd9f361-6ce1-4370-b677-2720aa6365d7/scratchpad"
+  $ EXE="/home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D/DICE3D-TEST"
+  $ OUT="$(pwd)/batchB"; rm -rf "$OUT"; mkdir -p "$OUT"
+  $ export DISPLAY=:99; pkill Xvfb 2>/dev/null; sleep 0.3
+  $ Xvfb :99 -screen 0 1280x1024x24 >/tmp/xvfb.log 2>&1 & XPID=$!; sleep 1.5
+  $ run(){ local tag=$1; shift; local d="$OUT/$tag"; mkdir -p "$d"; env "$@" DICE3D_SHOT_DIR="$d" timeout 12 "$EXE" >"$d/log" 2>&1; magick "$d/ui.png" -crop 400x400+360+60 +repage "$OUT/$tag.png" 2>/dev/null; }
+  $ run orange  DICE3D_ROLL=d6  DICE3D_TWEAK=orange
+  $ run marble  DICE3D_ROLL=d20 DICE3D_TWEAK=marble
+  $ run crystal DICE3D_ROLL=d20 DICE3D_TWEAK=crystal
+  $ kill $XPID 2>/dev/null
+  $ cd "$OUT"; magick orange.png marble.png crystal.png -background "#111" -bordercolor "#555" -border 2 +append batchB.png 2>/dev/null && echo OK
+  $ # also grab the full orange UI to see the panel
+  $ cp orange/ui.png fullorange.png
+2026-07-24T16:19:46-0400  WARNING  bash_end      [stderr] 1L stdout / 2L stderr — Capture orange translucent, marble, crystal
+  | OK
+  ! 
+  ! Shell cwd was reset to /home/grymmjack/git/qb64
+2026-07-24T16:20:33-0400  INFO     bash_start    Recompile+recapture Batch B looks — cd /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D | "/tmp/claude-1000/-home-grymmjack-git-qb64/0bd9f361-6ce1-4370-b677-2720aa6365d7/scratchpad/check.sh" "$(pwd)/…
+  > cwd: /home/grymmjack/git/qb64
+  $ cd /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D
+  $ "/tmp/claude-1000/-home-grymmjack-git-qb64/0bd9f361-6ce1-4370-b677-2720aa6365d7/scratchpad/check.sh" "$(pwd)/DICE3D-TEST.BAS" 2>&1 | tail -1
+  $ cd "/tmp/claude-1000/-home-grymmjack-git-qb64/0bd9f361-6ce1-4370-b677-2720aa6365d7/scratchpad"
+  $ EXE="/home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D/DICE3D-TEST"
+  $ OUT="$(pwd)/batchB2"; rm -rf "$OUT"; mkdir -p "$OUT"
+  $ export DISPLAY=:99; pkill Xvfb 2>/dev/null; sleep 0.3
+  $ Xvfb :99 -screen 0 1280x1024x24 >/tmp/xvfb.log 2>&1 & XPID=$!; sleep 1.5
+  $ run(){ local tag=$1; shift; local d="$OUT/$tag"; mkdir -p "$d"; env "$@" DICE3D_SHOT_DIR="$d" timeout 12 "$EXE" >"$d/log" 2>&1; magick "$d/ui.png" -crop 400x400+360+60 +repage "$OUT/$tag.png" 2>/dev/null; }
+  $ run orange  DICE3D_ROLL=d6  DICE3D_TWEAK=orange
+  $ run marble  DICE3D_ROLL=d20 DICE3D_TWEAK=marble
+  $ run crystal DICE3D_ROLL=d20 DICE3D_TWEAK=crystal
+  $ kill $XPID 2>/dev/null
+  $ cd "$OUT"; magick orange.png marble.png crystal.png -background "#111" -bordercolor "#555" -border 2 +append batchB.png 2>/dev/null && echo OK
+2026-07-24T16:20:41-0400  WARNING  bash_end      [stderr] 2L stdout / 2L stderr — Recompile+recapture Batch B looks
+  | ----- COMPILE: PASS (/home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D/DICE3D-TEST) -----
+  | OK
+  ! 
+  ! Shell cwd was reset to /home/grymmjack/git/qb64
+2026-07-24T16:25:35-0400  INFO     bash_start    Compile+run IO round-trip test — cd /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D | "/tmp/claude-1000/-home-grymmjack-git-qb64/0bd9f361-6ce1-4370-b677-2720aa6365d7/scratchpad/check.sh" "$(pwd)/DIC…
+  > cwd: /home/grymmjack/git/qb64
+  $ cd /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D
+  $ "/tmp/claude-1000/-home-grymmjack-git-qb64/0bd9f361-6ce1-4370-b677-2720aa6365d7/scratchpad/check.sh" "$(pwd)/DICE3D-IOTEST.BAS" 2>&1 | tail -3
+  $ echo "=== run (console-only, headless) ==="
+  $ cd /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D && timeout 15 ./DICE3D-IOTEST 2>&1 | head -20
+  $ echo "=== saved iotest.txt (first 12 lines) ===" && head -12 iotest.txt 2>/dev/null
+2026-07-24T16:25:43-0400  INFO     bash_start    Rename line->ln in _IO.BM — cd /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D | sed -i 's/\bline\b/ln/g' _IO.BM | echo "--- check LINE INPUT still intact + ln used ---" | grep -n "LINE INPUT\|dice3…
+  > cwd: /home/grymmjack/git/qb64
+  $ cd /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D
+  $ sed -i 's/\bline\b/ln/g' _IO.BM
+  $ echo "--- check LINE INPUT still intact + ln used ---"
+  $ grep -n "LINE INPUT\|dice3d_kv ln\|ln AS STRING\|LEFT\$(ln\|MID\$(ln\|_TRIM\$(ln" _IO.BM | head
+2026-07-24T16:25:43-0400  INFO     bash_end      [ok] 8L stdout — Rename line->ln in _IO.BM
+  | --- check LINE INPUT still intact + ln used ---
+  | 121:SUB dice3d_kv (ln AS STRING, k AS STRING, v AS STRING)
+  | 145:        LINE INPUT #fh, ln
+  | 147:            dice3d_kv ln, k, v: dice3d_config_apply cfg, k, v
+  | 176:        LINE INPUT #fh, ln
+  | 186:            dice3d_kv ln, k, v: dice3d_config_apply cset(lo + cur), k, v
+  | 217:        LINE INPUT #fh, ln
+  | 218:        IF _TRIM$(ln) <> "" THEN dice3d_kv ln, k, v: dice3d_config_apply cfg, k, v
+2026-07-24T16:25:50-0400  INFO     bash_start    Recompile+run IO round-trip test — cd /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D | "/tmp/claude-1000/-home-grymmjack-git-qb64/0bd9f361-6ce1-4370-b677-2720aa6365d7/scratchpad/check.sh" "$(pwd)/D…
+  > cwd: /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D
+  $ cd /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D
+  $ "/tmp/claude-1000/-home-grymmjack-git-qb64/0bd9f361-6ce1-4370-b677-2720aa6365d7/scratchpad/check.sh" "$(pwd)/DICE3D-IOTEST.BAS" 2>&1 | tail -3
+  $ echo "=== run ===" && timeout 15 ./DICE3D-IOTEST 2>&1 | head -20
+  $ echo "=== iotest.txt sample ===" && sed -n '1,6p;9,12p' iotest.txt 2>/dev/null
+2026-07-24T16:26:00-0400  INFO     bash_start    Rename name->tname in theme functions — cd /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D | perl -0pi -e 's/\bname\b/tname/g if /theme_save|theme_load|"theme_" \+ /' _IO.BM | # targeted: replace na…
+  > cwd: /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D
+  $ cd /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D
+  $ perl -0pi -e 's/\bname\b/tname/g if /theme_save|theme_load|"theme_" \+ /' _IO.BM
+  $ # targeted: replace name-> tname only within the two theme subs. Safer: do it across whole file since 'name' only appears in theme subs
+  $ grep -n "\bname\b" _IO.BM || echo "no bare 'name' left"
+  $ grep -n "tname" _IO.BM | head
+2026-07-24T16:26:00-0400  INFO     bash_end      [ok] 6L stdout — Rename name->tname in theme functions
+  | no bare 'name' left
+  | 194:' Named colour theme = the colour fields only, in theme_<tname>.txt.
+  | 195:SUB dice3d_theme_save (tname AS STRING, cfg AS DICE3D_CONFIG)
+  | 198:    OPEN "theme_" + tname + ".txt" FOR OUTPUT AS #fh
+  | 209:FUNCTION dice3d_theme_load% (tname AS STRING, cfg AS DICE3D_CONFIG)
+  | 212:    file = "theme_" + tname + ".txt"
+2026-07-24T16:26:06-0400  INFO     bash_start    Recompile+run IO test after name rename — cd /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D | "/tmp/claude-1000/-home-grymmjack-git-qb64/0bd9f361-6ce1-4370-b677-2720aa6365d7/scratchpad/check.sh" "$…
+  > cwd: /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D
+  $ cd /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D
+  $ "/tmp/claude-1000/-home-grymmjack-git-qb64/0bd9f361-6ce1-4370-b677-2720aa6365d7/scratchpad/check.sh" "$(pwd)/DICE3D-IOTEST.BAS" 2>&1 | tail -3
+  $ echo "=== run ===" && timeout 15 ./DICE3D-IOTEST 2>&1 | head -20
+2026-07-24T16:26:08-0400  INFO     bash_end      [ok] 16L stdout — Recompile+run IO test after name rename
+  | Compiling C++ code into executable...
+  | Output: /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D/DICE3D-IOTEST
+  | ----- COMPILE: PASS (/home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D/DICE3D-IOTEST) -----
+  | === run ===
+  | config load ok =-1 
+  | DIE_SIZE = 77  CAM_TILT = 45  BODY_ALPHA = .5 
+  | MATERIAL = 2  WIRE =-1 
+  | BODY_KOLOR match =-1 
+  | set load ok =-1 
+  | d4 size = 30 
+  | d6 size = 35 
+  | d8 size = 40 
+  | d10 size = 45 
+  | d12 size = 50 
+  | d20 size = 55 
+  | d100 size = 60
+2026-07-24T16:27:32-0400  INFO     bash_start    Clean IO test artifacts — rm -f DICE3D-IOTEST iotest.txt ioset.txt && echo cleaned
+  > cwd: /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D
+  $ rm -f DICE3D-IOTEST iotest.txt ioset.txt && echo cleaned
+2026-07-24T16:27:32-0400  INFO     bash_end      [ok] 1L stdout — Clean IO test artifacts
+  | cleaned
+2026-07-24T16:29:38-0400  INFO     bash_start    Compile demo with per-die slots + save/load — cd /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D | "/tmp/claude-1000/-home-grymmjack-git-qb64/0bd9f361-6ce1-4370-b677-2720aa6365d7/scratchpad/check.sh…
+  > cwd: /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D
+  $ cd /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D
+  $ "/tmp/claude-1000/-home-grymmjack-git-qb64/0bd9f361-6ce1-4370-b677-2720aa6365d7/scratchpad/check.sh" "$(pwd)/DICE3D-TEST.BAS" 2>&1 | tail -6
+2026-07-24T16:29:40-0400  INFO     bash_end      [ok] 5L stdout — Compile demo with per-die slots + save/load
+  | QB64-PE Compiler V4.4.0-UNKNOWN
+  | Beginning C++ output from QB64 code... 
+  | Compiling C++ code into executable...
+  | Output: /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D/DICE3D-TEST
+  | ----- COMPILE: PASS (/home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D/DICE3D-TEST) -----
+2026-07-24T16:29:50-0400  INFO     bash_start    Capture demo with per-die/save-load panel — cd "/tmp/claude-1000/-home-grymmjack-git-qb64/0bd9f361-6ce1-4370-b677-2720aa6365d7/scratchpad" | EXE="/home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D/DICE…
+  > cwd: /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D
+  $ cd "/tmp/claude-1000/-home-grymmjack-git-qb64/0bd9f361-6ce1-4370-b677-2720aa6365d7/scratchpad"
+  $ EXE="/home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D/DICE3D-TEST"
+  $ OUT="$(pwd)/cfgC"; rm -rf "$OUT"; mkdir -p "$OUT"
+  $ export DISPLAY=:99; pkill Xvfb 2>/dev/null; sleep 0.3
+  $ Xvfb :99 -screen 0 1280x1024x24 >/tmp/xvfb.log 2>&1 & XPID=$!; sleep 1.5
+  $ DICE3D_SHOT_DIR="$OUT" DICE3D_ROLL=d20 timeout 12 "$EXE" >"$OUT/log" 2>&1
+  $ kill $XPID 2>/dev/null
+  $ ls -la "$OUT/ui.png" && echo OK
+2026-07-24T16:29:53-0400  WARNING  bash_end      [stderr] 2L stdout / 2L stderr — Capture demo with per-die/save-load panel
+  | .rw-rw-r-- 48k grymmjack 24 Jul 16:29 /tmp/claude-1000/-home-grymmjack-git-qb64/0bd9f361-6ce1-4370-b677-2720aa6365d7/scratchpad/cfgC/ui.png
+  | OK
+  ! 
+  ! Shell cwd was reset to /home/grymmjack/git/qb64
+2026-07-24T16:31:58-0400  INFO     bash_start    Clean binaries, update TODO for Batch C — cd /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D && rm -f DICE3D-TEST DICE3D-SHOT DICE3D-FACES 2>/dev/null | # update TODO checkboxes for Batch C | perl -…
+  > cwd: /home/grymmjack/git/qb64
+  $ cd /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D && rm -f DICE3D-TEST DICE3D-SHOT DICE3D-FACES 2>/dev/null
+  $ # update TODO checkboxes for Batch C
+  $ perl -0pi -e 's/## Batch C — per-die-type config \+ the "dice set"/## Batch C — per-die config + save\/load  ✅ DONE/' TODO.md
+  $ perl -0pi -e 's/- \[ \] Per-die-type overrides \(size, font size, colours …\) over the global config/- [x] Per-die-type overrides via 7-slot dice set (each die its own size\/font\/colours)/' TODO.md
+  $ perl -0pi -e 's/- \[ \] Save\/load a whole dice set \(all dice \+ overrides\) to\/from a file/- [x] Save\/load a whole dice set to file (dice3d_set_save\/load; demo S\/L\/A)/' TODO.md
+  $ perl -0pi -e 's/- \[ \] Save\/load a named theme to\/from a file/- [x] Save\/load a named theme (dice3d_theme_save\/load; demo V\/B)/' TODO.md
+  $ echo "updated"; grep -c "\[x\]" TODO.md
+2026-07-24T16:31:58-0400  INFO     bash_end      [ok] 2L stdout — Clean binaries, update TODO for Batch C
+  | updated
+  | 16
+2026-07-24T16:35:08-0400  INFO     bash_start    Compile Batch D (perspective + mouse orbit) — cd /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D | "/tmp/claude-1000/-home-grymmjack-git-qb64/0bd9f361-6ce1-4370-b677-2720aa6365d7/scratchpad/check.sh…
+  > cwd: /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D
+  $ cd /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D
+  $ "/tmp/claude-1000/-home-grymmjack-git-qb64/0bd9f361-6ce1-4370-b677-2720aa6365d7/scratchpad/check.sh" "$(pwd)/DICE3D-TEST.BAS" 2>&1 | tail -6
+2026-07-24T16:35:10-0400  INFO     bash_end      [ok] 5L stdout — Compile Batch D (perspective + mouse orbit)
+  | QB64-PE Compiler V4.4.0-UNKNOWN
+  | Beginning C++ output from QB64 code... 
+  | Compiling C++ code into executable...
+  | Output: /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D/DICE3D-TEST
+  | ----- COMPILE: PASS (/home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D/DICE3D-TEST) -----
+2026-07-24T16:35:37-0400  INFO     bash_start    Capture orthographic vs perspective vs orbit — cd /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D | "/tmp/claude-1000/-home-grymmjack-git-qb64/0bd9f361-6ce1-4370-b677-2720aa6365d7/scratchpad/check.s…
+  > cwd: /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D
+  $ cd /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D
+  $ "/tmp/claude-1000/-home-grymmjack-git-qb64/0bd9f361-6ce1-4370-b677-2720aa6365d7/scratchpad/check.sh" "$(pwd)/DICE3D-TEST.BAS" 2>&1 | tail -1
+  $ cd "/tmp/claude-1000/-home-grymmjack-git-qb64/0bd9f361-6ce1-4370-b677-2720aa6365d7/scratchpad"
+  $ EXE="/home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D/DICE3D-TEST"
+  $ OUT="$(pwd)/batchD"; rm -rf "$OUT"; mkdir -p "$OUT"
+  $ export DISPLAY=:99; pkill Xvfb 2>/dev/null; sleep 0.3
+  $ Xvfb :99 -screen 0 1280x1024x24 >/tmp/xvfb.log 2>&1 & XPID=$!; sleep 1.5
+  $ run(){ local tag=$1; shift; local d="$OUT/$tag"; mkdir -p "$d"; env "$@" DICE3D_SHOT_DIR="$d" timeout 12 "$EXE" >"$d/log" 2>&1; magick "$d/ui.png" -crop 400x400+360+60 +repage "$OUT/$tag.png" 2>/dev/null; }
+  $ run ortho DICE3D_ROLL=d20 DICE3D_FOV=0  DICE3D_TILT=30 DICE3D_YAW=0
+  $ run persp DICE3D_ROLL=d20 DICE3D_FOV=50 DICE3D_TILT=30 DICE3D_YAW=0
+  $ run orbit DICE3D_ROLL=d20 DICE3D_FOV=45 DICE3D_TILT=55 DICE3D_YAW=40
+  $ kill $XPID 2>/dev/null
+  $ cd "$OUT"; magick ortho.png persp.png orbit.png -background "#111" -bordercolor "#555" -border 2 +append batchD.png 2>/dev/null && echo OK
+2026-07-24T16:35:45-0400  WARNING  bash_end      [stderr] 2L stdout / 2L stderr — Capture orthographic vs perspective vs orbit
+  | ----- COMPILE: PASS (/home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D/DICE3D-TEST) -----
+  | OK
+  ! 
+  ! Shell cwd was reset to /home/grymmjack/git/qb64
+2026-07-24T16:36:15-0400  INFO     bash_start    Update TODO for D/E, compile-check all harnesses — cd /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D | perl -0pi -e 's/## Batch D — camera & interaction\n- \[ \] Field-of-view.*?- \[ \] Left-click …
+  > cwd: /home/grymmjack/git/qb64
+  $ cd /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D
+  $ perl -0pi -e 's/## Batch D — camera & interaction\n- \[ \] Field-of-view.*?- \[ \] Left-click drag to orbit the camera \(perspective \+ orientation\)/## Batch D — camera & interaction  \x{2705} DONE\n- [x] Field-of-view \/ perspective control (cfg.FOV; 0 = orthographic)\n- [x] Tilt\/angle adjusts by 5; FOV + Yaw sliders added\n- [x] Press Enter on a setting to type an exact value\n- [x] Left-click drag inside the box orbits the camera (yaw + tilt)/s' TODO.md
+  $ perl -0pi -e 's/## Batch E — demo controls\n- \[ \] Choose how many dice to roll\n- \[ \] Choose box size/## Batch E — demo controls  \x{2705} DONE (in Batch A)\n- [x] Choose how many dice to roll (Dice count slider)\n- [x] Choose box size (Box size slider)/s' TODO.md
+  $ echo "=== remaining unchecked ===" ; grep -c "\[ \]" TODO.md; echo "=== full compile check of all harnesses ==="
+  $ for f in DICE3D-TEST DICE3D-SHOT DICE3D-FACES; do printf "%s: " "$f"; "/tmp/claude-1000/-home-grymmjack-git-qb64/0bd9f361-6ce1-4370-b677-2720aa6365d7/scratchpad/check.sh" "$(pwd)/$f.BAS" 2>&1 | grep -o "COMPILE: [A-Z]*"; done
+  $ rm -f DICE3D-TEST DICE3D-SHOT DICE3D-FACES 2>/dev/null; echo cleaned
+2026-07-24T16:36:21-0400  INFO     bash_end      [ok] 8L stdout — Update TODO for D/E, compile-check all harnesses
+  | Wide character in print at -e line 1, <> chunk 1.
+  | === remaining unchecked ===
+  | 2
+  | === full compile check of all harnesses ===
+  | DICE3D-TEST: COMPILE: PASS
+  | DICE3D-SHOT: COMPILE: PASS
+  | DICE3D-FACES: COMPILE: PASS
+  | cleaned
+2026-07-24T16:36:29-0400  INFO     bash_start    Check Batch D/E in TODO — cd /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D | sed -n '/## Batch D/,/Original notes/p' TODO.md | head -20
+  > cwd: /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D
+  $ cd /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D
+  $ sed -n '/## Batch D/,/Original notes/p' TODO.md | head -20
+2026-07-24T16:36:29-0400  INFO     bash_end      [ok] 17L stdout — Check Batch D/E in TODO
+  | ## Batch D â camera & interaction  ✅ DONE
+  | - [x] Field-of-view / perspective control (cfg.FOV; 0 = orthographic)
+  | - [x] Tilt/angle adjusts by 5; FOV + Yaw sliders added
+  | - [x] Press Enter on a setting to type an exact value
+  | - [x] Left-click drag inside the box orbits the camera (yaw + tilt)
+  | 
+  | ## Batch E â demo controls
+  | - [ ] Choose how many dice to roll
+  | - [ ] Choose box size
+  | 
+  | ---
+  | Design note â fairness: physics-determined values are fair-*ish* via the chaotic
+  | throw (random orientation + spin), like real dice. A `cfg.FAIR` flag can force a
+  | uniform RNG later if a game needs a guaranteed distribution.
+  | 
+  | ---
+  | ### Original notes
+2026-07-24T16:38:21-0400  INFO     bash_start    Final compile check + inventory — cd /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D | echo "=== final compile check (main demo) ===" | "/tmp/claude-1000/-home-grymmjack-git-qb64/0bd9f361-6ce1-4370-…
+  > cwd: /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D
+  $ cd /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D
+  $ echo "=== final compile check (main demo) ===" 
+  $ "/tmp/claude-1000/-home-grymmjack-git-qb64/0bd9f361-6ce1-4370-b677-2720aa6365d7/scratchpad/check.sh" "$(pwd)/DICE3D-TEST.BAS" 2>&1 | grep -o "COMPILE: [A-Z]*"
+  $ rm -f DICE3D-TEST DICE3D-SHOT DICE3D-FACES 2>/dev/null
+  $ echo "=== module source files ===" && ls -1 *.BI *.BM *.BAS *.md
+  $ echo "=== total library lines ===" && wc -l *.BI *.BM | tail -1
+2026-07-24T16:38:23-0400  INFO     bash_end      [ok] 22L stdout — Final compile check + inventory
+  | === final compile check (main demo) ===
+  | COMPILE: PASS
+  | === module source files ===
+  | _ALL.BI
+  | _ALL.BM
+  | _CFG.BI
+  | _DICE.BI
+  | _DICE.BM
+  | _GEO.BM
+  | _IO.BM
+  | _MISC.BM
+  | _PHYSICS.BM
+  | _RENDER.BM
+  | _TEX.BM
+  | DICE3D-FACES.BAS
+  | DICE3D-IOTEST.BAS
+  | DICE3D-SHOT.BAS
+  | DICE3D-TEST.BAS
+  | README.md
+  | TODO.md
+  | === total library lines ===
+  |  1915 total
+2026-07-24T17:06:54-0400  NOTICE   prompt        <ide_opened_file>The user opened the file /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D/diceset.txt in the IDE. This may or may not be related to the current task.</ide_opened_file>
+  > <ide_opened_file>The user opened the file /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D/diceset.txt in the IDE. This may or may not be related to the current task.</ide_opened_file>
+  > make an AGENTS.md to explain how to use it
+2026-07-24T17:15:09-0400  INFO     bash_start    Compile d4/d10 number changes — cd /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D | "/tmp/claude-1000/-home-grymmjack-git-qb64/0bd9f361-6ce1-4370-b677-2720aa6365d7/scratchpad/check.sh" "$(pwd)/DICE…
+  > cwd: /home/grymmjack/git/qb64
+  $ cd /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D
+  $ "/tmp/claude-1000/-home-grymmjack-git-qb64/0bd9f361-6ce1-4370-b677-2720aa6365d7/scratchpad/check.sh" "$(pwd)/DICE3D-SHOT.BAS" 2>&1 | tail -4
+2026-07-24T17:15:11-0400  INFO     bash_end      [ok] 4L stdout — Compile d4/d10 number changes
+  | Beginning C++ output from QB64 code... 
+  | Compiling C++ code into executable...
+  | Output: /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D/DICE3D-SHOT
+  | ----- COMPILE: PASS (/home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D/DICE3D-SHOT) -----
+2026-07-24T17:15:27-0400  INFO     bash_start    Capture d4 + d10 with new number orientation — cd /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D | "/tmp/claude-1000/-home-grymmjack-git-qb64/0bd9f361-6ce1-4370-b677-2720aa6365d7/scratchpad/check.s…
+  > cwd: /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D
+  $ cd /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D
+  $ "/tmp/claude-1000/-home-grymmjack-git-qb64/0bd9f361-6ce1-4370-b677-2720aa6365d7/scratchpad/check.sh" "$(pwd)/DICE3D-TEST.BAS" 2>&1 | tail -1
+  $ cd "/tmp/claude-1000/-home-grymmjack-git-qb64/0bd9f361-6ce1-4370-b677-2720aa6365d7/scratchpad"
+  $ EXE="/home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D/DICE3D-TEST"
+  $ OUT="$(pwd)/nums"; rm -rf "$OUT"; mkdir -p "$OUT"
+  $ export DISPLAY=:99; pkill Xvfb 2>/dev/null; sleep 0.3
+  $ Xvfb :99 -screen 0 1280x1024x24 >/tmp/xvfb.log 2>&1 & XPID=$!; sleep 1.5
+  $ run(){ local tag=$1; shift; local d="$OUT/$tag"; mkdir -p "$d"; env "$@" DICE3D_SHOT_DIR="$d" timeout 12 "$EXE" >"$d/log" 2>&1; magick "$d/ui.png" -crop 400x420+360+60 +repage "$OUT/$tag.png" 2>/dev/null; }
+  $ run d4  DICE3D_ROLL=d4
+  $ run d10 DICE3D_ROLL=d10
+  $ kill $XPID 2>/dev/null
+  $ cd "$OUT"; magick d4.png d10.png +append nums.png 2>/dev/null && echo OK
+2026-07-24T17:15:33-0400  WARNING  bash_end      [stderr] 2L stdout / 2L stderr — Capture d4 + d10 with new number orientation
+  | ----- COMPILE: PASS (/home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D/DICE3D-TEST) -----
+  | OK
+  ! 
+  ! Shell cwd was reset to /home/grymmjack/git/qb64
+2026-07-24T17:15:55-0400  INFO     bash_start    Zoom d4 triangle + d10 kite — cd "/tmp/claude-1000/-home-grymmjack-git-qb64/0bd9f361-6ce1-4370-b677-2720aa6365d7/scratchpad/nums" | # zoom the top d4 triangle and the clear d10 kite | magick d4/ui.pn…
+  > cwd: /home/grymmjack/git/qb64
+  $ cd "/tmp/claude-1000/-home-grymmjack-git-qb64/0bd9f361-6ce1-4370-b677-2720aa6365d7/scratchpad/nums"
+  $ # zoom the top d4 triangle and the clear d10 kite
+  $ magick d4/ui.png -crop 200x200+430+90 +repage -filter point -resize 400x400 d4zoom.png 2>/dev/null
+  $ magick d10/ui.png -crop 220x220+430+180 +repage -filter point -resize 400x400 d10zoom.png 2>/dev/null
+  $ magick d4zoom.png d10zoom.png +append numzoom.png 2>/dev/null && echo OK
+2026-07-24T17:15:55-0400  WARNING  bash_end      [stderr] 1L stdout / 2L stderr — Zoom d4 triangle + d10 kite
+  | OK
+  ! 
+  ! Shell cwd was reset to /home/grymmjack/git/qb64
+2026-07-24T17:16:29-0400  INFO     bash_start    Verify d6/d20/d12 no regression from centroid centering — cd "/tmp/claude-1000/-home-grymmjack-git-qb64/0bd9f361-6ce1-4370-b677-2720aa6365d7/scratchpad" | EXE="/home/grymmjack/git/qb64/qb64/GRAPHICS/…
+  > cwd: /home/grymmjack/git/qb64
+  $ cd "/tmp/claude-1000/-home-grymmjack-git-qb64/0bd9f361-6ce1-4370-b677-2720aa6365d7/scratchpad"
+  $ EXE="/home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D/DICE3D-TEST"
+  $ OUT="$(pwd)/nums2"; rm -rf "$OUT"; mkdir -p "$OUT"
+  $ export DISPLAY=:99; pkill Xvfb 2>/dev/null; sleep 0.3
+  $ Xvfb :99 -screen 0 1280x1024x24 >/tmp/xvfb.log 2>&1 & XPID=$!; sleep 1.5
+  $ run(){ local tag=$1; shift; local d="$OUT/$tag"; mkdir -p "$d"; env "$@" DICE3D_SHOT_DIR="$d" timeout 12 "$EXE" >"$d/log" 2>&1; magick "$d/ui.png" -crop 400x400+360+60 +repage "$OUT/$tag.png" 2>/dev/null; }
+  $ run d6  DICE3D_ROLL=d6
+  $ run d20 DICE3D_ROLL=d20
+  $ run d12 DICE3D_ROLL=d12
+  $ kill $XPID 2>/dev/null
+  $ cd "$OUT"; magick d6.png d20.png d12.png +append reg.png 2>/dev/null && echo OK
+2026-07-24T17:16:35-0400  WARNING  bash_end      [stderr] 1L stdout / 2L stderr — Verify d6/d20/d12 no regression from centroid centering
+  | OK
+  ! 
+  ! Shell cwd was reset to /home/grymmjack/git/qb64
+2026-07-24T17:17:04-0400  INFO     bash_start    Clean binaries, update TODO, final compile — cd /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D | rm -f DICE3D-TEST DICE3D-SHOT DICE3D-FACES DICE3D-IOTEST 2>/dev/null | # update the D4 line + add a …
+  > cwd: /home/grymmjack/git/qb64
+  $ cd /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D
+  $ rm -f DICE3D-TEST DICE3D-SHOT DICE3D-FACES DICE3D-IOTEST 2>/dev/null
+  $ # update the D4 line + add a polish note in TODO
+  $ perl -pi -e 's/\Q      (numbers legible but a little warped by affine mapping - polish later)\E/      (D4 rotated top-read corners; D10 centred + kite-axis aligned)/' TODO.md
+  $ echo "=== final compile of main demo ==="
+  $ "/tmp/claude-1000/-home-grymmjack-git-qb64/0bd9f361-6ce1-4370-b677-2720aa6365d7/scratchpad/check.sh" "$(pwd)/DICE3D-TEST.BAS" 2>&1 | grep -o "COMPILE: [A-Z]*"
+  $ rm -f DICE3D-TEST 2>/dev/null
+  $ grep -n "D4 rotated\|kite-axis" TODO.md
+2026-07-24T17:17:06-0400  INFO     bash_end      [ok] 3L stdout — Clean binaries, update TODO, final compile
+  | === final compile of main demo ===
+  | COMPILE: PASS
+  | 11:      (D4 rotated top-read corners; D10 centred + kite-axis aligned)
+2026-07-24T17:21:26-0400  NOTICE   prompt        <ide_opened_file>The user opened the file /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D/DICE3D-TEST.BAS in the IDE. This may or may not be related to the current task.</ide_opened_file>
+  > <ide_opened_file>The user opened the file /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D/DICE3D-TEST.BAS in the IDE. This may or may not be related to the current task.</ide_opened_file>
+  > you nailed the rotation on the dice for D4 and D10 well done!
+  > 
+  > what about the d4 text not being so close to the top? is that possible?
+2026-07-24T17:21:52-0400  INFO     bash_start    Recompile + capture d4 with larger inset — cd /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D | "/tmp/claude-1000/-home-grymmjack-git-qb64/0bd9f361-6ce1-4370-b677-2720aa6365d7/scratchpad/check.sh" "…
+  > cwd: /home/grymmjack/git/qb64
+  $ cd /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D
+  $ "/tmp/claude-1000/-home-grymmjack-git-qb64/0bd9f361-6ce1-4370-b677-2720aa6365d7/scratchpad/check.sh" "$(pwd)/DICE3D-TEST.BAS" 2>&1 | grep -o "COMPILE: [A-Z]*"
+  $ cd "/tmp/claude-1000/-home-grymmjack-git-qb64/0bd9f361-6ce1-4370-b677-2720aa6365d7/scratchpad"
+  $ EXE="/home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D/DICE3D-TEST"
+  $ OUT="$(pwd)/d4inset"; rm -rf "$OUT"; mkdir -p "$OUT"
+  $ export DISPLAY=:99; pkill Xvfb 2>/dev/null; sleep 0.3
+  $ Xvfb :99 -screen 0 1280x1024x24 >/tmp/xvfb.log 2>&1 & XPID=$!; sleep 1.5
+  $ DICE3D_SHOT_DIR="$OUT" DICE3D_ROLL=d4 timeout 12 "$EXE" >"$OUT/log" 2>&1
+  $ kill $XPID 2>/dev/null
+  $ magick "$OUT/ui.png" -crop 400x420+360+60 +repage "$OUT/d4.png" 2>/dev/null
+  $ magick "$OUT/ui.png" -crop 210x210+430+80 +repage -filter point -resize 400x400 "$OUT/d4zoom.png" 2>/dev/null
+  $ echo OK; rm -f /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D/DICE3D-TEST
+2026-07-24T17:21:57-0400  WARNING  bash_end      [stderr] 2L stdout / 2L stderr — Recompile + capture d4 with larger inset
+  | COMPILE: PASS
+  | OK
+  ! 
+  ! Shell cwd was reset to /home/grymmjack/git/qb64
+2026-07-24T17:38:30-0400  NOTICE   prompt        <ide_opened_file>The user opened the file /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D/DICE3D-TEST.BAS in the IDE. This may or may not be related to the current task.</ide_opened_file>
+  > <ide_opened_file>The user opened the file /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D/DICE3D-TEST.BAS in the IDE. This may or may not be related to the current task.</ide_opened_file>
+  > one thing, when i change the font size it doesn't update the D4
+2026-07-24T17:39:43-0400  INFO     bash_start    Compile; check for font-px test hook — cd /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D | "/tmp/claude-1000/-home-grymmjack-git-qb64/0bd9f361-6ce1-4370-b677-2720aa6365d7/scratchpad/check.sh" "$(pw…
+  > cwd: /home/grymmjack/git/qb64
+  $ cd /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D
+  $ "/tmp/claude-1000/-home-grymmjack-git-qb64/0bd9f361-6ce1-4370-b677-2720aa6365d7/scratchpad/check.sh" "$(pwd)/DICE3D-TEST.BAS" 2>&1 | grep -o "COMPILE: [A-Z]*"
+  $ cd "/tmp/claude-1000/-home-grymmjack-git-qb64/0bd9f361-6ce1-4370-b677-2720aa6365d7/scratchpad"
+  $ EXE="/home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D/DICE3D-TEST"
+  $ OUT="$(pwd)/d4font"; rm -rf "$OUT"; mkdir -p "$OUT"
+  $ # DICE3D-TEST has no font-size env; add a quick DICE3D_FONTPX hook? use the tweak: none.
+  $ # Instead drive DICE3D-SHOT which reads DICE3D_SIZE but not font... use TEST with a temporary env: none available.
+  $ # Simplest: DICE3D-TEST loads font at cfg.FONT_PX=46 default. To test 2 sizes I add a DICE3D_FONTPX env quickly.
+  $ grep -q 'DICE3D_FONTPX' /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D/DICE3D-TEST.BAS && echo "hook exists" || echo "no hook"
+2026-07-24T17:39:45-0400  WARNING  bash_end      [stderr] 2L stdout / 2L stderr — Compile; check for font-px test hook
+  | COMPILE: PASS
+  | no hook
+  ! 
+  ! Shell cwd was reset to /home/grymmjack/git/qb64
+2026-07-24T17:40:10-0400  INFO     bash_start    Capture d4 at font 28 vs 72 — cd /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D | "/tmp/claude-1000/-home-grymmjack-git-qb64/0bd9f361-6ce1-4370-b677-2720aa6365d7/scratchpad/check.sh" "$(pwd)/DICE3D…
+  > cwd: /home/grymmjack/git/qb64
+  $ cd /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D
+  $ "/tmp/claude-1000/-home-grymmjack-git-qb64/0bd9f361-6ce1-4370-b677-2720aa6365d7/scratchpad/check.sh" "$(pwd)/DICE3D-TEST.BAS" 2>&1 | grep -o "COMPILE: [A-Z]*"
+  $ cd "/tmp/claude-1000/-home-grymmjack-git-qb64/0bd9f361-6ce1-4370-b677-2720aa6365d7/scratchpad"
+  $ EXE="/home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D/DICE3D-TEST"
+  $ OUT="$(pwd)/d4font"; rm -rf "$OUT"; mkdir -p "$OUT"
+  $ export DISPLAY=:99; pkill Xvfb 2>/dev/null; sleep 0.3
+  $ Xvfb :99 -screen 0 1280x1024x24 >/tmp/xvfb.log 2>&1 & XPID=$!; sleep 1.5
+  $ run(){ local tag=$1; shift; local d="$OUT/$tag"; mkdir -p "$d"; env "$@" DICE3D_SHOT_DIR="$d" timeout 12 "$EXE" >"$d/log" 2>&1; magick "$d/ui.png" -crop 400x400+360+60 +repage "$OUT/$tag.png" 2>/dev/null; }
+  $ run small DICE3D_ROLL=d4 DICE3D_FONTPX=28
+  $ run big   DICE3D_ROLL=d4 DICE3D_FONTPX=72
+  $ kill $XPID 2>/dev/null
+  $ cd "$OUT"; magick small.png big.png -background "#111" -bordercolor "#555" -border 2 +append d4font.png 2>/dev/null && echo OK
+  $ rm -f /home/grymmjack/git/qb64/qb64/GRAPHICS/3D/DICE3D/DICE3D-TEST
+2026-07-24T17:40:16-0400  WARNING  bash_end      [stderr] 2L stdout / 2L stderr — Capture d4 at font 28 vs 72
+  | COMPILE: PASS
+  | OK
+  ! 
+  ! Shell cwd was reset to /home/grymmjack/git/qb64
