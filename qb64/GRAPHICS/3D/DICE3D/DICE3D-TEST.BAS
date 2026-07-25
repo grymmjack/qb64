@@ -49,8 +49,10 @@ DIM SHARED pName(0 TO NPARAM - 1) AS STRING
 DIM SHARED pStep(0 TO NPARAM - 1) AS SINGLE
 DIM SHARED pMin(0 TO NPARAM - 1) AS SINGLE
 DIM SHARED pMax(0 TO NPARAM - 1) AS SINGLE
+DIM SHARED hwOn AS INTEGER, hwPPU AS SINGLE   ' [G] OpenGL hardware dice; hwPPU = GPU px per model unit
 
 demo_init
+IF ENVIRON$("DICE3D_HW") <> "" THEN hwOn = -1: demo_hw_sync   ' start on the OpenGL hardware path
 demo_roll
 
 IF ENVIRON$("DICE3D_SHOT_DIR") <> "" THEN
@@ -110,6 +112,7 @@ DO
             CASE "K": colTarget = (colTarget + 1) MOD 7
             CASE "T": dropOn = NOT dropOn: changed = TRUE: needRoll = TRUE
             CASE "E": cfg.DROP_FX = (1 - cfg.DROP_FX): changed = TRUE
+            CASE "G": hwOn = NOT hwOn: demo_hw_sync: statusTxt = "GPU render " + demo_onoff$(hwOn): changed = TRUE
             CASE "A": demo_applyall: statusTxt = "applied to all dice"
             CASE "S": demo_saveset: statusTxt = "saved " + setFile
             CASE "L": demo_loadset: changed = TRUE: needRoll = TRUE: statusTxt = "loaded " + setFile
@@ -122,6 +125,7 @@ DO
     IF changed THEN demo_syncfont
     IF dieType = "d100" AND changed THEN needRoll = TRUE
     IF changed THEN
+        IF hwOn THEN demo_hw_sync              ' refresh HW params + invalidate atlas for new content/size
         IF needRoll THEN demo_roll ELSE demo_bg: dice3d_repose cfg
     END IF
     demo_panel
@@ -134,6 +138,7 @@ SUB demo_init ()
     dice3d_config_defaults cfg
     cfg.BOX_X = 370: cfg.BOX_Y = 70: cfg.BOX_W = 380: cfg.BOX_H = 380
     cfg.DIE_SIZE = 56: cfg.NUM_SCALE = 0.4
+    hwPPU = 88.4                     ' GPU px per model unit at z=-5 in a 700px-tall window (calibrated)
     cfg.FONT_PX = 46: liveFontPx = -1: demo_syncfont
     diceCount = 4: dieType = "d6": dropOn = 0: selParam = 0: colTarget = 0: resultTxt = ""
     setFile = "diceset.txt": statusTxt = ""
@@ -444,6 +449,10 @@ SUB demo_bg ()
     DIM i AS INTEGER
     CLS , BG
     FOR i = 0 TO 940 STEP 40: LINE (i, 0)-(i, 700), _RGBA32(255, 255, 255, 26): NEXT
+    IF hwOn THEN                                    ' HW dice float on the GL overlay -- draw the tray box behind them
+        IF cfg.BOX_SHOW_BACK THEN LINE (cfg.BOX_X, cfg.BOX_Y)-(cfg.BOX_X + cfg.BOX_W, cfg.BOX_Y + cfg.BOX_H), cfg.BOX_BACK_KOLOR, BF
+        IF cfg.BOX_SHOW_OUTLINE THEN LINE (cfg.BOX_X, cfg.BOX_Y)-(cfg.BOX_X + cfg.BOX_W, cfg.BOX_Y + cfg.BOX_H), cfg.BOX_OUTLINE_KOLOR, B
+    END IF
     _DISPLAY
 END SUB
 
@@ -458,7 +467,7 @@ SUB demo_panel ()
     _PRINTSTRING (12, 8), "DICE3D configurator"
     COLOR _RGB32(180, 230, 255), _RGBA32(0, 0, 0, 0)
     _PRINTSTRING (12, 28), "Die:4 6 8 0 Z 2 %  M mat C theme"
-    _PRINTSTRING (12, 44), "P pips W wire K colour T drop E fx"
+    _PRINTSTRING (12, 44), "P pips W wire K col T drop E fx G gpu"
     COLOR _RGB32(255, 255, 255), _RGBA32(0, 0, 0, 0)
     _PRINTSTRING (12, 66), "Up/Dn pick  L/R change  ENTER type"
     FOR i = 0 TO NPARAM - 1
@@ -483,7 +492,8 @@ SUB demo_panel ()
 
     y = y + 22
     _PRINTSTRING (12, y), "Die " + _TRIM$(STR$(diceCount)) + dieType + "  Mat " + matName(cfg.MATERIAL) + "  Th " + _TRIM$(theme(themeIdx).NM)
-    _PRINTSTRING (12, y + 16), "Pips " + demo_onoff$(cfg.D6_PIPS) + "  Wire " + demo_onoff$(cfg.WIRE_ENABLED) + "  Drop " + demo_onoff$(dropOn) + " " + demo_fxname$(cfg.DROP_FX)
+    _PRINTSTRING (12, y + 16), "Pips " + demo_onoff$(cfg.D6_PIPS) + "  Wire " + demo_onoff$(cfg.WIRE_ENABLED) + "  Drop " + demo_onoff$(dropOn) + "  Render " + demo_hwlabel$
+    COLOR _RGB32(200, 255, 200), _RGBA32(0, 0, 0, 0)
     COLOR _RGB32(200, 255, 200), _RGBA32(0, 0, 0, 0)
     _PRINTSTRING (12, y + 36), "Set: A=all S=save L=load (per-die)"
     _PRINTSTRING (12, y + 52), "Theme: V=save B=load by name"
@@ -495,7 +505,35 @@ SUB demo_panel ()
     _PRINTSTRING (372, ry), resultTxt
     COLOR _RGB32(150, 200, 255), _RGBA32(0, 0, 0, 0)
     _PRINTSTRING (372, ry + 18), "(x = dropped)   ESC to quit"
-    _DISPLAY
+    ' Software dice are already composited into the page; hardware dice live on the GL
+    ' overlay and must be (re)drawn each present -- _DISPLAY clears the overlay. Let
+    ' present_hw own the flip in HW mode so there's no double-_DISPLAY flicker.
+    IF hwOn THEN dice3d_present_hw cfg ELSE _DISPLAY
+END SUB
+
+FUNCTION demo_hwlabel$ ()
+    IF hwOn THEN demo_hwlabel$ = "HW (GPU)" ELSE demo_hwlabel$ = "SW"
+END FUNCTION
+
+'--- Toggle/refresh the OpenGL hardware render path. Maps the software tray box
+'    (BOX_X/Y/W/H on the 940x700 screen) into GPU coords: dice positions + size scale
+'    by GPU-units-per-pixel (1/hwPPU), the tray centred on screen. Invalidates the
+'    hardware atlas so present_hw rebuilds it from the current faces. present() branches
+'    on DICE3D_HW, so setting it alone redirects every dice render to the hardware path.
+SUB demo_hw_sync ()
+    DIM AS SINGLE pxk, cxpix, cypix
+    DICE3D_HW = hwOn
+    IF DICE3D_HWATLAS <> 0 THEN _FREEIMAGE DICE3D_HWATLAS
+    DICE3D_HWATLAS = 0
+    IF NOT hwOn THEN EXIT SUB
+    pxk = 1.0 / hwPPU
+    cxpix = cfg.BOX_X + cfg.BOX_W * 0.5     ' tray centre on the 940x700 screen (px)
+    cypix = cfg.BOX_Y + cfg.BOX_H * 0.5
+    DICE3D_HW_PXK = pxk
+    DICE3D_HW_Z = -5.0
+    DICE3D_HW_S = cfg.DIE_SIZE * pxk
+    DICE3D_HW_CX = (cxpix - 470) * pxk      ' 470 = screen centre x (940/2)
+    DICE3D_HW_CY = -(cypix - 350) * pxk     ' 350 = screen centre y (700/2); GPU +y is up
 END SUB
 
 FUNCTION demo_fmt$ (x AS SINGLE)
