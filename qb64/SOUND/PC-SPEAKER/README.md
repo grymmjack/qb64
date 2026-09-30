@@ -7,12 +7,15 @@ no `DECLARE LIBRARY`.
 
 ![DN1PLAY playing the Duke Nukem 1 BOMBEXPLODE sound](SCREENSHOTS/1-duke-bombexplode.png)
 
-It is a port of [grymmjack/ncot-pc-speaker](https://github.com/grymmjack/ncot-pc-speaker),
-which was Borland C++ code for MS-DOS that controlled the PC speaker hardware
-directly.
+It is a port of the Borland C++ code from **NCOT Technology's** video about
+programming the PC speaker under MS-DOS. The original code is at
+[ncot-tech/pc-speaker](https://github.com/ncot-tech/pc-speaker), with a copy at
+[grymmjack/ncot-pc-speaker](https://github.com/grymmjack/ncot-pc-speaker).
 
 **📺 Video:** [https://youtu.be/bH8UITZadf4](https://youtu.be/bH8UITZadf4).
-This is the video behind the original C code. Watch it alongside the code.
+Every C program in the video has a QB64-PE version here. See
+[Follow along with the video](#follow-along-with-the-video) for which file
+goes with which part.
 
 Built and tested with the QB64-PE **v4.7.0-GLFW** compiler.
 
@@ -132,6 +135,46 @@ PCSPK_Off                     1,193,182 steps per second (1-bit signal)        _
   the exact audio sample, so the timing never drifts.
 
 ---
+
+## Follow along with the video
+
+Each timestamp jumps to the part of the video where the C version is explained.
+The file next to it is the QB64-PE version.
+
+| Video | What happens | QB64-PE file |
+| --- | --- | --- |
+| [5:56](https://youtu.be/bH8UITZadf4?t=356) | The 8253 PIT: channel 2 wired to the speaker, divisors, port 61h | `PCSPKR.BM`, which emulates all of it |
+| [9:54](https://youtu.be/bH8UITZadf4?t=594) | `play_sound`, `no_sound`, `timer_wait`: a single beep | `BEEP.BAS` |
+| [11:13](https://youtu.be/bH8UITZadf4?t=673) | Hooking INT 1Ch so the program keeps running while the tone plays | `BEEP2.BAS` (and `INTTEST.BAS`) |
+| [14:05](https://youtu.be/bH8UITZadf4?t=845) | The Tetris tune from hand-transcribed sheet music | `BEEP3.BAS`, press **2** |
+| [16:47](https://youtu.be/bH8UITZadf4?t=1007) | The 330-note tune converted from MIDI (Doom's E1M1 bassline) | `BEEP3.BAS`, press **1** |
+| [24:55](https://youtu.be/bH8UITZadf4?t=1495) | Pulling the sound effects out of Commander Keen's `SOUNDS.CK1` | `BEEP4.BAS`, then **`DN1PLAY.BAS`** for Keen and Duke |
+| [31:34](https://youtu.be/bH8UITZadf4?t=1894) | How PWM works | the PWM section below |
+| [34:48](https://youtu.be/bH8UITZadf4?t=2088) | The sine-wave PWM code | `PWM.BAS` |
+| [36:32](https://youtu.be/bH8UITZadf4?t=2192) | Playing a real WAV file, and the fight with DOS's 64K memory segments | `WAV.BAS` |
+
+A few things work out differently in QB64-PE:
+
+* **No 64K memory limit.** Most of the WAV section of the video is about
+  `LOADFILE.C` reading the file in chunks of less than 32K, plus far pointers and
+  `farmalloc`. None of that is needed in QB64-PE: the whole file goes into one
+  string, so `LOADFILE.C` has no port.
+* **The "crunchy" Keen sounds.** At 27:59 the video says its Keen playback
+  sounds crunchier than the real game. `BEEP4.BAS` copies the C, which
+  reprograms the timer every 7 ms, so it sounds the same as in the video.
+  `DN1PLAY.BAS` plays at 140 samples per second and only reprograms the timer
+  when the value changes, which is how id Software's sound code worked, as far
+  as I remember. That may be why the C version sounds crunchier. Compare the
+  two and see.
+* **`PWM.C` doesn't quite do what the video describes.** The explanation at
+  32:00 is correct: flip the speaker at a fast fixed rate and vary how long it
+  stays on. The C code at 34:48 instead feeds each sample to the timer as a
+  square-wave divisor, which makes a warbly noise. `PWM.BAS` reproduces that,
+  and pressing **M** switches to real PWM as the video describes it: a clean
+  sine wave with a faint 8 kHz whine.
+* **No crashing.** In the video a crash leaves the speaker beeping forever,
+  and the WAV player won't run inside the Borland editor because there isn't
+  enough conventional memory. Neither can happen here.
 
 ## What's in this folder
 

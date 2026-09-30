@@ -32,8 +32,8 @@ DIM i AS LONG, k AS STRING, choice AS STRING
 _TITLE "BEEP3"
 PRINT "BEEP3.C -> QB64PE"
 PRINT
-PRINT "  1) MELODY.C  (330 note events)"
-PRINT "  2) notes[] / lengths[] from BEEP3.C"
+PRINT "  1) MELODY.C  (330 note events - Doom E1M1 bassline)"
+PRINT "  2) notes[] / lengths[] from BEEP3.C (Tetris)"
 PRINT
 PRINT "Choose 1 or 2 (ESC quits): ";
 DO
