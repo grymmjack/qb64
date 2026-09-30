@@ -11,9 +11,8 @@ It is a port of [grymmjack/ncot-pc-speaker](https://github.com/grymmjack/ncot-pc
 which was Borland C++ code for MS-DOS that controlled the PC speaker hardware
 directly.
 
-**Video:** the original repo's README points to
-[https://youtu.be/bH8UITZadf4](https://youtu.be/bH8UITZadf4) for background.
-Watch it alongside the code.
+**📺 Video:** [https://youtu.be/bH8UITZadf4](https://youtu.be/bH8UITZadf4).
+This is the video behind the original C code. Watch it alongside the code.
 
 Built and tested with the QB64-PE **v4.7.0-GLFW** compiler.
 
