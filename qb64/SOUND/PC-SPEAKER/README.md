@@ -46,12 +46,25 @@ Built and tested with the QB64-PE **v4.7.0-GLFW** compiler.
 You can also drag any `.DN1`/`.DN2`/`.DN3`/`.CK1`/`.CK2`/`.CK3` file onto the
 window, or pass one on the command line: `DN1PLAY path/to/file.dn1`.
 
-The graph shows each sound's pitch over time. Orange bars are notes, grey ticks
-along the bottom are silence, and the white line is the play position.
+---
 
-| Duke Nukem 1 | Commander Keen 1 |
-| --- | --- |
-| ![BADGUYGOUP](SCREENSHOTS/2-duke-badguygoup.png) | ![LVLDONESND](SCREENSHOTS/3-keen-lvldone.png) |
+## Screenshots
+
+The sound list is on the left and details of the selected sound are on the
+right. The graph shows the sound's pitch over time: orange bars are notes, grey
+ticks along the bottom are silence, and the white line is the play position.
+
+**Duke Nukem 1: `BOMBEXPLODE` playing** (`duke1-b.dn1`, 24 sounds)
+
+![DN1PLAY playing the Duke Nukem 1 BOMBEXPLODE sound](SCREENSHOTS/1-duke-bombexplode.png)
+
+**Duke Nukem 1: `BADGUYGOUP` playing**
+
+![DN1PLAY playing the Duke Nukem 1 BADGUYGOUP sound](SCREENSHOTS/2-duke-badguygoup.png)
+
+**Commander Keen 1: `LVLDONESND` playing** (`SOUNDS.CK1`, 63 sounds; press Tab to switch to it)
+
+![DN1PLAY playing the Commander Keen LVLDONESND sound](SCREENSHOTS/3-keen-lvldone.png)
 
 ---
 
