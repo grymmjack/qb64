@@ -14,6 +14,11 @@ CONST DICE3D_REST_ENERGY = 9.0# '        spin energy (deg/frame)^2 sum threshold
 CONST DICE3D_REST_LINSPD2 = 0.6# '       linear speed^2 threshold (px/frame)^2
 CONST DICE3D_DWELL = 6 '                 frames a die must stay slow before settling
 CONST DICE3D_RADIUS_K = 1.30# '          collision radius = DIE_SIZE * this
+' Relaxation iterations per frame. 6 was not enough: the tray is barely taller than one die, so
+' dice cannot pass each other vertically and separation is effectively 1-D -- an out-of-order pair
+' has to be walked past each other a step at a time. 24 converges; it is a handful of dice and
+' after the first pass there is normally nothing left to do.
+CONST DICE3D_SEP_PASSES = 24
 
 ''
 ' -------------------------------------------------------------------------
@@ -152,14 +157,42 @@ END SUB
 SUB dice3d_showcase (cfg AS DICE3D_CONFIG)
     DIM AS INTEGER i, f, lo, hi, fr
     CONST NFR = 12
+    DIM axisX AS DICE3D_VEC3, rxt AS DICE3D_QUAT, tgtq AS DICE3D_QUAT
     lo = LBOUND(DICE3D_DICE): hi = UBOUND(DICE3D_DICE)
+    ' A TETRAHEDRON is a TOP-READ die: its value lives on the BOTTOM (base) face and is
+    ' repeated at the top apex of the three visible faces (see dice3d_draw_d4_corners). So
+    ' FACE_Q(f) -- which points face f AT the camera -- is exactly wrong: it makes the value
+    ' face a visible TOP face and the apex then reads a DIFFERENT face's number. The correct
+    ' apex-up read seats the value face as the hidden BASE: rotate FACE_Q(f) about X by
+    ' 90 deg (base points straight down) PLUS the camera tilt (so it points straight away
+    ' from the tilted camera), plus D4_LEAN to decide which way it tips off square-on.
+    ' Verified value-correct 1..4 in dicelab.bas. (Sweep proof: at CAM_TILT 0 the clean angle
+    ' is 90; at 32 it is 122.)
+    '
+    ' D4_LEAN used to be a hardcoded -4, which tipped the base TOWARD the camera on purpose --
+    ' a sliver of the bottom showing so it read as a pyramid rather than a flat triangle. That
+    ' sliver is exactly what looks wrong: the die appears to lean outward at you. Positive
+    ' values tip it AWAY instead, hiding the base and showing more of the upper faces, which
+    ' still reads as solid because the three visible faces are foreshortened differently.
+    DIM lean AS SINGLE
+    lean = cfg.D4_LEAN
+    IF lean = 0 THEN lean = 20                    ' unset (an old set file): tip AWAY, not toward
+    axisX.X = 1: axisX.Y = 0: axisX.Z = 0
+    dice3d_qaxisangle axisX, (90 + cfg.CAM_TILT + lean) * 0.0174532925, rxt
     REDIM AS DICE3D_QUAT sq(lo TO hi)
     FOR i = lo TO hi: sq(i) = DICE3D_DICE(i).Q: NEXT
     FOR fr = 1 TO NFR
         FOR i = lo TO hi
             IF DICE3D_DICE(i).VALUE >= LBOUND(DICE3D_VAL2FACE) AND DICE3D_DICE(i).VALUE <= UBOUND(DICE3D_VAL2FACE) THEN
                 f = DICE3D_VAL2FACE(DICE3D_DICE(i).VALUE)
-                IF f >= 0 AND f < DICE3D_NF THEN dice3d_qslerp sq(i), DICE3D_FACE_Q(f), fr / NFR, DICE3D_DICE(i).Q
+                IF f >= 0 AND f < DICE3D_NF THEN
+                    IF DICE3D_DICE(i).SIDES = 4 THEN
+                        dice3d_qmul rxt, DICE3D_FACE_Q(f), tgtq   ' tetra: value face -> hidden base, apex-up top-read
+                    ELSE
+                        tgtq = DICE3D_FACE_Q(f)
+                    END IF
+                    dice3d_qslerp sq(i), tgtq, fr / NFR, DICE3D_DICE(i).Q
+                END IF
             END IF
         NEXT
         dice3d_present cfg
@@ -170,11 +203,32 @@ END SUB
 ''
 ' Push overlapping dice apart (top-down circle separation) and keep everyone
 ' inside the walls. Cheap O(n^2) - fine for a handful of dice.
+''
+' Nudge a die's tumble after a knock. A collision that changes only the path, never the spin,
+' reads as a slide -- the die keeps rotating exactly as it was while its direction jumps.
+' Skipped once a die has settled, so a late touch cannot restart a finished roll.
+SUB dice3d_spin_kick (di AS DICE3D_DIE, mag AS SINGLE)
+    DIM k AS SINGLE
+    IF di.SETTLED THEN EXIT SUB
+    k = mag * 0.6
+    IF k > 14 THEN k = 14
+    di.WX = di.WX + (RND - 0.5) * 2 * k
+    di.WY = di.WY + (RND - 0.5) * 2 * k
+    di.WZ = di.WZ + (RND - 0.5) * 2 * k
+END SUB
+
 SUB dice3d_separate (cfg AS DICE3D_CONFIG)
-    DIM AS INTEGER i, j, lo, hi
+    DIM AS INTEGER i, j, lo, hi, pass
     DIM AS SINGLE r, dx, dy, d, ov, nx, ny
+    DIM AS SINGLE rvx, rvy, vn, e, jimp
     lo = LBOUND(DICE3D_DICE): hi = UBOUND(DICE3D_DICE)
     r = cfg.DIE_SIZE * DICE3D_RADIUS_K
+    ' RELAXATION, not one pass. Resolving a pair moves a die that may then overlap a third, and
+    ' the wall clamp at the end can push it straight back into the one it was just freed from --
+    ' which is how a die ended up settled INSIDE a held one against the edge of a tight box. A few
+    ' iterations converge on an arrangement that satisfies everything at once. Cheap: a handful of
+    ' dice, and after the first pass there is usually nothing left to do.
+    FOR pass = 1 TO DICE3D_SEP_PASSES
     FOR i = lo TO hi - 1
         FOR j = i + 1 TO hi
             dx = DICE3D_DICE(j).PX - DICE3D_DICE(i).PX
@@ -183,18 +237,75 @@ SUB dice3d_separate (cfg AS DICE3D_CONFIG)
             IF d < 2 * r AND d > 0.0001 THEN
                 ov = (2 * r - d) / 2
                 nx = dx / d: ny = dy / d
-                DICE3D_DICE(i).PX = DICE3D_DICE(i).PX - nx * ov
-                DICE3D_DICE(i).PY = DICE3D_DICE(i).PY - ny * ov
-                DICE3D_DICE(j).PX = DICE3D_DICE(j).PX + nx * ov
-                DICE3D_DICE(j).PY = DICE3D_DICE(j).PY + ny * ov
+                ' A HELD die is immovable -- pinning it and then letting a neighbour shove it out
+                ' of its seat would defeat the point. When one side is pinned the other takes the
+                ' WHOLE overlap, so they still end up exactly touching rather than half-resolved.
+                IF DICE3D_DICE(i).HELD AND DICE3D_DICE(j).HELD THEN
+                    ' both pinned: they were already apart last roll, nothing to resolve
+                ELSEIF DICE3D_DICE(i).HELD THEN
+                    DICE3D_DICE(j).PX = DICE3D_DICE(j).PX + nx * ov * 2
+                    DICE3D_DICE(j).PY = DICE3D_DICE(j).PY + ny * ov * 2
+                ELSEIF DICE3D_DICE(j).HELD THEN
+                    DICE3D_DICE(i).PX = DICE3D_DICE(i).PX - nx * ov * 2
+                    DICE3D_DICE(i).PY = DICE3D_DICE(i).PY - ny * ov * 2
+                ELSE
+                    DICE3D_DICE(i).PX = DICE3D_DICE(i).PX - nx * ov
+                    DICE3D_DICE(i).PY = DICE3D_DICE(i).PY - ny * ov
+                    DICE3D_DICE(j).PX = DICE3D_DICE(j).PX + nx * ov
+                    DICE3D_DICE(j).PY = DICE3D_DICE(j).PY + ny * ov
+                END IF
+
+                '--- CONTACT RESPONSE ------------------------------------------------------
+                ' The overlap fix above only teleports dice apart. Nothing reflected, so a die
+                ' SLID off its neighbour with its velocity unchanged and simply carried on. That
+                ' is most obvious against a HELD die, which is precisely the thing you expect to
+                ' knock against and rebound from.
+                '
+                ' Standard equal-mass impulse along the contact normal, with a held die treated
+                ' as INFINITE mass -- it absorbs nothing and takes all of the rebound out of the
+                ' other die, which is what "it does not budge" has to mean physically as well as
+                ' positionally. Applied only while closing (vn < 0), or a pair resting in contact
+                ' would be re-impulsed every frame and buzz.
+                rvx = DICE3D_DICE(j).VX - DICE3D_DICE(i).VX
+                rvy = DICE3D_DICE(j).VY - DICE3D_DICE(i).VY
+                vn = rvx * nx + rvy * ny
+                IF vn < 0 THEN
+                    e = cfg.RESTITUTION
+                    IF e <= 0 THEN e = 0.5
+                    IF DICE3D_DICE(i).HELD AND DICE3D_DICE(j).HELD THEN
+                        ' two pinned dice: neither may move, so there is no impulse to share
+                    ELSEIF DICE3D_DICE(i).HELD THEN
+                        jimp = -(1 + e) * vn
+                        DICE3D_DICE(j).VX = DICE3D_DICE(j).VX + jimp * nx
+                        DICE3D_DICE(j).VY = DICE3D_DICE(j).VY + jimp * ny
+                        dice3d_spin_kick DICE3D_DICE(j), jimp
+                    ELSEIF DICE3D_DICE(j).HELD THEN
+                        jimp = -(1 + e) * vn
+                        DICE3D_DICE(i).VX = DICE3D_DICE(i).VX - jimp * nx
+                        DICE3D_DICE(i).VY = DICE3D_DICE(i).VY - jimp * ny
+                        dice3d_spin_kick DICE3D_DICE(i), jimp
+                    ELSE
+                        jimp = -(1 + e) * vn / 2
+                        DICE3D_DICE(i).VX = DICE3D_DICE(i).VX - jimp * nx
+                        DICE3D_DICE(i).VY = DICE3D_DICE(i).VY - jimp * ny
+                        DICE3D_DICE(j).VX = DICE3D_DICE(j).VX + jimp * nx
+                        DICE3D_DICE(j).VY = DICE3D_DICE(j).VY + jimp * ny
+                        dice3d_spin_kick DICE3D_DICE(i), jimp
+                        dice3d_spin_kick DICE3D_DICE(j), jimp
+                    END IF
+                END IF
             END IF
         NEXT
     NEXT
-    '--- re-clamp inside the box after any pushes ---
+    '--- re-clamp inside the box after any pushes (a HELD die is exempt: it is already exactly
+    '    where it was left, and clamping is the last remaining way it could drift) ---
     FOR i = lo TO hi
-        IF DICE3D_DICE(i).PX < r THEN DICE3D_DICE(i).PX = r
-        IF DICE3D_DICE(i).PX > cfg.BOX_W - r THEN DICE3D_DICE(i).PX = cfg.BOX_W - r
-        IF DICE3D_DICE(i).PY < r THEN DICE3D_DICE(i).PY = r
-        IF DICE3D_DICE(i).PY > cfg.BOX_H - r THEN DICE3D_DICE(i).PY = cfg.BOX_H - r
+        IF DICE3D_DICE(i).HELD = 0 THEN
+            IF DICE3D_DICE(i).PX < r THEN DICE3D_DICE(i).PX = r
+            IF DICE3D_DICE(i).PX > cfg.BOX_W - r THEN DICE3D_DICE(i).PX = cfg.BOX_W - r
+            IF DICE3D_DICE(i).PY < r THEN DICE3D_DICE(i).PY = r
+            IF DICE3D_DICE(i).PY > cfg.BOX_H - r THEN DICE3D_DICE(i).PY = cfg.BOX_H - r
+        END IF
     NEXT
+    NEXT pass
 END SUB

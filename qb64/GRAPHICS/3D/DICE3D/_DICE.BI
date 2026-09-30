@@ -53,11 +53,37 @@ TYPE DICE3D_DIE
     BODY_KOLOR AS _UNSIGNED LONG '       per-die body override (percentile hi/lo)
     ATLAS AS LONG '                      baked face texture handle
     OFFSET AS INTEGER '                  atlas tile row offset (for shared atlases)
+    HELD AS INTEGER '                    pinned by dice3d_hold: keeps its seat + face, no physics
 END TYPE
 
 '--- Engine globals ------------------------------------------------------------
 DIM SHARED DICE3D_BOXBUF AS LONG '        off-screen 32-bit box compositing buffer
 REDIM SHARED DICE3D_DICE(0) AS DICE3D_DIE
+
+'--- HELD DICE -----------------------------------------------------------------
+' A die can be PINNED for the next roll: it keeps the seat and the face it had, sits out the
+' physics, and is not re-read. The rest of the tray tumbles around it.
+'
+' This is what a partial re-roll actually looks like on a table -- you pick up the dice you are
+' re-throwing and leave the others where they lie. Rolling only the chosen dice in a fresh tray
+' is a different picture: the kept dice vanish, and what the player sees stops matching the rule
+' they chose ("re-roll the 1s and 2s" became "here are two dice, no idea why").
+'
+' Contract: call dice3d_hold BEFORE dice3d_roll, once per pinned die, 1-based to match the
+' results() array. Holds are consumed by that roll and cleared. A hold is honoured only if the
+' PREVIOUS roll had a die at that index to inherit a position from -- otherwise there is no
+' "in place" to hold, and it simply rolls.
+CONST DICE3D_HOLD_MAX = 16
+DIM SHARED DICE3D_HOLD_ON AS INTEGER '    any holds pending for the next roll
+DIM SHARED DICE3D_HOLD_V(1 TO DICE3D_HOLD_MAX) AS INTEGER '  per index: pinned value (0 = free)
+REDIM SHARED DICE3D_PREV(0) AS DICE3D_DIE '  the previous roll's dice, for seats + poses
+DIM SHARED DICE3D_PREV_N AS INTEGER
+
+'--- painter order for the dice themselves (see dice3d_depth_order) ---------------
+' SHARED rather than a local in the renderer: arrays here are dynamic, so a DIM inside a SUB that
+' runs every frame is a Duplicate definition on the second call.
+REDIM SHARED DICE3D_ORD(0) AS INTEGER
+DIM SHARED DICE3D_ORD_N AS INTEGER
 
 '--- Current mesh (shared by all dice of one type in a single roll) ------------
 DIM SHARED DICE3D_NV AS INTEGER '         unique vertex count
@@ -75,6 +101,10 @@ DIM SHARED DICE3D_NF AS INTEGER '         face count (= sides)
 REDIM SHARED DICE3D_FACE_Q(0) AS DICE3D_QUAT '  "this face at camera" pose
 REDIM SHARED DICE3D_FACE_N(0) AS DICE3D_VEC3 '  outward face normal (model space)
 REDIM SHARED DICE3D_FACE_VAL(0) AS INTEGER '    numeric value on each face
+' inradius/maxab per face: how much room the SHAPE gives a numeral once fitted to its tile.
+' ~0.5 for a triangle, ~0.71 a square, ~0.81 a pentagon. The atlas scales numerals by it so
+' the same digit reads the same size on every die (see dice3d_make_atlas).
+REDIM SHARED DICE3D_FACE_ROOM(0) AS SINGLE
 REDIM SHARED DICE3D_FACE_LABEL(0) AS STRING '   text stamped on each face
 REDIM SHARED DICE3D_VAL2FACE(0) AS INTEGER '    value -> face index
 REDIM SHARED DICE3D_CORNERVAL(0, 2) AS INTEGER '  D4 top-read: value at each triangle corner
@@ -108,7 +138,23 @@ DIM SHARED DICE3D_UPRIGHT AS INTEGER
 '    the software screen, sets these params + a hardware-copy atlas, then rolls. 0 = the
 '    software box-buffer renderer. present() branches on this.
 DIM SHARED DICE3D_HW AS INTEGER
+' DEV: force the SOFTWARE renderer even where the game would pick hardware. The GL layer draws
+' to the WINDOW, after the canvas blit, so _SAVEIMAGE CANVAS cannot see it -- a headless capture
+' of a 3D roll would show an empty tray. The software renderer composites into the canvas, so it
+' is the only path a dev-mode screenshot can prove. Set by `dungeon.run rollshot`; never in play.
+DIM SHARED dice3d_force_soft AS INTEGER
 DIM SHARED DICE3D_HWATLAS AS LONG   ' hardware (_COPYIMAGE ,33) atlas; built lazily, freed by the caller
+DIM SHARED DICE3D_HL AS LONG        ' hardware white sheen tile for the read-face highlight (built lazily)
+DIM SHARED DICE3D_HL_SW AS LONG     ' software white sheen tile (software render path)
+
+'--- Directional-light shading: baked into the atlas as opaque brightness COLUMNS (see
+'    dice3d_make_atlas). Column 0 = full bright, column NLEV-1 = darkest (MAXDARK black over
+'    it). The renderer picks a per-face level and offsets the source U by level*DICE3D_TILE.
+'    Opaque pixels only -- NO translucent overlays, which some GL drivers drop when a
+'    semi-transparent tile is uploaded via _COPYIMAGE(,33) (they render invisible).
+CONST DICE3D_LIGHT_NLEV = 12 '      brightness columns (finer = smoother gradient across a rounded bevel)
+CONST DICE3D_LIGHT_MAXDARK = .62
+CONST DICE3D_LIGHT_TINT = .55 '     max colour wash on the most-lit column (scaled by LIGHT_KOLOR saturation)
 DIM SHARED DICE3D_HW_S AS SINGLE    ' GPU units per model unit (die on-screen size)
 DIM SHARED DICE3D_HW_Z AS SINGLE    ' base view depth (negative; ~-5)
 DIM SHARED DICE3D_HW_CX AS SINGLE   ' GPU x of the tray centre (0 = screen centre)
@@ -123,6 +169,12 @@ DIM SHARED DICE3D_SND_VOL AS SINGLE
 '    if the die renders smaller (e.g. hardware dice render small but want a crisp hi-res
 '    atlas so numbers stay sharp). 0 = bake at the config's DIE_SIZE.
 DIM SHARED DICE3D_ATLAS_DIE AS SINGLE
+
+'--- Geometric edge bevel (rounded dice): 0 = sharp polyhedron (original mesh). > 0 insets each
+'    numbered face toward its centroid by this fraction and fills the frame with real bevel-strip
+'    + vertex-cap geometry, so the EDGES are physically chamfered (not a texture trick). Set by
+'    the caller before dice3d_build (it rebuilds the mesh). ~0.12-0.22 reads as a nice round. ---
+DIM SHARED DICE3D_BEVEL AS SINGLE
 
 '--- Optional frame capture (debugging / recording; 0 = off) -------------------
 DIM SHARED DICE3D_SHOT_EVERY AS INTEGER '  save box buffer every N frames

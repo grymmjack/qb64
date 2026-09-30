@@ -23,7 +23,7 @@ SUB dice3d_config_defaults (cfg AS DICE3D_CONFIG)
     cfg.BOX_SHOW_OUTLINE = -1: cfg.BOX_OUTLINE_KOLOR = _RGB32(120, 160, 255)
     cfg.BOX_SHOW_BACK = -1: cfg.BOX_BACK_KOLOR = _RGB32(0, 0, 90) '  deep blue
     cfg.DIE_SIZE = 40
-    cfg.CAM_TILT = 32: cfg.CAM_YAW = 0: cfg.FOV = 0
+    cfg.CAM_TILT = 32: cfg.CAM_YAW = 0: cfg.FOV = 0: cfg.D4_LEAN = 20
     cfg.MATERIAL = DICE3D_MAT_SOLID
     cfg.BODY_KOLOR = _RGB32(235, 235, 240)
     cfg.NUM_KOLOR = _RGB32(20, 20, 30)
@@ -36,6 +36,7 @@ SUB dice3d_config_defaults (cfg AS DICE3D_CONFIG)
     cfg.TEX_OPACITY = 1
     cfg.MARBLE_KOLOR = _RGB32(90, 90, 105)
     cfg.CRYSTAL_ALPHA = 0.72
+    dice3d_light_defaults cfg
     cfg.WIRE_ENABLED = 0
     cfg.WIRE_KOLOR = _RGB32(0, 0, 0)
     cfg.WIRE_OPACITY = 0.5
@@ -49,6 +50,17 @@ SUB dice3d_config_defaults (cfg AS DICE3D_CONFIG)
     cfg.MAX_ROLL_SECS = 6
     cfg.GRAVITY = 0.9: cfg.RESTITUTION = 0.55: cfg.FRICTION = 0.95
     cfg.SPIN_STRENGTH = 30: cfg.THROW_STRENGTH = 7
+END SUB
+
+''
+' Directional (top) light defaults. Shared by dice3d_config_defaults and the set loader, so
+' dice sets authored before the LIGHT_* keys existed still light up (the loader seeds these,
+' then any LIGHT_* keys in the file override).
+SUB dice3d_light_defaults (cfg AS DICE3D_CONFIG)
+    cfg.LIGHT_ENABLED = -1
+    cfg.LIGHT_X = -0.3: cfg.LIGHT_Y = 0.8: cfg.LIGHT_Z = 0.55 '  overhead, slightly front-left
+    cfg.LIGHT_AMBIENT = 0.5: cfg.LIGHT_INTENSITY = 0.8
+    cfg.LIGHT_KOLOR = _RGB32(255, 255, 255) '                   white = neutral (pure brightness)
 END SUB
 
 ''
@@ -93,7 +105,12 @@ SUB dice3d_run_loop (cfg AS DICE3D_CONFIG)
     ' dice3d_qrandom gives a UNIFORM start orientation (measured d20 mean ~10.5, each face
     ' ~5%). The showcase then turns that SAME face upright/readable -- it does NOT change the
     ' value, so the die shows what it landed on (no post-settle number swap or re-pose).
-    FOR i = lo TO hi: dice3d_read_value DICE3D_DICE(i): NEXT '   guarantee values (also covers a timeout)
+    ' A HELD die's value is pinned, not landed -- re-reading it from the orientation would derive
+    ' the number back from the pose we just set, which is at best a no-op and for a top-read d4
+    ' is simply wrong.
+    FOR i = lo TO hi
+        IF DICE3D_DICE(i).HELD = 0 THEN dice3d_read_value DICE3D_DICE(i)
+    NEXT '   guarantee values (also covers a timeout)
     IF DICE3D_UPRIGHT THEN dice3d_showcase cfg '  turn each settled face upright + readable
 END SUB
 
@@ -260,6 +277,135 @@ END SUB
 ' Roll dice: build mesh + atlas, animate the tumble/settle in the box, hand
 ' control back. results() is REDIM'd to (1 TO count) and filled with each die's
 ' value; DICE3D_LAST_TOTAL holds the kept sum + flat modifier.
+''
+' Where die `idx` (1-based) came to rest, in BOX pixels. Lets a caller verify that a held die
+' really did keep its seat -- "it looks like it moved" is not something to settle by eye.
+FUNCTION dice3d_px! (idx AS INTEGER)
+    dice3d_px! = 0
+    IF idx >= 1 AND idx <= DICE3D_LAST_COUNT THEN
+        IF idx - 1 <= UBOUND(DICE3D_DICE) THEN dice3d_px! = DICE3D_DICE(idx - 1).PX
+    END IF
+END FUNCTION
+
+FUNCTION dice3d_py! (idx AS INTEGER)
+    dice3d_py! = 0
+    IF idx >= 1 AND idx <= DICE3D_LAST_COUNT THEN
+        IF idx - 1 <= UBOUND(DICE3D_DICE) THEN dice3d_py! = DICE3D_DICE(idx - 1).PY
+    END IF
+END FUNCTION
+
+''
+' The collision radius the last roll used, in box pixels. Lets a caller check that dice actually
+' ended up apart -- "it rolled through the other one" is a distance, and distances can be measured.
+FUNCTION dice3d_radius! (cfg AS DICE3D_CONFIG)
+    dice3d_radius! = cfg.DIE_SIZE * DICE3D_RADIUS_K
+END FUNCTION
+
+''
+' Pin die `idx` (1-based) at `val` for the NEXT dice3d_roll: it keeps the seat and face it had
+' last roll, sits out the physics, and is not re-read. Cleared automatically by that roll.
+SUB dice3d_hold (idx AS INTEGER, face AS INTEGER)   ' `face`, not `val` -- VAL is reserved
+    IF idx < 1 OR idx > DICE3D_HOLD_MAX THEN EXIT SUB
+    IF face < 1 THEN EXIT SUB
+    DICE3D_HOLD_V(idx) = face
+    DICE3D_HOLD_ON = -1
+END SUB
+
+''
+' Drop every pending hold.
+SUB dice3d_hold_clear
+    DIM i AS INTEGER
+    FOR i = 1 TO DICE3D_HOLD_MAX: DICE3D_HOLD_V(i) = 0: NEXT i
+    DICE3D_HOLD_ON = 0
+END SUB
+
+''
+' Seat the pinned dice: previous position, value's face pose, no velocity, already SETTLED (which
+' is what makes dice3d_step skip them -- it exits on SETTLED before touching anything).
+' Called from dice3d_roll after the mesh is built, so DICE3D_VAL2FACE / DICE3D_FACE_Q are valid.
+SUB dice3d_apply_holds (cfg AS DICE3D_CONFIG)
+    DIM AS INTEGER i, v, f, lo, hi
+    DIM axisX AS DICE3D_VEC3, rxt AS DICE3D_QUAT
+    DIM lean AS SINGLE
+    IF DICE3D_HOLD_ON = 0 THEN EXIT SUB
+    lo = LBOUND(DICE3D_DICE): hi = UBOUND(DICE3D_DICE)
+    ' the same apex-up construction dice3d_showcase uses for a tetrahedron (a d4 is TOP-read:
+    ' its value sits on the hidden base), so a held d4 shows the number it is pinned to.
+    lean = cfg.D4_LEAN: IF lean = 0 THEN lean = 20
+    axisX.X = 1: axisX.Y = 0: axisX.Z = 0
+    dice3d_qaxisangle axisX, (90 + cfg.CAM_TILT + lean) * 0.0174532925, rxt
+    FOR i = lo TO hi
+        v = 0
+        IF i + 1 >= 1 AND i + 1 <= DICE3D_HOLD_MAX THEN v = DICE3D_HOLD_V(i + 1)
+        IF v > 0 AND i <= DICE3D_PREV_N - 1 THEN
+            DICE3D_DICE(i).VALUE = v
+            DICE3D_DICE(i).HELD = -1
+            DICE3D_DICE(i).SETTLED = -1
+            DICE3D_DICE(i).SETTLING = 0
+            DICE3D_DICE(i).VX = 0: DICE3D_DICE(i).VY = 0: DICE3D_DICE(i).VZ = 0
+            DICE3D_DICE(i).WX = 0: DICE3D_DICE(i).WY = 0: DICE3D_DICE(i).WZ = 0
+            DICE3D_DICE(i).PX = DICE3D_PREV(i).PX '  exactly where it was lying
+            DICE3D_DICE(i).PY = DICE3D_PREV(i).PY
+            DICE3D_DICE(i).PZ = DICE3D_PREV(i).PZ
+            IF v >= LBOUND(DICE3D_VAL2FACE) AND v <= UBOUND(DICE3D_VAL2FACE) THEN
+                f = DICE3D_VAL2FACE(v)
+                IF f >= 0 AND f < DICE3D_NF THEN
+                    IF DICE3D_DICE(i).SIDES = 4 THEN
+                        dice3d_qmul rxt, DICE3D_FACE_Q(f), DICE3D_DICE(i).Q
+                    ELSE
+                        DICE3D_DICE(i).Q = DICE3D_FACE_Q(f)
+                    END IF
+                END IF
+            END IF
+        END IF
+    NEXT i
+END SUB
+
+''
+' Give every FREE die a start position clear of the pinned ones.
+'
+' dice3d_throw scatters dice at random, which is right when the tray is empty and wrong when part
+' of it is already occupied: a die dropped straight onto a held one can end up WEDGED between two
+' pinned neighbours with nowhere to go. The tray is barely taller than a single die, so dice cannot
+' slip past each other vertically -- separation is effectively one-dimensional, and a die boxed in
+' on both sides stays boxed in however long it is relaxed.
+'
+' You would not drop a die onto one already lying on the table, so neither does this: it samples
+' candidate spots and keeps whichever is furthest from every held die. Sampling rather than solving
+' because "furthest from the occupied spots" is all that is needed, and the throw is still random.
+SUB dice3d_place_free (cfg AS DICE3D_CONFIG)
+    CONST TRIES = 24
+    DIM AS INTEGER i, j, lo, hi, t, anyheld
+    DIM AS SINGLE r, cx, best, bestx, dmin, dx, dy, d
+    IF DICE3D_HOLD_ON = 0 THEN EXIT SUB
+    lo = LBOUND(DICE3D_DICE): hi = UBOUND(DICE3D_DICE)
+    FOR i = lo TO hi
+        IF DICE3D_DICE(i).HELD THEN anyheld = -1
+    NEXT
+    IF anyheld = 0 THEN EXIT SUB
+    r = cfg.DIE_SIZE * DICE3D_RADIUS_K
+    FOR i = lo TO hi
+        IF DICE3D_DICE(i).HELD = 0 THEN
+            best = -1: bestx = DICE3D_DICE(i).PX
+            FOR t = 1 TO TRIES
+                cx = r + RND * (cfg.BOX_W - 2 * r)
+                dmin = 1E+09
+                FOR j = lo TO hi
+                    IF DICE3D_DICE(j).HELD THEN
+                        dx = cx - DICE3D_DICE(j).PX
+                        dy = DICE3D_DICE(i).PY - DICE3D_DICE(j).PY
+                        d = SQR(dx * dx + dy * dy)
+                        IF d < dmin THEN dmin = d
+                    END IF
+                NEXT j
+                IF dmin > best THEN best = dmin: bestx = cx
+                IF best >= 2 * r THEN EXIT FOR       ' already clear of everything -- good enough
+            NEXT t
+            DICE3D_DICE(i).PX = bestx
+        END IF
+    NEXT i
+END SUB
+
 SUB dice3d_roll (notation AS STRING, cfg AS DICE3D_CONFIG, results() AS INTEGER)
     DIM spec AS DICE3D_SPEC
     DIM AS INTEGER cnt, sides, i
@@ -277,6 +423,7 @@ SUB dice3d_roll (notation AS STRING, cfg AS DICE3D_CONFIG, results() AS INTEGER)
 
     DICE3D_FRAME = 0
     DICE3D_BOXBUF = _NEWIMAGE(cfg.BOX_W, cfg.BOX_H, 32)
+    DICE3D_BEVEL = cfg.BEVEL * 0.18   ' cfg.BEVEL 0..1 -> geometric edge-round inset fraction
     dice3d_build sides
     DIM adie AS SINGLE: adie = cfg.DIE_SIZE
     IF DICE3D_ATLAS_DIE > 0 THEN cfg.DIE_SIZE = DICE3D_ATLAS_DIE   ' bake a hi-res atlas (numbers stay sharp)
@@ -290,6 +437,8 @@ SUB dice3d_roll (notation AS STRING, cfg AS DICE3D_CONFIG, results() AS INTEGER)
         DICE3D_DICE(i).ATLAS = atlas
         dice3d_throw DICE3D_DICE(i), cfg, r
     NEXT
+    dice3d_apply_holds cfg           ' pinned dice keep their seat + face and sit out the physics
+    dice3d_place_free cfg            ' ...and the dice being thrown do not start on top of them
 
     dice3d_run_loop cfg
     dice3d_apply_drops cfg, spec
@@ -306,8 +455,15 @@ SUB dice3d_roll (notation AS STRING, cfg AS DICE3D_CONFIG, results() AS INTEGER)
         DICE3D_LAST_DROPPED(i + 1) = DICE3D_DICE(i).DROPPED
     NEXT
 
+    '--- remember this roll's dice, so the NEXT one can pin any of them in place ---
+    DICE3D_PREV_N = cnt
+    REDIM DICE3D_PREV(0 TO cnt - 1) AS DICE3D_DIE
+    FOR i = 0 TO cnt - 1: DICE3D_PREV(i) = DICE3D_DICE(i): NEXT
+    dice3d_hold_clear                             ' holds are consumed by the roll they were set for
+
     _FREEIMAGE atlas
-    _FREEIMAGE DICE3D_BOXBUF
+    _FREEIMAGE DICE3D_BOXBUF: DICE3D_BOXBUF = 0   ' zero it: a stale handle is not detectable, and
+    ' dice3d_present's SOFTWARE branch reads this buffer on every reveal frame AFTER the roll ends.
 END SUB
 
 ''
@@ -325,7 +481,8 @@ SUB dice3d_repose (cfg AS DICE3D_CONFIG)
     FOR i = lo TO hi: DICE3D_DICE(i).ATLAS = atlas: NEXT
     dice3d_present cfg
     _FREEIMAGE atlas
-    _FREEIMAGE DICE3D_BOXBUF
+    _FREEIMAGE DICE3D_BOXBUF: DICE3D_BOXBUF = 0   ' zero it: a stale handle is not detectable, and
+    ' dice3d_present's SOFTWARE branch reads this buffer on every reveal frame AFTER the roll ends.
 END SUB
 
 ''
@@ -339,6 +496,7 @@ SUB dice3d_roll_pct (cnt AS INTEGER, cfg AS DICE3D_CONFIG, results() AS INTEGER)
 
     DICE3D_FRAME = 0
     DICE3D_BOXBUF = _NEWIMAGE(cfg.BOX_W, cfg.BOX_H, 32)
+    DICE3D_BEVEL = cfg.BEVEL * 0.18   ' geometric edge-round (percentile d10 pair)
     dice3d_build 10
     atlasHi = dice3d_make_atlas&(cfg, cfg.PCT_HI_KOLOR, 1) '  tens 00..90
     atlasLo = dice3d_make_atlas&(cfg, cfg.PCT_LO_KOLOR, 0) '  units 0..9
@@ -373,5 +531,6 @@ SUB dice3d_roll_pct (cnt AS INTEGER, cfg AS DICE3D_CONFIG, results() AS INTEGER)
     NEXT
 
     _FREEIMAGE atlasHi: _FREEIMAGE atlasLo
-    _FREEIMAGE DICE3D_BOXBUF
+    _FREEIMAGE DICE3D_BOXBUF: DICE3D_BOXBUF = 0   ' zero it: a stale handle is not detectable, and
+    ' dice3d_present's SOFTWARE branch reads this buffer on every reveal frame AFTER the roll ends.
 END SUB

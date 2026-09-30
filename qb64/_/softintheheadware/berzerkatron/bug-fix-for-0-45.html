@@ -1,0 +1,87 @@
+<html>
+<head>
+<meta charset="utf-8">
+</head>
+<body>
+<h1>Bug in Berzerkotron0-45.bas ?</h1>
+<p>&quot;Berzerkotron0-45.bas&quot; has an issue where after mapping a controller, when starting a new game (press Enter to play), it sometimes crashes with illegal function call on line 852.</p>
+<p>Note that the error doesn't game does not crash when the controls were mapped to the keyboard, it only crashes when mapping to game controllers, and not every time.</p>
+<h1>Cause Analysis</h1>
+<p>The ai assistant helped analyze code and determined the crash occurs because of how QB64PE handles hardware controller devices via _DeviceInput and _Button/_Axis.</p>
+<p>In the interactive menu routine CONFIGCONTROLS_INLINE, when we map controls using a game controller, it assigns device indices starting from 3 (since device 1 is the keyboard and device 2 is typically the mouse):</p>
+<pre style="background-color: #f0f0f0; padding: 15px; border-radius: 5px;">For d% = 3 To _Devices
+    ...
+    m_arrControlMap(targetP%, CurrentControl%).device = d%
+</pre>
+<p>When you start a new game and READPLAYERINPUT executes, it polls mapped inputs:</p>
+<pre style="background-color: #f0f0f0; padding: 15px; border-radius: 5px;">While _DeviceInput(1): Wend ' &lt;-- Hardcoded to Device 1 (Keyboard)!
+For inputType% = 1 To 9
+    mDevice% = m_arrControlMap(p%, inputType%).device
+    ...
+    ElseIf mType% = cInputButton Then
+        While _DeviceInput(mDevice%): Wend
+        If _Button(mCode%) Then act% = _TRUE
+</pre>
+<p>This creates two specific bugs:</p>
+<ol>
+<li>Stale/Invalid Device Handles: QB64PE enumerates hardware input devices dynamically at runtime. If devices are polled, plugged/unplugged, or re-enumerated when moving between the INTRO menu loop and the main game loop, controller device handles (e.g., _DeviceInput(3)) can become invalid.</li>
+<li>Out of Bounds Parameter Error: Passing an invalid or out-of-range device handle directly to _DeviceInput(mDevice%) or calling _Button(mCode%) without calling _DeviceInput on the active controller causes an Illegal Function Call crash (Line 852).</li>
+</ol>
+<h1>Solution</h1>
+<p>To resolve this issue reliably:</p>
+<ol>
+<li>Poll device context properly: Ensure _DeviceInput(mDevice%) is called conditionally only if mDevice% &gt; 0 and mDevice% &lt;= _Devices.</li>
+<li>Poll inside the main input loop: Update the device buffer dynamically for each mapped controller prior to reading button/axis states.</li>
+</ol>
+<h1>Corrected READPLAYERINPUT Subroutine</h1>
+<p>We replace the existing READPLAYERINPUT subroutine with the corrected version below. No other logic needs to be altered.</p>
+<pre style="background-color: #f0f0f0; padding: 15px; border-radius: 5px;">Sub READPLAYERINPUT (p%)
+    Dim inputType%, mDevice%, mType%, mCode%, mVal%, act%, axVal!
+    Player(p%).moveUp = _FALSE
+    Player(p%).moveDown = _FALSE
+    Player(p%).moveLeft = _FALSE
+    Player(p%).moveRight = _FALSE
+    Player(p%).button1 = _FALSE
+    Player(p%).fireUp = _FALSE
+    Player(p%).fireDown = _FALSE
+    Player(p%).fireLeft = _FALSE
+    Player(p%).fireRight = _FALSE
+    For inputType% = 1 To 9
+        mDevice% = m_arrControlMap(p%, inputType%).device
+        mType% = m_arrControlMap(p%, inputType%).typ
+        mCode% = m_arrControlMap(p%, inputType%).code
+        mVal% = m_arrControlMap(p%, inputType%).value
+        If mDevice% &gt; 0 And mDevice% &lt;= _Devices Then
+            While _DeviceInput(mDevice%): Wend
+            act% = _FALSE
+            If mType% = cInputKey Then
+                If _Button(mCode%) Then act% = _TRUE
+            ElseIf mType% = cInputButton Then
+                If mCode% &gt; 0 And mCode% &lt;= _LastButton(mDevice%) Then
+                    If _Button(mCode%) Then act% = _TRUE
+                End If
+            ElseIf mType% = cInputAxis Then
+                If mCode% &gt; 0 And mCode% &lt;= _LastAxis(mDevice%) Then
+                    axVal! = _Axis(mCode%)
+                    If Sgn(axVal!) = Sgn(mVal%) And Abs(axVal!) &gt; 0.5 Then act% = _TRUE
+                End If
+            End If
+            If act% Then
+                Select Case inputType%
+                    Case cInputUp: Player(p%).moveUp = _TRUE
+                    Case cInputDown: Player(p%).moveDown = _TRUE
+                    Case cInputLeft: Player(p%).moveLeft = _TRUE
+                    Case cInputRight: Player(p%).moveRight = _TRUE
+                    Case cInputButton1: Player(p%).button1 = _TRUE
+                    Case cInputFireUp: Player(p%).fireUp = _TRUE
+                    Case cInputFireDown: Player(p%).fireDown = _TRUE
+                    Case cInputFireLeft: Player(p%).fireLeft = _TRUE
+                    Case cInputFireRight: Player(p%).fireRight = _TRUE
+                End Select
+            End If
+        End If
+    Next inputType%
+End Sub
+</pre>
+</body>
+</html>
