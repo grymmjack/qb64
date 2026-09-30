@@ -17,6 +17,8 @@
 *.bi-bak
 *.bm-bak
 *.cmp-out
+*.debug.bas
+*.debug.manifest
 
 # ignore symlinked help
 ./_help/
