@@ -1,0 +1,814 @@
+''
+' PCSPKR.BM - Native QB64PE IBM PC speaker emulator (implementation)
+'
+' See PCSPKR.BI for the overview. Everything here is plain QB64PE.
+'
+' How the emulation works:
+'   The PC speaker is a 1-bit device: at any instant the cone is either
+'   pushed out (1) or pulled in (0). PIT channel 2 decides the level - in
+'   mode 3 it toggles every divisor/2 input clocks (a square wave), in mode 0
+'   it goes LOW when a count is written and HIGH again when the count expires
+'   (that one-shot pulse is what the PWM / WAV tricks use).
+'
+'   We run that 1-bit signal at the real PIT clock rate (1.19 MHz) and box
+'   filter it down to the audio device rate: every output sample is the exact
+'   average speaker level across the PIT clocks it covers. That gives the
+'   true "PC speaker" timbre (including PWM carrier whine) without aliasing
+'   garbage. A DC blocker then models the cone (it can't hold a position),
+'   and an optional 2-pole low-pass models a small, muffled speaker.
+'
+'   Timer interrupts (INT 08h/1Ch) are replaced by PCSPK_Tick, which is paced
+'   by the audio stream itself. Code that ran inside an interrupt handler in
+'   C runs in a "DO WHILE PCSPK_Tick ... LOOP" in QB64PE and lands on exactly
+'   the right audio sample every time.
+'
+$IF PCSPKR_BM = UNDEFINED THEN
+    $LET PCSPKR_BM = TRUE
+
+    '-------------------------------------------------------------------------
+    ' Setup
+    '-------------------------------------------------------------------------
+
+    ''
+    ' Initialise the emulator (called automatically by everything else).
+    '
+    SUB PCSPK_Init
+        IF pcspk.initialized THEN EXIT SUB
+        pcspk.rate = _SNDRATE
+        IF pcspk.rate <= 0 THEN pcspk.rate = 44100
+        pcspk.clkPerSample = PCSPK_PIT_HZ / pcspk.rate
+        pcspk.dcR = 1 - (2 * _PI * 20 / pcspk.rate) ' ~20 Hz cone DC blocker
+        pcspk.volume = 0.25
+        pcspk.lead = 0.08
+        pcspk.initialized = -1
+        PCSPK_SetTickRate PCSPK_BIOS_TICK_HZ
+        PCSPK_SetLowPass 0
+        PCSPK_ResetVoice
+    END SUB
+
+
+    ''
+    ' Reset the emulated hardware: speaker off, PIT channel 2 idle, filters
+    ' at rest.
+    '
+    SUB PCSPK_ResetVoice
+        PCSPK_Init
+        pcspk.enabled = 0
+        pcspk.mode = PCSPK_MODE_SQUARE
+        pcspk.divisor = 65536
+        pcspk.phase = 0
+        pcspk.osRemain = 0
+        pcspk.sampPos = 0
+        pcspk.sampAcc = 0
+        pcspk.dcX = -1 ' cone resting "in" = speaker level 0
+        pcspk.dcY = 0
+        pcspk.lp1 = 0
+        pcspk.lp2 = 0
+    END SUB
+
+
+    ''
+    ' Master volume, 0.0 - 1.0 (default 0.25 - a raw square wave is LOUD).
+    '
+    SUB PCSPK_SetVolume (vol AS SINGLE)
+        PCSPK_Init
+        pcspk.volume = vol
+        IF pcspk.volume < 0 THEN pcspk.volume = 0
+        IF pcspk.volume > 1 THEN pcspk.volume = 1
+    END SUB
+
+
+    ''
+    ' Speaker cone low-pass cutoff in Hz (0 = off, the raw bright sound).
+    ' Around 3000-5000 Hz tames the PWM carrier the way a real speaker did.
+    '
+    SUB PCSPK_SetLowPass (hz AS SINGLE)
+        PCSPK_Init
+        IF hz <= 0 OR hz >= pcspk.rate / 2 THEN
+            pcspk.lpHz = 0
+        ELSE
+            pcspk.lpHz = hz
+            pcspk.lpA = 1 - EXP(-2 * _PI * hz / pcspk.rate)
+        END IF
+    END SUB
+
+
+    ''
+    ' Rate of the emulated timer interrupt used by PCSPK_Tick (default
+    ' 18.2065 Hz, the BIOS INT 1Ch rate).
+    '
+    SUB PCSPK_SetTickRate (hz AS DOUBLE)
+        DIM h AS DOUBLE
+        PCSPK_Init
+        h = hz
+        IF h <= 0 THEN h = PCSPK_BIOS_TICK_HZ
+        pcspk.tickHz = h
+        pcspk.tickClk = PCSPK_PIT_HZ / h
+    END SUB
+
+
+    ''
+    ' Same as reprogramming PIT channel 0 in C:
+    '     outportb(0x43, 0x36); outportb(0x40, lo); outportb(0x40, hi);
+    ' The tick rate becomes PIT clock / divisor (0 = 65536).
+    '
+    SUB PCSPK_SetTickDivisor (divisor AS LONG)
+        DIM d AS DOUBLE
+        d = divisor AND &HFFFF&
+        IF d = 0 THEN d = 65536
+        PCSPK_SetTickRate PCSPK_PIT_HZ / d
+    END SUB
+
+
+    FUNCTION PCSPK_TickHz#
+        PCSPK_Init
+        PCSPK_TickHz = pcspk.tickHz
+    END FUNCTION
+
+
+    '-------------------------------------------------------------------------
+    ' Emulated hardware - the BEEPER.C API
+    '-------------------------------------------------------------------------
+
+    ''
+    ' Low level: write a control word + count to PIT channel 2.
+    '   mode 3 = square wave (outportb(0x43, 0xB6) in C)
+    '   mode 0 = one-shot    (outportb(0x43, 0xB0) in C)
+    ' A count of 0 means 65536, just like the real chip. Port 61h is NOT
+    ' touched - use PCSPK_SpeakerOn / PCSPK_SpeakerOff for that.
+    '
+    SUB PCSPK_PitWrite (mode AS INTEGER, count AS LONG)
+        DIM c AS DOUBLE
+        PCSPK_Init
+        c = count AND &HFFFF&
+        IF c = 0 THEN c = 65536
+        IF mode = PCSPK_MODE_ONESHOT THEN
+            pcspk.mode = PCSPK_MODE_ONESHOT
+            pcspk.osRemain = c ' OUT goes low now, high again after c clocks
+        ELSE
+            pcspk.mode = PCSPK_MODE_SQUARE
+            IF c < 2 THEN c = 2
+            pcspk.divisor = c
+            pcspk.phase = 0 ' a control word write restarts the counter
+        END IF
+    END SUB
+
+
+    ''
+    ' Port 61h |= 3 : connect timer 2 to the speaker.
+    '
+    SUB PCSPK_SpeakerOn
+        PCSPK_Init
+        pcspk.enabled = -1
+    END SUB
+
+
+    ''
+    ' Port 61h &= ~3 : disconnect the speaker (nosound()).
+    '
+    SUB PCSPK_SpeakerOff
+        PCSPK_Init
+        pcspk.enabled = 0
+    END SUB
+
+
+    ''
+    ' BEEPER.C play_sound(divisor): square wave with the given PIT divisor.
+    ' A divisor of 0 turns the speaker off.
+    '
+    SUB PCSPK_SetDivisor (divisor AS LONG)
+        IF divisor = 0 THEN
+            PCSPK_SpeakerOff
+        ELSE
+            PCSPK_PitWrite PCSPK_MODE_SQUARE, divisor
+            PCSPK_SpeakerOn
+        END IF
+    END SUB
+
+
+    ''
+    ' BEEPER.C play_sound_freq(freq): divisor = 1193180 / freq.
+    ' A frequency of 0 turns the speaker off.
+    '
+    SUB PCSPK_SetFreq (hz AS DOUBLE)
+        IF hz <= 0 THEN
+            PCSPK_SpeakerOff
+        ELSE
+            PCSPK_SetDivisor PCSPK_FreqToDivisor(hz)
+        END IF
+    END SUB
+
+
+    ''
+    ' BEEPER.C nosound().
+    '
+    SUB PCSPK_Off
+        PCSPK_SpeakerOff
+    END SUB
+
+
+    FUNCTION PCSPK_FreqToDivisor& (hz AS DOUBLE)
+        IF hz <= 0 THEN EXIT FUNCTION
+        PCSPK_FreqToDivisor = INT(1193180 / hz)
+    END FUNCTION
+
+
+    FUNCTION PCSPK_DivisorToFreq# (divisor AS LONG)
+        IF divisor <= 0 THEN EXIT FUNCTION
+        PCSPK_DivisorToFreq = PCSPK_PIT_HZ / divisor
+    END FUNCTION
+
+
+    '-------------------------------------------------------------------------
+    ' Renderer
+    '-------------------------------------------------------------------------
+
+    ''
+    ' Area under a unit square wave (high for the first half cycle) from
+    ' phase 0 to phase ph (in cycles).
+    '
+    FUNCTION PCSPK_SqInt# (ph AS DOUBLE)
+        DIM w AS DOUBLE, f AS DOUBLE
+        w = INT(ph)
+        f = ph - w
+        IF f > 0.5 THEN f = 0.5
+        PCSPK_SqInt = w * 0.5 + f
+    END FUNCTION
+
+
+    ''
+    ' Integral of the speaker level over the next `clocks` PIT clocks, and
+    ' advance the PIT state by that much.
+    '
+    FUNCTION PCSPK_Integrate# (clocks AS DOUBLE)
+        DIM ph1 AS DOUBLE, lowPart AS DOUBLE
+        IF NOT pcspk.enabled THEN EXIT FUNCTION ' gate low: counter paused, cone in
+        IF pcspk.mode = PCSPK_MODE_SQUARE THEN
+            ph1 = pcspk.phase + clocks / pcspk.divisor
+            PCSPK_Integrate = pcspk.divisor * (PCSPK_SqInt(ph1) - PCSPK_SqInt(pcspk.phase))
+            pcspk.phase = ph1 - INT(ph1)
+        ELSE
+            lowPart = clocks
+            IF lowPart > pcspk.osRemain THEN lowPart = pcspk.osRemain
+            pcspk.osRemain = pcspk.osRemain - lowPart
+            PCSPK_Integrate = clocks - lowPart
+        END IF
+    END FUNCTION
+
+
+    ''
+    ' Run the emulated hardware forward by `clocks` PIT clocks with its
+    ' current state, sending audio to the current sink.
+    '
+    SUB PCSPK_AdvanceClocks (clocks AS DOUBLE)
+        DIM remain AS DOUBLE, room AS DOUBLE
+        PCSPK_Init
+        remain = clocks
+        DO WHILE remain > 0
+            room = pcspk.clkPerSample - pcspk.sampPos
+            IF remain >= room THEN
+                pcspk.sampAcc = pcspk.sampAcc + PCSPK_Integrate(room)
+                remain = remain - room
+                PCSPK_Emit pcspk.sampAcc / pcspk.clkPerSample
+                pcspk.sampPos = 0
+                pcspk.sampAcc = 0
+            ELSE
+                pcspk.sampAcc = pcspk.sampAcc + PCSPK_Integrate(remain)
+                pcspk.sampPos = pcspk.sampPos + remain
+                remain = 0
+            END IF
+        LOOP
+    END SUB
+
+
+    SUB PCSPK_AdvanceSeconds (seconds AS DOUBLE)
+        PCSPK_AdvanceClocks seconds * PCSPK_PIT_HZ
+    END SUB
+
+
+    ''
+    ' Turn an average speaker level (0..1) into an output sample.
+    '
+    SUB PCSPK_Emit (level AS DOUBLE)
+        DIM x AS SINGLE, y AS SINGLE
+        x = level * 2 - 1
+        y = x - pcspk.dcX + pcspk.dcR * pcspk.dcY
+        pcspk.dcX = x
+        pcspk.dcY = y
+        IF pcspk.lpHz > 0 THEN
+            pcspk.lp1 = pcspk.lp1 + pcspk.lpA * (y - pcspk.lp1)
+            pcspk.lp2 = pcspk.lp2 + pcspk.lpA * (pcspk.lp1 - pcspk.lp2)
+            y = pcspk.lp2
+        END IF
+        y = y * pcspk.volume
+        IF y > 1 THEN y = 1
+        IF y < -1 THEN y = -1
+
+        SELECT CASE pcspk.sink
+            CASE PCSPK_SINK_STREAM
+                pcspk_sbuf(pcspk.bufN) = y
+                pcspk.bufN = pcspk.bufN + 1
+                IF pcspk.bufN >= PCSPK_STREAM_CHUNK THEN PCSPK_StreamFlush
+            CASE PCSPK_SINK_CAPTURE
+                IF pcspk.capN > UBOUND(pcspk_cap) THEN
+                    REDIM _PRESERVE pcspk_cap(0 TO (UBOUND(pcspk_cap) + 1) * 2 - 1) AS SINGLE
+                END IF
+                pcspk_cap(pcspk.capN) = y
+                pcspk.capN = pcspk.capN + 1
+        END SELECT
+    END SUB
+
+
+    '-------------------------------------------------------------------------
+    ' Real-time output (the "interrupt driven" programs)
+    '-------------------------------------------------------------------------
+
+    ''
+    ' Open the real-time audio stream. Called automatically by PCSPK_Tick.
+    '
+    SUB PCSPK_StreamOpen
+        PCSPK_Init
+        IF pcspk.sink = PCSPK_SINK_STREAM THEN EXIT SUB
+        IF pcspk.stream = 0 THEN pcspk.stream = _SNDOPENRAW
+        pcspk.sink = PCSPK_SINK_STREAM
+        pcspk.bufN = 0
+        pcspk.rendered = 0
+        pcspk.wallStart = TIMER(0.001)
+    END SUB
+
+
+    SUB PCSPK_StreamClose
+        IF pcspk.sink = PCSPK_SINK_STREAM THEN PCSPK_StreamFlush
+        IF pcspk.stream THEN _SNDCLOSE pcspk.stream
+        pcspk.stream = 0
+        pcspk.sink = PCSPK_SINK_NONE
+    END SUB
+
+
+    ''
+    ' Push any staged samples to the audio device.
+    '
+    SUB PCSPK_StreamFlush
+        IF pcspk.bufN = 0 THEN EXIT SUB
+        IF pcspk.stream THEN _SNDRAWBATCH pcspk_sbuf(), 1, pcspk.stream, pcspk.bufN
+        pcspk.rendered = pcspk.rendered + pcspk.bufN / pcspk.rate
+        pcspk.bufN = 0
+    END SUB
+
+
+    ''
+    ' Seconds of audio queued but not yet heard. Falls back to the wall clock
+    ' when no audio device is available so programs still run at the right
+    ' speed.
+    '
+    FUNCTION PCSPK_Buffered#
+        DIM q AS DOUBLE, el AS DOUBLE, b AS DOUBLE
+        PCSPK_Init
+        q = pcspk.bufN / pcspk.rate
+        IF pcspk.stream THEN
+            PCSPK_Buffered = _SNDRAWLEN(pcspk.stream) + q
+        ELSE
+            el = TIMER(0.001) - pcspk.wallStart
+            IF el < 0 THEN ' midnight rollover
+                pcspk.wallStart = pcspk.wallStart - 86400
+                el = el + 86400
+            END IF
+            b = pcspk.rendered + q - el
+            IF b < 0 THEN pcspk.rendered = el - q: b = 0
+            PCSPK_Buffered = b
+        END IF
+    END FUNCTION
+
+
+    ''
+    ' Seconds of audio kept queued ahead (default 0.08). Bigger = safer,
+    ' smaller = snappier.
+    '
+    SUB PCSPK_SetLead (seconds AS DOUBLE)
+        PCSPK_Init
+        pcspk.lead = seconds
+        IF pcspk.lead < 0.02 THEN pcspk.lead = 0.02
+    END SUB
+
+
+    ''
+    ' The emulated timer interrupt.
+    '
+    ' Returns TRUE after rendering one timer tick of audio (with the speaker
+    ' state as it is now) - run your "interrupt handler" code, then call again.
+    ' Returns FALSE when enough audio is queued; go do other work (draw, read
+    ' keys, _LIMIT) and come back.
+    '
+    '   DO WHILE PCSPK_Tick
+    '       my_handler          ' was: void interrupt my_handler(...)
+    '   LOOP
+    '
+    FUNCTION PCSPK_Tick%%
+        IF pcspk.sink <> PCSPK_SINK_STREAM THEN PCSPK_StreamOpen
+        IF PCSPK_Buffered >= pcspk.lead THEN
+            PCSPK_StreamFlush
+            PCSPK_Tick = 0
+        ELSE
+            PCSPK_AdvanceClocks pcspk.tickClk
+            PCSPK_Tick = -1
+        END IF
+    END FUNCTION
+
+
+    ''
+    ' Block for n timer ticks while playing the current speaker state.
+    ' (timer_wait() / delay() in the C code).
+    '
+    SUB PCSPK_WaitTicks (n AS LONG)
+        DIM done AS LONG
+        DO WHILE done < n
+            IF PCSPK_Tick THEN done = done + 1 ELSE _DELAY 0.004
+        LOOP
+    END SUB
+
+
+    SUB PCSPK_WaitSeconds (seconds AS DOUBLE)
+        PCSPK_WaitTicks CLNG(seconds * PCSPK_TickHz)
+    END SUB
+
+
+    ''
+    ' Wait until everything queued has been heard. If the speaker is off a
+    ' short tail is rendered first so the cone settles without a click.
+    '
+    SUB PCSPK_Drain
+        DIM t0 AS DOUBLE, t AS DOUBLE
+        IF pcspk.sink <> PCSPK_SINK_STREAM THEN EXIT SUB
+        IF NOT pcspk.enabled THEN PCSPK_AdvanceSeconds 0.05
+        PCSPK_StreamFlush
+        t0 = TIMER(0.001)
+        DO WHILE PCSPK_Buffered > 0.001
+            _DELAY 0.005
+            t = TIMER(0.001) - t0
+            IF t < 0 THEN t = t + 86400
+            IF t > 30 THEN EXIT DO
+        LOOP
+    END SUB
+
+
+    '-------------------------------------------------------------------------
+    ' Offline rendering -> QB64PE sound handle / .WAV file
+    '-------------------------------------------------------------------------
+
+    ''
+    ' Start capturing: everything rendered until PCSPK_CaptureEnd goes into
+    ' memory instead of the speaker. The voice is reset for the capture and
+    ' the previous state (e.g. a running stream) is restored afterwards.
+    '
+    SUB PCSPK_CaptureBegin
+        PCSPK_Init
+        IF pcspk.sink = PCSPK_SINK_STREAM THEN PCSPK_StreamFlush
+        pcspk_saved = pcspk
+        PCSPK_ResetVoice
+        pcspk.sink = PCSPK_SINK_CAPTURE
+        pcspk.capN = 0
+    END SUB
+
+
+    ''
+    ' Finish capturing and return a QB64PE sound handle holding the result
+    ' (use _SNDPLAY / _SNDLOOP / _SNDCLOSE on it). Returns 0 when nothing was
+    ' captured or audio isn't available. The samples stay available for
+    ' PCSPK_SaveWAV until the next capture.
+    '
+    FUNCTION PCSPK_CaptureEnd&
+        DIM n AS LONG
+        n = pcspk.capN
+        pcspk = pcspk_saved
+        pcspk.capN = n
+        PCSPK_CaptureEnd = PCSPK_CaptureToSound
+    END FUNCTION
+
+
+    FUNCTION PCSPK_CaptureFrames&
+        PCSPK_CaptureFrames = pcspk.capN
+    END FUNCTION
+
+
+    ''
+    ' Build a new sound handle from the last capture.
+    '
+    FUNCTION PCSPK_CaptureToSound&
+        DIM h AS LONG, m AS _MEM, src AS _MEM, bytes AS _OFFSET
+        IF pcspk.capN < 1 THEN EXIT FUNCTION
+        h = _SNDNEW(pcspk.capN, 1, 32, pcspk.rate)
+        IF h < 1 THEN EXIT FUNCTION
+        m = _MEMSOUND(h, 0)
+        src = _MEM(pcspk_cap())
+        bytes = pcspk.capN * 4
+        IF bytes > m.SIZE THEN bytes = m.SIZE
+        _MEMCOPY src, src.OFFSET, bytes TO m, m.OFFSET
+        _MEMFREE src
+        _MEMFREE m
+        PCSPK_CaptureToSound = h
+    END FUNCTION
+
+
+    ''
+    ' Write the last capture to a 16-bit mono PCM .WAV file.
+    '
+    SUB PCSPK_SaveWAV (fileName AS STRING)
+        DIM ff AS LONG, i AS LONG, dataBytes AS LONG, hdr AS STRING, v AS SINGLE
+        IF pcspk.capN < 1 THEN EXIT SUB
+        REDIM pcm(0 TO pcspk.capN - 1) AS INTEGER
+        FOR i = 0 TO pcspk.capN - 1
+            v = pcspk_cap(i)
+            IF v > 1 THEN v = 1
+            IF v < -1 THEN v = -1
+            pcm(i) = CINT(v * 32767)
+        NEXT
+        dataBytes = pcspk.capN * 2
+        hdr = "RIFF" + MKL$(36 + dataBytes) + "WAVE"
+        hdr = hdr + "fmt " + MKL$(16) + MKI$(1) + MKI$(1) + MKL$(pcspk.rate) + MKL$(pcspk.rate * 2) + MKI$(2) + MKI$(16)
+        hdr = hdr + "data" + MKL$(dataBytes)
+        IF _FILEEXISTS(fileName) THEN KILL fileName
+        ff = FREEFILE
+        OPEN fileName FOR BINARY AS #ff
+        PUT #ff, 1, hdr
+        PUT #ff, , pcm()
+        CLOSE #ff
+    END SUB
+
+
+    '-------------------------------------------------------------------------
+    ' Inverse Frequency Sound (IFS) banks: Duke Nukem 1 (*.DN1-3) and
+    ' Commander Keen 1-3 (SOUNDS.CK1-3)
+    '
+    '   Header (16 bytes)
+    '     0  char[4]  "SND",0
+    '     4  uint16   file size
+    '     6  uint16   number of sounds
+    '     8  uint16   unknown (BEEP4.C reads this as the count - it isn't)
+    '    10  byte[6]  padding
+    '   Sound table (16 bytes each)
+    '     0  uint16   offset of sample data
+    '     2  uint8    priority
+    '     3  uint8    "rate" (always 8)
+    '     4  char[12] name, NUL padded
+    '   Sample data
+    '     uint16 per sample: PIT channel 2 divisor, 0 = silence,
+    '     $FFFF = end of sound. Played back at 140 samples per second.
+    '-------------------------------------------------------------------------
+
+    FUNCTION PCSPK_U16& (s AS STRING, p AS LONG)
+        IF p < 1 OR p + 1 > LEN(s) THEN EXIT FUNCTION
+        PCSPK_U16 = ASC(s, p) + ASC(s, p + 1) * 256&
+    END FUNCTION
+
+
+    FUNCTION PCSPK_U32& (s AS STRING, p AS LONG)
+        IF p < 1 OR p + 3 > LEN(s) THEN EXIT FUNCTION
+        PCSPK_U32 = CVL(MID$(s, p, 4))
+    END FUNCTION
+
+
+    FUNCTION PCSPK_ReadFile$ (fileName AS STRING)
+        DIM ff AS LONG, d AS STRING
+        IF NOT _FILEEXISTS(fileName) THEN EXIT FUNCTION
+        ff = FREEFILE
+        OPEN fileName FOR BINARY ACCESS READ AS #ff
+        d = SPACE$(LOF(ff))
+        IF LEN(d) THEN GET #ff, 1, d
+        CLOSE #ff
+        PCSPK_ReadFile = d
+    END FUNCTION
+
+
+    ''
+    ' Load an IFS sound bank. Returns TRUE on success.
+    '
+    FUNCTION PCSPK_IFSLoad%% (fileName AS STRING)
+        DIM d AS STRING, n AS LONG, i AS LONG, p AS LONG, q AS LONG
+        DIM nm AS STRING, z AS LONG, cnt AS LONG
+
+        pcspk_ifs_count = 0
+        d = PCSPK_ReadFile(fileName)
+        IF LEN(d) < 16 THEN EXIT FUNCTION
+        IF LEFT$(d, 4) <> "SND" + CHR$(0) THEN EXIT FUNCTION
+
+        pcspk_ifs_data = d
+        pcspk_ifs_filesize = PCSPK_U16(d, 5)
+        n = PCSPK_U16(d, 7)
+        pcspk_ifs_word8 = PCSPK_U16(d, 9)
+        IF 16 + n * 16 > LEN(d) THEN n = (LEN(d) - 16) \ 16
+        IF n < 1 THEN EXIT FUNCTION
+
+        REDIM pcspk_ifs(0 TO n - 1) AS PCSPK_IFS_ENTRY
+        FOR i = 0 TO n - 1
+            p = 17 + i * 16
+            pcspk_ifs(i).offset = PCSPK_U16(d, p)
+            pcspk_ifs(i).priority = ASC(d, p + 2)
+            pcspk_ifs(i).rate = ASC(d, p + 3)
+            nm = MID$(d, p + 4, 12)
+            z = INSTR(nm, CHR$(0))
+            IF z THEN nm = LEFT$(nm, z - 1)
+            pcspk_ifs(i).nam = nm
+
+            ' count samples up to the $FFFF terminator
+            cnt = 0
+            q = pcspk_ifs(i).offset + 1
+            DO WHILE q + 1 <= LEN(d)
+                IF PCSPK_U16(d, q) = &HFFFF& THEN EXIT DO
+                cnt = cnt + 1
+                q = q + 2
+            LOOP
+            pcspk_ifs(i).samples = cnt
+        NEXT
+        pcspk_ifs_count = n
+        PCSPK_IFSLoad = -1
+    END FUNCTION
+
+
+    FUNCTION PCSPK_IFSCount&
+        PCSPK_IFSCount = pcspk_ifs_count
+    END FUNCTION
+
+
+    FUNCTION PCSPK_IFSName$ (index AS LONG)
+        IF index < 0 OR index >= pcspk_ifs_count THEN EXIT FUNCTION
+        PCSPK_IFSName = RTRIM$(pcspk_ifs(index).nam)
+    END FUNCTION
+
+
+    FUNCTION PCSPK_IFSSamples& (index AS LONG)
+        IF index < 0 OR index >= pcspk_ifs_count THEN EXIT FUNCTION
+        PCSPK_IFSSamples = pcspk_ifs(index).samples
+    END FUNCTION
+
+
+    FUNCTION PCSPK_IFSOffset& (index AS LONG)
+        IF index < 0 OR index >= pcspk_ifs_count THEN EXIT FUNCTION
+        PCSPK_IFSOffset = pcspk_ifs(index).offset
+    END FUNCTION
+
+
+    FUNCTION PCSPK_IFSPriority% (index AS LONG)
+        IF index < 0 OR index >= pcspk_ifs_count THEN EXIT FUNCTION
+        PCSPK_IFSPriority = pcspk_ifs(index).priority
+    END FUNCTION
+
+
+    FUNCTION PCSPK_IFSRate% (index AS LONG)
+        IF index < 0 OR index >= pcspk_ifs_count THEN EXIT FUNCTION
+        PCSPK_IFSRate = pcspk_ifs(index).rate
+    END FUNCTION
+
+
+    ''
+    ' Sample n (0 based) of a sound: a PIT divisor, 0 = silence.
+    '
+    FUNCTION PCSPK_IFSValue& (index AS LONG, n AS LONG)
+        IF index < 0 OR index >= pcspk_ifs_count THEN EXIT FUNCTION
+        IF n < 0 OR n >= pcspk_ifs(index).samples THEN EXIT FUNCTION
+        PCSPK_IFSValue = PCSPK_U16(pcspk_ifs_data, pcspk_ifs(index).offset + 1 + n * 2)
+    END FUNCTION
+
+
+    ''
+    ' Play an IFS sound through the emulated speaker into the current sink,
+    ' the way id Software's sound service did: one sample per 1/hz second,
+    ' and the PIT is only reprogrammed when the value changes.
+    '
+    SUB PCSPK_IFSRenderInto (index AS LONG, hz AS DOUBLE)
+        DIM n AS LONG, v AS LONG, lastV AS LONG, clk AS DOUBLE
+        IF index < 0 OR index >= pcspk_ifs_count THEN EXIT SUB
+        IF hz <= 0 THEN clk = PCSPK_PIT_HZ / PCSPK_IFS_DEFAULT_HZ ELSE clk = PCSPK_PIT_HZ / hz
+        lastV = -1
+        FOR n = 0 TO pcspk_ifs(index).samples - 1
+            v = PCSPK_IFSValue(index, n)
+            IF v <> lastV THEN
+                PCSPK_SetDivisor v
+                lastV = v
+            END IF
+            PCSPK_AdvanceClocks clk
+        NEXT
+        PCSPK_Off
+        PCSPK_AdvanceSeconds 0.05 ' let the cone settle - no click at the end
+    END SUB
+
+
+    ''
+    ' Render an IFS sound to a new QB64PE sound handle (0 on failure).
+    '
+    FUNCTION PCSPK_IFSRender& (index AS LONG, hz AS DOUBLE)
+        IF index < 0 OR index >= pcspk_ifs_count THEN EXIT FUNCTION
+        PCSPK_CaptureBegin
+        PCSPK_IFSRenderInto index, hz
+        PCSPK_IFSRender = PCSPK_CaptureEnd
+    END FUNCTION
+
+
+    '-------------------------------------------------------------------------
+    ' 8-bit mono PCM .WAV loader (WAVLOAD.C)
+    '-------------------------------------------------------------------------
+
+    ''
+    ' Load an 8-bit mono PCM WAV. Returns TRUE on success; on failure the
+    ' reason is in PCSPK_WavError$.
+    '
+    FUNCTION PCSPK_WavLoad%% (fileName AS STRING)
+        DIM d AS STRING, p AS LONG, id AS STRING, sz AS LONG
+        DIM fmtFound AS _BYTE, audioFormat AS LONG, channels AS LONG, bits AS LONG, rate AS LONG
+        DIM dataStart AS LONG, dataLen AS LONG
+
+        pcspk_wav_data = ""
+        pcspk_wav_rate = 0
+        pcspk_wav_error = ""
+
+        d = PCSPK_ReadFile(fileName)
+        IF LEN(d) = 0 THEN pcspk_wav_error = "Can't open " + fileName: EXIT FUNCTION
+        IF LEN(d) < 12 OR LEFT$(d, 4) <> "RIFF" OR MID$(d, 9, 4) <> "WAVE" THEN
+            pcspk_wav_error = "Not WAV file"
+            EXIT FUNCTION
+        END IF
+
+        p = 13
+        DO WHILE p + 7 <= LEN(d)
+            id = MID$(d, p, 4)
+            sz = PCSPK_U32(d, p + 4)
+            IF sz < 0 THEN EXIT DO
+            SELECT CASE id
+                CASE "fmt "
+                    audioFormat = PCSPK_U16(d, p + 8)
+                    channels = PCSPK_U16(d, p + 10)
+                    rate = PCSPK_U32(d, p + 12)
+                    bits = PCSPK_U16(d, p + 22)
+                    fmtFound = -1
+                CASE "data"
+                    dataStart = p + 8
+                    dataLen = sz
+                    IF dataStart + dataLen - 1 > LEN(d) THEN dataLen = LEN(d) - dataStart + 1
+                    IF fmtFound THEN EXIT DO
+            END SELECT
+            p = p + 8 + sz + (sz AND 1) ' chunks are word aligned
+        LOOP
+
+        IF NOT fmtFound OR dataStart = 0 THEN pcspk_wav_error = "Missing fmt or data chunk": EXIT FUNCTION
+        IF audioFormat <> 1 OR channels <> 1 OR bits <> 8 THEN
+            pcspk_wav_error = "Only supports 8 bit mono PCM"
+            EXIT FUNCTION
+        END IF
+        IF rate <= 0 OR dataLen <= 0 THEN pcspk_wav_error = "Empty WAV": EXIT FUNCTION
+
+        pcspk_wav_data = MID$(d, dataStart, dataLen)
+        pcspk_wav_rate = rate
+        PCSPK_WavLoad = -1
+    END FUNCTION
+
+
+    FUNCTION PCSPK_WavError$
+        PCSPK_WavError = pcspk_wav_error
+    END FUNCTION
+
+
+    FUNCTION PCSPK_WavRate&
+        PCSPK_WavRate = pcspk_wav_rate
+    END FUNCTION
+
+
+    FUNCTION PCSPK_WavLength&
+        PCSPK_WavLength = LEN(pcspk_wav_data)
+    END FUNCTION
+
+
+    ''
+    ' Unsigned 8-bit sample n (0 based), 0-255 with 128 = centre.
+    '
+    FUNCTION PCSPK_WavSample% (n AS LONG)
+        IF n < 0 OR n >= LEN(pcspk_wav_data) THEN PCSPK_WavSample = 128: EXIT FUNCTION
+        PCSPK_WavSample = ASC(pcspk_wav_data, n + 1)
+    END FUNCTION
+
+
+    '-------------------------------------------------------------------------
+    ' Misc
+    '-------------------------------------------------------------------------
+
+    ''
+    ' Find a data file whether the program was started from its own folder,
+    ' from somewhere else, or from the IDE.
+    '
+    FUNCTION PCSPK_FindFile$ (fileName AS STRING)
+        DIM exe AS STRING, p AS LONG, c AS STRING
+        PCSPK_FindFile = fileName
+        IF _FILEEXISTS(fileName) THEN EXIT FUNCTION
+
+        c = _STARTDIR$
+        IF RIGHT$(c, 1) <> "/" AND RIGHT$(c, 1) <> "\" THEN c = c + "/"
+        c = c + fileName
+        IF _FILEEXISTS(c) THEN PCSPK_FindFile = c: EXIT FUNCTION
+
+        exe = COMMAND$(0)
+        p = _INSTRREV(exe, "/")
+        IF _INSTRREV(exe, "\") > p THEN p = _INSTRREV(exe, "\")
+        IF p THEN
+            c = LEFT$(exe, p) + fileName
+            IF _FILEEXISTS(c) THEN PCSPK_FindFile = c: EXIT FUNCTION
+        END IF
+    END FUNCTION
+$END IF
