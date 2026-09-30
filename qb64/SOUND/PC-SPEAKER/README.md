@@ -1,8 +1,9 @@
 # PC-SPEAKER: the DOS PC speaker, rebuilt in QB64-PE
 
 **Short version:** this folder plays old-school PC speaker sounds, including the
-**Duke Nukem 1** (`.DN1`) and **Commander Keen** (`.CK1`) sound effects, in
-QB64-PE on a modern computer. It is written entirely in QB64-PE, with no C and
+**Duke Nukem 1** (`.DN1`) and **Commander Keen** (`.CK1`) sound effects, and
+the PC speaker sounds of **DOOM** and every other DOOM engine game that has
+them, in QB64-PE on a modern computer. It is written entirely in QB64-PE, with no C and
 no `DECLARE LIBRARY`.
 
 ![DN1PLAY playing the Duke Nukem 1 BOMBEXPLODE sound](SCREENSHOTS/1-duke-bombexplode.png)
@@ -27,7 +28,9 @@ Built and tested with the QB64-PE **v4.7.0-GLFW** compiler.
 2. Press **F5**.
 3. Use the arrow keys to pick a sound, then press **Enter** to hear it.
 4. Press **A** to play every sound in order.
-5. Press **Tab** to switch to the Commander Keen sounds.
+5. Press **Tab** to switch to the Freedoom sounds, then again for the
+   Commander Keen sounds.
+6. Drop your own `DOOM.WAD` or `DOOM2.WAD` on the window to hear the real ones.
 
 | Key | What it does |
 | --- | --- |
@@ -40,11 +43,12 @@ Built and tested with the QB64-PE **v4.7.0-GLFW** compiler.
 | L | low-pass filter on/off (muffles the sound like a small speaker) |
 | W | save the selected sound as a `.wav` in `EXPORT/` |
 | E | save every sound as a `.wav` in `EXPORT/` |
-| Tab | load the next sound bank in the folder |
+| Tab | load the next sound bank or WAD in the folder |
 | Esc | quit |
 
-You can also drag any `.DN1`/`.DN2`/`.DN3`/`.CK1`/`.CK2`/`.CK3` file onto the
-window, or pass one on the command line: `DN1PLAY path/to/file.dn1`.
+You can also drag any `.DN1`/`.DN2`/`.DN3`/`.CK1`/`.CK2`/`.CK3` file, DOOM
+engine `.WAD` or `DP*.lmp` lump onto the window, or pass one on the command
+line: `DN1PLAY path/to/file.dn1` or `DN1PLAY ~/games/doom/DOOM2.WAD`.
 
 ---
 
@@ -62,9 +66,13 @@ ticks along the bottom are silence, and the white line is the play position.
 
 ![DN1PLAY playing the Duke Nukem 1 BADGUYGOUP sound](SCREENSHOTS/2-duke-badguygoup.png)
 
-**Commander Keen 1: `LVLDONESND` playing** (`SOUNDS.CK1`, 63 sounds; press Tab to switch to it)
+**Commander Keen 1: `LVLDONESND` playing** (`SOUNDS.CK1`, 63 sounds; press Tab twice to get to it)
 
 ![DN1PLAY playing the Commander Keen LVLDONESND sound](SCREENSHOTS/3-keen-lvldone.png)
+
+**DOOM: `DPSAWUP` playing** (`DOOM.WAD`, 67 sounds: the chainsaw revving up)
+
+![DN1PLAY playing the DOOM DPSAWUP sound](SCREENSHOTS/4-doom-sawup.png)
 
 ---
 
@@ -204,6 +212,7 @@ A few things work out differently in QB64-PE:
 | `PWM.BAS` | Tries to play a sine wave on a 1-bit speaker. Press M to hear what the C really did (warbly noise) versus true PWM (a clean tone). | `PWM.C` |
 | `WAV.BAS` | Plays real 8-bit `.wav` files through the 1-bit speaker using PWM. Press C to compare with normal playback. | `WAV.C` |
 | `ASSETS/` | `duke1-b.dn1` (Duke), `SOUNDS.CK1` (Keen), and three test `.wav` files | original repo |
+| `ASSETS/freedoom-dp.wad` | The 107 PC speaker sounds from Freedoom: Phase 2, so there are DOOM engine sounds to play without an id Software WAD. BSD licensed, see `FREEDOOM-LICENSE.txt`. | [Freedoom](https://freedoom.github.io/) |
 | `SCREENSHOTS/` | The images in this README | |
 
 ### PWM: playing recordings on a speaker with two positions
@@ -240,9 +249,11 @@ a beeper. You'll also hear a high 8 kHz whine; real PC speakers made it too.
 * **Pre-render a sound:** call `PCSPK_CaptureBegin`, then `PCSPK_SetDivisor` and
   `PCSPK_AdvanceSeconds` as needed. `PCSPK_CaptureEnd&` returns a handle you can
   `_SNDPLAY`. `PCSPK_SaveWAV "file.wav"` writes the capture to a file.
-* **Duke/Keen banks:** `PCSPK_IFSLoad`, `PCSPK_IFSCount`, `PCSPK_IFSName`,
-  `PCSPK_IFSSamples`, `PCSPK_IFSValue`, `PCSPK_IFSOffset`, `PCSPK_IFSPriority`,
-  `PCSPK_IFSRender&(index, hz)`
+* **Duke/Keen banks and DOOM WADs:** `PCSPK_IFSLoad`, `PCSPK_IFSCount`,
+  `PCSPK_IFSName`, `PCSPK_IFSSamples`, `PCSPK_IFSValue`, `PCSPK_IFSOffset`,
+  `PCSPK_IFSPriority`, `PCSPK_IFSKind` (`PCSPK_KIND_IFS`, `_WAD` or `_LMP`),
+  `PCSPK_IFSRender&(index, hz)`. `PCSPK_IFSLoad` works out the file type by
+  itself. `PCSPK_DoomDivisor&(tone)` turns a DOOM tone number into a divisor.
 * **8-bit WAV files:** `PCSPK_WavLoad`, `PCSPK_WavRate`, `PCSPK_WavLength`,
   `PCSPK_WavSample`, `PCSPK_WavError`
 
@@ -279,6 +290,47 @@ Sound data
 The original `BEEP4.C` reads the sound count from byte 8 instead of byte 6, so it
 reports 50 sounds for Duke and 60 for Keen. The real counts are **24** and
 **63**. The QB64-PE version reads the right field.
+
+## File format: DOOM engine PC speaker lumps
+
+DOOM keeps two versions of every sound effect in the WAD: `DSPISTOL` is the
+sound card sample and `DPPISTOL` is the PC speaker version. A WAD is a list of
+named lumps:
+
+```
+WAD header (12 bytes)
+  0   "IWAD" or "PWAD"
+  4   int32          number of lumps
+  8   int32          where the lump directory starts
+Directory (16 bytes per lump)
+  0   int32          where the lump starts
+  4   int32          lump size
+  8   char[8]        name, e.g. "DPPISTOL"
+DP* lump
+  0   uint16         always 0
+  2   uint16         number of tones
+  4   uint8 per step: 0 = silence, 1-127 = a note from a fixed table. 140 steps per second.
+```
+
+The difference from Duke/Keen is that each step is **one byte, a note
+number**, not a divisor. The table of 128 divisors comes from DMX, the sound
+library DOOM used, and is copied from Chocolate Doom's `i_pcsound.c`. It
+covers 175 Hz to 6.7 kHz in quarter-tone steps. `PCSPKR.BM` converts the notes
+into divisors as it loads, so from then on a DOOM sound plays exactly like a
+Duke one.
+
+Which games have them:
+
+| Has PC speaker sounds | Doesn't |
+| --- | --- |
+| DOOM, DOOM II, Final DOOM (TNT, Plutonia), Chex Quest 1 and 2, Freedoom 1 and 2, Strife (21 sounds) | Heretic, Hexen, DOOM 64, Hacx |
+
+Heretic and Hexen use the DOOM engine but have no `DP*` lumps in their WADs.
+
+The Steam copy of `DOOM.WAD` lists each of its 67 `DP*` lumps twice. When two
+lumps have the same name the later one wins, as in the game, so it shows up as
+67 sounds. Priority shows as `-`, because DOOM keeps sound priorities in the
+game code, not in the WAD.
 
 ## Notes and gotchas
 

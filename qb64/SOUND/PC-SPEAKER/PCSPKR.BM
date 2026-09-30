@@ -580,13 +580,41 @@ $IF PCSPKR_BM = UNDEFINED THEN
 
 
     ''
-    ' Load an IFS sound bank. Returns TRUE on success.
+    ' Load a PC speaker sound bank. Returns TRUE on success. Understands:
+    '   - Duke Nukem 1 / Commander Keen IFS banks ("SND",0 header)
+    '   - DOOM engine WADs (IWAD / PWAD): every DP* lump becomes one sound
+    '   - a single DOOM PC speaker lump on its own (e.g. DPPISTOL.LMP)
+    ' Whatever the source, the sounds end up as PIT divisors at 140 Hz, so
+    ' all the PCSPK_IFS* calls below work the same for every kind.
     '
     FUNCTION PCSPK_IFSLoad%% (fileName AS STRING)
+        DIM ff AS LONG, magic AS STRING * 4
+
+        pcspk_ifs_count = 0
+        pcspk_ifs_kind = PCSPK_KIND_NONE
+        IF NOT _FILEEXISTS(fileName) THEN EXIT FUNCTION
+        ff = FREEFILE
+        OPEN fileName FOR BINARY ACCESS READ AS #ff
+        IF LOF(ff) >= 4 THEN GET #ff, 1, magic
+        CLOSE #ff
+
+        IF magic = "SND" + CHR$(0) THEN
+            PCSPK_IFSLoad = PCSPK_IFSLoadSND(fileName)
+        ELSEIF magic = "IWAD" OR magic = "PWAD" THEN
+            PCSPK_IFSLoad = PCSPK_DoomLoadWAD(fileName)
+        ELSE
+            PCSPK_IFSLoad = PCSPK_DoomLoadLMP(fileName)
+        END IF
+    END FUNCTION
+
+
+    ''
+    ' Load a Duke Nukem 1 / Commander Keen IFS bank.
+    '
+    FUNCTION PCSPK_IFSLoadSND%% (fileName AS STRING)
         DIM d AS STRING, n AS LONG, i AS LONG, p AS LONG, q AS LONG
         DIM nm AS STRING, z AS LONG, cnt AS LONG
 
-        pcspk_ifs_count = 0
         d = PCSPK_ReadFile(fileName)
         IF LEN(d) < 16 THEN EXIT FUNCTION
         IF LEFT$(d, 4) <> "SND" + CHR$(0) THEN EXIT FUNCTION
@@ -602,6 +630,7 @@ $IF PCSPKR_BM = UNDEFINED THEN
         FOR i = 0 TO n - 1
             p = 17 + i * 16
             pcspk_ifs(i).offset = PCSPK_U16(d, p)
+            pcspk_ifs(i).dataPos = pcspk_ifs(i).offset
             pcspk_ifs(i).priority = ASC(d, p + 2)
             pcspk_ifs(i).rate = ASC(d, p + 3)
             nm = MID$(d, p + 4, 12)
@@ -620,7 +649,206 @@ $IF PCSPKR_BM = UNDEFINED THEN
             pcspk_ifs(i).samples = cnt
         NEXT
         pcspk_ifs_count = n
-        PCSPK_IFSLoad = -1
+        pcspk_ifs_kind = PCSPK_KIND_IFS
+        PCSPK_IFSLoadSND = -1
+    END FUNCTION
+
+
+    '-------------------------------------------------------------------------
+    ' DOOM engine PC speaker sounds (DP* lumps)
+    '
+    ' Doom, Doom II, Final Doom, Chex Quest, Freedoom and Strife keep a PC
+    ' speaker version of each sound effect next to the digitized one: DSPISTOL
+    ' is the sound card sample, DPPISTOL the PC speaker one. Heretic, Hexen
+    ' and Doom 64 have none.
+    '
+    '   Lump
+    '     0  uint16   always 0
+    '     2  uint16   number of tones
+    '     4  uint8[]  one tone per 1/140 second: 0 = silence, 1-127 = an
+    '                 index into the divisor table below
+    '
+    ' The table is DMX's (the sound library id licensed), as used by
+    ' Chocolate Doom's i_pcsound.c. It runs in quarter-tone steps from
+    ' 175 Hz (tone 1) to 6.7 kHz (tone 127).
+    '
+    ' WAD file
+    '     0  char[4]  "IWAD" or "PWAD"
+    '     4  int32    number of lumps
+    '     8  int32    where the lump directory starts
+    '   Directory (16 bytes per lump)
+    '     0  int32    where the lump starts
+    '     4  int32    lump size
+    '     8  char[8]  name, NUL padded
+    '-------------------------------------------------------------------------
+
+    SUB PCSPK_DoomInit
+        STATIC done AS _BYTE
+        DIM t AS STRING, i AS LONG, p AS LONG, q AS LONG
+        IF done THEN EXIT SUB
+        done = -1
+        t = "0," + _
+            "6818,6628,6449,6279,6087,5906,5736,5575," + _
+            "5423,5279,5120,4971,4830,4697,4554,4435," + _
+            "4307,4186,4058,3950,3836,3728,3615,3519," + _
+            "3418,3323,3224,3131,3043,2960,2875,2794," + _
+            "2711,2633,2560,2485,2415,2348,2281,2213," + _
+            "2153,2089,2032,1975,1918,1864,1810,1757," + _
+            "1709,1659,1612,1565,1521,1478,1435,1395," + _
+            "1355,1316,1280,1242,1207,1173,1140,1107," + _
+            "1075,1045,1015,986,959,931,905,879," + _
+            "854,829,806,783,760,739,718,697," + _
+            "677,658,640,621,604,586,570,553," + _
+            "538,522,507,493,479,465,452,439," + _
+            "427,415,403,391,380,369,359,348," + _
+            "339,329,319,310,302,293,285,276," + _
+            "269,261,253,246,239,232,226,219," + _
+            "213,207,201,195,190,184,179"
+        p = 1
+        FOR i = 0 TO 127
+            q = INSTR(p, t + ",", ",")
+            pcspk_doom_div(i) = VAL(MID$(t, p, q - p))
+            p = q + 1
+        NEXT
+        ' tones 128-255 are off the end of the table: silence, as in the game
+    END SUB
+
+
+    ''
+    ' PIT divisor for a DOOM PC speaker tone (0 = silence).
+    '
+    FUNCTION PCSPK_DoomDivisor& (tone AS LONG)
+        IF tone < 0 OR tone > 255 THEN EXIT FUNCTION
+        PCSPK_DoomInit
+        PCSPK_DoomDivisor = pcspk_doom_div(tone)
+    END FUNCTION
+
+
+    ''
+    ' TRUE if the bytes look like a DOOM PC speaker lump.
+    '
+    FUNCTION PCSPK_DoomLumpOK%% (lump AS STRING)
+        IF LEN(lump) < 4 THEN EXIT FUNCTION
+        IF ASC(lump, 1) <> 0 OR ASC(lump, 2) <> 0 THEN EXIT FUNCTION
+        IF PCSPK_U16(lump, 3) > LEN(lump) - 4 THEN EXIT FUNCTION
+        PCSPK_DoomLumpOK = -1
+    END FUNCTION
+
+
+    ''
+    ' Convert a DOOM PC speaker lump to divisors and add it to the bank. A
+    ' name that is already there is replaced, the way a PWAD overrides the
+    ' IWAD in the game.
+    '
+    SUB PCSPK_DoomAdd (lump AS STRING, nam AS STRING, filePos AS LONG)
+        DIM cnt AS LONG, n AS LONG, i AS LONG, idx AS LONG, dv AS STRING
+
+        cnt = PCSPK_U16(lump, 3)
+        dv = SPACE$(cnt * 2 + 2)
+        FOR n = 0 TO cnt - 1
+            MID$(dv, n * 2 + 1, 2) = MKI$(PCSPK_DoomDivisor(ASC(lump, 5 + n)))
+        NEXT
+        MID$(dv, cnt * 2 + 1, 2) = MKI$(-1) ' $FFFF end marker, like IFS
+
+        idx = pcspk_ifs_count
+        FOR i = 0 TO pcspk_ifs_count - 1
+            IF RTRIM$(pcspk_ifs(i).nam) = nam THEN idx = i: EXIT FOR
+        NEXT
+        IF idx = pcspk_ifs_count THEN
+            IF idx > UBOUND(pcspk_ifs) THEN REDIM _PRESERVE pcspk_ifs(0 TO idx * 2 + 1) AS PCSPK_IFS_ENTRY
+            pcspk_ifs_count = pcspk_ifs_count + 1
+        END IF
+
+        pcspk_ifs(idx).offset = filePos
+        pcspk_ifs(idx).dataPos = LEN(pcspk_ifs_data)
+        pcspk_ifs(idx).priority = 0 ' kept in the game's code, not the WAD
+        pcspk_ifs(idx).rate = 0
+        pcspk_ifs(idx).nam = nam
+        pcspk_ifs(idx).samples = cnt
+        pcspk_ifs_data = pcspk_ifs_data + dv
+    END SUB
+
+
+    ''
+    ' Load every DP* lump in a DOOM engine WAD. Only the directory and the
+    ' DP* lumps are read, so a 600 MB WAD loads as quickly as a small one.
+    '
+    FUNCTION PCSPK_DoomLoadWAD%% (fileName AS STRING)
+        DIM ff AS LONG, fileLen AS LONG, numLumps AS LONG, dirPos AS LONG, i AS LONG
+        DIM dir AS STRING, fp AS LONG, sz AS LONG, nm AS STRING, z AS LONG, lump AS STRING
+
+        pcspk_ifs_data = ""
+        pcspk_ifs_count = 0
+        REDIM pcspk_ifs(0 TO 127) AS PCSPK_IFS_ENTRY
+
+        ff = FREEFILE
+        OPEN fileName FOR BINARY ACCESS READ AS #ff
+        fileLen = LOF(ff)
+        IF fileLen >= 12 THEN
+            GET #ff, 5, numLumps
+            GET #ff, 9, dirPos
+        END IF
+        IF numLumps > 0 AND dirPos >= 12 AND dirPos <= fileLen - numLumps * 16 THEN
+            dir = SPACE$(numLumps * 16)
+            GET #ff, dirPos + 1, dir
+            FOR i = 0 TO numLumps - 1
+                fp = CVL(MID$(dir, i * 16 + 1, 4))
+                sz = CVL(MID$(dir, i * 16 + 5, 4))
+                nm = MID$(dir, i * 16 + 9, 8)
+                z = INSTR(nm, CHR$(0))
+                IF z THEN nm = LEFT$(nm, z - 1)
+                nm = UCASE$(nm)
+                IF LEFT$(nm, 2) = "DP" AND sz >= 4 AND sz <= 65539 AND fp >= 0 AND fp <= fileLen - sz THEN
+                    lump = SPACE$(sz)
+                    GET #ff, fp + 1, lump
+                    IF PCSPK_DoomLumpOK(lump) THEN PCSPK_DoomAdd lump, nm, fp
+                END IF
+            NEXT
+        END IF
+        CLOSE #ff
+
+        IF pcspk_ifs_count = 0 THEN EXIT FUNCTION
+        pcspk_ifs_filesize = fileLen
+        pcspk_ifs_word8 = numLumps
+        pcspk_ifs_kind = PCSPK_KIND_WAD
+        PCSPK_DoomLoadWAD = -1
+    END FUNCTION
+
+
+    ''
+    ' Load a single DOOM PC speaker lump saved as its own file. The sound is
+    ' named after the file (DPPISTOL.LMP -> DPPISTOL).
+    '
+    FUNCTION PCSPK_DoomLoadLMP%% (fileName AS STRING)
+        DIM d AS STRING, nm AS STRING, p AS LONG
+
+        d = PCSPK_ReadFile(fileName)
+        IF NOT PCSPK_DoomLumpOK(d) THEN EXIT FUNCTION
+
+        nm = fileName
+        p = _INSTRREV(nm, "/")
+        IF _INSTRREV(nm, "\") > p THEN p = _INSTRREV(nm, "\")
+        nm = MID$(nm, p + 1)
+        p = _INSTRREV(nm, ".")
+        IF p > 1 THEN nm = LEFT$(nm, p - 1)
+        nm = UCASE$(LEFT$(nm, 12))
+
+        pcspk_ifs_data = ""
+        pcspk_ifs_count = 0
+        REDIM pcspk_ifs(0 TO 0) AS PCSPK_IFS_ENTRY
+        PCSPK_DoomAdd d, nm, 0
+        pcspk_ifs_filesize = LEN(d)
+        pcspk_ifs_word8 = 0
+        pcspk_ifs_kind = PCSPK_KIND_LMP
+        PCSPK_DoomLoadLMP = -1
+    END FUNCTION
+
+
+    ''
+    ' Where the loaded bank came from: PCSPK_KIND_IFS, _WAD, _LMP or _NONE.
+    '
+    FUNCTION PCSPK_IFSKind%
+        PCSPK_IFSKind = pcspk_ifs_kind
     END FUNCTION
 
 
@@ -665,7 +893,7 @@ $IF PCSPKR_BM = UNDEFINED THEN
     FUNCTION PCSPK_IFSValue& (index AS LONG, n AS LONG)
         IF index < 0 OR index >= pcspk_ifs_count THEN EXIT FUNCTION
         IF n < 0 OR n >= pcspk_ifs(index).samples THEN EXIT FUNCTION
-        PCSPK_IFSValue = PCSPK_U16(pcspk_ifs_data, pcspk_ifs(index).offset + 1 + n * 2)
+        PCSPK_IFSValue = PCSPK_U16(pcspk_ifs_data, pcspk_ifs(index).dataPos + 1 + n * 2)
     END FUNCTION
 
 

@@ -2740,3 +2740,1105 @@
   | OK
   ! 
   ! Shell cwd was reset to /home/grymmjack/git/qb64
+2026-09-30T19:33:59-0400  NOTICE   prompt        <ide_opened_file>The user opened the file /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER/DN1PLAY.BAS in the IDE. This may or may not be related to the current task.</ide_opened_file>
+  > <ide_opened_file>The user opened the file /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER/DN1PLAY.BAS in the IDE. This may or may not be related to the current task.</ide_opened_file>
+  > can we add support for DOOM PC Speaker playback too? :)
+2026-09-30T19:34:01-0400  INFO     bash_start    cd /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER && ls -la && cat README.md | head -150 && wc -l *.BAS *.bas 2>/dev/null
+  > cwd: /home/grymmjack/git/qb64
+  $ cd /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER && ls -la && cat README.md | head -150 && wc -l *.BAS *.bas 2>/dev/null
+2026-09-30T19:34:03-0400  INFO     bash_start    cd /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER && ls -la; ls */ ; sed -n 150,400p README.md; wc -l *.BAS *.BM *.BI 2>/dev/null
+  > cwd: /home/grymmjack/git/qb64
+  $ cd /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER && ls -la; ls */ ; sed -n 150,400p README.md; wc -l *.BAS *.BM *.BI 2>/dev/null
+2026-09-30T19:34:03-0400  INFO     bash_end      [ok] 170L stdout
+  | ASSETS/:
+  | duke1-b.dn1
+  | scene17.wav
+  | scene20.wav
+  | SOUNDS.CK1
+  | xp8.wav
+  | 
+  | SCREENSHOTS/:
+  | 1-duke-bombexplode.png
+  | 2-duke-badguygoup.png
+  | 3-keen-lvldone.png
+  | ---
+  | 
+  | ## Follow along with the video
+  | 
+  | Each timestamp jumps to the part of the video where the C version is explained.
+  | The file next to it is the QB64-PE version.
+  | 
+  | | Video | What happens | QB64-PE file |
+  | | --- | --- | --- |
+  | | [5:56](https://youtu.be/bH8UITZadf4?t=356) | The 8253 PIT: channel 2 wired to the speaker, divisors, port 61h | `PCSPKR.BM`, which emulates all of it |
+  | | [9:54](https://youtu.be/bH8UITZadf4?t=594) | `play_sound`, `no_sound`, `timer_wait`: a single beep | `BEEP.BAS` |
+  | | [11:13](https://youtu.be/bH8UITZadf4?t=673) | Hooking INT 1Ch so the program keeps running while the tone plays | `BEEP2.BAS` (and `INTTEST.BAS`) |
+  | | [14:05](https://youtu.be/bH8UITZadf4?t=845) | The Tetris tune from hand-transcribed sheet music | `BEEP3.BAS`, press **2** |
+  | | [16:47](https://youtu.be/bH8UITZadf4?t=1007) | The 330-note tune converted from MIDI (Doom's E1M1 bassline) | `BEEP3.BAS`, press **1** |
+  | | [24:55](https://youtu.be/bH8UITZadf4?t=1495) | Pulling the sound effects out of Commander Keen's `SOUNDS.CK1` | `BEEP4.BAS`, then **`DN1PLAY.BAS`** for Keen and Duke |
+  | | [31:34](https://youtu.be/bH8UITZadf4?t=1894) | How PWM works | the PWM section below |
+  | | [34:48](https://youtu.be/bH8UITZadf4?t=2088) | The sine-wave PWM code | `PWM.BAS` |
+  | | [36:32](https://youtu.be/bH8UITZadf4?t=2192) | Playing a real WAV file, and the fight with DOS's 64K memory segments | `WAV.BAS` |
+  | 
+  | A few things work out differently in QB64-PE:
+  | 
+  | * **No 64K memory limit.** Most of the WAV section of the video is about
+  |   `LOADFILE.C` reading the file in chunks of less than 32K, plus far pointers and
+  |   `farmalloc`. None of that is needed in QB64-PE: the whole file goes into one
+  |   string, so `LOADFILE.C` has no port.
+  | * **The "crunchy" Keen sounds.** At 27:59 the video says its Keen playback
+  |   sounds crunchier than the real game. `BEEP4.BAS` copies the C, which
+  |   reprograms the timer every 7 ms, so it sounds the same as in the video.
+  |   `DN1PLAY.BAS` plays at 140 samples per second and only reprograms the timer
+  |   when the value changes, which is how id Software's sound code worked, as far
+  |   as I remember. That may be why the C version sounds crunchier. Compare the
+  |   two and see.
+  | * **`PWM.C` doesn't quite do what the video describes.** The explanation at
+  |   32:00 is correct: flip the speaker at a fast fixed rate and vary how long it
+  |   stays on. The C code at 34:48 instead feeds each sample to the timer as a
+  |   square-wave divisor, which makes a warbly noise. `PWM.BAS` reproduces that,
+  |   and pressing **M** switches to real PWM as the video describes it: a clean
+  |   sine wave with a faint 8 kHz whine.
+  | * **No crashing.** In the video a crash leaves the speaker beeping forever,
+  |   and the WAV player won't run inside the Borland editor because there isn't
+  |   enough conventional memory. Neither can happen here.
+  | 
+  | ## What's in this folder
+  | 
+  | | File | What it is | Ported from |
+  | | --- | --- | --- |
+  | | **`DN1PLAY.BAS`** | **The Duke Nukem / Keen sound player. Start here.** | new |
+  | | `PCSPKR.BI` + `PCSPKR.BM` | The fake PC speaker library. Put the `.BI` at the top of your program and the `.BM` at the bottom. | `BEEPER.C`, `WAVLOAD.C`, `LOADFILE.C`, `BEEP4.C` |
+  | | `NOTES.BI` | Named divisors for musical notes (`NOTE_A4`, `NOTE_C5`, ...) | `NOTES.H` |
+  | | `BEEP.BAS` | The smallest possible example: 440 Hz for 5 timer ticks | `BEEP.C` |
+  | | `INTTEST.BAS` | Hooks the timer and counts 18 ticks. No sound; uses QB64's `ON TIMER`. | `INTTEST.C` |
+  | | `BEEP2.BAS` | A tone plus a timer countdown | `BEEP2.C` |
+  | | `BEEP3.BAS` | A music player driven by the timer interrupt (press 1 or 2 to pick a tune) | `BEEP3.C` + `MELODY.C` |
+  | | `BEEP4.BAS` | Plays the first 20 Commander Keen sounds, the same way the C did | `BEEP4.C` |
+  | | `PWM.BAS` | Tries to play a sine wave on a 1-bit speaker. Press M to hear what the C really did (warbly noise) versus true PWM (a clean tone). | `PWM.C` |
+  | | `WAV.BAS` | Plays real 8-bit `.wav` files through the 1-bit speaker using PWM. Press C to compare with normal playback. | `WAV.C` |
+  | | `ASSETS/` | `duke1-b.dn1` (Duke), `SOUNDS.CK1` (Keen), and three test `.wav` files | original repo |
+  | | `SCREENSHOTS/` | The images in this README | |
+  | 
+  | ### PWM: playing recordings on a speaker with two positions
+  | 
+  | `WAV.BAS` and `PWM.BAS` use the cleverest trick here. The speaker can only be in
+  | or out, but if you flip it **8,000 times a second** and vary how long it stays
+  | out each time, the cone can't keep up. It averages the pulses, so a long pulse
+  | sounds "loud" and a short pulse sounds "quiet". That is **pulse width
+  | modulation (PWM)**. It is how DOS games squeezed speech and sampled sound out of
+  | a beeper. You'll also hear a high 8 kHz whine; real PC speakers made it too.
+  | 
+  | ---
+  | ...[truncated]
+2026-09-30T19:34:15-0400  INFO     bash_start    cat PCSPKR.BI && grep -n "IFS\|^SUB\|^FUNCTION" PCSPKR.BM | head -80; locate -i "*.wad" 2>/dev/null | head; find ~ / -xdev -iname "*.wad" 2>/dev/null | head; find ~ -iname "i_pcsound.c" -o -iname "pc…
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ cat PCSPKR.BI && grep -n "IFS\|^SUB\|^FUNCTION" PCSPKR.BM | head -80; locate -i "*.wad" 2>/dev/null | head; find ~ / -xdev -iname "*.wad" 2>/dev/null | head; find ~ -iname "i_pcsound.c" -o -iname "pcsound*" 2>/dev/null | head
+2026-09-30T19:34:23-0400  INFO     bash_end      [ok] 157L stdout
+  | ''
+  | ' PCSPKR.BI - Native QB64PE IBM PC speaker emulator (header)
+  | '
+  | ' A pure QB64PE port of the ideas in https://github.com/grymmjack/ncot-pc-speaker
+  | ' (Borland C / MS-DOS). No C, no DECLARE LIBRARY - everything is emulated in
+  | ' BASIC and pushed out through QB64PE's own audio engine.
+  | '
+  | ' What is emulated:
+  | '   - PIT (8253/8254) channel 2 in mode 3 (square wave) and mode 0 (one-shot)
+  | '   - Port 61h speaker gate / data bits (on / off)
+  | '   - PIT channel 0 / BIOS INT 1Ch style "timer ticks" driven by the AUDIO
+  | '     clock, so tick handlers are sample-accurate and jitter free
+  | '   - The speaker cone (DC blocking + optional low-pass)
+  | '
+  | ' Extras:
+  | '   - Inverse Frequency Sound (IFS) loader for Duke Nukem 1 (*.DN1, *.DN2,
+  | '     *.DN3) and Commander Keen 1-3 (SOUNDS.CK?) sound banks
+  | '   - 8-bit mono PCM WAV loader (for the PWM playback demo)
+  | '   - Offline render to a QB64PE sound handle (_SNDNEW) and to .WAV files
+  | '
+  | ' Usage:
+  | '   '$INCLUDE:'PCSPKR.BI'   <- top of program
+  | '   ...
+  | '   '$INCLUDE:'PCSPKR.BM'   <- bottom of program
+  | '
+  | ' Requires QB64-PE 4.x (_SNDNEW, _MEMSOUND, _SNDOPENRAW, _SNDRAWBATCH).
+  | '
+  | $IF PCSPKR_BI = UNDEFINED THEN
+  |     $LET PCSPKR_BI = TRUE
+  | 
+  |     ' PIT input clock (Hz): 14.31818 MHz / 12
+  |     CONST PCSPK_PIT_HZ = 1193181.666666667#
+  |     ' Default BIOS tick rate (Hz) - INT 08h / INT 1Ch with divisor 65536
+  |     CONST PCSPK_BIOS_TICK_HZ = 18.20650656285#
+  |     ' Commander Keen / Duke Nukem 1 PC speaker effects are driven at 140 Hz
+  |     CONST PCSPK_IFS_DEFAULT_HZ = 140
+  | 
+  |     ' PIT counter modes we emulate on channel 2
+  |     CONST PCSPK_MODE_ONESHOT = 0 ' mode 0: interrupt on terminal count
+  |     CONST PCSPK_MODE_SQUARE = 3 ' mode 3: square wave generator
+  | 
+  |     ' Where rendered samples go
+  |     CONST PCSPK_SINK_NONE = 0
+  |     CONST PCSPK_SINK_STREAM = 1
+  |     CONST PCSPK_SINK_CAPTURE = 2
+  | 
+  |     CONST PCSPK_STREAM_CHUNK = 256 ' frames pushed per _SNDRAWBATCH
+  | 
+  |     TYPE PCSPK_STATE
+  |         initialized AS _BYTE
+  |         rate AS LONG ' output sample rate (Hz)
+  |         clkPerSample AS DOUBLE ' PIT clocks per output sample
+  |         ' --- emulated hardware ---
+  |         enabled AS _BYTE ' port 61h bits 0+1 (timer 2 gate + speaker data)
+  |         mode AS INTEGER ' PIT channel 2 mode (0 or 3)
+  |         divisor AS DOUBLE ' mode 3 reload value (clocks per cycle)
+  |         phase AS DOUBLE ' mode 3 phase in cycles [0, 1)
+  |         osRemain AS DOUBLE ' mode 0 clocks left in the LOW state
+  |         ' --- resampler ---
+  |         sampPos AS DOUBLE ' clocks accumulated into current output sample
+  |         sampAcc AS DOUBLE ' integral of speaker level over those clocks
+  |         ' --- speaker cone ---
+  |         dcX AS SINGLE
+  |         dcY AS SINGLE
+  |         dcR AS SINGLE
+  |         lpHz AS SINGLE
+  |         lpA AS SINGLE
+  |         lp1 AS SINGLE
+  |         lp2 AS SINGLE
+  |         volume AS SINGLE
+  |         ' --- output ---
+  |         sink AS INTEGER
+  |         stream AS LONG ' _SNDOPENRAW handle
+  |         bufN AS LONG ' frames waiting in pcspk_sbuf()
+  |         lead AS DOUBLE ' seconds of audio to keep queued ahead
+  |         tickHz AS DOUBLE ' emulated timer interrupt rate
+  |         tickClk AS DOUBLE ' PIT clocks per emulated timer tick
+  |         rendered AS DOUBLE ' seconds rendered to the stream (fallback pacing)
+  |         wallStart AS DOUBLE ' TIMER when stream opened (fallback pacing)
+  |         capN AS LONG ' frames in pcspk_cap()
+  | ...[truncated]
+2026-09-30T19:34:23-0400  NOTICE   prompt        or any DOOM engine
+  > or any DOOM engine
+2026-09-30T19:34:23-0400  NOTICE   prompt        pc speaker sounds
+  > pc speaker sounds
+2026-09-30T19:34:27-0400  INFO     bash_start    cd /home/grymmjack/Pictures/dos-art/_work/apogee-id-epic/chocolate/src; grep -n "divisors\|format\|lumplen\|current_sound\|0x\|TIMER\|140\|dp%s\|DP" i_pcsound.c | head -60; sed -n '/divisors\[\]/,/};…
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ cd /home/grymmjack/Pictures/dos-art/_work/apogee-id-epic/chocolate/src; grep -n "divisors\|format\|lumplen\|current_sound\|0x\|TIMER\|140\|dp%s\|DP" i_pcsound.c | head -60; sed -n '/divisors\[\]/,/};/p' i_pcsound.c; ls ../pcsound 2>/dev/null; grep -rn "\"dp\|dp%s" . | head
+2026-09-30T19:34:27-0400  WARNING  bash_end      [stderr] 57L stdout / 2L stderr
+  | 31:#define TIMER_FREQ 1193181 /* hz */
+  | 38:static uint8_t *current_sound_lump = NULL;
+  | 39:static uint8_t *current_sound_pos = NULL;
+  | 40:static unsigned int current_sound_remaining = 0;
+  | 41:static int current_sound_handle = 0;
+  | 42:static int current_sound_lump_num = -1;
+  | 44:static const uint16_t divisors[] = {
+  | 53:    1355, 1316, 1280, 1242, 1207, 1173, 1140, 1107,
+  | 68:    *duration = 1000 / 140;
+  | 76:    if (current_sound_lump != NULL && current_sound_remaining > 0)
+  | 80:        tone = *current_sound_pos;
+  | 86:        if (tone < arrlen(divisors) && divisors[tone] != 0)
+  | 88:            *freq = (int) (TIMER_FREQ / divisors[tone]);
+  | 95:        ++current_sound_pos;
+  | 96:        --current_sound_remaining;
+  | 108:    int lumplen;
+  | 113:    if (current_sound_lump != NULL)
+  | 115:        W_ReleaseLumpNum(current_sound_lump_num);
+  | 116:        current_sound_lump = NULL;
+  | 121:    current_sound_lump = W_CacheLumpNum(sfxinfo->lumpnum, PU_STATIC);
+  | 122:    lumplen = W_LumpLength(sfxinfo->lumpnum);
+  | 126:    if (current_sound_lump[0] != 0x00 || current_sound_lump[1] != 0x00)
+  | 131:    headerlen = (current_sound_lump[3] << 8) | current_sound_lump[2];
+  | 133:    if (headerlen > lumplen - 4)
+  | 140:    current_sound_remaining = headerlen;
+  | 141:    current_sound_pos = current_sound_lump + 4;
+  | 142:    current_sound_lump_num = sfxinfo->lumpnum;
+  | 202:        current_sound_handle = channel;
+  | 231:    if (current_sound_handle == handle)
+  | 233:        current_sound_remaining = 0;
+  | 250:        M_snprintf(namebuf, sizeof(namebuf), "dp%s", DEH_String(sfx->name));
+  | 254:            // Missing sounds replaced with DPRIFLE.
+  | 255:            M_snprintf(namebuf, sizeof(namebuf), "dp%s", DEH_String("rifle"));
+  | 274:    if (handle != current_sound_handle)
+  | 279:    return current_sound_lump != NULL && current_sound_remaining > 0;
+  | static const uint16_t divisors[] = {
+  |     0,
+  |     6818, 6628, 6449, 6279, 6087, 5906, 5736, 5575,
+  |     5423, 5279, 5120, 4971, 4830, 4697, 4554, 4435,
+  |     4307, 4186, 4058, 3950, 3836, 3728, 3615, 3519,
+  |     3418, 3323, 3224, 3131, 3043, 2960, 2875, 2794,
+  |     2711, 2633, 2560, 2485, 2415, 2348, 2281, 2213,
+  |     2153, 2089, 2032, 1975, 1918, 1864, 1810, 1757,
+  |     1709, 1659, 1612, 1565, 1521, 1478, 1435, 1395,
+  |     1355, 1316, 1280, 1242, 1207, 1173, 1140, 1107,
+  |     1075, 1045, 1015,  986,  959,  931,  905,  879,
+  |      854,  829,  806,  783,  760,  739,  718,  697,
+  |      677,  658,  640,  621,  604,  586,  570,  553,
+  |      538,  522,  507,  493,  479,  465,  452,  439,
+  |      427,  415,  403,  391,  380,  369,  359,  348,
+  |      339,  329,  319,  310,  302,  293,  285,  276,
+  |      269,  261,  253,  246,  239,  232,  226,  219,
+  |      213,  207,  201,  195,  190,  184,  179,
+  | };
+  | i_pcsound.c:250:        M_snprintf(namebuf, sizeof(namebuf), "dp%s", DEH_String(sfx->name));
+  | i_pcsound.c:255:            M_snprintf(namebuf, sizeof(namebuf), "dp%s", DEH_String("rifle"));
+  | doom/d_main.c:1775:	    "dphoof","bfgga0","heada1","cybra1","spida1d1"
+  ! 
+  ! Shell cwd was reset to /home/grymmjack/git/qb64
+2026-09-30T19:34:35-0400  INFO     bash_start    cd ~; find / -xdev \( -iname "*.wad" -o -iname "*.pk3" \) 2>/dev/null | grep -v "/proc/" > /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/wads.txt; wc -l < …
+  > cwd: /home/grymmjack/git/qb64
+  $ cd ~; find / -xdev \( -iname "*.wad" -o -iname "*.pk3" \) 2>/dev/null | grep -v "/proc/" > /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/wads.txt; wc -l < /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/wads.txt
+  $ python3 - <<'EOF'
+  $ import struct
+  $ for p in open('/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/wads.txt').read().split('\n'):
+  $     if not p.lower().endswith('.wad'): continue
+  $     try:
+  $         d=open(p,'rb').read()
+  $         if d[:4] not in (b'IWAD',b'PWAD'): continue
+  $         n,o=struct.unpack('<ii',d[4:12])
+  $         dp=[];bad=0
+  $         for i in range(n):
+  $             fo,sz,nm=struct.unpack('<ii8s',d[o+i*16:o+i*16+16])
+  $             nm=nm.split(b'\0')[0]
+  $             if nm.upper().startswith(b'DP') and sz>=4:
+  $                 h=d[fo:fo+4]
+  $                 if h[0]==0 and h[1]==0 and struct.unpack('<H',h[2:4])[0]<=sz-4: dp.append(nm.decode())
+  $                 else: bad+=1
+  $         print(d[:4].decode(), len(dp), bad, len(d), p, dp[:5])
+  $     except Exception as e: print('ERR',p,e)
+  $ EOF
+2026-09-30T19:34:42-0400  WARNING  bash_end      [stderr] 119L stdout / 2L stderr
+  | 135
+  | PWAD 0 0 52576 /home/grymmjack/Dropbox/GJEUR1.WAD []
+  | PWAD 0 0 20100 /home/grymmjack/Dropbox/GJEUR2.wad []
+  | PWAD 0 0 68846 /home/grymmjack/Dropbox/GJEUR1 (copy).WAD []
+  | PWAD 0 0 3123 /home/grymmjack/Dropbox/MAP01.wad []
+  | PWAD 0 0 143312 /var/lib/flatpak/app/net.retrodeck.retrodeck/x86_64/stable/a86d30895e4f2fbd3127e2df49c5538ac6b7c78ff06d31c5e3c852c0d505db5c/files/retrodeck/components/retroarch/rd_extras/prboom.wad []
+  | PWAD 0 0 625140164 /home/grymmjack/Dropbox/DOOM Maps/extras.wad []
+  | PWAD 0 0 34816611 /home/grymmjack/Dropbox/DOOM Maps/id1.wad []
+  | PWAD 0 0 133656 /home/grymmjack/Dropbox/DOOM Maps/id1-weap.wad []
+  | PWAD 0 0 3920169 /home/grymmjack/Dropbox/DOOM Maps/masterlevels.wad []
+  | PWAD 0 0 4640210 /home/grymmjack/Dropbox/DOOM Maps/SIGIL_v1_21.wad []
+  | PWAD 0 0 1595 /home/grymmjack/Dropbox/DOOM Maps/Desec_GrymmPatch.wad []
+  | PWAD 0 0 5632323 /home/grymmjack/Dropbox/DOOM Maps/SIGIL_II_V1_0.WAD []
+  | PWAD 0 0 2108038 /home/grymmjack/Dropbox/DOOM Maps/id24res.wad []
+  | PWAD 0 0 17091 /home/grymmjack/Dropbox/DOOM Maps/dev textures.wad []
+  | PWAD 0 0 4634157 /home/grymmjack/Dropbox/DOOM Maps/SIGIL_COMPAT_v1_21.wad []
+  | PWAD 0 0 2249276 /home/grymmjack/Dropbox/DOOM Maps/Desecration.wad []
+  | PWAD 0 0 71575766 /home/grymmjack/Dropbox/DOOM Maps/OTEX_1.1.WAD []
+  | PWAD 0 0 18266239 /home/grymmjack/Dropbox/DOOM Maps/id1-res.wad []
+  | IWAD 0 0 27319149 /home/grymmjack/Dropbox/DOOM Maps/voices.wad []
+  | PWAD 0 0 4039441 /home/grymmjack/Dropbox/DOOM Maps/nerve.wad []
+  | PWAD 0 0 6215556 /home/grymmjack/Dropbox/DOOM Maps/SCYTHE.WAD []
+  | PWAD 0 0 86063 /home/grymmjack/Dropbox/DOOM Maps/Desecration_GZDPatch.wad []
+  | PWAD 0 0 31285404 /home/grymmjack/Dropbox/DOOM Maps/scythe2.wad []
+  | PWAD 0 0 24769102 /home/grymmjack/Dropbox/DOOM Maps/iddm1.wad []
+  | PWAD 0 0 4660156 /home/grymmjack/Dropbox/DOOM Maps/sigil.wad []
+  | PWAD 0 0 4109756 /home/grymmjack/Dropbox/DOOM Maps/DOOM SOUNDS/Doom_Sound_Bulb_Legacy.wad []
+  | PWAD 0 0 8302814 /home/grymmjack/Dropbox/DOOM Maps/DOOM SOUNDS/Doom_Sound_Bulb.wad []
+  | IWAD 21 0 28377364 /home/grymmjack/Dropbox/DOOM Maps/gzdoom/strife1.wad ['DPMTALHT', 'DPWPNUP', 'DPRIFLE', 'DPBAREXP', 'DPPLPAIN']
+  | IWAD 122 0 12408292 /home/grymmjack/Dropbox/DOOM Maps/gzdoom/DOOM (Case Conflict).WAD ['DPPISTOL', 'DPSHOTGN', 'DPSGCOCK', 'DPSAWUP', 'DPSAWIDL']
+  | IWAD 122 0 12996515 /home/grymmjack/Dropbox/DOOM Maps/gzdoom/doom.wad ['DPPISTOL', 'DPSHOTGN', 'DPSGCOCK', 'DPSAWUP', 'DPSAWIDL']
+  | IWAD 67 0 18310224 /home/grymmjack/Dropbox/DOOM Maps/gzdoom/FSSC1.wad ['DPPISTOL', 'DPSHOTGN', 'DPSGCOCK', 'DPSAWUP', 'DPSAWIDL']
+  | PWAD 122 0 12333296 /home/grymmjack/Dropbox/DOOM Maps/gzdoom/CHEX.WAD ['DPPISTOL', 'DPSHOTGN', 'DPSGCOCK', 'DPSAWUP', 'DPSAWIDL']
+  | IWAD 0 0 14189976 /home/grymmjack/Dropbox/DOOM Maps/gzdoom/HERETIC.WAD []
+  | PWAD 0 0 19191031 /home/grymmjack/Dropbox/DOOM Maps/gzdoom/chex3.wad []
+  | IWAD 107 0 17420824 /home/grymmjack/Dropbox/DOOM Maps/gzdoom/PLUTONIA.WAD ['DPPISTOL', 'DPSHOTGN', 'DPSGCOCK', 'DPSAWUP', 'DPSAWIDL']
+  | IWAD 67 0 18137580 /home/grymmjack/Dropbox/DOOM Maps/gzdoom/FSFC1.wad ['DPPISTOL', 'DPSHOTGN', 'DPSGCOCK', 'DPSAWUP', 'DPSAWIDL']
+  | IWAD 0 0 20417448 /home/grymmjack/Dropbox/DOOM Maps/gzdoom/blasphem.wad []
+  | IWAD 0 0 5120300 /home/grymmjack/Dropbox/DOOM Maps/gzdoom/HERETIC1.WAD []
+  | PWAD 0 0 58396393 /home/grymmjack/Dropbox/DOOM Maps/gzdoom/harm1.wad []
+  | PWAD 0 0 209908382 /home/grymmjack/Dropbox/DOOM Maps/gzdoom/action2.wad []
+  | PWAD 0 0 1512 /home/grymmjack/Dropbox/DOOM Maps/gzdoom/GJTEST.wad []
+  | IWAD 107 0 14604584 /home/grymmjack/Dropbox/DOOM Maps/gzdoom/DOOM2.WAD ['DPPISTOL', 'DPSHOTGN', 'DPSGCOCK', 'DPSAWUP', 'DPSAWIDL']
+  | PWAD 0 0 102407969 /home/grymmjack/Dropbox/DOOM Maps/gzdoom/SVE.wad []
+  | IWAD 107 0 18195736 /home/grymmjack/Dropbox/DOOM Maps/gzdoom/TNT.WAD ['DPPISTOL', 'DPSHOTGN', 'DPSGCOCK', 'DPSAWUP', 'DPSAWIDL']
+  | IWAD 107 0 28787748 /home/grymmjack/Dropbox/DOOM Maps/gzdoom/freedoom2.wad ['DPPISTOL', 'DPSHOTGN', 'DPSGCOCK', 'DPSAWUP', 'DPSAWIDL']
+  | IWAD 0 0 19321722 /home/grymmjack/Dropbox/DOOM Maps/gzdoom/HACX.WAD []
+  | IWAD 107 0 14951361 /home/grymmjack/Dropbox/DOOM Maps/gzdoom/doom2 (Case Conflict).wad ['DPPISTOL', 'DPSHOTGN', 'DPSGCOCK', 'DPSAWUP', 'DPSAWIDL']
+  | IWAD 107 0 18507237 /home/grymmjack/Dropbox/DOOM Maps/gzdoom/tnt (Case Conflict).wad ['DPPISTOL', 'DPSHOTGN', 'DPSGCOCK', 'DPSAWUP', 'DPSAWIDL']
+  | IWAD 67 0 28795076 /home/grymmjack/Dropbox/DOOM Maps/gzdoom/freedoom1.wad ['DPPISTOL', 'DPSHOTGN', 'DPSGCOCK', 'DPSAWUP', 'DPSAWIDL']
+  | IWAD 0 0 20083672 /home/grymmjack/Dropbox/DOOM Maps/gzdoom/HEXEN.WAD []
+  | IWAD 244 0 17456330 /home/grymmjack/Dropbox/DOOM Maps/gzdoom/CHEX2.WAD ['DPPISTOL', 'DPSHOTGN', 'DPSGCOCK', 'DPSAWUP', 'DPSAWIDL']
+  | IWAD 107 0 17704206 /home/grymmjack/Dropbox/DOOM Maps/gzdoom/plutonia (Case Conflict).wad ['DPPISTOL', 'DPSHOTGN', 'DPSGCOCK', 'DPSAWUP', 'DPSAWIDL']
+  | IWAD 0 0 4429700 /home/grymmjack/Dropbox/DOOM Maps/gzdoom/HEXDD.WAD []
+  | IWAD 0 0 15103212 /home/grymmjack/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/common/Doom 64/DOOM64.WAD []
+  | IWAD 21 0 28377364 /home/grymmjack/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/common/Strife/strife1.wad ['DPMTALHT', 'DPWPNUP', 'DPRIFLE', 'DPBAREXP', 'DPPLPAIN']
+  | PWAD 0 0 102407969 /home/grymmjack/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/common/Strife/SVE.wad []
+  | IWAD 0 0 27319149 /home/grymmjack/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/common/Strife/voices.wad []
+  | PWAD 0 0 146323881 /home/grymmjack/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/common/Heretic + Hexen/hexen_mus_orig.wad []
+  | IWAD 0 0 25899833 /home/grymmjack/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/common/Heretic + Hexen/heretic.wad []
+  | PWAD 0 0 5322309 /home/grymmjack/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/common/Heretic + Hexen/heretic_fr.wad []
+  | IWAD 0 0 26897845 /home/grymmjack/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/common/Heretic + Hexen/hexen.wad []
+  | PWAD 0 0 134649977 /home/grymmjack/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/common/Heretic + Hexen/heretic_mus_remix.wad []
+  | PWAD 0 0 48377005 /home/grymmjack/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/common/Heretic + Hexen/heretic_mus_orig.wad []
+  | PWAD 0 0 283685228 /home/grymmjack/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/common/Heretic + Hexen/hexen_mus_remix.wad []
+  | PWAD 0 0 11459325 /home/grymmjack/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/common/Heretic + Hexen/heretic_ex.wad []
+  | PWAD 0 0 693004 /home/grymmjack/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/common/Heretic + Hexen/hextest.wad []
+  | PWAD 0 0 5209773 /home/grymmjack/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/common/Heretic + Hexen/hexen_ex.wad []
+  | PWAD 0 0 4639098 /home/grymmjack/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/common/Heretic + Hexen/hexdd.wad []
+  | PWAD 0 0 10432085 /home/grymmjack/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/common/Heretic + Hexen/hexen_vog.wad []
+  | PWAD 0 0 4867489 /home/grymmjack/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/common/Heretic + Hexen/hexdd_ex.wad []
+  | IWAD 21 0 28377364 /home/grymmjack/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/common/Strife/DOS/C/STRIFE/strife1.wad ['DPMTALHT', 'DPWPNUP', 'DPRIFLE', 'DPBAREXP', 'DPPLPAIN']
+  | IWAD 0 0 27319149 /home/grymmjack/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/common/Strife/DOS/C/STRIFE/voices.wad []
+  | IWAD 32 0 9605955 /home/grymmjack/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/common/Strife/DOS/C/STRF1295/STRIFE0.WAD ['DPPISTOL', 'DPSHOTGN', 'DPDSHTGN', 'DPPLASMA', 'DPSAWUP']
+  | IWAD 0 0 14189976 /home/grymmjack/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/common/Heretic + Hexen/dos/base/heretic/HERETIC.WAD []
+  | IWAD 0 0 4440584 /home/grymmjack/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/common/Heretic + Hexen/dos/base/hexendk/HEXDD.WAD []
+  | ...[truncated]
+  ! 
+  ! Shell cwd was reset to /home/grymmjack/git/qb64
+2026-09-30T19:34:49-0400  INFO     bash_start    cd /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER && sed -n 530,720p PCSPKR.BM && grep -n "FindFile\|FUNCTION PCSPK_U16" -A3 PCSPKR.BM | head -30
+  > cwd: /home/grymmjack/git/qb64
+  $ cd /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER && sed -n 530,720p PCSPKR.BM && grep -n "FindFile\|FUNCTION PCSPK_U16" -A3 PCSPKR.BM | head -30
+2026-09-30T19:34:49-0400  INFO     bash_start    cd /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER && cat DN1PLAY.BAS
+  > cwd: /home/grymmjack/git/qb64
+  $ cd /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER && cat DN1PLAY.BAS
+2026-09-30T19:34:49-0400  INFO     bash_end      [ok] 526L stdout
+  | ''
+  | ' DN1PLAY.BAS - Duke Nukem 1 (and Commander Keen 1-3) PC speaker sound player
+  | '
+  | ' Native QB64PE - no C, no DECLARE LIBRARY. Loads an Inverse Frequency Sound
+  | ' bank (DUKE1*.DN1/.DN2/.DN3, SOUNDS.CK1/2/3), runs every sound through the
+  | ' emulated PC speaker (PIT channel 2 square wave, 140 samples/sec - the way
+  | ' the games' own sound service did it) and plays it with QB64PE's audio.
+  | '
+  | ' Usage:  DN1PLAY [bankfile]      (default ASSETS/duke1-b.dn1)
+  | '         ...or drag and drop a bank file onto the window.
+  | '
+  | ' Keys:
+  | '   Up/Down PgUp/PgDn Home/End   select sound (mouse wheel / click work too)
+  | '   Enter / Space / click         play selected sound
+  | '   A                             play all from selected (A again to stop)
+  | '   S                             stop
+  | '   + / -                         playback rate +/- 5 Hz     R  reset (140 Hz)
+  | '   L                             speaker low-pass on/off
+  | '   W / E                         export selected / all to EXPORT/*.wav
+  | '   Tab                           next sound bank in the same folder
+  | '   Esc                           quit
+  | '
+  | OPTION _EXPLICIT
+  | '$INCLUDE:'PCSPKR.BI'
+  | 
+  | CONST SCR_W = 1024
+  | CONST SCR_H = 640
+  | CONST ROW_H = 16
+  | CONST LIST_X = 8
+  | CONST LIST_Y = 56
+  | CONST LIST_W = 392
+  | CONST LIST_ROWS = 34
+  | CONST PANEL_X = 416
+  | CONST PLOT_X = 472
+  | CONST PLOT_Y = 230
+  | CONST PLOT_W = 536
+  | CONST PLOT_H = 300
+  | CONST F_LO = 20
+  | CONST F_HI = 20000
+  | 
+  | DIM SHARED bankFile AS STRING
+  | DIM SHARED bankDir AS STRING
+  | DIM SHARED rateHz AS DOUBLE
+  | DIM SHARED lowPass AS INTEGER
+  | REDIM SHARED snd(0 TO 0) AS LONG
+  | DIM SHARED sndCount AS LONG
+  | DIM SHARED sel AS LONG
+  | DIM SHARED topRow AS LONG
+  | DIM SHARED playingIdx AS LONG
+  | DIM SHARED playAll AS INTEGER
+  | DIM SHARED gapUntil AS DOUBLE
+  | DIM SHARED statusMsg AS STRING
+  | DIM SHARED statusUntil AS DOUBLE
+  | DIM SHARED audioOK AS INTEGER
+  | DIM SHARED gridFreq(0 TO 7) AS DOUBLE
+  | 
+  | DIM k AS LONG, f AS STRING, wheel AS LONG, row AS LONG
+  | 
+  | SCREEN _NEWIMAGE(SCR_W, SCR_H, 32)
+  | _TITLE "DN1PLAY - PC speaker sound player"
+  | _ACCEPTFILEDROP ON
+  | _PRINTMODE _KEEPBACKGROUND
+  | 
+  | rateHz = PCSPK_IFS_DEFAULT_HZ
+  | playingIdx = -1
+  | gridFreq(0) = 50: gridFreq(1) = 100: gridFreq(2) = 200: gridFreq(3) = 500
+  | gridFreq(4) = 1000: gridFreq(5) = 2000: gridFreq(6) = 5000: gridFreq(7) = 10000
+  | 
+  | f = COMMAND$(1)
+  | IF f = "" THEN f = "ASSETS/duke1-b.dn1"
+  | load_bank PCSPK_FindFile(f)
+  | 
+  | DO
+  |     ' ---------------------------------------------------------------- mouse
+  |     wheel = 0
+  |     DO WHILE _MOUSEINPUT
+  |         wheel = wheel + _MOUSEWHEEL
+  |     LOOP
+  |     IF wheel THEN move_sel sel + wheel * 3
+  |     IF _MOUSEBUTTON(1) THEN
+  | ...[truncated]
+2026-09-30T19:34:49-0400  INFO     bash_end      [ok] 212L stdout
+  |         ff = FREEFILE
+  |         OPEN fileName FOR BINARY AS #ff
+  |         PUT #ff, 1, hdr
+  |         PUT #ff, , pcm()
+  |         CLOSE #ff
+  |     END SUB
+  | 
+  | 
+  |     '-------------------------------------------------------------------------
+  |     ' Inverse Frequency Sound (IFS) banks: Duke Nukem 1 (*.DN1-3) and
+  |     ' Commander Keen 1-3 (SOUNDS.CK1-3)
+  |     '
+  |     '   Header (16 bytes)
+  |     '     0  char[4]  "SND",0
+  |     '     4  uint16   file size
+  |     '     6  uint16   number of sounds
+  |     '     8  uint16   unknown (BEEP4.C reads this as the count - it isn't)
+  |     '    10  byte[6]  padding
+  |     '   Sound table (16 bytes each)
+  |     '     0  uint16   offset of sample data
+  |     '     2  uint8    priority
+  |     '     3  uint8    "rate" (always 8)
+  |     '     4  char[12] name, NUL padded
+  |     '   Sample data
+  |     '     uint16 per sample: PIT channel 2 divisor, 0 = silence,
+  |     '     $FFFF = end of sound. Played back at 140 samples per second.
+  |     '-------------------------------------------------------------------------
+  | 
+  |     FUNCTION PCSPK_U16& (s AS STRING, p AS LONG)
+  |         IF p < 1 OR p + 1 > LEN(s) THEN EXIT FUNCTION
+  |         PCSPK_U16 = ASC(s, p) + ASC(s, p + 1) * 256&
+  |     END FUNCTION
+  | 
+  | 
+  |     FUNCTION PCSPK_U32& (s AS STRING, p AS LONG)
+  |         IF p < 1 OR p + 3 > LEN(s) THEN EXIT FUNCTION
+  |         PCSPK_U32 = CVL(MID$(s, p, 4))
+  |     END FUNCTION
+  | 
+  | 
+  |     FUNCTION PCSPK_ReadFile$ (fileName AS STRING)
+  |         DIM ff AS LONG, d AS STRING
+  |         IF NOT _FILEEXISTS(fileName) THEN EXIT FUNCTION
+  |         ff = FREEFILE
+  |         OPEN fileName FOR BINARY ACCESS READ AS #ff
+  |         d = SPACE$(LOF(ff))
+  |         IF LEN(d) THEN GET #ff, 1, d
+  |         CLOSE #ff
+  |         PCSPK_ReadFile = d
+  |     END FUNCTION
+  | 
+  | 
+  |     ''
+  |     ' Load an IFS sound bank. Returns TRUE on success.
+  |     '
+  |     FUNCTION PCSPK_IFSLoad%% (fileName AS STRING)
+  |         DIM d AS STRING, n AS LONG, i AS LONG, p AS LONG, q AS LONG
+  |         DIM nm AS STRING, z AS LONG, cnt AS LONG
+  | 
+  |         pcspk_ifs_count = 0
+  |         d = PCSPK_ReadFile(fileName)
+  |         IF LEN(d) < 16 THEN EXIT FUNCTION
+  |         IF LEFT$(d, 4) <> "SND" + CHR$(0) THEN EXIT FUNCTION
+  | 
+  |         pcspk_ifs_data = d
+  |         pcspk_ifs_filesize = PCSPK_U16(d, 5)
+  |         n = PCSPK_U16(d, 7)
+  |         pcspk_ifs_word8 = PCSPK_U16(d, 9)
+  |         IF 16 + n * 16 > LEN(d) THEN n = (LEN(d) - 16) \ 16
+  |         IF n < 1 THEN EXIT FUNCTION
+  | 
+  |         REDIM pcspk_ifs(0 TO n - 1) AS PCSPK_IFS_ENTRY
+  |         FOR i = 0 TO n - 1
+  |             p = 17 + i * 16
+  |             pcspk_ifs(i).offset = PCSPK_U16(d, p)
+  |             pcspk_ifs(i).priority = ASC(d, p + 2)
+  |             pcspk_ifs(i).rate = ASC(d, p + 3)
+  |             nm = MID$(d, p + 4, 12)
+  |             z = INSTR(nm, CHR$(0))
+  |             IF z THEN nm = LEFT$(nm, z - 1)
+  | ...[truncated]
+2026-09-30T19:35:11-0400  INFO     bash_start    grep -n "IFS\|Duke\|Keen" PCSPKR.BM | head -30; grep -rn "IFSOffset\|pcspk_ifs\b\|\.offset" *.BAS | head; ls "/home/grymmjack/Dropbox/DOOM Maps/gzdoom/" | grep -i -E "free|copying|license"; strings -…
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ grep -n "IFS\|Duke\|Keen" PCSPKR.BM | head -30; grep -rn "IFSOffset\|pcspk_ifs\b\|\.offset" *.BAS | head; ls "/home/grymmjack/Dropbox/DOOM Maps/gzdoom/" | grep -i -E "free|copying|license"; strings -n 6 "/home/grymmjack/Dropbox/DOOM Maps/gzdoom/freedoom2.wad" | grep -i -m3 "freedoom.*0\.[0-9]"
+2026-09-30T19:35:12-0400  INFO     bash_end      [ok] 32L stdout
+  | 539:    ' Inverse Frequency Sound (IFS) banks: Duke Nukem 1 (*.DN1-3) and
+  | 540:    ' Commander Keen 1-3 (SOUNDS.CK1-3)
+  | 583:    ' Load an IFS sound bank. Returns TRUE on success.
+  | 585:    FUNCTION PCSPK_IFSLoad%% (fileName AS STRING)
+  | 601:        REDIM pcspk_ifs(0 TO n - 1) AS PCSPK_IFS_ENTRY
+  | 623:        PCSPK_IFSLoad = -1
+  | 627:    FUNCTION PCSPK_IFSCount&
+  | 628:        PCSPK_IFSCount = pcspk_ifs_count
+  | 632:    FUNCTION PCSPK_IFSName$ (index AS LONG)
+  | 634:        PCSPK_IFSName = RTRIM$(pcspk_ifs(index).nam)
+  | 638:    FUNCTION PCSPK_IFSSamples& (index AS LONG)
+  | 640:        PCSPK_IFSSamples = pcspk_ifs(index).samples
+  | 644:    FUNCTION PCSPK_IFSOffset& (index AS LONG)
+  | 646:        PCSPK_IFSOffset = pcspk_ifs(index).offset
+  | 650:    FUNCTION PCSPK_IFSPriority% (index AS LONG)
+  | 652:        PCSPK_IFSPriority = pcspk_ifs(index).priority
+  | 656:    FUNCTION PCSPK_IFSRate% (index AS LONG)
+  | 658:        PCSPK_IFSRate = pcspk_ifs(index).rate
+  | 665:    FUNCTION PCSPK_IFSValue& (index AS LONG, n AS LONG)
+  | 668:        PCSPK_IFSValue = PCSPK_U16(pcspk_ifs_data, pcspk_ifs(index).offset + 1 + n * 2)
+  | 673:    ' Play an IFS sound through the emulated speaker into the current sink,
+  | 677:    SUB PCSPK_IFSRenderInto (index AS LONG, hz AS DOUBLE)
+  | 680:        IF hz <= 0 THEN clk = PCSPK_PIT_HZ / PCSPK_IFS_DEFAULT_HZ ELSE clk = PCSPK_PIT_HZ / hz
+  | 683:            v = PCSPK_IFSValue(index, n)
+  | 696:    ' Render an IFS sound to a new QB64PE sound handle (0 on failure).
+  | 698:    FUNCTION PCSPK_IFSRender& (index AS LONG, hz AS DOUBLE)
+  | 701:        PCSPK_IFSRenderInto index, hz
+  | 702:        PCSPK_IFSRender = PCSPK_CaptureEnd
+  | BEEP4.BAS:43:    PRINT USING "Playing sound ## from offset \  \  "; i; LCASE$(RIGHT$("000" + HEX$(PCSPK_IFSOffset(i)), 4));
+  | DN1PLAY.BAS:395:    _PRINTSTRING (PANEL_X, 80), "Offset      : $" + RIGHT$("000" + HEX$(PCSPK_IFSOffset(sel)), 4)
+  | freedoom1.wad
+  | freedoom2.wad
+2026-09-30T19:35:19-0400  INFO     bash_start    python3 - <<'EOF' | p='PCSPKR.BI'; s=open(p).read() | s=s.replace("""' *.DN3) and Commander Keen 1-3 (SOUNDS.CK?) sound banks | ""","""' *.DN3) and Commander Keen 1-3 (SOUNDS.CK?) sound banks | ' - D…
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ python3 - <<'EOF'
+  $ p='PCSPKR.BI'; s=open(p).read()
+  $ s=s.replace("""'     *.DN3) and Commander Keen 1-3 (SOUNDS.CK?) sound banks
+  $ ""","""'     *.DN3) and Commander Keen 1-3 (SOUNDS.CK?) sound banks
+  $ '   - DOOM engine PC speaker sounds (DP* lumps) straight out of a .WAD
+  $ '     (Doom, Doom II, Final Doom, Chex Quest, Freedoom, Strife) or a lone
+  $ '     .LMP - loaded into the same IFS bank, so the same calls play them
+  $ """)
+  $ s=s.replace("""    CONST PCSPK_IFS_DEFAULT_HZ = 140
+  $ ""","""    CONST PCSPK_IFS_DEFAULT_HZ = 140
+  $ 
+  $     ' What kind of file the IFS bank came from (PCSPK_IFSKind)
+  $     CONST PCSPK_KIND_NONE = 0
+  $     CONST PCSPK_KIND_IFS = 1 ' Duke Nukem 1 / Commander Keen "SND" bank
+  $     CONST PCSPK_KIND_WAD = 2 ' DOOM engine IWAD/PWAD, DP* lumps
+  $     CONST PCSPK_KIND_LMP = 3 ' a single DOOM PC speaker lump
+  $ """)
+  $ s=s.replace("""        offset AS LONG ' byte offset of sample data in file
+  $ ""","""        offset AS LONG ' byte offset of the sound in the file (WAD: lump position)
+  $         dataPos AS LONG ' 0-based position of its divisors in pcspk_ifs_data
+  $ """)
+  $ s=s.replace("""    DIM SHARED pcspk_ifs_word8 AS LONG ' header word at offset 8 (unknown)
+  $ ""","""    DIM SHARED pcspk_ifs_word8 AS LONG ' header word at offset 8 (unknown)
+  $     DIM SHARED pcspk_ifs_kind AS INTEGER ' PCSPK_KIND_*
+  $     DIM SHARED pcspk_doom_div(0 TO 255) AS LONG ' DOOM tone -> PIT divisor
+  $ """)
+  $ open(p,'w').write(s)
+  $ EOF
+  $ grep -n "KIND\|dataPos\|doom" PCSPKR.BI
+2026-09-30T19:35:19-0400  INFO     bash_end      [ok] 8L stdout
+  | 19:'     (Doom, Doom II, Final Doom, Chex Quest, Freedoom, Strife) or a lone
+  | 42:    CONST PCSPK_KIND_NONE = 0
+  | 43:    CONST PCSPK_KIND_IFS = 1 ' Duke Nukem 1 / Commander Keen "SND" bank
+  | 44:    CONST PCSPK_KIND_WAD = 2 ' DOOM engine IWAD/PWAD, DP* lumps
+  | 45:    CONST PCSPK_KIND_LMP = 3 ' a single DOOM PC speaker lump
+  | 95:        dataPos AS LONG ' 0-based position of its divisors in pcspk_ifs_data
+  | 112:    DIM SHARED pcspk_ifs_kind AS INTEGER ' PCSPK_KIND_*
+  | 113:    DIM SHARED pcspk_doom_div(0 TO 255) AS LONG ' DOOM tone -> PIT divisor
+2026-09-30T19:36:17-0400  INFO     bash_start    python3 - <<'EOF' | p='PCSPKR.BM'; s=open(p).read() | old_start=s.index(" ''\n ' Load an IFS sound bank. Returns TRUE on success.") | old_end=s.index(" FUNCTION PCSPK_IFSCount&") | new=''' '' | ' Loa…
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ python3 - <<'EOF'
+  $ p='PCSPKR.BM'; s=open(p).read()
+  $ old_start=s.index("    ''\n    ' Load an IFS sound bank. Returns TRUE on success.")
+  $ old_end=s.index("    FUNCTION PCSPK_IFSCount&")
+  $ new='''    ''
+  $     ' Load a PC speaker sound bank. Returns TRUE on success. Understands:
+  $     '   - Duke Nukem 1 / Commander Keen IFS banks ("SND",0 header)
+  $     '   - DOOM engine WADs (IWAD / PWAD): every DP* lump becomes one sound
+  $     '   - a single DOOM PC speaker lump on its own (e.g. DPPISTOL.LMP)
+  $     ' Whatever the source, the sounds end up as PIT divisors at 140 Hz, so
+  $     ' all the PCSPK_IFS* calls below work the same for every kind.
+  $     '
+  $     FUNCTION PCSPK_IFSLoad%% (fileName AS STRING)
+  $         DIM ff AS LONG, magic AS STRING * 4
+  $ 
+  $         pcspk_ifs_count = 0
+  $         pcspk_ifs_kind = PCSPK_KIND_NONE
+  $         IF NOT _FILEEXISTS(fileName) THEN EXIT FUNCTION
+  $         ff = FREEFILE
+  $         OPEN fileName FOR BINARY ACCESS READ AS #ff
+  $         IF LOF(ff) >= 4 THEN GET #ff, 1, magic
+  $         CLOSE #ff
+  $ 
+  $         IF magic = "SND" + CHR$(0) THEN
+  $             PCSPK_IFSLoad = PCSPK_IFSLoadSND(fileName)
+  $         ELSEIF magic = "IWAD" OR magic = "PWAD" THEN
+  $             PCSPK_IFSLoad = PCSPK_DoomLoadWAD(fileName)
+  $         ELSE
+  $             PCSPK_IFSLoad = PCSPK_DoomLoadLMP(fileName)
+  $         END IF
+  $     END FUNCTION
+  $ 
+  $ 
+  $     ''
+  $     ' Load a Duke Nukem 1 / Commander Keen IFS bank.
+  $     '
+  $     FUNCTION PCSPK_IFSLoadSND%% (fileName AS STRING)
+  $         DIM d AS STRING, n AS LONG, i AS LONG, p AS LONG, q AS LONG
+  $         DIM nm AS STRING, z AS LONG, cnt AS LONG
+  $ 
+  $         d = PCSPK_ReadFile(fileName)
+  $         IF LEN(d) < 16 THEN EXIT FUNCTION
+  $         IF LEFT$(d, 4) <> "SND" + CHR$(0) THEN EXIT FUNCTION
+  $ 
+  $         pcspk_ifs_data = d
+  $         pcspk_ifs_filesize = PCSPK_U16(d, 5)
+  $         n = PCSPK_U16(d, 7)
+  $         pcspk_ifs_word8 = PCSPK_U16(d, 9)
+  $         IF 16 + n * 16 > LEN(d) THEN n = (LEN(d) - 16) \\ 16
+  $         IF n < 1 THEN EXIT FUNCTION
+  $ 
+  $         REDIM pcspk_ifs(0 TO n - 1) AS PCSPK_IFS_ENTRY
+  $         FOR i = 0 TO n - 1
+  $             p = 17 + i * 16
+  $             pcspk_ifs(i).offset = PCSPK_U16(d, p)
+  $             pcspk_ifs(i).dataPos = pcspk_ifs(i).offset
+  $             pcspk_ifs(i).priority = ASC(d, p + 2)
+  $             pcspk_ifs(i).rate = ASC(d, p + 3)
+  $             nm = MID$(d, p + 4, 12)
+  $             z = INSTR(nm, CHR$(0))
+  $             IF z THEN nm = LEFT$(nm, z - 1)
+  $             pcspk_ifs(i).nam = nm
+  $ 
+  $             ' count samples up to the $FFFF terminator
+  $             cnt = 0
+  $             q = pcspk_ifs(i).offset + 1
+  $             DO WHILE q + 1 <= LEN(d)
+  $                 IF PCSPK_U16(d, q) = &HFFFF& THEN EXIT DO
+  $                 cnt = cnt + 1
+  $                 q = q + 2
+  $             LOOP
+  $             pcspk_ifs(i).samples = cnt
+  $         NEXT
+  $         pcspk_ifs_count = n
+  $         pcspk_ifs_kind = PCSPK_KIND_IFS
+  $         PCSPK_IFSLoadSND = -1
+  $     END FUNCTION
+  $ 
+  $ 
+  $     '-------------------------------------------------------------------------
+  $ ...[truncated]
+2026-09-30T19:36:17-0400  INFO     bash_end      [ok] 1L stdout
+  | 896:        PCSPK_IFSValue = PCSPK_U16(pcspk_ifs_data, pcspk_ifs(index).dataPos + 1 + n * 2)
+2026-09-30T19:36:17-0400  NOTICE   prompt        <ide_opened_file>The user opened the file /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER/PCSPKR.BM in the IDE. This may or may not be related to the current task.</ide_opened_file>
+  > <ide_opened_file>The user opened the file /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER/PCSPKR.BM in the IDE. This may or may not be related to the current task.</ide_opened_file>
+  > i have doom installed somewhere do you know where it is? i can get it for ya
+2026-09-30T19:36:32-0400  INFO     bash_start    python3 - <<'EOF' | p='DN1PLAY.BAS'; s=open(p).read() | def r(a,b,c=1): | global s | assert s.count(a)==c,(a,s.count(a)); s=s.replace(a,b) | r("""' DN1PLAY.BAS - Duke Nukem 1 (and Commander Keen 1-3)…
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ python3 - <<'EOF'
+  $ p='DN1PLAY.BAS'; s=open(p).read()
+  $ def r(a,b,c=1):
+  $     global s
+  $     assert s.count(a)==c,(a,s.count(a)); s=s.replace(a,b)
+  $ r("""' DN1PLAY.BAS - Duke Nukem 1 (and Commander Keen 1-3) PC speaker sound player
+  $ '
+  $ ' Native QB64PE - no C, no DECLARE LIBRARY. Loads an Inverse Frequency Sound
+  $ ' bank (DUKE1*.DN1/.DN2/.DN3, SOUNDS.CK1/2/3), runs every sound through the""",
+  $ """' DN1PLAY.BAS - Duke Nukem 1, Commander Keen 1-3 and DOOM engine PC speaker
+  $ '               sound player
+  $ '
+  $ ' Native QB64PE - no C, no DECLARE LIBRARY. Loads an Inverse Frequency Sound
+  $ ' bank (DUKE1*.DN1/.DN2/.DN3, SOUNDS.CK1/2/3), or the DP* PC speaker lumps
+  $ ' from a DOOM engine .WAD (Doom, Doom II, Final Doom, Chex Quest, Freedoom,
+  $ ' Strife) or a single .LMP, runs every sound through the""")
+  $ r("""'   Tab                           next sound bank in the same folder""","""'   Tab                           next sound bank / WAD in the same folder""")
+  $ r("""        set_status "Not an IFS sound bank: " + fileName""","""        set_status "No PC speaker sounds in: " + fileName""")
+  $ r("""' Cycle to the next *.DN? / *.CK? file in the bank's folder.""","""' Cycle to the next *.DN? / *.CK? / *.WAD / *.LMP file in the bank's folder.""")
+  $ r("""        IF LEFT$(e, 3) = ".DN" OR LEFT$(e, 3) = ".CK" THEN""","""        IF LEFT$(e, 3) = ".DN" OR LEFT$(e, 3) = ".CK" OR e = ".WAD" OR e = ".LMP" THEN""")
+  $ r("""        s = s + RIGHT$(SPACE$(5) + STR$(PCSPK_IFSPriority(n)), 5)""","""        IF PCSPK_IFSKind = PCSPK_KIND_IFS THEN s = s + RIGHT$(SPACE$(5) + STR$(PCSPK_IFSPriority(n)), 5) ELSE s = s + "    -" """)
+  $ r("""    _PRINTSTRING (PANEL_X, 80), "Offset      : $" + RIGHT$("000" + HEX$(PCSPK_IFSOffset(sel)), 4)
+  $     _PRINTSTRING (PANEL_X, 96), "Priority    :" + STR$(PCSPK_IFSPriority(sel))""",
+  $ """    _PRINTSTRING (PANEL_X, 80), "Offset      : $" + RIGHT$("000" + HEX$(PCSPK_IFSOffset(sel)), 4)
+  $     IF PCSPK_IFSKind = PCSPK_KIND_IFS THEN
+  $         _PRINTSTRING (PANEL_X, 96), "Priority    :" + STR$(PCSPK_IFSPriority(sel))
+  $     ELSE
+  $         _PRINTSTRING (PANEL_X, 96), "Format      : DOOM PC speaker lump (tone table)"
+  $     END IF""")
+  $ r("""    _PRINTSTRING (PANEL_X, SCR_H - 40), "Drop a .DN1/.DN2/.DN3/.CK1/.CK2/.CK3 file on the window to load it\"""",
+  $ """    _PRINTSTRING (PANEL_X, SCR_H - 40), "Drop a .DN?/.CK? bank, a DOOM .WAD or a .LMP on the window\"""")
+  $ open(p,'w').write(s)
+  $ EOF
+  $ grep -n 's + "    -"' DN1PLAY.BAS
+2026-09-30T19:36:32-0400  INFO     bash_end      [ok] 1L stdout
+  | 367:        IF PCSPK_IFSKind = PCSPK_KIND_IFS THEN s = s + RIGHT$(SPACE$(5) + STR$(PCSPK_IFSPriority(n)), 5) ELSE s = s + "    -"
+2026-09-30T19:36:42-0400  INFO     bash_start    sed -i 's/ELSE s = s + " -" $/ELSE s = s + " -"/' DN1PLAY.BAS && python3 - <<'EOF' | p='DN1PLAY.BAS'; s=open(p).read() | a=''' outName = "EXPORT/" + safe_name(base_name(bankFile)) + "_" + RIGHT$("0" …
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ sed -i 's/ELSE s = s + "    -" $/ELSE s = s + "    -"/' DN1PLAY.BAS && python3 - <<'EOF'
+  $ p='DN1PLAY.BAS'; s=open(p).read()
+  $ a='''    outName = "EXPORT/" + safe_name(base_name(bankFile)) + "_" + RIGHT$("0" + LTRIM$(STR$(index)), 2) + "_" + safe_name(PCSPK_IFSName(index)) + ".wav"'''
+  $ assert a in s
+  $ s=s.replace(a,'''    IF sndCount > 100 THEN digits = 3 ELSE digits = 2
+  $     outName = "EXPORT/" + safe_name(base_name(bankFile)) + "_" + RIGHT$("00" + LTRIM$(STR$(index)), digits) + "_" + safe_name(PCSPK_IFSName(index)) + ".wav"''')
+  $ s=s.replace('''SUB export_sound (index AS LONG, announce AS INTEGER)
+  $     DIM h AS LONG, outName AS STRING''','''SUB export_sound (index AS LONG, announce AS INTEGER)
+  $     DIM h AS LONG, outName AS STRING, digits AS LONG''')
+  $ s=s.replace('''s = RIGHT$(" " + LTRIM$(STR$(n)), 2) + "  " + LEFT$(PCSPK_IFSName(n) + SPACE$(12), 12)''','''s = RIGHT$("  " + LTRIM$(STR$(n)), 3) + " " + LEFT$(PCSPK_IFSName(n) + SPACE$(12), 12)''')
+  $ open(p,'w').write(s)
+  $ EOF
+  $ grep -n "digits\|RIGHT\$(\"  \"" DN1PLAY.BAS
+2026-09-30T19:36:42-0400  INFO     bash_end      [ok] 3L stdout
+  | 307:    DIM h AS LONG, outName AS STRING, digits AS LONG
+  | 310:    IF sndCount > 100 THEN digits = 3 ELSE digits = 2
+  | 311:    outName = "EXPORT/" + safe_name(base_name(bankFile)) + "_" + RIGHT$("00" + LTRIM$(STR$(index)), digits) + "_" + safe_name(PCSPK_IFSName(index)) + ".wav"
+2026-09-30T19:36:49-0400  INFO     bash_start    which qb64pe; ls ~/git/qb64pe/qb64pe 2>/dev/null; python3 - <<'EOF' | import struct | src='/home/grymmjack/Dropbox/DOOM Maps/gzdoom/freedoom2.wad' | d=open(src,'rb').read() | n,o=struct.unpack('<ii',…
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ which qb64pe; ls ~/git/qb64pe/qb64pe 2>/dev/null; python3 - <<'EOF'
+  $ import struct
+  $ src='/home/grymmjack/Dropbox/DOOM Maps/gzdoom/freedoom2.wad'
+  $ d=open(src,'rb').read()
+  $ n,o=struct.unpack('<ii',d[4:12])
+  $ lumps=[]
+  $ for i in range(n):
+  $     fp,sz,nm=struct.unpack('<ii8s',d[o+i*16:o+i*16+16])
+  $     if nm.upper().startswith(b'DP'): lumps.append((nm,d[fp:fp+sz]))
+  $ # PWAD: header, data, directory
+  $ body=b''; dirs=b''; pos=12
+  $ for nm,b in lumps:
+  $     dirs+=struct.pack('<ii8s',pos,len(b),nm); body+=b; pos+=len(b)
+  $ out=b'PWAD'+struct.pack('<ii',len(lumps),12+len(body))+body+dirs
+  $ open('ASSETS/freedoom-dp.wad','wb').write(out)
+  $ print(len(lumps),len(out))
+  $ # also test LMP
+  $ open('/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/DPPISTOL.LMP','wb').write(dict(lumps)[b'DPPISTOL'])
+  $ EOF
+2026-09-30T19:36:49-0400  INFO     bash_end      [ok] 3L stdout
+  | qb64pe: aliased to /home/grymmjack/git/QB64pe/qb64pe
+  | /home/grymmjack/git/qb64pe/qb64pe
+  | 107 9784
+2026-09-30T19:36:59-0400  INFO     bash_start    SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad; D=/home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER | cat > $SP/doomtest.bas <<EOF | \$CONSOLE:ONLY | OPTION…
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad; D=/home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ cat > $SP/doomtest.bas <<EOF
+  $ \$CONSOLE:ONLY
+  $ OPTION _EXPLICIT
+  $ '\$INCLUDE:'$D/PCSPKR.BI'
+  $ DIM f(1 TO 7) AS STRING, i AS LONG, j AS LONG, n AS LONG, sum AS _INTEGER64
+  $ f(1) = "$D/ASSETS/freedoom-dp.wad"
+  $ f(2) = "$HOME/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/common/Ultimate Doom/base/DOOM.WAD"
+  $ f(3) = "$HOME/Dropbox/DOOM Maps/gzdoom/strife1.wad"
+  $ f(4) = "$SP/DPPISTOL.LMP"
+  $ f(5) = "$D/ASSETS/duke1-b.dn1"
+  $ f(6) = "$HOME/Dropbox/DOOM Maps/gzdoom/HERETIC.WAD"
+  $ f(7) = "$HOME/Dropbox/DOOM Maps/gzdoom/CHEX2.WAD"
+  $ FOR i = 1 TO 7
+  $     IF PCSPK_IFSLoad(f(i)) THEN
+  $         sum = 0
+  $         FOR j = 0 TO PCSPK_IFSCount - 1
+  $             FOR n = 0 TO PCSPK_IFSSamples(j) - 1: sum = sum + PCSPK_IFSValue(j, n) * (n + 1): NEXT
+  $         NEXT
+  $         PRINT i; PCSPK_IFSKind; PCSPK_IFSCount; PCSPK_IFSName(0); PCSPK_IFSSamples(0); PCSPK_IFSValue(0, 0); sum
+  $     ELSE
+  $         PRINT i; "load failed"
+  $     END IF
+  $ NEXT
+  $ IF PCSPK_IFSLoad(f(2)) THEN
+  $     FOR j = 0 TO PCSPK_IFSCount - 1
+  $         IF PCSPK_IFSName(j) = "DPPISTOL" THEN n = PCSPK_IFSRender(j, 140): PCSPK_SaveWAV "$SP/dppistol.wav": PRINT "saved"; n
+  $     NEXT
+  $ END IF
+  $ SYSTEM
+  $ '\$INCLUDE:'$D/PCSPKR.BM'
+  $ EOF
+  $ cd $SP && /home/grymmjack/git/qb64pe/qb64pe -x doomtest.bas -o doomtest 2>&1 | tail -5 && ./doomtest
+2026-09-30T19:37:01-0400  WARNING  bash_end      [stderr] 13L stdout / 2L stderr
+  | [..................................................] 100%[A
+  | [..................................................] 100%
+  | 
+  | Compiling C++ code into executable...
+  | Output: /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/doomtest
+  |  1  2  107 DPPISTOL 14  2960  985096071 
+  |  2  2  67 DPPISTOL 27  3043  466579308 
+  |  3  2  21 DPMTALHT 15  4697  83700058 
+  |  4  3  1 DPPISTOL 14  2960  378964 
+  |  5  1  24 HIGHSCORE 210  0  968916650 
+  |  6 load failed
+  |  7  2  67 DPPISTOL 27  3043  466579308 
+  | saved 1
+  ! 
+  ! Shell cwd was reset to /home/grymmjack/git/qb64
+2026-09-30T19:37:10-0400  INFO     bash_start    python3 - <<'EOF' | import struct | DIV=[0,6818,6628,6449,6279,6087,5906,5736,5575,5423,5279,5120,4971,4830,4697,4554,4435,4307,4186,4058,3950,3836,3728,3615,3519,3418,3323,3224,3131,3043,2960,2875,2…
+  > cwd: /home/grymmjack/git/qb64
+  $ python3 - <<'EOF'
+  $ import struct
+  $ DIV=[0,6818,6628,6449,6279,6087,5906,5736,5575,5423,5279,5120,4971,4830,4697,4554,4435,4307,4186,4058,3950,3836,3728,3615,3519,3418,3323,3224,3131,3043,2960,2875,2794,2711,2633,2560,2485,2415,2348,2281,2213,2153,2089,2032,1975,1918,1864,1810,1757,1709,1659,1612,1565,1521,1478,1435,1395,1355,1316,1280,1242,1207,1173,1140,1107,1075,1045,1015,986,959,931,905,879,854,829,806,783,760,739,718,697,677,658,640,621,604,586,570,553,538,522,507,493,479,465,452,439,427,415,403,391,380,369,359,348,339,329,319,310,302,293,285,276,269,261,253,246,239,232,226,219,213,207,201,195,190,184,179]
+  $ print(len(DIV))
+  $ import os
+  $ H=os.path.expanduser('~')
+  $ for p in [H+'/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/common/Ultimate Doom/base/DOOM.WAD',H+'/Dropbox/DOOM Maps/gzdoom/CHEX2.WAD','/home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER/ASSETS/freedoom-dp.wad']:
+  $     d=open(p,'rb').read(); n,o=struct.unpack('<ii',d[4:12]); snd={}; order=[]; allc=0
+  $     for i in range(n):
+  $         fp,sz,nm=struct.unpack('<ii8s',d[o+i*16:o+i*16+16]); nm=nm.split(b'\0')[0].upper()
+  $         if nm.startswith(b'DP') and sz>=4 and d[fp]==0 and d[fp+1]==0:
+  $             allc+=1
+  $             if nm not in snd: order.append(nm)
+  $             snd[nm]=d[fp:fp+sz]
+  $     s=0
+  $     for nm in order:
+  $         b=snd[nm]; c=struct.unpack('<H',b[2:4])[0]
+  $         for k in range(c):
+  $             t=b[4+k]; s+=(DIV[t] if t<128 else 0)*(k+1)
+  $     print(allc,len(order),s)
+  $ EOF
+2026-09-30T19:37:10-0400  INFO     bash_end      [ok] 4L stdout
+  | 128
+  | 122 67 466579308
+  | 244 67 466579308
+  | 107 107 985096071
+2026-09-30T19:37:10-0400  NOTICE   prompt        <ide_opened_file>The user opened the file /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER/DN1PLAY.BAS in the IDE. This may or may not be related to the current task.</ide_opened_file>
+  > <ide_opened_file>The user opened the file /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER/DN1PLAY.BAS in the IDE. This may or may not be related to the current task.</ide_opened_file>
+  > what about heretic, hexen, etc too :) duke 3d - do those have pc speaker?
+2026-09-30T19:37:23-0400  INFO     bash_start    cd /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER && SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad; /home/grymmjack/git/qb64pe/qb64pe -x DN1PLAY.BAS -o …
+  > cwd: /home/grymmjack/git/qb64
+  $ cd /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER && SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad; /home/grymmjack/git/qb64pe/qb64pe -x DN1PLAY.BAS -o $SP/DN1PLAY 2>&1 | tail -2; for f in BEEP4 BEEP3 WAV PWM; do /home/grymmjack/git/qb64pe/qb64pe -x $f.BAS -o $SP/$f 2>&1 | tail -1; done; git status --short; cat ../../../.gitignore 2>/dev/null | head; git check-ignore -v ASSETS/freedoom-dp.wad
+2026-09-30T19:37:28-0400  INFO     bash_end      [ok] 22L stdout
+  | Compiling C++ code into executable...
+  | Output: /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/DN1PLAY
+  | Output: /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/BEEP4
+  | Output: /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/BEEP3
+  | Output: /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/WAV
+  | Output: /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/PWM
+  |  M ../../../.claude/activity.log
+  |  M DN1PLAY.BAS
+  |  M PCSPKR.BI
+  |  M PCSPKR.BM
+  | ?? ASSETS/freedoom-dp.wad
+  | # extensionless files
+  | # Ignore all
+  | *
+  | 
+  | # Unignore all with extensions
+  | !*.*
+  | 
+  | # Unignore all dirs
+  | !*/
+  | 
+  | .gitignore:6:!*.*	ASSETS/freedoom-dp.wad
+2026-09-30T19:37:32-0400  INFO     bash_start    which xdotool import gnome-screenshot scrot xwd convert 2>/dev/null; echo $DISPLAY $XDG_SESSION_TYPE
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ which xdotool import gnome-screenshot scrot xwd convert 2>/dev/null; echo $DISPLAY $XDG_SESSION_TYPE
+2026-09-30T19:37:32-0400  INFO     bash_end      [ok] 7L stdout
+  | /usr/bin/xdotool
+  | /home/linuxbrew/.linuxbrew/bin/import
+  | gnome-screenshot not found
+  | /usr/bin/scrot
+  | /usr/bin/xwd
+  | /home/linuxbrew/.linuxbrew/bin/convert
+  | :1 wayland
+2026-09-30T19:37:37-0400  INFO     bash_start    SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad; cp $SP/DN1PLAY $SP/dn1 ; ( $SP/DN1PLAY "$HOME/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamap…
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad; cp $SP/DN1PLAY $SP/dn1 ; ( $SP/DN1PLAY "$HOME/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/common/Ultimate Doom/base/DOOM.WAD" & echo $! > $SP/pid ); for i in $(seq 1 30); do W=$(xdotool search --name "DN1PLAY" 2>/dev/null | head -1); [ -n "$W" ] && break; sleep 0.3; done; echo win=$W; sleep 1.5; xdotool key --window $W Down Down Down Down Down Down Down Down Down Down Down Down Down Down Down Down Down Down Down Down Down Down Down; sleep 0.5; import -window $W $SP/shot.png; kill $(cat $SP/pid); ls -la $SP/shot.png
+2026-09-30T19:37:44-0400  INFO     bash_start    SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad; cd $SP; ( ./DN1PLAY "$HOME/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/common/Ultimate …
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad; cd $SP; ( ./DN1PLAY "$HOME/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/common/Ultimate Doom/base/DOOM.WAD" & echo $! > pid ); for i in $(seq 1 30); do W=$(xdotool search --name "DN1PLAY" 2>/dev/null | head -1); [ -n "$W" ] && break; sleep 0.3; done; sleep 1.5; for i in $(seq 1 21); do xdotool key --window $W Down; done; xdotool key --window $W Return; sleep 0.25; xwd -silent -id $W -out shot.xwd; kill $(cat pid); /usr/bin/convert shot.xwd shot.png 2>/dev/null || convert shot.xwd shot.png; ls -la shot.png
+2026-09-30T19:37:46-0400  WARNING  bash_end      [stderr] 1L stdout / 2L stderr
+  | .rw-rw-r-- 12k grymmjack 30 Sep 19:37 shot.png
+  ! 
+  ! Shell cwd was reset to /home/grymmjack/git/qb64
+2026-09-30T19:37:55-0400  INFO     bash_start    SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad; cd $SP; ( ./DN1PLAY "$HOME/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/common/Ultimate …
+  > cwd: /home/grymmjack/git/qb64
+  $ SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad; cd $SP; ( ./DN1PLAY "$HOME/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/common/Ultimate Doom/base/DOOM.WAD" & echo $! > pid ); for i in $(seq 1 30); do W=$(xdotool search --name "DN1PLAY" 2>/dev/null | head -1); [ -n "$W" ] && break; sleep 0.3; done; sleep 1.5; for i in 1 2 3; do xdotool key --window $W Down; sleep 0.1; done; xdotool key --window $W Return; sleep 0.55; xwd -silent -id $W -out shot.xwd; kill $(cat pid); convert shot.xwd /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER/SCREENSHOTS/4-doom-sawup.png
+2026-09-30T19:38:00-0400  INFO     bash_start    SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad; /usr/bin/convert $SP/shot.xwd /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER/SCREENSHOTS/4-doom-sawup.png…
+  > cwd: /home/grymmjack/git/qb64
+  $ SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad; /usr/bin/convert $SP/shot.xwd /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER/SCREENSHOTS/4-doom-sawup.png && echo ok
+2026-09-30T19:38:00-0400  INFO     bash_end      [ok] 1L stdout
+  | ok
+2026-09-30T19:38:12-0400  INFO     bash_start    cd /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER && python3 - <<'EOF' | p='DN1PLAY.BAS'; s=open(p).read() | a='''"Offset : $" + RIGHT$("000" + HEX$(PCSPK_IFSOffset(sel)), 4)''' | assert a in s | s=s…
+  > cwd: /home/grymmjack/git/qb64
+  $ cd /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER && python3 - <<'EOF'
+  $ p='DN1PLAY.BAS'; s=open(p).read()
+  $ a='''"Offset      : $" + RIGHT$("000" + HEX$(PCSPK_IFSOffset(sel)), 4)'''
+  $ assert a in s
+  $ s=s.replace(a,'''"Offset      : $" + hex4(PCSPK_IFSOffset(sel))''')
+  $ s=s.replace('''FUNCTION base_name$ (path AS STRING)''','''FUNCTION hex4$ (v AS LONG)
+  $     hex4 = HEX$(v)
+  $     IF LEN(HEX$(v)) < 4 THEN hex4 = RIGHT$("000" + HEX$(v), 4)
+  $ END FUNCTION
+  $ 
+  $ 
+  $ FUNCTION base_name$ (path AS STRING)''')
+  $ open(p,'w').write(s)
+  $ EOF
+  $ SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad; /home/grymmjack/git/qb64pe/qb64pe -x DN1PLAY.BAS -o $SP/DN1PLAY 2>&1 | tail -1; cd $SP; ( ./DN1PLAY "$HOME/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/common/Ultimate Doom/base/DOOM.WAD" & echo $! > pid ); for i in $(seq 1 30); do W=$(xdotool search --name "DN1PLAY" 2>/dev/null | head -1); [ -n "$W" ] && break; sleep 0.3; done; sleep 1.5; for i in 1 2 3; do xdotool key --window $W Down; sleep 0.1; done; xdotool key --window $W Return; sleep 0.55; xwd -silent -id $W -out shot.xwd; kill $(cat pid); /usr/bin/convert shot.xwd /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER/SCREENSHOTS/4-doom-sawup.png && echo ok
+2026-09-30T19:38:16-0400  WARNING  bash_end      [stderr] 2L stdout / 2L stderr
+  | Output: /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/DN1PLAY
+  | ok
+  ! 
+  ! Shell cwd was reset to /home/grymmjack/git/qb64
+2026-09-30T19:38:23-0400  INFO     bash_start    SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad; cd $SP; ( ./DN1PLAY "$HOME/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/common/Ultimate …
+  > cwd: /home/grymmjack/git/qb64
+  $ SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad; cd $SP; ( ./DN1PLAY "$HOME/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/common/Ultimate Doom/base/DOOM.WAD" & echo $! > pid ); for i in $(seq 1 30); do W=$(xdotool search --name "DN1PLAY" 2>/dev/null | head -1); [ -n "$W" ] && break; sleep 0.3; done; sleep 2.5; xdotool windowactivate $W 2>/dev/null; for i in 1 2 3; do xdotool key --delay 80 --window $W Down; sleep 0.3; done; xdotool key --window $W Return; sleep 0.55; xwd -silent -id $W -out shot.xwd; kill $(cat pid); /usr/bin/convert shot.xwd /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER/SCREENSHOTS/4-doom-sawup.png && echo ok
+2026-09-30T19:38:28-0400  WARNING  bash_end      [stderr] 1L stdout / 2L stderr
+  | ok
+  ! 
+  ! Shell cwd was reset to /home/grymmjack/git/qb64
+2026-09-30T19:38:57-0400  INFO     bash_start    cd /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER && cat > ASSETS/FREEDOOM-LICENSE.txt <<'EOF' | freedoom-dp.wad holds the 107 PC speaker sound lumps (DP*) copied unchanged | from Freedoom: Phase 2 (…
+  > cwd: /home/grymmjack/git/qb64
+  $ cd /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER && cat > ASSETS/FREEDOOM-LICENSE.txt <<'EOF'
+  $ freedoom-dp.wad holds the 107 PC speaker sound lumps (DP*) copied unchanged
+  $ from Freedoom: Phase 2 (freedoom2.wad). https://freedoom.github.io/
+  $ 
+  $ Copyright (c) 2001-2024
+  $ Contributors to the Freedoom project.  All rights reserved.
+  $ 
+  $ Redistribution and use in source and binary forms, with or without
+  $ modification, are permitted provided that the following conditions are met:
+  $ 
+  $     * Redistributions of source code must retain the above copyright
+  $       notice, this list of conditions and the following disclaimer.
+  $     * Redistributions in binary form must reproduce the above copyright
+  $       notice, this list of conditions and the following disclaimer in the
+  $       documentation and/or other materials provided with the distribution.
+  $     * Neither the name of the Freedoom project nor the names of its
+  $       contributors may be used to endorse or promote products derived from
+  $       this software without specific prior written permission.
+  $ 
+  $ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  $ AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  $ IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  $ ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+  $ LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+  $ CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+  $ SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+  $ INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+  $ CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+  $ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+  $ POSSIBILITY OF SUCH DAMAGE.
+  $ EOF
+  $ python3 - <<'EOF'
+  $ p='README.md'; s=open(p).read()
+  $ def r(a,b):
+  $     global s
+  $     assert s.count(a)==1,a; s=s.replace(a,b)
+  $ r("""**Duke Nukem 1** (`.DN1`) and **Commander Keen** (`.CK1`) sound effects, in
+  $ QB64-PE on a modern computer.""","""**Duke Nukem 1** (`.DN1`) and **Commander Keen** (`.CK1`) sound effects, and
+  $ the PC speaker sounds of **DOOM** and every other DOOM engine game that has
+  $ them, in QB64-PE on a modern computer.""")
+  $ r("""5. Press **Tab** to switch to the Commander Keen sounds.
+  $ ""","""5. Press **Tab** to switch to the Commander Keen sounds, then again for the
+  $    Freedoom sounds.
+  $ 6. Drop your own `DOOM.WAD` or `DOOM2.WAD` on the window to hear the real ones.
+  $ """)
+  $ r("""| Tab | load the next sound bank in the folder |""","""| Tab | load the next sound bank or WAD in the folder |""")
+  $ r("""You can also drag any `.DN1`/`.DN2`/`.DN3`/`.CK1`/`.CK2`/`.CK3` file onto the
+  $ window, or pass one on the command line: `DN1PLAY path/to/file.dn1`.""","""You can also drag any `.DN1`/`.DN2`/`.DN3`/`.CK1`/`.CK2`/`.CK3` file, DOOM
+  $ engine `.WAD` or `DP*.lmp` lump onto the window, or pass one on the command
+  $ line: `DN1PLAY path/to/file.dn1` or `DN1PLAY ~/games/doom/DOOM2.WAD`.""")
+  $ r("""![DN1PLAY playing the Commander Keen LVLDONESND sound](SCREENSHOTS/3-keen-lvldone.png)
+  $ ""","""![DN1PLAY playing the Commander Keen LVLDONESND sound](SCREENSHOTS/3-keen-lvldone.png)
+  $ 
+  $ **DOOM: `DPSAWUP` playing** (`DOOM.WAD`, 67 sounds: the chainsaw revving up)
+  $ 
+  $ ![DN1PLAY playing the DOOM DPSAWUP sound](SCREENSHOTS/4-doom-sawup.png)
+  $ """)
+  $ r("""| `ASSETS/` | `duke1-b.dn1` (Duke), `SOUNDS.CK1` (Keen), and three test `.wav` files | original repo |""","""| `ASSETS/` | `duke1-b.dn1` (Duke), `SOUNDS.CK1` (Keen), and three test `.wav` files | original repo |
+  $ | `ASSETS/freedoom-dp.wad` | The 107 PC speaker sounds from Freedoom: Phase 2, so there are DOOM engine sounds to play without an id Software WAD. BSD licensed, see `FREEDOOM-LICENSE.txt`. | [Freedoom](https://freedoom.github.io/) |""")
+  $ r("""* **Duke/Keen banks:** `PCSPK_IFSLoad`, `PCSPK_IFSCount`, `PCSPK_IFSName`,
+  $   `PCSPK_IFSSamples`, `PCSPK_IFSValue`, `PCSPK_IFSOffset`, `PCSPK_IFSPriority`,
+  $   `PCSPK_IFSRender&(index, hz)`""","""* **Duke/Keen banks and DOOM WADs:** `PCSPK_IFSLoad`, `PCSPK_IFSCount`,
+  $   `PCSPK_IFSName`, `PCSPK_IFSSamples`, `PCSPK_IFSValue`, `PCSPK_IFSOffset`,
+  $   `PCSPK_IFSPriority`, `PCSPK_IFSKind` (`PCSPK_KIND_IFS`, `_WAD` or `_LMP`),
+  $   `PCSPK_IFSRender&(index, hz)`. `PCSPK_IFSLoad` works out the file type by
+  $   itself. `PCSPK_DoomDivisor&(tone)` turns a DOOM tone number into a divisor.""")
+  $ r("""## Notes and gotchas
+  $ ""","""## File format: DOOM engine PC speaker lumps
+  $ 
+  $ DOOM keeps two versions of every sound effect in the WAD: `DSPISTOL` is the
+  $ sound card sample and `DPPISTOL` is the PC speaker version. A WAD is a list of
+  $ named lumps:
+  $ 
+  $ ```
+  $ WAD header (12 bytes)
+  $   0   "IWAD" or "PWAD"
+  $   4   int32          number of lumps
+  $   8   int32          where the lump directory starts
+  $ Directory (16 bytes per lump)
+  $   0   int32          where the lump starts
+  $ ...[truncated]
+2026-09-30T19:38:57-0400  INFO     bash_end      [ok] 6L stdout
+  |  .claude/activity.log              | 1010 +++++++++++++++++++++++++++++++++++++
+  |  qb64/SOUND/PC-SPEAKER/DN1PLAY.BAS |   40 +-
+  |  qb64/SOUND/PC-SPEAKER/PCSPKR.BI   |   14 +-
+  |  qb64/SOUND/PC-SPEAKER/PCSPKR.BM   |  236 ++++++++-
+  |  qb64/SOUND/PC-SPEAKER/README.md   |   70 ++-
+  |  5 files changed, 1343 insertions(+), 27 deletions(-)
+2026-09-30T19:39:02-0400  INFO     bash_start    python3 - <<'EOF' | p='README.md'; s=open(p).read() | a="""5. Press **Tab** to switch to the Commander Keen sounds, then again for the | Freedoom sounds.""" | assert a in s | s=s.replace(a,"""5. Pres…
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ python3 - <<'EOF'
+  $ p='README.md'; s=open(p).read()
+  $ a="""5. Press **Tab** to switch to the Commander Keen sounds, then again for the
+  $    Freedoom sounds."""
+  $ assert a in s
+  $ s=s.replace(a,"""5. Press **Tab** to switch to the Freedoom sounds, then again for the
+  $    Commander Keen sounds.""")
+  $ a="(`SOUNDS.CK1`, 63 sounds; press Tab to switch to it)"
+  $ assert a in s
+  $ s=s.replace(a,"(`SOUNDS.CK1`, 63 sounds; press Tab twice to get to it)")
+  $ open(p,'w').write(s)
+  $ EOF
+  $ grep -n "Tab" README.md | head
+2026-09-30T19:39:03-0400  INFO     bash_end      [ok] 3L stdout
+  | 31:5. Press **Tab** to switch to the Freedoom sounds, then again for the
+  | 46:| Tab | load the next sound bank or WAD in the folder |
+  | 69:**Commander Keen 1: `LVLDONESND` playing** (`SOUNDS.CK1`, 63 sounds; press Tab twice to get to it)
+2026-09-30T19:41:36-0400  NOTICE   prompt        <ide_opened_file>The user opened the file /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER/BEEP4.BAS in the IDE. This may or may not be related to the current task.</ide_opened_file>
+  > <ide_opened_file>The user opened the file /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER/BEEP4.BAS in the IDE. This may or may not be related to the current task.</ide_opened_file>
+  > can you go through my /media/grymmjack/10_TB1/Emulation/eXoDOS/eXoDOS/Games/ and create a list of any games that have PC Speaker sounds extensively that we can extract? - yeah i have wolf3d and keen in this folder... find the obvious candidates to add them :)
+2026-09-30T19:41:39-0400  INFO     bash_start    G=/media/grymmjack/10_TB1/Emulation/eXoDOS/eXoDOS/Games; ls "$G" | head -20; ls "$G" | wc -l; ls "$G" | sed 's/.*\.//' | sort | uniq -c | sort -rn | head
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ G=/media/grymmjack/10_TB1/Emulation/eXoDOS/eXoDOS/Games; ls "$G" | head -20; ls "$G" | wc -l; ls "$G" | sed 's/.*\.//' | sort | uniq -c | sort -rn | head
+2026-09-30T19:41:39-0400  INFO     bash_end      [ok] 24L stdout
+  | !dos
+  | '$100,000 Pyramid (1988).zip'
+  | "'Nam 1965-1975 (1991).zip"
+  | '+K (1996).zip'
+  | '007 - Licence to Kill (1989).zip'
+  | '1st Person Pinball (1989).zip'
+  | '1 Ton (1996).zip'
+  | '2 Fast 4 You (1995).zip'
+  | '2x2 (1995).zip'
+  | '3-D Body Adventure (1994).zip'
+  | '3-Demon (1983).zip'
+  | '3-D TableSports (1996).zip'
+  | '3-D Tic-Tac-Toe (1992).zip'
+  | '3-K Trivia (1984).zip'
+  | '3 Card High Low Poker (1986).zip'
+  | '3D Ball (1987).zip'
+  | '3D Ball Blaster (1992).zip'
+  | '3D Baller (1996).zip'
+  | '3D Bomber (1998).zip'
+  | '3DCube (1994).zip'
+  | 7001
+  |    6414 zip'
+  |     586 zip"
+  |       1 !dos
+2026-09-30T19:41:59-0400  INFO     bash_start    SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad; G=/media/grymmjack/10_TB1/Emulation/eXoDOS/eXoDOS/Games; ls "$G/!dos" | head; ls "$G/!dos" | wc -l | cat …
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad; G=/media/grymmjack/10_TB1/Emulation/eXoDOS/eXoDOS/Games; ls "$G/!dos" | head; ls "$G/!dos" | wc -l
+  $ cat > $SP/index.py <<'EOF'
+  $ import zipfile, os, sys, json
+  $ from concurrent.futures import ThreadPoolExecutor
+  $ G='/media/grymmjack/10_TB1/Emulation/eXoDOS/eXoDOS/Games'
+  $ def one(z):
+  $     try:
+  $         with zipfile.ZipFile(os.path.join(G,z)) as f:
+  $             return z,[(i.filename,i.file_size) for i in f.infolist()]
+  $     except Exception as e: return z,str(e)
+  $ zs=[z for z in os.listdir(G) if z.lower().endswith('.zip')]
+  $ with ThreadPoolExecutor(16) as ex: res=dict(ex.map(one,zs))
+  $ json.dump(res,open(sys.argv[1],'w'))
+  $ print(len(res), sum(1 for v in res.values() if isinstance(v,str)))
+  $ EOF
+  $ time python3 $SP/index.py $SP/exo_index.json
+2026-09-30T19:42:59-0400  INFO     bash_end      [ok] 13L stdout
+  | Absolute
+  | Abuse
+  | AbyssofP
+  | AbZero
+  | ACarrera
+  | accordi
+  | AccrUSA
+  | ACE2
+  | Ace94
+  | ACEAirCo
+  | 6894
+  | 7000 0
+  | python3 $SP/index.py $SP/exo_index.json  3.77s user 0.57s system 7% cpu 59.135 total
+2026-09-30T19:43:02-0400  INFO     bash_start    G=/media/grymmjack/10_TB1/Emulation/eXoDOS/eXoDOS/Games; ls -la "$G/!dos/Abuse" | head; du -sh "$G/!dos" 2>/dev/null | tail -1
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ G=/media/grymmjack/10_TB1/Emulation/eXoDOS/eXoDOS/Games; ls -la "$G/!dos/Abuse" | head; du -sh "$G/!dos" 2>/dev/null | tail -1

@@ -1,8 +1,11 @@
 ''
-' DN1PLAY.BAS - Duke Nukem 1 (and Commander Keen 1-3) PC speaker sound player
+' DN1PLAY.BAS - Duke Nukem 1, Commander Keen 1-3 and DOOM engine PC speaker
+'               sound player
 '
 ' Native QB64PE - no C, no DECLARE LIBRARY. Loads an Inverse Frequency Sound
-' bank (DUKE1*.DN1/.DN2/.DN3, SOUNDS.CK1/2/3), runs every sound through the
+' bank (DUKE1*.DN1/.DN2/.DN3, SOUNDS.CK1/2/3), or the DP* PC speaker lumps
+' from a DOOM engine .WAD (Doom, Doom II, Final Doom, Chex Quest, Freedoom,
+' Strife) or a single .LMP, runs every sound through the
 ' emulated PC speaker (PIT channel 2 square wave, 140 samples/sec - the way
 ' the games' own sound service did it) and plays it with QB64PE's audio.
 '
@@ -17,7 +20,7 @@
 '   + / -                         playback rate +/- 5 Hz     R  reset (140 Hz)
 '   L                             speaker low-pass on/off
 '   W / E                         export selected / all to EXPORT/*.wav
-'   Tab                           next sound bank in the same folder
+'   Tab                           next sound bank / WAD in the same folder
 '   Esc                           quit
 '
 OPTION _EXPLICIT
@@ -173,7 +176,7 @@ SUB load_bank (fileName AS STRING)
     stop_all
     playAll = 0
     IF NOT PCSPK_IFSLoad(fileName) THEN
-        set_status "Not an IFS sound bank: " + fileName
+        set_status "No PC speaker sounds in: " + fileName
         EXIT SUB
     END IF
     close_sounds
@@ -221,7 +224,7 @@ END SUB
 
 
 ''
-' Cycle to the next *.DN? / *.CK? file in the bank's folder.
+' Cycle to the next *.DN? / *.CK? / *.WAD / *.LMP file in the bank's folder.
 '
 SUB next_bank
     DIM f AS STRING, e AS STRING, n AS LONG, i AS LONG, j AS LONG, cur AS LONG, t AS STRING
@@ -230,7 +233,7 @@ SUB next_bank
     IF LEN(bankDir) THEN f = _FILES$(bankDir + "*") ELSE f = _FILES$("*")
     DO WHILE LEN(f)
         e = UCASE$(RIGHT$(f, 4))
-        IF LEFT$(e, 3) = ".DN" OR LEFT$(e, 3) = ".CK" THEN
+        IF LEFT$(e, 3) = ".DN" OR LEFT$(e, 3) = ".CK" OR e = ".WAD" OR e = ".LMP" THEN
             IF n > UBOUND(bankNames) THEN REDIM _PRESERVE bankNames(0 TO n * 2) AS STRING
             bankNames(n) = f
             n = n + 1
@@ -301,10 +304,11 @@ END SUB
 '-----------------------------------------------------------------------------
 
 SUB export_sound (index AS LONG, announce AS INTEGER)
-    DIM h AS LONG, outName AS STRING
+    DIM h AS LONG, outName AS STRING, digits AS LONG
     IF index < 0 OR index >= sndCount THEN EXIT SUB
     IF NOT _DIREXISTS("EXPORT") THEN MKDIR "EXPORT"
-    outName = "EXPORT/" + safe_name(base_name(bankFile)) + "_" + RIGHT$("0" + LTRIM$(STR$(index)), 2) + "_" + safe_name(PCSPK_IFSName(index)) + ".wav"
+    IF sndCount > 100 THEN digits = 3 ELSE digits = 2
+    outName = "EXPORT/" + safe_name(base_name(bankFile)) + "_" + RIGHT$("00" + LTRIM$(STR$(index)), digits) + "_" + safe_name(PCSPK_IFSName(index)) + ".wav"
     h = PCSPK_IFSRender(index, rateHz)
     PCSPK_SaveWAV outName
     IF h > 0 THEN _SNDCLOSE h
@@ -358,10 +362,10 @@ SUB draw_ui
         ELSE
             COLOR _RGB32(190, 200, 215)
         END IF
-        s = RIGHT$(" " + LTRIM$(STR$(n)), 2) + "  " + LEFT$(PCSPK_IFSName(n) + SPACE$(12), 12)
+        s = RIGHT$("  " + LTRIM$(STR$(n)), 3) + " " + LEFT$(PCSPK_IFSName(n) + SPACE$(12), 12)
         s = s + RIGHT$(SPACE$(10) + STR$(PCSPK_IFSSamples(n)), 10)
         s = s + RIGHT$(SPACE$(7) + fmt2(PCSPK_IFSSamples(n) / rateHz), 7)
-        s = s + RIGHT$(SPACE$(5) + STR$(PCSPK_IFSPriority(n)), 5)
+        IF PCSPK_IFSKind = PCSPK_KIND_IFS THEN s = s + RIGHT$(SPACE$(5) + STR$(PCSPK_IFSPriority(n)), 5) ELSE s = s + "    -"
         IF n = playingIdx THEN s = s + " " + CHR$(16)
         _PRINTSTRING (LIST_X, y), s
     NEXT
@@ -392,8 +396,12 @@ SUB draw_ui
     _PRINTSTRING (PANEL_X, 40), PCSPK_IFSName(sel)
     COLOR _RGB32(190, 200, 215)
     _PRINTSTRING (PANEL_X, 64), "Sound       :" + STR$(sel) + " of" + STR$(sndCount)
-    _PRINTSTRING (PANEL_X, 80), "Offset      : $" + RIGHT$("000" + HEX$(PCSPK_IFSOffset(sel)), 4)
-    _PRINTSTRING (PANEL_X, 96), "Priority    :" + STR$(PCSPK_IFSPriority(sel))
+    _PRINTSTRING (PANEL_X, 80), "Offset      : $" + hex4(PCSPK_IFSOffset(sel))
+    IF PCSPK_IFSKind = PCSPK_KIND_IFS THEN
+        _PRINTSTRING (PANEL_X, 96), "Priority    :" + STR$(PCSPK_IFSPriority(sel))
+    ELSE
+        _PRINTSTRING (PANEL_X, 96), "Format      : DOOM PC speaker lump (tone table)"
+    END IF
     _PRINTSTRING (PANEL_X, 112), "Samples     :" + STR$(samples) + "  (" + fmt2(secs) + " sec @" + STR$(rateHz) + " Hz)"
     IF hi > 0 THEN
         _PRINTSTRING (PANEL_X, 128), "Freq range  :" + STR$(CLNG(lo)) + " -" + STR$(CLNG(hi)) + " Hz"
@@ -464,7 +472,7 @@ SUB draw_ui
     COLOR _RGB32(120, 140, 170)
     _PRINTSTRING (PANEL_X, SCR_H - 72), "Enter/Space/click play   A play all   S stop   Tab next bank"
     _PRINTSTRING (PANEL_X, SCR_H - 56), "+/- rate   R reset rate   L low-pass   W/E export wav   Esc quit"
-    _PRINTSTRING (PANEL_X, SCR_H - 40), "Drop a .DN1/.DN2/.DN3/.CK1/.CK2/.CK3 file on the window to load it"
+    _PRINTSTRING (PANEL_X, SCR_H - 40), "Drop a .DN?/.CK? bank, a DOOM .WAD or a .LMP on the window"
     IF playAll THEN
         COLOR _RGB32(255, 200, 60)
         _PRINTSTRING (PANEL_X, 192), "[ PLAY ALL ]"
@@ -502,6 +510,12 @@ FUNCTION fmt2$ (x AS DOUBLE)
     DIM cents AS LONG
     cents = INT(x * 100 + 0.5)
     fmt2 = LTRIM$(STR$(cents \ 100)) + "." + RIGHT$("0" + LTRIM$(STR$(cents MOD 100)), 2)
+END FUNCTION
+
+
+FUNCTION hex4$ (v AS LONG)
+    hex4 = HEX$(v)
+    IF LEN(HEX$(v)) < 4 THEN hex4 = RIGHT$("000" + HEX$(v), 4)
 END FUNCTION
 
 

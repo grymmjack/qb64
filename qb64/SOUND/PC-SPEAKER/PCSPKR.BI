@@ -15,6 +15,9 @@
 ' Extras:
 '   - Inverse Frequency Sound (IFS) loader for Duke Nukem 1 (*.DN1, *.DN2,
 '     *.DN3) and Commander Keen 1-3 (SOUNDS.CK?) sound banks
+'   - DOOM engine PC speaker sounds (DP* lumps) straight out of a .WAD
+'     (Doom, Doom II, Final Doom, Chex Quest, Freedoom, Strife) or a lone
+'     .LMP - loaded into the same IFS bank, so the same calls play them
 '   - 8-bit mono PCM WAV loader (for the PWM playback demo)
 '   - Offline render to a QB64PE sound handle (_SNDNEW) and to .WAV files
 '
@@ -34,6 +37,12 @@ $IF PCSPKR_BI = UNDEFINED THEN
     CONST PCSPK_BIOS_TICK_HZ = 18.20650656285#
     ' Commander Keen / Duke Nukem 1 PC speaker effects are driven at 140 Hz
     CONST PCSPK_IFS_DEFAULT_HZ = 140
+
+    ' What kind of file the IFS bank came from (PCSPK_IFSKind)
+    CONST PCSPK_KIND_NONE = 0
+    CONST PCSPK_KIND_IFS = 1 ' Duke Nukem 1 / Commander Keen "SND" bank
+    CONST PCSPK_KIND_WAD = 2 ' DOOM engine IWAD/PWAD, DP* lumps
+    CONST PCSPK_KIND_LMP = 3 ' a single DOOM PC speaker lump
 
     ' PIT counter modes we emulate on channel 2
     CONST PCSPK_MODE_ONESHOT = 0 ' mode 0: interrupt on terminal count
@@ -82,7 +91,8 @@ $IF PCSPKR_BI = UNDEFINED THEN
 
     ' IFS (Inverse Frequency Sound) sound bank entry
     TYPE PCSPK_IFS_ENTRY
-        offset AS LONG ' byte offset of sample data in file
+        offset AS LONG ' byte offset of the sound in the file (WAD: lump position)
+        dataPos AS LONG ' 0-based position of its divisors in pcspk_ifs_data
         priority AS INTEGER
         rate AS INTEGER ' 4th byte in the entry (always 8 in known files)
         nam AS STRING * 12
@@ -99,6 +109,8 @@ $IF PCSPKR_BI = UNDEFINED THEN
     DIM SHARED pcspk_ifs_count AS LONG
     DIM SHARED pcspk_ifs_filesize AS LONG
     DIM SHARED pcspk_ifs_word8 AS LONG ' header word at offset 8 (unknown)
+    DIM SHARED pcspk_ifs_kind AS INTEGER ' PCSPK_KIND_*
+    DIM SHARED pcspk_doom_div(0 TO 255) AS LONG ' DOOM tone -> PIT divisor
     REDIM SHARED pcspk_ifs(0 TO 0) AS PCSPK_IFS_ENTRY
 
     ' 8-bit mono PCM WAV
