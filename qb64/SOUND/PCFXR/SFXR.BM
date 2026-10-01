@@ -1,0 +1,1290 @@
+''
+' SFXR.BM - sfxr sound effect synth for QB64-PE, with PC speaker output
+'
+' See SFXR.BI. The synth, presets and parameter units are ported from jsfxr's
+' sfxr.js (public domain) and keep its quirks so sounds match sfxr.me.
+'
+$IF SFXR_BM = UNDEFINED THEN
+    $LET SFXR_BM = TRUE
+
+    '-------------------------------------------------------------------------
+    ' Setup and parameters
+    '-------------------------------------------------------------------------
+
+    SUB SFXR_Init
+        DIM i AS LONG
+        IF sfxr_inited THEN EXIT SUB
+        sfxr_inited = -1
+        RANDOMIZE TIMER
+
+        SFXR_DefParam SP_ATTACK, "p_env_attack", "Attack time", 0
+        SFXR_DefParam SP_SUSTAIN, "p_env_sustain", "Sustain time", 0
+        SFXR_DefParam SP_PUNCH, "p_env_punch", "Sustain punch", 0
+        SFXR_DefParam SP_DECAY, "p_env_decay", "Decay time", 0
+        SFXR_DefParam SP_BASE_FREQ, "p_base_freq", "Start frequency", 0
+        SFXR_DefParam SP_FREQ_LIMIT, "p_freq_limit", "Min freq. cutoff", 0
+        SFXR_DefParam SP_FREQ_RAMP, "p_freq_ramp", "Slide", -1
+        SFXR_DefParam SP_FREQ_DRAMP, "p_freq_dramp", "Delta slide", -1
+        SFXR_DefParam SP_VIB_STRENGTH, "p_vib_strength", "Depth", 0
+        SFXR_DefParam SP_VIB_SPEED, "p_vib_speed", "Speed", 0
+        SFXR_DefParam SP_ARP_MOD, "p_arp_mod", "Frequency mult", -1
+        SFXR_DefParam SP_ARP_SPEED, "p_arp_speed", "Change speed", 0
+        SFXR_DefParam SP_DUTY, "p_duty", "Duty cycle", 0
+        SFXR_DefParam SP_DUTY_RAMP, "p_duty_ramp", "Sweep", -1
+        SFXR_DefParam SP_REPEAT_SPEED, "p_repeat_speed", "Rate", 0
+        SFXR_DefParam SP_PHA_OFFSET, "p_pha_offset", "Offset", -1
+        SFXR_DefParam SP_PHA_RAMP, "p_pha_ramp", "Sweep", -1
+        SFXR_DefParam SP_LPF_FREQ, "p_lpf_freq", "Cutoff frequency", 0
+        SFXR_DefParam SP_LPF_RAMP, "p_lpf_ramp", "Cutoff sweep", -1
+        SFXR_DefParam SP_LPF_RESONANCE, "p_lpf_resonance", "Resonance", 0
+        SFXR_DefParam SP_HPF_FREQ, "p_hpf_freq", "Cutoff frequency", 0
+        SFXR_DefParam SP_HPF_RAMP, "p_hpf_ramp", "Cutoff sweep", -1
+        sfxr_key(0) = "wave_type"
+        sfxr_label(0) = "Wave"
+
+        sfxr_mode = SFXR_MODE_BEEPER
+        sfxr_tickHz = PCSPK_IFS_DEFAULT_HZ
+        sfxr_gate = 0.1
+        sfxr_pwmHz = 16000
+        sfxr_vol = 0.25
+        SFXR_Reset
+    END SUB
+
+
+    SUB SFXR_DefParam (i AS LONG, pkey AS STRING, plabel AS STRING, psigned AS INTEGER)
+        sfxr_key(i) = pkey
+        sfxr_label(i) = plabel
+        sfxr_signed(i) = psigned
+    END SUB
+
+
+    ''
+    ' jsfxr's Params() defaults. sound_vol and the PC speaker settings are
+    ' left alone.
+    '
+    SUB SFXR_Reset
+        DIM i AS LONG
+        SFXR_Init
+        FOR i = 0 TO SFXR_NPARAMS
+            sfxr_p(i) = 0
+        NEXT
+        sfxr_p(0) = SFXR_SQUARE
+        sfxr_p(SP_SUSTAIN) = 0.3
+        sfxr_p(SP_DECAY) = 0.4
+        sfxr_p(SP_BASE_FREQ) = 0.3
+        sfxr_p(SP_LPF_FREQ) = 1
+    END SUB
+
+
+    FUNCTION SFXR_Default# (i AS LONG)
+        SELECT CASE i
+            CASE SP_SUSTAIN: SFXR_Default = 0.3
+            CASE SP_DECAY: SFXR_Default = 0.4
+            CASE SP_BASE_FREQ: SFXR_Default = 0.3
+            CASE SP_LPF_FREQ: SFXR_Default = 1
+        END SELECT
+    END FUNCTION
+
+
+    ''
+    ' Keep every parameter in its slider range (sfxr's sliders do the same).
+    '
+    SUB SFXR_Clamp
+        DIM i AS LONG, lo AS DOUBLE
+        FOR i = 1 TO SFXR_NPARAMS
+            IF sfxr_p(i) <> sfxr_p(i) THEN sfxr_p(i) = 0 ' NaN
+            IF sfxr_signed(i) THEN lo = -1 ELSE lo = 0
+            IF sfxr_p(i) < lo THEN sfxr_p(i) = lo
+            IF sfxr_p(i) > 1 THEN sfxr_p(i) = 1
+        NEXT
+        sfxr_p(0) = INT(sfxr_p(0))
+        IF sfxr_p(0) < 0 OR sfxr_p(0) > 3 THEN sfxr_p(0) = SFXR_SQUARE
+        IF sfxr_vol < 0 THEN sfxr_vol = 0
+        IF sfxr_vol > 1 THEN sfxr_vol = 1
+    END SUB
+
+
+    FUNCTION SFXR_Frnd# (range AS DOUBLE)
+        SFXR_Frnd = RND * range
+    END FUNCTION
+
+
+    FUNCTION SFXR_Rndr# (lo AS DOUBLE, hi AS DOUBLE)
+        SFXR_Rndr = RND * (hi - lo) + lo
+    END FUNCTION
+
+
+    FUNCTION SFXR_Rnd& (max AS LONG)
+        SFXR_Rnd = INT(RND * (max + 1))
+    END FUNCTION
+
+
+    FUNCTION SFXR_Cube# (x AS DOUBLE)
+        SFXR_Cube = x * x * x
+    END FUNCTION
+
+
+    '-------------------------------------------------------------------------
+    ' Presets (jsfxr Params.prototype.*)
+    '-------------------------------------------------------------------------
+
+    ''
+    ' Roll a new sound. kind$ is one of: pickupCoin, laserShoot, explosion,
+    ' powerUp, hitHurt, jump, click, blipSelect, synth, tone, random.
+    '
+    SUB SFXR_Preset (kind AS STRING)
+        SFXR_Reset
+        SFXR_PresetInto kind
+        SFXR_Clamp
+    END SUB
+
+
+    SUB SFXR_PresetInto (kind AS STRING)
+        DIM r AS LONG
+        SELECT CASE LCASE$(kind)
+            CASE "pickupcoin"
+                sfxr_p(0) = SFXR_SAWTOOTH
+                sfxr_p(SP_BASE_FREQ) = 0.4 + SFXR_Frnd(0.5)
+                sfxr_p(SP_ATTACK) = 0
+                sfxr_p(SP_SUSTAIN) = SFXR_Frnd(0.1)
+                sfxr_p(SP_DECAY) = 0.1 + SFXR_Frnd(0.4)
+                sfxr_p(SP_PUNCH) = 0.3 + SFXR_Frnd(0.3)
+                IF SFXR_Rnd(1) THEN
+                    sfxr_p(SP_ARP_SPEED) = 0.5 + SFXR_Frnd(0.2)
+                    sfxr_p(SP_ARP_MOD) = 0.2 + SFXR_Frnd(0.4)
+                END IF
+
+            CASE "lasershoot"
+                sfxr_p(0) = SFXR_Rnd(2)
+                IF sfxr_p(0) = SFXR_SINE AND SFXR_Rnd(1) THEN sfxr_p(0) = SFXR_Rnd(1)
+                IF SFXR_Rnd(2) = 0 THEN
+                    sfxr_p(SP_BASE_FREQ) = 0.3 + SFXR_Frnd(0.6)
+                    sfxr_p(SP_FREQ_LIMIT) = SFXR_Frnd(0.1)
+                    sfxr_p(SP_FREQ_RAMP) = -0.35 - SFXR_Frnd(0.3)
+                ELSE
+                    sfxr_p(SP_BASE_FREQ) = 0.5 + SFXR_Frnd(0.5)
+                    sfxr_p(SP_FREQ_LIMIT) = sfxr_p(SP_BASE_FREQ) - 0.2 - SFXR_Frnd(0.6)
+                    IF sfxr_p(SP_FREQ_LIMIT) < 0.2 THEN sfxr_p(SP_FREQ_LIMIT) = 0.2
+                    sfxr_p(SP_FREQ_RAMP) = -0.15 - SFXR_Frnd(0.2)
+                END IF
+                IF sfxr_p(0) = SFXR_SAWTOOTH THEN sfxr_p(SP_DUTY) = 1
+                IF SFXR_Rnd(1) THEN
+                    sfxr_p(SP_DUTY) = SFXR_Frnd(0.5)
+                    sfxr_p(SP_DUTY_RAMP) = SFXR_Frnd(0.2)
+                ELSE
+                    sfxr_p(SP_DUTY) = 0.4 + SFXR_Frnd(0.5)
+                    sfxr_p(SP_DUTY_RAMP) = -SFXR_Frnd(0.7)
+                END IF
+                sfxr_p(SP_ATTACK) = 0
+                sfxr_p(SP_SUSTAIN) = 0.1 + SFXR_Frnd(0.2)
+                sfxr_p(SP_DECAY) = SFXR_Frnd(0.4)
+                IF SFXR_Rnd(1) THEN sfxr_p(SP_PUNCH) = SFXR_Frnd(0.3)
+                IF SFXR_Rnd(2) = 0 THEN
+                    sfxr_p(SP_PHA_OFFSET) = SFXR_Frnd(0.2)
+                    sfxr_p(SP_PHA_RAMP) = -SFXR_Frnd(0.2)
+                END IF
+                sfxr_p(SP_HPF_FREQ) = SFXR_Frnd(0.3)
+
+            CASE "explosion"
+                sfxr_p(0) = SFXR_NOISE
+                IF SFXR_Rnd(1) THEN
+                    sfxr_p(SP_BASE_FREQ) = (0.1 + SFXR_Frnd(0.4)) ^ 2
+                    sfxr_p(SP_FREQ_RAMP) = -0.1 + SFXR_Frnd(0.4)
+                ELSE
+                    sfxr_p(SP_BASE_FREQ) = (0.2 + SFXR_Frnd(0.7)) ^ 2
+                    sfxr_p(SP_FREQ_RAMP) = -0.2 - SFXR_Frnd(0.2)
+                END IF
+                IF SFXR_Rnd(4) = 0 THEN sfxr_p(SP_FREQ_RAMP) = 0
+                IF SFXR_Rnd(2) = 0 THEN sfxr_p(SP_REPEAT_SPEED) = 0.3 + SFXR_Frnd(0.5)
+                sfxr_p(SP_ATTACK) = 0
+                sfxr_p(SP_SUSTAIN) = 0.1 + SFXR_Frnd(0.3)
+                sfxr_p(SP_DECAY) = SFXR_Frnd(0.5)
+                IF SFXR_Rnd(1) THEN
+                    sfxr_p(SP_PHA_OFFSET) = -0.3 + SFXR_Frnd(0.9)
+                    sfxr_p(SP_PHA_RAMP) = -SFXR_Frnd(0.3)
+                END IF
+                sfxr_p(SP_PUNCH) = 0.2 + SFXR_Frnd(0.6)
+                IF SFXR_Rnd(1) THEN
+                    sfxr_p(SP_VIB_STRENGTH) = SFXR_Frnd(0.7)
+                    sfxr_p(SP_VIB_SPEED) = SFXR_Frnd(0.6)
+                END IF
+                IF SFXR_Rnd(2) = 0 THEN
+                    sfxr_p(SP_ARP_SPEED) = 0.6 + SFXR_Frnd(0.3)
+                    sfxr_p(SP_ARP_MOD) = 0.8 - SFXR_Frnd(1.6)
+                END IF
+
+            CASE "powerup"
+                IF SFXR_Rnd(1) THEN
+                    sfxr_p(0) = SFXR_SAWTOOTH
+                    sfxr_p(SP_DUTY) = 1
+                ELSE
+                    sfxr_p(SP_DUTY) = SFXR_Frnd(0.6)
+                END IF
+                sfxr_p(SP_BASE_FREQ) = 0.2 + SFXR_Frnd(0.3)
+                IF SFXR_Rnd(1) THEN
+                    sfxr_p(SP_FREQ_RAMP) = 0.1 + SFXR_Frnd(0.4)
+                    sfxr_p(SP_REPEAT_SPEED) = 0.4 + SFXR_Frnd(0.4)
+                ELSE
+                    sfxr_p(SP_FREQ_RAMP) = 0.05 + SFXR_Frnd(0.2)
+                    IF SFXR_Rnd(1) THEN
+                        sfxr_p(SP_VIB_STRENGTH) = SFXR_Frnd(0.7)
+                        sfxr_p(SP_VIB_SPEED) = SFXR_Frnd(0.6)
+                    END IF
+                END IF
+                sfxr_p(SP_ATTACK) = 0
+                sfxr_p(SP_SUSTAIN) = SFXR_Frnd(0.4)
+                sfxr_p(SP_DECAY) = 0.1 + SFXR_Frnd(0.4)
+
+            CASE "hithurt"
+                sfxr_p(0) = SFXR_Rnd(2)
+                IF sfxr_p(0) = SFXR_SINE THEN sfxr_p(0) = SFXR_NOISE
+                IF sfxr_p(0) = SFXR_SQUARE THEN sfxr_p(SP_DUTY) = SFXR_Frnd(0.6)
+                IF sfxr_p(0) = SFXR_SAWTOOTH THEN sfxr_p(SP_DUTY) = 1
+                sfxr_p(SP_BASE_FREQ) = 0.2 + SFXR_Frnd(0.6)
+                sfxr_p(SP_FREQ_RAMP) = -0.3 - SFXR_Frnd(0.4)
+                sfxr_p(SP_ATTACK) = 0
+                sfxr_p(SP_SUSTAIN) = SFXR_Frnd(0.1)
+                sfxr_p(SP_DECAY) = 0.1 + SFXR_Frnd(0.2)
+                IF SFXR_Rnd(1) THEN sfxr_p(SP_HPF_FREQ) = SFXR_Frnd(0.3)
+
+            CASE "jump"
+                sfxr_p(0) = SFXR_SQUARE
+                sfxr_p(SP_DUTY) = SFXR_Frnd(0.6)
+                sfxr_p(SP_BASE_FREQ) = 0.3 + SFXR_Frnd(0.3)
+                sfxr_p(SP_FREQ_RAMP) = 0.1 + SFXR_Frnd(0.2)
+                sfxr_p(SP_ATTACK) = 0
+                sfxr_p(SP_SUSTAIN) = 0.1 + SFXR_Frnd(0.3)
+                sfxr_p(SP_DECAY) = 0.1 + SFXR_Frnd(0.2)
+                IF SFXR_Rnd(1) THEN sfxr_p(SP_HPF_FREQ) = SFXR_Frnd(0.3)
+                IF SFXR_Rnd(1) THEN sfxr_p(SP_LPF_FREQ) = 1 - SFXR_Frnd(0.6)
+
+            CASE "blipselect"
+                sfxr_p(0) = SFXR_Rnd(1)
+                IF sfxr_p(0) = SFXR_SQUARE THEN sfxr_p(SP_DUTY) = SFXR_Frnd(0.6) ELSE sfxr_p(SP_DUTY) = 1
+                sfxr_p(SP_BASE_FREQ) = 0.2 + SFXR_Frnd(0.4)
+                sfxr_p(SP_ATTACK) = 0
+                sfxr_p(SP_SUSTAIN) = 0.1 + SFXR_Frnd(0.1)
+                sfxr_p(SP_DECAY) = SFXR_Frnd(0.2)
+                sfxr_p(SP_HPF_FREQ) = 0.1
+
+            CASE "synth"
+                sfxr_p(0) = SFXR_Rnd(1)
+                SELECT CASE SFXR_Rnd(2)
+                    CASE 0: sfxr_p(SP_BASE_FREQ) = 0.2723171360931539#
+                    CASE 1: sfxr_p(SP_BASE_FREQ) = 0.19255692561524382#
+                    CASE ELSE: sfxr_p(SP_BASE_FREQ) = 0.13615778746815113#
+                END SELECT
+                IF SFXR_Rnd(4) > 3 THEN sfxr_p(SP_ATTACK) = SFXR_Frnd(0.5) ELSE sfxr_p(SP_ATTACK) = 0
+                sfxr_p(SP_SUSTAIN) = SFXR_Frnd(1)
+                sfxr_p(SP_PUNCH) = SFXR_Frnd(1)
+                sfxr_p(SP_DECAY) = SFXR_Frnd(0.9) + 0.1
+                SELECT CASE SFXR_Rnd(6)
+                    CASE 4: sfxr_p(SP_ARP_MOD) = -0.3162
+                    CASE 5, 6: sfxr_p(SP_ARP_MOD) = 0.7454
+                    CASE ELSE: sfxr_p(SP_ARP_MOD) = 0
+                END SELECT
+                sfxr_p(SP_ARP_SPEED) = SFXR_Frnd(0.5) + 0.4
+                sfxr_p(SP_DUTY) = SFXR_Frnd(1)
+                IF SFXR_Rnd(2) = 2 THEN sfxr_p(SP_DUTY_RAMP) = SFXR_Frnd(1) ELSE sfxr_p(SP_DUTY_RAMP) = 0
+                IF SFXR_Rnd(1) THEN sfxr_p(SP_LPF_FREQ) = 0.9 * SFXR_Frnd(1) * SFXR_Frnd(1) + 0.1 ELSE sfxr_p(SP_LPF_FREQ) = 1
+                sfxr_p(SP_LPF_RAMP) = SFXR_Rndr(-1, 1)
+                sfxr_p(SP_LPF_RESONANCE) = SFXR_Frnd(1)
+                IF SFXR_Rnd(3) = 3 THEN sfxr_p(SP_HPF_FREQ) = SFXR_Frnd(1) ELSE sfxr_p(SP_HPF_FREQ) = 0
+                IF SFXR_Rnd(3) = 3 THEN sfxr_p(SP_HPF_RAMP) = SFXR_Frnd(1) ELSE sfxr_p(SP_HPF_RAMP) = 0
+
+            CASE "tone"
+                sfxr_p(0) = SFXR_SINE
+                sfxr_p(SP_BASE_FREQ) = 0.35173364 ' 440 Hz
+                sfxr_p(SP_ATTACK) = 0
+                sfxr_p(SP_SUSTAIN) = 0.6641 ' 1 sec
+                sfxr_p(SP_DECAY) = 0
+                sfxr_p(SP_PUNCH) = 0
+
+            CASE "click"
+                IF SFXR_Rnd(1) THEN SFXR_PresetInto "hitHurt" ELSE SFXR_PresetInto "explosion"
+                IF SFXR_Rnd(1) THEN sfxr_p(SP_FREQ_RAMP) = -0.5 + SFXR_Frnd(1.0)
+                IF SFXR_Rnd(1) THEN
+                    sfxr_p(SP_SUSTAIN) = (SFXR_Frnd(0.4) + 0.2) * sfxr_p(SP_SUSTAIN)
+                    sfxr_p(SP_DECAY) = (SFXR_Frnd(0.4) + 0.2) * sfxr_p(SP_DECAY)
+                END IF
+                IF SFXR_Rnd(3) = 0 THEN sfxr_p(SP_ATTACK) = SFXR_Frnd(0.3)
+                sfxr_p(SP_BASE_FREQ) = 1 - SFXR_Frnd(0.25)
+                sfxr_p(SP_HPF_FREQ) = 1 - SFXR_Frnd(0.1)
+
+            CASE ELSE ' "random"
+                sfxr_p(0) = SFXR_Rnd(3)
+                IF SFXR_Rnd(1) THEN
+                    sfxr_p(SP_BASE_FREQ) = SFXR_Cube(SFXR_Frnd(2) - 1) + 0.5
+                ELSE
+                    sfxr_p(SP_BASE_FREQ) = SFXR_Frnd(1) ^ 2
+                END IF
+                sfxr_p(SP_FREQ_LIMIT) = 0
+                r = 0
+                sfxr_p(SP_FREQ_RAMP) = SFXR_Pow5(SFXR_Frnd(2) - 1)
+                IF sfxr_p(SP_BASE_FREQ) > 0.7 AND sfxr_p(SP_FREQ_RAMP) > 0.2 THEN sfxr_p(SP_FREQ_RAMP) = -sfxr_p(SP_FREQ_RAMP)
+                IF sfxr_p(SP_BASE_FREQ) < 0.2 AND sfxr_p(SP_FREQ_RAMP) < -0.05 THEN sfxr_p(SP_FREQ_RAMP) = -sfxr_p(SP_FREQ_RAMP)
+                sfxr_p(SP_FREQ_DRAMP) = SFXR_Cube(SFXR_Frnd(2) - 1)
+                sfxr_p(SP_DUTY) = SFXR_Frnd(2) - 1
+                sfxr_p(SP_DUTY_RAMP) = SFXR_Cube(SFXR_Frnd(2) - 1)
+                sfxr_p(SP_VIB_STRENGTH) = SFXR_Cube(SFXR_Frnd(2) - 1)
+                sfxr_p(SP_VIB_SPEED) = SFXR_Rndr(-1, 1)
+                sfxr_p(SP_ATTACK) = SFXR_Cube(SFXR_Rndr(-1, 1))
+                sfxr_p(SP_SUSTAIN) = SFXR_Rndr(-1, 1) ^ 2
+                sfxr_p(SP_DECAY) = SFXR_Rndr(-1, 1)
+                sfxr_p(SP_PUNCH) = SFXR_Frnd(0.8) ^ 2
+                IF sfxr_p(SP_ATTACK) + sfxr_p(SP_SUSTAIN) + sfxr_p(SP_DECAY) < 0.2 THEN
+                    sfxr_p(SP_SUSTAIN) = sfxr_p(SP_SUSTAIN) + 0.2 + SFXR_Frnd(0.3)
+                    sfxr_p(SP_DECAY) = sfxr_p(SP_DECAY) + 0.2 + SFXR_Frnd(0.3)
+                END IF
+                sfxr_p(SP_LPF_RESONANCE) = SFXR_Rndr(-1, 1)
+                sfxr_p(SP_LPF_FREQ) = 1 - SFXR_Cube(SFXR_Frnd(1))
+                sfxr_p(SP_LPF_RAMP) = SFXR_Cube(SFXR_Frnd(2) - 1)
+                IF sfxr_p(SP_LPF_FREQ) < 0.1 AND sfxr_p(SP_LPF_RAMP) < -0.05 THEN sfxr_p(SP_LPF_RAMP) = -sfxr_p(SP_LPF_RAMP)
+                sfxr_p(SP_HPF_FREQ) = SFXR_Pow5(SFXR_Frnd(1))
+                sfxr_p(SP_HPF_RAMP) = SFXR_Pow5(SFXR_Frnd(2) - 1)
+                sfxr_p(SP_PHA_OFFSET) = SFXR_Cube(SFXR_Frnd(2) - 1)
+                sfxr_p(SP_PHA_RAMP) = SFXR_Cube(SFXR_Frnd(2) - 1)
+                sfxr_p(SP_REPEAT_SPEED) = SFXR_Frnd(2) - 1
+                sfxr_p(SP_ARP_SPEED) = SFXR_Frnd(2) - 1
+                sfxr_p(SP_ARP_MOD) = SFXR_Frnd(2) - 1
+        END SELECT
+    END SUB
+
+
+    FUNCTION SFXR_Pow5# (x AS DOUBLE)
+        SFXR_Pow5 = x * x * x * x * x
+    END FUNCTION
+
+
+    ''
+    ' Nudge most parameters a little (jsfxr's Mutate).
+    '
+    SUB SFXR_Mutate
+        DIM i AS LONG
+        SFXR_Init
+        FOR i = 1 TO SFXR_NPARAMS ' everything but the frequency cutoff
+            IF i <> SP_FREQ_LIMIT THEN
+                IF SFXR_Rnd(1) THEN sfxr_p(i) = sfxr_p(i) + SFXR_Frnd(0.1) - 0.05
+            END IF
+        NEXT
+        SFXR_Clamp
+    END SUB
+
+
+    '-------------------------------------------------------------------------
+    ' The synth (jsfxr SoundEffect.init / initForRepeat / getRawBuffer)
+    '-------------------------------------------------------------------------
+
+    SUB SFXR_InitRepeat
+        sfxr_v.elapsedSinceRepeat = 0
+        sfxr_v.period = 100 / (sfxr_p(SP_BASE_FREQ) * sfxr_p(SP_BASE_FREQ) + 0.001)
+        sfxr_v.periodMax = 100 / (sfxr_p(SP_FREQ_LIMIT) * sfxr_p(SP_FREQ_LIMIT) + 0.001)
+        sfxr_v.enableFrequencyCutoff = (sfxr_p(SP_FREQ_LIMIT) > 0)
+        sfxr_v.periodMult = 1 - SFXR_Cube(sfxr_p(SP_FREQ_RAMP)) * 0.01
+        sfxr_v.periodMultSlide = -SFXR_Cube(sfxr_p(SP_FREQ_DRAMP)) * 0.000001
+        sfxr_v.dutyCycle = 0.5 - sfxr_p(SP_DUTY) * 0.5
+        sfxr_v.dutyCycleSlide = -sfxr_p(SP_DUTY_RAMP) * 0.00005
+        IF sfxr_p(SP_ARP_MOD) >= 0 THEN
+            sfxr_v.arpeggioMultiplier = 1 - sfxr_p(SP_ARP_MOD) ^ 2 * 0.9
+        ELSE
+            sfxr_v.arpeggioMultiplier = 1 + sfxr_p(SP_ARP_MOD) ^ 2 * 10
+        END IF
+        sfxr_v.arpeggioTime = INT((1 - sfxr_p(SP_ARP_SPEED)) ^ 2 * 20000 + 32)
+        IF sfxr_p(SP_ARP_SPEED) = 1 THEN sfxr_v.arpeggioTime = 0
+    END SUB
+
+
+    SUB SFXR_InitVoice
+        SFXR_InitRepeat
+        sfxr_v.waveShape = sfxr_p(0)
+
+        sfxr_v.fltw = SFXR_Cube(sfxr_p(SP_LPF_FREQ)) * 0.1
+        sfxr_v.enableLowPassFilter = (sfxr_p(SP_LPF_FREQ) <> 1)
+        sfxr_v.fltw_d = 1 + sfxr_p(SP_LPF_RAMP) * 0.0001
+        sfxr_v.fltdmp = 5 / (1 + sfxr_p(SP_LPF_RESONANCE) ^ 2 * 20) * (0.01 + sfxr_v.fltw)
+        IF sfxr_v.fltdmp > 0.8 THEN sfxr_v.fltdmp = 0.8
+        sfxr_v.flthp = sfxr_p(SP_HPF_FREQ) ^ 2 * 0.1
+        sfxr_v.flthp_d = 1 + sfxr_p(SP_HPF_RAMP) * 0.0003
+
+        sfxr_v.vibratoSpeed = sfxr_p(SP_VIB_SPEED) ^ 2 * 0.01
+        sfxr_v.vibratoAmplitude = sfxr_p(SP_VIB_STRENGTH) * 0.5
+
+        sfxr_v.envLen0 = INT(sfxr_p(SP_ATTACK) * sfxr_p(SP_ATTACK) * 100000)
+        sfxr_v.envLen1 = INT(sfxr_p(SP_SUSTAIN) * sfxr_p(SP_SUSTAIN) * 100000)
+        sfxr_v.envLen2 = INT(sfxr_p(SP_DECAY) * sfxr_p(SP_DECAY) * 100000)
+        sfxr_v.envelopePunch = sfxr_p(SP_PUNCH)
+
+        sfxr_v.flangerOffset = sfxr_p(SP_PHA_OFFSET) ^ 2 * 1020
+        IF sfxr_p(SP_PHA_OFFSET) < 0 THEN sfxr_v.flangerOffset = -sfxr_v.flangerOffset
+        sfxr_v.flangerOffsetSlide = sfxr_p(SP_PHA_RAMP) ^ 2
+        IF sfxr_p(SP_PHA_RAMP) < 0 THEN sfxr_v.flangerOffsetSlide = -sfxr_v.flangerOffsetSlide
+
+        sfxr_v.repeatTime = INT((1 - sfxr_p(SP_REPEAT_SPEED)) ^ 2 * 20000 + 32)
+        IF sfxr_p(SP_REPEAT_SPEED) = 0 THEN sfxr_v.repeatTime = 0
+
+        sfxr_v.gain = EXP(sfxr_vol) - 1
+    END SUB
+
+
+    ''
+    ' Run the synth. Fills sfxr_pcm() with the clean sfxr sound at 44100 Hz
+    ' and sfxr_div() with one PIT divisor per beeper tick.
+    '
+    SUB SFXR_Synth
+        DIM fltp AS DOUBLE, fltdp AS DOUBLE, fltphp AS DOUBLE, pp AS DOUBLE
+        DIM noise(0 TO 31) AS DOUBLE, flanger(0 TO 1023) AS DOUBLE
+        DIM envStage AS LONG, envElapsed AS LONG, envLen AS LONG
+        DIM vibratoPhase AS DOUBLE, phase AS LONG, ipp AS LONG, iphase AS LONG
+        DIM t AS LONG, maxT AS LONG, i AS LONG, si AS LONG
+        DIM rfperiod AS DOUBLE, iperiod AS LONG, envVol AS DOUBLE, envf AS DOUBLE
+        DIM sample AS DOUBLE, subSample AS DOUBLE, fp AS DOUBLE
+        DIM tickLen AS DOUBLE, nextTick AS DOUBLE
+
+        SFXR_Init
+        SFXR_InitVoice
+        FOR i = 0 TO 31
+            noise(i) = RND * 2 - 1
+        NEXT
+
+        sfxr_pcmN = 0
+        sfxr_divN = 0
+        sfxr_clipped = 0
+        REDIM sfxr_pcm(0 TO 65535) AS SINGLE
+        REDIM sfxr_div(0 TO 255) AS LONG
+        IF sfxr_tickHz <= 0 THEN sfxr_tickHz = PCSPK_IFS_DEFAULT_HZ
+        tickLen = SFXR_RATE / sfxr_tickHz
+        nextTick = 0
+        maxT = SFXR_RATE * SFXR_MAX_SECONDS
+
+        FOR t = 0 TO maxT
+            ' repeats
+            IF sfxr_v.repeatTime <> 0 THEN
+                sfxr_v.elapsedSinceRepeat = sfxr_v.elapsedSinceRepeat + 1
+                IF sfxr_v.elapsedSinceRepeat >= sfxr_v.repeatTime THEN SFXR_InitRepeat
+            END IF
+
+            ' arpeggio (single)
+            IF sfxr_v.arpeggioTime <> 0 AND t >= sfxr_v.arpeggioTime THEN
+                sfxr_v.arpeggioTime = 0
+                sfxr_v.period = sfxr_v.period * sfxr_v.arpeggioMultiplier
+            END IF
+
+            ' frequency slide, and frequency slide slide!
+            sfxr_v.periodMult = sfxr_v.periodMult + sfxr_v.periodMultSlide
+            sfxr_v.period = sfxr_v.period * sfxr_v.periodMult
+            IF sfxr_v.period > sfxr_v.periodMax THEN
+                sfxr_v.period = sfxr_v.periodMax
+                IF sfxr_v.enableFrequencyCutoff THEN EXIT FOR
+            END IF
+
+            ' vibrato
+            rfperiod = sfxr_v.period
+            IF sfxr_v.vibratoAmplitude > 0 THEN
+                vibratoPhase = vibratoPhase + sfxr_v.vibratoSpeed
+                rfperiod = sfxr_v.period * (1 + SIN(vibratoPhase) * sfxr_v.vibratoAmplitude)
+            END IF
+            iperiod = INT(rfperiod)
+            IF iperiod < SFXR_OVERSAMPLING THEN iperiod = SFXR_OVERSAMPLING
+
+            ' square wave duty cycle
+            sfxr_v.dutyCycle = sfxr_v.dutyCycle + sfxr_v.dutyCycleSlide
+            IF sfxr_v.dutyCycle < 0 THEN sfxr_v.dutyCycle = 0
+            IF sfxr_v.dutyCycle > 0.5 THEN sfxr_v.dutyCycle = 0.5
+
+            ' volume envelope
+            envElapsed = envElapsed + 1
+            IF envElapsed > SFXR_EnvLen(envStage) THEN
+                envElapsed = 0
+                envStage = envStage + 1
+                IF envStage > 2 THEN EXIT FOR
+            END IF
+            envLen = SFXR_EnvLen(envStage)
+            IF envLen > 0 THEN envf = envElapsed / envLen ELSE envf = 0
+            SELECT CASE envStage
+                CASE 0: envVol = envf
+                CASE 1: envVol = 1 + (1 - envf) * 2 * sfxr_v.envelopePunch
+                CASE ELSE: envVol = 1 - envf
+            END SELECT
+
+            ' flanger step
+            sfxr_v.flangerOffset = sfxr_v.flangerOffset + sfxr_v.flangerOffsetSlide
+            iphase = ABS(INT(sfxr_v.flangerOffset))
+            IF iphase > 1023 THEN iphase = 1023
+
+            IF sfxr_v.flthp_d <> 0 THEN
+                sfxr_v.flthp = sfxr_v.flthp * sfxr_v.flthp_d
+                IF sfxr_v.flthp < 0.00001 THEN sfxr_v.flthp = 0.00001
+                IF sfxr_v.flthp > 0.1 THEN sfxr_v.flthp = 0.1
+            END IF
+
+            ' PC speaker beeper: one PIT divisor per tick
+            IF t >= nextTick THEN
+                SFXR_AddTick rfperiod, envVol
+                nextTick = nextTick + tickLen
+            END IF
+
+            ' 8x oversampling
+            sample = 0
+            FOR si = 1 TO SFXR_OVERSAMPLING
+                phase = phase + 1
+                IF phase >= iperiod THEN
+                    phase = phase MOD iperiod
+                    IF sfxr_v.waveShape = SFXR_NOISE THEN
+                        FOR i = 0 TO 31
+                            noise(i) = RND * 2 - 1
+                        NEXT
+                    END IF
+                END IF
+
+                ' base waveform
+                fp = phase / iperiod
+                SELECT CASE sfxr_v.waveShape
+                    CASE SFXR_SQUARE
+                        IF fp < sfxr_v.dutyCycle THEN subSample = 0.5 ELSE subSample = -0.5
+                    CASE SFXR_SAWTOOTH
+                        IF fp < sfxr_v.dutyCycle THEN
+                            subSample = -1 + 2 * fp / sfxr_v.dutyCycle
+                        ELSE
+                            subSample = 1 - 2 * (fp - sfxr_v.dutyCycle) / (1 - sfxr_v.dutyCycle)
+                        END IF
+                    CASE SFXR_SINE
+                        subSample = SIN(fp * 2 * _PI)
+                    CASE ELSE
+                        subSample = noise(INT(phase * 32 / iperiod))
+                END SELECT
+
+                ' low-pass filter
+                pp = fltp
+                sfxr_v.fltw = sfxr_v.fltw * sfxr_v.fltw_d
+                IF sfxr_v.fltw < 0 THEN sfxr_v.fltw = 0
+                IF sfxr_v.fltw > 0.1 THEN sfxr_v.fltw = 0.1
+                IF sfxr_v.enableLowPassFilter THEN
+                    fltdp = fltdp + (subSample - fltp) * sfxr_v.fltw
+                    fltdp = fltdp - fltdp * sfxr_v.fltdmp
+                ELSE
+                    fltp = subSample
+                    fltdp = 0
+                END IF
+                fltp = fltp + fltdp
+
+                ' high-pass filter
+                fltphp = fltphp + fltp - pp
+                fltphp = fltphp - fltphp * sfxr_v.flthp
+                subSample = fltphp
+
+                ' flanger
+                flanger(ipp AND 1023) = subSample
+                subSample = subSample + flanger((ipp - iphase + 1024) AND 1023)
+                ipp = (ipp + 1) AND 1023
+
+                sample = sample + subSample * envVol
+            NEXT
+
+            sample = sample / SFXR_OVERSAMPLING * sfxr_v.gain
+            IF sample >= 127 / 128 OR sample < -1 THEN sfxr_clipped = sfxr_clipped + 1
+            IF sfxr_pcmN > UBOUND(sfxr_pcm) THEN REDIM _PRESERVE sfxr_pcm(0 TO UBOUND(sfxr_pcm) * 2 + 1) AS SINGLE
+            sfxr_pcm(sfxr_pcmN) = sample
+            sfxr_pcmN = sfxr_pcmN + 1
+        NEXT
+    END SUB
+
+
+    FUNCTION SFXR_EnvLen& (stage AS LONG)
+        SELECT CASE stage
+            CASE 0: SFXR_EnvLen = sfxr_v.envLen0
+            CASE 1: SFXR_EnvLen = sfxr_v.envLen1
+            CASE ELSE: SFXR_EnvLen = sfxr_v.envLen2
+        END SELECT
+    END FUNCTION
+
+
+    ''
+    ' One beeper tick. The PC speaker has no volume, so the envelope is a
+    ' gate: below sfxr_gate the speaker is off. Noise becomes a random pitch
+    ' every tick - the way DOS games did explosions.
+    '
+    SUB SFXR_AddTick (rfperiod AS DOUBLE, envVol AS DOUBLE)
+        DIM f AS DOUBLE, d AS LONG
+        IF envVol >= sfxr_gate AND rfperiod > 0 THEN
+            f = SFXR_RATE * SFXR_OVERSAMPLING / rfperiod
+            IF sfxr_v.waveShape = SFXR_NOISE THEN
+                f = f * 8 * 2 ^ (RND * 3 - 1.5)
+                IF f < 80 THEN f = 80 + RND * 80
+            END IF
+            IF f < 19 THEN f = 19
+            d = CLNG(PCSPK_PIT_HZ / f)
+            IF d < 20 THEN d = 20
+            IF d > 65535 THEN d = 65535
+        END IF
+        IF sfxr_divN > UBOUND(sfxr_div) THEN REDIM _PRESERVE sfxr_div(0 TO UBOUND(sfxr_div) * 2 + 1) AS LONG
+        sfxr_div(sfxr_divN) = d
+        sfxr_divN = sfxr_divN + 1
+    END SUB
+
+
+    '-------------------------------------------------------------------------
+    ' Rendering through the PC speaker
+    '-------------------------------------------------------------------------
+
+    ''
+    ' Synthesize the current sound and render it in sfxr_mode. Returns a
+    ' QB64-PE sound handle (0 if audio isn't available). Call
+    ' PCSPK_SetLowPass first to choose the speaker cone filter.
+    '
+    FUNCTION SFXR_Render&
+        SFXR_Init
+        SFXR_Synth
+        sfxr_outMode = sfxr_mode
+        SELECT CASE sfxr_mode
+            CASE SFXR_MODE_CLEAN: SFXR_Render = SFXR_RenderClean
+            CASE SFXR_MODE_PWM: SFXR_Render = SFXR_RenderPWM
+            CASE ELSE: SFXR_Render = SFXR_RenderBeeper
+        END SELECT
+    END FUNCTION
+
+
+    ''
+    ' Output loudness for the emulated speaker, from the gain slider.
+    '
+    FUNCTION SFXR_SpeakerVolume!
+        DIM v AS DOUBLE
+        v = (EXP(sfxr_vol) - 1) * 0.9
+        IF v > 1 THEN v = 1
+        SFXR_SpeakerVolume = v
+    END FUNCTION
+
+
+    FUNCTION SFXR_RenderBeeper&
+        DIM k AS LONG, lastV AS LONG, clk AS DOUBLE
+        PCSPK_CaptureBegin
+        PCSPK_SetVolume SFXR_SpeakerVolume
+        clk = PCSPK_PIT_HZ / sfxr_tickHz
+        lastV = -1
+        FOR k = 0 TO sfxr_divN - 1
+            IF sfxr_div(k) <> lastV THEN ' only reprogram on change, like id's sound code
+                PCSPK_SetDivisor sfxr_div(k)
+                lastV = sfxr_div(k)
+            END IF
+            PCSPK_AdvanceClocks clk
+        NEXT
+        PCSPK_Off
+        PCSPK_AdvanceSeconds 0.05
+        SFXR_RenderBeeper = PCSPK_CaptureEnd
+    END FUNCTION
+
+
+    ''
+    ' PWM: the clean sound, normalised, sets the width of a one-shot pulse on
+    ' every carrier tick. Resolution is log2(PIT clock / carrier) bits.
+    '
+    FUNCTION SFXR_RenderPWM&
+        DIM d AS LONG, stp AS DOUBLE, ppos AS DOUBLE, k AS LONG, n AS LONG
+        DIM a AS LONG, b AS LONG, i AS LONG, s AS DOUBLE, w AS LONG, pk AS DOUBLE
+
+        d = SFXR_PWMDivisor
+        stp = SFXR_RATE * d / PCSPK_PIT_HZ
+        pk = SFXR_Peak
+        IF pk < 0.000001 THEN pk = 1
+
+        PCSPK_CaptureBegin
+        PCSPK_SetVolume SFXR_SpeakerVolume
+        PCSPK_SpeakerOn
+        n = INT(sfxr_pcmN / stp)
+        ppos = 0
+        FOR k = 0 TO n - 1
+            a = INT(ppos)
+            b = INT(ppos + stp)
+            IF b <= a THEN b = a + 1
+            IF b > sfxr_pcmN THEN b = sfxr_pcmN
+            s = 0
+            FOR i = a TO b - 1
+                s = s + sfxr_pcm(i)
+            NEXT
+            s = s / (b - a) / pk
+            IF s > 1 THEN s = 1
+            IF s < -1 THEN s = -1
+            w = CLNG((1 - s) / 2 * (d - 2)) + 1 ' LOW time; short pulse = cone out
+            PCSPK_PitWrite PCSPK_MODE_ONESHOT, w
+            PCSPK_AdvanceClocks d
+            ppos = ppos + stp
+        NEXT
+        PCSPK_SpeakerOff
+        PCSPK_AdvanceSeconds 0.05
+        SFXR_RenderPWM = PCSPK_CaptureEnd
+    END FUNCTION
+
+
+    FUNCTION SFXR_PWMDivisor&
+        DIM d AS LONG
+        IF sfxr_pwmHz < 1000 THEN sfxr_pwmHz = 16000
+        d = CLNG(PCSPK_PIT_HZ / sfxr_pwmHz)
+        IF d < 4 THEN d = 4
+        SFXR_PWMDivisor = d
+    END FUNCTION
+
+
+    FUNCTION SFXR_PWMBits!
+        SFXR_PWMBits = LOG(SFXR_PWMDivisor) / LOG(2)
+    END FUNCTION
+
+
+    FUNCTION SFXR_Peak#
+        DIM i AS LONG, pk AS DOUBLE
+        FOR i = 0 TO sfxr_pcmN - 1
+            IF ABS(sfxr_pcm(i)) > pk THEN pk = ABS(sfxr_pcm(i))
+        NEXT
+        SFXR_Peak = pk
+    END FUNCTION
+
+
+    FUNCTION SFXR_RenderClean&
+        DIM h AS LONG, m AS _MEM, src AS _MEM, bytes AS _OFFSET
+        IF sfxr_pcmN < 1 THEN EXIT FUNCTION
+        h = _SNDNEW(sfxr_pcmN, 1, 32, SFXR_RATE)
+        IF h < 1 THEN EXIT FUNCTION
+        m = _MEMSOUND(h, 0)
+        src = _MEM(sfxr_pcm())
+        bytes = sfxr_pcmN * 4
+        IF bytes > m.SIZE THEN bytes = m.SIZE
+        _MEMCOPY src, src.OFFSET, bytes TO m, m.OFFSET
+        _MEMFREE src
+        _MEMFREE m
+        SFXR_RenderClean = h
+    END FUNCTION
+
+
+    ''
+    ' The last render's output, for drawing it: frame count, rate, samples.
+    '
+    FUNCTION SFXR_OutFrames&
+        IF sfxr_outMode = SFXR_MODE_CLEAN THEN SFXR_OutFrames = sfxr_pcmN ELSE SFXR_OutFrames = PCSPK_CaptureFrames
+    END FUNCTION
+
+
+    FUNCTION SFXR_OutRate&
+        IF sfxr_outMode = SFXR_MODE_CLEAN THEN SFXR_OutRate = SFXR_RATE ELSE SFXR_OutRate = pcspk.rate
+    END FUNCTION
+
+
+    FUNCTION SFXR_OutSample! (i AS LONG)
+        IF sfxr_outMode = SFXR_MODE_CLEAN THEN SFXR_OutSample = sfxr_pcm(i) ELSE SFXR_OutSample = pcspk_cap(i)
+    END FUNCTION
+
+
+    FUNCTION SFXR_Seconds#
+        IF SFXR_OutRate > 0 THEN SFXR_Seconds = SFXR_OutFrames / SFXR_OutRate
+    END FUNCTION
+
+
+    '-------------------------------------------------------------------------
+    ' Export
+    '-------------------------------------------------------------------------
+
+    FUNCTION SFXR_W16$ (v AS LONG)
+        SFXR_W16 = CHR$(v AND 255) + CHR$((v \ 256) AND 255)
+    END FUNCTION
+
+
+    ''
+    ' Write the last render as a 16-bit mono .WAV.
+    '
+    SUB SFXR_SaveWAV (fileName AS STRING)
+        DIM i AS LONG, n AS LONG, rate AS LONG, v AS SINGLE, ff AS LONG, hdr AS STRING
+        IF sfxr_outMode <> SFXR_MODE_CLEAN THEN
+            PCSPK_SaveWAV fileName
+            EXIT SUB
+        END IF
+        n = sfxr_pcmN
+        rate = SFXR_RATE
+        IF n < 1 THEN EXIT SUB
+        REDIM pcm(0 TO n - 1) AS INTEGER
+        FOR i = 0 TO n - 1
+            v = sfxr_pcm(i)
+            IF v > 1 THEN v = 1
+            IF v < -1 THEN v = -1
+            pcm(i) = CINT(v * 32767)
+        NEXT
+        IF _FILEEXISTS(fileName) THEN KILL fileName
+        ff = FREEFILE
+        OPEN fileName FOR BINARY AS #ff
+        hdr = SFXR_WavHeader$(rate, 16, n * 2)
+        PUT #ff, 1, hdr
+        PUT #ff, , pcm()
+        CLOSE #ff
+    END SUB
+
+
+    FUNCTION SFXR_WavHeader$ (rate AS LONG, bits AS LONG, dataBytes AS LONG)
+        DIM blockAlign AS LONG
+        blockAlign = bits \ 8
+        SFXR_WavHeader = "RIFF" + MKL$(36 + dataBytes) + "WAVE" + "fmt " + MKL$(16) + MKI$(1) + MKI$(1) + MKL$(rate) + MKL$(rate * blockAlign) + MKI$(blockAlign) + MKI$(bits) + "data" + MKL$(dataBytes)
+    END FUNCTION
+
+
+    ''
+    ' Write the clean sound as an 8-bit unsigned mono .WAV at `rate` Hz,
+    ' normalised - the format WAV.BAS plays through the PC speaker.
+    '
+    SUB SFXR_Save8BitWAV (fileName AS STRING, rate AS LONG)
+        DIM n AS LONG, k AS LONG, a AS LONG, b AS LONG, i AS LONG, stp AS DOUBLE
+        DIM s AS DOUBLE, pk AS DOUBLE, d AS STRING, ff AS LONG, hdr AS STRING
+        IF sfxr_pcmN < 1 OR rate < 1000 THEN EXIT SUB
+        stp = SFXR_RATE / rate
+        n = INT(sfxr_pcmN / stp)
+        pk = SFXR_Peak
+        IF pk < 0.000001 THEN pk = 1
+        d = SPACE$(n)
+        FOR k = 0 TO n - 1
+            a = INT(k * stp)
+            b = INT((k + 1) * stp)
+            IF b <= a THEN b = a + 1
+            IF b > sfxr_pcmN THEN b = sfxr_pcmN
+            s = 0
+            FOR i = a TO b - 1
+                s = s + sfxr_pcm(i)
+            NEXT
+            s = s / (b - a) / pk * 0.95
+            ASC(d, k + 1) = CINT(128 + s * 127)
+        NEXT
+        IF _FILEEXISTS(fileName) THEN KILL fileName
+        ff = FREEFILE
+        OPEN fileName FOR BINARY AS #ff
+        hdr = SFXR_WavHeader$(rate, 8, n)
+        PUT #ff, 1, hdr
+        PUT #ff, , d
+        CLOSE #ff
+    END SUB
+
+
+    ''
+    ' The beeper divisors as 16-bit words, no end marker.
+    '
+    FUNCTION SFXR_DivisorData$
+        DIM k AS LONG, s AS STRING
+        s = SPACE$(sfxr_divN * 2)
+        FOR k = 0 TO sfxr_divN - 1
+            MID$(s, k * 2 + 1, 2) = SFXR_W16(sfxr_div(k))
+        NEXT
+        SFXR_DivisorData = s
+    END FUNCTION
+
+
+    ''
+    ' Build an Inverse Frequency Sound bank (Duke Nukem 1 / Keen format) from
+    ' parallel arrays of names and divisor data. Returns "" if it would be
+    ' bigger than 64K (IFS offsets are 16-bit).
+    '
+    FUNCTION SFXR_BuildIFS$ (names() AS STRING, datas() AS STRING, count AS LONG)
+        DIM i AS LONG, ofs AS LONG, hdr AS STRING, tbl AS STRING, body AS STRING, nm AS STRING
+        ofs = 16 + count * 16
+        FOR i = 0 TO count - 1
+            nm = LEFT$(UCASE$(names(i)), 11)
+            tbl = tbl + SFXR_W16(ofs + LEN(body)) + CHR$(10) + CHR$(8) + nm + STRING$(12 - LEN(nm), 0)
+            body = body + datas(i) + SFXR_W16(&HFFFF&)
+        NEXT
+        IF ofs + LEN(body) > 65535 THEN EXIT FUNCTION
+        hdr = "SND" + CHR$(0) + SFXR_W16(ofs + LEN(body)) + SFXR_W16(count) + SFXR_W16(0) + STRING$(6, 0)
+        SFXR_BuildIFS = hdr + tbl + body
+    END FUNCTION
+
+
+    SUB SFXR_SaveText (fileName AS STRING, text AS STRING)
+        DIM ff AS LONG
+        IF _FILEEXISTS(fileName) THEN KILL fileName
+        ff = FREEFILE
+        OPEN fileName FOR BINARY AS #ff
+        PUT #ff, 1, text
+        CLOSE #ff
+    END SUB
+
+
+    ''
+    ' A complete QB64-PE program that plays the beeper version of the sound
+    ' with PCSPKR. Name becomes the DATA label.
+    '
+    FUNCTION SFXR_BasCode$ (nam AS STRING)
+        DIM s AS STRING, k AS LONG, lbl AS STRING, nl AS STRING, ln AS STRING, q AS STRING
+        nl = CHR$(10)
+        q = CHR$(39)
+        lbl = LCASE$(SFXR_SafeName(nam)) + "_data"
+        s = q + q + nl
+        s = s + q + " " + nam + " - PC speaker sound effect made with PCFXR" + nl
+        s = s + q + " sfxr.me: https://sfxr.me/#" + SFXR_ToB58 + nl
+        s = s + q + nl
+        s = s + q + " Needs PCSPKR.BI and PCSPKR.BM (qb64/SOUND/PC-SPEAKER) next to this file." + nl
+        s = s + q + " The sound is a list of PIT divisors, one per tick at" + STR$(sfxr_tickHz) + " Hz" + nl
+        s = s + q + " (0 = silence, -1 = end) - the same thing Duke Nukem 1 stores." + nl
+        s = s + q + nl
+        s = s + q + "$INCLUDE:" + q + "PCSPKR.BI" + q + nl
+        s = s + nl
+        s = s + "DIM d AS LONG, last AS LONG" + nl
+        s = s + nl
+        s = s + "PCSPK_SetTickRate" + STR$(sfxr_tickHz) + nl
+        s = s + "last = -1" + nl
+        s = s + "RESTORE " + lbl + nl
+        s = s + "DO" + nl
+        s = s + "    READ d" + nl
+        s = s + "    IF d < 0 THEN EXIT DO" + nl
+        s = s + "    IF d <> last THEN PCSPK_SetDivisor d: last = d" + nl
+        s = s + "    PCSPK_WaitTicks 1" + nl
+        s = s + "LOOP" + nl
+        s = s + "PCSPK_Off" + nl
+        s = s + "PCSPK_Drain" + nl
+        s = s + "END" + nl
+        s = s + nl
+        s = s + lbl + ":" + nl
+        ln = ""
+        FOR k = 0 TO sfxr_divN - 1
+            IF ln = "" THEN ln = "DATA " ELSE ln = ln + ","
+            ln = ln + LTRIM$(STR$(sfxr_div(k)))
+            IF LEN(ln) > 90 THEN s = s + ln + nl: ln = ""
+        NEXT
+        IF ln = "" THEN ln = "DATA -1" ELSE ln = ln + ",-1"
+        s = s + ln + nl
+        s = s + nl
+        s = s + q + "$INCLUDE:" + q + "PCSPKR.BM" + q + nl
+        SFXR_BasCode = s
+    END FUNCTION
+
+
+    FUNCTION SFXR_SafeName$ (s AS STRING)
+        DIM i AS LONG, c AS STRING, r AS STRING
+        FOR i = 1 TO LEN(s)
+            c = MID$(s, i, 1)
+            IF INSTR("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_", c) THEN r = r + c ELSE r = r + "_"
+        NEXT
+        IF r = "" THEN r = "sfx"
+        IF INSTR("0123456789", LEFT$(r, 1)) THEN r = "sfx" + r
+        SFXR_SafeName = r
+    END FUNCTION
+
+
+    '-------------------------------------------------------------------------
+    ' jsfxr .json files and sfxr.me links
+    '-------------------------------------------------------------------------
+
+    FUNCTION SFXR_Num$ (x AS DOUBLE)
+        DIM neg AS _BYTE, v AS _INTEGER64, s AS STRING, ip AS STRING, fp AS STRING
+        IF x = INT(x) AND ABS(x) < 1000000000 THEN SFXR_Num = LTRIM$(STR$(CLNG(x))): EXIT FUNCTION
+        neg = (x < 0)
+        v = _ROUND(ABS(x) * 1000000000#)
+        s = LTRIM$(STR$(v))
+        IF LEN(s) < 10 THEN s = STRING$(10 - LEN(s), "0") + s
+        ip = LEFT$(s, LEN(s) - 9)
+        fp = RIGHT$(s, 9)
+        DO WHILE RIGHT$(fp, 1) = "0" AND LEN(fp) > 1
+            fp = LEFT$(fp, LEN(fp) - 1)
+        LOOP
+        s = ip + "." + fp
+        IF neg THEN s = "-" + s
+        SFXR_Num = s
+    END FUNCTION
+
+
+    ''
+    ' The sound as a jsfxr .json (sfxr.me's "Save As"), plus PCFXR's own
+    ' settings, which sfxr.me ignores.
+    '
+    FUNCTION SFXR_ToJSON$
+        DIM s AS STRING, i AS LONG, nl AS STRING, q AS STRING
+        SFXR_Init
+        nl = CHR$(10)
+        q = CHR$(34)
+        s = "{" + nl + "  " + q + "oldParams" + q + ": true," + nl
+        FOR i = 0 TO SFXR_NPARAMS
+            s = s + "  " + q + sfxr_key(i) + q + ": " + SFXR_Num(sfxr_p(i)) + "," + nl
+        NEXT
+        s = s + "  " + q + "sound_vol" + q + ": " + SFXR_Num(sfxr_vol) + "," + nl
+        s = s + "  " + q + "sample_rate" + q + ": 44100," + nl
+        s = s + "  " + q + "sample_size" + q + ": 8," + nl
+        s = s + "  " + q + "pcfxr_mode" + q + ": " + SFXR_Num(sfxr_mode) + "," + nl
+        s = s + "  " + q + "pcfxr_tick_hz" + q + ": " + SFXR_Num(sfxr_tickHz) + "," + nl
+        s = s + "  " + q + "pcfxr_gate" + q + ": " + SFXR_Num(sfxr_gate) + "," + nl
+        s = s + "  " + q + "pcfxr_pwm_hz" + q + ": " + SFXR_Num(sfxr_pwmHz) + nl
+        s = s + "}" + nl
+        SFXR_ToJSON = s
+    END FUNCTION
+
+
+    ''
+    ' Find "key": number in JSON text. found is set TRUE if it was there.
+    '
+    FUNCTION SFXR_JsonNum# (text AS STRING, jkey AS STRING, found AS INTEGER)
+        DIM p AS LONG, e AS LONG, c AS STRING
+        found = 0
+        p = INSTR(text, CHR$(34) + jkey + CHR$(34))
+        IF p = 0 THEN EXIT FUNCTION
+        p = p + LEN(jkey) + 2
+        DO WHILE p <= LEN(text)
+            c = MID$(text, p, 1)
+            IF c <> " " AND c <> ":" AND c <> CHR$(9) AND c <> CHR$(10) AND c <> CHR$(13) THEN EXIT DO
+            p = p + 1
+        LOOP
+        e = p
+        DO WHILE e <= LEN(text)
+            IF INSTR("+-.0123456789eE", MID$(text, e, 1)) = 0 THEN EXIT DO
+            e = e + 1
+        LOOP
+        IF e = p THEN EXIT FUNCTION
+        SFXR_JsonNum = VAL(MID$(text, p, e - p))
+        found = -1
+    END FUNCTION
+
+
+    ''
+    ' Load a jsfxr .json (from sfxr.me or PCFXR). Returns TRUE on success.
+    '
+    FUNCTION SFXR_FromJSON%% (text AS STRING)
+        DIM i AS LONG, found AS INTEGER, v AS DOUBLE, gotAny AS INTEGER
+        SFXR_Init
+        v = SFXR_JsonNum(text, "p_base_freq", found)
+        IF NOT found THEN EXIT FUNCTION
+        SFXR_Reset
+        FOR i = 0 TO SFXR_NPARAMS
+            v = SFXR_JsonNum(text, sfxr_key(i), found)
+            IF found THEN sfxr_p(i) = v: gotAny = -1
+        NEXT
+        v = SFXR_JsonNum(text, "sound_vol", found): IF found THEN sfxr_vol = v
+        v = SFXR_JsonNum(text, "pcfxr_mode", found): IF found THEN sfxr_mode = v
+        v = SFXR_JsonNum(text, "pcfxr_tick_hz", found): IF found AND v > 0 THEN sfxr_tickHz = v
+        v = SFXR_JsonNum(text, "pcfxr_gate", found): IF found THEN sfxr_gate = v
+        v = SFXR_JsonNum(text, "pcfxr_pwm_hz", found): IF found AND v >= 1000 THEN sfxr_pwmHz = v
+        IF sfxr_mode < 0 OR sfxr_mode > 2 THEN sfxr_mode = SFXR_MODE_BEEPER
+        SFXR_Clamp
+        SFXR_FromJSON = gotAny
+    END FUNCTION
+
+
+    FUNCTION SFXR_B58Alphabet$
+        SFXR_B58Alphabet = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz"
+    END FUNCTION
+
+
+    ''
+    ' The sound as sfxr.me's base58 permalink code (https://sfxr.me/#code).
+    '
+    FUNCTION SFXR_ToB58$
+        DIM b AS STRING, i AS LONG, j AS LONG, nd AS LONG, carry AS LONG, s AS STRING, al AS STRING
+        DIM dg(0 TO 255) AS LONG
+        SFXR_Init
+        b = CHR$(sfxr_p(0))
+        FOR i = 1 TO SFXR_NPARAMS
+            b = b + MKS$(CSNG(sfxr_p(i)))
+        NEXT
+
+        al = SFXR_B58Alphabet
+        FOR i = 1 TO LEN(b)
+            carry = ASC(b, i)
+            FOR j = 0 TO nd - 1
+                carry = carry + dg(j) * 256
+                dg(j) = carry MOD 58
+                carry = carry \ 58
+            NEXT
+            DO WHILE carry > 0
+                dg(nd) = carry MOD 58
+                nd = nd + 1
+                carry = carry \ 58
+            LOOP
+        NEXT
+        FOR i = 1 TO LEN(b)
+            IF ASC(b, i) <> 0 THEN EXIT FOR
+            s = s + "1"
+        NEXT
+        FOR j = nd - 1 TO 0 STEP -1
+            s = s + MID$(al, dg(j) + 1, 1)
+        NEXT
+        SFXR_ToB58 = s
+    END FUNCTION
+
+
+    ''
+    ' Load a sound from sfxr.me's base58 code. Returns TRUE on success.
+    '
+    FUNCTION SFXR_FromB58%% (code AS STRING)
+        DIM i AS LONG, j AS LONG, nb AS LONG, carry AS LONG, c AS LONG, zeros AS LONG
+        DIM b AS STRING, al AS STRING, v AS SINGLE
+        DIM by(0 TO 255) AS LONG
+        SFXR_Init
+        al = SFXR_B58Alphabet
+        IF LEN(code) = 0 OR LEN(code) > 200 THEN EXIT FUNCTION
+        FOR i = 1 TO LEN(code)
+            c = INSTR(al, MID$(code, i, 1)) - 1
+            IF c < 0 THEN EXIT FUNCTION
+            carry = c
+            FOR j = 0 TO nb - 1
+                carry = carry + by(j) * 58
+                by(j) = carry AND 255
+                carry = carry \ 256
+            NEXT
+            DO WHILE carry > 0
+                by(nb) = carry AND 255
+                nb = nb + 1
+                carry = carry \ 256
+            LOOP
+        NEXT
+        FOR i = 1 TO LEN(code)
+            IF MID$(code, i, 1) <> "1" THEN EXIT FOR
+            zeros = zeros + 1
+        NEXT
+        b = STRING$(zeros, 0)
+        FOR j = nb - 1 TO 0 STEP -1
+            b = b + CHR$(by(j))
+        NEXT
+        IF LEN(b) < 1 + SFXR_NPARAMS * 4 THEN EXIT FUNCTION
+
+        SFXR_Reset
+        sfxr_p(0) = ASC(b, 1)
+        FOR i = 1 TO SFXR_NPARAMS
+            v = CVS(MID$(b, 2 + (i - 1) * 4, 4))
+            sfxr_p(i) = v
+        NEXT
+        SFXR_Clamp
+        SFXR_FromB58 = -1
+    END FUNCTION
+
+
+    ''
+    ' Load whatever was pasted: a jsfxr .json, an sfxr.me link, or a bare
+    ' base58 code. Returns TRUE on success.
+    '
+    FUNCTION SFXR_Import%% (text AS STRING)
+        DIM t AS STRING, p AS LONG
+        t = _TRIM$(text)
+        IF INSTR(t, "{") THEN SFXR_Import = SFXR_FromJSON(t): EXIT FUNCTION
+        p = _INSTRREV(t, "#")
+        IF p THEN t = MID$(t, p + 1)
+        p = INSTR(t, CHR$(10)): IF p THEN t = LEFT$(t, p - 1)
+        p = INSTR(t, CHR$(13)): IF p THEN t = LEFT$(t, p - 1)
+        SFXR_Import = SFXR_FromB58(_TRIM$(t))
+    END FUNCTION
+
+
+    '-------------------------------------------------------------------------
+    ' Parameter display (jsfxr's convert.sliders + convert.units)
+    '-------------------------------------------------------------------------
+
+    ''
+    ' x formatted to 4 significant digits like JavaScript's toPrecision(4).
+    '
+    FUNCTION SFXR_Prec4$ (x AS DOUBLE)
+        DIM a AS DOUBLE, e AS LONG, d AS LONG, r AS DOUBLE, s AS STRING
+        IF x = 0 THEN SFXR_Prec4 = "0.000": EXIT FUNCTION
+        a = ABS(x)
+        e = INT(LOG(a) / LOG(10) + 0.0000000001)
+        r = _ROUND(a / 10 ^ (e - 3))
+        IF r >= 10000 THEN e = e + 1
+        d = 3 - e
+        IF d < 0 THEN d = 0
+        s = SFXR_Fixed(a, d)
+        IF x < 0 THEN s = "-" + s
+        SFXR_Prec4 = s
+    END FUNCTION
+
+
+    FUNCTION SFXR_Fixed$ (a AS DOUBLE, d AS LONG)
+        DIM v AS _INTEGER64, s AS STRING
+        v = _ROUND(a * 10 ^ d)
+        s = LTRIM$(STR$(v))
+        IF d = 0 THEN SFXR_Fixed = s: EXIT FUNCTION
+        IF LEN(s) <= d THEN s = STRING$(d + 1 - LEN(s), "0") + s
+        SFXR_Fixed = LEFT$(s, LEN(s) - d) + "." + RIGHT$(s, d)
+    END FUNCTION
+
+
+    ''
+    ' x like JavaScript's toExponential(3).
+    '
+    FUNCTION SFXR_Exp3$ (x AS DOUBLE)
+        DIM a AS DOUBLE, e AS LONG, m AS DOUBLE, s AS STRING
+        IF x = 0 THEN SFXR_Exp3 = "0.000e+0": EXIT FUNCTION
+        a = ABS(x)
+        e = INT(LOG(a) / LOG(10) + 0.0000000001)
+        m = a / 10 ^ e
+        IF _ROUND(m * 1000) >= 10000 THEN e = e + 1: m = a / 10 ^ e
+        s = SFXR_Fixed(m, 3) + "e"
+        IF e >= 0 THEN s = s + "+" ELSE s = s + "-"
+        s = s + LTRIM$(STR$(ABS(e)))
+        IF x < 0 THEN s = "-" + s
+        SFXR_Exp3 = s
+    END FUNCTION
+
+
+    ''
+    ' A parameter's value in real units, as sfxr.me shows it.
+    '
+    FUNCTION SFXR_ParamText$ (i AS LONG)
+        DIM v AS DOUBLE, iv AS DOUBLE, sg AS DOUBLE
+        v = sfxr_p(i)
+        IF v < 0 THEN sg = -1 ELSE sg = 1
+        SELECT CASE i
+            CASE SP_ATTACK, SP_SUSTAIN, SP_DECAY
+                SFXR_ParamText = SFXR_Prec4(v * v * 100000 / 44100) + " sec"
+            CASE SP_PUNCH
+                SFXR_ParamText = "+" + SFXR_Prec4(v * 100) + "%"
+            CASE SP_BASE_FREQ, SP_FREQ_LIMIT
+                SFXR_ParamText = SFXR_Prec4(8 * 44100 * (v * v + 0.001) / 100) + " Hz"
+            CASE SP_FREQ_RAMP
+                iv = 1 - v * v * v * 0.01
+                SFXR_ParamText = SFXR_Prec4(44100 * LOG(iv) / LOG(0.5)) + " 8va/sec"
+            CASE SP_FREQ_DRAMP
+                iv = -v * v * v * 0.000001
+                SFXR_ParamText = SFXR_Exp3(iv * 44100 / 2 ^ (-44101 / 44100)) + " 8va/s^2"
+            CASE SP_VIB_STRENGTH
+                IF v = 0 THEN SFXR_ParamText = "OFF" ELSE SFXR_ParamText = "+/- " + SFXR_Prec4(v * 0.5 * 100) + "%"
+            CASE SP_VIB_SPEED
+                IF v = 0 THEN SFXR_ParamText = "OFF" ELSE SFXR_ParamText = SFXR_Prec4(441000 / 64 * v * v * 0.01) + " Hz"
+            CASE SP_ARP_MOD
+                IF v >= 0 THEN iv = 1 - v * v * 0.9 ELSE iv = 1 + v * v * 10
+                IF iv = 1 THEN SFXR_ParamText = "OFF" ELSE SFXR_ParamText = "x " + SFXR_Prec4(1 / iv)
+            CASE SP_ARP_SPEED
+                IF v = 1 THEN iv = 0 ELSE iv = INT((1 - v) ^ 2 * 20000 + 32)
+                IF iv = 0 THEN SFXR_ParamText = "OFF" ELSE SFXR_ParamText = SFXR_Prec4(iv / 44100) + " sec"
+            CASE SP_DUTY
+                SFXR_ParamText = SFXR_Prec4(100 * (0.5 - v * 0.5)) + "%"
+            CASE SP_DUTY_RAMP
+                SFXR_ParamText = SFXR_Prec4(8 * 44100 * -v * 0.00005) + "%/sec"
+            CASE SP_REPEAT_SPEED
+                IF v = 0 THEN SFXR_ParamText = "OFF" ELSE SFXR_ParamText = SFXR_Prec4(44100 / (INT((1 - v) ^ 2 * 20000) + 32)) + " Hz"
+            CASE SP_PHA_OFFSET
+                IF v = 0 THEN SFXR_ParamText = "OFF" ELSE SFXR_ParamText = SFXR_Prec4(1000 * sg * v * v * 1020 / 44100) + " msec"
+            CASE SP_PHA_RAMP
+                IF v = 0 THEN SFXR_ParamText = "OFF" ELSE SFXR_ParamText = SFXR_Prec4(1000 * sg * v * v) + " msec/sec"
+            CASE SP_LPF_FREQ
+                iv = v * v * v * 0.1
+                IF v = 1 THEN SFXR_ParamText = "OFF" ELSE SFXR_ParamText = LTRIM$(STR$(CLNG(8 * 44100 * iv / (1 - iv)))) + " Hz"
+            CASE SP_LPF_RAMP
+                IF v = 0 THEN SFXR_ParamText = "OFF" ELSE SFXR_ParamText = SFXR_Prec4((1 + v * 0.0001) ^ 44100) + " ^sec"
+            CASE SP_LPF_RESONANCE
+                SFXR_ParamText = SFXR_Prec4(100 * (1 - 5 / (1 + v * v * 20) * 0.11)) + "%"
+            CASE SP_HPF_FREQ
+                iv = v * v * 0.1
+                IF v = 0 THEN SFXR_ParamText = "OFF" ELSE SFXR_ParamText = LTRIM$(STR$(CLNG(8 * 44100 * iv / (1 - iv)))) + " Hz"
+            CASE SP_HPF_RAMP
+                IF v = 0 THEN SFXR_ParamText = "OFF" ELSE SFXR_ParamText = SFXR_Prec4((1 + v * 0.0003) ^ 44100) + " ^sec"
+        END SELECT
+    END FUNCTION
+
+
+    FUNCTION SFXR_GainText$
+        DIM g AS DOUBLE, db AS DOUBLE, s AS STRING
+        g = EXP(sfxr_vol) - 1
+        IF g <= 0 THEN SFXR_GainText = "-inf dB": EXIT FUNCTION
+        db = 10 * LOG(g * g) / LOG(10)
+        IF db >= 0 THEN s = "+"
+        SFXR_GainText = s + SFXR_Prec4(db) + " dB"
+    END FUNCTION
+
+
+    ''
+    ' Does this parameter do anything in beeper mode? (The PC speaker's
+    ' square wave has a fixed 50% duty and there is no volume to filter.)
+    '
+    FUNCTION SFXR_BeeperUses%% (i AS LONG)
+        SELECT CASE i
+            CASE SP_DUTY, SP_DUTY_RAMP, SP_PHA_OFFSET, SP_PHA_RAMP, SP_LPF_FREQ, SP_LPF_RAMP, SP_LPF_RESONANCE, SP_HPF_FREQ, SP_HPF_RAMP
+                SFXR_BeeperUses = 0
+            CASE ELSE
+                SFXR_BeeperUses = -1
+        END SELECT
+    END FUNCTION
+$END IF
