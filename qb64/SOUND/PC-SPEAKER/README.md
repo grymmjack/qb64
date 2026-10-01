@@ -79,11 +79,43 @@ Wolfenstein 3D or DOOM, change it, and save it as your own.
 ![PCSEDIT editing the Duke Nukem 1 BOMBEXPLODE sound](SCREENSHOTS/6-pcsedit.png)
 
 **Drawing:** the big panel is a piano roll, with pitch going up and time going
-right. Drag with the left mouse button to draw and with the right to erase.
-**Shift+click** draws a straight line from the last point, which makes slides
-and sweeps. **F6** switches snap to semitones on or off. The mouse wheel
+right. **Tab** switches between two drawing tools, and right-drag erases with
+either:
+
+* **NOTE** (the default): **click** to place a steady note at that pitch,
+  **Len** long (**F11/F12**; counted in grid cells while the grid is on). Drag
+  right to make it longer: the pitch stays where you clicked, however the
+  mouse wobbles. A grey bar shows the note a click would place.
+* **FREE**: a freehand pencil where every step follows the mouse, for sweeps,
+  zaps and slides. **Shift+click** draws a straight line from the last point. **F6** switches snap to semitones on or off. The mouse wheel
 scrolls and **Ctrl+wheel** zooms. Click the time ruler above the roll to move
 the cursor (yellow line).
+
+**What the dots are:** a sound is one pitch every 1/140 of a second, so
+each dot on the roll is one step. There are no note lengths, ties or curves in
+the file, only that list of pitches. A long note is a row of dots at the same
+pitch, and a slide is a staircase of dots. The thin lines between dots, here
+and in DN1PLAY's graph, are only drawn to join two sounding steps in a row so
+you can follow the shape; silence breaks them. To make a slide, draw it, or
+Shift+click to get a straight line from the last point.
+
+**Musical grid:** **Ctrl+G** steps through the grid sizes: off, 1/4, 1/8,
+1/16, 1/32, then 1/8 and 1/16 triplets (**Ctrl+Shift+G** goes back). **Ctrl+B**
+sets the tempo, which starts at 120 BPM. With the grid on:
+
+* the roll shows a line for every cell, a stronger one for every beat, and a
+  numbered line for every bar (4/4), and the cursor shows *bar.beat*;
+* drawing and erasing fill whole cells, with one pitch per cell, so a dragged
+  sweep turns into a staircase of notes;
+* Left/Right move the cursor a cell at a time and Ctrl+Left/Right a beat at a
+  time, and in STEP record **Len** counts cells instead of steps.
+
+The sound still plays at 140 steps a second, so a cell is often not a whole
+number of steps: a 1/16 at 120 BPM is 17.5. Each cell starts on the nearest
+step, so cells come out 18 and 17 steps long in turn and the notes stay in
+time. A very fine grid at a fast tempo can get down to one or two steps a
+cell. The tempo and grid aren't saved in the bank, because the IFS format has
+nowhere to store them.
 
 **Playing notes in:** the computer keyboard is a two-octave piano, laid out
 like a tracker:
@@ -94,8 +126,10 @@ Q W E R T Y U I      Z X C V B N M ,     (Z = C, F9/F10 change octave)
 ```
 
 A MIDI keyboard works too. PCSEDIT finds it at start-up, and **F7** switches
-to another device or turns MIDI off. Notes always sound while you hold them.
-**F5** picks what they do:
+to another device or turns MIDI off. You can also **click and hold the piano
+keys** left of the roll to hear a pitch, and drag up and down to slide; that
+never records. Notes always sound while you hold them. **F5** picks what
+they do:
 
 * **REC off:** the notes just play.
 * **STEP:** each note writes *Len* steps at the cursor and moves the cursor on,
@@ -105,6 +139,24 @@ to another device or turns MIDI off. Notes always sound while you hold them.
   trimmed off. The PC speaker plays one note at a time, so the note you pressed
   last wins.
 
+**Playing a sound as an instrument:** by default a key plays a plain tone.
+Press **Ctrl+K** and the keys play *the selected sound* instead: every note
+plays the whole sound, transposed, the way a sampler does. C4 plays it as
+drawn, C5 an octave higher, and so on. That turns a sound you have drawn (a
+zap, a blip, a little arpeggio) into an instrument you can play tunes with.
+
+* The instrument is marked with ♪ in the list. Select another sound and press
+  **Ctrl+K** to make that the instrument; press it with the instrument
+  selected to go back to plain notes.
+* **Ctrl+H** sets how a note plays it: **GATE** sounds while the key is held,
+  **ONE-SHOT** always plays to the end, and **LOOP** repeats while the key is
+  held.
+* **STEP** and **LIVE** record what you play *into another sound*, never into
+  the instrument. If the instrument is the selected sound when you start, a
+  new sound called `<name>_TUNE` is made to record into. In STEP, each note
+  writes the instrument as if the key was held for *Len*; ONE-SHOT writes the
+  whole sound.
+
 | Key | What it does |
 | --- | --- |
 | Space / Enter | play from the start / from the cursor (Ctrl+L loops) |
@@ -112,6 +164,10 @@ to another device or turns MIDI off. Notes always sound while you hold them.
 | Up / Down | previous / next sound in the bank |
 | Insert / Delete / Backspace | insert a step, delete a step, delete the step before the cursor |
 | Ctrl+Up / Ctrl+Down | transpose the sound a semitone (add Shift for an octave) |
+| Ctrl+G / Ctrl+Shift+G | grid size: off, 1/4, 1/8, 1/16, 1/32, 1/8T, 1/16T |
+| Ctrl+B | tempo (BPM) for the grid |
+| Ctrl+K / Ctrl+H | keys play notes or the selected sound / GATE, ONE-SHOT, LOOP |
+| Tab | drawing tool: NOTE (steady notes) / FREE (freehand) |
 | Ctrl+T | trim silence off the end |
 | Ctrl+Z / Ctrl+Y | undo / redo |
 | F2 / F3 / F4 / F8 | rename, new sound, duplicate, delete (press F8 twice) |

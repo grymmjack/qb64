@@ -13,26 +13,46 @@
 ' it writes the keyboard's bytes to a temp file that the editor reads every
 ' frame - no C, no DECLARE LIBRARY.
 '
-' Mouse (piano roll):
-'   left drag         draw            right drag     erase
-'   Shift+left click  straight line from the last point (slides)
+' Mouse (piano roll) - Tab switches the drawing tool:
+'   NOTE tool (default)  click = a steady note, Len long, at that pitch;
+'                        drag right = a longer note (the pitch stays put)
+'   FREE tool            left drag draws freehand, every step following
+'                        the mouse (sweeps); Shift+click = straight line
+'                        from the last point (slides)
+'   right drag        erase (both tools)
 '   wheel             scroll          Ctrl+wheel     zoom
 '   click time ruler  move the cursor
 '
 ' Notes - computer keyboard (two octaves, tracker layout):
 '   Z S X D C V G B H N J M ,     lower octave (C to C)
 '   Q 2 W 3 E R 5 T 6 Y 7 U I     upper octave
-'   ...or any MIDI keyboard (F7 picks the device)
+'   ...or any MIDI keyboard (F7 picks the device), or click and hold the
+'   piano keys left of the roll to audition a pitch (drag to slide)
+'
+' What the notes play (Ctrl+K):
+'   NOTES   plain tones - for writing a sound note by note
+'   SOUND   the selected sound becomes an instrument: every note plays the
+'           whole sound, transposed (C4 plays it as drawn). STEP / LIVE
+'           record what you play into another sound - a new one is made if
+'           the instrument itself is selected. Ctrl+H: GATE (plays while
+'           held), ONE-SHOT (always plays to the end), LOOP (repeats while
+'           held)
 '
 ' Keys:
 '   Space          play / stop            Enter        play from the cursor
-'   Left / Right   move the cursor        Home / End   start / end of sound
+'   Left / Right   move the cursor (a grid cell; Ctrl = a beat, or 0.1 s
+'                  with the grid off)     Home / End   start / end of sound
 '   Up / Down      previous / next sound
 '   F5             record mode: OFF, STEP (each note = Len steps at the
 '                  cursor), LIVE (records what you play, 140 steps/sec,
 '                  starting with the first note; F5 / Space stops)
 '   F6 snap to semitones on/off   F7 MIDI device   F9/F10 octave -/+
-'   F11/F12 note length -/+       Ctrl+L loop on/off
+'   F11/F12 note length -/+ (in grid cells while the grid is on)
+'   Ctrl+G / Ctrl+Shift+G   grid: off, 1/4, 1/8, 1/16, 1/32, 1/8T, 1/16T
+'   Ctrl+B                  tempo (BPM) for the grid
+'   Ctrl+L                  loop on/off
+'   Ctrl+K                  keys play NOTES / play the selected SOUND
+'   Ctrl+H                  instrument: GATE / ONE-SHOT / LOOP
 '   Insert / Delete   insert / delete a step at the cursor
 '   Backspace         delete the step before the cursor
 '   Ctrl+Up/Down      transpose the sound a semitone (with Shift: an octave)
@@ -73,6 +93,14 @@ CONST PROMPT_RENAME = 1
 CONST PROMPT_PRIORITY = 2
 CONST PROMPT_OPEN = 3
 CONST PROMPT_SAVEAS = 4
+CONST PROMPT_BPM = 5
+CONST BEATS_PER_BAR = 4 '                the grid is 4/4
+CONST KEYS_NOTES = 0 '                   what notes play: plain tones...
+CONST KEYS_SOUND = 1 '                   ...or the instrument sound, transposed
+CONST HOLD_GATE = 0
+CONST HOLD_ONESHOT = 1
+CONST HOLD_LOOP = 2
+CONST ROOT_NOTE = 60 '                   C4 plays the instrument as drawn
 
 ' --- the bank being edited
 DIM SHARED sndName(1 TO MAX_SOUNDS) AS STRING
@@ -91,7 +119,11 @@ DIM SHARED zoom AS LONG ' pixels per step
 DIM SHARED scrollX AS LONG ' first visible step
 DIM SHARED cursorStep AS LONG
 DIM SHARED snapOn AS INTEGER
-DIM SHARED drawing AS INTEGER ' 0, 1 = drawing, 2 = erasing
+DIM SHARED drawing AS INTEGER ' 0, 1 = drawing, 2 = erasing, 3 = placing a note
+DIM SHARED freeTool AS INTEGER ' FALSE = NOTE tool, TRUE = FREE (freehand) tool
+DIM SHARED noteBase AS STRING ' the sound before the note being placed
+DIM SHARED noteS0 AS LONG ' where the note being placed starts
+DIM SHARED noteNt AS DOUBLE ' and its pitch
 DIM SHARED lastStep AS LONG
 DIM SHARED lastNote AS DOUBLE
 DIM SHARED haveAnchor AS INTEGER
@@ -115,7 +147,16 @@ DIM SHARED recPos AS LONG
 DIM SHARED recStartLen AS LONG
 DIM SHARED recLastNote AS LONG
 DIM SHARED noteLen AS LONG
+DIM SHARED gridDiv AS LONG ' 0 = off, else cells per whole note: 4 8 16 32, 12 = 1/8T, 24 = 1/16T
+DIM SHARED bpm AS DOUBLE
 DIM SHARED octave AS LONG
+DIM SHARED keysMode AS INTEGER
+DIM SHARED instIdx AS LONG ' the instrument sound (KEYS_SOUND)
+DIM SHARED holdMode AS INTEGER
+DIM SHARED voiceOn AS INTEGER ' the instrument is sounding
+DIM SHARED voicePos AS LONG ' its step
+DIM SHARED voiceNote AS LONG ' at this pitch
+DIM SHARED auditionNote AS LONG ' piano key held with the mouse (-1 = none)
 DIM SHARED heldNote AS LONG ' the note sounding now (-1 = none); last pressed wins
 DIM SHARED noteStamp(0 TO 127) AS LONG ' when each note went down (0 = up)
 DIM SHARED stampCount AS LONG
@@ -165,8 +206,10 @@ rateHz = PCSPK_IFS_DEFAULT_HZ
 zoom = 6
 snapOn = -1
 noteLen = 4
+bpm = 120
 octave = 4
 heldNote = -1
+auditionNote = -1
 midiDevIdx = -1
 init_piano
 
@@ -219,7 +262,11 @@ DO
     ' ------------------------------------------------------------ keys
     k = _KEYHIT
     IF promptKind THEN
-        prompt_key k
+        ' take every key waiting, so pasted or fast typing shows up at once
+        DO WHILE k <> 0 AND promptKind <> PROMPT_NONE
+            prompt_key k
+            k = _KEYHIT
+        LOOP
     ELSE
         poll_piano ctrl
         IF k THEN quitNow = handle_key(k, ctrl, shift)
@@ -260,20 +307,36 @@ SUB on_tick
                 playPos = 0
             ELSE
                 playing = 0
-                PCSPK_Off
+                speaker 0
                 EXIT SUB
             END IF
         END IF
-        PCSPK_SetDivisor get_step(cur, playPos)
+        speaker get_step(cur, playPos)
         playPos = playPos + 1
         EXIT SUB
     END IF
 
+    ' what the keys are playing right now
+    IF keysMode = KEYS_SOUND THEN
+        IF voiceOn THEN
+            v = voice_div(voicePos, voiceNote)
+            IF v < 0 THEN
+                voiceOn = 0
+                v = 0
+            ELSE
+                voicePos = voicePos + 1
+            END IF
+        END IF
+    ELSEIF heldNote >= 0 THEN
+        v = note_div(heldNote)
+    ELSEIF auditionNote >= 0 THEN
+        v = note_div(auditionNote)
+    END IF
+
     IF recording THEN
-        IF heldNote >= 0 THEN v = note_div(heldNote) ELSE v = 0
         IF recPos < MAX_STEPS THEN
             set_step cur, recPos, v
-            IF v THEN recLastNote = recPos
+            IF v <> 0 OR (keysMode = KEYS_SOUND AND voiceOn <> 0) THEN recLastNote = recPos
             recPos = recPos + 1
             cursorStep = recPos
             follow cursorStep
@@ -282,7 +345,85 @@ SUB on_tick
         END IF
     END IF
 
-    IF heldNote >= 0 THEN PCSPK_SetDivisor note_div(heldNote) ELSE PCSPK_Off
+    speaker v
+END SUB
+
+
+''
+' Set the speaker's pitch, but only when it changes. Writing the PIT restarts
+' its square wave, so writing the same divisor every 1/140 s would chop a
+' steady note into uneven cycles - flat and buzzy instead of a clean tone.
+' (The games' sound code and PCSPK_IFSRenderInto do the same.)
+'
+SUB speaker (v AS LONG)
+    STATIC lastV AS LONG
+    IF v = lastV THEN EXIT SUB
+    lastV = v
+    PCSPK_SetDivisor v
+END SUB
+
+
+''
+' Step pos of the instrument played at note nt (-1 once it has finished).
+' Transposing divides the divisor: an octave up halves it.
+'
+FUNCTION voice_div& (stepPos AS LONG, nt AS LONG)
+    DIM ln AS LONG, p AS LONG, v AS LONG
+    ln = steps_of(instIdx)
+    p = stepPos
+    IF ln = 0 THEN voice_div = -1: EXIT FUNCTION
+    IF p >= ln THEN
+        IF holdMode = HOLD_LOOP THEN
+            p = p MOD ln
+        ELSE
+            voice_div = -1
+            EXIT FUNCTION
+        END IF
+    END IF
+    v = get_step(instIdx, p)
+    IF v THEN
+        v = CLNG(v / 2 ^ ((nt - ROOT_NOTE) / 12))
+        IF v < 1 THEN v = 1
+        IF v > 65534 THEN v = 65534
+    END IF
+    voice_div = v
+END FUNCTION
+
+
+SUB start_voice (n AS LONG)
+    IF keysMode <> KEYS_SOUND THEN EXIT SUB
+    voiceOn = -1
+    voicePos = 0
+    voiceNote = n
+END SUB
+
+
+''
+' Recording with the instrument goes into another sound, never into the
+' instrument itself: if it is selected, make a new sound to record into.
+'
+SUB ensure_target
+    IF keysMode <> KEYS_SOUND OR cur <> instIdx THEN EXIT SUB
+    add_sound "", ""
+    sndName(cur) = LEFT$(sndName(instIdx), 7) + "_TUNE"
+    set_status "Recording " + sndName(instIdx) + " into a new sound, " + sndName(cur)
+END SUB
+
+
+''
+' Piano keys clicked with the mouse: hear the pitch, never record it.
+'
+SUB audition_start (n AS LONG)
+    IF recording OR n < 0 OR n > 127 THEN EXIT SUB
+    IF playing THEN stop_playing
+    auditionNote = n
+    start_voice n
+END SUB
+
+
+SUB audition_stop
+    auditionNote = -1
+    IF keysMode = KEYS_SOUND AND holdMode <> HOLD_ONESHOT AND heldNote < 0 THEN voiceOn = 0
 END SUB
 
 
@@ -297,7 +438,7 @@ END SUB
 
 SUB stop_playing
     playing = 0
-    PCSPK_Off
+    speaker 0
 END SUB
 
 
@@ -365,9 +506,11 @@ SUB note_on (n AS LONG)
 
     SELECT CASE recMode
         CASE REC_STEP
+            ensure_target
             step_enter n
         CASE REC_LIVE
             IF NOT recording THEN
+                ensure_target
                 push_undo
                 recording = -1
                 recPos = cursorStep
@@ -375,6 +518,7 @@ SUB note_on (n AS LONG)
                 recLastNote = -1
             END IF
     END SELECT
+    start_voice n ' after ensure_target, which may switch sounds
 END SUB
 
 
@@ -386,6 +530,15 @@ SUB note_off (n AS LONG)
     FOR i = 0 TO 127
         IF noteStamp(i) > best THEN best = noteStamp(i): heldNote = i
     NEXT
+    ' the instrument: let go of the last key = stop (unless ONE-SHOT); with
+    ' another key still down, carry on at its pitch (legato)
+    IF keysMode = KEYS_SOUND AND holdMode <> HOLD_ONESHOT THEN
+        IF heldNote >= 0 THEN
+            voiceNote = heldNote
+        ELSEIF auditionNote < 0 THEN
+            voiceOn = 0
+        END IF
+    END IF
 END SUB
 
 
@@ -393,12 +546,37 @@ END SUB
 ' STEP record: write the note for noteLen steps at the cursor and move on.
 '
 SUB step_enter (n AS LONG)
-    DIM i AS LONG
+    DIM i AS LONG, c AS LONG, s0 AS LONG, s1 AS LONG, last AS LONG, v AS LONG
     push_undo
-    FOR i = 0 TO noteLen - 1
-        IF cursorStep + i < MAX_STEPS THEN set_step cur, cursorStep + i, note_div(n)
+    IF gridDiv THEN
+        ' whole cells: noteLen of them, from the cell the cursor is at the
+        ' start of (or the next one, if it is part way into a cell)
+        c = cell_of(cursorStep)
+        IF cell_start(c) < cursorStep THEN c = c + 1
+        s0 = cell_start(c)
+        s1 = cell_start(c + noteLen)
+    ELSE
+        s0 = cursorStep
+        s1 = cursorStep + noteLen
+    END IF
+
+    ' the note as if held for s1 - s0 steps; a ONE-SHOT instrument always
+    ' writes the whole sound (the next note may cover its tail)
+    last = s1 - 1
+    IF keysMode = KEYS_SOUND AND holdMode = HOLD_ONESHOT THEN
+        IF s0 + steps_of(instIdx) - 1 > last THEN last = s0 + steps_of(instIdx) - 1
+    END IF
+    FOR i = s0 TO last
+        IF i >= MAX_STEPS THEN EXIT FOR
+        IF keysMode = KEYS_SOUND THEN
+            v = voice_div(i - s0, n)
+            IF v < 0 THEN v = 0
+        ELSE
+            v = note_div(n)
+        END IF
+        set_step cur, i, v
     NEXT
-    cursorStep = cursorStep + noteLen
+    cursorStep = s1
     IF cursorStep > MAX_STEPS THEN cursorStep = MAX_STEPS
     follow cursorStep
 END SUB
@@ -561,9 +739,29 @@ SUB handle_mouse (mx AS LONG, my AS LONG, b1 AS INTEGER, b2 AS INTEGER)
     mouseStep = s
     mouseNote = nt
 
+    ' --- piano keys: hold to hear the pitch, drag to slide
+    IF auditionNote >= 0 THEN
+        IF b1 THEN
+            IF INT(nt + 0.5) <> auditionNote AND my >= CANVAS_Y AND my < CANVAS_Y + CANVAS_H THEN audition_start INT(nt + 0.5)
+        ELSE
+            audition_stop
+        END IF
+        wasDown = b1 OR b2
+        EXIT SUB
+    END IF
+    IF b1 AND NOT wasDown AND mx >= RULER_X - 30 AND mx < CANVAS_X AND my >= CANVAS_Y AND my < CANVAS_Y + CANVAS_H THEN
+        audition_start INT(nt + 0.5)
+        wasDown = -1
+        EXIT SUB
+    END IF
+
     ' --- drawing / erasing in the roll
     IF drawing THEN
-        IF drawing = 1 AND b1 THEN
+        IF drawing = 3 AND b1 THEN
+            place_note s
+        ELSEIF drawing = 3 THEN
+            drawing = 0
+        ELSEIF drawing = 1 AND b1 THEN
             draw_line lastStep, lastNote, s, nt, 0
             lastStep = s: lastNote = nt
         ELSEIF drawing = 2 AND b2 THEN
@@ -577,7 +775,16 @@ SUB handle_mouse (mx AS LONG, my AS LONG, b1 AS INTEGER, b2 AS INTEGER)
         push_undo
         IF playing THEN stop_playing
         IF b1 THEN drawing = 1 ELSE drawing = 2
-        IF b1 AND shift AND haveAnchor THEN
+        IF b1 AND NOT freeTool THEN
+            ' NOTE tool: the pitch is fixed where you click
+            drawing = 3
+            noteBase = sndData(cur)
+            noteNt = nt
+            IF snapOn THEN noteNt = INT(nt + 0.5)
+            noteS0 = s
+            IF gridDiv THEN noteS0 = cell_start(cell_of(s))
+            place_note s
+        ELSEIF b1 AND shift AND haveAnchor THEN
             draw_line lastStep, lastNote, s, nt, 0
         ELSE
             draw_line s, nt, s, nt, (drawing = 2)
@@ -600,16 +807,73 @@ END SUB
 
 
 ''
+' NOTE tool: put back the sound as it was when the button went down, then
+' write one steady note from noteS0 to wherever the mouse is now - at least
+' Len long (Len counts grid cells while the grid is on).
+'
+SUB place_note (mouseS AS LONG)
+    DIM e AS LONG, i AS LONG, v AS LONG
+    e = note_tool_end(noteS0)
+    IF gridDiv THEN
+        IF cell_start(cell_of(mouseS) + 1) > e THEN e = cell_start(cell_of(mouseS) + 1)
+    ELSE
+        IF mouseS + 1 > e THEN e = mouseS + 1
+    END IF
+    IF e > MAX_STEPS THEN e = MAX_STEPS
+    sndData(cur) = noteBase
+    v = note_div(noteNt)
+    FOR i = noteS0 TO e - 1
+        set_step cur, i, v
+    NEXT
+    cursorStep = e
+    lastStep = e - 1: lastNote = noteNt
+END SUB
+
+
+''
+' Where a Len-long note starting at s0 ends.
+'
+FUNCTION note_tool_end& (s0 AS LONG)
+    IF gridDiv THEN
+        note_tool_end = cell_start(cell_of(s0) + noteLen)
+    ELSE
+        note_tool_end = s0 + noteLen
+    END IF
+END FUNCTION
+
+
+''
 ' Set every step from s0 to s1 along a straight line in pitch (or to
 ' silence when erasing).
 '
 SUB draw_line (s0 AS LONG, n0 AS DOUBLE, s1 AS LONG, n1 AS DOUBLE, erasing AS INTEGER)
     DIM a AS LONG, b AS LONG, na AS DOUBLE, nb AS DOUBLE, s AS LONG, nt AS DOUBLE
+    DIM ca AS LONG, cb AS LONG, c AS LONG, v AS LONG
     IF s0 <= s1 THEN
         a = s0: b = s1: na = n0: nb = n1
     ELSE
         a = s1: b = s0: na = n1: nb = n0
     END IF
+
+    ' grid on: whole cells, one pitch per cell
+    IF gridDiv THEN
+        ca = cell_of(a)
+        cb = cell_of(b)
+        FOR c = ca TO cb
+            IF cb > ca THEN nt = na + (nb - na) * (c - ca) / (cb - ca) ELSE nt = na
+            IF snapOn THEN nt = INT(nt + 0.5)
+            v = note_div(nt)
+            FOR s = cell_start(c) TO cell_start(c + 1) - 1
+                IF erasing THEN
+                    IF s < steps_of(cur) THEN set_step cur, s, 0
+                ELSE
+                    set_step cur, s, v
+                END IF
+            NEXT
+        NEXT
+        EXIT SUB
+    END IF
+
     FOR s = a TO b
         IF erasing THEN
             IF s < steps_of(cur) THEN set_step cur, s, 0
@@ -648,9 +912,17 @@ FUNCTION handle_key% (k AS LONG, ctrl AS INTEGER, shift AS INTEGER)
             END IF
         CASE 13: play_from cursorStep '                        Enter
         CASE 19200 '                                           Left
-            IF ctrl THEN move_cursor cursorStep - 14 ELSE move_cursor cursorStep - 1
+            IF gridDiv THEN
+                IF ctrl THEN move_cursor grid_prev(cursorStep, beat_cells) ELSE move_cursor grid_prev(cursorStep, 1)
+            ELSE
+                IF ctrl THEN move_cursor cursorStep - 14 ELSE move_cursor cursorStep - 1
+            END IF
         CASE 19712 '                                           Right
-            IF ctrl THEN move_cursor cursorStep + 14 ELSE move_cursor cursorStep + 1
+            IF gridDiv THEN
+                IF ctrl THEN move_cursor grid_next(cursorStep, beat_cells) ELSE move_cursor grid_next(cursorStep, 1)
+            ELSE
+                IF ctrl THEN move_cursor cursorStep + 14 ELSE move_cursor cursorStep + 1
+            END IF
         CASE 18176: move_cursor 0 '                            Home
         CASE 20224: move_cursor steps_of(cur) '                End
         CASE 18432 '                                           Up
@@ -675,6 +947,13 @@ FUNCTION handle_key% (k AS LONG, ctrl AS INTEGER, shift AS INTEGER)
                 delete_step cursorStep
             END IF
         CASE 15104: helpOn = NOT helpOn '                      F1
+        CASE 9 '                                               Tab
+            freeTool = NOT freeTool
+            IF freeTool THEN
+                set_status "FREE tool: drag to draw freehand (sweeps), Shift+click for a straight line"
+            ELSE
+                set_status "NOTE tool: click = a steady note Len long, drag right = longer"
+            END IF
         CASE 15360: start_prompt PROMPT_RENAME, "Name (up to 12 characters):", sndName(cur) ' F2
         CASE 15616: add_sound "", "" '                         F3
         CASE 15872: add_sound sndName(cur), sndData(cur) '     F4
@@ -726,6 +1005,13 @@ FUNCTION handle_key% (k AS LONG, ctrl AS INTEGER, shift AS INTEGER)
                             save_bank savePath
                         END IF
                     CASE "E": export_wav
+                    CASE "K": toggle_keys_mode
+                    CASE "H"
+                        holdMode = (holdMode + 1) MOD 3
+                        set_status "Instrument plays " + hold_name + " - " + hold_help
+                    CASE "G"
+                        IF shift THEN cycle_grid -1 ELSE cycle_grid 1
+                    CASE "B": start_prompt PROMPT_BPM, "Tempo in BPM (20-400):", LTRIM$(STR$(bpm))
                 END SELECT
             END IF
     END SELECT
@@ -766,6 +1052,43 @@ FUNCTION confirm_ok% (what AS STRING)
 END FUNCTION
 
 
+''
+' Ctrl+K: plain notes <-> the selected sound as an instrument. With a
+' different sound selected than the instrument, it becomes the instrument.
+'
+SUB toggle_keys_mode
+    voiceOn = 0
+    stop_recording
+    IF keysMode = KEYS_SOUND AND cur = instIdx THEN
+        keysMode = KEYS_NOTES
+        set_status "Keys play plain NOTES"
+        EXIT SUB
+    END IF
+    IF steps_of(cur) = 0 THEN set_status "This sound is empty - draw something first, then Ctrl+K": EXIT SUB
+    keysMode = KEYS_SOUND
+    instIdx = cur
+    set_status "Keys play " + sndName(cur) + " (C4 = as drawn), " + hold_name + ". Recording goes into another sound."
+END SUB
+
+
+FUNCTION hold_name$
+    SELECT CASE holdMode
+        CASE HOLD_GATE: hold_name = "GATE"
+        CASE HOLD_ONESHOT: hold_name = "ONE-SHOT"
+        CASE HOLD_LOOP: hold_name = "LOOP"
+    END SELECT
+END FUNCTION
+
+
+FUNCTION hold_help$
+    SELECT CASE holdMode
+        CASE HOLD_GATE: hold_help = "sounds while the key is held"
+        CASE HOLD_ONESHOT: hold_help = "always plays to the end"
+        CASE HOLD_LOOP: hold_help = "repeats while the key is held"
+    END SELECT
+END FUNCTION
+
+
 SUB set_octave (o AS LONG)
     octave = o
     IF octave < 1 THEN octave = 1
@@ -774,11 +1097,109 @@ SUB set_octave (o AS LONG)
 END SUB
 
 
+'-----------------------------------------------------------------------------
+' Musical grid
+'
+' gridDiv cells per whole note (4 = quarter notes, 16 = sixteenths, 12 and
+' 24 = eighth and sixteenth triplets) at bpm beats per minute, 4/4 time.
+' A cell is rarely a whole number of steps (1/16 at 120 BPM = 17.5 steps),
+' so cell k starts at step ROUND(k * cell_steps): cells come out 17 and 18
+' steps long in turn and never drift from the tempo.
+'-----------------------------------------------------------------------------
+
+FUNCTION cell_steps#
+    IF gridDiv = 0 THEN cell_steps = 1: EXIT FUNCTION
+    cell_steps = 4 * 60 * rateHz / (bpm * gridDiv)
+END FUNCTION
+
+
+FUNCTION cell_start& (c AS LONG)
+    cell_start = INT(c * cell_steps + 0.5)
+END FUNCTION
+
+
+''
+' The cell that step s is in.
+'
+FUNCTION cell_of& (s AS LONG)
+    DIM c AS LONG
+    c = INT(s / cell_steps)
+    DO WHILE cell_start(c + 1) <= s: c = c + 1: LOOP
+    DO WHILE c > 0 AND cell_start(c) > s: c = c - 1: LOOP
+    cell_of = c
+END FUNCTION
+
+
+''
+' Cells in one beat (a quarter note).
+'
+FUNCTION beat_cells&
+    beat_cells = gridDiv \ 4
+    IF gridDiv \ 4 < 1 THEN beat_cells = 1
+END FUNCTION
+
+
+''
+' The start of the n-th cell after / before step s.
+'
+FUNCTION grid_next& (s AS LONG, n AS LONG)
+    grid_next = cell_start(cell_of(s) + n)
+END FUNCTION
+
+
+FUNCTION grid_prev& (s AS LONG, n AS LONG)
+    DIM c AS LONG
+    c = cell_of(s)
+    IF cell_start(c) < s THEN c = c + 1 ' part way into a cell: count from its start
+    c = c - n
+    IF c < 0 THEN c = 0
+    grid_prev = cell_start(c)
+END FUNCTION
+
+
+FUNCTION grid_name$
+    SELECT CASE gridDiv
+        CASE 0: grid_name = "off"
+        CASE 12: grid_name = "1/8T"
+        CASE 24: grid_name = "1/16T"
+        CASE ELSE: grid_name = "1/" + LTRIM$(STR$(gridDiv))
+    END SELECT
+END FUNCTION
+
+
+FUNCTION grid_info$
+    IF gridDiv = 0 THEN grid_info = "": EXIT FUNCTION
+    grid_info = " - grid " + grid_name + ", " + fmt2(cell_steps) + " steps a cell"
+END FUNCTION
+
+
+SUB cycle_grid (dirn AS LONG)
+    DIM order AS STRING, i AS LONG, n AS LONG
+    DIM divs(0 TO 6) AS LONG
+    divs(0) = 0: divs(1) = 4: divs(2) = 8: divs(3) = 16: divs(4) = 32: divs(5) = 12: divs(6) = 24
+    FOR i = 0 TO 6
+        IF divs(i) = gridDiv THEN n = i
+    NEXT
+    n = (n + dirn + 7) MOD 7
+    gridDiv = divs(n)
+    IF gridDiv THEN
+        set_status "Grid " + grid_name + " at" + STR$(bpm) + " BPM = " + fmt2(cell_steps) + " steps a cell (Ctrl+B tempo)"
+        IF cell_steps < 2 THEN set_status "Grid " + grid_name + " is finer than 2 steps at" + STR$(bpm) + " BPM - try a slower tempo"
+    ELSE
+        set_status "Grid off - free drawing, step by step"
+    END IF
+END SUB
+
+
 SUB set_note_len (n AS LONG)
     noteLen = n
     IF noteLen < 1 THEN noteLen = 1
     IF noteLen > 140 THEN noteLen = 140
-    set_status "Note length" + STR$(noteLen) + " steps (" + fmt2(noteLen / rateHz) + " s)"
+    IF gridDiv THEN
+        set_status "Note length" + STR$(noteLen) + " grid cell(s) of " + grid_name
+    ELSE
+        set_status "Note length" + STR$(noteLen) + " steps (" + fmt2(noteLen / rateHz) + " s)"
+    END IF
 END SUB
 
 
@@ -856,6 +1277,14 @@ SUB prompt_key (k AS LONG)
                     IF v > 255 THEN v = 255
                     sndPri(cur) = v
                     dirty = -1
+                    promptKind = PROMPT_NONE
+                CASE PROMPT_BPM
+                    IF VAL(t) >= 20 AND VAL(t) <= 400 THEN
+                        bpm = VAL(t)
+                        set_status "Tempo" + STR$(bpm) + " BPM" + grid_info
+                    ELSE
+                        set_status "Tempo has to be between 20 and 400 BPM"
+                    END IF
                     promptKind = PROMPT_NONE
                 CASE PROMPT_OPEN
                     promptKind = PROMPT_NONE
@@ -936,6 +1365,9 @@ SUB new_bank
     stop_playing
     stop_recording
     sndCount = 0
+    keysMode = KEYS_NOTES
+    voiceOn = 0
+    instIdx = 0
     add_sound "", ""
     savePath = ""
     openedPath = ""
@@ -969,6 +1401,7 @@ SUB add_sound (nam AS STRING, dat AS STRING)
         sndData(at) = dat
     END IF
     fix_undo_after_insert at
+    IF at <= instIdx THEN instIdx = instIdx + 1
     select_sound at
     dirty = -1
 END SUB
@@ -983,6 +1416,8 @@ SUB delete_sound
         set_status "Cleared the only sound"
     ELSE
         set_status "Deleted " + sndName(cur)
+        IF cur = instIdx THEN keysMode = KEYS_NOTES: voiceOn = 0
+        IF cur < instIdx THEN instIdx = instIdx - 1
         FOR i = cur TO sndCount - 1
             sndName(i) = sndName(i + 1): sndPri(i) = sndPri(i + 1): sndData(i) = sndData(i + 1)
         NEXT
@@ -1141,6 +1576,9 @@ SUB open_bank (fileName AS STRING)
     stop_playing
     stop_recording
     sndCount = 0
+    keysMode = KEYS_NOTES
+    voiceOn = 0
+    instIdx = 0
     FOR i = 0 TO PCSPK_IFSCount - 1
         IF sndCount >= MAX_SOUNDS THEN EXIT FOR
         sndCount = sndCount + 1
@@ -1243,7 +1681,7 @@ END FUNCTION
 ' Render the current sound through the emulated speaker into a .wav.
 '
 SUB export_wav
-    DIM s AS LONG, h AS LONG, outName AS STRING, bankName AS STRING
+    DIM s AS LONG, h AS LONG, outName AS STRING, bankName AS STRING, v AS LONG, lastV AS LONG
     IF steps_of(cur) = 0 THEN set_status "Nothing to export": EXIT SUB
     stop_playing
     errNum = 0
@@ -1256,8 +1694,10 @@ SUB export_wav
     END IF
     outName = "EXPORT/" + safe_name(bankName) + "_" + safe_name(sndName(cur)) + ".wav"
     PCSPK_CaptureBegin
+    lastV = -1
     FOR s = 0 TO steps_of(cur) - 1
-        PCSPK_SetDivisor get_step(cur, s)
+        v = get_step(cur, s)
+        IF v <> lastV THEN PCSPK_SetDivisor v: lastV = v ' only on a change, see speaker
         PCSPK_AdvanceClocks PCSPK_PIT_HZ / rateHz
     NEXT
     PCSPK_Off
@@ -1337,7 +1777,11 @@ SUB draw_ui
     END IF
     IF LEN(statusMsg) = 0 AND promptKind = PROMPT_NONE THEN
         COLOR _RGB32(100, 115, 140)
-        _PRINTSTRING (8, SCR_H - 20), "Draw: left drag  Erase: right drag  Line: Shift+click  Notes: Z-M / Q-I keys or MIDI  Space play  F5 record"
+        IF freeTool THEN
+            _PRINTSTRING (8, SCR_H - 20), "FREE tool: drag draws freehand, Shift+click straight line, right drag erases   Tab: NOTE tool   Space play"
+        ELSE
+            _PRINTSTRING (8, SCR_H - 20), "NOTE tool: click = steady note (Len, F11/F12), drag right = longer, right drag erases   Tab: FREE tool   Space play"
+        END IF
     END IF
 
     IF helpOn THEN draw_help
@@ -1352,9 +1796,25 @@ SUB draw_info
     COLOR _RGB32(190, 200, 215)
     _PRINTSTRING (LIST_X, 52), "Priority" + STR$(sndPri(cur))
     _PRINTSTRING (LIST_X, 68), LTRIM$(STR$(steps_of(cur))) + " steps, " + fmt2(steps_of(cur) / rateHz) + " s"
+    IF keysMode = KEYS_SOUND THEN
+        COLOR _RGB32(120, 230, 160)
+        _PRINTSTRING (LIST_X, 84), "Keys: " + CHR$(14) + " " + LEFT$(sndName(instIdx), 8) + " " + hold_name
+    ELSE
+        COLOR _RGB32(150, 160, 180)
+        _PRINTSTRING (LIST_X, 84), "Keys: notes (Ctrl+K)"
+    END IF
+    COLOR _RGB32(190, 200, 215)
 
     s = "Cursor" + STR$(cursorStep) + " (" + fmt2(cursorStep / rateHz) + " s)"
+    IF gridDiv THEN s = s + "  bar " + bar_beat(cursorStep)
     _PRINTSTRING (x, 36), s
+    COLOR _RGB32(150, 200, 255)
+    IF gridDiv THEN
+        _PRINTSTRING (700, 36), "Grid " + grid_name + " @" + STR$(bpm) + " BPM (" + fmt2(cell_steps) + " steps)"
+    ELSE
+        _PRINTSTRING (700, 36), "Grid off (Ctrl+G)"
+    END IF
+    COLOR _RGB32(190, 200, 215)
     IF mouseIn THEN
         v = get_step(cur, mouseStep)
         s = "Mouse: step" + STR$(mouseStep) + "  " + note_name(mouseNote)
@@ -1378,15 +1838,28 @@ SUB draw_info
     END IF
     _PRINTSTRING (x, 76), s
     COLOR _RGB32(150, 160, 180)
-    s = "Snap " + on_off(snapOn) + "   Octave" + STR$(octave) + "   Len" + STR$(noteLen) + "   Loop " + on_off(loopOn) + "   Zoom" + STR$(zoom)
+    IF freeTool THEN s = "Tool FREE   " ELSE s = "Tool NOTE   "
+    s = s + "Snap " + on_off(snapOn) + "   Octave" + STR$(octave) + "   Len" + STR$(noteLen) + "   Loop " + on_off(loopOn) + "   Zoom" + STR$(zoom)
     s = s + "   MIDI: "
     IF midiDevIdx >= 0 THEN s = s + midiDevName(midiDevIdx) ELSE s = s + "off"
-    _PRINTSTRING (x + 248, 76), s
-    IF heldNote >= 0 THEN
+    _PRINTSTRING (x + 176, 76), s
+    IF heldNote >= 0 OR auditionNote >= 0 THEN
         COLOR _RGB32(255, 255, 255)
-        _PRINTSTRING (SCR_W - 160, 36), "Note " + note_name(heldNote)
+        IF heldNote >= 0 THEN v = heldNote ELSE v = auditionNote
+        _PRINTSTRING (SCR_W - 120, 36), "Note " + note_name(v)
     END IF
 END SUB
+
+
+''
+' "bar.beat" (both from 1) for a step, while the grid is on.
+'
+FUNCTION bar_beat$ (s AS LONG)
+    DIM beats AS DOUBLE, b AS LONG
+    beats = s * bpm / (60 * rateHz)
+    b = INT(beats + 0.000001)
+    bar_beat = LTRIM$(STR$(b \ BEATS_PER_BAR + 1)) + "." + LTRIM$(STR$(b MOD BEATS_PER_BAR + 1))
+END FUNCTION
 
 
 FUNCTION on_off$ (b AS INTEGER)
@@ -1409,6 +1882,7 @@ SUB draw_list
             COLOR _RGB32(190, 200, 215)
         END IF
         s = RIGHT$("  " + LTRIM$(STR$(n)), 3) + " " + LEFT$(sndName(n) + SPACE$(12), 12) + RIGHT$(SPACE$(6) + STR$(steps_of(n)), 6)
+        IF keysMode = KEYS_SOUND AND n = instIdx THEN s = s + " " + CHR$(14) ' the instrument
         _PRINTSTRING (LIST_X, y), s
     NEXT
     IF sndCount > LIST_ROWS THEN
@@ -1421,7 +1895,7 @@ END SUB
 
 SUB draw_roll
     DIM nt AS LONG, y AS LONG, x AS LONG, s AS LONG, v AS LONG, vis AS LONG, endX AS LONG
-    DIM w AS LONG, nn AS DOUBLE, col AS _UNSIGNED LONG, hp AS LONG, isBlack AS INTEGER
+    DIM w AS LONG, nn AS DOUBLE, col AS _UNSIGNED LONG, hp AS LONG, isBlack AS INTEGER, prevY AS LONG
 
     vis = CANVAS_W \ zoom
 
@@ -1442,8 +1916,10 @@ SUB draw_roll
             _PRINTSTRING (RULER_X - 26, y - 8), "C" + LTRIM$(STR$(nt \ 12 - 1))
         END IF
     NEXT
-    IF heldNote >= NOTE_LO AND heldNote < NOTE_HI THEN
-        y = note_y(heldNote)
+    nt = heldNote
+    IF nt < 0 THEN nt = auditionNote
+    IF nt >= NOTE_LO AND nt < NOTE_HI THEN
+        y = note_y(nt)
         LINE (RULER_X, y - PX_SEMI \ 2)-(RULER_X + 40, y + PX_SEMI \ 2 - 1), _RGB32(255, 170, 40), BF
     END IF
 
@@ -1455,35 +1931,36 @@ SUB draw_roll
         LINE (endX, CANVAS_Y)-(endX, CANVAS_Y + CANVAS_H - 1), _RGB32(90, 90, 110)
     END IF
 
-    ' time ruler: a tick every 0.1 s, a label every second
     LINE (CANVAS_X, TIME_Y)-(CANVAS_X + CANVAS_W - 1, CANVAS_Y - 2), _RGB32(26, 32, 44), BF
-    FOR s = (scrollX \ 14) * 14 TO scrollX + vis STEP 14
-        x = CANVAS_X + (s - scrollX) * zoom
-        IF x >= CANVAS_X AND x < CANVAS_X + CANVAS_W THEN
-            IF s MOD 140 = 0 THEN
-                LINE (x, TIME_Y)-(x, CANVAS_Y - 2), _RGB32(150, 160, 180)
-                COLOR _RGB32(150, 160, 180)
-                _PRINTSTRING (x + 3, TIME_Y + 2), LTRIM$(STR$(s \ 140)) + "s"
-            ELSE
-                LINE (x, CANVAS_Y - 8)-(x, CANVAS_Y - 2), _RGB32(80, 90, 110)
-            END IF
-        END IF
-    NEXT
+    IF gridDiv THEN
+        draw_grid vis
+    ELSE
+        draw_seconds vis
+    END IF
 
     ' the steps
     w = zoom - 1
     IF w < 1 THEN w = 1
+    ' Each step is one pitch (a dot). Like DN1PLAY's graph, a thin line joins
+    ' two sounding steps in a row, so jumps and slides read as one shape;
+    ' silence breaks the line.
+    prevY = -1
     FOR s = scrollX TO scrollX + vis
         IF s >= steps_of(cur) THEN EXIT FOR
         x = CANVAS_X + (s - scrollX) * zoom
         v = get_step(cur, s)
+        IF v = 0 THEN prevY = -1
         IF v THEN
             nn = div_note(v)
             col = _RGB32(255, 170, 40)
             IF nn >= NOTE_HI THEN nn = NOTE_HI - 0.5: col = _RGB32(255, 120, 200)
             IF nn < NOTE_LO THEN nn = NOTE_LO: col = _RGB32(255, 120, 200)
             y = note_y(nn)
-            LINE (x, y - 2)-(x + w - 1, y + 2), col, BF
+            IF prevY >= 0 AND prevY <> y THEN LINE (x, prevY)-(x, y), _RGB32(120, 80, 20)
+            ' full width, as in DN1PLAY: a run of one pitch reads as one solid
+            ' bar instead of a row of dots
+            LINE (x, y - 1)-(x + zoom - 1, y + 1), col, BF
+            prevY = y
         ELSE
             LINE (x, CANVAS_Y + CANVAS_H - 3)-(x + w - 1, CANVAS_Y + CANVAS_H - 1), _RGB32(70, 80, 100), BF
         END IF
@@ -1505,12 +1982,26 @@ SUB draw_roll
         IF x >= CANVAS_X AND x < CANVAS_X + CANVAS_W THEN LINE (x, CANVAS_Y)-(x, CANVAS_Y + CANVAS_H - 1), _RGB32(255, 60, 60)
     END IF
 
-    ' mouse crosshair note
-    IF mouseIn AND drawing = 0 THEN
+    ' mouse preview: the note the NOTE tool would place, or the step / cell
+    ' the FREE tool would draw
+    IF mouseIn AND drawing = 0 AND NOT freeTool THEN
         y = note_y(INT(mouseNote + 0.5))
         IF NOT snapOn THEN y = note_y(mouseNote)
-        x = CANVAS_X + (mouseStep - scrollX) * zoom
-        LINE (x, y - 2)-(x + w - 1, y + 2), _RGBA32(255, 255, 255, 120), BF
+        s = mouseStep
+        IF gridDiv THEN s = cell_start(cell_of(mouseStep))
+        x = CANVAS_X + (s - scrollX) * zoom
+        LINE (x, y - 2)-(x + (note_tool_end(s) - s) * zoom - 2, y + 2), _RGBA32(255, 255, 255, 110), BF
+    END IF
+    IF mouseIn AND drawing = 0 AND freeTool THEN
+        y = note_y(INT(mouseNote + 0.5))
+        IF NOT snapOn THEN y = note_y(mouseNote)
+        IF gridDiv THEN
+            x = CANVAS_X + (cell_start(cell_of(mouseStep)) - scrollX) * zoom
+            LINE (x, y - 2)-(x + (cell_start(cell_of(mouseStep) + 1) - cell_start(cell_of(mouseStep))) * zoom - 2, y + 2), _RGBA32(255, 255, 255, 120), BF
+        ELSE
+            x = CANVAS_X + (mouseStep - scrollX) * zoom
+            LINE (x, y - 2)-(x + w - 1, y + 2), _RGBA32(255, 255, 255, 120), BF
+        END IF
     END IF
 
     LINE (CANVAS_X - 1, CANVAS_Y - 1)-(CANVAS_X + CANVAS_W, CANVAS_Y + CANVAS_H), _RGB32(70, 80, 100), B
@@ -1519,18 +2010,69 @@ SUB draw_roll
 END SUB
 
 
+''
+' Time ruler with the grid off: a tick every 0.1 s, a label every second.
+'
+SUB draw_seconds (vis AS LONG)
+    DIM s AS LONG, x AS LONG
+    FOR s = (scrollX \ 14) * 14 TO scrollX + vis STEP 14
+        x = CANVAS_X + (s - scrollX) * zoom
+        IF x >= CANVAS_X AND x < CANVAS_X + CANVAS_W THEN
+            IF s MOD 140 = 0 THEN
+                LINE (x, TIME_Y)-(x, CANVAS_Y - 2), _RGB32(150, 160, 180)
+                COLOR _RGB32(150, 160, 180)
+                _PRINTSTRING (x + 3, TIME_Y + 2), LTRIM$(STR$(s \ 140)) + "s"
+            ELSE
+                LINE (x, CANVAS_Y - 8)-(x, CANVAS_Y - 2), _RGB32(80, 90, 110)
+            END IF
+        END IF
+    NEXT
+END SUB
+
+
+''
+' Time ruler and roll lines with the grid on: every cell, stronger on beats,
+' strongest on bars, which are numbered.
+'
+SUB draw_grid (vis AS LONG)
+    DIM c AS LONG, c0 AS LONG, c1 AS LONG, x AS LONG, s AS LONG, bc AS LONG, onBeat AS INTEGER, onBar AS INTEGER
+    bc = beat_cells
+    c0 = cell_of(scrollX)
+    c1 = cell_of(scrollX + vis) + 1
+    FOR c = c0 TO c1
+        s = cell_start(c)
+        x = CANVAS_X + (s - scrollX) * zoom
+        IF x >= CANVAS_X AND x < CANVAS_X + CANVAS_W THEN
+            onBeat = (c MOD bc = 0) AND (gridDiv MOD 4 = 0 OR gridDiv = 12 OR gridDiv = 24)
+            onBar = (c MOD (bc * BEATS_PER_BAR) = 0)
+            IF onBar THEN
+                LINE (x, TIME_Y)-(x, CANVAS_Y + CANVAS_H - 1), _RGB32(110, 130, 170)
+                COLOR _RGB32(180, 200, 235)
+                _PRINTSTRING (x + 3, TIME_Y + 2), LTRIM$(STR$(c \ (bc * BEATS_PER_BAR) + 1))
+            ELSEIF onBeat THEN
+                LINE (x, CANVAS_Y - 10)-(x, CANVAS_Y - 2), _RGB32(120, 135, 160)
+                LINE (x, CANVAS_Y)-(x, CANVAS_Y + CANVAS_H - 1), _RGB32(52, 60, 82)
+            ELSEIF (cell_steps * zoom) >= 4 THEN
+                LINE (x, CANVAS_Y - 5)-(x, CANVAS_Y - 2), _RGB32(80, 90, 110)
+                LINE (x, CANVAS_Y)-(x, CANVAS_Y + CANVAS_H - 1), _RGB32(30, 36, 50)
+            END IF
+        END IF
+    NEXT
+END SUB
+
+
 SUB draw_help
-    DIM x AS LONG, y AS LONG, i AS LONG
-    DIM t(1 TO 26) AS STRING
+    DIM x AS LONG, y AS LONG, i AS LONG, wMax AS LONG
+    DIM t(1 TO 28) AS STRING
     t(1) = "PCSEDIT - PC speaker sound editor"
     t(2) = ""
-    t(3) = "Mouse   left drag draw   right drag erase   Shift+click straight line"
-    t(4) = "        wheel scroll   Ctrl+wheel zoom   click the time ruler: cursor"
+    t(3) = "Mouse   Tab tool: NOTE (click = steady note Len long, drag right = longer)"
+    t(4) = "        or FREE (drag draws freehand, Shift+click straight line); right drag erases"
     t(5) = "Notes   Z S X D C V G B H N J M ,   lower octave     F9 / F10 octave"
     t(6) = "        Q 2 W 3 E R 5 T 6 Y 7 U I   upper octave     or a MIDI keyboard"
-    t(7) = ""
+    t(7) = "        wheel scroll   Ctrl+wheel zoom   click the time ruler: cursor"
     t(8) = "F5      record: OFF / STEP (note = Len steps at cursor) / LIVE"
-    t(9) = "F6      snap to semitones      F7  MIDI device      F11/F12  note length"
+    t(9) = "F6 snap to semitones  F7 MIDI device  F11/F12 note length  Ctrl+G grid  Ctrl+B BPM"
     t(10) = "Space   play / stop            Enter  play from cursor     Ctrl+L  loop"
     t(11) = "Left/Right  cursor (Ctrl: 0.1 s)   Home/End   Up/Down  choose sound"
     t(12) = "Insert / Delete  step at cursor    Backspace  delete step before cursor"
@@ -1545,11 +2087,20 @@ SUB draw_help
     t(21) = "Opens anything DN1PLAY plays. Saving never replaces the file you"
     t(22) = "opened unless you choose its name in Save As."
     t(23) = ""
-    t(24) = "Esc / F1  close this"
-    x = 300: y = 140
-    LINE (x - 16, y - 16)-(x + 600, y + 24 * 18), _RGB32(20, 26, 40), BF
-    LINE (x - 16, y - 16)-(x + 600, y + 24 * 18), _RGB32(120, 140, 180), B
-    FOR i = 1 TO 24
+    t(24) = "Ctrl+K  keys play the selected SOUND as an instrument (C4 = as drawn)"
+    t(25) = "        Ctrl+H GATE / ONE-SHOT / LOOP; recording goes into another sound"
+    t(26) = "Click and hold the piano keys to audition a pitch (drag to slide)"
+    t(27) = ""
+    t(28) = "Esc / F1  close this"
+    ' as wide as the longest line, centred
+    FOR i = 1 TO 28
+        IF LEN(t(i)) > wMax THEN wMax = LEN(t(i))
+    NEXT
+    wMax = wMax * 8
+    x = (SCR_W - wMax) \ 2: y = 120
+    LINE (x - 16, y - 16)-(x + wMax + 16, y + 28 * 18), _RGB32(20, 26, 40), BF
+    LINE (x - 16, y - 16)-(x + wMax + 16, y + 28 * 18), _RGB32(120, 140, 180), B
+    FOR i = 1 TO 28
         IF i = 1 THEN COLOR _RGB32(255, 200, 60) ELSE COLOR _RGB32(210, 220, 235)
         _PRINTSTRING (x, y + (i - 1) * 18), t(i)
     NEXT
