@@ -13560,3 +13560,655 @@
   $ Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
   $ EOF
   $ git log --oneline -1 && git push origin main 2>&1 | tail -1
+2026-10-01T00:17:31-0400  INFO     bash_end      [ok] 6L stdout
+  |  M .claude/activity.log
+  |  M qb64/SOUND/PC-SPEAKER/PCSEDIT.BAS
+  |  M qb64/SOUND/PC-SPEAKER/README.md
+  | warning: in the working copy of '.claude/activity.log', CRLF will be replaced by LF the next time Git touches it
+  | 2ba66aa5 SOUND/PC-SPEAKER: PCSEDIT metronome, count-in, quantize, loop region, follow
+  |    ee585fe5..2ba66aa5  main -> main
+2026-10-01T00:22:36-0400  NOTICE   prompt        can we allow zoom out farther? like 16 bars?
+  > can we allow zoom out farther? like 16 bars?
+2026-10-01T00:22:45-0400  INFO     bash_start    cd /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER && grep -n "zoom" PCSEDIT.BAS | grep -v "^\s*'" 
+  > cwd: /home/grymmjack/git/qb64
+  $ cd /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER && grep -n "zoom" PCSEDIT.BAS | grep -v "^\s*'" 
+2026-10-01T00:22:45-0400  INFO     bash_end      [ok] 44L stdout
+  | 35:'   wheel             scroll          Ctrl+wheel     zoom
+  | 153:DIM SHARED zoom AS LONG ' pixels per step
+  | 311:zoom = 6
+  | 384:                set_zoom_at zoom + (zoom \ 4 + 1), _MOUSEX
+  | 386:                set_zoom_at zoom - (zoom \ 5 + 1), _MOUSEX
+  | 391:            scroll_to scrollX + wheel * (60 \ zoom + 1)
+  | 1174:    s = scrollX + (mx - CANVAS_X) \ zoom
+  | 1967:                set_status "Grid lines ON - between note rows and every cell (or step, zoomed in)"
+  | 2336:SUB set_zoom (z AS LONG)
+  | 2337:    set_zoom_at z, CANVAS_X + CANVAS_W \ 2
+  | 2344:SUB set_zoom_at (z AS LONG, x AS LONG)
+  | 2348:    at = scrollX + px / zoom ' the step under x, before zooming
+  | 2349:    zoom = z
+  | 2350:    IF zoom < 1 THEN zoom = 1
+  | 2351:    IF zoom > 64 THEN zoom = 64 ' 64 px a step: about 15 steps (0.1 s) on screen
+  | 2352:    scroll_to CLNG(at - px / zoom)
+  | 2358:    IF scrollX > MAX_STEPS - CANVAS_W \ zoom THEN scrollX = MAX_STEPS - CANVAS_W \ zoom
+  | 2368:    vis = CANVAS_W \ zoom
+  | 2409:    vis = CANVAS_W \ zoom
+  | 3020:    s = s + "  Aud " + on_off(drawAudOn) + "  Snap " + on_off(snapOn) + "  Oct" + LTRIM$(STR$(octave)) + "  Len" + LTRIM$(STR$(noteLen)) + "  Loop " + on_off(loopOn) + "  Z" + LTRIM$(STR$(zoom))
+  | 3087:    vis = CANVAS_W \ zoom
+  | 3123:        IF gridDiv = 0 AND zoom >= 4 THEN
+  | 3125:                x = CANVAS_X + (s - scrollX) * zoom
+  | 3152:    endX = CANVAS_X + (steps_of(cur) - scrollX) * zoom
+  | 3160:    w = zoom - 1
+  | 3168:        x = CANVAS_X + (s - scrollX) * zoom
+  | 3181:            LINE (x, y - 1)-(x + zoom - 1, y + 1), col, BF
+  | 3190:        x = CANVAS_X + (waveS0 - scrollX) * zoom
+  | 3191:        endX = CANVAS_X + (waveS1 - scrollX) * zoom
+  | 3205:        x = CANVAS_X + (selS0 - scrollX) * zoom
+  | 3206:        endX = CANVAS_X + (selS1 - scrollX) * zoom
+  | 3217:    x = CANVAS_X + (cursorStep - scrollX) * zoom
+  | 3224:        x = CANVAS_X + (hp - scrollX) * zoom
+  | 3228:        x = CANVAS_X + (recPos - scrollX) * zoom
+  | 3239:        x = CANVAS_X + (s - scrollX) * zoom
+  | 3240:        LINE (x, y - 2)-(x + (note_tool_end(s) - s) * zoom - 2, y + 2), _RGBA32(255, 255, 255, 110), BF
+  | 3246:            x = CANVAS_X + (cell_start(cell_of(mouseStep)) - scrollX) * zoom
+  | 3247:            LINE (x, y - 2)-(x + (cell_start(cell_of(mouseStep) + 1) - cell_start(cell_of(mouseStep))) * zoom - 2, y + 2), _RGBA32(255, 255, 255, 120), BF
+  | 3249:            x = CANVAS_X + (mouseStep - scrollX) * zoom
+  | 3256:    _PRINTSTRING (CANVAS_X, CANVAS_Y + CANVAS_H + 6), "Step" + STR$(scrollX) + " -" + STR$(scrollX + vis) + "   (140 steps = 1 second)   wheel scrolls, Ctrl+wheel zooms"
+  | 3266:        x = CANVAS_X + (s - scrollX) * zoom
+  | 3291:        x = CANVAS_X + (s - scrollX) * zoom
+  | 3302:            ELSEIF linesOn AND (cell_steps * zoom) >= 4 THEN
+  | 3372:    t(7) = "        wheel scroll   Ctrl+wheel zoom   click the time ruler: cursor"
+2026-10-01T00:23:08-0400  INFO     bash_start    grep -n "set_zoom " PCSEDIT.BAS | grep -v "^.*SUB set_zoom"; sed -n 3160,3185p PCSEDIT.BAS; sed -n '/^SUB draw_seconds/,/^END SUB/p' PCSEDIT.BAS
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ grep -n "set_zoom " PCSEDIT.BAS | grep -v "^.*SUB set_zoom"; sed -n 3160,3185p PCSEDIT.BAS; sed -n '/^SUB draw_seconds/,/^END SUB/p' PCSEDIT.BAS
+2026-10-01T00:23:08-0400  INFO     bash_end      [ok] 41L stdout
+  |     w = zoom - 1
+  |     IF w < 1 THEN w = 1
+  |     ' Each step is one pitch (a dot). Like DN1PLAY's graph, a thin line joins
+  |     ' two sounding steps in a row, so jumps and slides read as one shape;
+  |     ' silence breaks the line.
+  |     prevY = -1
+  |     FOR s = scrollX TO scrollX + vis
+  |         IF s >= steps_of(cur) THEN EXIT FOR
+  |         x = CANVAS_X + (s - scrollX) * zoom
+  |         v = get_step(cur, s)
+  |         IF v = 0 THEN prevY = -1
+  |         IF v THEN
+  |             nn = div_note(v)
+  |             col = _RGB32(255, 170, 40)
+  |             IF nn >= NOTE_HI THEN nn = NOTE_HI - 0.5: col = _RGB32(255, 120, 200)
+  |             IF nn < NOTE_LO THEN nn = NOTE_LO: col = _RGB32(255, 120, 200)
+  |             y = note_y(nn)
+  |             IF in_sel(s, v) THEN col = _RGB32(90, 220, 255)
+  |             IF prevY >= 0 AND prevY <> y THEN LINE (x, prevY)-(x, y), _RGB32(120, 80, 20)
+  |             ' full width, as in DN1PLAY: a run of one pitch reads as one solid
+  |             ' bar instead of a row of dots
+  |             LINE (x, y - 1)-(x + zoom - 1, y + 1), col, BF
+  |             prevY = y
+  |         ELSE
+  |             LINE (x, CANVAS_Y + CANVAS_H - 3)-(x + w - 1, CANVAS_Y + CANVAS_H - 1), _RGB32(70, 80, 100), BF
+  |         END IF
+  | SUB draw_seconds (vis AS LONG)
+  |     DIM s AS LONG, x AS LONG
+  |     FOR s = (scrollX \ 14) * 14 TO scrollX + vis STEP 14
+  |         x = CANVAS_X + (s - scrollX) * zoom
+  |         IF x >= CANVAS_X AND x < CANVAS_X + CANVAS_W THEN
+  |             IF s MOD 140 = 0 THEN
+  |                 LINE (x, TIME_Y)-(x, CANVAS_Y - 2), _RGB32(150, 160, 180)
+  |                 COLOR _RGB32(150, 160, 180)
+  |                 _PRINTSTRING (x + 3, TIME_Y + 2), LTRIM$(STR$(s \ 140)) + "s"
+  |             ELSE
+  |                 LINE (x, CANVAS_Y - 8)-(x, CANVAS_Y - 2), _RGB32(80, 90, 110)
+  |             END IF
+  |         END IF
+  |     NEXT
+  | END SUB
+2026-10-01T00:23:25-0400  INFO     bash_start    python3 - <<'PYEOF' | p='PCSEDIT.BAS'; s=open(p).read() | def r(a,b,c=1): | global s | assert s.count(a)==c,(a[:70],s.count(a)); s=s.replace(a,b) | r("""DIM SHARED zoom AS LONG ' pixels per step""","…
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ python3 - <<'PYEOF'
+  $ p='PCSEDIT.BAS'; s=open(p).read()
+  $ def r(a,b,c=1):
+  $     global s
+  $     assert s.count(a)==c,(a[:70],s.count(a)); s=s.replace(a,b)
+  $ r("""DIM SHARED zoom AS LONG ' pixels per step""","""DIM SHARED zoom AS DOUBLE ' pixels per step: 64 down to 1/10 (zoomed out, a pixel covers several steps)""")
+  $ r("""                set_zoom_at zoom + (zoom \\ 4 + 1), _MOUSEX""","""                set_zoom_at zoom_step(1), _MOUSEX""")
+  $ r("""                set_zoom_at zoom - (zoom \\ 5 + 1), _MOUSEX""","""                set_zoom_at zoom_step(-1), _MOUSEX""")
+  $ r("""            scroll_to scrollX + wheel * (60 \\ zoom + 1)""","""            scroll_to scrollX + wheel * (INT(60 / zoom) + 1)""")
+  $ r("""    s = scrollX + (mx - CANVAS_X) \\ zoom""","""    s = scrollX + INT((mx - CANVAS_X) / zoom)""")
+  $ r("""SUB set_zoom (z AS LONG)""","""SUB set_zoom (z AS DOUBLE)""")
+  $ r("""SUB set_zoom_at (z AS LONG, x AS LONG)""","""''
+  $ ' The zoom ladder: whole pixels per step down to 1, then whole steps per
+  $ ' pixel (1/2 ... 1/10), so steps never straddle pixels unevenly. 1/10 fits
+  $ ' the longest sound (64 s) on screen.
+  $ '
+  $ FUNCTION zoom_step# (dirn AS LONG)
+  $     DIM lv AS STRING, i AS LONG, n AS LONG, z(0 TO 30) AS DOUBLE, best AS LONG, p AS LONG, q AS LONG
+  $     lv = "64 48 32 24 16 12 10 8 6 5 4 3 2 1 -2 -3 -4 -5 -6 -8 -10 "
+  $     p = 1
+  $     DO
+  $         q = INSTR(p, lv, " ")
+  $         IF q = 0 THEN EXIT DO
+  $         z(n) = VAL(MID$(lv, p, q - p))
+  $         IF z(n) < 0 THEN z(n) = 1 / -z(n)
+  $         n = n + 1
+  $         p = q + 1
+  $     LOOP
+  $     ' the level nearest the zoom now, then one along (in = bigger)
+  $     best = 0
+  $     FOR i = 1 TO n - 1
+  $         IF ABS(LOG(z(i) / zoom)) < ABS(LOG(z(best) / zoom)) THEN best = i
+  $     NEXT
+  $     best = best - dirn
+  $     IF best < 0 THEN best = 0
+  $     IF best > n - 1 THEN best = n - 1
+  $     zoom_step = z(best)
+  $ END FUNCTION
+  $ 
+  $ 
+  $ FUNCTION zoom_name$
+  $     IF zoom >= 1 THEN zoom_name = LTRIM$(STR$(CLNG(zoom))) ELSE zoom_name = "1/" + LTRIM$(STR$(CLNG(1 / zoom)))
+  $ END FUNCTION
+  $ 
+  $ 
+  $ SUB set_zoom_at (z AS DOUBLE, x AS LONG)""")
+  $ r("""    IF zoom < 1 THEN zoom = 1
+  $     IF zoom > 64 THEN zoom = 64 ' 64 px a step: about 15 steps (0.1 s) on screen""","""    IF zoom < 0.1 THEN zoom = 0.1 ' 1/10: about 10,000 steps (71 s) on screen
+  $     IF zoom > 64 THEN zoom = 64 ' 64 px a step: about 15 steps (0.1 s) on screen""")
+  $ r("""    IF scrollX > MAX_STEPS - CANVAS_W \\ zoom THEN scrollX = MAX_STEPS - CANVAS_W \\ zoom""","""    IF scrollX > MAX_STEPS - INT(CANVAS_W / zoom) THEN scrollX = MAX_STEPS - INT(CANVAS_W / zoom)""")
+  $ r("""    vis = CANVAS_W \\ zoom""","""    vis = INT(CANVAS_W / zoom)""",4)
+  $ r("""  Z" + LTRIM$(STR$(zoom))""","""  Z" + zoom_name""")
+  $ # step drawing widths
+  $ r("""    w = zoom - 1
+  $     IF w < 1 THEN w = 1""","""    w = INT(zoom) - 1
+  $     IF w < 1 THEN w = 1""")
+  $ r("""            LINE (x, y - 1)-(x + zoom - 1, y + 1), col, BF""","""            LINE (x, y - 1)-(x + w, y + 1), col, BF""")
+  $ # time ruler spacing adapts
+  $ r("""SUB draw_seconds (vis AS LONG)
+  $     DIM s AS LONG, x AS LONG
+  $     FOR s = (scrollX \\ 14) * 14 TO scrollX + vis STEP 14
+  $         x = CANVAS_X + (s - scrollX) * zoom
+  $         IF x >= CANVAS_X AND x < CANVAS_X + CANVAS_W THEN
+  $             IF s MOD 140 = 0 THEN""","""SUB draw_seconds (vis AS LONG)
+  $     DIM s AS LONG, x AS LONG, tk AS LONG, lb AS LONG
+  $     ' ticks every 0.1 s, or every second when that would be too tight; a
+  $     ' label every second, or every few seconds when zoomed far out
+  $     tk = 14
+  $     IF 14 * zoom < 4 THEN tk = 140
+  $     lb = 140
+  $     DO WHILE lb * zoom < 40: lb = lb * 2: LOOP
+  $     FOR s = (scrollX \\ tk) * tk TO scrollX + vis STEP tk
+  $         x = CANVAS_X + (s - scrollX) * zoom
+  $         IF x >= CANVAS_X AND x < CANVAS_X + CANVAS_W THEN
+  $             IF s MOD lb = 0 THEN""")
+  $ open(p,'w').write(s)
+  $ PYEOF
+  $ sed -n '/^SUB draw_grid/,/^END SUB/p' PCSEDIT.BAS | head -30
+2026-10-01T00:23:25-0400  INFO     bash_end      [ok] 29L stdout
+  | Traceback (most recent call last):
+  |   File "<stdin>", line 50, in <module>
+  |   File "<stdin>", line 4, in r
+  | AssertionError: ('    vis = CANVAS_W \\ zoom', 3)
+  | SUB draw_grid (vis AS LONG)
+  |     DIM c AS LONG, c0 AS LONG, c1 AS LONG, x AS LONG, s AS LONG, bc AS LONG, onBeat AS INTEGER, onBar AS INTEGER
+  |     bc = beat_cells
+  |     c0 = cell_of(scrollX)
+  |     c1 = cell_of(scrollX + vis) + 1
+  |     FOR c = c0 TO c1
+  |         s = cell_start(c)
+  |         x = CANVAS_X + (s - scrollX) * zoom
+  |         IF x >= CANVAS_X AND x < CANVAS_X + CANVAS_W THEN
+  |             onBeat = (c MOD bc = 0) AND (gridDiv MOD 4 = 0 OR gridDiv = 12 OR gridDiv = 24)
+  |             onBar = (c MOD (bc * BEATS_PER_BAR) = 0)
+  |             IF onBar THEN
+  |                 LINE (x, TIME_Y)-(x, CANVAS_Y + CANVAS_H - 1), _RGB32(110, 130, 170)
+  |                 COLOR _RGB32(180, 200, 235)
+  |                 _PRINTSTRING (x + 3, TIME_Y + 2), LTRIM$(STR$(c \ (bc * BEATS_PER_BAR) + 1))
+  |             ELSEIF onBeat THEN
+  |                 LINE (x, CANVAS_Y - 10)-(x, CANVAS_Y - 2), _RGB32(120, 135, 160)
+  |                 LINE (x, CANVAS_Y)-(x, CANVAS_Y + CANVAS_H - 1), _RGB32(52, 60, 82)
+  |             ELSEIF linesOn AND (cell_steps * zoom) >= 4 THEN
+  |                 LINE (x, CANVAS_Y - 5)-(x, CANVAS_Y - 2), _RGB32(80, 90, 110)
+  |                 LINE (x, CANVAS_Y)-(x, CANVAS_Y + CANVAS_H - 1), _RGB32(38, 46, 64)
+  |             END IF
+  |         END IF
+  |     NEXT
+  | END SUB
+2026-10-01T00:23:25-0400  NOTICE   prompt        and when i use select tool, snap to the grid with shift down, and select empty time too - not just the data - this will allow me to have musical phrases and chunks
+  > and when i use select tool, snap to the grid with shift down, and select empty time too - not just the data - this will allow me to have musical phrases and chunks
+2026-10-01T00:23:53-0400  INFO     bash_start    grep -n "\\\\ zoom" PCSEDIT.BAS
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ grep -n "\\\\ zoom" PCSEDIT.BAS
+2026-10-01T00:23:53-0400  INFO     bash_end      [ok] 6L stdout
+  | 391:            scroll_to scrollX + wheel * (60 \ zoom + 1)
+  | 1174:    s = scrollX + (mx - CANVAS_X) \ zoom
+  | 2358:    IF scrollX > MAX_STEPS - CANVAS_W \ zoom THEN scrollX = MAX_STEPS - CANVAS_W \ zoom
+  | 2368:    vis = CANVAS_W \ zoom
+  | 2409:    vis = CANVAS_W \ zoom
+  | 3087:    vis = CANVAS_W \ zoom
+2026-10-01T00:24:16-0400  INFO     bash_start    python3 - <<'PYEOF' | p='PCSEDIT.BAS'; s=open(p).read() | def r(a,b,c=1): | global s | assert s.count(a)==c,(a[:70],s.count(a)); s=s.replace(a,b) | r("""DIM SHARED zoom AS LONG ' pixels per step""","…
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ python3 - <<'PYEOF'
+  $ p='PCSEDIT.BAS'; s=open(p).read()
+  $ def r(a,b,c=1):
+  $     global s
+  $     assert s.count(a)==c,(a[:70],s.count(a)); s=s.replace(a,b)
+  $ r("""DIM SHARED zoom AS LONG ' pixels per step""","""DIM SHARED zoom AS DOUBLE ' pixels per step: 64 down to 1/10 (zoomed out, a pixel covers several steps)""")
+  $ r("""                set_zoom_at zoom + (zoom \\ 4 + 1), _MOUSEX""","""                set_zoom_at zoom_step(1), _MOUSEX""")
+  $ r("""                set_zoom_at zoom - (zoom \\ 5 + 1), _MOUSEX""","""                set_zoom_at zoom_step(-1), _MOUSEX""")
+  $ r("""            scroll_to scrollX + wheel * (60 \\ zoom + 1)""","""            scroll_to scrollX + wheel * (INT(60 / zoom) + 1)""")
+  $ r("""    s = scrollX + (mx - CANVAS_X) \\ zoom""","""    s = scrollX + INT((mx - CANVAS_X) / zoom)""")
+  $ r("""SUB set_zoom (z AS LONG)""","""SUB set_zoom (z AS DOUBLE)""")
+  $ r("""SUB set_zoom_at (z AS LONG, x AS LONG)""","""''
+  $ ' The zoom ladder: whole pixels per step down to 1, then whole steps per
+  $ ' pixel (1/2 ... 1/10), so steps never straddle pixels unevenly. 1/10 fits
+  $ ' the longest sound (64 s) on screen; 1/4 fits 16 bars at 120 BPM.
+  $ '
+  $ FUNCTION zoom_step# (dirn AS LONG)
+  $     DIM lv AS STRING, i AS LONG, n AS LONG, z(0 TO 30) AS DOUBLE, best AS LONG, p AS LONG, q AS LONG
+  $     lv = "64 48 32 24 16 12 10 8 6 5 4 3 2 1 -2 -3 -4 -5 -6 -8 -10 "
+  $     p = 1
+  $     DO
+  $         q = INSTR(p, lv, " ")
+  $         IF q = 0 THEN EXIT DO
+  $         z(n) = VAL(MID$(lv, p, q - p))
+  $         IF z(n) < 0 THEN z(n) = 1 / -z(n)
+  $         n = n + 1
+  $         p = q + 1
+  $     LOOP
+  $     ' the level nearest the zoom now, then one along (in = bigger)
+  $     best = 0
+  $     FOR i = 1 TO n - 1
+  $         IF ABS(LOG(z(i) / zoom)) < ABS(LOG(z(best) / zoom)) THEN best = i
+  $     NEXT
+  $     best = best - dirn
+  $     IF best < 0 THEN best = 0
+  $     IF best > n - 1 THEN best = n - 1
+  $     zoom_step = z(best)
+  $ END FUNCTION
+  $ 
+  $ 
+  $ FUNCTION zoom_name$
+  $     IF zoom >= 1 THEN zoom_name = LTRIM$(STR$(CLNG(zoom))) ELSE zoom_name = "1/" + LTRIM$(STR$(CLNG(1 / zoom)))
+  $ END FUNCTION
+  $ 
+  $ 
+  $ SUB set_zoom_at (z AS DOUBLE, x AS LONG)""")
+  $ r("""    IF zoom < 1 THEN zoom = 1
+  $     IF zoom > 64 THEN zoom = 64 ' 64 px a step: about 15 steps (0.1 s) on screen""","""    IF zoom < 0.1 THEN zoom = 0.1 ' 1/10: about 10,000 steps (71 s) on screen
+  $     IF zoom > 64 THEN zoom = 64 ' 64 px a step: about 15 steps (0.1 s) on screen""")
+  $ r("""    IF scrollX > MAX_STEPS - CANVAS_W \\ zoom THEN scrollX = MAX_STEPS - CANVAS_W \\ zoom""","""    IF scrollX > MAX_STEPS - INT(CANVAS_W / zoom) THEN scrollX = MAX_STEPS - INT(CANVAS_W / zoom)""")
+  $ r("""    vis = CANVAS_W \\ zoom""","""    vis = INT(CANVAS_W / zoom)""",3)
+  $ r("""  Z" + LTRIM$(STR$(zoom))""","""  Z" + zoom_name""")
+  $ r("""    w = zoom - 1
+  $     IF w < 1 THEN w = 1""","""    w = INT(zoom) - 1
+  $     IF w < 1 THEN w = 1""")
+  $ r("""            LINE (x, y - 1)-(x + zoom - 1, y + 1), col, BF""","""            LINE (x, y - 1)-(x + w, y + 1), col, BF""")
+  $ r("""SUB draw_seconds (vis AS LONG)
+  $     DIM s AS LONG, x AS LONG
+  $     FOR s = (scrollX \\ 14) * 14 TO scrollX + vis STEP 14
+  $         x = CANVAS_X + (s - scrollX) * zoom
+  $         IF x >= CANVAS_X AND x < CANVAS_X + CANVAS_W THEN
+  $             IF s MOD 140 = 0 THEN""","""SUB draw_seconds (vis AS LONG)
+  $     DIM s AS LONG, x AS LONG, tk AS LONG, lb AS LONG
+  $     ' ticks every 0.1 s, or every second when that would be too tight; a
+  $     ' label every second, or every few seconds when zoomed far out
+  $     tk = 14
+  $     IF 14 * zoom < 4 THEN tk = 140
+  $     lb = 140
+  $     DO WHILE lb * zoom < 40: lb = lb * 2: LOOP
+  $     FOR s = (scrollX \\ tk) * tk TO scrollX + vis STEP tk
+  $         x = CANVAS_X + (s - scrollX) * zoom
+  $         IF x >= CANVAS_X AND x < CANVAS_X + CANVAS_W THEN
+  $             IF s MOD lb = 0 THEN""")
+  $ # grid: beat lines / bar labels only when there is room
+  $ r("""            IF onBar THEN
+  $                 LINE (x, TIME_Y)-(x, CANVAS_Y + CANVAS_H - 1), _RGB32(110, 130, 170)
+  $                 COLOR _RGB32(180, 200, 235)
+  $                 _PRINTSTRING (x + 3, TIME_Y + 2), LTRIM$(STR$(c \\ (bc * BEATS_PER_BAR) + 1))
+  $             ELSEIF onBeat THEN""","""            IF onBar THEN
+  $                 LINE (x, TIME_Y)-(x, CANVAS_Y + CANVAS_H - 1), _RGB32(110, 130, 170)
+  $ ...[truncated]
+2026-10-01T00:24:18-0400  INFO     bash_end      [ok] 1L stdout
+  | Output: /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/PCSEDIT
+2026-10-01T00:24:21-0400  INFO     bash_start    grep -n "set_box " PCSEDIT.BAS; sed -n '/^SUB set_box/,/^END SUB/p;/^FUNCTION in_sel/,/^END FUNCTION/p;/^SUB put_moved/,/^END SUB/p;/^SUB fine_pitch/,/^END SUB/p' PCSEDIT.BAS
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ grep -n "set_box " PCSEDIT.BAS; sed -n '/^SUB set_box/,/^END SUB/p;/^FUNCTION in_sel/,/^END FUNCTION/p;/^SUB put_moved/,/^END SUB/p;/^SUB fine_pitch/,/^END SUB/p' PCSEDIT.BAS
+2026-10-01T00:24:21-0400  INFO     bash_end      [ok] 51L stdout
+  | 1206:                set_box boxS, boxN, s, nt
+  | 1209:                set_box boxS, boxN, s, nt
+  | 1282:        set_box s, nt, s, nt
+  | 1539:SUB set_box (sa AS LONG, na AS DOUBLE, sb AS LONG, nb AS DOUBLE)
+  | SUB set_box (sa AS LONG, na AS DOUBLE, sb AS LONG, nb AS DOUBLE)
+  |     DIM a AS LONG, b AS LONG
+  |     IF sa <= sb THEN a = sa: b = sb ELSE a = sb: b = sa
+  |     IF gridDiv THEN
+  |         selS0 = cell_start(cell_of(a))
+  |         selS1 = cell_start(cell_of(b) + 1)
+  |     ELSE
+  |         selS0 = a
+  |         selS1 = b + 1
+  |     END IF
+  |     selLo = INT(na + 0.5): selHi = INT(nb + 0.5)
+  |     IF selLo > selHi THEN SWAP selLo, selHi
+  |     selOn = -1
+  | END SUB
+  | FUNCTION in_sel% (s AS LONG, v AS LONG)
+  |     IF v = 0 OR NOT selOn THEN EXIT FUNCTION
+  |     in_sel = in_box(s, div_note(v))
+  | END FUNCTION
+  | SUB put_moved (ds AS LONG, dn AS LONG)
+  |     DIM i AS LONG, s AS LONG, v AS LONG
+  |     sndData(cur) = moveBase
+  |     FOR i = 0 TO itemN - 1
+  |         s = itemS(i) + ds
+  |         IF s >= 0 AND s < MAX_STEPS THEN
+  |             v = CLNG(itemV(i) / 2 ^ (dn / 12))
+  |             IF v < 1 THEN v = 1
+  |             set_step cur, s, v
+  |         END IF
+  |     NEXT
+  |     moveDs = ds: moveDn = dn
+  | END SUB
+  | SUB fine_pitch (dv AS LONG)
+  |     DIM s AS LONG, v AS LONG, n AS LONG
+  |     IF NOT selOn THEN EXIT SUB
+  |     push_undo
+  |     FOR s = selS0 TO selS1 - 1
+  |         v = get_step(cur, s)
+  |         IF in_sel(s, v) THEN
+  |             v = v + dv
+  |             IF v >= 1 AND v <= 65534 THEN set_step cur, s, v: n = n + 1
+  |         END IF
+  |     NEXT
+  |     IF n THEN
+  |         v = get_step(cur, selS0)
+  |         set_status "Fine pitch: divisors " + MID$("+-", 1 - (dv < 0), 1) + "1 on" + STR$(n) + " steps (Alt+Up/Down)"
+  |     END IF
+  | END SUB
+2026-10-01T00:24:40-0400  INFO     bash_start    python3 - <<'PYEOF' | p='PCSEDIT.BAS'; s=open(p).read() | def r(a,b,c=1): | global s | assert s.count(a)==c,(a[:70],s.count(a)); s=s.replace(a,b) | r(""" set_box boxS, boxN, s, nt | ELSE | drawing = …
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ python3 - <<'PYEOF'
+  $ p='PCSEDIT.BAS'; s=open(p).read()
+  $ def r(a,b,c=1):
+  $     global s
+  $     assert s.count(a)==c,(a[:70],s.count(a)); s=s.replace(a,b)
+  $ r("""                set_box boxS, boxN, s, nt
+  $             ELSE
+  $                 drawing = 0
+  $                 set_box boxS, boxN, s, nt""","""                set_box boxS, boxN, s, nt, shift
+  $             ELSE
+  $                 drawing = 0
+  $                 set_box boxS, boxN, s, nt, shift""")
+  $ r("""        set_box s, nt, s, nt""","""        set_box s, nt, s, nt, shift""")
+  $ r("""SUB set_box (sa AS LONG, na AS DOUBLE, sb AS LONG, nb AS DOUBLE)
+  $     DIM a AS LONG, b AS LONG
+  $     IF sa <= sb THEN a = sa: b = sb ELSE a = sb: b = sa
+  $     IF gridDiv THEN
+  $         selS0 = cell_start(cell_of(a))
+  $         selS1 = cell_start(cell_of(b) + 1)
+  $     ELSE
+  $         selS0 = a
+  $         selS1 = b + 1
+  $     END IF""","""SUB set_box (sa AS LONG, na AS DOUBLE, sb AS LONG, nb AS DOUBLE, snapIt AS INTEGER)
+  $     DIM a AS LONG, b AS LONG, beatLen AS DOUBLE
+  $     IF sa <= sb THEN a = sa: b = sb ELSE a = sb: b = sa
+  $     ' Shift held: whole grid cells (or whole beats with the grid off), so a
+  $     ' selection is a clean musical chunk; otherwise exact steps
+  $     IF snapIt AND gridDiv <> 0 THEN
+  $         selS0 = cell_start(cell_of(a))
+  $         selS1 = cell_start(cell_of(b) + 1)
+  $     ELSEIF snapIt THEN
+  $         beatLen = 60 * rateHz / bpm
+  $         selS0 = INT(INT(a / beatLen) * beatLen + 0.5)
+  $         selS1 = INT((INT(b / beatLen) + 1) * beatLen + 0.5)
+  $     ELSE
+  $         selS0 = a
+  $         selS1 = b + 1
+  $     END IF""")
+  $ r("""FUNCTION in_sel% (s AS LONG, v AS LONG)
+  $     IF v = 0 OR NOT selOn THEN EXIT FUNCTION
+  $     in_sel = in_box(s, div_note(v))
+  $ END FUNCTION""","""''
+  $ ' Is step s (with value v) part of the selection? Rests (v = 0) in the
+  $ ' box's time span are too, so a selection is a whole chunk of music:
+  $ ' moving, cutting, copying and pasting it keeps its silences.
+  $ '
+  $ FUNCTION in_sel% (s AS LONG, v AS LONG)
+  $     IF NOT selOn THEN EXIT FUNCTION
+  $     IF v = 0 THEN
+  $         in_sel = (s >= selS0 AND s < selS1)
+  $     ELSE
+  $         in_sel = in_box(s, div_note(v))
+  $     END IF
+  $ END FUNCTION""")
+  $ r("""            v = CLNG(itemV(i) / 2 ^ (dn / 12))
+  $             IF v < 1 THEN v = 1
+  $             set_step cur, s, v""","""            v = itemV(i)
+  $             IF v THEN ' rests stay rests
+  $                 v = CLNG(v / 2 ^ (dn / 12))
+  $                 IF v < 1 THEN v = 1
+  $             END IF
+  $             set_step cur, s, v""")
+  $ r("""        v = get_step(cur, s)
+  $         IF in_sel(s, v) THEN
+  $             v = v + dv
+  $             IF v >= 1 AND v <= 65534 THEN set_step cur, s, v: n = n + 1""","""        v = get_step(cur, s)
+  $         IF v <> 0 AND in_sel(s, v) THEN
+  $             v = v + dv
+  $             IF v >= 1 AND v <= 65534 THEN set_step cur, s, v: n = n + 1""")
+  $ r("""        CASE TOOL_SELECT: tool_help = "SELECT: drag a box around steps; Ctrl+A = all; Esc deselects\"""","""        CASE TOOL_SELECT: tool_help = "SELECT: drag a box (Shift = snap to grid); rests inside are part of it; Ctrl+A all; Esc\"""")
+  $ open(p,'w').write(s)
+  $ PYEOF
+  $ /home/grymmjack/git/qb64pe/qb64pe -x PCSEDIT.BAS -o /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/PCSEDIT 2>&1 | grep -A3 -E "38;5;9m|Output:" | head -3
+2026-10-01T00:24:42-0400  INFO     bash_end      [ok] 1L stdout
+  | Output: /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/PCSEDIT
+2026-10-01T00:25:01-0400  INFO     bash_start    SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad; cd /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER; rm -f $SP/chunk.SND | (Xvfb :99 -screen 0 1400x900x24 …
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad; cd /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER; rm -f $SP/chunk.SND
+  $ (Xvfb :99 -screen 0 1400x900x24 >/dev/null 2>&1 &); sleep 1.5; export DISPLAY=:99; unset WAYLAND_DISPLAY; xdpyinfo >/dev/null 2>&1 || exit 1
+  $ ( env -u XDG_CURRENT_DESKTOP -u KDE_FULL_SESSION PCSEDIT_NOMIDI=1 $SP/PCSEDIT $SP/wave.snd & ); for i in $(seq 1 30); do W=$(xdotool search --name "PCSEDIT" 2>/dev/null | head -1); [ -n "$W" ] && break; sleep 0.3; done; sleep 2.5
+  $ K(){ xdotool key --window $W "$@"; sleep 0.25; }
+  $ K ctrl+g; K ctrl+g; K ctrl+g                    # 1/16 (17.5 steps)
+  $ # --- selection chunk: shift-drag from step 33 to step 57 (snaps to cells 1..3 = 18..70)
+  $ K s
+  $ xdotool mousemove $((268+33*6+3)) 200; xdotool keydown shift; xdotool mousedown 1; sleep 0.1; xdotool mousemove $((268+45*6)) 400; sleep 0.1; xdotool mousemove $((268+57*6+3)) 600; sleep 0.1; xdotool mouseup 1; xdotool keyup shift; sleep 0.3
+  $ xwd -silent -root -out $SP/s.xwd; /usr/bin/convert $SP/s.xwd -crop 1280x660+0+0 $SP/chunk_sel.png
+  $ K ctrl+c
+  $ xdotool mousemove $((268+105*6+3)) 108; xdotool click 1; sleep 0.2   # cursor to step 105 (ruler)
+  $ K ctrl+v; sleep 0.3
+  $ # --- zoom out all the way
+  $ xdotool mousemove 700 400; xdotool keydown ctrl; for i in $(seq 1 25); do xdotool click 5; sleep 0.05; done; xdotool keyup ctrl; sleep 0.4
+  $ xwd -silent -root -out $SP/s.xwd; /usr/bin/convert $SP/s.xwd -crop 1280x660+0+0 $SP/zoomout.png
+  $ # save
+  $ K ctrl+shift+s
+  $ for i in $(seq 1 20); do D=$(xdotool search --name "Save IFS" 2>/dev/null | head -1); [ -n "$D" ] && break; sleep 0.3; done; sleep 0.8
+  $ xdotool key --window $D ctrl+a; xdotool type --window $D --delay 5 "$SP/chunk"; xdotool key --window $D Return; sleep 1.5
+  $ python3 - <<EOF
+  $ import struct, math
+  $ d=open('$SP/chunk.SND','rb').read(); off=struct.unpack_from('<H',d,16)[0]; w=[];p=off
+  $ while struct.unpack_from('<H',d,p)[0]!=0xffff: w.append(struct.unpack_from('<H',d,p)[0]); p+=2
+  $ names='C C# D D# E F F# G G# A A# B'.split()
+  $ def nn(v):
+  $     if v==0: return '-'
+  $     k=round(69+12*math.log2(1193181.67/v/440)); return names[k%12]+str(k//12-1)
+  $ print('orig 18..70 :', ' '.join(nn(v) for v in w[18:70]))
+  $ print('paste 105..157:', ' '.join(nn(v) for v in w[105:157]))
+  $ print('same?', w[18:70]==w[105:157])
+  $ EOF
+  $ pkill -x PCSEDIT; pkill -f "^kdialog"; sleep 0.3; kill $(pgrep -f "^Xvfb :99") 2>/dev/null; true
+2026-10-01T00:25:23-0400  INFO     bash_end      [ok] 42L stdout
+  | Non-native QFileDialog supports only local files
+  | qt.svg.draw: The requested buffer size is too big, ignoring
+  | qt.svg.draw: The requested buffer size is too big, ignoring
+  | qt.svg.draw: The requested buffer size is too big, ignoring
+  | qt.svg.draw: The requested buffer size is too big, ignoring
+  | You specified the wrong number of args.
+  | Usage: key [options] <keysequence> [keysequence ...]
+  | --clearmodifiers     - clear active keyboard modifiers during keystrokes
+  | --delay DELAY        - Use DELAY milliseconds between keystrokes
+  | --repeat TIMES       - How many times to repeat the key sequence
+  | --repeat-delay DELAY - DELAY milliseconds between repetitions
+  | --window WINDOW      - send keystrokes to a specific window
+  | Each keysequence can be any number of modifiers and keys, separated by plus (+)
+  |   For example: alt+r
+  | 
+  | Any letter or key symbol such as Shift_L, Return, Dollar, a, space are valid,
+  | including those not currently available on your keyboard.
+  | 
+  | If no window is given, and there are windows in the stack, %1 is used. Otherwise
+  | the currently-focused window is used
+  | This command consumes all arguments after it, so you cannot chain
+  |  additional commands after it.
+  | You specified the wrong number of args.
+  | Usage: key [options] <keysequence> [keysequence ...]
+  | --clearmodifiers     - clear active keyboard modifiers during keystrokes
+  | --delay DELAY        - Use DELAY milliseconds between keystrokes
+  | --repeat TIMES       - How many times to repeat the key sequence
+  | --repeat-delay DELAY - DELAY milliseconds between repetitions
+  | --window WINDOW      - send keystrokes to a specific window
+  | Each keysequence can be any number of modifiers and keys, separated by plus (+)
+  |   For example: alt+r
+  | 
+  | Any letter or key symbol such as Shift_L, Return, Dollar, a, space are valid,
+  | including those not currently available on your keyboard.
+  | 
+  | If no window is given, and there are windows in the stack, %1 is used. Otherwise
+  | the currently-focused window is used
+  | This command consumes all arguments after it, so you cannot chain
+  |  additional commands after it.
+  | Traceback (most recent call last):
+  |   File "<stdin>", line 2, in <module>
+  | FileNotFoundError: [Errno 2] No such file or directory: '/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/chunk.SND'
+2026-10-01T00:25:46-0400  INFO     bash_start    python3 - <<'PYEOF' | p='PCSEDIT.BAS'; s=open(p).read() | def r(a,b,c=1): | global s | assert s.count(a)==c,(a[:70],s.count(a)); s=s.replace(a,b) | r(""" shift = _KEYDOWN(100303) OR _KEYDOWN(100304) …
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ python3 - <<'PYEOF'
+  $ p='PCSEDIT.BAS'; s=open(p).read()
+  $ def r(a,b,c=1):
+  $     global s
+  $     assert s.count(a)==c,(a[:70],s.count(a)); s=s.replace(a,b)
+  $ r("""    shift = _KEYDOWN(100303) OR _KEYDOWN(100304)
+  $     inCanvas = mx >= CANVAS_X""","""    shift = _KEYDOWN(100303) OR _KEYDOWN(100304) OR modShift
+  $     inCanvas = mx >= CANVAS_X""")
+  $ r("""    IF selOn THEN s = s + "   Selection: steps" + STR$(selS0) + " -" + STR$(selS1 - 1) + ", " + note_name(selLo) + " - " + note_name(selHi)""","""    IF selOn THEN s = s + "  Sel" + STR$(selS0) + "-" + LTRIM$(STR$(selS1 - 1)) + " " + note_name(selLo) + "-" + note_name(selHi)""")
+  $ open(p,'w').write(s)
+  $ PYEOF
+  $ grep -n "shift = _KEYDOWN(100303) OR _KEYDOWN(100304)" PCSEDIT.BAS | head; SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad; /home/grymmjack/git/qb64pe/qb64pe -x PCSEDIT.BAS -o $SP/PCSEDIT 2>&1 | grep -A3 -E "38;5;9m|Output:" | head -3
+2026-10-01T00:25:48-0400  INFO     bash_end      [ok] 3L stdout
+  | 379:    shift = _KEYDOWN(100303) OR _KEYDOWN(100304)
+  | 1171:    shift = _KEYDOWN(100303) OR _KEYDOWN(100304) OR modShift
+  | Output: /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/PCSEDIT
+2026-10-01T00:26:02-0400  INFO     bash_start    SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad; cd /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER; rm -f $SP/chunk.SND | (Xvfb :99 -screen 0 1400x900x24 …
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad; cd /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER; rm -f $SP/chunk.SND
+  $ (Xvfb :99 -screen 0 1400x900x24 >/dev/null 2>&1 &); sleep 1.5; export DISPLAY=:99; unset WAYLAND_DISPLAY; xdpyinfo >/dev/null 2>&1 || exit 1
+  $ (openbox --sm-disable >/dev/null 2>&1 &); sleep 1
+  $ ( env -u XDG_CURRENT_DESKTOP -u KDE_FULL_SESSION PCSEDIT_NOMIDI=1 $SP/PCSEDIT $SP/wave.snd & ); for i in $(seq 1 30); do W=$(xdotool search --name "PCSEDIT - PC" 2>/dev/null | head -1); [ -n "$W" ] && break; sleep 0.3; done; sleep 2.5
+  $ xdotool windowactivate --sync $W; eval $(xdotool getwindowgeometry --shell $W); sleep 0.3
+  $ K(){ xdotool key --window $W "$@"; sleep 0.25; }
+  $ K ctrl+g; K ctrl+g; K ctrl+g; K s
+  $ xdotool mousemove $((X+268+33*6+3)) $((Y+200)); xdotool keydown shift; sleep 0.2; xdotool mousedown 1; sleep 0.1; xdotool mousemove $((X+268+45*6)) $((Y+400)); sleep 0.1; xdotool mousemove $((X+268+57*6+3)) $((Y+600)); sleep 0.1; xdotool mouseup 1; sleep 0.1; xdotool keyup shift; sleep 0.3
+  $ xwd -silent -root -out $SP/s.xwd; /usr/bin/convert $SP/s.xwd -crop 1280x20+$X+$((Y+52)) $SP/selinfo.png
+  $ K ctrl+c
+  $ xdotool mousemove $((X+268+105*6+3)) $((Y+108)); xdotool click 1; sleep 0.2
+  $ K ctrl+v; sleep 0.3
+  $ K ctrl+shift+s
+  $ for i in $(seq 1 30); do D=$(xdotool search --name "Save IFS" 2>/dev/null | head -1); [ -n "$D" ] && break; sleep 0.3; done; echo "dialog $D"; sleep 1
+  $ xdotool windowactivate --sync $D 2>/dev/null; xdotool key ctrl+a; xdotool type --delay 5 "$SP/chunk"; xdotool key Return; sleep 1.5
+  $ python3 - <<EOF
+  $ import struct, math
+  $ d=open('$SP/chunk.SND','rb').read(); off=struct.unpack_from('<H',d,16)[0]; w=[];p=off
+  $ while struct.unpack_from('<H',d,p)[0]!=0xffff: w.append(struct.unpack_from('<H',d,p)[0]); p+=2
+  $ names='C C# D D# E F F# G G# A A# B'.split()
+  $ def nn(v):
+  $     if v==0: return '-'
+  $     k=round(69+12*math.log2(1193181.67/v/440)); return names[k%12]+str(k//12-1)
+  $ print('orig  18..70 :', ' '.join(nn(v) for v in w[18:70]))
+  $ print('paste 105..157:', ' '.join(nn(v) for v in w[105:157]))
+  $ print('identical:', w[18:70]==w[105:157])
+  $ EOF
+  $ pkill -x PCSEDIT; pkill -f "^kdialog"; sleep 0.3; kill $(pgrep -f "^openbox --sm-disable") $(pgrep -f "^Xvfb :99") 2>/dev/null; true
+2026-10-01T00:26:23-0400  INFO     bash_end      [ok] 10L stdout
+  | Non-native QFileDialog supports only local files
+  | Non-native QFileDialog supports only local files
+  | qt.svg.draw: The requested buffer size is too big, ignoring
+  | qt.svg.draw: The requested buffer size is too big, ignoring
+  | qt.svg.draw: The requested buffer size is too big, ignoring
+  | qt.svg.draw: The requested buffer size is too big, ignoring
+  | dialog 
+  | Traceback (most recent call last):
+  |   File "<stdin>", line 2, in <module>
+  | FileNotFoundError: [Errno 2] No such file or directory: '/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/chunk.SND'
+2026-10-01T00:26:40-0400  INFO     bash_start    SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad; D=/home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER; rm -f $SP/chunk.SND | python3 - <<EOF | s=open('$D/PCSE…
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad; D=/home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER; rm -f $SP/chunk.SND
+  $ python3 - <<EOF
+  $ s=open('$D/PCSEDIT.BAS').read()
+  $ s=s.replace("'\$INCLUDE:'PCSPKR.BI'","'\$INCLUDE:'$D/PCSPKR.BI'").replace("'\$INCLUDE:'PCSPKR.BM'","'\$INCLUDE:'$D/PCSPKR.BM'")
+  $ a='    f = _SAVEFILEDIALOG\$("Save IFS sound bank", suggest_save, "*.snd|*.SND", "IFS sound bank (Duke Nukem / Keen format)")'
+  $ assert a in s
+  $ s=s.replace(a,'    f = "$SP/chunk" \' TEST BUILD: no dialog')
+  $ open('$SP/tst.bas','w').write(s)
+  $ EOF
+  $ cd $SP && /home/grymmjack/git/qb64pe/qb64pe -x tst.bas -o tst 2>&1 | grep -c "Output:"
+  $ cd $D; (Xvfb :99 -screen 0 1400x900x24 >/dev/null 2>&1 &); sleep 1.5; export DISPLAY=:99; unset WAYLAND_DISPLAY; xdpyinfo >/dev/null 2>&1 || exit 1
+  $ ( env -u XDG_CURRENT_DESKTOP -u KDE_FULL_SESSION PCSEDIT_NOMIDI=1 $SP/tst $SP/wave.snd & ); for i in $(seq 1 30); do W=$(xdotool search --name "PCSEDIT" 2>/dev/null | head -1); [ -n "$W" ] && break; sleep 0.3; done; sleep 2.5
+  $ K(){ xdotool key --window $W "$@"; sleep 0.25; }
+  $ K ctrl+g; K ctrl+g; K ctrl+g; K s
+  $ xdotool mousemove $((268+33*6+3)) 200; xdotool keydown shift; sleep 0.2; xdotool mousedown 1; sleep 0.1; xdotool mousemove $((268+45*6)) 400; sleep 0.1; xdotool mousemove $((268+57*6+3)) 600; sleep 0.1; xdotool mouseup 1; sleep 0.1; xdotool keyup shift; sleep 0.3
+  $ xwd -silent -root -out $SP/s.xwd; /usr/bin/convert $SP/s.xwd -crop 1280x20+0+52 $SP/selinfo.png
+  $ K ctrl+c
+  $ xdotool mousemove $((268+105*6+3)) 108; xdotool click 1; sleep 0.2
+  $ K ctrl+v; sleep 0.3
+  $ K ctrl+shift+s; sleep 1
+  $ python3 - <<EOF
+  $ import struct, math
+  $ d=open('$SP/chunk.SND','rb').read(); off=struct.unpack_from('<H',d,16)[0]; w=[];p=off
+  $ while struct.unpack_from('<H',d,p)[0]!=0xffff: w.append(struct.unpack_from('<H',d,p)[0]); p+=2
+  $ names='C C# D D# E F F# G G# A A# B'.split()
+  $ def nn(v):
+  $     if v==0: return '-'
+  $     k=round(69+12*math.log2(1193181.67/v/440)); return names[k%12]+str(k//12-1)
+  $ print('orig  18..70 :', ' '.join(nn(v) for v in w[18:70]))
+  $ print('paste 105..157:', ' '.join(nn(v) for v in w[105:157]))
+  $ print('identical:', w[18:70]==w[105:157])
+  $ EOF
+  $ pkill -x tst; sleep 0.3; kill $(pgrep -f "^Xvfb :99") 2>/dev/null; true
+2026-10-01T00:26:51-0400  INFO     bash_end      [ok] 4L stdout
+  | 1
+  | orig  18..70 : F4 F#4 F#4 F#4 G4 G4 G4 G#4 G#4 G#4 G#4 A4 A4 A4 A#4 A#4 A#4 B4 B4 B4 B4 C5 C5 - - - - - - - - - C4 C#4 D4 D#4 D#4 E4 F4 F#4 G4 G#4 A4 A4 A#4 B4 C5 A#4 G#4 F#4 E4 D4
+  | paste 105..157: F4 F#4 F#4 F#4 G4 G4 G4 G#4 G#4 G#4 G#4 A4 A4 A4 A#4 A#4 A#4 B4 B4 B4 B4 C5 C5 - - - - - - - - - C4 C#4 D4 D#4 D#4 E4 F4 F#4 G4 G#4 A4 A4 A#4 B4 C5 A#4 G#4 F#4 E4 D4
+  | identical: True
+2026-10-01T00:27:02-0400  INFO     bash_start    python3 - <<'PYEOF' | p='README.md'; s=open(p).read() | def r(a,b): | global s | assert s.count(a)==1,a[:60]; s=s.replace(a,b) | r("""| **S**elect | drag a box around steps (it snaps to grid cells wh…
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ python3 - <<'PYEOF'
+  $ p='README.md'; s=open(p).read()
+  $ def r(a,b):
+  $     global s
+  $     assert s.count(a)==1,a[:60]; s=s.replace(a,b)
+  $ r("""| **S**elect | drag a box around steps (it snaps to grid cells when the grid is on). **Ctrl+A** selects the whole sound. |""","""| **S**elect | drag a box around steps; hold **Shift** to snap it to whole grid cells (or whole beats with the grid off). Rests inside the box are part of the selection, so a bar or a phrase moves, copies and pastes as one chunk, silences and all. **Ctrl+A** selects the whole sound. |""")
+  $ r("""The mouse wheel scrolls, and **Ctrl+wheel** zooms around the mouse pointer.""","""The mouse wheel scrolls, and **Ctrl+wheel** zooms around the mouse pointer:
+  $ from 64 pixels a step (about 15 steps on screen) out to a tenth of a pixel
+  $ a step (about 70 seconds, or 36 bars at 120 BPM). The time ruler and bar
+  $ numbers thin out as you zoom out, so they stay readable.""")
+  $ open(p,'w').write(s)
+  $ PYEOF
+  $ grep -c "tenth of a pixel" README.md
+2026-10-01T00:27:02-0400  INFO     bash_end      [ok] 1L stdout
+  | 1
+2026-10-01T00:27:28-0400  NOTICE   prompt        commit and push
+  > commit and push
+2026-10-01T00:27:33-0400  INFO     bash_start    cd /home/grymmjack/git/qb64 && git status --short && git add .claude/activity.log qb64/SOUND/PC-SPEAKER/PCSEDIT.BAS qb64/SOUND/PC-SPEAKER/README.md && git commit -q -F - <<'EOF' | SOUND/PC-SPEAKER: P…
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ cd /home/grymmjack/git/qb64 && git status --short && git add .claude/activity.log qb64/SOUND/PC-SPEAKER/PCSEDIT.BAS qb64/SOUND/PC-SPEAKER/README.md && git commit -q -F - <<'EOF'
+  $ SOUND/PC-SPEAKER: PCSEDIT zoom out to 1/10 px a step, phrase selections
+  $ 
+  $ - Zoom is now fractional: a ladder from 64 px a step down to 1/10 (about
+  $   70 s / 36 bars on screen); the time ruler, beat lines and bar numbers
+  $   thin out when zoomed far out.
+  $ - Select: Shift snaps the box to grid cells (or beats with the grid off);
+  $   rests inside the box are part of the selection, so phrases move, copy
+  $   and paste as whole chunks, silences included.
+  $ - Shorter selection readout. README updated.
+  $ 
+  $ Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+  $ EOF
+  $ git log --oneline -1 && git push origin main 2>&1 | tail -1

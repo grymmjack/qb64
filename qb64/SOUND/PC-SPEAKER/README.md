@@ -90,11 +90,14 @@ right. The toolbar above it picks a tool. Click a button, press its letter
 | **N**ote | the default. **Click** to place a steady note at that pitch, **Len** long (**F11/F12**; counted in grid cells while the grid is on). Drag right to make it longer; the pitch stays where you clicked. A grey bar shows what a click would place. |
 | **W**ave | drag a box to fill it with a pitch waveform: the box's width is how long it lasts and its height is the pitch range it swings between. While the box is still live (pink), press **1** square, **2** triangle, **3** saw up, **4** saw down or **5** sine. **[ ]** give fewer or more cycles. Drag inside the box left/right for the **duty cycle** and up/down for the **phase**. Press Enter, click outside the box or pick another tool to finish; Esc cancels. |
 | **E**rase | drag to clear steps |
-| **S**elect | drag a box around steps (it snaps to grid cells when the grid is on). **Ctrl+A** selects the whole sound. |
+| **S**elect | drag a box around steps; hold **Shift** to snap it to whole grid cells (or whole beats with the grid off). Rests inside the box are part of the selection, so a bar or a phrase moves, copies and pastes as one chunk, silences and all. **Ctrl+A** selects the whole sound. |
 | **M**ove | drag the selection. Time moves in steps (whole cells with the grid on), pitch in semitones. |
 | **C**ut, Copy, Paste | **C** or **Ctrl+X** cuts, **Ctrl+C** copies, and **Ctrl+V** pastes at the cursor. Pasted steps become the selection, ready to move. |
 
-The mouse wheel scrolls, and **Ctrl+wheel** zooms around the mouse pointer.
+The mouse wheel scrolls, and **Ctrl+wheel** zooms around the mouse pointer:
+from 64 pixels a step (about 15 steps on screen) out to a tenth of a pixel
+a step (about 70 seconds, or 36 bars at 120 BPM). The time ruler and bar
+numbers thin out as you zoom out, so they stay readable.
 Click the time ruler above the roll to move the cursor (the yellow line).
 
 **Waveforms** shape the pitch, not the sound itself: the speaker always plays a

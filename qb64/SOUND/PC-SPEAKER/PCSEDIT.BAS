@@ -150,7 +150,7 @@ DIM SHARED dirty AS INTEGER
 DIM SHARED rateHz AS DOUBLE
 
 ' --- view and editing
-DIM SHARED zoom AS LONG ' pixels per step
+DIM SHARED zoom AS DOUBLE ' pixels per step: 64 down to 1/10 (zoomed out, a pixel covers several steps)
 DIM SHARED scrollX AS LONG ' first visible step
 DIM SHARED cursorStep AS LONG
 DIM SHARED snapOn AS INTEGER
@@ -381,14 +381,14 @@ DO
         IF ctrl THEN
             ' about a quarter per click, so 1 to 64 is a quick spin, not 60 clicks
             IF wheel < 0 THEN
-                set_zoom_at zoom + (zoom \ 4 + 1), _MOUSEX
+                set_zoom_at zoom_step(1), _MOUSEX
             ELSE
-                set_zoom_at zoom - (zoom \ 5 + 1), _MOUSEX
+                set_zoom_at zoom_step(-1), _MOUSEX
             END IF
         ELSEIF _MOUSEX < RULER_X THEN
             user_select cur + wheel
         ELSE
-            scroll_to scrollX + wheel * (60 \ zoom + 1)
+            scroll_to scrollX + wheel * (INT(60 / zoom) + 1)
         END IF
     END IF
 
@@ -1168,10 +1168,10 @@ SUB handle_mouse (mx AS LONG, my AS LONG, b1 AS INTEGER, b2 AS INTEGER)
     STATIC wasDown AS INTEGER
     DIM s AS LONG, nt AS DOUBLE, shift AS INTEGER, inCanvas AS INTEGER, row AS LONG
 
-    shift = _KEYDOWN(100303) OR _KEYDOWN(100304)
+    shift = _KEYDOWN(100303) OR _KEYDOWN(100304) OR modShift
     inCanvas = mx >= CANVAS_X AND mx < CANVAS_X + CANVAS_W AND my >= CANVAS_Y AND my < CANVAS_Y + CANVAS_H
     mouseIn = inCanvas
-    s = scrollX + (mx - CANVAS_X) \ zoom
+    s = scrollX + INT((mx - CANVAS_X) / zoom)
     IF mx < CANVAS_X THEN s = scrollX
     IF s < 0 THEN s = 0
     IF s >= MAX_STEPS THEN s = MAX_STEPS - 1
@@ -1203,10 +1203,10 @@ SUB handle_mouse (mx AS LONG, my AS LONG, b1 AS INTEGER, b2 AS INTEGER)
             drawing = 0
         ELSEIF drawing = 4 THEN ' marquee
             IF b1 THEN
-                set_box boxS, boxN, s, nt
+                set_box boxS, boxN, s, nt, shift
             ELSE
                 drawing = 0
-                set_box boxS, boxN, s, nt
+                set_box boxS, boxN, s, nt, shift
                 IF sel_count = 0 THEN selOn = 0: set_status "Nothing in that box" ELSE set_status LTRIM$(STR$(sel_count)) + " steps selected - M to move, arrows to nudge, Ctrl+X/C/V"
             END IF
         ELSEIF drawing = 6 THEN ' dragging out a waveform box
@@ -1279,7 +1279,7 @@ SUB handle_mouse (mx AS LONG, my AS LONG, b1 AS INTEGER, b2 AS INTEGER)
     ELSEIF inCanvas AND b1 AND NOT wasDown AND tool = TOOL_SELECT THEN
         drawing = 4
         boxS = s: boxN = nt
-        set_box s, nt, s, nt
+        set_box s, nt, s, nt, shift
     ELSEIF inCanvas AND b1 AND NOT wasDown AND tool = TOOL_MOVE THEN
         IF selOn AND in_box(s, nt) THEN
             IF playing THEN stop_playing
@@ -1386,7 +1386,7 @@ FUNCTION tool_help$
             END IF
         CASE TOOL_NOTE: tool_help = "NOTE: click = steady note Len long (F11/F12), drag right = longer"
         CASE TOOL_ERASE: tool_help = "ERASE: drag to clear steps"
-        CASE TOOL_SELECT: tool_help = "SELECT: drag a box around steps; Ctrl+A = all; Esc deselects"
+        CASE TOOL_SELECT: tool_help = "SELECT: drag a box (Shift = snap to grid); rests inside are part of it; Ctrl+A all; Esc"
         CASE TOOL_MOVE: tool_help = "MOVE: drag the selection; arrows nudge it (Shift+Up/Down = octave)"
     END SELECT
 END FUNCTION
@@ -1536,12 +1536,18 @@ END SUB
 ' The selection box from two corners (step, pitch). With the grid on its
 ' ends snap to whole cells.
 '
-SUB set_box (sa AS LONG, na AS DOUBLE, sb AS LONG, nb AS DOUBLE)
-    DIM a AS LONG, b AS LONG
+SUB set_box (sa AS LONG, na AS DOUBLE, sb AS LONG, nb AS DOUBLE, snapIt AS INTEGER)
+    DIM a AS LONG, b AS LONG, beatLen AS DOUBLE
     IF sa <= sb THEN a = sa: b = sb ELSE a = sb: b = sa
-    IF gridDiv THEN
+    ' Shift held: whole grid cells (or whole beats with the grid off), so a
+    ' selection is a clean musical chunk; otherwise exact steps
+    IF snapIt AND gridDiv <> 0 THEN
         selS0 = cell_start(cell_of(a))
         selS1 = cell_start(cell_of(b) + 1)
+    ELSEIF snapIt THEN
+        beatLen = 60 * rateHz / bpm
+        selS0 = INT(INT(a / beatLen) * beatLen + 0.5)
+        selS1 = INT((INT(b / beatLen) + 1) * beatLen + 0.5)
     ELSE
         selS0 = a
         selS1 = b + 1
@@ -1560,9 +1566,18 @@ END FUNCTION
 ''
 ' Is step s (with value v) part of the selection?
 '
+''
+' Is step s (with value v) part of the selection? Rests (v = 0) in the
+' box's time span are too, so a selection is a whole chunk of music:
+' moving, cutting, copying and pasting it keeps its silences.
+'
 FUNCTION in_sel% (s AS LONG, v AS LONG)
-    IF v = 0 OR NOT selOn THEN EXIT FUNCTION
-    in_sel = in_box(s, div_note(v))
+    IF NOT selOn THEN EXIT FUNCTION
+    IF v = 0 THEN
+        in_sel = (s >= selS0 AND s < selS1)
+    ELSE
+        in_sel = in_box(s, div_note(v))
+    END IF
 END FUNCTION
 
 
@@ -1616,8 +1631,11 @@ SUB put_moved (ds AS LONG, dn AS LONG)
     FOR i = 0 TO itemN - 1
         s = itemS(i) + ds
         IF s >= 0 AND s < MAX_STEPS THEN
-            v = CLNG(itemV(i) / 2 ^ (dn / 12))
-            IF v < 1 THEN v = 1
+            v = itemV(i)
+            IF v THEN ' rests stay rests
+                v = CLNG(v / 2 ^ (dn / 12))
+                IF v < 1 THEN v = 1
+            END IF
             set_step cur, s, v
         END IF
     NEXT
@@ -1676,7 +1694,7 @@ SUB fine_pitch (dv AS LONG)
     push_undo
     FOR s = selS0 TO selS1 - 1
         v = get_step(cur, s)
-        IF in_sel(s, v) THEN
+        IF v <> 0 AND in_sel(s, v) THEN
             v = v + dv
             IF v >= 1 AND v <= 65534 THEN set_step cur, s, v: n = n + 1
         END IF
@@ -2333,7 +2351,7 @@ SUB set_note_len (n AS LONG)
 END SUB
 
 
-SUB set_zoom (z AS LONG)
+SUB set_zoom (z AS DOUBLE)
     set_zoom_at z, CANVAS_X + CANVAS_W \ 2
 END SUB
 
@@ -2341,13 +2359,47 @@ END SUB
 ''
 ' Zoom keeping the step under screen x (the mouse) where it is.
 '
-SUB set_zoom_at (z AS LONG, x AS LONG)
+''
+' The zoom ladder: whole pixels per step down to 1, then whole steps per
+' pixel (1/2 ... 1/10), so steps never straddle pixels unevenly. 1/10 fits
+' the longest sound (64 s) on screen; 1/4 fits 16 bars at 120 BPM.
+'
+FUNCTION zoom_step# (dirn AS LONG)
+    DIM lv AS STRING, i AS LONG, n AS LONG, z(0 TO 30) AS DOUBLE, best AS LONG, p AS LONG, q AS LONG
+    lv = "64 48 32 24 16 12 10 8 6 5 4 3 2 1 -2 -3 -4 -5 -6 -8 -10 "
+    p = 1
+    DO
+        q = INSTR(p, lv, " ")
+        IF q = 0 THEN EXIT DO
+        z(n) = VAL(MID$(lv, p, q - p))
+        IF z(n) < 0 THEN z(n) = 1 / -z(n)
+        n = n + 1
+        p = q + 1
+    LOOP
+    ' the level nearest the zoom now, then one along (in = bigger)
+    best = 0
+    FOR i = 1 TO n - 1
+        IF ABS(LOG(z(i) / zoom)) < ABS(LOG(z(best) / zoom)) THEN best = i
+    NEXT
+    best = best - dirn
+    IF best < 0 THEN best = 0
+    IF best > n - 1 THEN best = n - 1
+    zoom_step = z(best)
+END FUNCTION
+
+
+FUNCTION zoom_name$
+    IF zoom >= 1 THEN zoom_name = LTRIM$(STR$(CLNG(zoom))) ELSE zoom_name = "1/" + LTRIM$(STR$(CLNG(1 / zoom)))
+END FUNCTION
+
+
+SUB set_zoom_at (z AS DOUBLE, x AS LONG)
     DIM px AS LONG, at AS DOUBLE
     px = x - CANVAS_X
     IF px < 0 OR px >= CANVAS_W THEN px = CANVAS_W \ 2
     at = scrollX + px / zoom ' the step under x, before zooming
     zoom = z
-    IF zoom < 1 THEN zoom = 1
+    IF zoom < 0.1 THEN zoom = 0.1 ' 1/10: about 10,000 steps (71 s) on screen
     IF zoom > 64 THEN zoom = 64 ' 64 px a step: about 15 steps (0.1 s) on screen
     scroll_to CLNG(at - px / zoom)
 END SUB
@@ -2355,7 +2407,7 @@ END SUB
 
 SUB scroll_to (s AS LONG)
     scrollX = s
-    IF scrollX > MAX_STEPS - CANVAS_W \ zoom THEN scrollX = MAX_STEPS - CANVAS_W \ zoom
+    IF scrollX > MAX_STEPS - INT(CANVAS_W / zoom) THEN scrollX = MAX_STEPS - INT(CANVAS_W / zoom)
     IF scrollX < 0 THEN scrollX = 0
 END SUB
 
@@ -2365,7 +2417,7 @@ END SUB
 '
 SUB follow (s AS LONG)
     DIM vis AS LONG
-    vis = CANVAS_W \ zoom
+    vis = INT(CANVAS_W / zoom)
     IF s < scrollX THEN scroll_to s - vis \ 4
     IF s >= scrollX + vis THEN scroll_to s - vis \ 4
 END SUB
@@ -2406,7 +2458,7 @@ END SUB
 
 SUB follow_page (s AS LONG)
     DIM vis AS LONG
-    vis = CANVAS_W \ zoom
+    vis = INT(CANVAS_W / zoom)
     IF s < scrollX OR s >= scrollX + vis - vis \ 50 THEN scroll_to s - vis \ 50
 END SUB
 
@@ -2978,7 +3030,7 @@ SUB draw_info
 
     s = "Cursor" + STR$(cursorStep) + " (" + fmt2(cursorStep / rateHz) + " s)"
     IF gridDiv THEN s = s + "  bar " + bar_beat(cursorStep)
-    IF selOn THEN s = s + "   Selection: steps" + STR$(selS0) + " -" + STR$(selS1 - 1) + ", " + note_name(selLo) + " - " + note_name(selHi)
+    IF selOn THEN s = s + "  Sel" + STR$(selS0) + "-" + LTRIM$(STR$(selS1 - 1)) + " " + note_name(selLo) + "-" + note_name(selHi)
     _PRINTSTRING (x, 52), s
     COLOR _RGB32(150, 200, 255)
     IF gridDiv THEN
@@ -3017,7 +3069,7 @@ SUB draw_info
     _PRINTSTRING (x, 76), s
     COLOR _RGB32(150, 160, 180)
     IF pianoOn THEN s = "Caps:piano" ELSE s = "Caps:tools"
-    s = s + "  Aud " + on_off(drawAudOn) + "  Snap " + on_off(snapOn) + "  Oct" + LTRIM$(STR$(octave)) + "  Len" + LTRIM$(STR$(noteLen)) + "  Loop " + on_off(loopOn) + "  Z" + LTRIM$(STR$(zoom))
+    s = s + "  Aud " + on_off(drawAudOn) + "  Snap " + on_off(snapOn) + "  Oct" + LTRIM$(STR$(octave)) + "  Len" + LTRIM$(STR$(noteLen)) + "  Loop " + on_off(loopOn) + "  Z" + zoom_name
     s = s + "  Met " + MID$("offRECR+P", metroMode * 3 + 1, 3) + "  In" + STR$(countIn) + "  Q " + on_off(quantOn) + "  Fol " + on_off(followOn)
     s = s + "  MIDI: "
     IF midiDevIdx >= 0 AND midiBusy THEN
@@ -3084,7 +3136,7 @@ SUB draw_roll
     DIM nt AS LONG, y AS LONG, x AS LONG, s AS LONG, v AS LONG, vis AS LONG, endX AS LONG
     DIM w AS LONG, nn AS DOUBLE, col AS _UNSIGNED LONG, hp AS LONG, isBlack AS INTEGER, prevY AS LONG
 
-    vis = CANVAS_W \ zoom
+    vis = INT(CANVAS_W / zoom)
 
     ' piano keys + note rows: white-key rows lighter, black-key rows darker,
     ' like a piano roll, so you can see which row you are on
@@ -3157,7 +3209,7 @@ SUB draw_roll
     END IF
 
     ' the steps
-    w = zoom - 1
+    w = INT(zoom) - 1
     IF w < 1 THEN w = 1
     ' Each step is one pitch (a dot). Like DN1PLAY's graph, a thin line joins
     ' two sounding steps in a row, so jumps and slides read as one shape;
@@ -3178,7 +3230,7 @@ SUB draw_roll
             IF prevY >= 0 AND prevY <> y THEN LINE (x, prevY)-(x, y), _RGB32(120, 80, 20)
             ' full width, as in DN1PLAY: a run of one pitch reads as one solid
             ' bar instead of a row of dots
-            LINE (x, y - 1)-(x + zoom - 1, y + 1), col, BF
+            LINE (x, y - 1)-(x + w, y + 1), col, BF
             prevY = y
         ELSE
             LINE (x, CANVAS_Y + CANVAS_H - 3)-(x + w - 1, CANVAS_Y + CANVAS_H - 1), _RGB32(70, 80, 100), BF
@@ -3261,11 +3313,17 @@ END SUB
 ' Time ruler with the grid off: a tick every 0.1 s, a label every second.
 '
 SUB draw_seconds (vis AS LONG)
-    DIM s AS LONG, x AS LONG
-    FOR s = (scrollX \ 14) * 14 TO scrollX + vis STEP 14
+    DIM s AS LONG, x AS LONG, tk AS LONG, lb AS LONG
+    ' ticks every 0.1 s, or every second when that would be too tight; a
+    ' label every second, or every few seconds when zoomed far out
+    tk = 14
+    IF 14 * zoom < 4 THEN tk = 140
+    lb = 140
+    DO WHILE lb * zoom < 40: lb = lb * 2: LOOP
+    FOR s = (scrollX \ tk) * tk TO scrollX + vis STEP tk
         x = CANVAS_X + (s - scrollX) * zoom
         IF x >= CANVAS_X AND x < CANVAS_X + CANVAS_W THEN
-            IF s MOD 140 = 0 THEN
+            IF s MOD lb = 0 THEN
                 LINE (x, TIME_Y)-(x, CANVAS_Y - 2), _RGB32(150, 160, 180)
                 COLOR _RGB32(150, 160, 180)
                 _PRINTSTRING (x + 3, TIME_Y + 2), LTRIM$(STR$(s \ 140)) + "s"
@@ -3283,7 +3341,10 @@ END SUB
 '
 SUB draw_grid (vis AS LONG)
     DIM c AS LONG, c0 AS LONG, c1 AS LONG, x AS LONG, s AS LONG, bc AS LONG, onBeat AS INTEGER, onBar AS INTEGER
+    DIM barN AS LONG, barEvery AS LONG
     bc = beat_cells
+    barEvery = 1
+    DO WHILE barEvery * cell_steps * bc * BEATS_PER_BAR * zoom < 28: barEvery = barEvery * 2: LOOP
     c0 = cell_of(scrollX)
     c1 = cell_of(scrollX + vis) + 1
     FOR c = c0 TO c1
@@ -3294,9 +3355,13 @@ SUB draw_grid (vis AS LONG)
             onBar = (c MOD (bc * BEATS_PER_BAR) = 0)
             IF onBar THEN
                 LINE (x, TIME_Y)-(x, CANVAS_Y + CANVAS_H - 1), _RGB32(110, 130, 170)
-                COLOR _RGB32(180, 200, 235)
-                _PRINTSTRING (x + 3, TIME_Y + 2), LTRIM$(STR$(c \ (bc * BEATS_PER_BAR) + 1))
-            ELSEIF onBeat THEN
+                ' bar numbers: every bar, or every 2nd / 4th... when bars get narrow
+                barN = c \ (bc * BEATS_PER_BAR)
+                IF barN MOD barEvery = 0 THEN
+                    COLOR _RGB32(180, 200, 235)
+                    _PRINTSTRING (x + 3, TIME_Y + 2), LTRIM$(STR$(barN + 1))
+                END IF
+            ELSEIF onBeat AND cell_steps * bc * zoom >= 4 THEN
                 LINE (x, CANVAS_Y - 10)-(x, CANVAS_Y - 2), _RGB32(120, 135, 160)
                 LINE (x, CANVAS_Y)-(x, CANVAS_Y + CANVAS_H - 1), _RGB32(52, 60, 82)
             ELSEIF linesOn AND (cell_steps * zoom) >= 4 THEN
