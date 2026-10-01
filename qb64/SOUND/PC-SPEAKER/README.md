@@ -66,6 +66,75 @@ onto the window, or pass one on the command line:
 
 ---
 
+## PCSEDIT: make your own sounds
+
+**`PCSEDIT.BAS`** is an editor for PC speaker sound effects. A sound is a list
+of steps, 140 per second, and each step is a pitch or silence, which is exactly
+what the games stored. You can draw a sound with the mouse, or play it in on
+the computer keyboard or a MIDI keyboard. It saves IFS banks (the Duke Nukem 1
+/ Commander Keen format), which DN1PLAY and `PCSPKR.BM` play. It can open any
+file from [Supported games](#supported-games), so you can take a sound from
+Wolfenstein 3D or DOOM, change it, and save it as your own.
+
+![PCSEDIT editing the Duke Nukem 1 BOMBEXPLODE sound](SCREENSHOTS/6-pcsedit.png)
+
+**Drawing:** the big panel is a piano roll, with pitch going up and time going
+right. Drag with the left mouse button to draw and with the right to erase.
+**Shift+click** draws a straight line from the last point, which makes slides
+and sweeps. **F6** switches snap to semitones on or off. The mouse wheel
+scrolls and **Ctrl+wheel** zooms. Click the time ruler above the roll to move
+the cursor (yellow line).
+
+**Playing notes in:** the computer keyboard is a two-octave piano, laid out
+like a tracker:
+
+```
+ 2 3   5 6 7          S D   G H J
+Q W E R T Y U I      Z X C V B N M ,     (Z = C, F9/F10 change octave)
+```
+
+A MIDI keyboard works too. PCSEDIT finds it at start-up, and **F7** switches
+to another device or turns MIDI off. Notes always sound while you hold them.
+**F5** picks what they do:
+
+* **REC off:** the notes just play.
+* **STEP:** each note writes *Len* steps at the cursor and moves the cursor on,
+  like a tracker. **F11/F12** set *Len*.
+* **LIVE:** records what you play, 140 steps a second, starting with your first
+  note. **F5** or **Space** stops it, and the silence after your last note is
+  trimmed off. The PC speaker plays one note at a time, so the note you pressed
+  last wins.
+
+| Key | What it does |
+| --- | --- |
+| Space / Enter | play from the start / from the cursor (Ctrl+L loops) |
+| Left / Right, Home / End | move the cursor (Ctrl: 0.1 s at a time) |
+| Up / Down | previous / next sound in the bank |
+| Insert / Delete / Backspace | insert a step, delete a step, delete the step before the cursor |
+| Ctrl+Up / Ctrl+Down | transpose the sound a semitone (add Shift for an octave) |
+| Ctrl+T | trim silence off the end |
+| Ctrl+Z / Ctrl+Y | undo / redo |
+| F2 / F3 / F4 / F8 | rename, new sound, duplicate, delete (press F8 twice) |
+| Ctrl+P | set the sound's priority |
+| Ctrl+N / Ctrl+O / Ctrl+S / Ctrl+Shift+S | new bank, open, save, save as |
+| Ctrl+E | export the sound as a `.wav` in `EXPORT/` |
+| F1 | help |
+
+The first save after opening a file always asks for a name, and suggests
+`<name>-EDIT.SND`, so a game's own file is never overwritten by accident. An
+IFS bank stores its offsets as 16-bit numbers, so a bank has to stay under
+64 KB, which is about 4 minutes of sound in total.
+
+**How MIDI works without `DECLARE LIBRARY`:** QB64 can't read a device
+without stopping the program until data arrives. PCSEDIT starts ALSA's `amidi`
+in the background (`amidi -p hw:4,0,0 -r /tmp/pcsedit-midi-....raw`), which
+writes the keyboard's bytes to a temp file. The editor reads anything new in
+that file every frame. When PCSEDIT quits, it stops `amidi` and deletes the
+file. This needs Linux, the `alsa-utils` package, and your user in the `audio`
+group. On other systems, use the computer keyboard.
+
+---
+
 ## Supported games
 
 Browse to **`ASSETS/GAMES/`** in DN1PLAY and load any file there. The file
@@ -279,6 +348,7 @@ A few things work out differently in QB64-PE:
 | File | What it is | Ported from |
 | --- | --- | --- |
 | **`DN1PLAY.BAS`** | **The Duke Nukem / Keen sound player. Start here.** | new |
+| **`PCSEDIT.BAS`** | **The sound editor: draw sounds, or play them in from the keyboard or a MIDI keyboard, and save them as IFS banks.** | new |
 | `PCSPKR.BI` + `PCSPKR.BM` | The fake PC speaker library. Put the `.BI` at the top of your program and the `.BM` at the bottom. | `BEEPER.C`, `WAVLOAD.C`, `LOADFILE.C`, `BEEP4.C` |
 | `NOTES.BI` | Named divisors for musical notes (`NOTE_A4`, `NOTE_C5`, ...) | `NOTES.H` |
 | `BEEP.BAS` | The smallest possible example: 440 Hz for 5 timer ticks | `BEEP.C` |

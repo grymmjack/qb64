@@ -6794,3 +6794,1044 @@
   | ?? qb64/SOUND/PC-SPEAKER/ASSETS/GAMES/
   | ?? qb64/SOUND/PC-SPEAKER/SCREENSHOTS/0-browser-wolf3d.png
   | ?? qb64/SOUND/PC-SPEAKER/SCREENSHOTS/5-wolf3d.png
+2026-09-30T20:20:58-0400  NOTICE   prompt        <ide_opened_file>The user opened the file /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER/DN1PLAY.BAS in the IDE. This may or may not be related to the current task.</ide_opened_file>
+  > <ide_opened_file>The user opened the file /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER/DN1PLAY.BAS in the IDE. This may or may not be related to the current task.</ide_opened_file>
+  > can we make an editor for these kinds of sounds? where i can like draw my mouse to make them? or use a midi keyboard to enter the notes?
+2026-09-30T20:21:07-0400  INFO     bash_start    ls -la /dev/snd/ 2>/dev/null | grep -i midi; ls -la /dev/midi* 2>/dev/null; cat /proc/asound/cards 2>/dev/null; aconnect -i 2>/dev/null | head -20; id -nG
+  > cwd: /home/grymmjack/git/qb64
+  $ ls -la /dev/snd/ 2>/dev/null | grep -i midi; ls -la /dev/midi* 2>/dev/null; cat /proc/asound/cards 2>/dev/null; aconnect -i 2>/dev/null | head -20; id -nG
+2026-09-30T20:21:07-0400  INFO     bash_end      [ok] 25L stdout
+  | crw-rw----@ 116,19 root 28 Sep 01:01 midiC4D0
+  | crw-rw----@ 14,66 root 28 Sep 01:01 /dev/midi4
+  |  0 [HDMI           ]: HDA-Intel - HDA ATI HDMI
+  |                       HDA ATI HDMI at 0xdcd20000 irq 149
+  |  1 [Generic_1      ]: HDA-Intel - HD-Audio Generic
+  |                       HD-Audio Generic at 0xdc5c8000 irq 148
+  |  2 [Generic        ]: HDA-Intel - HD-Audio Generic
+  |                       HD-Audio Generic at 0xdc5c0000 irq 150
+  |  3 [Device         ]: USB-Audio - USB Audio Device
+  |                       C-Media Electronics Inc. USB Audio Device at usb-0000:c8:00.3-3, full speed
+  |  4 [MK2            ]: USB-Audio - KOMPLETE KONTROL S49 MK2
+  |                       Native Instruments KOMPLETE KONTROL S49 MK2 at usb-0000:c8:00.3-1.1.2, high spe
+  |  5 [Brio           ]: USB-Audio - MX Brio
+  |                       MX Brio at usb-0000:c8:00.3-2.2.1, super speed
+  |  6 [Digital        ]: USB-Audio - Spark Digital
+  |                       Blue Microphones Spark Digital at usb-0000:c8:00.3-1.2.1.3, full speed
+  | client 0: 'System' [type=kernel]
+  |     0 'Timer           '
+  |     1 'Announce        '
+  | client 14: 'Midi Through' [type=kernel]
+  |     0 'Midi Through Port-0'
+  | client 32: 'KOMPLETE KONTROL S49 MK2' [type=kernel,card=4]
+  |     0 'KOMPLETE KONTROL S49 MK2 MIDI 1'
+  |     1 'KOMPLETE KONTROL S49 MK2 MIDI 2'
+  | grymmjack cdrom floppy sudo audio dip video plugdev users netdev scanner bluetooth lpadmin pipewire libvirt docker render kvm input realtime
+2026-09-30T20:21:17-0400  INFO     bash_start    which amidi aseqdump; amidi -l 2>&1 | head
+  > cwd: /home/grymmjack/git/qb64
+  $ which amidi aseqdump; amidi -l 2>&1 | head
+2026-09-30T20:21:17-0400  INFO     bash_end      [ok] 5L stdout
+  | /usr/bin/amidi
+  | /usr/bin/aseqdump
+  | Dir Device    Name
+  | IO  hw:4,0,0  KOMPLETE KONTROL S49 MK2 MIDI 1
+  | IO  hw:4,0,1  KOMPLETE KONTROL S49 MK2 MIDI 2
+2026-09-30T20:21:21-0400  INFO     bash_start    cd /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad && timeout 2 amidi -p hw:4,0,0 -r midi.raw; echo "exit $?"; ls -la midi.raw
+  > cwd: /home/grymmjack/git/qb64
+  $ cd /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad && timeout 2 amidi -p hw:4,0,0 -r midi.raw; echo "exit $?"; ls -la midi.raw
+2026-09-30T20:21:23-0400  WARNING  bash_end      [stderr] 2L stdout / 2L stderr
+  | exit 124
+  | .rw-rw-r-- 0 grymmjack 30 Sep 20:21 midi.raw
+  ! 
+  ! Shell cwd was reset to /home/grymmjack/git/qb64
+2026-09-30T20:21:50-0400  INFO     bash_start    cd /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER && grep -n "^ SUB\|^ FUNCTION" PCSPKR.BM | head -50; sed -n '/SUB PCSPK_Init/,/END SUB/p;/FUNCTION PCSPK_Tick/,/END FUNCTION/p;/SUB PCSPK_StreamPump\…
+  > cwd: /home/grymmjack/git/qb64
+  $ cd /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER && grep -n "^    SUB\|^    FUNCTION" PCSPKR.BM | head -50; sed -n '/SUB PCSPK_Init/,/END SUB/p;/FUNCTION PCSPK_Tick/,/END FUNCTION/p;/SUB PCSPK_StreamPump\|SUB PCSPK_Pump/,/END SUB/p' PCSPKR.BM | head -120
+2026-09-30T20:21:51-0400  INFO     bash_end      [ok] 77L stdout
+  | 35:    SUB PCSPK_Init
+  | 54:    SUB PCSPK_ResetVoice
+  | 73:    SUB PCSPK_SetVolume (vol AS SINGLE)
+  | 85:    SUB PCSPK_SetLowPass (hz AS SINGLE)
+  | 100:    SUB PCSPK_SetTickRate (hz AS DOUBLE)
+  | 115:    SUB PCSPK_SetTickDivisor (divisor AS LONG)
+  | 123:    FUNCTION PCSPK_TickHz#
+  | 140:    SUB PCSPK_PitWrite (mode AS INTEGER, count AS LONG)
+  | 160:    SUB PCSPK_SpeakerOn
+  | 169:    SUB PCSPK_SpeakerOff
+  | 179:    SUB PCSPK_SetDivisor (divisor AS LONG)
+  | 193:    SUB PCSPK_SetFreq (hz AS DOUBLE)
+  | 205:    SUB PCSPK_Off
+  | 210:    FUNCTION PCSPK_FreqToDivisor& (hz AS DOUBLE)
+  | 216:    FUNCTION PCSPK_DivisorToFreq# (divisor AS LONG)
+  | 230:    FUNCTION PCSPK_SqInt# (ph AS DOUBLE)
+  | 243:    FUNCTION PCSPK_Integrate# (clocks AS DOUBLE)
+  | 263:    SUB PCSPK_AdvanceClocks (clocks AS DOUBLE)
+  | 284:    SUB PCSPK_AdvanceSeconds (seconds AS DOUBLE)
+  | 292:    SUB PCSPK_Emit (level AS DOUBLE)
+  | 329:    SUB PCSPK_StreamOpen
+  | 340:    SUB PCSPK_StreamClose
+  | 351:    SUB PCSPK_StreamFlush
+  | 364:    FUNCTION PCSPK_Buffered#
+  | 387:    SUB PCSPK_SetLead (seconds AS DOUBLE)
+  | 406:    FUNCTION PCSPK_Tick%%
+  | 422:    SUB PCSPK_WaitTicks (n AS LONG)
+  | 430:    SUB PCSPK_WaitSeconds (seconds AS DOUBLE)
+  | 439:    SUB PCSPK_Drain
+  | 463:    SUB PCSPK_CaptureBegin
+  | 479:    FUNCTION PCSPK_CaptureEnd&
+  | 488:    FUNCTION PCSPK_CaptureFrames&
+  | 496:    FUNCTION PCSPK_CaptureToSound&
+  | 515:    SUB PCSPK_SaveWAV (fileName AS STRING)
+  | 560:    FUNCTION PCSPK_U16& (s AS STRING, p AS LONG)
+  | 566:    FUNCTION PCSPK_U32& (s AS STRING, p AS LONG)
+  | 572:    FUNCTION PCSPK_ReadFile$ (fileName AS STRING)
+  | 599:    FUNCTION PCSPK_IFSLoad%% (fileName AS STRING)
+  | 657:    FUNCTION PCSPK_FilePart$ (path AS STRING)
+  | 670:    FUNCTION PCSPK_AddSound& (dv AS STRING, nam AS STRING, filePos AS LONG, priority AS LONG, fmt AS INTEGER, replaceSame AS INTEGER)
+  | 702:    FUNCTION PCSPK_IFSScan%% (d AS STRING)
+  | 750:    FUNCTION PCSPK_CString$ (s AS STRING)
+  | 795:    SUB PCSPK_DoomInit
+  | 830:    FUNCTION PCSPK_DoomDivisor& (tone AS LONG)
+  | 840:    FUNCTION PCSPK_DoomLumpOK%% (lump AS STRING)
+  | 853:    SUB PCSPK_DoomAdd (lump AS STRING, nam AS STRING, filePos AS LONG)
+  | 870:    FUNCTION PCSPK_DoomLoadWAD%% (fileName AS STRING)
+  | 938:    SUB PCSPK_IdAddChunk (chunk AS STRING, nam AS STRING, filePos AS LONG)
+  | 957:    FUNCTION PCSPK_IdParse%% (hed AS STRING, t AS STRING, basePos AS LONG)
+  | 1000:    FUNCTION PCSPK_IdLoadPair%% (fileName AS STRING)
+  |     SUB PCSPK_Init
+  |         IF pcspk.initialized THEN EXIT SUB
+  |         pcspk.rate = _SNDRATE
+  |         IF pcspk.rate <= 0 THEN pcspk.rate = 44100
+  |         pcspk.clkPerSample = PCSPK_PIT_HZ / pcspk.rate
+  |         pcspk.dcR = 1 - (2 * _PI * 20 / pcspk.rate) ' ~20 Hz cone DC blocker
+  |         pcspk.volume = 0.25
+  |         pcspk.lead = 0.08
+  |         pcspk.initialized = -1
+  |         PCSPK_SetTickRate PCSPK_BIOS_TICK_HZ
+  |         PCSPK_SetLowPass 0
+  |         PCSPK_ResetVoice
+  |     END SUB
+  |     FUNCTION PCSPK_TickHz#
+  |         PCSPK_Init
+  |         PCSPK_TickHz = pcspk.tickHz
+  |     END FUNCTION
+  |     FUNCTION PCSPK_Tick%%
+  |         IF pcspk.sink <> PCSPK_SINK_STREAM THEN PCSPK_StreamOpen
+  |         IF PCSPK_Buffered >= pcspk.lead THEN
+  |             PCSPK_StreamFlush
+  |             PCSPK_Tick = 0
+  |         ELSE
+  |             PCSPK_AdvanceClocks pcspk.tickClk
+  |             PCSPK_Tick = -1
+  |         END IF
+  |     END FUNCTION
+2026-09-30T20:22:55-0400  INFO     bash_start    sed -n 100,125p PCSPKR.BM; sed -n 175,230p PCSPKR.BM; sed -n 325,420p PCSPKR.BM
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ sed -n 100,125p PCSPKR.BM; sed -n 175,230p PCSPKR.BM; sed -n 325,420p PCSPKR.BM
+2026-09-30T20:22:55-0400  INFO     bash_end      [ok] 178L stdout
+  |     SUB PCSPK_SetTickRate (hz AS DOUBLE)
+  |         DIM h AS DOUBLE
+  |         PCSPK_Init
+  |         h = hz
+  |         IF h <= 0 THEN h = PCSPK_BIOS_TICK_HZ
+  |         pcspk.tickHz = h
+  |         pcspk.tickClk = PCSPK_PIT_HZ / h
+  |     END SUB
+  | 
+  | 
+  |     ''
+  |     ' Same as reprogramming PIT channel 0 in C:
+  |     '     outportb(0x43, 0x36); outportb(0x40, lo); outportb(0x40, hi);
+  |     ' The tick rate becomes PIT clock / divisor (0 = 65536).
+  |     '
+  |     SUB PCSPK_SetTickDivisor (divisor AS LONG)
+  |         DIM d AS DOUBLE
+  |         d = divisor AND &HFFFF&
+  |         IF d = 0 THEN d = 65536
+  |         PCSPK_SetTickRate PCSPK_PIT_HZ / d
+  |     END SUB
+  | 
+  | 
+  |     FUNCTION PCSPK_TickHz#
+  |         PCSPK_Init
+  |         PCSPK_TickHz = pcspk.tickHz
+  |     ''
+  |     ' BEEPER.C play_sound(divisor): square wave with the given PIT divisor.
+  |     ' A divisor of 0 turns the speaker off.
+  |     '
+  |     SUB PCSPK_SetDivisor (divisor AS LONG)
+  |         IF divisor = 0 THEN
+  |             PCSPK_SpeakerOff
+  |         ELSE
+  |             PCSPK_PitWrite PCSPK_MODE_SQUARE, divisor
+  |             PCSPK_SpeakerOn
+  |         END IF
+  |     END SUB
+  | 
+  | 
+  |     ''
+  |     ' BEEPER.C play_sound_freq(freq): divisor = 1193180 / freq.
+  |     ' A frequency of 0 turns the speaker off.
+  |     '
+  |     SUB PCSPK_SetFreq (hz AS DOUBLE)
+  |         IF hz <= 0 THEN
+  |             PCSPK_SpeakerOff
+  |         ELSE
+  |             PCSPK_SetDivisor PCSPK_FreqToDivisor(hz)
+  |         END IF
+  |     END SUB
+  | 
+  | 
+  |     ''
+  |     ' BEEPER.C nosound().
+  |     '
+  |     SUB PCSPK_Off
+  |         PCSPK_SpeakerOff
+  |     END SUB
+  | 
+  | 
+  |     FUNCTION PCSPK_FreqToDivisor& (hz AS DOUBLE)
+  |         IF hz <= 0 THEN EXIT FUNCTION
+  |         PCSPK_FreqToDivisor = INT(1193180 / hz)
+  |     END FUNCTION
+  | 
+  | 
+  |     FUNCTION PCSPK_DivisorToFreq# (divisor AS LONG)
+  |         IF divisor <= 0 THEN EXIT FUNCTION
+  |         PCSPK_DivisorToFreq = PCSPK_PIT_HZ / divisor
+  |     END FUNCTION
+  | 
+  | 
+  |     '-------------------------------------------------------------------------
+  |     ' Renderer
+  |     '-------------------------------------------------------------------------
+  | 
+  |     ''
+  |     ' Area under a unit square wave (high for the first half cycle) from
+  |     ' phase 0 to phase ph (in cycles).
+  | ...[truncated]
+2026-09-30T20:28:01-0400  INFO     bash_start    python3 - <<'PYEOF' | p='PCSEDIT.BAS'; s=open(p).read() | def r(a,b): | global s | assert s.count(a)==1,a; s=s.replace(a,b) | r(''' isBlack = INSTR("010100101010", MID$("010100101010", (nt MOD 12) + …
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ python3 - <<'PYEOF'
+  $ p='PCSEDIT.BAS'; s=open(p).read()
+  $ def r(a,b):
+  $     global s
+  $     assert s.count(a)==1,a; s=s.replace(a,b)
+  $ r('''        isBlack = INSTR("010100101010", MID$("010100101010", (nt MOD 12) + 1, 1)) AND MID$("010100101010", (nt MOD 12) + 1, 1) = "1"''',
+  $ '''        isBlack = MID$("010100101010", (nt MOD 12) + 1, 1) = "1"''')
+  $ r('''    IF ofs + LEN(body) - LEN(sndData(sndCount)) - 2 > 65535 OR total > 65535 THEN''','''    IF total > 65535 THEN''')
+  $ r('''    IF LEN(savePath) THEN bankName = PCSPK_FilePart(savePath) ELSE IF LEN(openedPath) THEN bankName = PCSPK_FilePart(openedPath)''',
+  $ '''    IF LEN(savePath) THEN
+  $         bankName = PCSPK_FilePart(savePath)
+  $     ELSEIF LEN(openedPath) THEN
+  $         bankName = PCSPK_FilePart(openedPath)
+  $     END IF''')
+  $ open(p,'w').write(s)
+  $ PYEOF
+  $ /home/grymmjack/git/qb64pe/qb64pe -x PCSEDIT.BAS -o /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/PCSEDIT 2>&1 | grep -iE "error|in line|Output"
+2026-09-30T20:28:01-0400  INFO     bash_end      [ok] 1L stdout
+  | Beginning C++ output from QB64 code...
+2026-09-30T20:28:04-0400  INFO     bash_start    /home/grymmjack/git/qb64pe/qb64pe -x PCSEDIT.BAS -o /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/PCSEDIT 2>&1 | tail -15
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ /home/grymmjack/git/qb64pe/qb64pe -x PCSEDIT.BAS -o /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/PCSEDIT 2>&1 | tail -15
+2026-09-30T20:28:04-0400  INFO     bash_end      [ok] 15L stdout
+  | [.........                                         ] 18%[A
+  | [..........                                        ] 20%[A
+  | [...........                                       ] 22%[A
+  | [............                                      ] 24%[A
+  | [.............                                     ] 26%[A
+  | [..............                                    ] 28%[A
+  | [...............                                   ] 30%[A
+  | [................                                  ] 32%[A
+  | [.................                                 ] 34%[A
+  | [..................                                ] 36%[A
+  | [...................                               ] 38%[A
+  | 
+  | [38;5;9mIncorrect number of arguments - Reference: note_name$(nt AS DOUBLE)
+  | [38;5;7mCaused by (or after):NOTE_NAME = _TRIM$ ( NOTE_NAME ) + LTRIM$ ( STR$ ( N \ 12 - 1 ) )
+  | [38;5;8mLINE [38;5;15m921:[38;5;7mnote_name = _TRIM$(note_name) + LTRIM$(STR$(n \ 12 - 1))
+2026-09-30T20:28:11-0400  INFO     bash_start    python3 - <<'PYEOF' | p='PCSEDIT.BAS'; s=open(p).read() | a='''FUNCTION note_name$ (nt AS DOUBLE) | DIM n AS LONG | n = INT(nt + 0.5) | note_name = MID$("C C#D D#E F F#G G#A A#B ", (n MOD 12) * 2 + 1…
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ python3 - <<'PYEOF'
+  $ p='PCSEDIT.BAS'; s=open(p).read()
+  $ a='''FUNCTION note_name$ (nt AS DOUBLE)
+  $     DIM n AS LONG
+  $     n = INT(nt + 0.5)
+  $     note_name = MID$("C C#D D#E F F#G G#A A#B ", (n MOD 12) * 2 + 1, 2)
+  $     note_name = _TRIM$(note_name) + LTRIM$(STR$(n \\ 12 - 1))
+  $ END FUNCTION'''
+  $ assert a in s
+  $ s=s.replace(a,'''FUNCTION note_name$ (nt AS DOUBLE)
+  $     DIM n AS LONG
+  $     n = INT(nt + 0.5)
+  $     note_name = _TRIM$(MID$("C C#D D#E F F#G G#A A#B ", (n MOD 12) * 2 + 1, 2)) + LTRIM$(STR$(n \\ 12 - 1))
+  $ END FUNCTION''')
+  $ open(p,'w').write(s)
+  $ PYEOF
+  $ grep -nE "^\s+(suggest_save|default_dir|ctrl_letter|confirm_ok|handle_key) = .*(suggest_save|default_dir|ctrl_letter)" PCSEDIT.BAS; /home/grymmjack/git/qb64pe/qb64pe -x PCSEDIT.BAS -o /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/PCSEDIT 2>&1 | grep -A3 -E "38;5;9m|Output:" | head
+2026-09-30T20:28:13-0400  INFO     bash_end      [ok] 2L stdout
+  | 1226:        suggest_save = default_dir + "MYSOUNDS.SND"
+  | Output: /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/PCSEDIT
+2026-09-30T20:28:24-0400  INFO     bash_start    SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad; cd /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER | ( $SP/PCSEDIT & echo $! > $SP/pid ); for i in $(seq 1…
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad; cd /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ ( $SP/PCSEDIT & echo $! > $SP/pid ); for i in $(seq 1 30); do W=$(xdotool search --name "PCSEDIT" 2>/dev/null | head -1); [ -n "$W" ] && break; sleep 0.3; done; sleep 2; echo "win $W"; xdotool windowactivate $W 2>/dev/null; sleep 0.3
+  $ eval $(xdotool getwindowgeometry --shell $W); echo "at $X,$Y"
+  $ snap(){ xwd -silent -id $W -out $SP/s.xwd; /usr/bin/convert $SP/s.xwd $SP/$1; }
+  $ snap p0.png
+  $ # draw a rising sweep then a falling one
+  $ xdotool mousemove $((X+300)) $((Y+560)); xdotool mousedown 1
+  $ for i in $(seq 0 30); do xdotool mousemove $((X+300+i*8)) $((Y+560-i*12)); sleep 0.02; done
+  $ for i in $(seq 0 30); do xdotool mousemove $((X+548+i*8)) $((Y+200+i*6)); sleep 0.02; done
+  $ xdotool mouseup 1; sleep 0.3
+  $ snap p1.png
+  $ # STEP record: F5, End, then z x c v b (C D E F G)
+  $ xdotool key --window $W F5; sleep 0.2; xdotool key --window $W End; sleep 0.2
+  $ for k in z x c v b; do xdotool keydown --window $W $k; sleep 0.15; xdotool keyup --window $W $k; sleep 0.15; done
+  $ sleep 0.3; snap p2.png
+  $ ls /tmp/pcsedit-midi-*.raw 2>/dev/null; pgrep -af "amidi -p" | head -2
+2026-09-30T20:28:31-0400  INFO     bash_end      [ok] 5L stdout
+  | win 35651591
+  | at 1600,866
+  | /tmp/pcsedit-midi-7.3705E+07.raw
+  | 2696566 /usr/bin/zsh -c source /home/grymmjack/.claude/shell-snapshots/snapshot-zsh-1790811241507-2alwlk.sh 2>/dev/null || true && setopt NO_EXTENDED_GLOB NO_BARE_GLOB_QUAL 2>/dev/null || true && { \builtin unalias -- 'unsetenv'; \builtin unset -f -- 'unsetenv'; } >/dev/null 2>&1 || true && eval 'SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad; cd /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER ( $SP/PCSEDIT & echo $! > $SP/pid ); for i in $(seq 1 30); do W=$(xdotool search --name "PCSEDIT" 2>/dev/null | head -1); [ -n "$W" ] && break; sleep 0.3; done; sleep 2; echo "win $W"; xdotool windowactivate $W 2>/dev/null; sleep 0.3 eval $(xdotool getwindowgeometry --shell $W); echo "at $X,$Y" snap(){ xwd -silent -id $W -out $SP/s.xwd; /usr/bin/convert $SP/s.xwd $SP/$1; } snap p0.png # draw a rising sweep then a falling one xdotool mousemove $((X+300)) $((Y+560)); xdotool mousedown 1 for i in $(seq 0 30); do xdotool mousemove $((X+300+i*8)) $((Y+560-i*12)); sleep 0.02; done for i in $(seq 0 30); do xdotool mousemove $((X+548+i*8)) $((Y+200+i*6)); sleep 0.02; done xdotool mouseup 1; sleep 0.3 snap p1.png # STEP record: F5, End, then z x c v b (C D E F G) xdotool key --window $W F5; sleep 0.2; xdotool key --window $W End; sleep 0.2 for k in z x c v b; do xdotool keydown --window $W $k; sleep 0.15; xdotool keyup --window $W $k; sleep 0.15; done sleep 0.3; snap p2.png ls /tmp/pcsedit-midi-*.raw 2>/dev/null; pgrep -af "amidi -p" | head -2' < /dev/null && pwd -P >| /tmp/claude-f383-cwd
+  | 2696605 sh -c -- amidi -p hw:4,0,0 -r '/tmp/pcsedit-midi-7.3705E+07.raw' 2>/dev/null
+2026-09-30T20:28:56-0400  INFO     bash_start    SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad; W=$(xdotool search --name "PCSEDIT" | head -1); xdotool windowactivate --sync $W; sleep 0.3 | snap(){ xwd…
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad; W=$(xdotool search --name "PCSEDIT" | head -1); xdotool windowactivate --sync $W; sleep 0.3
+  $ snap(){ xwd -silent -id $W -out $SP/s.xwd; /usr/bin/convert $SP/s.xwd $SP/$1; }
+  $ xdotool key ctrl+z; sleep 0.2; xdotool key ctrl+z; sleep 0.2; xdotool key ctrl+z; xdotool key ctrl+z; xdotool key ctrl+z; sleep 0.3
+  $ xdotool key End; sleep 0.2
+  $ for k in z x c v b; do xdotool keydown $k; sleep 0.15; xdotool keyup $k; sleep 0.15; done
+  $ sleep 0.3; xdotool key Home; sleep 0.3; snap p3.png
+2026-09-30T20:29:00-0400  INFO     bash_end      [ok] 0L stdout
+2026-09-30T20:29:16-0400  INFO     bash_start    pkill -f scratchpad/PCSEDIT; pkill -f "pcsedit-midi"; SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad; cat > $SP/kd.bas <<'EOF' | SCREEN _NEWIMAGE(320, 20…
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ pkill -f scratchpad/PCSEDIT; pkill -f "pcsedit-midi"; SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad; cat > $SP/kd.bas <<'EOF'
+  $ SCREEN _NEWIMAGE(320, 200, 32)
+  $ _TITLE "KDTEST"
+  $ DIM t0 AS DOUBLE, prev AS INTEGER, d AS INTEGER, k AS LONG
+  $ OPEN "/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/kd.log" FOR OUTPUT AS #1
+  $ t0 = TIMER(0.001)
+  $ DO
+  $     k = _KEYHIT
+  $     IF k THEN PRINT #1, USING "##.### hit #######"; TIMER(0.001) - t0; k
+  $     d = _KEYDOWN(122)
+  $     IF d <> prev THEN PRINT #1, USING "##.### down122 ##"; TIMER(0.001) - t0; d: prev = d
+  $     _LIMIT 200
+  $ LOOP UNTIL TIMER(0.001) - t0 > 6
+  $ CLOSE #1
+  $ SYSTEM
+  $ EOF
+  $ cd $SP && /home/grymmjack/git/qb64pe/qb64pe -x kd.bas -o kd 2>&1 | grep -i error; (./kd &); for i in $(seq 1 30); do W=$(xdotool search --name "KDTEST" 2>/dev/null | head -1); [ -n "$W" ] && break; sleep 0.2; done; xdotool windowactivate --sync $W; sleep 1
+  $ xdotool keydown z; sleep 0.15; xdotool keyup z; sleep 0.5; xdotool keydown z; sleep 1.0; xdotool keyup z
+  $ sleep 5; cat $SP/kd.log
+2026-09-30T20:29:22-0400  INFO     bash_start    SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad; kill $(cat $SP/pid) 2>/dev/null; pgrep -x PCSEDIT; cd $SP && /home/grymmjack/git/qb64pe/qb64pe -x kd.bas …
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad; kill $(cat $SP/pid) 2>/dev/null; pgrep -x PCSEDIT; cd $SP && /home/grymmjack/git/qb64pe/qb64pe -x kd.bas -o kd 2>&1 | grep -i error; (./kd &); for i in $(seq 1 30); do W=$(xdotool search --name "KDTEST" 2>/dev/null | head -1); [ -n "$W" ] && break; sleep 0.2; done; xdotool windowactivate --sync $W; sleep 1
+  $ xdotool keydown z; sleep 0.15; xdotool keyup z; sleep 0.5; xdotool keydown z; sleep 1.0; xdotool keyup z
+  $ sleep 5; cat $SP/kd.log; pgrep -af amidi
+2026-09-30T20:29:36-0400  WARNING  bash_end      [stderr] 10L stdout / 2L stderr
+  | (eval):1: no such file or directory: ./kd
+  | There are no windows in the stack
+  | Invalid window '%1'
+  | Usage: windowactivate [options] [window=%1]
+  | --sync    - only exit once the window is active (is visible + active)
+  | If no window is given, %1 is used. See WINDOW STACK in xdotool(1)
+  | cat: /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/kd.log: No such file or directory
+  | 2696605 sh -c -- amidi -p hw:4,0,0 -r '/tmp/pcsedit-midi-7.3705E+07.raw' 2>/dev/null
+  | 2696606 amidi -p hw:4,0,0 -r /tmp/pcsedit-midi-7.3705E+07.raw
+  | 2697697 /usr/bin/zsh -c source /home/grymmjack/.claude/shell-snapshots/snapshot-zsh-1790811241507-2alwlk.sh 2>/dev/null || true && setopt NO_EXTENDED_GLOB NO_BARE_GLOB_QUAL 2>/dev/null || true && { \builtin unalias -- 'unsetenv'; \builtin unset -f -- 'unsetenv'; } >/dev/null 2>&1 || true && eval 'SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad; kill $(cat $SP/pid) 2>/dev/null; pgrep -x PCSEDIT; cd $SP && /home/grymmjack/git/qb64pe/qb64pe -x kd.bas -o kd 2>&1 | grep -i error; (./kd &); for i in $(seq 1 30); do W=$(xdotool search --name "KDTEST" 2>/dev/null | head -1); [ -n "$W" ] && break; sleep 0.2; done; xdotool windowactivate --sync $W; sleep 1 xdotool keydown z; sleep 0.15; xdotool keyup z; sleep 0.5; xdotool keydown z; sleep 1.0; xdotool keyup z sleep 5; cat $SP/kd.log; pgrep -af amidi' < /dev/null && pwd -P >| /tmp/claude-5134-cwd
+  ! 
+  ! Shell cwd was reset to /home/grymmjack/git/qb64
+2026-09-30T20:29:43-0400  INFO     bash_start    kill 2696606 2696605 2>/dev/null; rm -f /tmp/pcsedit-midi-*; SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad; cd $SP && /home/grymmjack/git/qb64pe/qb64pe …
+  > cwd: /home/grymmjack/git/qb64
+  $ kill 2696606 2696605 2>/dev/null; rm -f /tmp/pcsedit-midi-*; SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad; cd $SP && /home/grymmjack/git/qb64pe/qb64pe -x kd.bas -o kd 2>&1 | grep -B2 -A3 "38;5;9m" | head
+2026-09-30T20:29:43-0400  WARNING  bash_end      [stderr] 0L stdout / 2L stderr
+  ! 
+  ! Shell cwd was reset to /home/grymmjack/git/qb64
+2026-09-30T20:29:46-0400  INFO     bash_start    SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad; cd $SP; /home/grymmjack/git/qb64pe/qb64pe -x kd.bas -o kd 2>&1 | tail -3; ls -la kd
+  > cwd: /home/grymmjack/git/qb64
+  $ SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad; cd $SP; /home/grymmjack/git/qb64pe/qb64pe -x kd.bas -o kd 2>&1 | tail -3; ls -la kd
+2026-09-30T20:29:54-0400  INFO     bash_start    SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad; cat > $SP/kd.bas <<'EOF' | SCREEN _NEWIMAGE(320, 200, 32) | _TITLE "KDTEST" | DIM t0 AS DOUBLE, prev AS I…
+  > cwd: /home/grymmjack/git/qb64
+  $ SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad; cat > $SP/kd.bas <<'EOF'
+  $ SCREEN _NEWIMAGE(320, 200, 32)
+  $ _TITLE "KDTEST"
+  $ DIM t0 AS DOUBLE, prev AS INTEGER, d AS INTEGER, k AS LONG
+  $ OPEN "/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/kd.log" FOR OUTPUT AS #1
+  $ t0 = TIMER(0.001)
+  $ DO
+  $     k = _KEYHIT
+  $     IF k THEN PRINT #1, USING "##.### hit #######"; TIMER(0.001) - t0; k
+  $     d = _KEYDOWN(122)
+  $     IF d <> prev THEN PRINT #1, USING "##.### down122 ##"; TIMER(0.001) - t0; d: prev = d
+  $     _LIMIT 200
+  $ LOOP UNTIL TIMER(0.001) - t0 > 6
+  $ CLOSE #1
+  $ SYSTEM
+  $ EOF
+  $ cd $SP && /home/grymmjack/git/qb64pe/qb64pe -x kd.bas -o kd 2>&1 | grep -c Output; (./kd &); for i in $(seq 1 30); do W=$(xdotool search --name "KDTEST" 2>/dev/null | head -1); [ -n "$W" ] && break; sleep 0.2; done; xdotool windowactivate --sync $W; sleep 1
+  $ xdotool keydown z; sleep 0.15; xdotool keyup z; sleep 0.5; xdotool keydown z; sleep 1.0; xdotool keyup z
+  $ sleep 5; cat $SP/kd.log
+2026-09-30T20:30:02-0400  WARNING  bash_end      [stderr] 18L stdout / 2L stderr
+  | 1
+  |  1.096 hit     122
+  |  1.096 down122 -1
+  |  1.260 hit    -122
+  |  1.260 down122  0
+  |  1.780 hit     122
+  |  1.780 down122 -1
+  |  2.446 hit     122
+  |  2.481 hit     122
+  |  2.515 hit     122
+  |  2.560 hit     122
+  |  2.595 hit     122
+  |  2.645 hit     122
+  |  2.680 hit     122
+  |  2.730 hit     122
+  |  2.760 hit     122
+  |  2.795 hit    -122
+  |  2.795 down122  0
+  ! 
+  ! Shell cwd was reset to /home/grymmjack/git/qb64
+2026-09-30T20:30:17-0400  INFO     bash_start    SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad; cd /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER | ( $SP/PCSEDIT & echo $! > $SP/pid ); for i in $(seq 1…
+  > cwd: /home/grymmjack/git/qb64
+  $ SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad; cd /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ ( $SP/PCSEDIT & echo $! > $SP/pid ); for i in $(seq 1 30); do W=$(xdotool search --name "PCSEDIT" 2>/dev/null | head -1); [ -n "$W" ] && break; sleep 0.3; done; sleep 2; xdotool windowactivate --sync $W; sleep 0.3
+  $ snap(){ xwd -silent -id $W -out $SP/s.xwd; /usr/bin/convert $SP/s.xwd -crop 700x100+0+24 $SP/$1; }
+  $ xdotool key F5; sleep 0.3; snap q0.png
+  $ xdotool keydown z; sleep 0.1; snap q1.png; sleep 0.3; snap q2.png; xdotool keyup z; sleep 0.3; snap q3.png
+  $ kill $(cat $SP/pid); sleep 0.3; pkill -f 'amidi -p hw' ; /usr/bin/convert $SP/q0.png $SP/q1.png $SP/q2.png $SP/q3.png -append $SP/q.png
+2026-09-30T20:30:25-0400  INFO     bash_start    pkill -x amidi; SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad; ls $SP/q*.png; /usr/bin/convert $SP/q0.png $SP/q1.png $SP/q2.png $SP/q3.png -append $SP/q…
+  > cwd: /home/grymmjack/git/qb64
+  $ pkill -x amidi; SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad; ls $SP/q*.png; /usr/bin/convert $SP/q0.png $SP/q1.png $SP/q2.png $SP/q3.png -append $SP/q.png
+2026-09-30T20:30:25-0400  INFO     bash_end      [ok] 4L stdout
+  | /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/q0.png
+  | /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/q1.png
+  | /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/q2.png
+  | /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/q3.png
+2026-09-30T20:30:50-0400  INFO     bash_start    SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad; D=/home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER; python3 - <<EOF | s=open('$D/PCSEDIT.BAS').read() | s=s…
+  > cwd: /home/grymmjack/git/qb64
+  $ SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad; D=/home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER; python3 - <<EOF
+  $ s=open('$D/PCSEDIT.BAS').read()
+  $ s=s.replace("'\$INCLUDE:'PCSPKR.BI'","'\$INCLUDE:'$D/PCSPKR.BI'").replace("'\$INCLUDE:'PCSPKR.BM'","'\$INCLUDE:'$D/PCSPKR.BM'")
+  $ s=s.replace("ON ERROR GOTO trap","ON ERROR GOTO trap\nOPEN \"$SP/dbg.log\" FOR OUTPUT AS #99")
+  $ s=s.replace("""        IF isDown AND NOT kbDown(i) THEN""","""        IF isDown AND NOT kbDown(i) THEN PRINT #99, "down"; i; TIMER(0.001)
+  $         IF NOT isDown AND kbDown(i) THEN PRINT #99, "up"; i; TIMER(0.001)
+  $         IF isDown AND NOT kbDown(i) THEN""")
+  $ s=s.replace("""SUB note_on (n AS LONG)
+  $     IF n < 0""","""SUB note_on (n AS LONG)
+  $     PRINT #99, "note_on"; n; recMode; TIMER(0.001)
+  $     IF n < 0""")
+  $ s=s.replace("""SUB step_enter (n AS LONG)
+  $     DIM i AS LONG""","""SUB step_enter (n AS LONG)
+  $     DIM i AS LONG
+  $     PRINT #99, "step_enter"; n; cursorStep""")
+  $ s=s.replace("""    k = _KEYHIT
+  $     IF promptKind THEN""","""    k = _KEYHIT
+  $     IF k THEN PRINT #99, "hit"; k; TIMER(0.001)
+  $     IF promptKind THEN""")
+  $ open('$SP/dbg.bas','w').write(s)
+  $ EOF
+  $ cd $SP && /home/grymmjack/git/qb64pe/qb64pe -x dbg.bas -o dbg 2>&1 | grep -c Output
+  $ ( ./dbg & echo $! > pid ); for i in $(seq 1 30); do W=$(xdotool search --name "PCSEDIT" 2>/dev/null | head -1); [ -n "$W" ] && break; sleep 0.3; done; sleep 2; xdotool windowactivate --sync $W; sleep 0.3
+  $ xdotool key F5; sleep 0.3; xdotool keydown z; sleep 0.15; xdotool keyup z; sleep 0.3; xdotool keydown x; sleep 0.15; xdotool keyup x; sleep 0.5
+  $ kill $(cat pid); sleep 0.3; pkill -x amidi; cat dbg.log | head -40
+2026-09-30T20:30:56-0400  WARNING  bash_end      [stderr] 1L stdout / 2L stderr
+  | 1
+  ! 
+  ! Shell cwd was reset to /home/grymmjack/git/qb64
+2026-09-30T20:31:02-0400  INFO     bash_start    SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad; cd $SP | ( ./dbg & echo $! > pid ); for i in $(seq 1 30); do W=$(xdotool search --name "PCSEDIT" 2>/dev/n…
+  > cwd: /home/grymmjack/git/qb64
+  $ SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad; cd $SP
+  $ ( ./dbg & echo $! > pid ); for i in $(seq 1 30); do W=$(xdotool search --name "PCSEDIT" 2>/dev/null | head -1); [ -n "$W" ] && break; sleep 0.3; done; sleep 2; xdotool windowactivate --sync $W; sleep 0.3
+  $ xdotool key F5; sleep 0.3; xdotool keydown z; sleep 0.15; xdotool keyup z; sleep 0.3; xdotool keydown x; sleep 0.15; xdotool keyup x; sleep 0.5
+  $ xdotool key Escape; sleep 0.3; xdotool key Escape; sleep 1; pgrep -x dbg && kill $(cat pid); pkill -x amidi; cat dbg.log | head -40
+2026-09-30T20:31:07-0400  WARNING  bash_end      [stderr] 42L stdout / 2L stderr
+  | 2699576
+  | (eval):kill:4: kill 2699553 failed: no such process
+  | hit 16128  73864.8 
+  | hit-16128  73864.82 
+  | hit 122  73865.12 
+  | down 0  73865.12 
+  | note_on 60  1  73865.12 
+  | step_enter 60  0 
+  | down 0  73865.13 
+  | note_on 60  1  73865.13 
+  | step_enter 60  4 
+  | down 0  73865.15 
+  | note_on 60  1  73865.15 
+  | step_enter 60  8 
+  | down 0  73865.17 
+  | note_on 60  1  73865.17 
+  | step_enter 60  12 
+  | down 0  73865.19 
+  | note_on 60  1  73865.19 
+  | step_enter 60  16 
+  | down 0  73865.2 
+  | note_on 60  1  73865.2 
+  | step_enter 60  20 
+  | down 0  73865.22 
+  | note_on 60  1  73865.22 
+  | step_enter 60  24 
+  | down 0  73865.23 
+  | note_on 60  1  73865.23 
+  | step_enter 60  28 
+  | down 0  73865.25 
+  | note_on 60  1  73865.25 
+  | step_enter 60  32 
+  | down 0  73865.27 
+  | note_on 60  1  73865.27 
+  | step_enter 60  36 
+  | hit-122  73865.28 
+  | up 0  73865.28 
+  | hit 120  73865.6 
+  | down 2  73865.6 
+  | note_on 62  1  73865.6 
+  | step_enter 62  40 
+  | down 2  73865.62
+  ! 
+  ! Shell cwd was reset to /home/grymmjack/git/qb64
+2026-09-30T20:31:21-0400  INFO     bash_start    cd /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER && python3 - <<'PYEOF' | p='PCSEDIT.BAS'; s=open(p).read() | def r(a,b): | global s | assert s.count(a)==1,a; s=s.replace(a,b) | r(""" IF isDown AND …
+  > cwd: /home/grymmjack/git/qb64
+  $ cd /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER && python3 - <<'PYEOF'
+  $ p='PCSEDIT.BAS'; s=open(p).read()
+  $ def r(a,b):
+  $     global s
+  $     assert s.count(a)==1,a; s=s.replace(a,b)
+  $ r("""        IF isDown AND NOT kbDown(i) THEN
+  $             kbDown(i) = kb_note(i) + 1 ' remember which note, in case the octave changes
+  $             note_on kbDown(i) - 1
+  $         ELSEIF NOT isDown AND kbDown(i) THEN""","""        ' kbDown holds note + 1, so compare with 0 (NOT 61 is -62, still true)
+  $         IF isDown AND kbDown(i) = 0 THEN
+  $             kbDown(i) = kb_note(i) + 1 ' remember which note, in case the octave changes
+  $             note_on kbDown(i) - 1
+  $         ELSEIF NOT isDown AND kbDown(i) <> 0 THEN""")
+  $ # unique temp names without scientific notation, and clear leftovers from a crashed run
+  $ r("""        tmp = "/tmp/pcsedit-mididevs-" + LTRIM$(STR$(INT(TIMER(0.001) * 1000))) + ".txt\"""","""        tmp = "/tmp/pcsedit-mididevs-" + HEX$(CLNG(TIMER(0.001) * 1000)) + ".txt\"""")
+  $ r("""        midiFile = "/tmp/pcsedit-midi-" + LTRIM$(STR$(INT(TIMER(0.001) * 1000))) + ".raw\"""","""        midiFile = "/tmp/pcsedit-midi-" + HEX$(CLNG(TIMER(0.001) * 1000)) + ".raw\"""")
+  $ r("""midi_scan
+  $ IF midiDevCount > 0 THEN midi_start 0""","""$IF WIN THEN
+  $ $ELSE
+  $     ' an editor that was killed can't stop its amidi; clear any leftovers
+  $     SHELL _HIDE "pkill -f '/tmp/pcsedit-midi-' 2>/dev/null; rm -f /tmp/pcsedit-midi-*.raw"
+  $ $END IF
+  $ midi_scan
+  $ IF midiDevCount > 0 THEN midi_start 0""")
+  $ open(p,'w').write(s)
+  $ PYEOF
+  $ grep -n "NOT [a-z]*(" PCSEDIT.BAS | grep -v "_DIREXISTS\|_FILEEXISTS" ; /home/grymmjack/git/qb64pe/qb64pe -x PCSEDIT.BAS -o /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/PCSEDIT 2>&1 | grep -c "Output:"
+2026-09-30T20:31:23-0400  INFO     bash_end      [ok] 1L stdout
+  | 1
+2026-09-30T20:31:36-0400  INFO     bash_start    python3 - <<'PYEOF' | p='PCSEDIT.BAS'; s=open(p).read() | a=''' SHELL _HIDE "pkill -f '/tmp/pcsedit-midi-' 2>/dev/null; rm -f /tmp/pcsedit-midi-*.raw"''' | assert a in s | s=s.replace(a,''' ' (rm fir…
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ python3 - <<'PYEOF'
+  $ p='PCSEDIT.BAS'; s=open(p).read()
+  $ a='''    SHELL _HIDE "pkill -f '/tmp/pcsedit-midi-' 2>/dev/null; rm -f /tmp/pcsedit-midi-*.raw"'''
+  $ assert a in s
+  $ s=s.replace(a,'''    ' (rm first: pkill -f also matches the sh running this line)
+  $     SHELL _HIDE "rm -f /tmp/pcsedit-midi-*.raw; pkill -f '/tmp/pcsedit-midi-' 2>/dev/null"''')
+  $ open(p,'w').write(s)
+  $ PYEOF
+  $ SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad; /home/grymmjack/git/qb64pe/qb64pe -x PCSEDIT.BAS -o $SP/PCSEDIT 2>&1 | grep -c "Output:"
+  $ ( $SP/PCSEDIT & echo $! > $SP/pid ); for i in $(seq 1 30); do W=$(xdotool search --name "PCSEDIT" 2>/dev/null | head -1); [ -n "$W" ] && break; sleep 0.3; done; sleep 2; xdotool windowactivate --sync $W; sleep 0.3
+  $ snap(){ xwd -silent -id $W -out $SP/s.xwd; /usr/bin/convert $SP/s.xwd $SP/$1; }
+  $ # STEP: C D E F G
+  $ xdotool key F5; sleep 0.2
+  $ for k in z x c v b; do xdotool keydown $k; sleep 0.15; xdotool keyup $k; sleep 0.1; done
+  $ sleep 0.2; snap r1.png
+  $ # LIVE via fake MIDI bytes appended to amidi's file: F5 -> LIVE, then notes
+  $ xdotool key F5; sleep 0.3
+  $ MF=$(ls /tmp/pcsedit-midi-*.raw | head -1); echo "midi file $MF"
+  $ printf '\x90\x48\x64' >> $MF; sleep 0.3; printf '\x80\x48\x00' >> $MF; sleep 0.15
+  $ printf '\x90\x4c\x64' >> $MF; sleep 0.2; printf '\x4f\x64' >> $MF; sleep 0.2; printf '\x4f\x00\x4c\x00' >> $MF; sleep 0.3
+  $ xdotool key space; sleep 0.3; snap r2.png
+  $ # save as
+  $ xdotool key ctrl+shift+s; sleep 0.3
+  $ for i in $(seq 1 80); do xdotool key BackSpace; done
+  $ xdotool type --delay 20 "$SP/test.snd"; xdotool key Return; sleep 0.5; snap r3.png
+  $ xdotool key Escape; sleep 0.3; xdotool key Escape; sleep 0.8; pgrep -x PCSEDIT; pgrep -af amidi | grep -v pgrep; ls -la $SP/test.snd; ls /tmp/pcsedit-midi* 2>&1 | head -2
+2026-09-30T20:31:49-0400  INFO     bash_start    python3 - <<'PYEOF' | p='PCSEDIT.BAS'; s=open(p).read() | def r(a,b): | global s | assert s.count(a)==1,a; s=s.replace(a,b) | r(""" ' (rm first: pkill -f also matches the sh running this line) | SHEL…
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ python3 - <<'PYEOF'
+  $ p='PCSEDIT.BAS'; s=open(p).read()
+  $ def r(a,b):
+  $     global s
+  $     assert s.count(a)==1,a; s=s.replace(a,b)
+  $ r("""    ' (rm first: pkill -f also matches the sh running this line)
+  $     SHELL _HIDE "rm -f /tmp/pcsedit-midi-*.raw; pkill -f '/tmp/pcsedit-midi-' 2>/dev/null\"""",
+  $ """    ' (the ^amidi anchor keeps pkill to amidi itself, not shells or editors
+  $     ' that happen to mention the path)
+  $     SHELL _HIDE "pkill -f '^amidi .* -r /tmp/pcsedit-midi-' 2>/dev/null; rm -f /tmp/pcsedit-midi-*.raw\"""")
+  $ r("""        SHELL _HIDE "pkill -f '" + midiFile + "' 2>/dev/null\"""","""        SHELL _HIDE "pkill -f '^amidi .* -r " + midiFile + "' 2>/dev/null\"""")
+  $ open(p,'w').write(s)
+  $ PYEOF
+  $ pkill -x amidi; rm -f /tmp/pcsedit-midi-*; pgrep -x PCSEDIT && kill $(pgrep -x PCSEDIT); /home/grymmjack/git/qb64pe/qb64pe -x PCSEDIT.BAS -o /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/PCSEDIT 2>&1 | grep -c "Output:"
+2026-09-30T20:31:50-0400  INFO     bash_end      [ok] 3L stdout
+  | 2700166
+  | 2700204
+  | 1
+2026-09-30T20:31:59-0400  INFO     bash_start    SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad; cd /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER | ( $SP/PCSEDIT & echo $! > $SP/pid ); for i in $(seq 1…
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad; cd /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ ( $SP/PCSEDIT & echo $! > $SP/pid ); for i in $(seq 1 30); do W=$(xdotool search --name "PCSEDIT" 2>/dev/null | head -1); [ -n "$W" ] && break; sleep 0.3; done; sleep 2; xdotool windowactivate --sync $W; sleep 0.3
+  $ snap(){ xwd -silent -id $W -out $SP/s.xwd; /usr/bin/convert $SP/s.xwd $SP/$1; }
+  $ xdotool key F5; sleep 0.2
+  $ for k in z x c v b; do xdotool keydown $k; sleep 0.15; xdotool keyup $k; sleep 0.1; done
+  $ sleep 0.2; snap r1.png
+  $ xdotool key F5; sleep 0.3
+  $ MF=$(ls /tmp/pcsedit-midi-*.raw | head -1); echo "midi file $MF"
+  $ printf '\x90\x48\x64' >> $MF; sleep 0.3; printf '\x80\x48\x00' >> $MF; sleep 0.15
+  $ printf '\x90\x4c\x64' >> $MF; sleep 0.2; printf '\x4f\x64' >> $MF; sleep 0.2; printf '\x4f\x00\x4c\x00' >> $MF; sleep 0.3
+  $ xdotool key space; sleep 0.3; snap r2.png
+  $ xdotool key ctrl+shift+s; sleep 0.3
+  $ for i in $(seq 1 80); do xdotool key BackSpace; done
+  $ xdotool type --delay 20 "$SP/test.snd"; xdotool key Return; sleep 0.5; snap r3.png
+  $ xdotool key Escape; sleep 0.3; xdotool key Escape; sleep 0.8; echo "editor: $(pgrep -x PCSEDIT)"; echo "amidi: $(pgrep -x amidi)"; ls -la $SP/test.snd; ls /tmp/ | grep -c pcsedit
+2026-09-30T20:32:10-0400  INFO     bash_end      [ok] 6L stdout
+  | midi file /tmp/pcsedit-midi-467EEB4.raw
+  | editor: 2700605
+  | 2700631
+  | amidi: 2700633
+  | "/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/test.snd": No such file or directory (os error 2)
+  | 1
+2026-09-30T20:32:41-0400  INFO     bash_start    kill $(pgrep -x PCSEDIT) 2>/dev/null; sleep 0.3; pkill -x amidi; SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad; rm -f $SP/test.snd; cd /home/grymmjack/g…
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ kill $(pgrep -x PCSEDIT) 2>/dev/null; sleep 0.3; pkill -x amidi; SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad; rm -f $SP/test.snd; cd /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ ( $SP/PCSEDIT & echo $! > $SP/pid ); for i in $(seq 1 30); do W=$(xdotool search --name "PCSEDIT" 2>/dev/null | head -1); [ -n "$W" ] && break; sleep 0.3; done; sleep 2; xdotool windowactivate --sync $W; sleep 0.3
+  $ xdotool key F5; sleep 0.3
+  $ for k in z x c v b; do xdotool keydown $k; sleep 0.15; xdotool keyup $k; sleep 0.1; done
+  $ xdotool key F5; sleep 0.5
+  $ MF=$(ls /tmp/pcsedit-midi-*.raw | head -1)
+  $ printf '\x90\x48\x64' >> $MF; sleep 0.3; printf '\x80\x48\x00' >> $MF; sleep 0.15
+  $ printf '\x90\x4c\x64' >> $MF; sleep 0.2; printf '\x4f\x64' >> $MF; sleep 0.2; printf '\x4f\x00\x4c\x00' >> $MF; sleep 0.4
+  $ xdotool key space; sleep 0.5
+  $ xdotool key F5; sleep 0.3      # back to REC off so typing can't record
+  $ xdotool keydown ctrl; sleep 0.1; xdotool keydown shift; sleep 0.1; xdotool key s; sleep 0.1; xdotool keyup shift; xdotool keyup ctrl; sleep 0.4
+  $ for i in $(seq 1 90); do xdotool key BackSpace; done
+  $ xdotool type --delay 15 "$SP/test.snd"; sleep 0.2; xdotool key Return; sleep 0.8
+  $ xdotool key Escape; sleep 0.5; echo "editor still up: $(pgrep -x PCSEDIT)"; echo "amidi: $(pgrep -x amidi)"; ls -la $SP/test.snd; xxd -l 64 $SP/test.snd
+2026-09-30T20:32:58-0400  INFO     bash_start    SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad; W=$(xdotool search --name "PCSEDIT" | head -1); xdotool windowactivate --sync $W; sleep 0.5; xwd -silent …
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad; W=$(xdotool search --name "PCSEDIT" | head -1); xdotool windowactivate --sync $W; sleep 0.5; xwd -silent -id $W -out $SP/s.xwd; /usr/bin/convert $SP/s.xwd $SP/t1.png; ps -o pid,ppid,cmd -p $(pgrep -x PCSEDIT | tr '\n' ',' | sed 's/,$//')
+2026-09-30T20:33:17-0400  INFO     bash_start    pkill -x amidi; SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad; D=/home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER; rm -f $SP/dbg.log; python3 - <<EOF | s=…
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ pkill -x amidi; SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad; D=/home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER; rm -f $SP/dbg.log; python3 - <<EOF
+  $ s=open('$D/PCSEDIT.BAS').read()
+  $ s=s.replace("'\$INCLUDE:'PCSPKR.BI'","'\$INCLUDE:'$D/PCSPKR.BI'").replace("'\$INCLUDE:'PCSPKR.BM'","'\$INCLUDE:'$D/PCSPKR.BM'")
+  $ s=s.replace("""    k = _KEYHIT
+  $     IF promptKind THEN""","""    k = _KEYHIT
+  $     IF k THEN dbg "hit" + STR\$(k) + " ctrl" + STR\$(_KEYDOWN(100305) OR _KEYDOWN(100306)) + " shift" + STR\$(_KEYDOWN(100303) OR _KEYDOWN(100304)) + " prompt" + STR\$(promptKind)
+  $     IF promptKind THEN""")
+  $ s=s.replace("""SUB save_bank (fileName AS STRING)""","""SUB dbg (m AS STRING)
+  $     DIM ff AS LONG
+  $     ff = FREEFILE
+  $     OPEN "$SP/dbg.log" FOR APPEND AS #ff
+  $     PRINT #ff, m
+  $     CLOSE #ff
+  $ END SUB
+  $ 
+  $ SUB save_bank (fileName AS STRING)""")
+  $ s=s.replace("""    ofs = 16 + sndCount * 16""","""    dbg "save_bank " + fileName
+  $     ofs = 16 + sndCount * 16""")
+  $ s=s.replace("""trap:
+  $ errNum = ERR""","""trap:
+  $ errNum = ERR
+  $ dbg "ERROR" + STR\$(ERR) + " line" + STR\$(_ERRORLINE)""")
+  $ s=s.replace("""midi_stop
+  $ PCSPK_Off
+  $ PCSPK_StreamClose
+  $ SYSTEM""","""dbg "quit"
+  $ midi_stop
+  $ PCSPK_Off
+  $ PCSPK_StreamClose
+  $ SYSTEM""")
+  $ open('$SP/dbg.bas','w').write(s)
+  $ EOF
+  $ cd $SP && /home/grymmjack/git/qb64pe/qb64pe -x dbg.bas -o dbg 2>&1 | grep -c "Output:"
+  $ ( ./dbg & ); for i in $(seq 1 30); do W=$(xdotool search --name "PCSEDIT" 2>/dev/null | head -1); [ -n "$W" ] && break; sleep 0.3; done; sleep 2; xdotool windowactivate --sync $W; sleep 0.3
+  $ xdotool key F5; sleep 0.3; xdotool keydown z; sleep 0.15; xdotool keyup z; sleep 0.2
+  $ xdotool key F5; sleep 0.3; xdotool key F5; sleep 0.3
+  $ xdotool keydown ctrl; sleep 0.1; xdotool keydown shift; sleep 0.1; xdotool key s; sleep 0.1; xdotool keyup shift; xdotool keyup ctrl; sleep 0.4
+  $ for i in $(seq 1 5); do xdotool key BackSpace; done
+  $ xdotool type --delay 15 "abc"; sleep 0.2; xdotool key Escape; sleep 0.5
+  $ xdotool key Escape; sleep 0.3; xdotool key Escape; sleep 1; cat dbg.log; pgrep -x dbg
+2026-09-30T20:33:38-0400  INFO     bash_start    SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad; cd $SP; rm -f dbg.log test.snd | ( ./dbg & ); for i in $(seq 1 30); do W=$(xdotool search --name "PCSEDIT…
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad; cd $SP; rm -f dbg.log test.snd
+  $ ( ./dbg & ); for i in $(seq 1 30); do W=$(xdotool search --name "PCSEDIT" 2>/dev/null | head -1); [ -n "$W" ] && break; sleep 0.3; done; sleep 2; xdotool windowactivate --sync $W; sleep 0.3
+  $ xdotool key F5; sleep 0.3; xdotool keydown z; sleep 0.15; xdotool keyup z; sleep 0.2; xdotool key F5; xdotool key F5; sleep 0.3
+  $ xdotool keydown ctrl; sleep 0.1; xdotool keydown shift; sleep 0.1; xdotool key s; sleep 0.1; xdotool keyup shift; xdotool keyup ctrl; sleep 0.4
+  $ for i in $(seq 1 90); do xdotool key BackSpace; done
+  $ xdotool type --delay 15 "$SP/test.snd"; sleep 0.3; xdotool key Return; sleep 1
+  $ grep -v "^hit 8\|^hit-8\|hit [0-9][0-9] \|hit-[0-9][0-9] \|hit [0-9][0-9][0-9] c\|hit-[0-9][0-9][0-9] c" dbg.log | tail -20; ls -la test.snd
+2026-09-30T20:33:49-0400  INFO     bash_start    cd /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad; grep -c "" dbg.log; tail -12 dbg.log; awk '/prompt 4/ && /^hit [0-9]/ {print $2}' dbg.log | while read c;…
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ cd /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad; grep -c "" dbg.log; tail -12 dbg.log; awk '/prompt 4/ && /^hit [0-9]/ {print $2}' dbg.log | while read c; do [ $c -lt 256 ] && printf "\\$(printf %03o $c)"; done; echo
+2026-09-30T20:33:49-0400  WARNING  bash_end      [stderr] 14L stdout / 2L stderr
+  | 394
+  | hit 46 ctrl 0 shift 0 prompt 4
+  | hit-46 ctrl 0 shift 0 prompt 4
+  | hit 115 ctrl 0 shift 0 prompt 4
+  | hit-115 ctrl 0 shift 0 prompt 4
+  | hit 110 ctrl 0 shift 0 prompt 4
+  | hit-110 ctrl 0 shift 0 prompt 4
+  | hit 100 ctrl 0 shift 0 prompt 4
+  | hit-100 ctrl 0 shift 0 prompt 4
+  | hit 13 ctrl 0 shift 0 prompt 4
+  | save_bank /tmp/claude-/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/test.snd
+  | ERROR 64 line 1204
+  | hit-13 ctrl 0 shift 0 prompt 0
+  | /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/test.snd
+  ! 
+  ! Shell cwd was reset to /home/grymmjack/git/qb64
+2026-09-30T20:34:00-0400  INFO     bash_start    cd /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER && python3 - <<'PYEOF' | p='PCSEDIT.BAS'; s=open(p).read() | def r(a,b): | global s | assert s.count(a)==1,a; s=s.replace(a,b) | r(""" CASE 8 | IF LE…
+  > cwd: /home/grymmjack/git/qb64
+  $ cd /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER && python3 - <<'PYEOF'
+  $ p='PCSEDIT.BAS'; s=open(p).read()
+  $ def r(a,b):
+  $     global s
+  $     assert s.count(a)==1,a; s=s.replace(a,b)
+  $ r("""        CASE 8
+  $             IF LEN(promptText) THEN promptText = LEFT$(promptText, LEN(promptText) - 1)
+  $             promptConfirm = \"\"""","""        CASE 8
+  $             IF LEN(promptText) THEN promptText = LEFT$(promptText, LEN(promptText) - 1)
+  $             promptConfirm = ""
+  $         CASE 21248 '                                   Delete clears the field
+  $             promptText = ""
+  $             promptConfirm = \"\"""")
+  $ r("""        ln = promptLabel + " " + promptText""","""        ln = promptLabel + " " + promptText""")
+  $ r("""    promptKind = kind
+  $     promptLabel = label""","""    promptKind = kind
+  $     promptLabel = label
+  $     set_status "Enter = OK   Esc = cancel   Delete = clear the field\"""")
+  $ open(p,'w').write(s)
+  $ PYEOF
+  $ grep -n "IF promptKind THEN" PCSEDIT.BAS | head -3; sed -n '/^SUB draw_ui/,/^END SUB/p' PCSEDIT.BAS | grep -n "statusMsg" 
+2026-09-30T20:34:00-0400  INFO     bash_end      [ok] 6L stdout
+  | 221:    IF promptKind THEN
+  | 1322:    IF promptKind THEN
+  | 33:    ELSEIF LEN(statusMsg) THEN
+  | 36:            _PRINTSTRING (8, SCR_H - 20), statusMsg
+  | 38:            statusMsg = ""
+  | 41:    IF LEN(statusMsg) = 0 AND promptKind = PROMPT_NONE THEN
+2026-09-30T20:34:13-0400  INFO     bash_start    python3 - <<'PYEOF' | p='PCSEDIT.BAS'; s=open(p).read() | def r(a,b): | global s | assert s.count(a)==1,a; s=s.replace(a,b) | r(""" promptLabel = label | set_status "Enter = OK Esc = cancel Delete = …
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ python3 - <<'PYEOF'
+  $ p='PCSEDIT.BAS'; s=open(p).read()
+  $ def r(a,b):
+  $     global s
+  $     assert s.count(a)==1,a; s=s.replace(a,b)
+  $ r("""    promptLabel = label
+  $     set_status "Enter = OK   Esc = cancel   Delete = clear the field\"""","""    promptLabel = label""")
+  $ r("""        IF LEN(ln) > SCR_W \\ 8 - 2 THEN ln = "..." + RIGHT$(ln, SCR_W \\ 8 - 5)
+  $         _PRINTSTRING (8, SCR_H - 20), ln""","""        IF LEN(ln) > SCR_W \\ 8 - 42 THEN ln = "..." + RIGHT$(ln, SCR_W \\ 8 - 45)
+  $         _PRINTSTRING (8, SCR_H - 20), ln
+  $         COLOR _RGB32(130, 150, 190)
+  $         _PRINTSTRING (SCR_W - 8 * 38, SCR_H - 20), "Enter OK  Esc cancel  Delete clears\"""")
+  $ open(p,'w').write(s)
+  $ PYEOF
+  $ SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad; /home/grymmjack/git/qb64pe/qb64pe -x PCSEDIT.BAS -o $SP/PCSEDIT 2>&1 | grep -c "Output:"; rm -f $SP/test.snd
+  $ ( $SP/PCSEDIT & ); for i in $(seq 1 30); do W=$(xdotool search --name "PCSEDIT" 2>/dev/null | head -1); [ -n "$W" ] && break; sleep 0.3; done; sleep 2; xdotool windowactivate --sync $W; sleep 0.3
+  $ xdotool key F5; sleep 0.3
+  $ for k in z x c v b; do xdotool keydown $k; sleep 0.15; xdotool keyup $k; sleep 0.1; done
+  $ xdotool key F5; sleep 0.5
+  $ MF=$(ls /tmp/pcsedit-midi-*.raw | head -1)
+  $ printf '\x90\x48\x64' >> $MF; sleep 0.3; printf '\x80\x48\x00' >> $MF; sleep 0.15
+  $ printf '\x90\x4c\x64' >> $MF; sleep 0.2; printf '\x4f\x64' >> $MF; sleep 0.2; printf '\x4f\x00\x4c\x00' >> $MF; sleep 0.4
+  $ xdotool key space; sleep 0.4; xdotool key F5; sleep 0.3
+  $ xdotool keydown ctrl; sleep 0.1; xdotool keydown shift; sleep 0.1; xdotool key s; sleep 0.1; xdotool keyup shift; xdotool keyup ctrl; sleep 0.4
+  $ xdotool key Delete; xdotool type --delay 10 "$SP/test.snd"; sleep 0.2; xdotool key Return; sleep 0.8
+  $ xwd -silent -id $W -out $SP/s.xwd; /usr/bin/convert $SP/s.xwd $SP/u1.png
+  $ xdotool key Escape; sleep 1; echo "editor: $(pgrep -x PCSEDIT) amidi: $(pgrep -x amidi)"; ls -la $SP/test.snd; xxd $SP/test.snd | head -5
+2026-09-30T20:34:24-0400  INFO     bash_end      [ok] 5L stdout
+  | 1
+  | editor: 2703213
+  | 2703243 amidi: 2703245
+  | "/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/test.snd": No such file or directory (os error 2)
+  | xxd: /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/test.snd: No such file or directory
+2026-09-30T20:34:52-0400  INFO     bash_start    kill $(pgrep -x PCSEDIT) 2>/dev/null; sleep 0.3; pkill -x amidi; SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad; D=/home/grymmjack/git/qb64/qb64/SOUND/PC…
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ kill $(pgrep -x PCSEDIT) 2>/dev/null; sleep 0.3; pkill -x amidi; SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad; D=/home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER; rm -f $SP/dbg.log $SP/test.snd; python3 - <<EOF
+  $ s=open('$D/PCSEDIT.BAS').read()
+  $ s=s.replace("'\$INCLUDE:'PCSPKR.BI'","'\$INCLUDE:'$D/PCSPKR.BI'").replace("'\$INCLUDE:'PCSPKR.BM'","'\$INCLUDE:'$D/PCSPKR.BM'")
+  $ s=s.replace("""    k = _KEYHIT
+  $     IF promptKind THEN""","""    k = _KEYHIT
+  $     IF k > 0 THEN dbg "hit" + STR\$(k) + " prompt" + STR\$(promptKind) + " rec" + STR\$(recMode) + " steps" + STR\$(steps_of(cur))
+  $     IF promptKind THEN""")
+  $ s=s.replace("""SUB save_bank (fileName AS STRING)""","""SUB dbg (m AS STRING)
+  $     DIM ff AS LONG
+  $     ff = FREEFILE
+  $     OPEN "$SP/dbg.log" FOR APPEND AS #ff
+  $     PRINT #ff, m
+  $     CLOSE #ff
+  $ END SUB
+  $ 
+  $ SUB save_bank (fileName AS STRING)""")
+  $ s=s.replace("""SUB note_on (n AS LONG)
+  $     IF n < 0""","""SUB note_on (n AS LONG)
+  $     dbg "note_on" + STR\$(n) + " rec" + STR\$(recMode)
+  $     IF n < 0""")
+  $ s=s.replace("""    ofs = 16 + sndCount * 16""","""    dbg "save_bank [" + fileName + "]"
+  $     ofs = 16 + sndCount * 16""")
+  $ s=s.replace("""trap:
+  $ errNum = ERR""","""trap:
+  $ errNum = ERR
+  $ dbg "ERROR" + STR\$(ERR) + " line" + STR\$(_ERRORLINE)""")
+  $ open('$SP/dbg.bas','w').write(s)
+  $ EOF
+  $ cd $SP && /home/grymmjack/git/qb64pe/qb64pe -x dbg.bas -o dbg 2>&1 | grep -c "Output:"
+  $ cd $D; ( $SP/dbg & ); for i in $(seq 1 30); do W=$(xdotool search --name "PCSEDIT" 2>/dev/null | head -1); [ -n "$W" ] && break; sleep 0.3; done; sleep 2; xdotool windowactivate --sync $W; sleep 0.3
+  $ xdotool key F5; sleep 0.3
+  $ for k in z x c v b; do xdotool keydown $k; sleep 0.15; xdotool keyup $k; sleep 0.1; done
+  $ xdotool key F5; sleep 0.5
+  $ MF=$(ls /tmp/pcsedit-midi-*.raw | head -1)
+  $ printf '\x90\x48\x64' >> $MF; sleep 0.3; printf '\x80\x48\x00' >> $MF; sleep 0.15
+  $ printf '\x90\x4c\x64' >> $MF; sleep 0.2; printf '\x4f\x64' >> $MF; sleep 0.2; printf '\x4f\x00\x4c\x00' >> $MF; sleep 0.4
+  $ xdotool key space; sleep 0.4; xdotool key F5; sleep 0.3
+  $ xdotool keydown ctrl; sleep 0.1; xdotool keydown shift; sleep 0.1; xdotool key s; sleep 0.1; xdotool keyup shift; xdotool keyup ctrl; sleep 0.4
+  $ xdotool key Delete; sleep 0.2; xdotool type --delay 10 "$SP/test.snd"; sleep 0.3; xdotool key Return; sleep 0.8
+  $ grep -v "prompt 4 rec" $SP/dbg.log; grep "prompt 4" $SP/dbg.log | head -3; ls -la $SP/test.snd
+2026-09-30T20:35:18-0400  INFO     bash_start    pkill -x dbg; pkill -x PCSEDIT; pkill -x kd; sleep 0.5; pkill -x amidi; rm -f /tmp/pcsedit-midi-*; pgrep -x dbg; pgrep -x PCSEDIT; pgrep -x amidi; xdotool search --name "PCSEDIT"; echo clean
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ pkill -x dbg; pkill -x PCSEDIT; pkill -x kd; sleep 0.5; pkill -x amidi; rm -f /tmp/pcsedit-midi-*; pgrep -x dbg; pgrep -x PCSEDIT; pgrep -x amidi; xdotool search --name "PCSEDIT"; echo clean
+2026-09-30T20:35:19-0400  INFO     bash_end      [ok] 1L stdout
+  | clean
+2026-09-30T20:35:26-0400  INFO     bash_start    SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad; D=/home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER; rm -f $SP/dbg.log $SP/test.snd; grep -c 'rec" + STR' $S…
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad; D=/home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER; rm -f $SP/dbg.log $SP/test.snd; grep -c 'rec" + STR' $SP/dbg.bas; ls -la $SP/dbg
+  $ cd $D; ( $SP/dbg & ); for i in $(seq 1 30); do W=$(xdotool search --name "PCSEDIT" 2>/dev/null | head -1); [ -n "$W" ] && break; sleep 0.3; done; sleep 2; xdotool windowactivate --sync $W; sleep 0.3
+  $ xdotool key F5; sleep 0.3
+  $ for k in z x c v b; do xdotool keydown $k; sleep 0.15; xdotool keyup $k; sleep 0.1; done
+  $ xdotool key F5; sleep 0.5
+  $ MF=$(ls /tmp/pcsedit-midi-*.raw | head -1); echo "files: $(ls /tmp/pcsedit-midi-*.raw | wc -l)"
+  $ printf '\x90\x48\x64' >> $MF; sleep 0.3; printf '\x80\x48\x00' >> $MF; sleep 0.15
+  $ printf '\x90\x4c\x64' >> $MF; sleep 0.2; printf '\x4f\x64' >> $MF; sleep 0.2; printf '\x4f\x00\x4c\x00' >> $MF; sleep 0.4
+  $ xdotool key space; sleep 0.4; xdotool key F5; sleep 0.3
+  $ xdotool keydown ctrl; sleep 0.1; xdotool keydown shift; sleep 0.1; xdotool key s; sleep 0.1; xdotool keyup shift; xdotool keyup ctrl; sleep 0.4
+  $ xdotool key Delete; sleep 0.2; xdotool type --delay 10 "$SP/test.snd"; sleep 0.3; xdotool key Return; sleep 0.8
+  $ grep -v "^hit [0-9]* prompt 4" $SP/dbg.log; ls -la $SP/test.snd
+2026-09-30T20:35:40-0400  INFO     bash_start    SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad; tail -8 $SP/dbg.log; grep -c "prompt 4" $SP/dbg.log; grep -E "save|ERROR" $SP/dbg.log
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad; tail -8 $SP/dbg.log; grep -c "prompt 4" $SP/dbg.log; grep -E "save|ERROR" $SP/dbg.log
+2026-09-30T20:35:40-0400  INFO     bash_end      [ok] 10L stdout
+  | hit 115 prompt 4 rec 0 steps 138
+  | hit 116 prompt 4 rec 0 steps 138
+  | hit 46 prompt 4 rec 0 steps 138
+  | hit 115 prompt 4 rec 0 steps 138
+  | hit 110 prompt 4 rec 0 steps 138
+  | hit 100 prompt 4 rec 0 steps 138
+  | hit 13 prompt 4 rec 0 steps 138
+  | save_bank [/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/test.snd]
+  | 100
+  | save_bank [/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/test.snd]
+2026-09-30T20:35:43-0400  INFO     bash_start    SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad; ls -la $SP/test.snd 2>&1; ls -la $SP/*.snd $SP/*.SND 2>&1 | head; find / -xdev -name "test.snd" -newer $S…
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad; ls -la $SP/test.snd 2>&1; ls -la $SP/*.snd $SP/*.SND 2>&1 | head; find / -xdev -name "test.snd" -newer $SP/dbg.bas 2>/dev/null | head
+2026-09-30T20:35:44-0400  INFO     bash_end      [ok] 2L stdout
+  | .rw-rw-r-- 310 grymmjack 30 Sep 20:35 /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/test.snd
+  | (eval):1: no matches found: /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/*.SND
+2026-09-30T20:35:52-0400  INFO     bash_start    SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad; python3 - <<EOF | import struct, math | d=open('$SP/test.snd','rb').read() | print(d[:4], 'size', struct.…
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad; python3 - <<EOF
+  $ import struct, math
+  $ d=open('$SP/test.snd','rb').read()
+  $ print(d[:4], 'size', struct.unpack_from('<H',d,4)[0], 'count', struct.unpack_from('<H',d,6)[0])
+  $ off,pri,rate=struct.unpack_from('<HBB',d,16); name=d[20:32].split(b'\0')[0]
+  $ print('entry', off, pri, rate, name)
+  $ w=[]; p=off
+  $ while True:
+  $     v=struct.unpack_from('<H',d,p)[0]
+  $     if v==0xffff: break
+  $     w.append(v); p+=2
+  $ names='C C# D D# E F F# G G# A A# B'.split()
+  $ def nn(v):
+  $     if v==0: return '-'
+  $     n=round(69+12*math.log2(1193181.67/v/440)); return names[n%12]+str(n//12-1)
+  $ runs=[]
+  $ for v in w:
+  $     t=nn(v)
+  $     if runs and runs[-1][0]==t: runs[-1][1]+=1
+  $     else: runs.append([t,1])
+  $ print(len(w),'steps:', ' '.join(f'{t}x{c}' for t,c in runs))
+  $ EOF
+  $ echo "$SP/test.snd" > $SP/g/list.txt; $SP/t2 2>&1 | tail -1
+2026-09-30T20:35:52-0400  INFO     bash_end      [ok] 4L stdout
+  | b'SND\x00' size 310 count 1
+  | entry 32 10 8 b'SOUND1'
+  | 138 steps: C4x4 D4x4 E4x4 F4x4 G4x4 C5x42 -x21 E5x27 G5x28
+  | test.snd 1  1  SOUND1 SOUND1 14746852  0.000 s
+2026-09-30T20:36:03-0400  INFO     bash_start    pkill -x dbg; sleep 0.5; pkill -x amidi; SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad; D=/home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER; rm -rf $SP/EXP…
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ pkill -x dbg; sleep 0.5; pkill -x amidi; SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad; D=/home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER; rm -rf $SP/EXPORT; cd $D
+  $ ( $SP/PCSEDIT ASSETS/duke1-b.dn1 & ); for i in $(seq 1 30); do W=$(xdotool search --name "PCSEDIT" 2>/dev/null | head -1); [ -n "$W" ] && break; sleep 0.3; done; sleep 2.5; xdotool windowactivate --sync $W; sleep 0.3
+  $ for i in 1 2 3 4 5 6 7 8 9; do xdotool key Down; sleep 0.1; done; sleep 0.3
+  $ xdotool keydown ctrl; sleep 0.1; xdotool key e; sleep 0.1; xdotool keyup ctrl; sleep 1
+  $ xwd -silent -id $W -out $SP/s.xwd; /usr/bin/convert $SP/s.xwd $D/SCREENSHOTS/6-pcsedit.png
+  $ echo "amidi while open: $(pgrep -x amidi)"
+  $ xdotool key Escape; sleep 1.5; echo "editor after Esc: $(pgrep -x PCSEDIT)  amidi: $(pgrep -x amidi)  tmp: $(ls /tmp | grep -c pcsedit)"; ls -la $SP/EXPORT/
+2026-09-30T20:36:11-0400  INFO     bash_end      [ok] 3L stdout
+  | amidi while open: 2705215
+  | editor after Esc:   amidi:   tmp: 0
+  | .rw-rw-r-- 171k grymmjack 30 Sep 20:36 duke1-b_dn1_BOMBEXPLODE.wav
+2026-09-30T20:36:34-0400  INFO     bash_start    python3 - <<'PYEOF' | p='README.md'; s=open(p).read() | def r(a,b): | global s | assert s.count(a)==1,a; s=s.replace(a,b) | r("""--- | | ## Supported games | ""","""--- | | ## PCSEDIT: make your own …
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ python3 - <<'PYEOF'
+  $ p='README.md'; s=open(p).read()
+  $ def r(a,b):
+  $     global s
+  $     assert s.count(a)==1,a; s=s.replace(a,b)
+  $ r("""---
+  $ 
+  $ ## Supported games
+  $ ""","""---
+  $ 
+  $ ## PCSEDIT: make your own sounds
+  $ 
+  $ **`PCSEDIT.BAS`** is an editor for PC speaker sound effects. A sound is a list
+  $ of steps, 140 per second, and each step is a pitch or silence, which is exactly
+  $ what the games stored. You can draw a sound with the mouse, or play it in on
+  $ the computer keyboard or a MIDI keyboard. It saves IFS banks (the Duke Nukem 1
+  $ / Commander Keen format), which DN1PLAY and `PCSPKR.BM` play. It can open any
+  $ file from [Supported games](#supported-games), so you can take a sound from
+  $ Wolfenstein 3D or DOOM, change it, and save it as your own.
+  $ 
+  $ ![PCSEDIT editing the Duke Nukem 1 BOMBEXPLODE sound](SCREENSHOTS/6-pcsedit.png)
+  $ 
+  $ **Drawing:** the big panel is a piano roll, with pitch going up and time going
+  $ right. Drag with the left mouse button to draw and with the right to erase.
+  $ **Shift+click** draws a straight line from the last point, which makes slides
+  $ and sweeps. **F6** switches snap to semitones on or off. The mouse wheel
+  $ scrolls and **Ctrl+wheel** zooms. Click the time ruler above the roll to move
+  $ the cursor (yellow line).
+  $ 
+  $ **Playing notes in:** the computer keyboard is a two-octave piano, laid out
+  $ like a tracker:
+  $ 
+  $ ```
+  $  2 3   5 6 7          S D   G H J
+  $ Q W E R T Y U I      Z X C V B N M ,     (Z = C, F9/F10 change octave)
+  $ ```
+  $ 
+  $ A MIDI keyboard works too. PCSEDIT finds it at start-up, and **F7** switches
+  $ to another device or turns MIDI off. Notes always sound while you hold them.
+  $ **F5** picks what they do:
+  $ 
+  $ * **REC off:** the notes just play.
+  $ * **STEP:** each note writes *Len* steps at the cursor and moves the cursor on,
+  $   like a tracker. **F11/F12** set *Len*.
+  $ * **LIVE:** records what you play, 140 steps a second, starting with your first
+  $   note. **F5** or **Space** stops it, and the silence after your last note is
+  $   trimmed off. The PC speaker plays one note at a time, so the note you pressed
+  $   last wins.
+  $ 
+  $ | Key | What it does |
+  $ | --- | --- |
+  $ | Space / Enter | play from the start / from the cursor (Ctrl+L loops) |
+  $ | Left / Right, Home / End | move the cursor (Ctrl: 0.1 s at a time) |
+  $ | Up / Down | previous / next sound in the bank |
+  $ | Insert / Delete / Backspace | insert a step, delete a step, delete the step before the cursor |
+  $ | Ctrl+Up / Ctrl+Down | transpose the sound a semitone (add Shift for an octave) |
+  $ | Ctrl+T | trim silence off the end |
+  $ | Ctrl+Z / Ctrl+Y | undo / redo |
+  $ | F2 / F3 / F4 / F8 | rename, new sound, duplicate, delete (press F8 twice) |
+  $ | Ctrl+P | set the sound's priority |
+  $ | Ctrl+N / Ctrl+O / Ctrl+S / Ctrl+Shift+S | new bank, open, save, save as |
+  $ | Ctrl+E | export the sound as a `.wav` in `EXPORT/` |
+  $ | F1 | help |
+  $ 
+  $ The first save after opening a file always asks for a name, and suggests
+  $ `<name>-EDIT.SND`, so a game's own file is never overwritten by accident. An
+  $ IFS bank stores its offsets as 16-bit numbers, so a bank has to stay under
+  $ 64 KB, which is about 3 minutes of sound in total.
+  $ 
+  $ **How MIDI works without `DECLARE LIBRARY`:** QB64 can't read a device
+  $ without stopping the program until data arrives. PCSEDIT starts ALSA's `amidi`
+  $ in the background (`amidi -p hw:4,0,0 -r /tmp/pcsedit-midi-....raw`), which
+  $ writes the keyboard's bytes to a temp file. The editor reads anything new in
+  $ that file every frame. When PCSEDIT quits, it stops `amidi` and deletes the
+  $ file. This needs Linux, the `alsa-utils` package, and your user in the `audio`
+  $ group. On other systems, use the computer keyboard.
+  $ 
+  $ ---
+  $ 
+  $ ## Supported games
+  $ ...[truncated]
+2026-09-30T20:36:34-0400  INFO     bash_end      [ok] 3L stdout
+  |  M qb64/SOUND/PC-SPEAKER/README.md
+  | ?? qb64/SOUND/PC-SPEAKER/PCSEDIT.BAS
+  | ?? qb64/SOUND/PC-SPEAKER/SCREENSHOTS/6-pcsedit.png
+2026-09-30T20:36:38-0400  INFO     bash_start    cd /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER && sed -i 's/64 KB, which is about 3 minutes of sound in total\./64 KB, which is about 4 minutes of sound in total./' README.md && grep -n "4 minutes…
+  > cwd: /home/grymmjack/git/qb64
+  $ cd /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER && sed -i 's/64 KB, which is about 3 minutes of sound in total\./64 KB, which is about 4 minutes of sound in total./' README.md && grep -n "4 minutes" README.md
+2026-09-30T20:36:38-0400  INFO     bash_end      [ok] 1L stdout
+  | 126:64 KB, which is about 4 minutes of sound in total.
+2026-09-30T22:01:08-0400  NOTICE   prompt        commit and push
+  > commit and push
+2026-09-30T22:01:14-0400  INFO     bash_start    cd /home/grymmjack/git/qb64 && git status --short && git log --oneline -5 && git branch --show-current && git diff --stat
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ cd /home/grymmjack/git/qb64 && git status --short && git log --oneline -5 && git branch --show-current && git diff --stat
+2026-09-30T22:01:14-0400  INFO     bash_end      [ok] 14L stdout
+  |  M .claude/activity.log
+  |  M qb64/SOUND/PC-SPEAKER/README.md
+  | ?? qb64/SOUND/PC-SPEAKER/PCSEDIT.BAS
+  | ?? qb64/SOUND/PC-SPEAKER/SCREENSHOTS/6-pcsedit.png
+  | 057c13f4 Adding more games support and games browser
+  | ba6a3b66 Added DOOM to PC-SPEAKER (freedoom)
+  | 36261a54 Updates
+  | 15b7808d Updated gitignore
+  | 148c9909 Merge pull request #4 from grymmjack/claude/qb64pe-pc-speaker-convert-577h1v
+  | main
+  | warning: in the working copy of '.claude/activity.log', CRLF will be replaced by LF the next time Git touches it
+  |  .claude/activity.log            | 977 ++++++++++++++++++++++++++++++++++++++++
+  |  qb64/SOUND/PC-SPEAKER/README.md |  70 +++
+  |  2 files changed, 1047 insertions(+)
+2026-09-30T22:01:17-0400  INFO     bash_start    git log --oneline -3 -- .claude/activity.log; git show --stat HEAD | head -20; git status --short --ignored qb64/SOUND/PC-SPEAKER/ASSETS/GAMES | head -3
+  > cwd: /home/grymmjack/git/qb64
+  $ git log --oneline -3 -- .claude/activity.log; git show --stat HEAD | head -20; git status --short --ignored qb64/SOUND/PC-SPEAKER/ASSETS/GAMES | head -3
+2026-09-30T22:01:17-0400  INFO     bash_end      [ok] 26L stdout
+  | 057c13f4 Adding more games support and games browser
+  | ba6a3b66 Added DOOM to PC-SPEAKER (freedoom)
+  | c0ad7561 Adding GRAPHICS/3D/3DDICE
+  | commit 057c13f437094bc7b7ad2ec3b509a7546cb8b752
+  | Author: Rick Christy <grymmjack@gmail.com>
+  | Date:   Wed Sep 30 20:15:25 2026 -0400
+  | 
+  |     Adding more games support and games browser
+  | 
+  |  .claude/activity.log                               | 2952 ++++++++++++++++++++
+  |  qb64/SOUND/PC-SPEAKER/ASSETS/GAMES/.gitignore      |   53 +
+  |  qb64/SOUND/PC-SPEAKER/ASSETS/GAMES/AUDIOHED.BM1    |  Bin 0 -> 580 bytes
+  |  qb64/SOUND/PC-SPEAKER/ASSETS/GAMES/AUDIOHED.BM2    |  Bin 0 -> 564 bytes
+  |  qb64/SOUND/PC-SPEAKER/ASSETS/GAMES/AUDIOHED.BM3    |  Bin 0 -> 552 bytes
+  |  qb64/SOUND/PC-SPEAKER/ASSETS/GAMES/AUDIOT.BM1      |  Bin 0 -> 205754 bytes
+  |  qb64/SOUND/PC-SPEAKER/ASSETS/GAMES/AUDIOT.BM2      |  Bin 0 -> 244224 bytes
+  |  qb64/SOUND/PC-SPEAKER/ASSETS/GAMES/AUDIOT.BM3      |  Bin 0 -> 201662 bytes
+  |  qb64/SOUND/PC-SPEAKER/ASSETS/GAMES/CC1-1.SND       |  Bin 0 -> 7320 bytes
+  |  qb64/SOUND/PC-SPEAKER/ASSETS/GAMES/CC1-2.SND       |  Bin 0 -> 7320 bytes
+  |  qb64/SOUND/PC-SPEAKER/ASSETS/GAMES/CC1-3.SND       |  Bin 0 -> 7320 bytes
+  |  qb64/SOUND/PC-SPEAKER/ASSETS/GAMES/COSMO1.STN      |  Bin 0 -> 607004 bytes
+  |  qb64/SOUND/PC-SPEAKER/ASSETS/GAMES/DUKE1-B.DN1     |  Bin 0 -> 6158 bytes
+  |  qb64/SOUND/PC-SPEAKER/ASSETS/GAMES/DUKE1.DN1       |  Bin 0 -> 5692 bytes
+  | !! qb64/SOUND/PC-SPEAKER/ASSETS/GAMES/AUDIOHED.BC
+  | !! qb64/SOUND/PC-SPEAKER/ASSETS/GAMES/AUDIOHED.BS6
+  | !! qb64/SOUND/PC-SPEAKER/ASSETS/GAMES/AUDIOHED.CHS
+2026-09-30T22:01:22-0400  INFO     bash_start    git add .claude/activity.log qb64/SOUND/PC-SPEAKER/README.md qb64/SOUND/PC-SPEAKER/PCSEDIT.BAS qb64/SOUND/PC-SPEAKER/SCREENSHOTS/6-pcsedit.png && git commit -q -F - <<'EOF' | SOUND/PC-SPEAKER: add PC…
+  > cwd: /home/grymmjack/git/qb64
+  $ git add .claude/activity.log qb64/SOUND/PC-SPEAKER/README.md qb64/SOUND/PC-SPEAKER/PCSEDIT.BAS qb64/SOUND/PC-SPEAKER/SCREENSHOTS/6-pcsedit.png && git commit -q -F - <<'EOF'
+  $ SOUND/PC-SPEAKER: add PCSEDIT sound editor
+  $ 
+  $ PCSEDIT.BAS edits PC speaker sound effects: draw them on a piano roll
+  $ with the mouse, or play them in on the computer keyboard or a MIDI
+  $ keyboard (STEP and LIVE record at 140 steps/sec). Opens every format
+  $ PCSPKR.BM loads and saves IFS banks that DN1PLAY plays; exports WAV.
+  $ 
+  $ MIDI input on Linux runs ALSA's amidi in the background, writing to a
+  $ temp file the editor reads every frame, so it stays pure QB64 (no C,
+  $ no DECLARE LIBRARY).
+  $ 
+  $ README: new PCSEDIT section and screenshot.
+  $ 
+  $ Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+  $ EOF
+  $ git log --oneline -1 && git push origin main 2>&1 | tail -3
