@@ -14671,3 +14671,621 @@
   $ Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
   $ EOF
   $ git log --oneline -1 && git push origin main 2>&1 | tail -1
+2026-10-01T00:42:01-0400  INFO     bash_end      [ok] 3L stdout
+  | warning: in the working copy of '.claude/activity.log', CRLF will be replaced by LF the next time Git touches it
+  | 4f03b7ac SOUND/PC-SPEAKER: PCSEDIT resize live waveforms by their edges
+  |    c43abdc9..4f03b7ac  main -> main
+2026-10-01T00:42:37-0400  NOTICE   prompt        i don't see the handles on the edges when i pressed w - drew out a box, etc. ?
+  > i don't see the handles on the edges when i pressed w - drew out a box, etc.  ?
+2026-10-01T00:42:45-0400  INFO     bash_start    ps -o pid,lstart,args -C PCSEDIT.run 2>/dev/null; ps -eo pid,lstart,args | grep -i "pcsedit" | grep -v grep | head; ls -la --time-style=+%H:%M:%S /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER/PCSEDI…
+  > cwd: /home/grymmjack/git/qb64
+  $ ps -o pid,lstart,args -C PCSEDIT.run 2>/dev/null; ps -eo pid,lstart,args | grep -i "pcsedit" | grep -v grep | head; ls -la --time-style=+%H:%M:%S /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER/PCSEDIT.run /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER/PCSEDIT.BAS 2>/dev/null | awk '{print $6, $7}'; date +%H:%M:%S
+2026-10-01T00:42:45-0400  INFO     bash_end      [ok] 4L stdout
+  |     PID                  STARTED COMMAND
+  |  
+  |  
+  | 00:42:45
+2026-10-01T00:42:47-0400  INFO     bash_start    ls -la --time-style=+%H:%M:%S /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER/ | grep -i "pcsedit"; pgrep -af -i pcsedit | grep -v pgrep
+  > cwd: /home/grymmjack/git/qb64
+  $ ls -la --time-style=+%H:%M:%S /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER/ | grep -i "pcsedit"; pgrep -af -i pcsedit | grep -v pgrep
+2026-10-01T00:42:47-0400  INFO     bash_end      [ok] 2L stdout
+  | .rw-rw-r-- 131k grymmjack 00:40:57 PCSEDIT.BAS
+  | .rwxrwxr-x 3.6M grymmjack 00:32:18 PCSEDIT.run
+2026-10-01T00:44:08-0400  NOTICE   prompt        <ide_opened_file>The user opened the file /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER/PCSEDIT.BAS in the IDE. This may or may not be related to the current task.</ide_opened_file>
+  > <ide_opened_file>The user opened the file /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER/PCSEDIT.BAS in the IDE. This may or may not be related to the current task.</ide_opened_file>
+  > works great. can we make the window resizable, and have a ctrl+ and ctrl- for zooming the display scale? i'd like to maximize the window and have more room, etc.
+2026-10-01T00:44:37-0400  INFO     bash_start    cd /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER && grep -n "^CONST" PCSEDIT.BAS | head -40; grep -c "_MOUSEX\|_MOUSEY" PCSEDIT.BAS; grep -n "_MOUSEX\|_MOUSEY" PCSEDIT.BAS; grep -n "SCREEN _NEWIMAGE…
+  > cwd: /home/grymmjack/git/qb64
+  $ cd /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER && grep -n "^CONST" PCSEDIT.BAS | head -40; grep -c "_MOUSEX\|_MOUSEY" PCSEDIT.BAS; grep -n "_MOUSEX\|_MOUSEY" PCSEDIT.BAS; grep -n "SCREEN _NEWIMAGE\|_PRINTMODE\|_DISPLAY\|CLS ," PCSEDIT.BAS
+2026-10-01T00:44:38-0400  INFO     bash_end      [ok] 51L stdout
+  | 90:CONST SCR_W = 1280
+  | 91:CONST SCR_H = 800
+  | 92:CONST ROW_H = 16
+  | 93:CONST LIST_X = 8
+  | 94:CONST LIST_Y = 120
+  | 95:CONST LIST_W = 200
+  | 96:CONST LIST_ROWS = 31
+  | 97:CONST RULER_X = 224 '                    piano keys
+  | 98:CONST CANVAS_X = 268 '                   piano roll
+  | 99:CONST CANVAS_Y = 120
+  | 100:CONST CANVAS_W = 1004
+  | 101:CONST CANVAS_H = 504
+  | 102:CONST TIME_Y = 100 '                     time ruler, above the roll
+  | 103:CONST SCOPE_Y = 652 '                    oscilloscope, under the roll
+  | 104:CONST SCOPE_H = 104
+  | 105:CONST SCOPE_SPP = 2 '                    samples per pixel: 1004 px = about 42 ms at 48 kHz
+  | 106:CONST NOTE_LO = 33 '                     A1, 55 Hz at the bottom edge
+  | 107:CONST NOTE_HI = 117 '                    A8, 7040 Hz at the top edge
+  | 108:CONST PX_SEMI = 6 '                      (NOTE_HI - NOTE_LO) * PX_SEMI = CANVAS_H
+  | 109:CONST MAX_SOUNDS = 300
+  | 110:CONST MAX_STEPS = 9000 '                 64 seconds
+  | 111:CONST UNDO_MAX = 100
+  | 112:CONST REC_OFF = 0
+  | 113:CONST REC_STEP = 1
+  | 114:CONST REC_LIVE = 2
+  | 117:CONST OPEN_FILTER = "*.snd|*.SND|*.dn1|*.DN1|*.dn2|*.DN2|*.dn3|*.DN3|*.ck1|*.CK1|*.wad|*.WAD|*.lmp|*.LMP|*.cmp|*.CMP|*.stn|*.STN|*.ms1|*.MS1|*.ms2|*.MS2|*.ms3|*.MS3|*.hov|*.HOV|*.rov|*.ROV|*.ca2|*.CA2|*.slo|*.SLO|*.8|AUDIOT.*|audiot.*|AUDIOHED.*|audiohed.*"
+  | 118:CONST BEATS_PER_BAR = 4 '                the grid is 4/4
+  | 119:CONST KEYS_NOTES = 0 '                   what notes play: plain tones...
+  | 120:CONST KEYS_SOUND = 1 '                   ...or the instrument sound, transposed
+  | 121:CONST HOLD_GATE = 0
+  | 122:CONST HOLD_ONESHOT = 1
+  | 123:CONST HOLD_LOOP = 2
+  | 124:CONST ROOT_NOTE = 60 '                   C4 plays the instrument as drawn
+  | 125:CONST TOOL_DRAW = 0
+  | 126:CONST TOOL_NOTE = 1
+  | 127:CONST TOOL_ERASE = 2
+  | 128:CONST TOOL_SELECT = 3
+  | 129:CONST TOOL_MOVE = 4
+  | 130:CONST TOOL_LINE = 5
+  | 131:CONST TOOL_WAVE = 6
+  | 6
+  | 387:        handle_mouse _MOUSEX, _MOUSEY, _MOUSEBUTTON(1), _MOUSEBUTTON(2)
+  | 395:                set_zoom_at zoom_step(1), _MOUSEX
+  | 397:                set_zoom_at zoom_step(-1), _MOUSEX
+  | 399:        ELSEIF _MOUSEX < RULER_X THEN
+  | 3470:            hv = wave_edge(_MOUSEX, _MOUSEY)
+  | 3490:                hv = sel_edge(_MOUSEX, _MOUSEY)
+  | 305:SCREEN _NEWIMAGE(SCR_W, SCR_H, 32)
+  | 308:_PRINTMODE _KEEPBACKGROUND
+  | 452:    _DISPLAY
+  | 3159:    CLS , _RGB32(16, 20, 28)
+2026-10-01T00:45:08-0400  INFO     bash_start    sed -n 300,312p PCSEDIT.BAS; sed -n 383,402p PCSEDIT.BAS; sed -n 446,456p PCSEDIT.BAS; head -3 PCSEDIT.BAS; grep -n "^OPTION _EXPLICIT" PCSEDIT.BAS
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ sed -n 300,312p PCSEDIT.BAS; sed -n 383,402p PCSEDIT.BAS; sed -n 446,456p PCSEDIT.BAS; head -3 PCSEDIT.BAS; grep -n "^OPTION _EXPLICIT" PCSEDIT.BAS
+2026-10-01T00:45:09-0400  INFO     bash_end      [ok] 48L stdout
+  | DIM SHARED modAlt AS INTEGER
+  | 
+  | DIM k AS LONG, f AS STRING, wheel AS LONG, mx AS LONG, my AS LONG, b1 AS INTEGER, b2 AS INTEGER
+  | DIM ctrl AS INTEGER, shift AS INTEGER, quitNow AS INTEGER
+  | 
+  | SCREEN _NEWIMAGE(SCR_W, SCR_H, 32)
+  | _TITLE "PCSEDIT - PC speaker sound editor"
+  | _ACCEPTFILEDROP ON
+  | _PRINTMODE _KEEPBACKGROUND
+  | 
+  | ' Disk and device errors must not stop the program with QB64's "Continue?"
+  | ' box: the trap records the error and carries on, and code that touches the
+  | ' disk checks errNum.
+  |     ' ------------------------------------------------------------ mouse
+  |     wheel = 0
+  |     DO WHILE _MOUSEINPUT
+  |         wheel = wheel + _MOUSEWHEEL
+  |         handle_mouse _MOUSEX, _MOUSEY, _MOUSEBUTTON(1), _MOUSEBUTTON(2)
+  |     LOOP
+  |     ctrl = _KEYDOWN(100305) OR _KEYDOWN(100306)
+  |     shift = _KEYDOWN(100303) OR _KEYDOWN(100304)
+  |     IF wheel THEN
+  |         IF ctrl THEN
+  |             ' about a quarter per click, so 1 to 64 is a quick spin, not 60 clicks
+  |             IF wheel < 0 THEN
+  |                 set_zoom_at zoom_step(1), _MOUSEX
+  |             ELSE
+  |                 set_zoom_at zoom_step(-1), _MOUSEX
+  |             END IF
+  |         ELSEIF _MOUSEX < RULER_X THEN
+  |             user_select cur + wheel
+  |         ELSE
+  |             scroll_to scrollX + wheel * (INT(60 / zoom) + 1)
+  |     END IF
+  | 
+  |     ' follow playback: page the view along so the playhead stays on screen
+  |     IF playing AND followOn THEN follow_page heard_pos(playPos)
+  | 
+  |     draw_ui
+  |     _DISPLAY
+  |     _LIMIT 60
+  | LOOP
+  | 
+  | midi_stop
+  | ''
+  | ' PCSEDIT.BAS - PC speaker sound effect editor
+  | '
+  | 87:OPTION _EXPLICIT
+2026-10-01T00:45:39-0400  INFO     bash_start    python3 - <<'PYEOF' | p='PCSEDIT.BAS'; s=open(p).read() | def r(a,b,c=1): | global s | assert s.count(a)==c,(a[:70],s.count(a)); s=s.replace(a,b) | | # ---------- metacommand + constants -> layout va…
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ python3 - <<'PYEOF'
+  $ p='PCSEDIT.BAS'; s=open(p).read()
+  $ def r(a,b,c=1):
+  $     global s
+  $     assert s.count(a)==c,(a[:70],s.count(a)); s=s.replace(a,b)
+  $ 
+  $ # ---------- metacommand + constants -> layout variables
+  $ r("""OPTION _EXPLICIT
+  $ ""","""OPTION _EXPLICIT
+  $ $RESIZE:ON
+  $ """)
+  $ r("""CONST SCR_W = 1280
+  $ CONST SCR_H = 800
+  $ CONST ROW_H = 16""","""' Window layout. The screen is drawn at a "logical" size (the window size
+  $ ' divided by the display scale, Ctrl+= / Ctrl+-) and scaled up to the window;
+  $ ' do_layout fits everything to that size whenever the window or scale changes.
+  $ DIM SHARED SCR_W AS LONG
+  $ DIM SHARED SCR_H AS LONG
+  $ DIM SHARED LIST_ROWS AS LONG
+  $ DIM SHARED CANVAS_W AS LONG
+  $ DIM SHARED CANVAS_H AS LONG
+  $ DIM SHARED SCOPE_Y AS LONG
+  $ DIM SHARED PX_SEMI AS LONG ' pixels per semitone row: CANVAS_H = (NOTE_HI - NOTE_LO) * PX_SEMI
+  $ DIM SHARED uiScale AS DOUBLE
+  $ DIM SHARED uiImg AS LONG ' what is drawn, at the logical size
+  $ DIM SHARED scrImg AS LONG ' the window
+  $ DIM SHARED physW AS LONG
+  $ DIM SHARED physH AS LONG
+  $ DIM SHARED mlx AS LONG ' the mouse, in logical pixels
+  $ DIM SHARED mly AS LONG
+  $ CONST MIN_LW = 1000 '                    smallest logical size the layout fits in
+  $ CONST MIN_LH = 640
+  $ CONST ROW_H = 16""")
+  $ r("""CONST LIST_ROWS = 31
+  $ ""","")
+  $ r("""CONST CANVAS_W = 1004
+  $ CONST CANVAS_H = 504
+  $ ""","")
+  $ r("""CONST SCOPE_Y = 652 '                    oscilloscope, under the roll
+  $ ""","")
+  $ r("""CONST SCOPE_SPP = 2 '                    samples per pixel: 1004 px = about 42 ms at 48 kHz
+  $ ""","""CONST SCOPE_SPAN = 2008 '                samples shown by the scope: about 42 ms at 48 kHz
+  $ """)
+  $ r("""CONST PX_SEMI = 6 '                      (NOTE_HI - NOTE_LO) * PX_SEMI = CANVAS_H
+  $ ""","")
+  $ 
+  $ # ---------- startup screen
+  $ r("""SCREEN _NEWIMAGE(SCR_W, SCR_H, 32)
+  $ _TITLE "PCSEDIT - PC speaker sound editor"
+  $ _ACCEPTFILEDROP ON
+  $ _PRINTMODE _KEEPBACKGROUND""","""uiScale = 1
+  $ physW = 1280
+  $ physH = 800
+  $ scrImg = _NEWIMAGE(physW, physH, 32)
+  $ SCREEN scrImg
+  $ make_ui
+  $ _TITLE "PCSEDIT - PC speaker sound editor"
+  $ _ACCEPTFILEDROP ON""")
+  $ 
+  $ # ---------- mouse in logical pixels
+  $ r("""        handle_mouse _MOUSEX, _MOUSEY, _MOUSEBUTTON(1), _MOUSEBUTTON(2)""","""        mlx = INT(_MOUSEX / uiScale): mly = INT(_MOUSEY / uiScale)
+  $         handle_mouse mlx, mly, _MOUSEBUTTON(1), _MOUSEBUTTON(2)""")
+  $ r("""                set_zoom_at zoom_step(1), _MOUSEX""","""                set_zoom_at zoom_step(1), mlx""")
+  $ r("""                set_zoom_at zoom_step(-1), _MOUSEX""","""                set_zoom_at zoom_step(-1), mlx""")
+  $ r("""        ELSEIF _MOUSEX < RULER_X THEN""","""        ELSEIF mlx < RULER_X THEN""")
+  $ r("""            hv = wave_edge(_MOUSEX, _MOUSEY)""","""            hv = wave_edge(mlx, mly)""")
+  $ r("""                hv = sel_edge(_MOUSEX, _MOUSEY)""","""                hv = sel_edge(mlx, mly)""")
+  $ 
+  $ # ---------- frame: resize, draw to uiImg, scale to the window
+  $ r("""    draw_ui
+  $     _DISPLAY
+  $     _LIMIT 60""","""    ' window resized (or maximised): new window image, re-fit the layout
+  $     IF _RESIZE THEN
+  $         physW = _RESIZEWIDTH: physH = _RESIZEHEIGHT
+  $         IF physW < 320 THEN physW = 320
+  $         IF physH < 240 THEN physH = 240
+  $         f = "" ' (reuse) free the old window image after switching
+  $         k = scrImg
+  $         scrImg = _NEWIMAGE(physW, physH, 32)
+  $         SCREEN scrImg
+  $ ...[truncated]
+2026-10-01T00:45:42-0400  INFO     bash_end      [ok] 1L stdout
+  | Output: /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/PCSEDIT
+2026-10-01T00:46:00-0400  INFO     bash_start    python3 - <<'PYEOF' | p='PCSEDIT.BAS'; s=open(p).read() | def r(a,b): | global s | assert s.count(a)==1,a[:60]; s=s.replace(a,b) | r(""" f = "" ' (reuse) free the old window image after switching | k…
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ python3 - <<'PYEOF'
+  $ p='PCSEDIT.BAS'; s=open(p).read()
+  $ def r(a,b):
+  $     global s
+  $     assert s.count(a)==1,a[:60]; s=s.replace(a,b)
+  $ r("""        f = "" ' (reuse) free the old window image after switching
+  $         k = scrImg
+  $         scrImg = _NEWIMAGE(physW, physH, 32)
+  $         SCREEN scrImg
+  $         _FREEIMAGE k
+  $         make_ui
+  $         k = 0""","""        oldScr = scrImg ' free the old window image once the new one is up
+  $         scrImg = _NEWIMAGE(physW, physH, 32)
+  $         SCREEN scrImg
+  $         _FREEIMAGE oldScr
+  $         make_ui""")
+  $ r("""DIM ctrl AS INTEGER, shift AS INTEGER, quitNow AS INTEGER""","""DIM ctrl AS INTEGER, shift AS INTEGER, quitNow AS INTEGER, oldScr AS LONG""")
+  $ r("""    LIST_ROWS = (CANVAS_Y + CANVAS_H - LIST_Y) \\ ROW_H
+  $     scroll_to scrollX""","""    LIST_ROWS = (CANVAS_Y + CANVAS_H - LIST_Y) \\ ROW_H
+  $     IF zoom > 0 THEN scroll_to scrollX ' (not yet set the first time, at start-up)""")
+  $ open(p,'w').write(s)
+  $ PYEOF
+  $ SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad; /home/grymmjack/git/qb64pe/qb64pe -x PCSEDIT.BAS -o $SP/PCSEDIT 2>&1 | grep -A3 -E "38;5;9m|Output:" | head -3
+  $ (Xvfb :99 -screen 0 2400x1400x24 >/dev/null 2>&1 &); sleep 1.5; export DISPLAY=:99; unset WAYLAND_DISPLAY; xdpyinfo >/dev/null 2>&1 || exit 1
+  $ (openbox --sm-disable >/dev/null 2>&1 &); sleep 1
+  $ ( env -u XDG_CURRENT_DESKTOP -u KDE_FULL_SESSION PCSEDIT_NOMIDI=1 $SP/PCSEDIT $SP/wave.snd & ); for i in $(seq 1 30); do W=$(xdotool search --name "PCSEDIT - PC" 2>/dev/null | head -1); [ -n "$W" ] && break; sleep 0.3; done; sleep 2.5
+  $ xdotool windowsize $W 2000 1200; sleep 1.5
+  $ xwd -silent -root -out $SP/s.xwd; /usr/bin/convert $SP/s.xwd -resize 50% $SP/big.png
+  $ xdotool windowactivate --sync $W; sleep 0.3; xdotool key --window $W ctrl+equal; sleep 0.3; xdotool key --window $W ctrl+equal; sleep 0.8
+  $ xwd -silent -root -out $SP/s.xwd; /usr/bin/convert $SP/s.xwd -resize 50% $SP/big150.png
+  $ pgrep -x PCSEDIT >/dev/null && echo "still running" || echo "CRASHED"
+  $ pkill -x PCSEDIT; sleep 0.3; kill $(pgrep -f "^openbox --sm-disable") $(pgrep -f "^Xvfb :99") 2>/dev/null; true
+2026-10-01T00:46:11-0400  INFO     bash_end      [ok] 2L stdout
+  | Output: /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/PCSEDIT
+  | still running
+2026-10-01T00:46:27-0400  INFO     bash_start    SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad; cd /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER | (Xvfb :99 -screen 0 2400x1400x24 >/dev/null 2>&1 &); …
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad; cd /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ (Xvfb :99 -screen 0 2400x1400x24 >/dev/null 2>&1 &); sleep 1.5; export DISPLAY=:99; unset WAYLAND_DISPLAY; xdpyinfo >/dev/null 2>&1 || exit 1
+  $ (openbox --sm-disable >/dev/null 2>&1 &); sleep 1
+  $ ( env -u XDG_CURRENT_DESKTOP -u KDE_FULL_SESSION PCSEDIT_NOMIDI=1 $SP/PCSEDIT $SP/wave.snd & ); for i in $(seq 1 30); do W=$(xdotool search --name "PCSEDIT - PC" 2>/dev/null | head -1); [ -n "$W" ] && break; sleep 0.3; done; sleep 2.5
+  $ xdotool windowsize $W 2000 1200; sleep 1.2; xdotool windowactivate --sync $W; xdotool key --window $W ctrl+equal; sleep 0.3; xdotool key --window $W ctrl+equal; sleep 0.8
+  $ # logical layout at 150%: window 2000x1200 -> logical 1333x800 -> PX_SEMI 6, CANVAS_Y 120
+  $ lx=$((268+50*6+3)); ly=$(python3 -c "print(int(120+6*84-(72-33+0.5)*6))")
+  $ xdotool mousemove --window $W $(python3 -c "print(int($lx*1.5))") $(python3 -c "print(int($ly*1.5))"); sleep 0.5
+  $ xwd -silent -id $W -out $SP/s.xwd; /usr/bin/convert $SP/s.xwd -resize 66.67% -crop 1333x20+0+52 $SP/mouse150.png
+  $ pkill -x PCSEDIT; sleep 0.3; kill $(pgrep -f "^openbox --sm-disable") $(pgrep -f "^Xvfb :99") 2>/dev/null; true
+2026-10-01T00:46:36-0400  INFO     bash_end      [ok] 0L stdout
+2026-10-01T00:46:45-0400  INFO     bash_start    python3 - <<'PYEOF' | p='README.md'; s=open(p).read() | def r(a,b): | global s | assert s.count(a)==1,a[:60]; s=s.replace(a,b) | r("""**Reading the roll:**""","""**Window and display scale:** the win…
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ python3 - <<'PYEOF'
+  $ p='README.md'; s=open(p).read()
+  $ def r(a,b):
+  $     global s
+  $     assert s.count(a)==1,a[:60]; s=s.replace(a,b)
+  $ r("""**Reading the roll:**""","""**Window and display scale:** the window can be resized or maximised. The
+  $ piano roll and scope take the extra width (more time on screen), the note
+  $ rows get taller, and the sound list shows more sounds. **Ctrl+=** / **Ctrl+-**
+  $ change the display scale from 50% to 300% (**Ctrl+0** = 100%). Bigger makes
+  $ text and controls easier to read on a large screen; smaller fits more in. If
+  $ the window is too small for a scale, PCSEDIT says so; make the window bigger
+  $ and try again.
+  $ 
+  $ **Reading the roll:**""")
+  $ r("""| Ctrl+F | follow the playhead while playing |""","""| Ctrl+F | follow the playhead while playing |
+  $ | Ctrl+= / Ctrl+- / Ctrl+0 | display scale bigger / smaller / 100% |""")
+  $ open(p,'w').write(s)
+  $ PYEOF
+  $ grep -c "display scale" README.md
+2026-10-01T00:46:45-0400  INFO     bash_end      [ok] 1L stdout
+  | 3
+2026-10-01T00:47:41-0400  NOTICE   prompt        yes remember it please. this is awesome.
+  > yes remember it please. this is awesome.
+2026-10-01T00:47:56-0400  INFO     bash_start    sed -n '/^uiScale = 1$/,/^f = COMMAND\$(1)$/p' PCSEDIT.BAS; grep -n "^midi_stop$" -A4 PCSEDIT.BAS
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ sed -n '/^uiScale = 1$/,/^f = COMMAND\$(1)$/p' PCSEDIT.BAS; grep -n "^midi_stop$" -A4 PCSEDIT.BAS
+2026-10-01T00:47:56-0400  INFO     bash_end      [ok] 49L stdout
+  | uiScale = 1
+  | physW = 1280
+  | physH = 800
+  | scrImg = _NEWIMAGE(physW, physH, 32)
+  | SCREEN scrImg
+  | make_ui
+  | _TITLE "PCSEDIT - PC speaker sound editor"
+  | _ACCEPTFILEDROP ON
+  | 
+  | ' Disk and device errors must not stop the program with QB64's "Continue?"
+  | ' box: the trap records the error and carries on, and code that touches the
+  | ' disk checks errNum.
+  | ON ERROR GOTO trap
+  | 
+  | ' Trap the window's close button (and Ctrl+Break) so they go through the
+  | ' same clean-up as Esc. The first read of _EXIT switches the monitoring
+  | ' on; after that the main loop checks it every frame (as DRAW.BAS does).
+  | DIM osExitTrap AS INTEGER
+  | osExitTrap = _EXIT
+  | 
+  | rateHz = PCSPK_IFS_DEFAULT_HZ
+  | zoom = 6
+  | snapOn = -1
+  | noteLen = 4
+  | bpm = 120
+  | linesOn = -1
+  | octave = 4
+  | heldNote = -1
+  | auditionNote = -1
+  | drawAudOn = -1
+  | metroMode = 1
+  | followOn = -1
+  | metroVol = 0.5
+  | countIn = 1
+  | quantOn = -1
+  | clickHi = make_click(1760, 0.03)
+  | clickLo = make_click(1175, 0.025)
+  | midiDevIdx = -1
+  | init_piano
+  | 
+  | PCSPK_SetTickRate rateHz
+  | PCSPK_SetLead 0.05
+  | 
+  | f = COMMAND$(1)
+  | 489:midi_stop
+  | 490-PCSPK_Off
+  | 491-PCSPK_StreamClose
+  | 492-SYSTEM
+  | 493-
+2026-10-01T00:48:23-0400  INFO     bash_start    python3 - <<'PYEOF' | p='PCSEDIT.BAS'; s=open(p).read() | def r(a,b,c=1): | global s | assert s.count(a)==c,(a[:70],s.count(a)); s=s.replace(a,b) | | # ---------- shared settings store | r("""DIM SHA…
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ python3 - <<'PYEOF'
+  $ p='PCSEDIT.BAS'; s=open(p).read()
+  $ def r(a,b,c=1):
+  $     global s
+  $     assert s.count(a)==c,(a[:70],s.count(a)); s=s.replace(a,b)
+  $ 
+  $ # ---------- shared settings store
+  $ r("""DIM SHARED mlx AS LONG ' the mouse, in logical pixels""","""REDIM SHARED cfgKey(0 TO 0) AS STRING ' settings file, key = value
+  $ REDIM SHARED cfgVal(0 TO 0) AS STRING
+  $ DIM SHARED cfgN AS LONG
+  $ DIM SHARED mlx AS LONG ' the mouse, in logical pixels""")
+  $ 
+  $ # ---------- startup: error trap first, settings, window from settings
+  $ r("""uiScale = 1
+  $ physW = 1280
+  $ physH = 800
+  $ scrImg = _NEWIMAGE(physW, physH, 32)
+  $ SCREEN scrImg
+  $ make_ui
+  $ _TITLE "PCSEDIT - PC speaker sound editor"
+  $ _ACCEPTFILEDROP ON
+  $ 
+  $ ' Disk and device errors must not stop the program with QB64's "Continue?"
+  $ ' box: the trap records the error and carries on, and code that touches the
+  $ ' disk checks errNum.
+  $ ON ERROR GOTO trap
+  $ ""","""' Disk and device errors must not stop the program with QB64's "Continue?"
+  $ ' box: the trap records the error and carries on, and code that touches the
+  $ ' disk checks errNum.
+  $ ON ERROR GOTO trap
+  $ 
+  $ ' the window as it was last time (settings_save writes it at quit)
+  $ cfg_load
+  $ uiScale = VAL(cfg_get("scale", "1"))
+  $ IF uiScale < 0.5 OR uiScale > 3 THEN uiScale = 1
+  $ physW = VAL(cfg_get("width", "1280"))
+  $ physH = VAL(cfg_get("height", "800"))
+  $ IF physW < 640 OR physW > 16000 THEN physW = 1280
+  $ IF physH < 480 OR physH > 16000 THEN physH = 800
+  $ scrImg = _NEWIMAGE(physW, physH, 32)
+  $ SCREEN scrImg
+  $ make_ui
+  $ IF VAL(cfg_get("x", "-99999")) > -99999 THEN _SCREENMOVE VAL(cfg_get("x", "0")), VAL(cfg_get("y", "0"))
+  $ _TITLE "PCSEDIT - PC speaker sound editor"
+  $ _ACCEPTFILEDROP ON
+  $ """)
+  $ r("""rateHz = PCSPK_IFS_DEFAULT_HZ
+  $ zoom = 6
+  $ snapOn = -1
+  $ noteLen = 4
+  $ bpm = 120
+  $ linesOn = -1
+  $ octave = 4
+  $ heldNote = -1
+  $ auditionNote = -1
+  $ drawAudOn = -1
+  $ metroMode = 1
+  $ followOn = -1
+  $ metroVol = 0.5
+  $ countIn = 1
+  $ quantOn = -1""","""rateHz = PCSPK_IFS_DEFAULT_HZ
+  $ ' working preferences, as left last time (defaults the first time)
+  $ zoom = VAL(cfg_get("zoom", "6"))
+  $ IF zoom < 0.1 OR zoom > 64 THEN zoom = 6
+  $ snapOn = VAL(cfg_get("snap", "-1"))
+  $ noteLen = VAL(cfg_get("notelen", "4"))
+  $ IF noteLen < 1 OR noteLen > 140 THEN noteLen = 4
+  $ bpm = VAL(cfg_get("bpm", "120"))
+  $ IF bpm < 20 OR bpm > 400 THEN bpm = 120
+  $ gridDiv = VAL(cfg_get("grid", "0"))
+  $ linesOn = VAL(cfg_get("lines", "-1"))
+  $ octave = VAL(cfg_get("octave", "4"))
+  $ IF octave < 1 OR octave > 7 THEN octave = 4
+  $ heldNote = -1
+  $ auditionNote = -1
+  $ drawAudOn = VAL(cfg_get("audition", "-1"))
+  $ metroMode = VAL(cfg_get("metronome", "1"))
+  $ IF metroMode < 0 OR metroMode > 2 THEN metroMode = 1
+  $ followOn = VAL(cfg_get("follow", "-1"))
+  $ metroVol = VAL(cfg_get("metrovol", "0.5"))
+  $ ...[truncated]
+2026-10-01T00:48:25-0400  INFO     bash_end      [ok] 1L stdout
+  | Output: /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/PCSEDIT
+2026-10-01T00:48:40-0400  INFO     bash_start    M=/home/grymmjack/.claude/projects/-home-grymmjack-git-qb64/memory/no-desktop-automation.md; printf '\nAlso: PCSEDIT saves settings to ~/.config/pcsedit.ini when it quits - test runs must use a scrat…
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ M=/home/grymmjack/.claude/projects/-home-grymmjack-git-qb64/memory/no-desktop-automation.md; printf '\nAlso: PCSEDIT saves settings to ~/.config/pcsedit.ini when it quits - test runs must use a scratch HOME (env HOME=<scratch>/home) so they never overwrite the user'"'"'s settings.\n' >> $M
+  $ SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad; rm -rf $SP/home; mkdir -p $SP/home; cd /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ (Xvfb :99 -screen 0 2400x1400x24 >/dev/null 2>&1 &); sleep 1.5; export DISPLAY=:99; unset WAYLAND_DISPLAY; xdpyinfo >/dev/null 2>&1 || exit 1
+  $ (openbox --sm-disable >/dev/null 2>&1 &); sleep 1
+  $ run(){ ( env -u XDG_CURRENT_DESKTOP -u KDE_FULL_SESSION HOME=$SP/home PCSEDIT_NOMIDI=1 $SP/PCSEDIT & ); for i in $(seq 1 30); do W=$(xdotool search --name "PCSEDIT - PC" 2>/dev/null | head -1); [ -n "$W" ] && break; sleep 0.3; done; sleep 2.5; }
+  $ run
+  $ xdotool windowsize $W 1800 1100; sleep 1.2; xdotool windowactivate --sync $W
+  $ xdotool key --window $W ctrl+equal; sleep 0.3
+  $ xdotool key --window $W ctrl+g; sleep 0.2; xdotool key --window $W ctrl+g; sleep 0.3
+  $ xdotool key --window $W Escape; sleep 1.5
+  $ echo "running after Esc: $(pgrep -x PCSEDIT)"; cat $SP/home/.config/pcsedit.ini
+  $ run
+  $ eval $(xdotool getwindowgeometry --shell $W); echo "restored window: ${WIDTH}x${HEIGHT}"
+  $ xwd -silent -id $W -out $SP/s.xwd; /usr/bin/convert $SP/s.xwd -resize 50% $SP/restored.png
+  $ pkill -x PCSEDIT; sleep 0.3; kill $(pgrep -f "^openbox --sm-disable") $(pgrep -f "^Xvfb :99") 2>/dev/null; true
+2026-10-01T00:48:52-0400  INFO     bash_end      [ok] 22L stdout
+  | running after Esc: 
+  | # PCSEDIT settings - written when PCSEDIT quits
+  | width=1800
+  | height=1100
+  | x=599
+  | y=295
+  | scale=1.25
+  | zoom=6
+  | grid=8
+  | bpm=120
+  | lines=-1
+  | snap=-1
+  | notelen=4
+  | octave=4
+  | audition=-1
+  | metronome=1
+  | metrovol=.5
+  | countin=1
+  | quantize=-1
+  | follow=-1
+  | loop=0
+  | restored window: 1800x1100
+2026-10-01T00:49:01-0400  INFO     bash_start    python3 - <<'PYEOF' | p='README.md'; s=open(p).read() | a="""the window is too small for a scale, PCSEDIT says so; make the window bigger | and try again.""" | assert s.count(a)==1 | s=s.replace(a,a+…
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ python3 - <<'PYEOF'
+  $ p='README.md'; s=open(p).read()
+  $ a="""the window is too small for a scale, PCSEDIT says so; make the window bigger
+  $ and try again."""
+  $ assert s.count(a)==1
+  $ s=s.replace(a,a+"""
+  $ 
+  $ PCSEDIT **remembers** the window size, position and display scale, plus your
+  $ working settings (grid and tempo, metronome mode and volume, count-in,
+  $ quantize, follow, loop, grid lines, audition, snap, octave, note length and
+  $ zoom). They are saved when you quit, to `~/.config/pcsedit.ini`
+  $ (`%APPDATA%\\PCSEDIT.ini` on Windows), a plain `key=value` text file. Delete it
+  $ to go back to the defaults.""")
+  $ open(p,'w').write(s)
+  $ PYEOF
+  $ grep -c "pcsedit.ini" README.md
+2026-10-01T00:49:01-0400  INFO     bash_end      [ok] 1L stdout
+  | 1
+2026-10-01T00:52:24-0400  NOTICE   prompt        <ide_opened_file>The user opened the file /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER/PCSEDIT.BAS in the IDE. This may or may not be related to the current task.</ide_opened_file>
+  > <ide_opened_file>The user opened the file /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER/PCSEDIT.BAS in the IDE. This may or may not be related to the current task.</ide_opened_file>
+  > ctrl-a is selecting stuff that is over the GUI
+2026-10-01T00:52:34-0400  INFO     bash_start    sed -n '/^SUB select_all/,/^END SUB/p' PCSEDIT.BAS; grep -n "LINE (x, y)-(endX, note_y(selLo) + PX_SEMI \\\\ 2)\|LINE (x, y)-(endX, note_y(wave_min) + PX_SEMI \\\\ 2)\|y = note_y(selHi) - PX_SEMI \\\…
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ sed -n '/^SUB select_all/,/^END SUB/p' PCSEDIT.BAS; grep -n "LINE (x, y)-(endX, note_y(selLo) + PX_SEMI \\\\ 2)\|LINE (x, y)-(endX, note_y(wave_min) + PX_SEMI \\\\ 2)\|y = note_y(selHi) - PX_SEMI \\\\ 2\|y = note_y(wave_max) - PX_SEMI \\\\ 2\|draw_handles x, endX" PCSEDIT.BAS
+2026-10-01T00:52:34-0400  INFO     bash_end      [ok] 16L stdout
+  | SUB select_all
+  |     IF steps_of(cur) = 0 THEN EXIT SUB
+  |     selS0 = 0: selS1 = steps_of(cur)
+  |     selLo = 0: selHi = 127
+  |     selOn = -1
+  |     set_tool TOOL_MOVE
+  |     set_status "All" + STR$(sel_count) + " steps selected - drag or use the arrows to move them"
+  | END SUB
+  | 3525:            y = note_y(wave_max) - PX_SEMI \ 2
+  | 3526:            LINE (x, y)-(endX, note_y(wave_min) + PX_SEMI \ 2), _RGBA32(255, 120, 220, 30), BF
+  | 3527:            LINE (x, y)-(endX, note_y(wave_min) + PX_SEMI \ 2), _RGB32(255, 120, 220), B
+  | 3530:            draw_handles x, endX, y, note_y(wave_min) + PX_SEMI \ 2, hv, _RGB32(255, 120, 220)
+  | 3543:            y = note_y(selHi) - PX_SEMI \ 2
+  | 3544:            LINE (x, y)-(endX, note_y(selLo) + PX_SEMI \ 2), _RGBA32(90, 160, 255, 40), BF
+  | 3545:            LINE (x, y)-(endX, note_y(selLo) + PX_SEMI \ 2), _RGB32(90, 180, 255), B
+  | 3550:                draw_handles x, endX, y, note_y(selLo) + PX_SEMI \ 2, hv, _RGB32(90, 180, 255)
+2026-10-01T00:52:49-0400  INFO     bash_start    python3 - <<'PYEOF' | p='PCSEDIT.BAS'; s=open(p).read() | def r(a,b): | global s | assert s.count(a)==1,a[:60]; s=s.replace(a,b) | r("""SUB select_all | IF steps_of(cur) = 0 THEN EXIT SUB | selS0 = 0…
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ python3 - <<'PYEOF'
+  $ p='PCSEDIT.BAS'; s=open(p).read()
+  $ def r(a,b):
+  $     global s
+  $     assert s.count(a)==1,a[:60]; s=s.replace(a,b)
+  $ r("""SUB select_all
+  $     IF steps_of(cur) = 0 THEN EXIT SUB
+  $     selS0 = 0: selS1 = steps_of(cur)
+  $     selLo = 0: selHi = 127""","""SUB select_all
+  $     DIM s AS LONG, v AS LONG, n AS LONG, lo AS LONG, hi AS LONG
+  $     IF steps_of(cur) = 0 THEN EXIT SUB
+  $     selS0 = 0: selS1 = steps_of(cur)
+  $     ' the box spans the notes the sound actually uses (so its top / bottom
+  $     ' stretch handles sit on the music, inside the roll)
+  $     lo = 999: hi = -999
+  $     FOR s = 0 TO steps_of(cur) - 1
+  $         v = get_step(cur, s)
+  $         IF v THEN
+  $             n = INT(div_note(v) + 0.5)
+  $             IF n < lo THEN lo = n
+  $             IF n > hi THEN hi = n
+  $         END IF
+  $     NEXT
+  $     IF hi < lo THEN lo = NOTE_LO: hi = NOTE_HI - 1
+  $     selLo = lo: selHi = hi""")
+  $ # clip boxes to the roll
+  $ r("""            y = note_y(wave_max) - PX_SEMI \\ 2
+  $             LINE (x, y)-(endX, note_y(wave_min) + PX_SEMI \\ 2), _RGBA32(255, 120, 220, 30), BF
+  $             LINE (x, y)-(endX, note_y(wave_min) + PX_SEMI \\ 2), _RGB32(255, 120, 220), B""","""            y = clip_y(note_y(wave_max) - PX_SEMI \\ 2)
+  $             yb = clip_y(note_y(wave_min) + PX_SEMI \\ 2)
+  $             LINE (x, y)-(endX, yb), _RGBA32(255, 120, 220, 30), BF
+  $             LINE (x, y)-(endX, yb), _RGB32(255, 120, 220), B""")
+  $ r("""            draw_handles x, endX, y, note_y(wave_min) + PX_SEMI \\ 2, hv, _RGB32(255, 120, 220)""","""            draw_handles x, endX, y, yb, hv, _RGB32(255, 120, 220)""")
+  $ r("""            y = note_y(selHi) - PX_SEMI \\ 2
+  $             LINE (x, y)-(endX, note_y(selLo) + PX_SEMI \\ 2), _RGBA32(90, 160, 255, 40), BF
+  $             LINE (x, y)-(endX, note_y(selLo) + PX_SEMI \\ 2), _RGB32(90, 180, 255), B""","""            y = clip_y(note_y(selHi) - PX_SEMI \\ 2)
+  $             yb = clip_y(note_y(selLo) + PX_SEMI \\ 2)
+  $             LINE (x, y)-(endX, yb), _RGBA32(90, 160, 255, 40), BF
+  $             LINE (x, y)-(endX, yb), _RGB32(90, 180, 255), B""")
+  $ r("""                draw_handles x, endX, y, note_y(selLo) + PX_SEMI \\ 2, hv, _RGB32(90, 180, 255)""","""                draw_handles x, endX, y, yb, hv, _RGB32(90, 180, 255)""")
+  $ r("""    DIM w AS LONG, nn AS DOUBLE, col AS _UNSIGNED LONG, hp AS LONG, isBlack AS INTEGER, prevY AS LONG, hv AS INTEGER""","""    DIM w AS LONG, nn AS DOUBLE, col AS _UNSIGNED LONG, hp AS LONG, isBlack AS INTEGER, prevY AS LONG, hv AS INTEGER, yb AS LONG""")
+  $ r("""SUB draw_handles (""","""''
+  $ ' Keep a y inside the piano roll (boxes for pitches off the roll are cut off
+  $ ' at its edge instead of drawing over the toolbar or the scope).
+  $ '
+  $ FUNCTION clip_y& (y AS LONG)
+  $     clip_y = y
+  $     IF y < CANVAS_Y THEN clip_y = CANVAS_Y
+  $     IF y > CANVAS_Y + CANVAS_H - 1 THEN clip_y = CANVAS_Y + CANVAS_H - 1
+  $ END FUNCTION
+  $ 
+  $ 
+  $ SUB draw_handles (""")
+  $ open(p,'w').write(s)
+  $ PYEOF
+  $ /home/grymmjack/git/qb64pe/qb64pe -x PCSEDIT.BAS -o /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/PCSEDIT 2>&1 | grep -A3 -E "38;5;9m|Output:" | head -3
+2026-10-01T00:52:51-0400  INFO     bash_end      [ok] 1L stdout
+  | Output: /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/PCSEDIT
+2026-10-01T00:53:03-0400  INFO     bash_start    python3 - <<'PYEOF' | p='PCSEDIT.BAS'; s=open(p).read() | a=""" yt = note_y(selHi) - PX_SEMI \\ 2 | yb = note_y(selLo) + PX_SEMI \\ 2""" | assert s.count(a)==1 | s=s.replace(a,""" yt = clip_y(note_y(…
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ python3 - <<'PYEOF'
+  $ p='PCSEDIT.BAS'; s=open(p).read()
+  $ a="""    yt = note_y(selHi) - PX_SEMI \\ 2
+  $     yb = note_y(selLo) + PX_SEMI \\ 2"""
+  $ assert s.count(a)==1
+  $ s=s.replace(a,"""    yt = clip_y(note_y(selHi) - PX_SEMI \\ 2)
+  $     yb = clip_y(note_y(selLo) + PX_SEMI \\ 2)""")
+  $ a="""    yt = note_y(wave_max) - PX_SEMI \\ 2
+  $     yb = note_y(wave_min) + PX_SEMI \\ 2"""
+  $ assert s.count(a)==1
+  $ s=s.replace(a,"""    yt = clip_y(note_y(wave_max) - PX_SEMI \\ 2)
+  $     yb = clip_y(note_y(wave_min) + PX_SEMI \\ 2)""")
+  $ open(p,'w').write(s)
+  $ PYEOF
+  $ SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad; /home/grymmjack/git/qb64pe/qb64pe -x PCSEDIT.BAS -o $SP/PCSEDIT 2>&1 | grep -A3 -E "38;5;9m|Output:" | head -3; rm -rf $SP/home; mkdir -p $SP/home
+  $ (Xvfb :99 -screen 0 1400x900x24 >/dev/null 2>&1 &); sleep 1.5; export DISPLAY=:99; unset WAYLAND_DISPLAY; xdpyinfo >/dev/null 2>&1 || exit 1
+  $ ( env -u XDG_CURRENT_DESKTOP -u KDE_FULL_SESSION HOME=$SP/home PCSEDIT_NOMIDI=1 $SP/PCSEDIT $SP/wave.snd & ); for i in $(seq 1 30); do W=$(xdotool search --name "PCSEDIT" 2>/dev/null | head -1); [ -n "$W" ] && break; sleep 0.3; done; sleep 2.5
+  $ xdotool key --window $W ctrl+a; sleep 0.5
+  $ xwd -silent -root -out $SP/s.xwd; /usr/bin/convert $SP/s.xwd -crop 1280x800+0+0 $SP/selall.png
+  $ pkill -x PCSEDIT; sleep 0.3; kill $(pgrep -f "^Xvfb :99") 2>/dev/null; true
+2026-10-01T00:53:10-0400  INFO     bash_end      [ok] 1L stdout
+  | Output: /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/PCSEDIT
+2026-10-01T00:53:31-0400  NOTICE   prompt        <ide_opened_file>The user opened the file /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER/PCSEDIT.BAS in the IDE. This may or may not be related to the current task.</ide_opened_file>
+  > <ide_opened_file>The user opened the file /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER/PCSEDIT.BAS in the IDE. This may or may not be related to the current task.</ide_opened_file>
+  > commit and push
+2026-10-01T00:53:37-0400  INFO     bash_start    cd /home/grymmjack/git/qb64 && git add .claude/activity.log qb64/SOUND/PC-SPEAKER/PCSEDIT.BAS qb64/SOUND/PC-SPEAKER/README.md && git commit -q -F - <<'EOF' | SOUND/PC-SPEAKER: PCSEDIT resizable windo…
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ cd /home/grymmjack/git/qb64 && git add .claude/activity.log qb64/SOUND/PC-SPEAKER/PCSEDIT.BAS qb64/SOUND/PC-SPEAKER/README.md && git commit -q -F - <<'EOF'
+  $ SOUND/PC-SPEAKER: PCSEDIT resizable window, display scale, saved settings
+  $ 
+  $ - $RESIZE:ON: the layout refits to the window (wider roll and scope,
+  $   taller note rows, more list rows). Drawing goes to a logical-size
+  $   image scaled to the window; Ctrl+= / Ctrl+- / Ctrl+0 set the display
+  $   scale (50%-300%); mouse coordinates are scaled to match.
+  $ - Window size, position, scale and working settings (grid, tempo,
+  $   metronome, count-in, quantize, follow, loop, lines, audition, snap,
+  $   octave, note length, zoom) are saved to ~/.config/pcsedit.ini
+  $   (%APPDATA%\PCSEDIT.ini) on quit and restored at start-up.
+  $ - Ctrl+A sizes the selection to the notes used; selection / waveform
+  $   boxes are clipped to the roll (no drawing over the GUI).
+  $ - README updated.
+  $ 
+  $ Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+  $ EOF
+  $ git log --oneline -1 && git push origin main 2>&1 | tail -1

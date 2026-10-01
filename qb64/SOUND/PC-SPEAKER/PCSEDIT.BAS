@@ -85,27 +85,43 @@
 '   F1 help   Esc stop / cancel / quit
 '
 OPTION _EXPLICIT
+$RESIZE:ON
 '$INCLUDE:'PCSPKR.BI'
 
-CONST SCR_W = 1280
-CONST SCR_H = 800
+' Window layout. The screen is drawn at a "logical" size (the window size
+' divided by the display scale, Ctrl+= / Ctrl+-) and scaled up to the window;
+' do_layout fits everything to that size whenever the window or scale changes.
+DIM SHARED SCR_W AS LONG
+DIM SHARED SCR_H AS LONG
+DIM SHARED LIST_ROWS AS LONG
+DIM SHARED CANVAS_W AS LONG
+DIM SHARED CANVAS_H AS LONG
+DIM SHARED SCOPE_Y AS LONG
+DIM SHARED PX_SEMI AS LONG ' pixels per semitone row: CANVAS_H = (NOTE_HI - NOTE_LO) * PX_SEMI
+DIM SHARED uiScale AS DOUBLE
+DIM SHARED uiImg AS LONG ' what is drawn, at the logical size
+DIM SHARED scrImg AS LONG ' the window
+DIM SHARED physW AS LONG
+DIM SHARED physH AS LONG
+REDIM SHARED cfgKey(0 TO 0) AS STRING ' settings file, key = value
+REDIM SHARED cfgVal(0 TO 0) AS STRING
+DIM SHARED cfgN AS LONG
+DIM SHARED mlx AS LONG ' the mouse, in logical pixels
+DIM SHARED mly AS LONG
+CONST MIN_LW = 1000 '                    smallest logical size the layout fits in
+CONST MIN_LH = 640
 CONST ROW_H = 16
 CONST LIST_X = 8
 CONST LIST_Y = 120
 CONST LIST_W = 200
-CONST LIST_ROWS = 31
 CONST RULER_X = 224 '                    piano keys
 CONST CANVAS_X = 268 '                   piano roll
 CONST CANVAS_Y = 120
-CONST CANVAS_W = 1004
-CONST CANVAS_H = 504
 CONST TIME_Y = 100 '                     time ruler, above the roll
-CONST SCOPE_Y = 652 '                    oscilloscope, under the roll
 CONST SCOPE_H = 104
-CONST SCOPE_SPP = 2 '                    samples per pixel: 1004 px = about 42 ms at 48 kHz
+CONST SCOPE_SPAN = 2008 '                samples shown by the scope: about 42 ms at 48 kHz
 CONST NOTE_LO = 33 '                     A1, 55 Hz at the bottom edge
 CONST NOTE_HI = 117 '                    A8, 7040 Hz at the top edge
-CONST PX_SEMI = 6 '                      (NOTE_HI - NOTE_LO) * PX_SEMI = CANVAS_H
 CONST MAX_SOUNDS = 300
 CONST MAX_STEPS = 9000 '                 64 seconds
 CONST UNDO_MAX = 100
@@ -300,17 +316,27 @@ DIM SHARED modShift AS INTEGER
 DIM SHARED modAlt AS INTEGER
 
 DIM k AS LONG, f AS STRING, wheel AS LONG, mx AS LONG, my AS LONG, b1 AS INTEGER, b2 AS INTEGER
-DIM ctrl AS INTEGER, shift AS INTEGER, quitNow AS INTEGER
-
-SCREEN _NEWIMAGE(SCR_W, SCR_H, 32)
-_TITLE "PCSEDIT - PC speaker sound editor"
-_ACCEPTFILEDROP ON
-_PRINTMODE _KEEPBACKGROUND
+DIM ctrl AS INTEGER, shift AS INTEGER, quitNow AS INTEGER, oldScr AS LONG
 
 ' Disk and device errors must not stop the program with QB64's "Continue?"
 ' box: the trap records the error and carries on, and code that touches the
 ' disk checks errNum.
 ON ERROR GOTO trap
+
+' the window as it was last time (settings_save writes it at quit)
+cfg_load
+uiScale = VAL(cfg_get("scale", "1"))
+IF uiScale < 0.5 OR uiScale > 3 THEN uiScale = 1
+physW = VAL(cfg_get("width", "1280"))
+physH = VAL(cfg_get("height", "800"))
+IF physW < 640 OR physW > 16000 THEN physW = 1280
+IF physH < 480 OR physH > 16000 THEN physH = 800
+scrImg = _NEWIMAGE(physW, physH, 32)
+SCREEN scrImg
+make_ui
+IF VAL(cfg_get("x", "-99999")) > -99999 THEN _SCREENMOVE VAL(cfg_get("x", "0")), VAL(cfg_get("y", "0"))
+_TITLE "PCSEDIT - PC speaker sound editor"
+_ACCEPTFILEDROP ON
 
 ' Trap the window's close button (and Ctrl+Break) so they go through the
 ' same clean-up as Esc. The first read of _EXIT switches the monitoring
@@ -319,20 +345,30 @@ DIM osExitTrap AS INTEGER
 osExitTrap = _EXIT
 
 rateHz = PCSPK_IFS_DEFAULT_HZ
-zoom = 6
-snapOn = -1
-noteLen = 4
-bpm = 120
-linesOn = -1
-octave = 4
+' working preferences, as left last time (defaults the first time)
+zoom = VAL(cfg_get("zoom", "6"))
+IF zoom < 0.1 OR zoom > 64 THEN zoom = 6
+snapOn = VAL(cfg_get("snap", "-1"))
+noteLen = VAL(cfg_get("notelen", "4"))
+IF noteLen < 1 OR noteLen > 140 THEN noteLen = 4
+bpm = VAL(cfg_get("bpm", "120"))
+IF bpm < 20 OR bpm > 400 THEN bpm = 120
+gridDiv = VAL(cfg_get("grid", "0"))
+linesOn = VAL(cfg_get("lines", "-1"))
+octave = VAL(cfg_get("octave", "4"))
+IF octave < 1 OR octave > 7 THEN octave = 4
 heldNote = -1
 auditionNote = -1
-drawAudOn = -1
-metroMode = 1
-followOn = -1
-metroVol = 0.5
-countIn = 1
-quantOn = -1
+drawAudOn = VAL(cfg_get("audition", "-1"))
+metroMode = VAL(cfg_get("metronome", "1"))
+IF metroMode < 0 OR metroMode > 2 THEN metroMode = 1
+followOn = VAL(cfg_get("follow", "-1"))
+metroVol = VAL(cfg_get("metrovol", "0.5"))
+IF metroVol < 0 OR metroVol > 1 THEN metroVol = 0.5
+countIn = VAL(cfg_get("countin", "1"))
+IF countIn < 0 OR countIn > 2 THEN countIn = 1
+quantOn = VAL(cfg_get("quantize", "-1"))
+loopOn = VAL(cfg_get("loop", "0"))
 clickHi = make_click(1760, 0.03)
 clickLo = make_click(1175, 0.025)
 midiDevIdx = -1
@@ -384,7 +420,8 @@ DO
     wheel = 0
     DO WHILE _MOUSEINPUT
         wheel = wheel + _MOUSEWHEEL
-        handle_mouse _MOUSEX, _MOUSEY, _MOUSEBUTTON(1), _MOUSEBUTTON(2)
+        mlx = INT(_MOUSEX / uiScale): mly = INT(_MOUSEY / uiScale)
+        handle_mouse mlx, mly, _MOUSEBUTTON(1), _MOUSEBUTTON(2)
     LOOP
     ctrl = _KEYDOWN(100305) OR _KEYDOWN(100306)
     shift = _KEYDOWN(100303) OR _KEYDOWN(100304)
@@ -392,11 +429,11 @@ DO
         IF ctrl THEN
             ' about a quarter per click, so 1 to 64 is a quick spin, not 60 clicks
             IF wheel < 0 THEN
-                set_zoom_at zoom_step(1), _MOUSEX
+                set_zoom_at zoom_step(1), mlx
             ELSE
-                set_zoom_at zoom_step(-1), _MOUSEX
+                set_zoom_at zoom_step(-1), mlx
             END IF
-        ELSEIF _MOUSEX < RULER_X THEN
+        ELSEIF mlx < RULER_X THEN
             user_select cur + wheel
         ELSE
             scroll_to scrollX + wheel * (INT(60 / zoom) + 1)
@@ -448,11 +485,27 @@ DO
     ' follow playback: page the view along so the playhead stays on screen
     IF playing AND followOn THEN follow_page heard_pos(playPos)
 
+    ' window resized (or maximised): new window image, re-fit the layout
+    IF _RESIZE THEN
+        physW = _RESIZEWIDTH: physH = _RESIZEHEIGHT
+        IF physW < 320 THEN physW = 320
+        IF physH < 240 THEN physH = 240
+        oldScr = scrImg ' free the old window image once the new one is up
+        scrImg = _NEWIMAGE(physW, physH, 32)
+        SCREEN scrImg
+        _FREEIMAGE oldScr
+        make_ui
+    END IF
+
+    _DEST uiImg
     draw_ui
+    _DEST scrImg
+    _PUTIMAGE (0, 0)-(physW - 1, physH - 1), uiImg, scrImg
     _DISPLAY
     _LIMIT 60
 LOOP
 
+settings_save
 midi_stop
 PCSPK_Off
 PCSPK_StreamClose
@@ -1523,8 +1576,8 @@ FUNCTION wave_edge% (x AS LONG, y AS LONG)
     IF NOT waveLive THEN EXIT FUNCTION
     xl = CANVAS_X + (waveS0 - scrollX) * zoom
     xr = CANVAS_X + (waveS1 - scrollX) * zoom
-    yt = note_y(wave_max) - PX_SEMI \ 2
-    yb = note_y(wave_min) + PX_SEMI \ 2
+    yt = clip_y(note_y(wave_max) - PX_SEMI \ 2)
+    yb = clip_y(note_y(wave_min) + PX_SEMI \ 2)
     IF y >= yt - 4 AND y <= yb + 4 THEN
         IF ABS(x - xl) <= 4 THEN wave_edge = 1: EXIT FUNCTION
         IF ABS(x - xr) <= 4 THEN wave_edge = 2: EXIT FUNCTION
@@ -1683,9 +1736,22 @@ END FUNCTION
 
 
 SUB select_all
+    DIM s AS LONG, v AS LONG, n AS LONG, lo AS LONG, hi AS LONG
     IF steps_of(cur) = 0 THEN EXIT SUB
     selS0 = 0: selS1 = steps_of(cur)
-    selLo = 0: selHi = 127
+    ' the box spans the notes the sound actually uses (so its top / bottom
+    ' stretch handles sit on the music, inside the roll)
+    lo = 999: hi = -999
+    FOR s = 0 TO steps_of(cur) - 1
+        v = get_step(cur, s)
+        IF v THEN
+            n = INT(div_note(v) + 0.5)
+            IF n < lo THEN lo = n
+            IF n > hi THEN hi = n
+        END IF
+    NEXT
+    IF hi < lo THEN lo = NOTE_LO: hi = NOTE_HI - 1
+    selLo = lo: selHi = hi
     selOn = -1
     set_tool TOOL_MOVE
     set_status "All" + STR$(sel_count) + " steps selected - drag or use the arrows to move them"
@@ -1870,8 +1936,8 @@ FUNCTION sel_edge% (x AS LONG, y AS LONG)
     IF NOT selOn THEN EXIT FUNCTION
     xl = CANVAS_X + (selS0 - scrollX) * zoom
     xr = CANVAS_X + (selS1 - scrollX) * zoom
-    yt = note_y(selHi) - PX_SEMI \ 2
-    yb = note_y(selLo) + PX_SEMI \ 2
+    yt = clip_y(note_y(selHi) - PX_SEMI \ 2)
+    yb = clip_y(note_y(selLo) + PX_SEMI \ 2)
     IF y >= yt - 4 AND y <= yb + 4 THEN
         IF ABS(x - xl) <= 4 THEN sel_edge = 1: EXIT FUNCTION
         IF ABS(x - xr) <= 4 THEN sel_edge = 2: EXIT FUNCTION
@@ -2223,6 +2289,11 @@ FUNCTION handle_key% (k AS LONG, ctrl AS INTEGER, shift AS INTEGER)
                 END SELECT
             END IF
             IF ctrl THEN
+                SELECT CASE k
+                    CASE 61, 43: set_ui_scale 1 '                   Ctrl+= / Ctrl++
+                    CASE 45, 95: set_ui_scale -1 '                  Ctrl+- / Ctrl+_
+                    CASE 48, 41: set_ui_scale 0 '                   Ctrl+0
+                END SELECT
                 SELECT CASE ctrl_letter$(k)
                     CASE "Z": undo
                     CASE "Y": redo
@@ -3354,7 +3425,7 @@ END SUB
 
 SUB draw_roll
     DIM nt AS LONG, y AS LONG, x AS LONG, s AS LONG, v AS LONG, vis AS LONG, endX AS LONG
-    DIM w AS LONG, nn AS DOUBLE, col AS _UNSIGNED LONG, hp AS LONG, isBlack AS INTEGER, prevY AS LONG, hv AS INTEGER
+    DIM w AS LONG, nn AS DOUBLE, col AS _UNSIGNED LONG, hp AS LONG, isBlack AS INTEGER, prevY AS LONG, hv AS INTEGER, yb AS LONG
 
     vis = INT(CANVAS_W / zoom)
 
@@ -3464,12 +3535,13 @@ SUB draw_roll
         IF x < CANVAS_X THEN x = CANVAS_X
         IF endX > CANVAS_X + CANVAS_W - 1 THEN endX = CANVAS_X + CANVAS_W - 1
         IF endX > x THEN
-            y = note_y(wave_max) - PX_SEMI \ 2
-            LINE (x, y)-(endX, note_y(wave_min) + PX_SEMI \ 2), _RGBA32(255, 120, 220, 30), BF
-            LINE (x, y)-(endX, note_y(wave_min) + PX_SEMI \ 2), _RGB32(255, 120, 220), B
-            hv = wave_edge(_MOUSEX, _MOUSEY)
+            y = clip_y(note_y(wave_max) - PX_SEMI \ 2)
+            yb = clip_y(note_y(wave_min) + PX_SEMI \ 2)
+            LINE (x, y)-(endX, yb), _RGBA32(255, 120, 220, 30), BF
+            LINE (x, y)-(endX, yb), _RGB32(255, 120, 220), B
+            hv = wave_edge(mlx, mly)
             IF drawing >= 13 AND drawing <= 16 THEN hv = drawing - 12
-            draw_handles x, endX, y, note_y(wave_min) + PX_SEMI \ 2, hv, _RGB32(255, 120, 220)
+            draw_handles x, endX, y, yb, hv, _RGB32(255, 120, 220)
             COLOR _RGB32(255, 160, 230)
             _PRINTSTRING (x + 2, y - 17), wave_name + STR$(waveCycles) + "x duty" + STR$(CLNG(waveDuty * 100)) + "% ph" + STR$(CLNG(wavePhase * 100)) + "%"
         END IF
@@ -3482,14 +3554,15 @@ SUB draw_roll
         IF x < CANVAS_X THEN x = CANVAS_X
         IF endX > CANVAS_X + CANVAS_W - 1 THEN endX = CANVAS_X + CANVAS_W - 1
         IF endX > x THEN
-            y = note_y(selHi) - PX_SEMI \ 2
-            LINE (x, y)-(endX, note_y(selLo) + PX_SEMI \ 2), _RGBA32(90, 160, 255, 40), BF
-            LINE (x, y)-(endX, note_y(selLo) + PX_SEMI \ 2), _RGB32(90, 180, 255), B
+            y = clip_y(note_y(selHi) - PX_SEMI \ 2)
+            yb = clip_y(note_y(selLo) + PX_SEMI \ 2)
+            LINE (x, y)-(endX, yb), _RGBA32(90, 160, 255, 40), BF
+            LINE (x, y)-(endX, yb), _RGB32(90, 180, 255), B
             ' stretch handles (Select / Move tools); the one under the mouse lights up
             IF tool = TOOL_SELECT OR tool = TOOL_MOVE THEN
-                hv = sel_edge(_MOUSEX, _MOUSEY)
+                hv = sel_edge(mlx, mly)
                 IF drawing >= 9 AND drawing <= 12 THEN hv = drawing - 8
-                draw_handles x, endX, y, note_y(selLo) + PX_SEMI \ 2, hv, _RGB32(90, 180, 255)
+                draw_handles x, endX, y, yb, hv, _RGB32(90, 180, 255)
             END IF
         END IF
     END IF
@@ -3541,6 +3614,17 @@ END SUB
 ''
 ' Time ruler with the grid off: a tick every 0.1 s, a label every second.
 '
+''
+' Keep a y inside the piano roll (boxes for pitches off the roll are cut off
+' at its edge instead of drawing over the toolbar or the scope).
+'
+FUNCTION clip_y& (y AS LONG)
+    clip_y = y
+    IF y < CANVAS_Y THEN clip_y = CANVAS_Y
+    IF y > CANVAS_Y + CANVAS_H - 1 THEN clip_y = CANVAS_Y + CANVAS_H - 1
+END FUNCTION
+
+
 SUB draw_handles (xl AS LONG, xr AS LONG, yt AS LONG, yb AS LONG, hover AS INTEGER, baseCol AS _UNSIGNED LONG)
     DIM ym AS LONG, xm AS LONG, c AS _UNSIGNED LONG, i AS INTEGER
     ym = (yt + yb) \ 2: xm = (xl + xr) \ 2
@@ -3642,7 +3726,7 @@ SUB draw_scope
     LINE (CANVAS_X, mid)-(CANVAS_X + CANVAS_W - 1, mid), _RGB32(20, 48, 32)
     LINE (CANVAS_X - 1, SCOPE_Y - 1)-(CANVAS_X + CANVAS_W, SCOPE_Y + SCOPE_H), _RGB32(70, 80, 100), B
 
-    ms = CANVAS_W * SCOPE_SPP * 1000 / pcspk.rate
+    ms = SCOPE_SPAN * 1000 / pcspk.rate
     COLOR _RGB32(110, 200, 140)
     _PRINTSTRING (RULER_X - 26, SCOPE_Y), "SCOPE"
     COLOR _RGB32(80, 130, 100)
@@ -3650,7 +3734,7 @@ SUB draw_scope
     _PRINTSTRING (RULER_X - 26, SCOPE_Y + 34), "10/div"
 
     ' skip what is queued but not heard yet, then find a rising edge
-    span = CANVAS_W * SCOPE_SPP
+    span = SCOPE_SPAN
     heard = CLNG(PCSPK_Buffered * pcspk.rate)
     IF heard < 0 THEN heard = 0
     IF heard + span + 1600 >= PCSPK_SCOPE_N THEN heard = PCSPK_SCOPE_N - span - 1601
@@ -3663,7 +3747,7 @@ SUB draw_scope
     gain = (SCOPE_H / 2 - 6) / 0.3
     py = -1
     FOR x = 0 TO CANVAS_W - 1
-        v = PCSPK_ScopeSample(start - x * SCOPE_SPP)
+        v = PCSPK_ScopeSample(start - INT(x * span / CANVAS_W))
         y = mid - CLNG(v * gain)
         IF y < SCOPE_Y + 1 THEN y = SCOPE_Y + 1
         IF y > SCOPE_Y + SCOPE_H - 2 THEN y = SCOPE_Y + SCOPE_H - 2
@@ -3696,7 +3780,7 @@ SUB draw_help
     t(13) = "Ctrl+Up/Down  transpose semitone (Shift: octave)   Ctrl+T trim silence"
     t(14) = "Ctrl+Z / Ctrl+Y  undo / redo     A  hear what you draw while drawing (on/off)"
     t(16) = "F2 rename   F3 new sound   F4 duplicate   F8 delete   Ctrl+P priority"
-    t(17) = "Ctrl+N new bank   Ctrl+O open   Ctrl+S save   Ctrl+Shift+S save as"
+    t(17) = "Ctrl+N new  Ctrl+O open  Ctrl+S save  Ctrl+Shift+S save as  Ctrl+= / - / 0 display scale"
     t(18) = "Ctrl+E export the sound as .wav (EXPORT/)     drop a file to open it"
     t(19) = ""
     t(20) = "Saves IFS banks (Duke Nukem / Keen format, 140 steps per second)."
@@ -3720,6 +3804,163 @@ SUB draw_help
         IF i = 1 THEN COLOR _RGB32(255, 200, 60) ELSE COLOR _RGB32(210, 220, 235)
         _PRINTSTRING (x, y + (i - 1) * 18), t(i)
     NEXT
+END SUB
+
+
+''
+' (Re)make the logical-size image for the window size and display scale,
+' and fit the layout to it. A scale too big for the window is reduced.
+'
+SUB make_ui
+    DIM lw AS LONG, lh AS LONG
+    DO
+        lw = INT(physW / uiScale): lh = INT(physH / uiScale)
+        IF (lw >= MIN_LW AND lh >= MIN_LH) OR uiScale <= 0.5 THEN EXIT DO
+        uiScale = uiScale - 0.125 ' the window is too small for this scale
+    LOOP
+    IF lw < MIN_LW THEN lw = MIN_LW
+    IF lh < MIN_LH THEN lh = MIN_LH
+    IF uiImg THEN _FREEIMAGE uiImg
+    uiImg = _NEWIMAGE(lw, lh, 32)
+    _DEST uiImg
+    _PRINTMODE _KEEPBACKGROUND
+    _DEST scrImg
+    do_layout lw, lh
+END SUB
+
+
+''
+' Fit the panels to a logical size: the roll takes the spare width; its
+' note rows take the spare height (the note range stays C1-A8).
+'
+SUB do_layout (lw AS LONG, lh AS LONG)
+    DIM avail AS LONG
+    SCR_W = lw: SCR_H = lh
+    CANVAS_W = SCR_W - CANVAS_X - 8
+    avail = SCR_H - CANVAS_Y - 28 - (SCOPE_H + 4) - 32 ' footer, scope, status line
+    PX_SEMI = avail \ (NOTE_HI - NOTE_LO)
+    IF PX_SEMI < 4 THEN PX_SEMI = 4
+    CANVAS_H = PX_SEMI * (NOTE_HI - NOTE_LO)
+    SCOPE_Y = CANVAS_Y + CANVAS_H + 28
+    LIST_ROWS = (CANVAS_Y + CANVAS_H - LIST_Y) \ ROW_H
+    IF zoom > 0 THEN scroll_to scrollX ' (not yet set the first time, at start-up)
+END SUB
+
+
+''
+' Ctrl+= / Ctrl+- / Ctrl+0: display scale 50% ... 300%.
+'
+SUB set_ui_scale (dirn AS LONG)
+    DIM lv AS STRING, i AS LONG, n AS LONG, sc(0 TO 15) AS DOUBLE, best AS LONG, want AS DOUBLE
+    lv = "0.5 0.625 0.75 0.875 1 1.25 1.5 1.75 2 2.5 3 "
+    DO WHILE LEN(lv)
+        sc(n) = VAL(LEFT$(lv, INSTR(lv, " ") - 1))
+        lv = MID$(lv, INSTR(lv, " ") + 1)
+        n = n + 1
+    LOOP
+    IF dirn = 0 THEN
+        want = 1
+    ELSE
+        FOR i = 0 TO n - 1
+            IF ABS(sc(i) - uiScale) < ABS(sc(best) - uiScale) THEN best = i
+        NEXT
+        best = best + dirn
+        IF best < 0 THEN best = 0
+        IF best > n - 1 THEN best = n - 1
+        want = sc(best)
+    END IF
+    uiScale = want
+    make_ui
+    IF uiScale < want THEN
+        set_status "Display scale" + STR$(CLNG(uiScale * 100)) + "% - make the window bigger for" + STR$(CLNG(want * 100)) + "%"
+    ELSE
+        set_status "Display scale" + STR$(CLNG(uiScale * 100)) + "%  (Ctrl+= bigger, Ctrl+- smaller, Ctrl+0 100%)"
+    END IF
+END SUB
+
+
+'-----------------------------------------------------------------------------
+' Settings: ~/.config/pcsedit.ini (Windows: %APPDATA%\PCSEDIT.ini), plain
+' "key=value" lines. Read at start-up, written when PCSEDIT quits.
+'-----------------------------------------------------------------------------
+
+FUNCTION cfg_path$
+    DIM d AS STRING
+    $IF WIN THEN
+        d = ENVIRON$("APPDATA")
+        IF d = "" THEN d = start_dir
+        IF RIGHT$(d, 1) <> "\" THEN d = d + "\"
+        cfg_path = d + "PCSEDIT.ini"
+    $ELSE
+        d = ENVIRON$("HOME")
+        IF d = "" THEN cfg_path = start_dir + "pcsedit.ini": EXIT FUNCTION
+        d = d + "/.config"
+        IF NOT _DIREXISTS(d) THEN MKDIR d
+        cfg_path = d + "/pcsedit.ini"
+    $END IF
+END FUNCTION
+
+
+SUB cfg_load
+    DIM ff AS LONG, ln AS STRING, p AS LONG, f AS STRING
+    cfgN = 0
+    f = cfg_path
+    IF NOT _FILEEXISTS(f) THEN EXIT SUB
+    errNum = 0
+    ff = FREEFILE
+    OPEN f FOR INPUT AS #ff
+    IF errNum THEN EXIT SUB
+    DO UNTIL EOF(ff) OR errNum <> 0
+        LINE INPUT #ff, ln
+        p = INSTR(ln, "=")
+        IF p > 1 AND LEFT$(ln, 1) <> "#" THEN
+            IF cfgN > UBOUND(cfgKey) THEN REDIM _PRESERVE cfgKey(0 TO cfgN * 2) AS STRING: REDIM _PRESERVE cfgVal(0 TO cfgN * 2) AS STRING
+            cfgKey(cfgN) = LCASE$(_TRIM$(LEFT$(ln, p - 1)))
+            cfgVal(cfgN) = _TRIM$(MID$(ln, p + 1))
+            cfgN = cfgN + 1
+        END IF
+    LOOP
+    CLOSE #ff
+END SUB
+
+
+FUNCTION cfg_get$ (k AS STRING, dflt AS STRING)
+    DIM i AS LONG
+    cfg_get = dflt
+    FOR i = 0 TO cfgN - 1
+        IF cfgKey(i) = k THEN cfg_get = cfgVal(i): EXIT FUNCTION
+    NEXT
+END FUNCTION
+
+
+SUB settings_save
+    DIM ff AS LONG, f AS STRING
+    f = cfg_path
+    errNum = 0
+    ff = FREEFILE
+    OPEN f FOR OUTPUT AS #ff
+    IF errNum THEN EXIT SUB
+    PRINT #ff, "# PCSEDIT settings - written when PCSEDIT quits"
+    PRINT #ff, "width="; LTRIM$(STR$(physW))
+    PRINT #ff, "height="; LTRIM$(STR$(physH))
+    PRINT #ff, "x="; LTRIM$(STR$(_SCREENX))
+    PRINT #ff, "y="; LTRIM$(STR$(_SCREENY))
+    PRINT #ff, "scale="; LTRIM$(STR$(uiScale))
+    PRINT #ff, "zoom="; LTRIM$(STR$(zoom))
+    PRINT #ff, "grid="; LTRIM$(STR$(gridDiv))
+    PRINT #ff, "bpm="; LTRIM$(STR$(bpm))
+    PRINT #ff, "lines="; LTRIM$(STR$(linesOn))
+    PRINT #ff, "snap="; LTRIM$(STR$(snapOn))
+    PRINT #ff, "notelen="; LTRIM$(STR$(noteLen))
+    PRINT #ff, "octave="; LTRIM$(STR$(octave))
+    PRINT #ff, "audition="; LTRIM$(STR$(drawAudOn))
+    PRINT #ff, "metronome="; LTRIM$(STR$(metroMode))
+    PRINT #ff, "metrovol="; LTRIM$(STR$(metroVol))
+    PRINT #ff, "countin="; LTRIM$(STR$(countIn))
+    PRINT #ff, "quantize="; LTRIM$(STR$(quantOn))
+    PRINT #ff, "follow="; LTRIM$(STR$(followOn))
+    PRINT #ff, "loop="; LTRIM$(STR$(loopOn))
+    CLOSE #ff
 END SUB
 
 

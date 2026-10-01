@@ -109,6 +109,21 @@ For a saw it is how much of the cycle the ramp takes (100% is a plain saw).
 With the grid on, the box snaps to cells; with snap on, the pitches snap to
 semitones (switch snap off with F6 for smooth slides).
 
+**Window and display scale:** the window can be resized or maximised. The
+piano roll and scope take the extra width (more time on screen), the note
+rows get taller, and the sound list shows more sounds. **Ctrl+=** / **Ctrl+-**
+change the display scale from 50% to 300% (**Ctrl+0** = 100%). Bigger makes
+text and controls easier to read on a large screen; smaller fits more in. If
+the window is too small for a scale, PCSEDIT says so; make the window bigger
+and try again.
+
+PCSEDIT **remembers** the window size, position and display scale, plus your
+working settings (grid and tempo, metronome mode and volume, count-in,
+quantize, follow, loop, grid lines, audition, snap, octave, note length and
+zoom). They are saved when you quit, to `~/.config/pcsedit.ini`
+(`%APPDATA%\PCSEDIT.ini` on Windows), a plain `key=value` text file. Delete it
+to go back to the defaults.
+
 **Reading the roll:** white-key rows are lighter and black-key rows darker, like
 a piano roll. Every C has a brighter octave line, labelled at both edges of the
 grid. While a key is held (computer keyboard, MIDI or the piano keys), its row
@@ -271,6 +286,7 @@ zap, a blip, a little arpeggio) into an instrument you can play tunes with.
 | Ctrl+R | LIVE record from the cursor now, after the count-in |
 | Ctrl+M / Ctrl+Shift+M | metronome off / while recording / recording + playback; click volume |
 | Ctrl+F | follow the playhead while playing |
+| Ctrl+= / Ctrl+- / Ctrl+0 | display scale bigger / smaller / 100% |
 | Ctrl+U | count-in: off, 1 bar, 2 bars |
 | Ctrl+Q | quantize LIVE notes to the grid |
 | A | hear what you draw while the mouse button is down |
