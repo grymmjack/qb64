@@ -78,18 +78,40 @@ Wolfenstein 3D or DOOM, change it, and save it as your own.
 
 ![PCSEDIT editing the Duke Nukem 1 BOMBEXPLODE sound](SCREENSHOTS/6-pcsedit.png)
 
-**Drawing:** the big panel is a piano roll, with pitch going up and time going
-right. **Tab** switches between two drawing tools, and right-drag erases with
-either:
+**Tools:** the big panel is a piano roll, with pitch going up and time going
+right. The toolbar above it picks a tool. Click a button, press its letter
+(with **Caps Lock off**), press **Alt+letter** (always works), or press **Tab**
+/ **Shift+Tab** to cycle. Right-drag erases with any tool.
 
-* **NOTE** (the default): **click** to place a steady note at that pitch,
-  **Len** long (**F11/F12**; counted in grid cells while the grid is on). Drag
-  right to make it longer: the pitch stays where you clicked, however the
-  mouse wobbles. A grey bar shows the note a click would place.
-* **FREE**: a freehand pencil where every step follows the mouse, for sweeps,
-  zaps and slides. **Shift+click** draws a straight line from the last point. **F6** switches snap to semitones on or off. The mouse wheel
-scrolls and **Ctrl+wheel** zooms. Click the time ruler above the roll to move
-the cursor (yellow line).
+| Tool | What it does |
+| --- | --- |
+| **D**raw | freehand: every step follows the mouse, for sweeps and zaps. **Shift+click** draws a straight line from the last point (slides). |
+| **L**ine | press, drag and release to draw a straight line of steps, like a pixel-art line tool, with a rubber-band preview. With snap on it becomes a staircase of semitones. |
+| **N**ote | the default. **Click** to place a steady note at that pitch, **Len** long (**F11/F12**; counted in grid cells while the grid is on). Drag right to make it longer; the pitch stays where you clicked. A grey bar shows what a click would place. |
+| **W**ave | drag a box to fill it with a pitch waveform: the box's width is how long it lasts and its height is the pitch range it swings between. While the box is still live (pink), press **1** square, **2** triangle, **3** saw up, **4** saw down or **5** sine. **[ ]** give fewer or more cycles. Drag inside the box left/right for the **duty cycle** and up/down for the **phase**. Press Enter, click outside the box or pick another tool to finish; Esc cancels. |
+| **E**rase | drag to clear steps |
+| **S**elect | drag a box around steps (it snaps to grid cells when the grid is on). **Ctrl+A** selects the whole sound. |
+| **M**ove | drag the selection. Time moves in steps (whole cells with the grid on), pitch in semitones. |
+| **C**ut, Copy, Paste | **C** or **Ctrl+X** cuts, **Ctrl+C** copies, and **Ctrl+V** pastes at the cursor. Pasted steps become the selection, ready to move. |
+
+The mouse wheel scrolls, and **Ctrl+wheel** zooms around the mouse pointer.
+Click the time ruler above the roll to move the cursor (the yellow line).
+
+**Waveforms** shape the pitch, not the sound itself: the speaker always plays a
+square wave. A square wave is a trill between two pitches, a triangle or sine is a
+siren or vibrato, and a saw up is the classic rising zap. Duty sets where the
+shape turns. For a square it is the share of each cycle spent on the high
+pitch. For a triangle or sine it is where the peak falls (50% is symmetrical).
+For a saw it is how much of the cycle the ramp takes (100% is a plain saw).
+With the grid on, the box snaps to cells; with snap on, the pitches snap to
+semitones (switch snap off with F6 for smooth slides).
+
+With a selection, the **arrow keys** nudge it (**Shift+Up/Down** moves it an
+octave), **Delete** clears it, and **Esc** deselects. All of it can be undone.
+
+**Caps Lock** decides what the letter keys do. With Caps Lock **on**, the
+computer keyboard is a piano (see below). With it **off**, the letters pick
+tools.
 
 **What the dots are:** a sound is one pitch every 1/140 of a second, so
 each dot on the roll is one step. There are no note lengths, ties or curves in
@@ -117,8 +139,8 @@ time. A very fine grid at a fast tempo can get down to one or two steps a
 cell. The tempo and grid aren't saved in the bank, because the IFS format has
 nowhere to store them.
 
-**Playing notes in:** the computer keyboard is a two-octave piano, laid out
-like a tracker:
+**Playing notes in:** with **Caps Lock on**, the computer keyboard is a
+two-octave piano, laid out like a tracker:
 
 ```
  2 3   5 6 7          S D   G H J
@@ -160,14 +182,20 @@ zap, a blip, a little arpeggio) into an instrument you can play tunes with.
 | Key | What it does |
 | --- | --- |
 | Space / Enter | play from the start / from the cursor (Ctrl+L loops) |
-| Left / Right, Home / End | move the cursor (Ctrl: 0.1 s at a time) |
-| Up / Down | previous / next sound in the bank |
+| Left / Right | move the cursor a step (a grid cell with the grid on); Ctrl: a beat, or 0.1 s with the grid off. With a selection they nudge it instead. |
+| Home / End | cursor to the start / end of the sound |
+| PageUp / PageDown | previous / next dot (where a new pitch starts); with the NOTE tool, previous / next bar |
+| Up / Down, Ctrl+PageUp / PageDown | previous / next sound in the bank |
 | Insert / Delete / Backspace | insert a step, delete a step, delete the step before the cursor |
 | Ctrl+Up / Ctrl+Down | transpose the sound a semitone (add Shift for an octave) |
 | Ctrl+G / Ctrl+Shift+G | grid size: off, 1/4, 1/8, 1/16, 1/32, 1/8T, 1/16T |
 | Ctrl+B | tempo (BPM) for the grid |
 | Ctrl+K / Ctrl+H | keys play notes or the selected sound / GATE, ONE-SHOT, LOOP |
-| Tab | drawing tool: NOTE (steady notes) / FREE (freehand) |
+| D L N W E S M (Caps Lock off), Alt+letter, Tab | tools: Draw, Line, Note, Wave, Erase, Select, Move |
+| 1-5, [ ] (WAVE tool, Caps Lock off) | waveform shape (square, triangle, saw up, saw down, sine), fewer / more cycles |
+| C / Ctrl+X, Ctrl+C, Ctrl+V, Ctrl+A | cut, copy, paste at the cursor, select all |
+| Arrows / Delete / Esc (with a selection) | nudge it (Shift+Up/Down = octave) / clear it / deselect |
+| Caps Lock | on = the keyboard plays notes, off = letters pick tools |
 | Ctrl+T | trim silence off the end |
 | Ctrl+Z / Ctrl+Y | undo / redo |
 | F2 / F3 / F4 / F8 | rename, new sound, duplicate, delete (press F8 twice) |

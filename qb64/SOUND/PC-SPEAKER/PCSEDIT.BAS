@@ -13,19 +13,32 @@
 ' it writes the keyboard's bytes to a temp file that the editor reads every
 ' frame - no C, no DECLARE LIBRARY.
 '
-' Mouse (piano roll) - Tab switches the drawing tool:
-'   NOTE tool (default)  click = a steady note, Len long, at that pitch;
-'                        drag right = a longer note (the pitch stays put)
-'   FREE tool            left drag draws freehand, every step following
-'                        the mouse (sweeps); Shift+click = straight line
-'                        from the last point (slides)
-'   right drag        erase (both tools)
+' Tools - click the toolbar, press the letter (with Caps Lock off),
+' Alt+letter (always) or Tab to cycle:
+'   D)raw    freehand: every step follows the mouse (sweeps, zaps);
+'            Shift+click = straight line from the last point (slides)
+'   L)ine    press, drag, release: a straight line of steps (pixel-art
+'            style, with a rubber band preview)
+'   N)ote    click = a steady note, Len long; drag right = longer
+'   W)ave    drag a box = a pitch waveform across it (width = time, height
+'            = pitch range). Then, while it is live: 1 square, 2 triangle,
+'            3 saw up, 4 saw down, 5 sine; [ ] fewer / more cycles; drag
+'            inside the box left/right = duty cycle, up/down = phase. Enter,
+'            another tool or a click outside it = done; Esc = cancel
+'   E)rase   drag to clear steps
+'   S)elect  drag a box around steps
+'   M)ove    drag the selection (time and pitch); arrow keys nudge it,
+'            Shift+Up/Down = an octave
+'   C)ut / Ctrl+X, Ctrl+C copy, Ctrl+V paste at the cursor, Delete clears
+'   the selection, Esc deselects
+'   right drag erases with any tool
 '   wheel             scroll          Ctrl+wheel     zoom
 '   click time ruler  move the cursor
 '
 ' Notes - computer keyboard (two octaves, tracker layout):
 '   Z S X D C V G B H N J M ,     lower octave (C to C)
 '   Q 2 W 3 E R 5 T 6 Y 7 U I     upper octave
+'   CAPS LOCK ON = these keys play notes; CAPS LOCK OFF = letters pick tools
 '   ...or any MIDI keyboard (F7 picks the device), or click and hold the
 '   piano keys left of the roll to audition a pitch (drag to slide)
 '
@@ -101,6 +114,23 @@ CONST HOLD_GATE = 0
 CONST HOLD_ONESHOT = 1
 CONST HOLD_LOOP = 2
 CONST ROOT_NOTE = 60 '                   C4 plays the instrument as drawn
+CONST TOOL_DRAW = 0
+CONST TOOL_NOTE = 1
+CONST TOOL_ERASE = 2
+CONST TOOL_SELECT = 3
+CONST TOOL_MOVE = 4
+CONST TOOL_LINE = 5
+CONST TOOL_WAVE = 6
+CONST WAVE_SQUARE = 1
+CONST WAVE_TRIANGLE = 2
+CONST WAVE_SAWUP = 3
+CONST WAVE_SAWDOWN = 4
+CONST WAVE_SINE = 5
+CONST TB_Y = 26 '                        toolbar
+CONST TB_H = 20
+CONST TB_W = 66
+CONST TB_TOOLS = 7 '                     toolbar: 7 tools, then cut / copy / paste
+CONST TB_BUTTONS = 10
 
 ' --- the bank being edited
 DIM SHARED sndName(1 TO MAX_SOUNDS) AS STRING
@@ -120,7 +150,51 @@ DIM SHARED scrollX AS LONG ' first visible step
 DIM SHARED cursorStep AS LONG
 DIM SHARED snapOn AS INTEGER
 DIM SHARED drawing AS INTEGER ' 0, 1 = drawing, 2 = erasing, 3 = placing a note
-DIM SHARED freeTool AS INTEGER ' FALSE = NOTE tool, TRUE = FREE (freehand) tool
+DIM SHARED tool AS INTEGER ' TOOL_*
+DIM SHARED lineBase AS STRING ' LINE tool: the sound before the line
+DIM SHARED lineS AS LONG ' and where the line starts
+DIM SHARED lineNt AS DOUBLE
+' WAVE tool: shape, cycles, duty (0-1) and phase (0-1) of the live waveform
+DIM SHARED waveShape AS INTEGER
+DIM SHARED waveCycles AS LONG
+DIM SHARED waveDuty AS DOUBLE
+DIM SHARED wavePhase AS DOUBLE
+DIM SHARED waveLive AS INTEGER ' a waveform is placed and still adjustable
+DIM SHARED waveBase AS STRING ' the sound before it
+DIM SHARED waveS0 AS LONG ' its box: steps waveS0 to waveS1 - 1...
+DIM SHARED waveS1 AS LONG
+DIM SHARED waveLo AS DOUBLE ' ...pitch waveLo to waveHi
+DIM SHARED waveHi AS DOUBLE
+DIM SHARED waveAS AS LONG ' box anchor while dragging it out
+DIM SHARED waveAN AS DOUBLE
+DIM SHARED adjX AS LONG ' adjusting: where the drag started
+DIM SHARED adjY AS LONG
+DIM SHARED adjDuty AS DOUBLE
+DIM SHARED adjPhase AS DOUBLE
+DIM SHARED pianoOn AS INTEGER ' computer keyboard plays notes (else letters pick tools)
+
+' selection: steps selS0 to selS1 - 1, pitches selLo to selHi (semitones)
+DIM SHARED selOn AS INTEGER
+DIM SHARED selS0 AS LONG
+DIM SHARED selS1 AS LONG
+DIM SHARED selLo AS LONG
+DIM SHARED selHi AS LONG
+DIM SHARED boxS AS LONG ' marquee anchor while dragging
+DIM SHARED boxN AS DOUBLE
+REDIM SHARED itemS(0 TO 0) AS LONG ' the selected steps, picked up for a move
+REDIM SHARED itemV(0 TO 0) AS LONG
+DIM SHARED itemN AS LONG
+DIM SHARED moveBase AS STRING ' the sound before the move, minus the selection
+DIM SHARED moveS AS LONG ' where the move drag started
+DIM SHARED moveNt AS DOUBLE
+DIM SHARED moveDs AS LONG ' how far it has moved
+DIM SHARED moveDn AS LONG
+REDIM SHARED clipS(0 TO 0) AS LONG ' clipboard: step offsets and divisors
+REDIM SHARED clipV(0 TO 0) AS LONG
+DIM SHARED clipN AS LONG
+DIM SHARED clipLen AS LONG
+DIM SHARED clipLo AS LONG
+DIM SHARED clipHi AS LONG
 DIM SHARED noteBase AS STRING ' the sound before the note being placed
 DIM SHARED noteS0 AS LONG ' where the note being placed starts
 DIM SHARED noteNt AS DOUBLE ' and its pitch
@@ -176,6 +250,7 @@ DIM SHARED midiStatus AS LONG
 DIM SHARED midiD(0 TO 1) AS LONG
 DIM SHARED midiCnt AS LONG
 DIM SHARED midiSysex AS INTEGER
+DIM SHARED midiBusy AS INTEGER ' amidi couldn't open the port
 
 ' --- UI
 DIM SHARED promptKind AS INTEGER
@@ -188,6 +263,9 @@ DIM SHARED statusMsg AS STRING
 DIM SHARED statusUntil AS DOUBLE
 DIM SHARED helpOn AS INTEGER
 DIM SHARED errNum AS LONG
+DIM SHARED modCtrl AS INTEGER ' modifier keys, tracked from the key events
+DIM SHARED modShift AS INTEGER
+DIM SHARED modAlt AS INTEGER
 
 DIM k AS LONG, f AS STRING, wheel AS LONG, mx AS LONG, my AS LONG, b1 AS INTEGER, b2 AS INTEGER
 DIM ctrl AS INTEGER, shift AS INTEGER, quitNow AS INTEGER
@@ -201,6 +279,12 @@ _PRINTMODE _KEEPBACKGROUND
 ' box: the trap records the error and carries on, and code that touches the
 ' disk checks errNum.
 ON ERROR GOTO trap
+
+' Trap the window's close button (and Ctrl+Break) so they go through the
+' same clean-up as Esc. The first read of _EXIT switches the monitoring
+' on; after that the main loop checks it every frame (as DRAW.BAS does).
+DIM osExitTrap AS INTEGER
+osExitTrap = _EXIT
 
 rateHz = PCSPK_IFS_DEFAULT_HZ
 zoom = 6
@@ -224,13 +308,22 @@ IF sndCount = 0 THEN new_bank
 
 $IF WIN THEN
 $ELSE
-    ' an editor that was killed can't stop its amidi; clear any leftovers
-    ' (the ^amidi anchor keeps pkill to amidi itself, not shells or editors
-    ' that happen to mention the path)
-    SHELL _HIDE "pkill -f '^amidi .* -r /tmp/pcsedit-midi-' 2>/dev/null; rm -f /tmp/pcsedit-midi-*.raw"
+    ' Clear leftovers from older builds (before the watchdog) - but only
+    ' orphans. The chain is editor -> forked copy -> sh -> amidi; when the
+    ' editor is gone the forked copy is left with a non-PCSEDIT parent. An
+    ' amidi whose editor still runs belongs to another PCSEDIT: keep it.
+    SHELL _HIDE "for p in $(pgrep -f '^amidi .* -r /tmp/pcsedit-midi-'); do " + _
+                "g=$(ps -o ppid= -p $(ps -o ppid= -p $(ps -o ppid= -p $p))); " + _
+                "case $(ps -o comm= -p $g 2>/dev/null) in PCSEDIT*) ;; *) " + _
+                "f=$(ps -o args= -p $p | sed 's/.* -r //'); kill $p; rm -f $f;; esac; done 2>/dev/null"
 $END IF
 midi_scan
 IF midiDevCount > 0 THEN midi_start 0
+tool = TOOL_NOTE
+waveShape = WAVE_SQUARE
+waveCycles = 4
+waveDuty = 0.5
+set_status "Caps Lock ON = computer keyboard plays notes, OFF = letters pick tools (D N E S M C)"
 
 DO
     ' ------------------------------------------------------------ audio
@@ -251,7 +344,7 @@ DO
     shift = _KEYDOWN(100303) OR _KEYDOWN(100304)
     IF wheel AND promptKind = PROMPT_NONE THEN
         IF ctrl THEN
-            set_zoom zoom - SGN(wheel)
+            set_zoom_at zoom - SGN(wheel), _MOUSEX
         ELSEIF _MOUSEX < RULER_X THEN
             select_sound cur + wheel
         ELSE
@@ -260,17 +353,40 @@ DO
     END IF
 
     ' ------------------------------------------------------------ keys
+    ' Caps Lock is the switch: on = the keyboard is a piano, off = letters
+    ' pick tools. Let go of any keyboard notes when it goes off.
+    pianoOn = _CAPSLOCK
+    IF NOT pianoOn THEN poll_piano -1
+
+    ' Every key waiting is handled in order. Ctrl / Shift / Alt come from
+    ' the same stream (their press and release events), so a quick Ctrl+C
+    ' is still Ctrl+C even if Ctrl is already up by the time we get here.
+    IF promptKind = PROMPT_NONE THEN poll_piano ctrl
     k = _KEYHIT
-    IF promptKind THEN
-        ' take every key waiting, so pasted or fast typing shows up at once
-        DO WHILE k <> 0 AND promptKind <> PROMPT_NONE
-            prompt_key k
-            k = _KEYHIT
-        LOOP
-    ELSE
-        poll_piano ctrl
-        IF k THEN quitNow = handle_key(k, ctrl, shift)
-        IF quitNow THEN EXIT DO
+    DO WHILE k <> 0
+        SELECT CASE ABS(k)
+            CASE 100305, 100306: modCtrl = (k > 0)
+            CASE 100303, 100304: modShift = (k > 0)
+            CASE 100307, 100308: modAlt = (k > 0)
+            CASE ELSE
+                IF promptKind THEN
+                    prompt_key k
+                ELSEIF k > 0 THEN
+                    quitNow = handle_key(k, modCtrl, modShift)
+                    IF quitNow THEN EXIT DO
+                END IF
+        END SELECT
+        k = _KEYHIT
+    LOOP
+    IF quitNow THEN EXIT DO
+
+    ' ------------------------------------------------------------ close box
+    ' Handled here instead of letting QB64 end the program: that would skip
+    ' midi_stop, leave amidi running, and the program would then hang at
+    ' exit waiting for it - keeping the MIDI port busy with no window open.
+    osExitTrap = _EXIT
+    IF osExitTrap THEN
+        IF confirm_ok("quit") THEN EXIT DO
     END IF
 
     ' ------------------------------------------------------------ drops
@@ -480,8 +596,8 @@ SUB poll_piano (ctrl AS INTEGER)
     DIM i AS LONG, isDown AS INTEGER, c AS STRING
     FOR i = 0 TO 25
         c = pianoKey(i)
-        IF ctrl THEN
-            isDown = 0 ' Ctrl+letter is a command, not a note
+        IF ctrl OR NOT pianoOn OR _KEYDOWN(100307) OR _KEYDOWN(100308) THEN
+            isDown = 0 ' Ctrl/Alt+letter is a command, and with the piano off letters pick tools
         ELSE
             isDown = _KEYDOWN(ASC(c)) OR _KEYDOWN(ASC(UCASE$(c)))
         END IF
@@ -642,7 +758,16 @@ SUB midi_start (idx AS LONG)
         errNum = 0
         ff = FREEFILE
         OPEN midiFile FOR OUTPUT AS #ff: CLOSE #ff
-        SHELL _HIDE _DONTWAIT "amidi -p " + midiDevs(idx) + " -r '" + midiFile + "' 2>/dev/null"
+        ' The sh stays behind as a watchdog: if PCSEDIT itself disappears
+        ' (killed, crashed, stopped from the IDE) it stops amidi and deletes
+        ' the temp file, so the MIDI port never stays taken. It also ends as
+        ' soon as amidi does (midi_stop, or a busy port).
+        ' SHELL _DONTWAIT runs the command from a forked copy of PCSEDIT, so
+        ' the editor itself is the sh's grandparent (e) - that is what to watch.
+        SHELL _HIDE _DONTWAIT "amidi -p " + midiDevs(idx) + " -r '" + midiFile + "' 2>/dev/null & a=$!; " + _
+            "e=$(ps -o ppid= -p $PPID); " + _
+            "while kill -0 $e 2>/dev/null && kill -0 $a 2>/dev/null; do sleep 0.5; done; " + _
+            "kill $a 2>/dev/null; rm -f '" + midiFile + "'"
         midiFF = FREEFILE
         OPEN midiFile FOR BINARY ACCESS READ AS #midiFF
         IF errNum THEN midiFF = 0: set_status "Can't start MIDI input": EXIT SUB
@@ -650,9 +775,36 @@ SUB midi_start (idx AS LONG)
         midiStatus = 0
         midiCnt = 0
         midiDevIdx = idx
-        set_status "MIDI input: " + midiDevName(idx) + " (" + midiDevs(idx) + ")"
+        midiBusy = 0
+
+        ' amidi quits at once if it can't open the port - usually because
+        ' another program (another PCSEDIT, a DAW, Komplete Kontrol) has it
+        _DELAY 0.4
+        IF NOT amidi_alive THEN
+            midiBusy = -1
+            set_status "MIDI port " + midiDevs(idx) + " is busy - close any other PCSEDIT / DAW using it, then press F7"
+        ELSE
+            set_status "MIDI input: " + midiDevName(idx) + " (" + midiDevs(idx) + ")"
+        END IF
     $END IF
 END SUB
+
+
+''
+' Is our amidi still running?
+'
+FUNCTION amidi_alive%
+    DIM tmp AS STRING
+    $IF WIN THEN
+    $ELSE
+        tmp = midiFile + ".pid"
+        SHELL _HIDE "pgrep -f '^amidi .* -r " + midiFile + "' > '" + tmp + "' 2>/dev/null"
+        IF _FILEEXISTS(tmp) THEN
+            amidi_alive = LEN(PCSPK_ReadFile(tmp)) > 0
+            KILL tmp
+        END IF
+    $END IF
+END FUNCTION
 
 
 SUB midi_stop
@@ -761,21 +913,99 @@ SUB handle_mouse (mx AS LONG, my AS LONG, b1 AS INTEGER, b2 AS INTEGER)
             place_note s
         ELSEIF drawing = 3 THEN
             drawing = 0
+        ELSEIF drawing = 4 THEN ' marquee
+            IF b1 THEN
+                set_box boxS, boxN, s, nt
+            ELSE
+                drawing = 0
+                set_box boxS, boxN, s, nt
+                IF sel_count = 0 THEN selOn = 0: set_status "Nothing in that box" ELSE set_status LTRIM$(STR$(sel_count)) + " steps selected - M to move, arrows to nudge, Ctrl+X/C/V"
+            END IF
+        ELSEIF drawing = 6 THEN ' dragging out a waveform box
+            IF b1 THEN
+                wave_box waveAS, waveAN, s, nt
+            ELSE
+                drawing = 0
+                wave_box waveAS, waveAN, s, nt
+                set_status wave_info + "   - drag inside: duty / phase, 1-5 shape, [ ] cycles, Enter = done"
+            END IF
+        ELSEIF drawing = 7 THEN ' adjusting duty / phase inside the live box
+            IF b1 THEN
+                waveDuty = adjDuty + (mx - adjX) / 400
+                IF waveDuty < 0.02 THEN waveDuty = 0.02
+                IF waveDuty > 1 THEN waveDuty = 1
+                wavePhase = adjPhase + (adjY - my) / 300
+                wavePhase = wavePhase - INT(wavePhase)
+                wave_render
+            ELSE
+                drawing = 0
+            END IF
+        ELSEIF drawing = 8 THEN ' rubber band line
+            IF b1 THEN
+                sndData(cur) = lineBase
+                draw_line lineS, lineNt, s, nt, 0
+            ELSE
+                drawing = 0
+                lastStep = s: lastNote = nt
+                haveAnchor = -1
+            END IF
+        ELSEIF drawing = 5 THEN ' moving the selection
+            IF b1 THEN
+                drag_move s, nt
+            ELSE
+                drawing = 0
+                end_move
+            END IF
         ELSEIF drawing = 1 AND b1 THEN
             draw_line lastStep, lastNote, s, nt, 0
             lastStep = s: lastNote = nt
-        ELSEIF drawing = 2 AND b2 THEN
+        ELSEIF drawing = 2 AND (b1 OR b2) THEN
             draw_line lastStep, lastNote, s, nt, -1
             lastStep = s: lastNote = nt
         ELSE
             drawing = 0
             haveAnchor = -1
         END IF
+    ELSEIF inCanvas AND b1 AND NOT wasDown AND tool = TOOL_WAVE THEN
+        IF waveLive AND s >= waveS0 AND s < waveS1 AND nt >= waveLo - 0.5 AND nt <= waveHi + 0.5 THEN
+            drawing = 7 ' inside the live box: adjust it
+            adjX = mx: adjY = my: adjDuty = waveDuty: adjPhase = wavePhase
+        ELSE
+            wave_done
+            IF playing THEN stop_playing
+            push_undo
+            waveBase = sndData(cur)
+            waveLive = -1
+            waveAS = s: waveAN = nt
+            wave_box s, nt, s, nt
+            drawing = 6
+        END IF
+    ELSEIF inCanvas AND b1 AND NOT wasDown AND tool = TOOL_LINE THEN
+        IF playing THEN stop_playing
+        push_undo
+        lineBase = sndData(cur)
+        lineS = s: lineNt = nt
+        IF snapOn THEN lineNt = INT(nt + 0.5)
+        draw_line s, lineNt, s, lineNt, 0
+        drawing = 8
+    ELSEIF inCanvas AND b1 AND NOT wasDown AND tool = TOOL_SELECT THEN
+        drawing = 4
+        boxS = s: boxN = nt
+        set_box s, nt, s, nt
+    ELSEIF inCanvas AND b1 AND NOT wasDown AND tool = TOOL_MOVE THEN
+        IF selOn AND in_box(s, nt) THEN
+            IF playing THEN stop_playing
+            begin_move
+            moveS = s: moveNt = nt
+            drawing = 5
+        ELSE
+            set_status "Select something first: S tool, drag a box (then M, or drag inside it)"
+        END IF
     ELSEIF inCanvas AND (b1 OR b2) AND NOT wasDown THEN
         push_undo
         IF playing THEN stop_playing
-        IF b1 THEN drawing = 1 ELSE drawing = 2
-        IF b1 AND NOT freeTool THEN
+        IF b1 AND tool <> TOOL_ERASE THEN drawing = 1 ELSE drawing = 2
+        IF b1 AND tool = TOOL_NOTE THEN
             ' NOTE tool: the pitch is fixed where you click
             drawing = 3
             noteBase = sndData(cur)
@@ -791,8 +1021,11 @@ SUB handle_mouse (mx AS LONG, my AS LONG, b1 AS INTEGER, b2 AS INTEGER)
         END IF
         lastStep = s: lastNote = nt
     ELSEIF b1 AND NOT wasDown THEN
+        ' --- toolbar
+        IF my >= TB_Y AND my < TB_Y + TB_H AND mx >= RULER_X AND mx < RULER_X + TB_BUTTONS * TB_W THEN
+            toolbar_click (mx - RULER_X) \ TB_W
         ' --- time ruler: move the cursor
-        IF my >= TIME_Y AND my < CANVAS_Y AND mx >= CANVAS_X THEN
+        ELSEIF my >= TIME_Y AND my < CANVAS_Y AND mx >= CANVAS_X THEN
             cursorStep = s
         ' --- sound list
         ELSEIF mx >= LIST_X AND mx < LIST_X + LIST_W AND my >= LIST_Y AND my < LIST_Y + LIST_ROWS * ROW_H THEN
@@ -803,6 +1036,396 @@ SUB handle_mouse (mx AS LONG, my AS LONG, b1 AS INTEGER, b2 AS INTEGER)
         cursorStep = s ' drag along the ruler
     END IF
     wasDown = b1 OR b2
+END SUB
+
+
+'-----------------------------------------------------------------------------
+' Tools, toolbar, selection, moving, clipboard
+'-----------------------------------------------------------------------------
+
+SUB set_tool (t AS INTEGER)
+    IF t <> TOOL_WAVE THEN wave_done
+    tool = t
+    drawing = 0
+    set_status tool_help
+END SUB
+
+
+''
+' The tools in toolbar (and Tab) order.
+'
+FUNCTION tb_tool% (i AS LONG)
+    tb_tool = VAL(MID$("0516234", i + 1, 1)) ' DRAW LINE NOTE WAVE ERASE SELECT MOVE
+END FUNCTION
+
+
+FUNCTION tb_index& (t AS INTEGER)
+    tb_index = INSTR("0516234", LTRIM$(STR$(t))) - 1
+END FUNCTION
+
+
+FUNCTION tool_name$ (t AS INTEGER)
+    SELECT CASE t
+        CASE TOOL_DRAW: tool_name = "D)raw"
+        CASE TOOL_LINE: tool_name = "L)ine"
+        CASE TOOL_NOTE: tool_name = "N)ote"
+        CASE TOOL_WAVE: tool_name = "W)ave"
+        CASE TOOL_ERASE: tool_name = "E)rase"
+        CASE TOOL_SELECT: tool_name = "S)elect"
+        CASE TOOL_MOVE: tool_name = "M)ove"
+    END SELECT
+END FUNCTION
+
+
+FUNCTION tool_help$
+    SELECT CASE tool
+        CASE TOOL_DRAW: tool_help = "DRAW: drag draws freehand, one step at a time (sweeps); Shift+click = straight line"
+        CASE TOOL_LINE: tool_help = "LINE: press, drag, release = a straight line of steps"
+        CASE TOOL_WAVE
+            IF waveLive THEN
+                tool_help = wave_info + "  drag inside: <> duty, ^v phase   1-5 shape  [ ] cycles  Enter done"
+            ELSE
+                tool_help = "WAVE: drag a box (width = time, height = pitch range)   " + wave_info
+            END IF
+        CASE TOOL_NOTE: tool_help = "NOTE: click = steady note Len long (F11/F12), drag right = longer"
+        CASE TOOL_ERASE: tool_help = "ERASE: drag to clear steps"
+        CASE TOOL_SELECT: tool_help = "SELECT: drag a box around steps; Ctrl+A = all; Esc deselects"
+        CASE TOOL_MOVE: tool_help = "MOVE: drag the selection; arrows nudge it (Shift+Up/Down = octave)"
+    END SELECT
+END FUNCTION
+
+
+''
+' Toolbar buttons: the tools first (tb_tool order), then cut / copy / paste.
+'
+SUB toolbar_click (i AS LONG)
+    SELECT CASE i
+        CASE 0 TO TB_TOOLS - 1: set_tool tb_tool(i)
+        CASE TB_TOOLS: sel_cut
+        CASE TB_TOOLS + 1: sel_copy
+        CASE TB_TOOLS + 2: sel_paste
+    END SELECT
+END SUB
+
+
+'--- WAVE tool ------------------------------------------------------------------
+
+''
+' 0-1 at position t (0-1) of one cycle. duty is where the shape turns:
+' square - time spent high; triangle / sine - where the peak is; saws -
+' how much of the cycle the ramp takes (1 = a plain saw).
+'
+FUNCTION wave_at# (t AS DOUBLE)
+    DIM d AS DOUBLE
+    d = waveDuty
+    SELECT CASE waveShape
+        CASE WAVE_SQUARE
+            IF t < d THEN wave_at = 1 ELSE wave_at = 0
+        CASE WAVE_TRIANGLE
+            IF d >= 1 THEN d = 0.999
+            IF t < d THEN wave_at = t / d ELSE wave_at = (1 - t) / (1 - d)
+        CASE WAVE_SAWUP
+            IF t < d THEN wave_at = t / d ELSE wave_at = 1
+        CASE WAVE_SAWDOWN
+            IF t < d THEN wave_at = 1 - t / d ELSE wave_at = 0
+        CASE WAVE_SINE
+            IF d >= 1 THEN d = 0.999
+            IF t < d THEN
+                wave_at = 0.5 - 0.5 * COS(_PI * t / d)
+            ELSE
+                wave_at = 0.5 + 0.5 * COS(_PI * (t - d) / (1 - d))
+            END IF
+    END SELECT
+END FUNCTION
+
+
+FUNCTION wave_name$
+    SELECT CASE waveShape
+        CASE WAVE_SQUARE: wave_name = "1 SQUARE"
+        CASE WAVE_TRIANGLE: wave_name = "2 TRIANGLE"
+        CASE WAVE_SAWUP: wave_name = "3 SAW UP"
+        CASE WAVE_SAWDOWN: wave_name = "4 SAW DOWN"
+        CASE WAVE_SINE: wave_name = "5 SINE"
+    END SELECT
+END FUNCTION
+
+
+FUNCTION wave_info$
+    wave_info = wave_name + "  cycles" + STR$(waveCycles) + "  duty" + STR$(CLNG(waveDuty * 100)) + "%  phase" + STR$(CLNG(wavePhase * 100)) + "%"
+END FUNCTION
+
+
+''
+' Set the live waveform's box from two corners and draw it.
+'
+SUB wave_box (sa AS LONG, na AS DOUBLE, sb AS LONG, nb AS DOUBLE)
+    DIM a AS LONG, b AS LONG
+    IF sa <= sb THEN a = sa: b = sb ELSE a = sb: b = sa
+    IF gridDiv THEN
+        waveS0 = cell_start(cell_of(a))
+        waveS1 = cell_start(cell_of(b) + 1)
+    ELSE
+        waveS0 = a
+        waveS1 = b + 1
+    END IF
+    waveLo = na: waveHi = nb
+    IF waveLo > waveHi THEN SWAP waveLo, waveHi
+    IF snapOn THEN waveLo = INT(waveLo + 0.5): waveHi = INT(waveHi + 0.5)
+    wave_render
+END SUB
+
+
+''
+' Put the sound back as it was, then write the waveform into the box.
+'
+SUB wave_render
+    DIM s AS LONG, ln AS LONG, t AS DOUBLE, nt AS DOUBLE
+    IF NOT waveLive THEN EXIT SUB
+    sndData(cur) = waveBase
+    ln = waveS1 - waveS0
+    IF ln < 1 THEN EXIT SUB
+    FOR s = waveS0 TO waveS1 - 1
+        t = (s - waveS0) * waveCycles / ln + wavePhase
+        t = t - INT(t)
+        nt = waveLo + wave_at(t) * (waveHi - waveLo)
+        IF snapOn THEN nt = INT(nt + 0.5)
+        set_step cur, s, note_div(nt)
+    NEXT
+END SUB
+
+
+''
+' Finish the live waveform: it stays as drawn and stops being adjustable.
+'
+SUB wave_done
+    IF NOT waveLive THEN EXIT SUB
+    waveLive = 0
+    IF drawing = 6 OR drawing = 7 THEN drawing = 0
+END SUB
+
+
+SUB wave_cancel
+    IF NOT waveLive THEN EXIT SUB
+    sndData(cur) = waveBase
+    waveLive = 0
+    IF undoN > 0 THEN undoN = undoN - 1
+    set_status "Waveform cancelled"
+END SUB
+
+
+''
+' 1-5 and [ ] while the WAVE tool is active (re-draws a live waveform).
+'
+SUB wave_key (c AS STRING)
+    SELECT CASE c
+        CASE "1" TO "5"
+            waveShape = VAL(c)
+            ' sensible duty for each shape: saws ramp the whole cycle
+            IF waveShape = WAVE_SAWUP OR waveShape = WAVE_SAWDOWN THEN waveDuty = 1 ELSE IF waveDuty >= 1 THEN waveDuty = 0.5
+        CASE "["
+            IF waveCycles > 1 THEN waveCycles = waveCycles - 1
+        CASE "]"
+            IF waveCycles < 128 THEN waveCycles = waveCycles + 1
+        CASE ELSE
+            EXIT SUB
+    END SELECT
+    wave_render
+    set_status wave_info
+END SUB
+
+
+''
+' The selection box from two corners (step, pitch). With the grid on its
+' ends snap to whole cells.
+'
+SUB set_box (sa AS LONG, na AS DOUBLE, sb AS LONG, nb AS DOUBLE)
+    DIM a AS LONG, b AS LONG
+    IF sa <= sb THEN a = sa: b = sb ELSE a = sb: b = sa
+    IF gridDiv THEN
+        selS0 = cell_start(cell_of(a))
+        selS1 = cell_start(cell_of(b) + 1)
+    ELSE
+        selS0 = a
+        selS1 = b + 1
+    END IF
+    selLo = INT(na + 0.5): selHi = INT(nb + 0.5)
+    IF selLo > selHi THEN SWAP selLo, selHi
+    selOn = -1
+END SUB
+
+
+FUNCTION in_box% (s AS LONG, nt AS DOUBLE)
+    in_box = selOn AND s >= selS0 AND s < selS1 AND nt >= selLo - 0.5 AND nt < selHi + 0.5
+END FUNCTION
+
+
+''
+' Is step s (with value v) part of the selection?
+'
+FUNCTION in_sel% (s AS LONG, v AS LONG)
+    IF v = 0 OR NOT selOn THEN EXIT FUNCTION
+    in_sel = in_box(s, div_note(v))
+END FUNCTION
+
+
+FUNCTION sel_count&
+    DIM s AS LONG, n AS LONG
+    FOR s = selS0 TO selS1 - 1
+        IF in_sel(s, get_step(cur, s)) THEN n = n + 1
+    NEXT
+    sel_count = n
+END FUNCTION
+
+
+SUB select_all
+    IF steps_of(cur) = 0 THEN EXIT SUB
+    selS0 = 0: selS1 = steps_of(cur)
+    selLo = 0: selHi = 127
+    selOn = -1
+    set_tool TOOL_MOVE
+    set_status "All" + STR$(sel_count) + " steps selected - drag or use the arrows to move them"
+END SUB
+
+
+''
+' Lift the selected steps out of the sound: remember them in item*, and keep
+' the sound without them in moveBase.
+'
+SUB begin_move
+    DIM s AS LONG, v AS LONG
+    push_undo
+    itemN = 0
+    REDIM itemS(0 TO selS1 - selS0) AS LONG
+    REDIM itemV(0 TO selS1 - selS0) AS LONG
+    FOR s = selS0 TO selS1 - 1
+        v = get_step(cur, s)
+        IF in_sel(s, v) THEN
+            itemS(itemN) = s: itemV(itemN) = v: itemN = itemN + 1
+            set_step cur, s, 0
+        END IF
+    NEXT
+    moveBase = sndData(cur)
+    moveDs = 0: moveDn = 0
+END SUB
+
+
+''
+' Put the lifted steps back, moved ds steps and dn semitones.
+'
+SUB put_moved (ds AS LONG, dn AS LONG)
+    DIM i AS LONG, s AS LONG, v AS LONG
+    sndData(cur) = moveBase
+    FOR i = 0 TO itemN - 1
+        s = itemS(i) + ds
+        IF s >= 0 AND s < MAX_STEPS THEN
+            v = CLNG(itemV(i) / 2 ^ (dn / 12))
+            IF v < 1 THEN v = 1
+            set_step cur, s, v
+        END IF
+    NEXT
+    moveDs = ds: moveDn = dn
+END SUB
+
+
+SUB drag_move (s AS LONG, nt AS DOUBLE)
+    DIM ds AS LONG, dn AS LONG
+    IF gridDiv THEN
+        ds = cell_start(cell_of(moveS) + (cell_of(s) - cell_of(moveS))) - cell_start(cell_of(moveS))
+    ELSE
+        ds = s - moveS
+    END IF
+    IF selS0 + ds < 0 THEN ds = -selS0
+    dn = INT(nt - moveNt + 0.5 * SGN(nt - moveNt))
+    IF ds <> moveDs OR dn <> moveDn THEN put_moved ds, dn
+END SUB
+
+
+''
+' After a move the box follows what was moved.
+'
+SUB end_move
+    selS0 = selS0 + moveDs: selS1 = selS1 + moveDs
+    selLo = selLo + moveDn: selHi = selHi + moveDn
+    IF moveDs = 0 AND moveDn = 0 THEN
+        IF undoN > 0 THEN undoN = undoN - 1 ' nothing changed: drop the undo step
+    ELSE
+        set_status "Moved" + STR$(moveDs) + " steps," + STR$(moveDn) + " semitones"
+    END IF
+END SUB
+
+
+''
+' Arrow keys with a selection: move it by ds steps / dn semitones.
+'
+SUB nudge (ds AS LONG, dn AS LONG)
+    DIM d AS LONG
+    d = ds
+    IF selS0 + d < 0 THEN d = -selS0
+    IF d = 0 AND dn = 0 THEN EXIT SUB
+    begin_move
+    put_moved d, dn
+    end_move
+END SUB
+
+
+FUNCTION nudge_step&
+    IF gridDiv THEN nudge_step = CLNG(cell_steps) ELSE nudge_step = 1
+END FUNCTION
+
+
+SUB sel_copy
+    DIM s AS LONG, v AS LONG
+    IF NOT selOn THEN set_status "Nothing selected - use the S tool to drag a box": EXIT SUB
+    clipN = 0
+    REDIM clipS(0 TO selS1 - selS0) AS LONG
+    REDIM clipV(0 TO selS1 - selS0) AS LONG
+    FOR s = selS0 TO selS1 - 1
+        v = get_step(cur, s)
+        IF in_sel(s, v) THEN clipS(clipN) = s - selS0: clipV(clipN) = v: clipN = clipN + 1
+    NEXT
+    clipLen = selS1 - selS0
+    clipLo = selLo: clipHi = selHi
+    set_status "Copied" + STR$(clipN) + " steps - Ctrl+V pastes them at the cursor"
+END SUB
+
+
+''
+' Clear the selected steps (Delete), or copy them first (cut).
+'
+SUB sel_clear (announce AS INTEGER)
+    DIM s AS LONG
+    IF NOT selOn THEN set_status "Nothing selected": EXIT SUB
+    push_undo
+    FOR s = selS0 TO selS1 - 1
+        IF in_sel(s, get_step(cur, s)) THEN set_step cur, s, 0
+    NEXT
+    IF announce THEN set_status "Cleared the selection"
+END SUB
+
+
+SUB sel_cut
+    IF NOT selOn THEN set_status "Nothing selected - use the S tool to drag a box": EXIT SUB
+    sel_copy
+    sel_clear 0
+    set_status "Cut" + STR$(clipN) + " steps - Ctrl+V pastes them at the cursor"
+END SUB
+
+
+''
+' Paste at the cursor (on top of what is there); the pasted steps become
+' the selection, ready to move.
+'
+SUB sel_paste
+    DIM i AS LONG
+    IF clipN = 0 THEN set_status "The clipboard is empty - Ctrl+C or cut a selection first": EXIT SUB
+    push_undo
+    FOR i = 0 TO clipN - 1
+        IF cursorStep + clipS(i) < MAX_STEPS THEN set_step cur, cursorStep + clipS(i), clipV(i)
+    NEXT
+    selS0 = cursorStep: selS1 = cursorStep + clipLen
+    selLo = clipLo: selHi = clipHi
+    selOn = -1
+    set_status "Pasted" + STR$(clipN) + " steps - they are selected: drag (M) or nudge with the arrows"
 END SUB
 
 
@@ -895,6 +1518,11 @@ FUNCTION handle_key% (k AS LONG, ctrl AS INTEGER, shift AS INTEGER)
         CASE 27 '                                              Esc
             IF helpOn THEN
                 helpOn = 0
+            ELSEIF waveLive THEN
+                wave_cancel
+            ELSEIF selOn THEN
+                selOn = 0
+                set_status "Selection cleared"
             ELSEIF recording THEN
                 stop_recording
             ELSEIF playing THEN
@@ -910,15 +1538,25 @@ FUNCTION handle_key% (k AS LONG, ctrl AS INTEGER, shift AS INTEGER)
             ELSE
                 play_from 0
             END IF
-        CASE 13: play_from cursorStep '                        Enter
+        CASE 13 '                                              Enter
+            IF waveLive THEN
+                wave_done
+                set_status "Waveform done - drag another box, or pick another tool"
+            ELSE
+                play_from cursorStep
+            END IF
         CASE 19200 '                                           Left
-            IF gridDiv THEN
+            IF selOn AND NOT ctrl THEN
+                nudge -nudge_step, 0
+            ELSEIF gridDiv THEN
                 IF ctrl THEN move_cursor grid_prev(cursorStep, beat_cells) ELSE move_cursor grid_prev(cursorStep, 1)
             ELSE
                 IF ctrl THEN move_cursor cursorStep - 14 ELSE move_cursor cursorStep - 1
             END IF
         CASE 19712 '                                           Right
-            IF gridDiv THEN
+            IF selOn AND NOT ctrl THEN
+                nudge nudge_step, 0
+            ELSEIF gridDiv THEN
                 IF ctrl THEN move_cursor grid_next(cursorStep, beat_cells) ELSE move_cursor grid_next(cursorStep, 1)
             ELSE
                 IF ctrl THEN move_cursor cursorStep + 14 ELSE move_cursor cursorStep + 1
@@ -926,21 +1564,28 @@ FUNCTION handle_key% (k AS LONG, ctrl AS INTEGER, shift AS INTEGER)
         CASE 18176: move_cursor 0 '                            Home
         CASE 20224: move_cursor steps_of(cur) '                End
         CASE 18432 '                                           Up
-            IF ctrl THEN
+            IF selOn AND NOT ctrl THEN
+                IF shift THEN nudge 0, 12 ELSE nudge 0, 1
+            ELSEIF ctrl THEN
                 IF shift THEN transpose 12 ELSE transpose 1
             ELSE
                 select_sound cur - 1
             END IF
         CASE 20480 '                                           Down
-            IF ctrl THEN
+            IF selOn AND NOT ctrl THEN
+                IF shift THEN nudge 0, -12 ELSE nudge 0, -1
+            ELSEIF ctrl THEN
                 IF shift THEN transpose -12 ELSE transpose -1
             ELSE
                 select_sound cur + 1
             END IF
-        CASE 18688: select_sound cur - LIST_ROWS '             PgUp
-        CASE 20736: select_sound cur + LIST_ROWS '             PgDn
+        CASE 18688 '                                           PgUp
+            IF ctrl THEN select_sound cur - 1 ELSE jump_mark -1
+        CASE 20736 '                                           PgDn
+            IF ctrl THEN select_sound cur + 1 ELSE jump_mark 1
         CASE 20992: insert_step '                              Insert
-        CASE 21248: delete_step cursorStep '                   Delete
+        CASE 21248 '                                           Delete
+            IF selOn THEN sel_clear -1 ELSE delete_step cursorStep
         CASE 8 '                                               Backspace
             IF cursorStep > 0 THEN
                 cursorStep = cursorStep - 1
@@ -948,11 +1593,10 @@ FUNCTION handle_key% (k AS LONG, ctrl AS INTEGER, shift AS INTEGER)
             END IF
         CASE 15104: helpOn = NOT helpOn '                      F1
         CASE 9 '                                               Tab
-            freeTool = NOT freeTool
-            IF freeTool THEN
-                set_status "FREE tool: drag to draw freehand (sweeps), Shift+click for a straight line"
+            IF shift THEN
+                set_tool tb_tool((tb_index(tool) + TB_TOOLS - 1) MOD TB_TOOLS)
             ELSE
-                set_status "NOTE tool: click = a steady note Len long, drag right = longer"
+                set_tool tb_tool((tb_index(tool) + 1) MOD TB_TOOLS)
             END IF
         CASE 15360: start_prompt PROMPT_RENAME, "Name (up to 12 characters):", sndName(cur) ' F2
         CASE 15616: add_sound "", "" '                         F3
@@ -972,6 +1616,8 @@ FUNCTION handle_key% (k AS LONG, ctrl AS INTEGER, shift AS INTEGER)
             IF midiDevCount = 0 THEN midi_scan
             IF midiDevCount = 0 THEN
                 set_status "No MIDI inputs found (needs amidi from alsa-utils)"
+            ELSEIF midiBusy THEN
+                midi_start midiDevIdx ' try the same port again
             ELSEIF midiDevIdx + 1 >= midiDevCount THEN
                 midi_stop
                 set_status "MIDI input off"
@@ -985,6 +1631,21 @@ FUNCTION handle_key% (k AS LONG, ctrl AS INTEGER, shift AS INTEGER)
         CASE 34048: set_note_len noteLen - 1 '                 F11
         CASE 34304: set_note_len noteLen + 1 '                 F12
         CASE ELSE
+            ' tool letters: always with Alt, and plain while the piano is off
+            IF NOT ctrl AND (NOT pianoOn OR modAlt) THEN
+                SELECT CASE UCASE$(CHR$(k AND 255))
+                    CASE "D": set_tool TOOL_DRAW
+                    CASE "N": set_tool TOOL_NOTE
+                    CASE "E": set_tool TOOL_ERASE
+                    CASE "S": set_tool TOOL_SELECT
+                    CASE "M": set_tool TOOL_MOVE
+                    CASE "L": set_tool TOOL_LINE
+                    CASE "W": set_tool TOOL_WAVE
+                    CASE "C": sel_cut
+                    CASE "1" TO "5", "[", "]"
+                        IF tool = TOOL_WAVE THEN wave_key CHR$(k AND 255)
+                END SELECT
+            END IF
             IF ctrl THEN
                 SELECT CASE ctrl_letter$(k)
                     CASE "Z": undo
@@ -1006,6 +1667,11 @@ FUNCTION handle_key% (k AS LONG, ctrl AS INTEGER, shift AS INTEGER)
                         END IF
                     CASE "E": export_wav
                     CASE "K": toggle_keys_mode
+                    CASE "X": sel_cut
+                    CASE "C": sel_copy
+                    CASE "V": sel_paste
+                    CASE "A": select_all
+
                     CASE "H"
                         holdMode = (holdMode + 1) MOD 3
                         set_status "Instrument plays " + hold_name + " - " + hold_help
@@ -1047,6 +1713,7 @@ FUNCTION confirm_ok% (what AS STRING)
     SELECT CASE what
         CASE "delete": set_status "Delete " + sndName(cur) + "? Press F8 again to delete it"
         CASE "drop": set_status "Unsaved changes - drop the file again to open it anyway"
+        CASE "quit": set_status "Unsaved changes - press Esc or the close button again to quit anyway"
         CASE ELSE: set_status "Unsaved changes - press again to " + what + " anyway"
     END SELECT
 END FUNCTION
@@ -1204,12 +1871,22 @@ END SUB
 
 
 SUB set_zoom (z AS LONG)
-    DIM centre AS LONG
-    centre = scrollX + (CANVAS_W \ zoom) \ 2
+    set_zoom_at z, CANVAS_X + CANVAS_W \ 2
+END SUB
+
+
+''
+' Zoom keeping the step under screen x (the mouse) where it is.
+'
+SUB set_zoom_at (z AS LONG, x AS LONG)
+    DIM px AS LONG, at AS DOUBLE
+    px = x - CANVAS_X
+    IF px < 0 OR px >= CANVAS_W THEN px = CANVAS_W \ 2
+    at = scrollX + px / zoom ' the step under x, before zooming
     zoom = z
     IF zoom < 1 THEN zoom = 1
     IF zoom > 24 THEN zoom = 24
-    scroll_to centre - (CANVAS_W \ zoom) \ 2
+    scroll_to CLNG(at - px / zoom)
 END SUB
 
 
@@ -1228,6 +1905,39 @@ SUB follow (s AS LONG)
     vis = CANVAS_W \ zoom
     IF s < scrollX THEN scroll_to s - vis \ 4
     IF s >= scrollX + vis THEN scroll_to s - vis \ 4
+END SUB
+
+
+''
+' PageUp / PageDown: with the NOTE tool, the previous / next bar line;
+' with the other tools, the previous / next dot - a step where a new
+' pitch starts.
+'
+SUB jump_mark (dirn AS LONG)
+    DIM s AS LONG, barLen AS DOUBLE, b AS LONG, n AS LONG
+    IF tool = TOOL_NOTE THEN
+        barLen = BEATS_PER_BAR * 60 * rateHz / bpm
+        b = INT(cursorStep / barLen + 0.000001)
+        IF dirn > 0 THEN
+            b = b + 1
+        ELSEIF INT(b * barLen + 0.5) >= cursorStep THEN
+            b = b - 1 ' already on a bar line: go to the one before
+        END IF
+        IF b < 0 THEN b = 0
+        move_cursor INT(b * barLen + 0.5)
+        set_status "Bar" + STR$(b + 1)
+        EXIT SUB
+    END IF
+
+    n = steps_of(cur)
+    s = cursorStep
+    DO
+        s = s + dirn
+        IF s <= 0 THEN s = 0: EXIT DO
+        IF s >= n THEN s = n: EXIT DO
+        IF get_step(cur, s) <> 0 AND get_step(cur, s) <> get_step(cur, s - 1) THEN EXIT DO
+    LOOP
+    move_cursor s
 END SUB
 
 
@@ -1447,6 +2157,8 @@ END SUB
 SUB select_sound (i AS LONG)
     IF playing THEN stop_playing
     stop_recording
+    selOn = 0
+    wave_done
     cur = i
     IF cur > sndCount THEN cur = sndCount
     IF cur < 1 THEN cur = 1
@@ -1531,6 +2243,8 @@ SUB undo
     DIM s AS LONG
     IF undoN = 0 THEN set_status "Nothing to undo": EXIT SUB
     stop_playing
+    drawing = 0
+    waveLive = 0
     s = undoSnd(undoN)
     IF redoN < UNDO_MAX THEN redoN = redoN + 1
     redoSnd(redoN) = s: redoData(redoN) = sndData(s)
@@ -1777,14 +2491,39 @@ SUB draw_ui
     END IF
     IF LEN(statusMsg) = 0 AND promptKind = PROMPT_NONE THEN
         COLOR _RGB32(100, 115, 140)
-        IF freeTool THEN
-            _PRINTSTRING (8, SCR_H - 20), "FREE tool: drag draws freehand, Shift+click straight line, right drag erases   Tab: NOTE tool   Space play"
-        ELSE
-            _PRINTSTRING (8, SCR_H - 20), "NOTE tool: click = steady note (Len, F11/F12), drag right = longer, right drag erases   Tab: FREE tool   Space play"
-        END IF
+        _PRINTSTRING (8, SCR_H - 20), tool_help + "   right drag erases   Space play"
     END IF
 
     IF helpOn THEN draw_help
+END SUB
+
+
+''
+' The toolbar: the five tools (the active one lit up) and cut / copy / paste.
+'
+SUB draw_toolbar
+    DIM i AS LONG, x AS LONG, lbl AS STRING, active AS INTEGER
+    FOR i = 0 TO TB_BUTTONS - 1
+        x = RULER_X + i * TB_W
+        SELECT CASE i
+            CASE 0 TO TB_TOOLS - 1: lbl = tool_name(tb_tool(i)): active = (tool = tb_tool(i))
+            CASE TB_TOOLS: lbl = "C)ut": active = 0
+            CASE TB_TOOLS + 1: lbl = "Copy": active = 0
+            CASE TB_TOOLS + 2: lbl = "Paste": active = 0
+        END SELECT
+        IF active THEN
+            LINE (x, TB_Y)-(x + TB_W - 4, TB_Y + TB_H - 1), _RGB32(255, 200, 60), BF
+            COLOR _RGB32(20, 20, 20)
+        ELSEIF i >= TB_TOOLS THEN
+            LINE (x, TB_Y)-(x + TB_W - 4, TB_Y + TB_H - 1), _RGB32(34, 40, 56), BF
+            LINE (x, TB_Y)-(x + TB_W - 4, TB_Y + TB_H - 1), _RGB32(70, 80, 100), B
+            IF (i = TB_TOOLS + 2 AND clipN = 0) OR (i < TB_TOOLS + 2 AND NOT selOn) THEN COLOR _RGB32(90, 100, 120) ELSE COLOR _RGB32(210, 220, 235)
+        ELSE
+            LINE (x, TB_Y)-(x + TB_W - 4, TB_Y + TB_H - 1), _RGB32(40, 48, 66), BF
+            COLOR _RGB32(210, 220, 235)
+        END IF
+        _PRINTSTRING (x + (TB_W - 4 - 8 * LEN(lbl)) \ 2, TB_Y + 2), lbl
+    NEXT
 END SUB
 
 
@@ -1805,22 +2544,26 @@ SUB draw_info
     END IF
     COLOR _RGB32(190, 200, 215)
 
+    draw_toolbar
+    COLOR _RGB32(190, 200, 215) ' the toolbar leaves its last button's colour set
+
     s = "Cursor" + STR$(cursorStep) + " (" + fmt2(cursorStep / rateHz) + " s)"
     IF gridDiv THEN s = s + "  bar " + bar_beat(cursorStep)
-    _PRINTSTRING (x, 36), s
+    IF selOn THEN s = s + "   Selection: steps" + STR$(selS0) + " -" + STR$(selS1 - 1) + ", " + note_name(selLo) + " - " + note_name(selHi)
+    _PRINTSTRING (x, 52), s
     COLOR _RGB32(150, 200, 255)
     IF gridDiv THEN
-        _PRINTSTRING (700, 36), "Grid " + grid_name + " @" + STR$(bpm) + " BPM (" + fmt2(cell_steps) + " steps)"
+        _PRINTSTRING (RULER_X + TB_BUTTONS * TB_W + 12, TB_Y + 3), "Grid " + grid_name + " @" + STR$(bpm) + " BPM (" + fmt2(cell_steps) + ")"
     ELSE
-        _PRINTSTRING (700, 36), "Grid off (Ctrl+G)"
+        _PRINTSTRING (RULER_X + TB_BUTTONS * TB_W + 12, TB_Y + 3), "Grid off (Ctrl+G)"
     END IF
     COLOR _RGB32(190, 200, 215)
     IF mouseIn THEN
         v = get_step(cur, mouseStep)
-        s = "Mouse: step" + STR$(mouseStep) + "  " + note_name(mouseNote)
-        s = s + "  " + LTRIM$(STR$(CLNG(note_hz(mouseNote)))) + " Hz"
-        IF v THEN s = s + "   here: divisor" + STR$(v) + " = " + LTRIM$(STR$(CLNG(PCSPK_DivisorToFreq(v)))) + " Hz " + note_name(div_note(v))
-        _PRINTSTRING (x, 52), s
+        s = "Mouse" + STR$(mouseStep) + " " + note_name(mouseNote)
+        s = s + " " + LTRIM$(STR$(CLNG(note_hz(mouseNote)))) + "Hz"
+        IF v THEN s = s + "  here " + note_name(div_note(v)) + " (div" + STR$(v) + ")"
+        _PRINTSTRING (x + 520, 52), s
     END IF
 
     ' mode line
@@ -1838,15 +2581,21 @@ SUB draw_info
     END IF
     _PRINTSTRING (x, 76), s
     COLOR _RGB32(150, 160, 180)
-    IF freeTool THEN s = "Tool FREE   " ELSE s = "Tool NOTE   "
+    IF pianoOn THEN s = "CAPS: piano   " ELSE s = "caps off: tools   "
     s = s + "Snap " + on_off(snapOn) + "   Octave" + STR$(octave) + "   Len" + STR$(noteLen) + "   Loop " + on_off(loopOn) + "   Zoom" + STR$(zoom)
     s = s + "   MIDI: "
-    IF midiDevIdx >= 0 THEN s = s + midiDevName(midiDevIdx) ELSE s = s + "off"
+    IF midiDevIdx >= 0 AND midiBusy THEN
+        s = s + "BUSY (F7 retry)"
+    ELSEIF midiDevIdx >= 0 THEN
+        s = s + midiDevName(midiDevIdx)
+    ELSE
+        s = s + "off"
+    END IF
     _PRINTSTRING (x + 176, 76), s
     IF heldNote >= 0 OR auditionNote >= 0 THEN
         COLOR _RGB32(255, 255, 255)
         IF heldNote >= 0 THEN v = heldNote ELSE v = auditionNote
-        _PRINTSTRING (SCR_W - 120, 36), "Note " + note_name(v)
+        _PRINTSTRING (SCR_W - 80, TB_Y + 3), note_name(v)
     END IF
 END SUB
 
@@ -1956,6 +2705,7 @@ SUB draw_roll
             IF nn >= NOTE_HI THEN nn = NOTE_HI - 0.5: col = _RGB32(255, 120, 200)
             IF nn < NOTE_LO THEN nn = NOTE_LO: col = _RGB32(255, 120, 200)
             y = note_y(nn)
+            IF in_sel(s, v) THEN col = _RGB32(90, 220, 255)
             IF prevY >= 0 AND prevY <> y THEN LINE (x, prevY)-(x, y), _RGB32(120, 80, 20)
             ' full width, as in DN1PLAY: a run of one pitch reads as one solid
             ' bar instead of a row of dots
@@ -1965,6 +2715,34 @@ SUB draw_roll
             LINE (x, CANVAS_Y + CANVAS_H - 3)-(x + w - 1, CANVAS_Y + CANVAS_H - 1), _RGB32(70, 80, 100), BF
         END IF
     NEXT
+
+    ' the live waveform's box
+    IF waveLive AND tool = TOOL_WAVE THEN
+        x = CANVAS_X + (waveS0 - scrollX) * zoom
+        endX = CANVAS_X + (waveS1 - scrollX) * zoom
+        IF x < CANVAS_X THEN x = CANVAS_X
+        IF endX > CANVAS_X + CANVAS_W - 1 THEN endX = CANVAS_X + CANVAS_W - 1
+        IF endX > x THEN
+            y = note_y(waveHi) - PX_SEMI \ 2
+            LINE (x, y)-(endX, note_y(waveLo) + PX_SEMI \ 2), _RGBA32(255, 120, 220, 30), BF
+            LINE (x, y)-(endX, note_y(waveLo) + PX_SEMI \ 2), _RGB32(255, 120, 220), B
+            COLOR _RGB32(255, 160, 230)
+            _PRINTSTRING (x + 2, y - 17), wave_name + STR$(waveCycles) + "x duty" + STR$(CLNG(waveDuty * 100)) + "% ph" + STR$(CLNG(wavePhase * 100)) + "%"
+        END IF
+    END IF
+
+    ' the selection box
+    IF selOn THEN
+        x = CANVAS_X + (selS0 - scrollX) * zoom
+        endX = CANVAS_X + (selS1 - scrollX) * zoom
+        IF x < CANVAS_X THEN x = CANVAS_X
+        IF endX > CANVAS_X + CANVAS_W - 1 THEN endX = CANVAS_X + CANVAS_W - 1
+        IF endX > x THEN
+            y = note_y(selHi) - PX_SEMI \ 2
+            LINE (x, y)-(endX, note_y(selLo) + PX_SEMI \ 2), _RGBA32(90, 160, 255, 40), BF
+            LINE (x, y)-(endX, note_y(selLo) + PX_SEMI \ 2), _RGB32(90, 180, 255), B
+        END IF
+    END IF
 
     ' cursor, playhead, record head
     x = CANVAS_X + (cursorStep - scrollX) * zoom
@@ -1984,7 +2762,7 @@ SUB draw_roll
 
     ' mouse preview: the note the NOTE tool would place, or the step / cell
     ' the FREE tool would draw
-    IF mouseIn AND drawing = 0 AND NOT freeTool THEN
+    IF mouseIn AND drawing = 0 AND tool = TOOL_NOTE THEN
         y = note_y(INT(mouseNote + 0.5))
         IF NOT snapOn THEN y = note_y(mouseNote)
         s = mouseStep
@@ -1992,7 +2770,7 @@ SUB draw_roll
         x = CANVAS_X + (s - scrollX) * zoom
         LINE (x, y - 2)-(x + (note_tool_end(s) - s) * zoom - 2, y + 2), _RGBA32(255, 255, 255, 110), BF
     END IF
-    IF mouseIn AND drawing = 0 AND freeTool THEN
+    IF mouseIn AND drawing = 0 AND (tool = TOOL_DRAW OR tool = TOOL_ERASE OR tool = TOOL_LINE OR tool = TOOL_WAVE) THEN
         y = note_y(INT(mouseNote + 0.5))
         IF NOT snapOn THEN y = note_y(mouseNote)
         IF gridDiv THEN
@@ -2065,16 +2843,16 @@ SUB draw_help
     DIM x AS LONG, y AS LONG, i AS LONG, wMax AS LONG
     DIM t(1 TO 28) AS STRING
     t(1) = "PCSEDIT - PC speaker sound editor"
-    t(2) = ""
-    t(3) = "Mouse   Tab tool: NOTE (click = steady note Len long, drag right = longer)"
-    t(4) = "        or FREE (drag draws freehand, Shift+click straight line); right drag erases"
-    t(5) = "Notes   Z S X D C V G B H N J M ,   lower octave     F9 / F10 octave"
+    t(2) = "Selection: arrows nudge (Shift+Up/Down octave), Delete clears, Esc deselects"
+    t(3) = "Tools   D)raw L)ine N)ote W)ave E)rase S)elect M)ove (letter w/ Caps off, Alt+letter, Tab)"
+    t(4) = "        C)ut Ctrl+X  Ctrl+C copy  Ctrl+V paste  Ctrl+A all.  W)ave: 1-5 shape [ ] cycles"
+    t(5) = "Notes   Z S X D C V G B H N J M ,   lower octave     F9/F10 octave  (Caps Lock ON)"
     t(6) = "        Q 2 W 3 E R 5 T 6 Y 7 U I   upper octave     or a MIDI keyboard"
     t(7) = "        wheel scroll   Ctrl+wheel zoom   click the time ruler: cursor"
     t(8) = "F5      record: OFF / STEP (note = Len steps at cursor) / LIVE"
     t(9) = "F6 snap to semitones  F7 MIDI device  F11/F12 note length  Ctrl+G grid  Ctrl+B BPM"
     t(10) = "Space   play / stop            Enter  play from cursor     Ctrl+L  loop"
-    t(11) = "Left/Right  cursor (Ctrl: 0.1 s)   Home/End   Up/Down  choose sound"
+    t(11) = "Left/Right cursor  Home/End  PgUp/PgDn next dot (NOTE tool: bar)  Up/Down sound"
     t(12) = "Insert / Delete  step at cursor    Backspace  delete step before cursor"
     t(13) = "Ctrl+Up/Down  transpose semitone (Shift: octave)   Ctrl+T trim silence"
     t(14) = "Ctrl+Z / Ctrl+Y  undo / redo"
