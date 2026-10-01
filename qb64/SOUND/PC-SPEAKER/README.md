@@ -146,7 +146,7 @@ you can follow the shape; silence breaks them. To make a slide, draw it, or
 Shift+click to get a straight line from the last point.
 
 **Musical grid:** **Ctrl+G** steps through the grid sizes: off, 1/4, 1/8,
-1/16, 1/32, then 1/8 and 1/16 triplets (**Ctrl+Shift+G** goes back). **Ctrl+B**
+1/16, 1/32, 1/64, 1/128, then 1/8 and 1/16 triplets (**Ctrl+Shift+G** goes back). **Ctrl+B**
 sets the tempo, which starts at 120 BPM. With the grid on:
 
 * the roll shows a line for every cell, a stronger one for every beat, and a
@@ -185,6 +185,37 @@ they do:
   trimmed off. The PC speaker plays one note at a time, so the note you pressed
   last wins.
 
+**Recording with a metronome:** **Ctrl+R** starts a LIVE recording at the
+cursor straight away, after a **count-in** of 1 bar (**Ctrl+U** cycles off / 1
+/ 2 bars). The **metronome** clicks on every beat, with a higher click on
+the first beat of each bar, lined up with the grid's bars. **Ctrl+M** cycles
+it: off / **REC** (while recording) / **R+P** (while recording and playing
+back). **Ctrl+Shift+M** sets its volume. The clicks are a separate sound mixed in alongside the
+speaker, so they are never recorded. F5's LIVE mode still waits for your first
+note and starts recording there, with the metronome from then on.
+
+**Quantize** (**Ctrl+Q**, on by default): every LIVE note snaps to the grid as
+you play. Each note's start moves to the nearest grid cell and its end to the
+nearest cell edge (at least one cell long), and the take is re-drawn straight
+away. Notes are timed by what you *heard*, so the audio running a little
+ahead doesn't make you late. It works for plain notes and for instrument mode
+(Ctrl+K): each instrument note plays the sound from its quantized start, cut
+at its quantized release (GATE) or played in full (ONE-SHOT). If the grid is
+off when you start recording, it is set to 1/16.
+
+**Loop** (**Ctrl+L**, or the **Loop** button on the toolbar, which lights up
+when it's on): playback repeats the whole sound, or just the selection's time
+span when something is selected (Space then starts at the selection). The
+metronome starts over from beat 1 each time round.
+
+**Follow** (**Ctrl+F**, on by default): while playing, the view pages along
+with the playhead so it never runs off the right edge.
+
+**Hear what you draw:** with **A** on (the default), the Draw, Line, Note,
+Wave and Move tools play the step under the pointer while the mouse button
+is down, so you hear pitches as you place them. Press **A** again for silent
+drawing.
+
 **Playing a sound as an instrument:** by default a key plays a plain tone.
 Press **Ctrl+K** and the keys play *the selected sound* instead: every note
 plays the whole sound, transposed, the way a sampler does. C4 plays it as
@@ -216,8 +247,14 @@ zap, a blip, a little arpeggio) into an instrument you can play tunes with.
 | Up / Down, Ctrl+PageUp / PageDown | previous / next sound in the bank |
 | Insert / Delete / Backspace | insert a step, delete a step, delete the step before the cursor |
 | Ctrl+Up / Ctrl+Down | transpose the sound a semitone (add Shift for an octave) |
-| Ctrl+G / Ctrl+Shift+G | grid size: off, 1/4, 1/8, 1/16, 1/32, 1/8T, 1/16T |
-| Ctrl+B | tempo (BPM) for the grid |
+| Ctrl+G / Ctrl+Shift+G | grid size: off, 1/4, 1/8, 1/16, 1/32, 1/64, 1/128, 1/8T, 1/16T |
+| Ctrl+B | tempo (BPM) for the grid, the metronome and the count-in |
+| Ctrl+R | LIVE record from the cursor now, after the count-in |
+| Ctrl+M / Ctrl+Shift+M | metronome off / while recording / recording + playback; click volume |
+| Ctrl+F | follow the playhead while playing |
+| Ctrl+U | count-in: off, 1 bar, 2 bars |
+| Ctrl+Q | quantize LIVE notes to the grid |
+| A | hear what you draw while the mouse button is down |
 | ' (apostrophe) | grid lines on/off: a line between every note row and at every grid cell (with the grid off: every step, when zoomed in). Off leaves just beats and bars. A # after the grid label means they are on. |
 | Ctrl+K / Ctrl+Shift+K / Ctrl+H | keys play notes or the selected sound / lock the instrument / GATE, ONE-SHOT, LOOP |
 | D L N W E S M (Caps Lock off), Alt+letter, Tab | tools: Draw, Line, Note, Wave, Erase, Select, Move |

@@ -59,9 +59,14 @@
 '   F5             record mode: OFF, STEP (each note = Len steps at the
 '                  cursor), LIVE (records what you play, 140 steps/sec,
 '                  starting with the first note; F5 / Space stops)
+'   Ctrl+R         LIVE record from the cursor now, after the count-in
+'   Ctrl+M / Ctrl+Shift+M   metronome on/off / its volume
+'   Ctrl+U         count-in: off, 1 bar, 2 bars
+'   Ctrl+Q         quantize LIVE notes to the grid as you play them
+'   A              hear what you draw while the mouse button is down
 '   F6 snap to semitones on/off   F7 MIDI device   F9/F10 octave -/+
 '   F11/F12 note length -/+ (in grid cells while the grid is on)
-'   Ctrl+G / Ctrl+Shift+G   grid: off, 1/4, 1/8, 1/16, 1/32, 1/8T, 1/16T
+'   Ctrl+G / Ctrl+Shift+G   grid: off, 1/4 ... 1/128, 1/8T, 1/16T
 '   Ctrl+B                  tempo (BPM) for the grid
 '   Ctrl+L                  loop on/off
 '   Ctrl+K                  keys play NOTES / play the selected SOUND
@@ -130,7 +135,7 @@ CONST TB_Y = 26 '                        toolbar
 CONST TB_H = 20
 CONST TB_W = 66
 CONST TB_TOOLS = 7 '                     toolbar: 7 tools, then cut / copy / paste
-CONST TB_BUTTONS = 10
+CONST TB_BUTTONS = 11 '                  ...and a Loop toggle
 
 ' --- the bank being edited
 DIM SHARED sndName(1 TO MAX_SOUNDS) AS STRING
@@ -221,7 +226,7 @@ DIM SHARED recPos AS LONG
 DIM SHARED recStartLen AS LONG
 DIM SHARED recLastNote AS LONG
 DIM SHARED noteLen AS LONG
-DIM SHARED gridDiv AS LONG ' 0 = off, else cells per whole note: 4 8 16 32, 12 = 1/8T, 24 = 1/16T
+DIM SHARED gridDiv AS LONG ' 0 = off, else cells per whole note: 4 8 16 32 64 128, 12 = 1/8T, 24 = 1/16T
 DIM SHARED bpm AS DOUBLE
 DIM SHARED linesOn AS INTEGER ' ' key: lines between note rows and grid cells / steps
 DIM SHARED octave AS LONG
@@ -233,6 +238,26 @@ DIM SHARED voiceOn AS INTEGER ' the instrument is sounding
 DIM SHARED voicePos AS LONG ' its step
 DIM SHARED voiceNote AS LONG ' at this pitch
 DIM SHARED auditionNote AS LONG ' piano key held with the mouse (-1 = none)
+DIM SHARED drawAudOn AS INTEGER ' A: hear the step under the pointer while drawing
+DIM SHARED drawAud AS LONG ' the divisor to hear right now (0 = nothing)
+' metronome / count-in / quantize (LIVE recording)
+DIM SHARED metroMode AS INTEGER ' 0 off, 1 while recording, 2 recording + playback
+DIM SHARED followOn AS INTEGER ' page the view along with the playhead
+DIM SHARED metroVol AS SINGLE
+DIM SHARED clickHi AS LONG ' QB64 sounds for the clicks (bar / beat), mixed
+DIM SHARED clickLo AS LONG ' alongside the speaker, never recorded
+DIM SHARED lastBeat AS LONG
+DIM SHARED recPos0 AS LONG ' where this recording (or its count-in) began
+DIM SHARED countIn AS LONG ' bars of clicks before Ctrl+R recording starts
+DIM SHARED recFrom AS LONG ' recording writes from this step on (count-in runs before it)
+DIM SHARED quantOn AS INTEGER
+' quantize: every note of the take as an event (step heard, note, on/off);
+' the take is re-drawn from them with the times snapped to the grid
+REDIM SHARED evS(0 TO 255) AS LONG
+REDIM SHARED evN(0 TO 255) AS LONG
+REDIM SHARED evOn(0 TO 255) AS INTEGER
+DIM SHARED evCount AS LONG
+DIM SHARED protectUntil AS LONG ' a note quantized longer than played runs to here
 DIM SHARED heldNote AS LONG ' the note sounding now (-1 = none); last pressed wins
 DIM SHARED noteStamp(0 TO 127) AS LONG ' when each note went down (0 = up)
 DIM SHARED stampCount AS LONG
@@ -291,6 +316,14 @@ linesOn = -1
 octave = 4
 heldNote = -1
 auditionNote = -1
+drawAudOn = -1
+metroMode = 1
+followOn = -1
+metroVol = 0.5
+countIn = 1
+quantOn = -1
+clickHi = make_click(1760, 0.03)
+clickLo = make_click(1175, 0.025)
 midiDevIdx = -1
 init_piano
 
@@ -334,6 +367,7 @@ DO
 
     ' ------------------------------------------------------------ MIDI
     midi_poll
+    metronome
 
     ' ------------------------------------------------------------ mouse
     wheel = 0
@@ -400,6 +434,9 @@ DO
         IF ok_to_lose("Open " + PCSPK_FilePart(f)) THEN open_bank f
     END IF
 
+    ' follow playback: page the view along so the playhead stays on screen
+    IF playing AND followOn THEN follow_page heard_pos(playPos)
+
     draw_ui
     _DISPLAY
     _LIMIT 60
@@ -422,9 +459,10 @@ RESUME NEXT
 SUB on_tick
     DIM v AS LONG
     IF playing THEN
-        IF playPos >= steps_of(cur) THEN
+        IF playPos >= loop_end THEN
             IF loopOn AND steps_of(cur) > 0 THEN
-                playPos = 0
+                playPos = loop_start
+                lastBeat = -999999 ' the metronome starts over with the loop
             ELSE
                 playing = 0
                 speaker 0
@@ -452,10 +490,17 @@ SUB on_tick
     ELSEIF auditionNote >= 0 THEN
         v = note_div(auditionNote)
     END IF
+    ' drawing audition (A): the step under the pointer, when no key is down
+    IF v = 0 AND drawAud > 0 AND NOT recording THEN v = drawAud
 
     IF recording THEN
-        IF recPos < MAX_STEPS THEN
-            set_step cur, recPos, v
+        IF recPos < recFrom THEN
+            recPos = recPos + 1 ' counting in: clicks only, nothing written
+        ELSEIF recPos < MAX_STEPS THEN
+            ' a key already down when the count-in ends is a note from step one
+            IF recPos = recFrom AND evCount = 0 AND heldNote >= 0 THEN add_event recFrom, heldNote, -1
+            ' silence must not cut a note that was quantized longer than played
+            IF NOT (v = 0 AND recPos < protectUntil) THEN set_step cur, recPos, v
             IF v <> 0 OR (keysMode = KEYS_SOUND AND voiceOn <> 0) THEN recLastNote = recPos
             recPos = recPos + 1
             cursorStep = recPos
@@ -552,8 +597,39 @@ SUB play_from (s AS LONG)
     stop_recording
     IF steps_of(cur) = 0 THEN set_status "Nothing to play - draw or play some notes first": EXIT SUB
     playPos = s
+    ' looping a selection: start inside it
+    IF loopOn AND selOn AND (playPos < loop_start OR playPos >= loop_end) THEN playPos = loop_start
     IF playPos >= steps_of(cur) THEN playPos = 0
+    lastBeat = -999999
     playing = -1
+END SUB
+
+
+''
+' What Loop repeats: the selection's time span, or the whole sound.
+'
+FUNCTION loop_start&
+    IF loopOn AND selOn THEN loop_start = selS0
+END FUNCTION
+
+
+FUNCTION loop_end&
+    loop_end = steps_of(cur)
+    IF loopOn AND selOn THEN
+        IF selS1 < steps_of(cur) THEN loop_end = selS1
+    END IF
+END FUNCTION
+
+
+SUB toggle_loop
+    loopOn = NOT loopOn
+    IF loopOn AND selOn THEN
+        set_status "Loop ON - repeating the selection (steps" + STR$(selS0) + " -" + STR$(selS1 - 1) + ")"
+    ELSEIF loopOn THEN
+        set_status "Loop ON - repeating the whole sound (select a part to loop just that)"
+    ELSE
+        set_status "Loop OFF"
+    END IF
 END SUB
 
 
@@ -569,6 +645,8 @@ END SUB
 FUNCTION heard_pos& (p AS LONG)
     DIM h AS LONG
     h = p - CLNG(PCSPK_Buffered * rateHz)
+    ' just after a loop jumped back, what you hear is still the loop's end
+    IF playing AND loopOn AND h < loop_start AND p >= loop_start THEN h = loop_end - (loop_start - h)
     IF h < 0 THEN h = 0
     heard_pos = h
 END FUNCTION
@@ -633,19 +711,18 @@ SUB note_on (n AS LONG)
             IF NOT recording THEN
                 ensure_target
                 push_undo
-                recording = -1
-                recPos = cursorStep
-                recStartLen = steps_of(cur)
-                recLastNote = -1
+                begin_live cursorStep, 0
             END IF
     END SELECT
     start_voice n ' after ensure_target, which may switch sounds
+    IF recMode = REC_LIVE THEN rec_event n, -1
 END SUB
 
 
 SUB note_off (n AS LONG)
     DIM i AS LONG, best AS LONG
     IF n < 0 OR n > 127 THEN EXIT SUB
+    IF noteStamp(n) <> 0 THEN rec_event n, 0
     noteStamp(n) = 0
     heldNote = -1
     FOR i = 0 TO 127
@@ -703,10 +780,216 @@ SUB step_enter (n AS LONG)
 END SUB
 
 
+''
+' Start LIVE recording at step at, after countBars bars of count-in.
+'
+SUB begin_live (at AS LONG, countBars AS LONG)
+    recording = -1
+    recFrom = at
+    recPos = at - CLNG(countBars * BEATS_PER_BAR * 60 * rateHz / bpm)
+    recPos0 = recPos
+    recStartLen = steps_of(cur)
+    recLastNote = -1
+    evCount = 0: protectUntil = 0
+    lastBeat = -999999
+    IF quantOn AND gridDiv = 0 THEN
+        gridDiv = 16
+        set_status "Quantize needs a grid - set to 1/16 (Ctrl+G changes it, Ctrl+Q turns quantize off)"
+    END IF
+END SUB
+
+
+''
+' Ctrl+R: record now from the cursor, with the count-in.
+'
+SUB record_now
+    IF recording THEN stop_recording: EXIT SUB
+    IF playing THEN stop_playing
+    recMode = REC_LIVE
+    ensure_target
+    push_undo
+    begin_live cursorStep, countIn
+    IF countIn THEN set_status "Count-in..." ELSE set_status "Recording - Space or F5 stops"
+END SUB
+
+
+''
+' Note on / off while recording: remember it (timed by what you heard, not
+' by what is queued ahead) and, with quantize on, re-draw the take.
+'
+SUB rec_event (n AS LONG, isOn AS INTEGER)
+    DIM t AS LONG
+    IF NOT recording OR recPos < recFrom THEN EXIT SUB
+    t = recPos - CLNG(PCSPK_Buffered * rateHz)
+    IF t < recFrom THEN t = recFrom
+    add_event t, n, isOn
+    IF quantOn AND gridDiv <> 0 THEN render_take 0
+END SUB
+
+
+SUB add_event (t AS LONG, n AS LONG, isOn AS INTEGER)
+    IF evCount > UBOUND(evS) THEN
+        REDIM _PRESERVE evS(0 TO evCount * 2) AS LONG
+        REDIM _PRESERVE evN(0 TO evCount * 2) AS LONG
+        REDIM _PRESERVE evOn(0 TO evCount * 2) AS INTEGER
+    END IF
+    evS(evCount) = t: evN(evCount) = n: evOn(evCount) = isOn
+    evCount = evCount + 1
+END SUB
+
+
+''
+' Snap a step to the nearest grid cell edge.
+'
+FUNCTION snap_cell& (t AS LONG)
+    DIM c AS LONG
+    c = cell_of(t)
+    IF t - cell_start(c) >= cell_start(c + 1) - t THEN c = c + 1
+    snap_cell = cell_start(c)
+END FUNCTION
+
+
+''
+' Re-draw the take from its events with every note snapped to the grid:
+' start to the nearest cell, end to the nearest cell edge (at least a cell).
+' Plain notes write their pitch; with the instrument (Ctrl+K) each note plays
+' the instrument from its own start. Notes still held run to recPos
+' (unfinished = FALSE) or end there (final = TRUE, when recording stops).
+'
+SUB render_take (final AS INTEGER)
+    DIM i AS LONG, j AS LONG, k AS LONG, nn AS LONG, s AS LONG, e AS LONG, v AS LONG
+    DIM best AS LONG, endS AS LONG
+    IF evCount = 0 THEN EXIT SUB
+    REDIM ns(0 TO evCount) AS LONG ' note start, end, number (quantized)
+    REDIM ne(0 TO evCount) AS LONG
+    REDIM nk(0 TO evCount) AS LONG
+    REDIM held(0 TO evCount) AS INTEGER
+
+    ' pair each note-on with its note-off
+    FOR i = 0 TO evCount - 1
+        IF evOn(i) THEN
+            e = -1
+            FOR j = i + 1 TO evCount - 1
+                IF evN(j) = evN(i) THEN e = evS(j): EXIT FOR
+            NEXT
+            ns(nn) = snap_cell(evS(i))
+            IF ns(nn) < recFrom THEN ns(nn) = recFrom
+            nk(nn) = evN(i)
+            IF e < 0 THEN
+                held(nn) = -1
+                e = recPos
+                IF final THEN e = snap_cell(e)
+            ELSE
+                e = snap_cell(e)
+            END IF
+            IF e <= ns(nn) THEN e = cell_start(cell_of(ns(nn)) + 1)
+            IF keysMode = KEYS_SOUND AND holdMode = HOLD_ONESHOT THEN e = ns(nn) + steps_of(instIdx)
+            ne(nn) = e
+            nn = nn + 1
+        END IF
+    NEXT
+    IF nn = 0 THEN EXIT SUB
+
+    endS = recPos
+    protectUntil = 0
+    FOR i = 0 TO nn - 1
+        IF ne(i) > endS THEN endS = ne(i)
+        IF NOT held(i) AND ne(i) > protectUntil THEN protectUntil = ne(i)
+    NEXT
+    IF endS > MAX_STEPS THEN endS = MAX_STEPS
+
+    ' each step plays the most recently started note that is still sounding
+    FOR s = recFrom TO endS - 1
+        best = -1
+        FOR k = 0 TO nn - 1
+            IF s >= ns(k) AND s < ne(k) THEN
+                IF best < 0 THEN
+                    best = k
+                ELSEIF ns(k) >= ns(best) THEN
+                    best = k
+                END IF
+            END IF
+        NEXT
+        v = 0
+        IF best >= 0 THEN
+            IF keysMode = KEYS_SOUND THEN
+                v = voice_div(s - ns(best), nk(best))
+                IF v < 0 THEN v = 0
+            ELSE
+                v = note_div(nk(best))
+            END IF
+        END IF
+        set_step cur, s, v
+        IF v <> 0 AND s > recLastNote THEN recLastNote = s
+    NEXT
+END SUB
+
+
+''
+' Clicks on every beat while recording (higher on the first beat of a bar),
+' timed by what you hear, not by what is queued.
+'
+SUB metronome
+    DIM hp AS LONG, beatLen AS DOUBLE, b AS LONG
+    ' clicks line up with the grid's bars: beat 1 of bar 1 is step 0
+    beatLen = 60 * rateHz / bpm
+    IF recording AND metroMode >= 1 THEN
+        hp = recPos - CLNG(PCSPK_Buffered * rateHz)
+        IF hp < recPos0 THEN EXIT SUB ' the start isn't heard yet (no click "before" beat one)
+    ELSEIF playing AND metroMode = 2 THEN
+        hp = playPos - CLNG(PCSPK_Buffered * rateHz)
+        IF hp < 0 THEN EXIT SUB
+    ELSE
+        lastBeat = -999999
+        EXIT SUB
+    END IF
+    b = INT(hp / beatLen + 0.000001)
+    IF hp < 0 THEN b = -INT(-hp / beatLen + 0.999999)
+    IF b = lastBeat THEN EXIT SUB
+    lastBeat = b
+    IF ((b MOD BEATS_PER_BAR) + BEATS_PER_BAR) MOD BEATS_PER_BAR = 0 THEN
+        IF clickHi > 0 THEN _SNDVOL clickHi, metroVol: _SNDPLAY clickHi
+    ELSE
+        IF clickLo > 0 THEN _SNDVOL clickLo, metroVol: _SNDPLAY clickLo
+    END IF
+    IF recording AND hp < recFrom THEN set_status "Count-in..."
+    IF recording AND hp >= recFrom AND hp - beatLen < recFrom THEN set_status "Recording - Space or F5 stops"
+END SUB
+
+
+''
+' A short decaying sine blip, for the metronome.
+'
+FUNCTION make_click& (hz AS DOUBLE, secs AS DOUBLE)
+    DIM h AS LONG, m AS _MEM, n AS LONG, i AS LONG, t AS DOUBLE, sr AS LONG, v AS SINGLE
+    sr = _SNDRATE
+    IF sr <= 0 THEN EXIT FUNCTION
+    n = CLNG(sr * secs)
+    h = _SNDNEW(n, 1, 32)
+    IF h < 1 THEN EXIT FUNCTION
+    m = _MEMSOUND(h, 0)
+    FOR i = 0 TO n - 1
+        t = i / sr
+        v = SIN(2 * _PI * hz * t) * EXP(-t * 140) * 0.9
+        _MEMPUT m, m.OFFSET + i * 4, v
+    NEXT
+    _MEMFREE m
+    make_click = h
+END FUNCTION
+
+
 SUB stop_recording
     DIM keepLen AS LONG
     IF NOT recording THEN EXIT SUB
     recording = 0
+    IF quantOn AND gridDiv <> 0 AND evCount > 0 THEN
+        render_take -1
+        ' re-find the last note: quantizing may have moved it either way
+        recLastNote = -1
+        FOR keepLen = steps_of(cur) - 1 TO recFrom STEP -1
+            IF get_step(cur, keepLen) THEN recLastNote = keepLen: EXIT FOR
+        NEXT
+    END IF
     ' drop the silence recorded after the last note (but never cut what was
     ' there before recording started)
     keepLen = recLastNote + 1
@@ -1041,6 +1324,15 @@ SUB handle_mouse (mx AS LONG, my AS LONG, b1 AS INTEGER, b2 AS INTEGER)
         cursorStep = s ' drag along the ruler
     END IF
     wasDown = b1 OR b2
+
+    ' drawing audition: while drawing / placing / moving, hear the step under
+    ' the pointer (not while erasing or dragging a selection box)
+    drawAud = 0
+    IF drawAudOn AND b1 THEN
+        SELECT CASE drawing
+            CASE 1, 3, 5, 6, 7, 8: drawAud = get_step(cur, s)
+        END SELECT
+    END IF
 END SUB
 
 
@@ -1109,6 +1401,7 @@ SUB toolbar_click (i AS LONG)
         CASE TB_TOOLS: sel_cut
         CASE TB_TOOLS + 1: sel_copy
         CASE TB_TOOLS + 2: sel_paste
+        CASE TB_TOOLS + 3: toggle_loop
     END SELECT
 END SUB
 
@@ -1661,6 +1954,13 @@ FUNCTION handle_key% (k AS LONG, ctrl AS INTEGER, shift AS INTEGER)
         CASE 17408: set_octave octave + 1 '                    F10
         CASE 34048: set_note_len noteLen - 1 '                 F11
         CASE 34304: set_note_len noteLen + 1 '                 F12
+        CASE 65, 97 '                                          A: audition while drawing
+            IF ctrl THEN
+                select_all
+            ELSE
+                drawAudOn = NOT drawAudOn
+                IF drawAudOn THEN set_status "Audition ON - you hear what you draw while the button is down" ELSE set_status "Audition OFF - drawing is silent"
+            END IF
         CASE 39 '                                              ' (apostrophe)
             linesOn = NOT linesOn
             IF linesOn THEN
@@ -1688,9 +1988,7 @@ FUNCTION handle_key% (k AS LONG, ctrl AS INTEGER, shift AS INTEGER)
                 SELECT CASE ctrl_letter$(k)
                     CASE "Z": undo
                     CASE "Y": redo
-                    CASE "L"
-                        loopOn = NOT loopOn
-                        IF loopOn THEN set_status "Loop ON" ELSE set_status "Loop OFF"
+                    CASE "L": toggle_loop
                     CASE "T": trim_end
                     CASE "P": ask_priority
                     CASE "N"
@@ -1701,6 +1999,31 @@ FUNCTION handle_key% (k AS LONG, ctrl AS INTEGER, shift AS INTEGER)
                         IF shift THEN save_as ELSE save_now
                     CASE "E": export_wav
                     CASE "K": toggle_keys_mode shift
+                    CASE "R": record_now
+                    CASE "F"
+                        followOn = NOT followOn
+                        IF followOn THEN set_status "Follow ON - the view pages along with the playhead" ELSE set_status "Follow OFF"
+                    CASE "M"
+                        IF shift THEN
+                            ask_metro_vol
+                        ELSE
+                            metroMode = (metroMode + 1) MOD 3
+                            SELECT CASE metroMode
+                                CASE 0: set_status "Metronome OFF"
+                                CASE 1: set_status "Metronome while recording (Ctrl+Shift+M volume)"
+                                CASE 2: set_status "Metronome while recording and playing back (Ctrl+Shift+M volume)"
+                            END SELECT
+                        END IF
+                    CASE "U"
+                        countIn = (countIn + 1) MOD 3
+                        IF countIn THEN set_status "Count-in" + STR$(countIn) + " bar(s) before Ctrl+R recording" ELSE set_status "No count-in: Ctrl+R records at once"
+                    CASE "Q"
+                        quantOn = NOT quantOn
+                        IF quantOn THEN
+                            set_status "Quantize ON - LIVE notes snap to the grid as you play" + MID$(" (turn the grid on: Ctrl+G)", 1, -28 * (gridDiv = 0))
+                        ELSE
+                            set_status "Quantize OFF - LIVE notes recorded as played"
+                        END IF
                     CASE "X": sel_cut
                     CASE "C": sel_copy
                     CASE "V": sel_paste
@@ -1816,6 +2139,19 @@ SUB ask_priority
     IF v > 255 THEN v = 255
     sndPri(cur) = v
     dirty = -1
+END SUB
+
+
+SUB ask_metro_vol
+    DIM t AS STRING
+    t = _INPUTBOX$("Metronome", "Click volume (0-100):", LTRIM$(STR$(CLNG(metroVol * 100))))
+    after_dialog
+    IF t = "" THEN EXIT SUB
+    metroVol = VAL(t) / 100
+    IF metroVol < 0 THEN metroVol = 0
+    IF metroVol > 1 THEN metroVol = 1
+    set_status "Metronome volume" + STR$(CLNG(metroVol * 100)) + "%"
+    IF clickHi > 0 THEN _SNDVOL clickHi, metroVol: _SNDPLAY clickHi
 END SUB
 
 
@@ -1969,12 +2305,12 @@ END FUNCTION
 
 SUB cycle_grid (dirn AS LONG)
     DIM order AS STRING, i AS LONG, n AS LONG
-    DIM divs(0 TO 6) AS LONG
-    divs(0) = 0: divs(1) = 4: divs(2) = 8: divs(3) = 16: divs(4) = 32: divs(5) = 12: divs(6) = 24
-    FOR i = 0 TO 6
+    DIM divs(0 TO 8) AS LONG
+    divs(0) = 0: divs(1) = 4: divs(2) = 8: divs(3) = 16: divs(4) = 32: divs(5) = 64: divs(6) = 128: divs(7) = 12: divs(8) = 24
+    FOR i = 0 TO 8
         IF divs(i) = gridDiv THEN n = i
     NEXT
-    n = (n + dirn + 7) MOD 7
+    n = (n + dirn + 9) MOD 9
     gridDiv = divs(n)
     IF gridDiv THEN
         set_status "Grid " + grid_name + " at" + STR$(bpm) + " BPM = " + fmt2(cell_steps) + " steps a cell (Ctrl+B tempo)"
@@ -2065,6 +2401,13 @@ SUB jump_mark (dirn AS LONG)
         IF get_step(cur, s) <> 0 AND get_step(cur, s) <> get_step(cur, s - 1) THEN EXIT DO
     LOOP
     move_cursor s
+END SUB
+
+
+SUB follow_page (s AS LONG)
+    DIM vis AS LONG
+    vis = CANVAS_W \ zoom
+    IF s < scrollX OR s >= scrollX + vis - vis \ 50 THEN scroll_to s - vis \ 50
 END SUB
 
 
@@ -2593,11 +2936,12 @@ SUB draw_toolbar
             CASE TB_TOOLS: lbl = "C)ut": active = 0
             CASE TB_TOOLS + 1: lbl = "Copy": active = 0
             CASE TB_TOOLS + 2: lbl = "Paste": active = 0
+            CASE TB_TOOLS + 3: lbl = "Loop": active = loopOn
         END SELECT
         IF active THEN
             LINE (x, TB_Y)-(x + TB_W - 4, TB_Y + TB_H - 1), _RGB32(255, 200, 60), BF
             COLOR _RGB32(20, 20, 20)
-        ELSEIF i >= TB_TOOLS THEN
+        ELSEIF i >= TB_TOOLS AND i < TB_TOOLS + 3 THEN
             LINE (x, TB_Y)-(x + TB_W - 4, TB_Y + TB_H - 1), _RGB32(34, 40, 56), BF
             LINE (x, TB_Y)-(x + TB_W - 4, TB_Y + TB_H - 1), _RGB32(70, 80, 100), B
             IF (i = TB_TOOLS + 2 AND clipN = 0) OR (i < TB_TOOLS + 2 AND NOT selOn) THEN COLOR _RGB32(90, 100, 120) ELSE COLOR _RGB32(210, 220, 235)
@@ -2657,7 +3001,13 @@ SUB draw_info
         CASE REC_OFF: s = "REC off"
         CASE REC_STEP: s = "REC STEP"
         CASE REC_LIVE
-            IF recording THEN s = "REC LIVE *recording*" ELSE s = "REC LIVE (waiting for a note)"
+            IF recording AND recPos < recFrom THEN
+                s = "REC LIVE count-in"
+            ELSEIF recording THEN
+                s = "REC LIVE *rec*"
+            ELSE
+                s = "REC LIVE (waiting)"
+            END IF
     END SELECT
     IF recMode <> REC_OFF THEN
         COLOR _RGB32(255, 90, 80)
@@ -2666,13 +3016,14 @@ SUB draw_info
     END IF
     _PRINTSTRING (x, 76), s
     COLOR _RGB32(150, 160, 180)
-    IF pianoOn THEN s = "CAPS: piano   " ELSE s = "caps off: tools   "
-    s = s + "Snap " + on_off(snapOn) + "   Octave" + STR$(octave) + "   Len" + STR$(noteLen) + "   Loop " + on_off(loopOn) + "   Zoom" + STR$(zoom)
-    s = s + "   MIDI: "
+    IF pianoOn THEN s = "Caps:piano" ELSE s = "Caps:tools"
+    s = s + "  Aud " + on_off(drawAudOn) + "  Snap " + on_off(snapOn) + "  Oct" + LTRIM$(STR$(octave)) + "  Len" + LTRIM$(STR$(noteLen)) + "  Loop " + on_off(loopOn) + "  Z" + LTRIM$(STR$(zoom))
+    s = s + "  Met " + MID$("offRECR+P", metroMode * 3 + 1, 3) + "  In" + STR$(countIn) + "  Q " + on_off(quantOn) + "  Fol " + on_off(followOn)
+    s = s + "  MIDI: "
     IF midiDevIdx >= 0 AND midiBusy THEN
-        s = s + "BUSY (F7 retry)"
+        s = s + "BUSY (F7)"
     ELSEIF midiDevIdx >= 0 THEN
-        s = s + midiDevName(midiDevIdx)
+        s = s + LEFT$(midiDevName(midiDevIdx), 12)
     ELSE
         s = s + "off"
     END IF
@@ -3019,14 +3370,14 @@ SUB draw_help
     t(5) = "Notes   Z S X D C V G B H N J M ,   lower octave     F9/F10 octave  (Caps Lock ON)"
     t(6) = "        Q 2 W 3 E R 5 T 6 Y 7 U I   upper octave     or a MIDI keyboard"
     t(7) = "        wheel scroll   Ctrl+wheel zoom   click the time ruler: cursor"
-    t(8) = "F5      record: OFF / STEP (note = Len steps at cursor) / LIVE"
+    t(8) = "F5 rec OFF/STEP/LIVE  Ctrl+R rec now (Ctrl+U count-in)  Ctrl+M metronome off/rec/rec+play"
+    t(15) = "Ctrl+Q quantize LIVE takes   Ctrl+F follow the playhead   Ctrl+Shift+M click volume"
     t(9) = "F6 snap  F7 MIDI device  F11/F12 note length  Ctrl+G grid  Ctrl+B BPM  ' lines"
     t(10) = "Space   play / stop            Enter  play from cursor     Ctrl+L  loop"
     t(11) = "Left/Right cursor  Home/End  PgUp/PgDn next dot (NOTE tool: bar)  Up/Down sound"
     t(12) = "Insert / Delete  step at cursor    Backspace  delete step before cursor"
     t(13) = "Ctrl+Up/Down  transpose semitone (Shift: octave)   Ctrl+T trim silence"
-    t(14) = "Ctrl+Z / Ctrl+Y  undo / redo"
-    t(15) = ""
+    t(14) = "Ctrl+Z / Ctrl+Y  undo / redo     A  hear what you draw while drawing (on/off)"
     t(16) = "F2 rename   F3 new sound   F4 duplicate   F8 delete   Ctrl+P priority"
     t(17) = "Ctrl+N new bank   Ctrl+O open   Ctrl+S save   Ctrl+Shift+S save as"
     t(18) = "Ctrl+E export the sound as .wav (EXPORT/)     drop a file to open it"
