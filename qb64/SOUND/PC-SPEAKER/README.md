@@ -76,7 +76,7 @@ the computer keyboard or a MIDI keyboard. It saves IFS banks (the Duke Nukem 1
 file from [Supported games](#supported-games), so you can take a sound from
 Wolfenstein 3D or DOOM, change it, and save it as your own.
 
-![PCSEDIT editing the Duke Nukem 1 BOMBEXPLODE sound](SCREENSHOTS/6-pcsedit.png)
+![PCSEDIT playing a four-voice chord tune with PWM, in the Duke Nukem 1 bank: voice chips with G on, the 1/8 grid, a selection across all voices, the loop region and the oscilloscope](SCREENSHOTS/6-pcsedit.png)
 
 **Tools:** the big panel is a piano roll, with pitch going up and time going
 right. The toolbar above it picks a tool. Click a button, press its letter

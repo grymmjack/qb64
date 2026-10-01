@@ -18648,3 +18648,290 @@
   $ into the same voice of the tune.
   $ 
   $ Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>" && git push -q && git log --oneline -1; cd qb64/SOUND/PC-SPEAKER && grep -n "png\|jpg\|gif" README.md; ls *.png ASSETS/*.png 2>/dev/null; ls
+2026-10-01T01:33:53-0400  INFO     bash_end      [ok] 0L stdout
+2026-10-01T01:33:55-0400  INFO     bash_start    sleep 20; cat /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/tasks/bw0odkshj.output; cd /home/grymmjack/git/qb64 && git log --oneline -1 && git status --short | head
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ sleep 20; cat /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/tasks/bw0odkshj.output; cd /home/grymmjack/git/qb64 && git log --oneline -1 && git status --short | head
+2026-10-01T01:34:15-0400  INFO     bash_end      [ok] 14L stdout
+  | warning: in the working copy of '.claude/activity.log', CRLF will be replaced by LF the next time Git touches it
+  | fd5103e9 SOUND/PC-SPEAKER: PCSEDIT Ctrl+K plays multi-voice instruments with PWM
+  | 10:![DN1PLAY playing the Duke Nukem 1 BOMBEXPLODE sound](SCREENSHOTS/1-duke-bombexplode.png)
+  | 37:![DN1PLAY with the file browser open in ASSETS/GAMES, playing a Wolfenstein 3D sound](SCREENSHOTS/0-browser-wolf3d.png)
+  | 79:![PCSEDIT editing the Duke Nukem 1 BOMBEXPLODE sound](SCREENSHOTS/6-pcsedit.png)
+  | 452:![DN1PLAY playing the Duke Nukem 1 BOMBEXPLODE sound](SCREENSHOTS/1-duke-bombexplode.png)
+  | 456:![DN1PLAY playing the Duke Nukem 1 BADGUYGOUP sound](SCREENSHOTS/2-duke-badguygoup.png)
+  | 460:![DN1PLAY playing the Commander Keen LVLDONESND sound](SCREENSHOTS/3-keen-lvldone.png)
+  | 464:![DN1PLAY playing the DOOM DPSAWUP sound](SCREENSHOTS/4-doom-sawup.png)
+  | 469:![DN1PLAY playing Wolfenstein 3D sound 24](SCREENSHOTS/5-wolf3d.png)
+  | (eval):7: no matches found: *.png
+  | fd5103e9 SOUND/PC-SPEAKER: PCSEDIT Ctrl+K plays multi-voice instruments with PWM
+  |  M .claude/activity.log
+  | ?? MYSOUNDS.SND
+2026-10-01T01:34:19-0400  INFO     bash_start    cd /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER && file SCREENSHOTS/*.png; sed -n 76,82p README.md; grep -n "6-pcsedit" -B2 -A2 README.md | sed -n 1,20p
+  > cwd: /home/grymmjack/git/qb64
+  $ cd /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER && file SCREENSHOTS/*.png; sed -n 76,82p README.md; grep -n "6-pcsedit" -B2 -A2 README.md | sed -n 1,20p
+2026-10-01T01:34:19-0400  INFO     bash_end      [ok] 19L stdout
+  | SCREENSHOTS/0-browser-wolf3d.png:   PNG image data, 1280 x 640, 8-bit colormap, non-interlaced
+  | SCREENSHOTS/1-duke-bombexplode.png: PNG image data, 1024 x 640, 8-bit/color RGBA, non-interlaced
+  | SCREENSHOTS/2-duke-badguygoup.png:  PNG image data, 1024 x 640, 8-bit/color RGBA, non-interlaced
+  | SCREENSHOTS/3-keen-lvldone.png:     PNG image data, 1024 x 640, 8-bit/color RGBA, non-interlaced
+  | SCREENSHOTS/4-doom-sawup.png:       PNG image data, 1024 x 640, 4-bit colormap, non-interlaced
+  | SCREENSHOTS/5-wolf3d.png:           PNG image data, 1024 x 640, 4-bit colormap, non-interlaced
+  | SCREENSHOTS/6-pcsedit.png:          PNG image data, 1280 x 720, 8-bit colormap, non-interlaced
+  | file from [Supported games](#supported-games), so you can take a sound from
+  | Wolfenstein 3D or DOOM, change it, and save it as your own.
+  | 
+  | ![PCSEDIT editing the Duke Nukem 1 BOMBEXPLODE sound](SCREENSHOTS/6-pcsedit.png)
+  | 
+  | **Tools:** the big panel is a piano roll, with pitch going up and time going
+  | right. The toolbar above it picks a tool. Click a button, press its letter
+  | 77-Wolfenstein 3D or DOOM, change it, and save it as your own.
+  | 78-
+  | 79:![PCSEDIT editing the Duke Nukem 1 BOMBEXPLODE sound](SCREENSHOTS/6-pcsedit.png)
+  | 80-
+  | 81-**Tools:** the big panel is a piano roll, with pitch going up and time going
+2026-10-01T01:34:22-0400  INFO     bash_start    sed -n "$(grep -n '^SUB settings_save' PCSEDIT.BAS | cut -d: -f1),+32p" PCSEDIT.BAS | grep PRINT; grep -n 'cfg_get("win' PCSEDIT.BAS
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ sed -n "$(grep -n '^SUB settings_save' PCSEDIT.BAS | cut -d: -f1),+32p" PCSEDIT.BAS | grep PRINT; grep -n 'cfg_get("win' PCSEDIT.BAS
+2026-10-01T01:34:22-0400  INFO     bash_end      [ok] 21L stdout
+  |     PRINT #ff, "# PCSEDIT settings - written when PCSEDIT quits"
+  |     PRINT #ff, "width="; LTRIM$(STR$(physW))
+  |     PRINT #ff, "height="; LTRIM$(STR$(physH))
+  |     PRINT #ff, "x="; LTRIM$(STR$(_SCREENX))
+  |     PRINT #ff, "y="; LTRIM$(STR$(_SCREENY))
+  |     PRINT #ff, "scale="; LTRIM$(STR$(uiScale))
+  |     PRINT #ff, "zoom="; LTRIM$(STR$(zoom))
+  |     PRINT #ff, "grid="; LTRIM$(STR$(gridDiv))
+  |     PRINT #ff, "bpm="; LTRIM$(STR$(bpm))
+  |     PRINT #ff, "lines="; LTRIM$(STR$(linesOn))
+  |     PRINT #ff, "snap="; LTRIM$(STR$(snapOn))
+  |     PRINT #ff, "notelen="; LTRIM$(STR$(noteLen))
+  |     PRINT #ff, "octave="; LTRIM$(STR$(octave))
+  |     PRINT #ff, "audition="; LTRIM$(STR$(drawAudOn))
+  |     PRINT #ff, "metronome="; LTRIM$(STR$(metroMode))
+  |     PRINT #ff, "metrovol="; LTRIM$(STR$(metroVol))
+  |     PRINT #ff, "countin="; LTRIM$(STR$(countIn))
+  |     PRINT #ff, "quantize="; LTRIM$(STR$(quantOn))
+  |     PRINT #ff, "follow="; LTRIM$(STR$(followOn))
+  |     PRINT #ff, "loop="; LTRIM$(STR$(loopOn))
+  |     PRINT #ff, "poly="; LTRIM$(STR$(polyMode))
+2026-10-01T01:34:46-0400  INFO     bash_start    export SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad && mkdir -p $SP/shot/home/.config && printf 'width=1280\nheight=720\nx=0\ny=0\nscale=1\nzoom=1\ngri…
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ export SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad && mkdir -p $SP/shot/home/.config && printf 'width=1280\nheight=720\nx=0\ny=0\nscale=1\nzoom=1\ngrid=8\nbpm=120\nlines=-1\nsnap=-1\npoly=1\nloop=-1\nmetronome=0\n' > $SP/shot/home/.config/pcsedit.ini && python3 - <<'PYEOF'
+  $ import os
+  $ SP=os.environ['SP']
+  $ s=open('PCSEDIT.BAS').read()
+  $ lines=s.split('\n'); i=lines.index('DO')
+  $ lines.insert(i,'''DIM shB AS LONG, shBt AS LONG, shE AS LONG, shS AS LONG, shK AS LONG, shN AS LONG
+  $ DIM shCh(0 TO 3, 0 TO 2) AS LONG, shMel AS STRING
+  $ open_bank "''' + os.getcwd() + '''/ASSETS/GAMES/DUKE1.DN1"
+  $ cur = 3
+  $ add_sound "", ""
+  $ sndName(cur) = "CHORDTUNE"
+  $ ' C, Am, F, G
+  $ shCh(0, 0) = 48: shCh(0, 1) = 52: shCh(0, 2) = 55
+  $ shCh(1, 0) = 45: shCh(1, 1) = 48: shCh(1, 2) = 52
+  $ shCh(2, 0) = 41: shCh(2, 1) = 45: shCh(2, 2) = 48
+  $ shCh(3, 0) = 43: shCh(3, 1) = 47: shCh(3, 2) = 50
+  $ FOR shK = 2 TO 4
+  $     switch_voice shK
+  $     FOR shB = 0 TO 3
+  $         FOR shBt = 0 TO 3
+  $             FOR shS = 0 TO 51
+  $                 set_step cur, shB * 280 + shBt * 70 + shS, note_div(shCh(shB, shK - 2))
+  $             NEXT
+  $         NEXT
+  $     NEXT
+  $ NEXT
+  $ switch_voice 1
+  $ ' melody, in eighths: offsets from the chord's root an octave up
+  $ shMel = "0 4 7 12 7 4 0 4 0 3 7 12 15 12 7 3 0 4 7 12 16 12 7 4 0 4 7 11 14 11 7 4"
+  $ FOR shB = 0 TO 3
+  $     FOR shE = 0 TO 7
+  $         shN = VAL(MID$(shMel, 1 + (shB * 8 + shE) * 3 - (shB * 8 + shE > 0) * 0))
+  $     NEXT
+  $ NEXT
+  $ CLOSE
+  $ ''')
+  $ open(SP+'/shot/x.BAS','w').write('\n'.join(lines))
+  $ PYEOF
+  $ echo ok
+2026-10-01T01:34:46-0400  INFO     bash_end      [ok] 1L stdout
+  | ok
+2026-10-01T01:34:57-0400  INFO     bash_start    export SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad && python3 - <<'PYEOF' | import os | SP=os.environ['SP'] | s=open('PCSEDIT.BAS').read() | chords=[(…
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ export SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad && python3 - <<'PYEOF'
+  $ import os
+  $ SP=os.environ['SP']
+  $ s=open('PCSEDIT.BAS').read()
+  $ chords=[(48,52,55),(45,48,52),(41,45,48),(43,47,50)]
+  $ mel=[[0,4,7,12,7,4,0,4],[0,3,7,12,15,12,7,3],[0,4,7,12,16,12,7,4],[0,4,7,11,14,11,7,4]]
+  $ roots=[60,57,53,55]
+  $ b=[]
+  $ b.append('DIM shS AS LONG')
+  $ b.append('open_bank "%s/ASSETS/GAMES/DUKE1.DN1"' % os.getcwd())
+  $ b.append('cur = 3: add_sound "", "": sndName(cur) = "CHORDTUNE"')
+  $ for k in (2,3,4):
+  $     b.append('switch_voice %d' % k)
+  $     for bar,ch in enumerate(chords):
+  $         for bt in range(4):
+  $             a=bar*280+bt*70
+  $             b.append('FOR shS = %d TO %d: set_step cur, shS, note_div(%d): NEXT' % (a,a+51,ch[k-2]))
+  $ b.append('switch_voice 1')
+  $ for bar in range(4):
+  $     for e,o in enumerate(mel[bar]):
+  $         a=bar*280+e*35
+  $         b.append('FOR shS = %d TO %d: set_step cur, shS, note_div(%d): NEXT' % (a,a+29,roots[bar]+12+o))
+  $ b.append('dirty = 0')
+  $ b.append('allVoices = -1')
+  $ b.append('selS0 = 280: selS1 = 560: selLo = 45: selHi = 81: selOn = -1')
+  $ b.append('loopSet = -1: loopA = 0: loopB = 1120')
+  $ b.append('set_tool TOOL_SELECT')
+  $ b.append('selOn = -1')
+  $ b.append('play_from 0')
+  $ b.append('set_status "PWM: 4 voices sounding together - G edits them all at once (select, move, stretch, copy / paste)"')
+  $ lines=s.split('\n'); i=lines.index('DO')
+  $ lines.insert(i,'\n'.join(b))
+  $ open(SP+'/shot/x.BAS','w').write('\n'.join(lines))
+  $ PYEOF
+  $ cp PCSPKR.BI PCSPKR.BM NOTES.BI $SP/shot/ && cd $SP/shot && /home/grymmjack/git/qb64pe/qb64pe -x x.BAS -o ./PCSEDIT 2>&1 | grep -i "error\|Output"
+2026-10-01T01:35:00-0400  WARNING  bash_end      [stderr] 2L stdout / 2L stderr
+  | Beginning C++ output from QB64 code... 
+  | Output: /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/shot/PCSEDIT
+  ! 
+  ! Shell cwd was reset to /home/grymmjack/git/qb64
+2026-10-01T01:35:06-0400  INFO     bash_start    cd /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/shot && cat > xwd2png.py <<'EOF' | import struct,zlib,sys | d=open(sys.argv[1],'rb').read(); W,H=int(sys.a…
+  > cwd: /home/grymmjack/git/qb64
+  $ cd /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/shot && cat > xwd2png.py <<'EOF'
+  $ import struct,zlib,sys
+  $ d=open(sys.argv[1],'rb').read(); W,H=int(sys.argv[3]),int(sys.argv[4])
+  $ hs=struct.unpack('>I',d[:4])[0]; bpl=struct.unpack('>I',d[48:52])[0]; ncol=struct.unpack('>I',d[76:80])[0]
+  $ off=hs+ncol*12
+  $ rows=b''.join(b'\x00'+b''.join(bytes((d[off+y*bpl+x*4+2],d[off+y*bpl+x*4+1],d[off+y*bpl+x*4])) for x in range(W)) for y in range(H))
+  $ def ch(t,b): return struct.pack('>I',len(b))+t+b+struct.pack('>I',zlib.crc32(t+b))
+  $ open(sys.argv[2],'wb').write(b'\x89PNG\r\n\x1a\n'+ch(b'IHDR',struct.pack('>IIBBBBB',W,H,8,2,0,0,0))+ch(b'IDAT',zlib.compress(rows,9))+ch(b'IEND',b''))
+  $ EOF
+  $ (HOME=$PWD/home PCSEDIT_NOMIDI=1 DISPLAY=:99 ./PCSEDIT &>/dev/null &); sleep 3.3; DISPLAY=:99 xwd -root -silent > s.xwd; pkill -x PCSEDIT; python3 xwd2png.py s.xwd shot.png 1280 720
+2026-10-01T01:35:10-0400  WARNING  bash_end      [stderr] 0L stdout / 2L stderr
+  ! 
+  ! Shell cwd was reset to /home/grymmjack/git/qb64
+2026-10-01T01:35:16-0400  INFO     bash_start    cd /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER && grep -n 'cfg_get("width\|cfg_get("height\|physW =' PCSEDIT.BAS | head; n=$(grep -n 'cfg_get("width' PCSEDIT.BAS | cut -d: -f1); sed -n "$n,$((n+12…
+  > cwd: /home/grymmjack/git/qb64
+  $ cd /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER && grep -n 'cfg_get("width\|cfg_get("height\|physW =' PCSEDIT.BAS | head; n=$(grep -n 'cfg_get("width' PCSEDIT.BAS | cut -d: -f1); sed -n "$n,$((n+12))p" PCSEDIT.BAS
+2026-10-01T01:35:16-0400  INFO     bash_end      [ok] 18L stdout
+  | 368:physW = VAL(cfg_get("width", "1280"))
+  | 369:physH = VAL(cfg_get("height", "800"))
+  | 370:IF physW < 640 OR physW > 16000 THEN physW = 1280
+  | 534:        physW = _RESIZEWIDTH: physH = _RESIZEHEIGHT
+  | 535:        IF physW < 320 THEN physW = 320
+  | physW = VAL(cfg_get("width", "1280"))
+  | physH = VAL(cfg_get("height", "800"))
+  | IF physW < 640 OR physW > 16000 THEN physW = 1280
+  | IF physH < 480 OR physH > 16000 THEN physH = 800
+  | scrImg = _NEWIMAGE(physW, physH, 32)
+  | SCREEN scrImg
+  | make_ui
+  | IF VAL(cfg_get("x", "-99999")) > -99999 THEN _SCREENMOVE VAL(cfg_get("x", "0")), VAL(cfg_get("y", "0"))
+  | _TITLE "PCSEDIT - PC speaker sound editor"
+  | _ACCEPTFILEDROP ON
+  | 
+  | ' Trap the window's close button (and Ctrl+Break) so they go through the
+  | ' same clean-up as Esc. The first read of _EXIT switches the monitoring
+2026-10-01T01:35:22-0400  INFO     bash_start    cd /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/shot && (HOME=$PWD/home PCSEDIT_NOMIDI=1 DISPLAY=:99 ./PCSEDIT &>/dev/null &); sleep 2.5; DISPLAY=:99 xwin…
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ cd /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/shot && (HOME=$PWD/home PCSEDIT_NOMIDI=1 DISPLAY=:99 ./PCSEDIT &>/dev/null &); sleep 2.5; DISPLAY=:99 xwininfo -root -tree | grep -i pcsedit; cat home/.config/pcsedit.ini | head -3; pkill -x PCSEDIT; sleep 0.5; head -4 home/.config/pcsedit.ini
+2026-10-01T01:35:25-0400  WARNING  bash_end      [stderr] 8L stdout / 2L stderr
+  |      0x200007 "PCSEDIT - PC speaker sound editor": ("Untitled" "Untitled")  1280x720+0+0  +0+0
+  | width=1280
+  | height=720
+  | x=0
+  | width=1280
+  | height=720
+  | x=0
+  | y=0
+  ! 
+  ! Shell cwd was reset to /home/grymmjack/git/qb64
+2026-10-01T01:35:30-0400  INFO     bash_start    cd /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER && sed -n "$(grep -n '^SUB make_ui' PCSEDIT.BAS | cut -d: -f1),+22p" PCSEDIT.BAS; sed -n 528,545p PCSEDIT.BAS
+  > cwd: /home/grymmjack/git/qb64
+  $ cd /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER && sed -n "$(grep -n '^SUB make_ui' PCSEDIT.BAS | cut -d: -f1),+22p" PCSEDIT.BAS; sed -n 528,545p PCSEDIT.BAS
+2026-10-01T01:35:30-0400  INFO     bash_end      [ok] 41L stdout
+  | SUB make_ui
+  |     DIM lw AS LONG, lh AS LONG
+  |     DO
+  |         lw = INT(physW / uiScale): lh = INT(physH / uiScale)
+  |         IF (lw >= MIN_LW AND lh >= MIN_LH) OR uiScale <= 0.5 THEN EXIT DO
+  |         uiScale = uiScale - 0.125 ' the window is too small for this scale
+  |     LOOP
+  |     IF lw < MIN_LW THEN lw = MIN_LW
+  |     IF lh < MIN_LH THEN lh = MIN_LH
+  |     IF uiImg THEN _FREEIMAGE uiImg
+  |     uiImg = _NEWIMAGE(lw, lh, 32)
+  |     _DEST uiImg
+  |     _PRINTMODE _KEEPBACKGROUND
+  |     _DEST scrImg
+  |     do_layout lw, lh
+  | END SUB
+  | 
+  | 
+  | ''
+  | ' Fit the panels to a logical size: the roll takes the spare width; its
+  | ' note rows take the spare height (the note range stays C1-A8).
+  | '
+  | SUB do_layout (lw AS LONG, lh AS LONG)
+  | 
+  |     ' follow playback: page the view along so the playhead stays on screen
+  |     IF playing AND followOn THEN follow_page heard_pos(playPos)
+  | 
+  |     ' window resized (or maximised): new window image, re-fit the layout
+  |     IF _RESIZE THEN
+  |         physW = _RESIZEWIDTH: physH = _RESIZEHEIGHT
+  |         IF physW < 320 THEN physW = 320
+  |         IF physH < 240 THEN physH = 240
+  |         oldScr = scrImg ' free the old window image once the new one is up
+  |         scrImg = _NEWIMAGE(physW, physH, 32)
+  |         SCREEN scrImg
+  |         _FREEIMAGE oldScr
+  |         make_ui
+  |     END IF
+  | 
+  |     _DEST uiImg
+  |     draw_ui
+2026-10-01T01:35:39-0400  INFO     bash_start    cd /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/shot && sed -i 's/^width=.*/width=1707/; s/^height=.*/height=720/' home/.config/pcsedit.ini && (HOME=$PWD/…
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ cd /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/shot && sed -i 's/^width=.*/width=1707/; s/^height=.*/height=720/' home/.config/pcsedit.ini && (HOME=$PWD/home PCSEDIT_NOMIDI=1 DISPLAY=:99 ./PCSEDIT &>/dev/null &); sleep 3.3; DISPLAY=:99 xwd -root -silent > s.xwd; DISPLAY=:99 xwininfo -root -tree | grep -i pcsedit; pkill -x PCSEDIT; python3 xwd2png.py s.xwd full.png 1600 760
+2026-10-01T01:35:43-0400  WARNING  bash_end      [stderr] 1L stdout / 2L stderr
+  |      0x200007 "PCSEDIT - PC speaker sound editor": ("Untitled" "Untitled")  1707x720+0+0  +0+0
+  ! 
+  ! Shell cwd was reset to /home/grymmjack/git/qb64
+2026-10-01T01:35:57-0400  INFO     bash_start    cd /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/shot && sed -i 's/^width=.*/width=1280/' home/.config/pcsedit.ini && python3 - <<'EOF' | s=open('x.BAS').r…
+  > cwd: /home/grymmjack/git/qb64
+  $ cd /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/shot && sed -i 's/^width=.*/width=1280/' home/.config/pcsedit.ini && python3 - <<'EOF'
+  $ s=open('x.BAS').read()
+  $ s=s.replace("play_from 0\n","play_from 0\nDIM SHARED shT AS DOUBLE: shT = TIMER\n",1)
+  $ a="    midi_poll\n    metronome\n"
+  $ assert a in s
+  $ s=s.replace(a,a+'    IF shT > 0 AND TIMER - shT > 1.6 THEN _SAVEIMAGE "'+__import__('os').getcwd()+'/shot.png", scrImg: SYSTEM\n',1)
+  $ open('x.BAS','w').write(s)
+  $ EOF
+  $ /home/grymmjack/git/qb64pe/qb64pe -x x.BAS -o ./PCSEDIT 2>&1 | grep -i "error\|Output"; rm -f shot.png; HOME=$PWD/home PCSEDIT_NOMIDI=1 DISPLAY=:99 timeout 20 ./PCSEDIT; file shot.png
+2026-10-01T01:36:02-0400  WARNING  bash_end      [stderr] 3L stdout / 2L stderr
+  | Beginning C++ output from QB64 code... 
+  | Output: /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/shot/PCSEDIT
+  | shot.png: PNG image data, 1280 x 720, 8-bit/color RGBA, non-interlaced
+  ! 
+  ! Shell cwd was reset to /home/grymmjack/git/qb64
+2026-10-01T01:36:11-0400  INFO     bash_start    cd /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER && cp /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/shot/shot.png SCREENSHOTS/6-pcsedit.png && python3 - …
+  > cwd: /home/grymmjack/git/qb64
+  $ cd /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER && cp /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/shot/shot.png SCREENSHOTS/6-pcsedit.png && python3 - <<'EOF'
+  $ p='README.md'; s=open(p).read()
+  $ a="![PCSEDIT editing the Duke Nukem 1 BOMBEXPLODE sound](SCREENSHOTS/6-pcsedit.png)"
+  $ assert s.count(a)==1
+  $ s=s.replace(a,"![PCSEDIT playing a four-voice chord tune with PWM, in the Duke Nukem 1 bank: voice chips with G on, the 1/8 grid, a selection across all voices, the loop region and the oscilloscope](SCREENSHOTS/6-pcsedit.png)")
+  $ open(p,'w').write(s)
+  $ EOF
+  $ ls -la SCREENSHOTS/6-pcsedit.png; cd /home/grymmjack/git/qb64 && git add .claude/activity.log qb64/SOUND/PC-SPEAKER/SCREENSHOTS/6-pcsedit.png qb64/SOUND/PC-SPEAKER/README.md && git commit -q -m "SOUND/PC-SPEAKER: new PCSEDIT screenshot
+  $ 
+  $ A four-voice chord tune playing with PWM: voice chips with G, the grid, a
+  $ selection across voices, the loop region and the oscilloscope.
+  $ 
+  $ Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>" && timeout 100 git push -q; git log --oneline -1; git status --short
