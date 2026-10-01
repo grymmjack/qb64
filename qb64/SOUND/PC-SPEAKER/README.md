@@ -90,8 +90,8 @@ right. The toolbar above it picks a tool. Click a button, press its letter
 | **N**ote | the default. **Click** to place a steady note at that pitch, **Len** long (**F11/F12**; counted in grid cells while the grid is on). Drag right to make it longer; the pitch stays where you clicked. A grey bar shows what a click would place. |
 | **W**ave | drag a box to fill it with a pitch waveform: the box's width is how long it lasts and its height is the pitch range it swings between. While the box is still live (pink), press **1** square, **2** triangle, **3** saw up, **4** saw down or **5** sine. **[ ]** give fewer or more cycles. Drag inside the box left/right for the **duty cycle** and up/down for the **phase**. Drag the box's **edges** to resize it: left/right stretch or squash it in time (the cycles stretch with it), top/bottom move the top or bottom of its pitch swing (past the other edge, it turns upside down). Press Enter, click outside the box or pick another tool to finish; Esc cancels. |
 | **E**rase | drag to clear steps |
-| **S**elect | drag a box around steps; hold **Shift** to snap it to whole grid cells (or whole beats with the grid off). Rests inside the box are part of the selection, so a bar or a phrase moves, copies and pastes as one chunk, silences and all. **Ctrl+A** selects the whole sound. |
-| **M**ove | drag the selection. Time moves in steps (whole cells with the grid on), pitch in semitones. |
+| **S**elect | drag a box around steps. With the grid and snap (F6) on, its ends snap to whole grid cells; hold **Alt** while dragging for exact steps. With the grid off, **Shift** snaps it to whole beats. Rests inside the box are part of the selection, so a bar or a phrase moves, copies and pastes as one chunk, silences and all. **Ctrl+A** selects the whole sound. |
+| **M**ove | drag the selection. Time moves in whole cells with the grid and snap on (hold **Alt** for single steps), otherwise in steps; pitch in semitones. Stretching the box's edges snaps the same way. |
 | **C**ut, Copy, Paste | **C** or **Ctrl+X** cuts, **Ctrl+C** copies, and **Ctrl+V** pastes at the cursor. Pasted steps become the selection, ready to move. |
 
 The mouse wheel scrolls, and **Ctrl+wheel** zooms around the mouse pointer:
@@ -185,6 +185,11 @@ sets the tempo, which starts at 120 BPM. With the grid on:
 
 * the roll shows a line for every cell, a stronger one for every beat, and a
   numbered line for every bar (4/4), and the cursor shows *bar.beat*;
+* with snap on (**F6**), everything you place in time lands on grid lines:
+  drawing, erasing, Line, Note, Wave boxes, selections, moving, stretching,
+  nudging with Left/Right, pasting and clicking the cursor in the ruler.
+  Hold **Alt** while dragging (or with the arrows / Ctrl+V) to place by
+  single steps instead;
 * drawing and erasing fill whole cells, with one pitch per cell, so a dragged
   sweep turns into a staircase of notes;
 * Left/Right move the cursor a cell at a time and Ctrl+Left/Right a beat at a

@@ -17592,3 +17592,500 @@
   $ the NOTE tool puts each note in a free voice so clicks build chords.
   $ 
   $ Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>" && git push -q && git log --oneline -1 && git status --short
+2026-10-01T01:18:55-0400  INFO     bash_end      [ok] 2L stdout
+  | warning: in the working copy of '.claude/activity.log', CRLF will be replaced by LF the next time Git touches it
+  | 4376b9ea SOUND/PC-SPEAKER: PCSEDIT G mode edits all voices at once
+2026-10-01T01:22:26-0400  NOTICE   prompt        <ide_opened_file>The user opened the file /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER/PCSEDIT.BAS in the IDE. This may or may not be related to the current task.</ide_opened_file>
+  > <ide_opened_file>The user opened the file /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER/PCSEDIT.BAS in the IDE. This may or may not be related to the current task.</ide_opened_file>
+  > can we make the selection tool snap to the grid if snap is on? and hold alt while dragging or something to bypass the snap if on? this would make more musical sense
+2026-10-01T01:22:37-0400  INFO     bash_start    cd /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER && grep -n "modAlt" PCSEDIT.BAS | head; grep -n "set_box\|snap_cell(" PCSEDIT.BAS; grep -n -i "shift.*select\|select.*shift\|whole bars\|whole cells\…
+  > cwd: /home/grymmjack/git/qb64
+  $ cd /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER && grep -n "modAlt" PCSEDIT.BAS | head; grep -n "set_box\|snap_cell(" PCSEDIT.BAS; grep -n -i "shift.*select\|select.*shift\|whole bars\|whole cells\|whole beats" PCSEDIT.BAS README.md | head -20
+2026-10-01T01:22:37-0400  INFO     bash_end      [ok] 35L stdout
+  | 353:DIM SHARED modAlt AS INTEGER
+  | 501:            CASE 100307, 100308: modAlt = (k > 0)
+  | 2760:            IF selOn AND modAlt THEN
+  | 2772:            IF selOn AND modAlt THEN
+  | 2850:            IF NOT ctrl AND (NOT pianoOn OR modAlt) THEN
+  | 2952:    modCtrl = 0: modShift = 0: modAlt = 0
+  | 1085:        ruler_snap = snap_cell(s)
+  | 1397:            ns(nn) = snap_cell(evS(i))
+  | 1403:                IF final THEN e = snap_cell(e)
+  | 1405:                e = snap_cell(e)
+  | 1733:                set_box boxS, boxN, s, nt, shift
+  | 1736:                set_box boxS, boxN, s, nt, shift
+  | 1837:        set_box s, nt, s, nt, shift
+  | 2094:            IF gridDiv THEN e = snap_cell(e)
+  | 2100:            IF gridDiv THEN e = snap_cell(e)
+  | 2176:SUB set_box (sa AS LONG, na AS DOUBLE, sb AS LONG, nb AS DOUBLE, snapIt AS INTEGER)
+  | 2588:            IF gridDiv THEN e = snap_cell(e)
+  | README.md:93:| **S**elect | drag a box around steps; hold **Shift** to snap it to whole grid cells (or whole beats with the grid off). Rests inside the box are part of the selection, so a bar or a phrase moves, copies and pastes as one chunk, silences and all. **Ctrl+A** selects the whole sound. |
+  | README.md:94:| **M**ove | drag the selection. Time moves in steps (whole cells with the grid on), pitch in semitones. |
+  | README.md:167:With a selection, the **arrow keys** nudge it (**Shift+Up/Down** moves it an
+  | README.md:188:* drawing and erasing fill whole cells, with one pitch per cell, so a dragged
+  | README.md:246:   Its ends snap to grid cells with the grid on, or to **whole bars with
+  | README.md:329:| Ctrl+Up / Ctrl+Down | with a selection: twice / half as long; without: transpose the sound a semitone (add Shift for an octave) |
+  | README.md:340:| Ctrl+K / Ctrl+Shift+K / Ctrl+H | keys play notes or the selected sound / lock the instrument / GATE, ONE-SHOT, LOOP |
+  | README.md:344:| Arrows / Delete / Esc (with a selection) | nudge it (Shift+Up/Down = octave, Alt+Up/Down = one PIT divisor) / clear it / deselect |
+  | PCSEDIT.BAS:1044:' to grid cells with the grid on, to whole bars with Shift.
+  | PCSEDIT.BAS:1074:' Snap a loop edge: whole bars with Shift, grid cells with the grid on,
+  | PCSEDIT.BAS:1230:        ' whole cells: noteLen of them, from the cell the cursor is at the
+  | PCSEDIT.BAS:1966:        CASE TOOL_SELECT: tool_help = "SELECT: drag a box (Shift = snap to grid); rests inside are part of it; Ctrl+A all; Esc"
+  | PCSEDIT.BAS:1967:        CASE TOOL_MOVE: tool_help = "MOVE: drag the selection; arrows nudge it (Shift+Up/Down = octave)"
+  | PCSEDIT.BAS:2174:' ends snap to whole cells.
+  | PCSEDIT.BAS:2179:    ' Shift held: whole grid cells (or whole beats with the grid off), so a
+  | PCSEDIT.BAS:2674:    ' grid on: whole cells, one pitch per cell
+  | PCSEDIT.BAS:4598:    t(2) = "Selection: arrows nudge (Shift octave, Alt 1 divisor); Ctrl+Up/Down x2 / half; drag edges to stretch"
+  | PCSEDIT.BAS:4620:    t(24) = "Ctrl+K  keys play the selected SOUND (follows your pick; Ctrl+Shift+K locks it)"
+2026-10-01T01:22:42-0400  INFO     bash_start    sed -n 2170,2180p PCSEDIT.BAS; sed -n 2580,2592p PCSEDIT.BAS; grep -n "^SUB drag_move" -A8 PCSEDIT.BAS; grep -n "snapOn" PCSEDIT.BAS | head -5
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ sed -n 2170,2180p PCSEDIT.BAS; sed -n 2580,2592p PCSEDIT.BAS; grep -n "^SUB drag_move" -A8 PCSEDIT.BAS; grep -n "snapOn" PCSEDIT.BAS | head -5
+2026-10-01T01:22:42-0400  INFO     bash_end      [ok] 36L stdout
+  | ''
+  | ' The selection box from two corners (step, pitch). With the grid on its
+  | ' ends snap to whole cells.
+  | '
+  | SUB set_box (sa AS LONG, na AS DOUBLE, sb AS LONG, nb AS DOUBLE, snapIt AS INTEGER)
+  |     DIM a AS LONG, b AS LONG, beatLen AS DOUBLE
+  |     IF sa <= sb THEN a = sa: b = sb ELSE a = sb: b = sa
+  |     ' Shift held: whole grid cells (or whole beats with the grid off), so a
+  |     ' selection is a clean musical chunk; otherwise exact steps
+  | ' Dragging an edge of the box (drawing 9-12) to step s / pitch nt.
+  | '
+  | SUB tf_drag (which AS INTEGER, s AS LONG, nt AS DOUBLE)
+  |     DIM e AS LONG, p AS DOUBLE
+  |     SELECT CASE which
+  |         CASE 9, 10 ' time: the edge snaps to grid cells when the grid is on
+  |             e = s
+  |             IF which = 10 THEN e = s + 1
+  |             IF gridDiv THEN e = snap_cell(e)
+  |             IF which = 9 THEN
+  |                 IF e > tfS1 - 1 THEN e = tfS1 - 1
+  |                 IF e < 0 THEN e = 0
+  |                 tf_apply e, tfS1, tfLo, tfHi
+  | 2334:SUB drag_move (s AS LONG, nt AS DOUBLE)
+  | 2335-    DIM ds AS LONG, dn AS LONG
+  | 2336-    IF gridDiv THEN
+  | 2337-        ds = cell_start(cell_of(moveS) + (cell_of(s) - cell_of(moveS))) - cell_start(cell_of(moveS))
+  | 2338-    ELSE
+  | 2339-        ds = s - moveS
+  | 2340-    END IF
+  | 2341-    IF selS0 + ds < 0 THEN ds = -selS0
+  | 2342-    dn = INT(nt - moveNt + 0.5 * SGN(nt - moveNt))
+  | 200:DIM SHARED snapOn AS INTEGER
+  | 388:snapOn = VAL(cfg_get("snap", "-1"))
+  | 1827:        IF snapOn THEN lineNt = INT(nt + 0.5)
+  | 1855:            IF snapOn THEN noteNt = INT(nt + 0.5)
+  | 2048:    IF snapOn THEN waveLo = INT(waveLo + 0.5): waveHi = INT(waveHi + 0.5)
+2026-10-01T01:22:58-0400  INFO     bash_start    python3 - <<'PYEOF' | p='PCSEDIT.BAS'; s=open(p).read() | def r(a,b,c=1): | global s | assert s.count(a)==c,(a[:90],s.count(a)); s=s.replace(a,b) | i=s.index(" ' Shift held: whole grid cells (or whol…
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ python3 - <<'PYEOF'
+  $ p='PCSEDIT.BAS'; s=open(p).read()
+  $ def r(a,b,c=1):
+  $     global s
+  $     assert s.count(a)==c,(a[:90],s.count(a)); s=s.replace(a,b)
+  $ i=s.index("    ' Shift held: whole grid cells (or whole beats with the grid off), so a")
+  $ j=s.index("    selLo = INT(na + 0.5): selHi = INT(nb + 0.5)", i)
+  $ print(s[i:j])
+  $ r(s[i:j],"""    ' Snap on (F6) with the grid on, or Shift: whole grid cells; Shift with
+  $     ' the grid off: whole beats - so a selection is a clean musical chunk.
+  $     ' Alt held: exact steps whatever the snap.
+  $     IF NOT free_hand AND gridDiv <> 0 AND (snapOn OR snapIt) THEN
+  $         selS0 = cell_start(cell_of(a))
+  $         selS1 = cell_start(cell_of(b) + 1)
+  $     ELSEIF snapIt AND NOT free_hand THEN
+  $         beatLen = 60 * rateHz / bpm
+  $         selS0 = INT(INT(a / beatLen) * beatLen + 0.5)
+  $         selS1 = INT((INT(b / beatLen) + 1) * beatLen + 0.5)
+  $     ELSE
+  $         selS0 = a
+  $         selS1 = b + 1
+  $     END IF
+  $ """)
+  $ r("""' The selection box from two corners (step, pitch). With the grid on its
+  $ ' ends snap to whole cells.
+  $ '""","""' The selection box from two corners (step, pitch). With the grid and snap
+  $ ' on its ends snap to whole cells (Alt: not).
+  $ '
+  $ FUNCTION free_hand%
+  $     free_hand = _KEYDOWN(100307) OR _KEYDOWN(100308) OR modAlt
+  $ END FUNCTION
+  $ 
+  $ 
+  $ ''""")
+  $ r("""    IF gridDiv THEN
+  $         ds = cell_start(cell_of(moveS) + (cell_of(s) - cell_of(moveS))) - cell_start(cell_of(moveS))""","""    IF gridDiv <> 0 AND snapOn AND NOT free_hand THEN ' Alt: by steps
+  $         ds = cell_start(cell_of(moveS) + (cell_of(s) - cell_of(moveS))) - cell_start(cell_of(moveS))""")
+  $ r("""        CASE 9, 10 ' time: the edge snaps to grid cells when the grid is on
+  $             e = s
+  $             IF which = 10 THEN e = s + 1
+  $             IF gridDiv THEN e = snap_cell(e)""","""        CASE 9, 10 ' time: the edge snaps to grid cells with grid and snap on (Alt: not)
+  $             e = s
+  $             IF which = 10 THEN e = s + 1
+  $             IF gridDiv <> 0 AND snapOn AND NOT free_hand THEN e = snap_cell(e)""")
+  $ r('''"SELECT: drag a box (Shift = snap to grid); rests inside are part of it; Ctrl+A all; Esc"''','''"SELECT: drag a box (snaps to the grid; Alt = free, Shift = beats); rests inside count; Ctrl+A all"''')
+  $ r('''"MOVE: drag the selection; arrows nudge it (Shift+Up/Down = octave)"''','''"MOVE: drag the selection (by grid cells; Alt = by steps); arrows nudge it (Shift+Up/Down = octave)"''')
+  $ open(p,'w').write(s)
+  $ p='README.md'; s=open(p).read()
+  $ r("""drag a box around steps; hold **Shift** to snap it to whole grid cells (or whole beats with the grid off).""","""drag a box around steps. With the grid and snap (F6) on, its ends snap to whole grid cells; hold **Alt** while dragging for exact steps. With the grid off, **Shift** snaps it to whole beats.""")
+  $ r("""drag the selection. Time moves in steps (whole cells with the grid on), pitch in semitones.""","""drag the selection. Time moves in whole cells with the grid and snap on (hold **Alt** for single steps), otherwise in steps; pitch in semitones. Stretching the box's edges snaps the same way.""")
+  $ open(p,'w').write(s)
+  $ PYEOF
+  $ grep -n "F6 snap" PCSEDIT.BAS README.md | head
+2026-10-01T01:22:58-0400  INFO     bash_end      [ok] 16L stdout
+  |     ' Shift held: whole grid cells (or whole beats with the grid off), so a
+  |     ' selection is a clean musical chunk; otherwise exact steps
+  |     IF snapIt AND gridDiv <> 0 THEN
+  |         selS0 = cell_start(cell_of(a))
+  |         selS1 = cell_start(cell_of(b) + 1)
+  |     ELSEIF snapIt THEN
+  |         beatLen = 60 * rateHz / bpm
+  |         selS0 = INT(INT(a / beatLen) * beatLen + 0.5)
+  |         selS1 = INT((INT(b / beatLen) + 1) * beatLen + 0.5)
+  |     ELSE
+  |         selS0 = a
+  |         selS1 = b + 1
+  |     END IF
+  | 
+  | PCSEDIT.BAS:78:'   F6 snap to semitones on/off   F7 MIDI device   F9/F10 octave -/+
+  | PCSEDIT.BAS:4613:    t(9) = "F6 snap  F7 MIDI device  F11/F12 note length  Ctrl+G grid  Ctrl+B BPM  ' lines"
+2026-10-01T01:22:58-0400  NOTICE   prompt        same with move tool
+  > same with move tool
+2026-10-01T01:23:03-0400  INFO     bash_start    sed -i "78s/F6 snap to semitones on\/off /F6 snap (semitones, grid) /" PCSEDIT.BAS && sed -n 78p PCSEDIT.BAS && grep -n "F6" README.md | head -5 && SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2d…
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ sed -i "78s/F6 snap to semitones on\/off  /F6 snap (semitones, grid)    /" PCSEDIT.BAS && sed -n 78p PCSEDIT.BAS && grep -n "F6" README.md | head -5 && SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad && /home/grymmjack/git/qb64pe/qb64pe -x PCSEDIT.BAS -o $SP/PCSEDIT 2>&1 | grep -i "error\|line [0-9]\|Output"
+2026-10-01T01:23:05-0400  INFO     bash_end      [ok] 5L stdout
+  | '   F6 snap (semitones, grid)     F7 MIDI device   F9/F10 octave -/+
+  | 93:| **S**elect | drag a box around steps. With the grid and snap (F6) on, its ends snap to whole grid cells; hold **Alt** while dragging for exact steps. With the grid off, **Shift** snaps it to whole beats. Rests inside the box are part of the selection, so a bar or a phrase moves, copies and pastes as one chunk, silences and all. **Ctrl+A** selects the whole sound. |
+  | 110:semitones (switch snap off with F6 for smooth slides).
+  | Beginning C++ output from QB64 code... 
+  | Output: /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/PCSEDIT
+2026-10-01T01:23:05-0400  NOTICE   prompt        basically honor grid snap
+  > basically honor grid snap
+2026-10-01T01:23:05-0400  NOTICE   prompt        for the tools
+  > for the tools
+2026-10-01T01:23:05-0400  NOTICE   prompt        and pasting
+  > and pasting
+2026-10-01T01:23:05-0400  NOTICE   prompt        etc.
+  > etc.
+2026-10-01T01:23:14-0400  INFO     bash_start    grep -n "gridDiv" PCSEDIT.BAS | grep -v "^\s*'" 
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ grep -n "gridDiv" PCSEDIT.BAS | grep -v "^\s*'" 
+2026-10-01T01:23:14-0400  INFO     bash_end      [ok] 42L stdout
+  | 286:DIM SHARED gridDiv AS LONG ' 0 = off, else cells per whole note: 4 8 16 32 64 128, 12 = 1/8T, 24 = 1/16T
+  | 393:gridDiv = VAL(cfg_get("grid", "0"))
+  | 1084:    ELSEIF gridDiv THEN
+  | 1229:    IF gridDiv THEN
+  | 1317:    IF quantOn AND gridDiv = 0 THEN
+  | 1318:        gridDiv = 16
+  | 1348:    IF quantOn AND gridDiv <> 0 THEN render_take 0
+  | 1507:    IF quantOn AND gridDiv <> 0 AND evCount > 0 THEN
+  | 1857:            IF gridDiv THEN noteS0 = cell_start(cell_of(s))
+  | 2039:    IF gridDiv THEN
+  | 2094:            IF gridDiv THEN e = snap_cell(e)
+  | 2100:            IF gridDiv THEN e = snap_cell(e)
+  | 2188:    IF NOT free_hand AND gridDiv <> 0 AND (snapOn OR snapIt) THEN
+  | 2343:    IF gridDiv <> 0 AND snapOn AND NOT free_hand THEN ' Alt: by steps
+  | 2409:    IF gridDiv THEN nudge_step = CLNG(cell_steps) ELSE nudge_step = 1
+  | 2595:            IF gridDiv <> 0 AND snapOn AND NOT free_hand THEN e = snap_cell(e)
+  | 2640:    IF gridDiv THEN
+  | 2660:    IF gridDiv THEN
+  | 2682:    IF gridDiv THEN
+  | 2751:            ELSEIF gridDiv THEN
+  | 2759:            ELSEIF gridDiv THEN
+  | 2915:                            set_status "Quantize ON - LIVE notes snap to the grid as you play" + MID$(" (turn the grid on: Ctrl+G)", 1, -28 * (gridDiv = 0))
+  | 3125:' gridDiv cells per whole note (4 = quarter notes, 16 = sixteenths, 12 and
+  | 3133:    IF gridDiv = 0 THEN cell_steps = 1: EXIT FUNCTION
+  | 3134:    cell_steps = 4 * 60 * rateHz / (bpm * gridDiv)
+  | 3159:    beat_cells = gridDiv \ 4
+  | 3160:    IF gridDiv \ 4 < 1 THEN beat_cells = 1
+  | 3183:    SELECT CASE gridDiv
+  | 3187:        CASE ELSE: grid_name = "1/" + LTRIM$(STR$(gridDiv))
+  | 3193:    IF gridDiv = 0 THEN grid_info = "": EXIT FUNCTION
+  | 3203:        IF divs(i) = gridDiv THEN n = i
+  | 3206:    gridDiv = divs(n)
+  | 3207:    IF gridDiv THEN
+  | 3220:    IF gridDiv THEN
+  | 4060:    IF gridDiv THEN s = s + "  bar " + bar_beat(cursorStep)
+  | 4064:    IF gridDiv THEN
+  | 4261:        IF gridDiv = 0 AND zoom >= 4 THEN
+  | 4269:    IF gridDiv THEN
+  | 4429:        IF gridDiv THEN s = cell_start(cell_of(mouseStep))
+  | 4436:        IF gridDiv THEN
+  | 4527:            onBeat = (c MOD bc = 0) AND (gridDiv MOD 4 = 0 OR gridDiv = 12 OR gridDiv = 24)
+  | 4787:    PRINT #ff, "grid="; LTRIM$(STR$(gridDiv))
+2026-10-01T01:23:14-0400  NOTICE   prompt        moving etc
+  > moving etc
+2026-10-01T01:23:17-0400  INFO     bash_start    sed -n 1075,1095p PCSEDIT.BAS; sed -n 2030,2050p PCSEDIT.BAS; sed -n 2085,2105p PCSEDIT.BAS; sed -n 2636,2690p PCSEDIT.BAS; sed -n 2745,2765p PCSEDIT.BAS; sed -n 4425,4440p PCSEDIT.BAS; grep -n "^FUN…
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ sed -n 1075,1095p PCSEDIT.BAS; sed -n 2030,2050p PCSEDIT.BAS; sed -n 2085,2105p PCSEDIT.BAS; sed -n 2636,2690p PCSEDIT.BAS; sed -n 2745,2765p PCSEDIT.BAS; sed -n 4425,4440p PCSEDIT.BAS; grep -n "^FUNCTION snap_cell" -A6 PCSEDIT.BAS; grep -n "drawing = 17 THEN cursorStep\|SUB ruler_drag" -A12 PCSEDIT.BAS | head -30
+2026-10-01T01:23:17-0400  INFO     bash_end      [ok] 189L stdout
+  | ' otherwise the step itself. isEnd rounds ends up so a region is never empty.
+  | '
+  | FUNCTION ruler_snap& (s AS LONG, isEnd AS INTEGER)
+  |     DIM barLen AS DOUBLE, b AS LONG
+  |     IF modShift OR _KEYDOWN(100303) OR _KEYDOWN(100304) THEN
+  |         barLen = BEATS_PER_BAR * 60 * rateHz / bpm
+  |         b = INT(s / barLen + 0.5)
+  |         IF isEnd AND b < 1 THEN b = 1
+  |         ruler_snap = INT(b * barLen + 0.5)
+  |     ELSEIF gridDiv THEN
+  |         ruler_snap = snap_cell(s)
+  |     ELSE
+  |         ruler_snap = s
+  |     END IF
+  | END FUNCTION
+  | 
+  | 
+  | SUB toggle_loop
+  |     loopOn = NOT loopOn
+  |     IF loopOn AND selOn THEN
+  |         set_status "Loop ON - repeating the selection (steps" + STR$(selS0) + " -" + STR$(selS1 - 1) + ")"
+  | END FUNCTION
+  | 
+  | 
+  | ''
+  | ' Set the live waveform's box from two corners and draw it.
+  | '
+  | SUB wave_box (sa AS LONG, na AS DOUBLE, sb AS LONG, nb AS DOUBLE)
+  |     DIM a AS LONG, b AS LONG
+  |     IF sa <= sb THEN a = sa: b = sb ELSE a = sb: b = sa
+  |     IF gridDiv THEN
+  |         waveS0 = cell_start(cell_of(a))
+  |         waveS1 = cell_start(cell_of(b) + 1)
+  |     ELSE
+  |         waveS0 = a
+  |         waveS1 = b + 1
+  |     END IF
+  |     waveLo = na: waveHi = nb
+  |     IF waveLo > waveHi THEN SWAP waveLo, waveHi
+  |     IF snapOn THEN waveLo = INT(waveLo + 0.5): waveHi = INT(waveHi + 0.5)
+  |     wave_render
+  | END SUB
+  | ' Drag an edge of the live waveform's box (drawing 13-16). Time edges keep
+  | ' the number of cycles, so each cycle stretches; pitch edges move the top or
+  | ' bottom of its swing, and past the other edge the shape turns upside down.
+  | '
+  | SUB wave_resize (which AS INTEGER, s AS LONG, nt AS DOUBLE)
+  |     DIM e AS LONG, p AS DOUBLE
+  |     SELECT CASE which
+  |         CASE 13
+  |             e = s
+  |             IF gridDiv THEN e = snap_cell(e)
+  |             IF e > waveS1 - 1 THEN e = waveS1 - 1
+  |             IF e < 0 THEN e = 0
+  |             waveS0 = e
+  |         CASE 14
+  |             e = s + 1
+  |             IF gridDiv THEN e = snap_cell(e)
+  |             IF e < waveS0 + 1 THEN e = waveS0 + 1
+  |             waveS1 = e
+  |         CASE 15, 16
+  |             p = nt
+  |             IF snapOn THEN p = INT(p + 0.5)
+  | '
+  | SUB place_note (mouseS AS LONG)
+  |     DIM e AS LONG, i AS LONG, v AS LONG
+  |     e = note_tool_end(noteS0)
+  |     IF gridDiv THEN
+  |         IF cell_start(cell_of(mouseS) + 1) > e THEN e = cell_start(cell_of(mouseS) + 1)
+  |     ELSE
+  |         IF mouseS + 1 > e THEN e = mouseS + 1
+  |     END IF
+  |     IF e > MAX_STEPS THEN e = MAX_STEPS
+  |     sndData(cur) = noteBase
+  |     v = note_div(noteNt)
+  |     FOR i = noteS0 TO e - 1
+  |         set_step cur, i, v
+  |     NEXT
+  |     cursorStep = e
+  |     lastStep = e - 1: lastNote = noteNt
+  | ...[truncated]
+2026-10-01T01:23:26-0400  INFO     bash_start    grep -n "nudge_step\|FUNCTION grid_next\|FUNCTION grid_prev" -A3 PCSEDIT.BAS | head -30; sed -n 1225,1240p PCSEDIT.BAS
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ grep -n "nudge_step\|FUNCTION grid_next\|FUNCTION grid_prev" -A3 PCSEDIT.BAS | head -30; sed -n 1225,1240p PCSEDIT.BAS
+2026-10-01T01:23:26-0400  INFO     bash_end      [ok] 40L stdout
+  | 2408:FUNCTION nudge_step&
+  | 2409:    IF gridDiv THEN nudge_step = CLNG(cell_steps) ELSE nudge_step = 1
+  | 2410-END FUNCTION
+  | 2411-
+  | 2412-
+  | --
+  | 2750:                nudge -nudge_step, 0
+  | 2751-            ELSEIF gridDiv THEN
+  | 2752-                IF ctrl THEN move_cursor grid_prev(cursorStep, beat_cells) ELSE move_cursor grid_prev(cursorStep, 1)
+  | 2753-            ELSE
+  | --
+  | 2758:                nudge nudge_step, 0
+  | 2759-            ELSEIF gridDiv THEN
+  | 2760-                IF ctrl THEN move_cursor grid_next(cursorStep, beat_cells) ELSE move_cursor grid_next(cursorStep, 1)
+  | 2761-            ELSE
+  | --
+  | 3167:FUNCTION grid_next& (s AS LONG, n AS LONG)
+  | 3168-    grid_next = cell_start(cell_of(s) + n)
+  | 3169-END FUNCTION
+  | 3170-
+  | --
+  | 3172:FUNCTION grid_prev& (s AS LONG, n AS LONG)
+  | 3173-    DIM c AS LONG
+  | 3174-    c = cell_of(s)
+  | 3175-    IF cell_start(c) < s THEN c = c + 1 ' part way into a cell: count from its start
+  |         NEXT
+  |         set_status "Chord: " + note_name(n) + " in voice" + STR$(k)
+  |         EXIT SUB
+  |     END IF
+  |     IF gridDiv THEN
+  |         ' whole cells: noteLen of them, from the cell the cursor is at the
+  |         ' start of (or the next one, if it is part way into a cell)
+  |         c = cell_of(cursorStep)
+  |         IF cell_start(c) < cursorStep THEN c = c + 1
+  |         s0 = cell_start(c)
+  |         s1 = cell_start(c + noteLen)
+  |     ELSE
+  |         s0 = cursorStep
+  |         s1 = cursorStep + noteLen
+  |     END IF
+2026-10-01T01:23:46-0400  INFO     bash_start    python3 - <<'PYEOF' | p='PCSEDIT.BAS'; s=open(p).read() | def r(a,b,c=1): | global s | assert s.count(a)==c,(a[:90],s.count(a)); s=s.replace(a,b) | r("""FUNCTION free_hand% | free_hand = _KEYDOWN(100…
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ python3 - <<'PYEOF'
+  $ p='PCSEDIT.BAS'; s=open(p).read()
+  $ def r(a,b,c=1):
+  $     global s
+  $     assert s.count(a)==c,(a[:90],s.count(a)); s=s.replace(a,b)
+  $ r("""FUNCTION free_hand%
+  $     free_hand = _KEYDOWN(100307) OR _KEYDOWN(100308) OR modAlt
+  $ END FUNCTION""","""FUNCTION free_hand%
+  $     free_hand = _KEYDOWN(100307) OR _KEYDOWN(100308) OR modAlt
+  $ END FUNCTION
+  $ 
+  $ 
+  $ ''
+  $ ' Grid snap: the grid is on, snap (F6) is on and Alt isn't held. Every tool
+  $ ' that places things in time asks this.
+  $ '
+  $ FUNCTION grid_snap%
+  $     grid_snap = gridDiv <> 0 AND snapOn <> 0 AND NOT free_hand
+  $ END FUNCTION""")
+  $ # ruler
+  $ r("""    ELSEIF gridDiv THEN
+  $         ruler_snap = snap_cell(s)""","""    ELSEIF grid_snap THEN
+  $         ruler_snap = snap_cell(s)""")
+  $ r("""            IF ABS(mx - rulerPressX) <= 3 AND NOT loopSetByDrag THEN
+  $                 cursorStep = s""","""            IF ABS(mx - rulerPressX) <= 3 AND NOT loopSetByDrag THEN
+  $                 cursorStep = s
+  $                 IF grid_snap THEN cursorStep = snap_cell(s)""")
+  $ r("""            IF drawing = 17 THEN cursorStep = s""","""            IF drawing = 17 THEN
+  $                 cursorStep = s
+  $                 IF grid_snap THEN cursorStep = snap_cell(s)
+  $             END IF""")
+  $ # note tool
+  $ r("""            IF gridDiv THEN noteS0 = cell_start(cell_of(s))""","""            IF grid_snap THEN noteS0 = cell_start(cell_of(s))""")
+  $ # wave
+  $ r("""    IF sa <= sb THEN a = sa: b = sb ELSE a = sb: b = sa
+  $     IF gridDiv THEN
+  $         waveS0""","""    IF sa <= sb THEN a = sa: b = sb ELSE a = sb: b = sa
+  $     IF grid_snap THEN
+  $         waveS0""")
+  $ r("""            e = s
+  $             IF gridDiv THEN e = snap_cell(e)
+  $             IF e > waveS1 - 1""","""            e = s
+  $             IF grid_snap THEN e = snap_cell(e)
+  $             IF e > waveS1 - 1""")
+  $ r("""            e = s + 1
+  $             IF gridDiv THEN e = snap_cell(e)
+  $             IF e < waveS0 + 1""","""            e = s + 1
+  $             IF grid_snap THEN e = snap_cell(e)
+  $             IF e < waveS0 + 1""")
+  $ # select / move / stretch
+  $ r("""    IF NOT free_hand AND gridDiv <> 0 AND (snapOn OR snapIt) THEN""","""    IF grid_snap OR (snapIt AND gridDiv <> 0 AND NOT free_hand) THEN""")
+  $ r("""    IF gridDiv <> 0 AND snapOn AND NOT free_hand THEN ' Alt: by steps""","""    IF grid_snap THEN ' Alt: by steps""")
+  $ r("""            IF gridDiv <> 0 AND snapOn AND NOT free_hand THEN e = snap_cell(e)""","""            IF grid_snap THEN e = snap_cell(e)""")
+  $ # place_note / note_tool_end / draw_line / previews
+  $ r("""    e = note_tool_end(noteS0)
+  $     IF gridDiv THEN""","""    e = note_tool_end(noteS0)
+  $     IF grid_snap THEN""")
+  $ r("""FUNCTION note_tool_end& (s0 AS LONG)
+  $     IF gridDiv THEN""","""FUNCTION note_tool_end& (s0 AS LONG)
+  $     IF grid_snap THEN""")
+  $ r("""    ' grid on: whole cells, one pitch per cell
+  $     IF gridDiv THEN""","""    ' grid snap: whole cells, one pitch per cell
+  $     IF grid_snap THEN""")
+  $ r("""        IF gridDiv THEN s = cell_start(cell_of(mouseStep))""","""        IF grid_snap THEN s = cell_start(cell_of(mouseStep))""")
+  $ r("""        IF NOT snapOn THEN y = note_y(mouseNote)
+  $         IF gridDiv THEN
+  $             x = CANVAS_X""","""        IF NOT snapOn THEN y = note_y(mouseNote)
+  $         IF grid_snap THEN
+  $             x = CANVAS_X""")
+  $ # nudge
+  $ r("""FUNCTION nudge_step&
+  $     IF gridDiv THEN nudge_step = CLNG(cell_steps) ELSE nudge_step = 1
+  $ END FUNCTION""","""''
+  $ ' How far Left / Right nudge a selection: to the next grid line with grid
+  $ ' snap (Alt: one step).
+  $ '
+  $ FUNCTION nudge_step& (dirn AS LONG)
+  $     IF NOT grid_snap THEN nudge_step = dirn: EXIT FUNCTION
+  $     IF dirn > 0 THEN nudge_step = grid_next(selS0, 1) - selS0 ELSE nudge_step = grid_prev(selS0, 1) - selS0
+  $ END FUNCTION""")
+  $ ...[truncated]
+2026-10-01T01:23:46-0400  INFO     bash_end      [ok] 8L stdout
+  | 193:* drawing and erasing fill whole cells, with one pitch per cell, so a dragged
+  | 194-  sweep turns into a staircase of notes;
+  | 195-* Left/Right move the cursor a cell at a time and Ctrl+Left/Right a beat at a
+  | 2425:FUNCTION nudge_step& (dirn AS LONG)
+  | 2426:    IF NOT grid_snap THEN nudge_step = dirn: EXIT FUNCTION
+  | 2427:    IF dirn > 0 THEN nudge_step = grid_next(selS0, 1) - selS0 ELSE nudge_step = grid_prev(selS0, 1) - selS0
+  | 2769:                nudge nudge_step(-1), 0
+  | 2777:                nudge nudge_step(1), 0
+2026-10-01T01:23:57-0400  INFO     bash_start    export SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad && /home/grymmjack/git/qb64pe/qb64pe -x PCSEDIT.BAS -o $SP/PCSEDIT 2>&1 | grep -i "error\|line [0-9…
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ export SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad && /home/grymmjack/git/qb64pe/qb64pe -x PCSEDIT.BAS -o $SP/PCSEDIT 2>&1 | grep -i "error\|line [0-9]\|Output" && python3 - <<'PYEOF'
+  $ import os
+  $ SP=os.environ['SP']
+  $ s=open('PCSEDIT.BAS').read()
+  $ lines=s.split('\n'); i=lines.index('DO')
+  $ lines.insert(i,'''DIM tsI AS LONG, tsF AS LONG
+  $ tsF = FREEFILE: OPEN "SPX/pt/snap.txt" FOR OUTPUT AS #tsF
+  $ bpm = 120: gridDiv = 16: snapOn = -1
+  $ FOR tsI = 0 TO 69: set_step cur, tsI, note_div(60): NEXT
+  $ PRINT #tsF, "cell"; cell_steps; " cells:"; cell_start(1); cell_start(2); cell_start(3); cell_start(4)
+  $ set_box 5, 59, 30, 61, 0
+  $ PRINT #tsF, "box snap"; selS0; selS1
+  $ modAlt = -1: set_box 5, 59, 30, 61, 0: PRINT #tsF, "box alt"; selS0; selS1: modAlt = 0
+  $ snapOn = 0: set_box 5, 59, 30, 61, 0: PRINT #tsF, "box snap off"; selS0; selS1: snapOn = -1
+  $ set_box 5, 59, 30, 61, 0
+  $ PRINT #tsF, "nudge R"; nudge_step(1); " L"; nudge_step(-1)
+  $ sel_copy: cursorStep = 40: sel_paste: PRINT #tsF, "paste at"; cursorStep; selS0
+  $ modAlt = -1: cursorStep = 40: sel_paste: PRINT #tsF, "paste alt at"; selS0: modAlt = 0
+  $ PRINT #tsF, "note end from 3:"; note_tool_end(3)
+  $ CLOSE #tsF
+  $ SYSTEM'''.replace('SPX',SP))
+  $ open(SP+'/pt/PCSEDIT7.BAS','w').write('\n'.join(lines))
+  $ PYEOF
+  $ cd $SP/pt && /home/grymmjack/git/qb64pe/qb64pe -x PCSEDIT7.BAS -o ./PCSEDIT7 2>&1 | tail -1; HOME=$SP/pt/home PCSEDIT_NOMIDI=1 DISPLAY=:99 timeout 20 ./PCSEDIT7; cat snap.txt
+2026-10-01T01:24:02-0400  WARNING  bash_end      [stderr] 11L stdout / 2L stderr
+  | Beginning C++ output from QB64 code... 
+  | Output: /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/PCSEDIT
+  | Output: /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/pt/PCSEDIT7
+  | cell 17.5  cells: 18  35  53  70 
+  | box snap 0  35 
+  | box alt 5  31 
+  | box snap off 5  31 
+  | nudge R 18  L 0 
+  | paste at 35  35 
+  | paste alt at 40 
+  | note end from 3: 70
+  ! 
+  ! Shell cwd was reset to /home/grymmjack/git/qb64
+2026-10-01T01:24:18-0400  NOTICE   prompt        <ide_opened_file>The user opened the file /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER/PCSEDIT.BAS in the IDE. This may or may not be related to the current task.</ide_opened_file>
+  > <ide_opened_file>The user opened the file /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER/PCSEDIT.BAS in the IDE. This may or may not be related to the current task.</ide_opened_file>
+  > commit and push
+2026-10-01T01:24:21-0400  INFO     bash_start    git add .claude/activity.log qb64/SOUND/PC-SPEAKER/PCSEDIT.BAS qb64/SOUND/PC-SPEAKER/README.md && git commit -q -m "SOUND/PC-SPEAKER: PCSEDIT tools honour grid snap, Alt places freely | | With the gr…
+  > cwd: /home/grymmjack/git/qb64
+  $ git add .claude/activity.log qb64/SOUND/PC-SPEAKER/PCSEDIT.BAS qb64/SOUND/PC-SPEAKER/README.md && git commit -q -m "SOUND/PC-SPEAKER: PCSEDIT tools honour grid snap, Alt places freely
+  $ 
+  $ With the grid and snap on, select, move, stretch, nudge, paste, the ruler
+  $ cursor and the draw/erase/line/note/wave tools all land on grid lines.
+  $ Holding Alt places by single steps instead.
+  $ 
+  $ Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>" && git push -q && git log --oneline -1 && git status --short

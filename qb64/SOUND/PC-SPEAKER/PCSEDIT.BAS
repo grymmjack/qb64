@@ -75,7 +75,7 @@
 '   Ctrl+U         count-in: off, 1 bar, 2 bars
 '   Ctrl+Q         quantize LIVE notes to the grid as you play them
 '   A              hear what you draw while the mouse button is down
-'   F6 snap to semitones on/off   F7 MIDI device   F9/F10 octave -/+
+'   F6 snap (semitones, grid)     F7 MIDI device   F9/F10 octave -/+
 '   F11/F12 note length -/+ (in grid cells while the grid is on)
 '   Ctrl+G / Ctrl+Shift+G   grid: off, 1/4 ... 1/128, 1/8T, 1/16T
 '   Ctrl+B                  tempo (BPM) for the grid
@@ -1049,6 +1049,7 @@ SUB ruler_drag (which AS INTEGER, s AS LONG, mx AS LONG)
         CASE 17
             IF ABS(mx - rulerPressX) <= 3 AND NOT loopSetByDrag THEN
                 cursorStep = s
+                IF grid_snap THEN cursorStep = snap_cell(s)
                 EXIT SUB
             END IF
             IF NOT loopSetByDrag THEN cursorStep = rulerCursor ' a drag, not a click
@@ -1081,7 +1082,7 @@ FUNCTION ruler_snap& (s AS LONG, isEnd AS INTEGER)
         b = INT(s / barLen + 0.5)
         IF isEnd AND b < 1 THEN b = 1
         ruler_snap = INT(b * barLen + 0.5)
-    ELSEIF gridDiv THEN
+    ELSEIF grid_snap THEN
         ruler_snap = snap_cell(s)
     ELSE
         ruler_snap = s
@@ -1854,7 +1855,7 @@ SUB handle_mouse (mx AS LONG, my AS LONG, b1 AS INTEGER, b2 AS INTEGER)
             noteNt = nt
             IF snapOn THEN noteNt = INT(nt + 0.5)
             noteS0 = s
-            IF gridDiv THEN noteS0 = cell_start(cell_of(s))
+            IF grid_snap THEN noteS0 = cell_start(cell_of(s))
             ' G: into a voice that is free there, so notes stack into chords
             noteHome = 0
             IF allVoices THEN
@@ -1884,7 +1885,10 @@ SUB handle_mouse (mx AS LONG, my AS LONG, b1 AS INTEGER, b2 AS INTEGER)
                 IF ABS(mx - (CANVAS_X + (loopA - scrollX) * zoom)) <= 4 THEN drawing = 18
                 IF ABS(mx - (CANVAS_X + (loopB - scrollX) * zoom)) <= 4 THEN drawing = 19
             END IF
-            IF drawing = 17 THEN cursorStep = s
+            IF drawing = 17 THEN
+                cursorStep = s
+                IF grid_snap THEN cursorStep = snap_cell(s)
+            END IF
         ' --- voice chips
         ELSEIF voice_chip_hit(mx, my) THEN
             SELECT CASE voice_chip_hit(mx, my)
@@ -1963,8 +1967,8 @@ FUNCTION tool_help$
             END IF
         CASE TOOL_NOTE: tool_help = "NOTE: click = steady note Len long (F11/F12), drag right = longer"
         CASE TOOL_ERASE: tool_help = "ERASE: drag to clear steps"
-        CASE TOOL_SELECT: tool_help = "SELECT: drag a box (Shift = snap to grid); rests inside are part of it; Ctrl+A all; Esc"
-        CASE TOOL_MOVE: tool_help = "MOVE: drag the selection; arrows nudge it (Shift+Up/Down = octave)"
+        CASE TOOL_SELECT: tool_help = "SELECT: drag a box (snaps to the grid; Alt = free, Shift = beats); rests inside count; Ctrl+A all"
+        CASE TOOL_MOVE: tool_help = "MOVE: drag the selection (by grid cells; Alt = by steps); arrows nudge it (Shift+Up/Down = octave)"
     END SELECT
 END FUNCTION
 
@@ -2036,7 +2040,7 @@ END FUNCTION
 SUB wave_box (sa AS LONG, na AS DOUBLE, sb AS LONG, nb AS DOUBLE)
     DIM a AS LONG, b AS LONG
     IF sa <= sb THEN a = sa: b = sb ELSE a = sb: b = sa
-    IF gridDiv THEN
+    IF grid_snap THEN
         waveS0 = cell_start(cell_of(a))
         waveS1 = cell_start(cell_of(b) + 1)
     ELSE
@@ -2091,13 +2095,13 @@ SUB wave_resize (which AS INTEGER, s AS LONG, nt AS DOUBLE)
     SELECT CASE which
         CASE 13
             e = s
-            IF gridDiv THEN e = snap_cell(e)
+            IF grid_snap THEN e = snap_cell(e)
             IF e > waveS1 - 1 THEN e = waveS1 - 1
             IF e < 0 THEN e = 0
             waveS0 = e
         CASE 14
             e = s + 1
-            IF gridDiv THEN e = snap_cell(e)
+            IF grid_snap THEN e = snap_cell(e)
             IF e < waveS0 + 1 THEN e = waveS0 + 1
             waveS1 = e
         CASE 15, 16
@@ -2170,18 +2174,34 @@ END SUB
 
 
 ''
-' The selection box from two corners (step, pitch). With the grid on its
-' ends snap to whole cells.
+' The selection box from two corners (step, pitch). With the grid and snap
+' on its ends snap to whole cells (Alt: not).
 '
+FUNCTION free_hand%
+    free_hand = _KEYDOWN(100307) OR _KEYDOWN(100308) OR modAlt
+END FUNCTION
+
+
+''
+' Grid snap: the grid is on, snap (F6) is on and Alt isn't held. Every tool
+' that places things in time asks this.
+'
+FUNCTION grid_snap%
+    grid_snap = gridDiv <> 0 AND snapOn <> 0 AND NOT free_hand
+END FUNCTION
+
+
+''
 SUB set_box (sa AS LONG, na AS DOUBLE, sb AS LONG, nb AS DOUBLE, snapIt AS INTEGER)
     DIM a AS LONG, b AS LONG, beatLen AS DOUBLE
     IF sa <= sb THEN a = sa: b = sb ELSE a = sb: b = sa
-    ' Shift held: whole grid cells (or whole beats with the grid off), so a
-    ' selection is a clean musical chunk; otherwise exact steps
-    IF snapIt AND gridDiv <> 0 THEN
+    ' Snap on (F6) with the grid on, or Shift: whole grid cells; Shift with
+    ' the grid off: whole beats - so a selection is a clean musical chunk.
+    ' Alt held: exact steps whatever the snap.
+    IF grid_snap OR (snapIt AND gridDiv <> 0 AND NOT free_hand) THEN
         selS0 = cell_start(cell_of(a))
         selS1 = cell_start(cell_of(b) + 1)
-    ELSEIF snapIt THEN
+    ELSEIF snapIt AND NOT free_hand THEN
         beatLen = 60 * rateHz / bpm
         selS0 = INT(INT(a / beatLen) * beatLen + 0.5)
         selS1 = INT((INT(b / beatLen) + 1) * beatLen + 0.5)
@@ -2333,7 +2353,7 @@ END SUB
 
 SUB drag_move (s AS LONG, nt AS DOUBLE)
     DIM ds AS LONG, dn AS LONG
-    IF gridDiv THEN
+    IF grid_snap THEN ' Alt: by steps
         ds = cell_start(cell_of(moveS) + (cell_of(s) - cell_of(moveS))) - cell_start(cell_of(moveS))
     ELSE
         ds = s - moveS
@@ -2398,8 +2418,13 @@ SUB fine_pitch (dv AS LONG)
 END SUB
 
 
-FUNCTION nudge_step&
-    IF gridDiv THEN nudge_step = CLNG(cell_steps) ELSE nudge_step = 1
+''
+' How far Left / Right nudge a selection: to the next grid line with grid
+' snap (Alt: one step).
+'
+FUNCTION nudge_step& (dirn AS LONG)
+    IF NOT grid_snap THEN nudge_step = dirn: EXIT FUNCTION
+    IF dirn > 0 THEN nudge_step = grid_next(selS0, 1) - selS0 ELSE nudge_step = grid_prev(selS0, 1) - selS0
 END FUNCTION
 
 
@@ -2466,6 +2491,7 @@ END SUB
 SUB sel_paste
     DIM i AS LONG
     IF clipN = 0 THEN set_status "The clipboard is empty - Ctrl+C or cut a selection first": EXIT SUB
+    IF grid_snap THEN cursorStep = snap_cell(cursorStep) ' on a grid line (Ctrl+Alt+V: exactly at the cursor)
     push_undo
     FOR i = 0 TO clipN - 1
         IF cursorStep + clipS(i) < MAX_STEPS THEN
@@ -2582,10 +2608,10 @@ END SUB
 SUB tf_drag (which AS INTEGER, s AS LONG, nt AS DOUBLE)
     DIM e AS LONG, p AS DOUBLE
     SELECT CASE which
-        CASE 9, 10 ' time: the edge snaps to grid cells when the grid is on
+        CASE 9, 10 ' time: the edge snaps to grid cells with grid and snap on (Alt: not)
             e = s
             IF which = 10 THEN e = s + 1
-            IF gridDiv THEN e = snap_cell(e)
+            IF grid_snap THEN e = snap_cell(e)
             IF which = 9 THEN
                 IF e > tfS1 - 1 THEN e = tfS1 - 1
                 IF e < 0 THEN e = 0
@@ -2630,7 +2656,7 @@ END SUB
 SUB place_note (mouseS AS LONG)
     DIM e AS LONG, i AS LONG, v AS LONG
     e = note_tool_end(noteS0)
-    IF gridDiv THEN
+    IF grid_snap THEN
         IF cell_start(cell_of(mouseS) + 1) > e THEN e = cell_start(cell_of(mouseS) + 1)
     ELSE
         IF mouseS + 1 > e THEN e = mouseS + 1
@@ -2650,7 +2676,7 @@ END SUB
 ' Where a Len-long note starting at s0 ends.
 '
 FUNCTION note_tool_end& (s0 AS LONG)
-    IF gridDiv THEN
+    IF grid_snap THEN
         note_tool_end = cell_start(cell_of(s0) + noteLen)
     ELSE
         note_tool_end = s0 + noteLen
@@ -2671,8 +2697,8 @@ SUB draw_line (s0 AS LONG, n0 AS DOUBLE, s1 AS LONG, n1 AS DOUBLE, erasing AS IN
         a = s1: b = s0: na = n1: nb = n0
     END IF
 
-    ' grid on: whole cells, one pitch per cell
-    IF gridDiv THEN
+    ' grid snap: whole cells, one pitch per cell
+    IF grid_snap THEN
         ca = cell_of(a)
         cb = cell_of(b)
         FOR c = ca TO cb
@@ -2740,7 +2766,7 @@ FUNCTION handle_key% (k AS LONG, ctrl AS INTEGER, shift AS INTEGER)
             END IF
         CASE 19200 '                                           Left
             IF selOn AND NOT ctrl THEN
-                nudge -nudge_step, 0
+                nudge nudge_step(-1), 0
             ELSEIF gridDiv THEN
                 IF ctrl THEN move_cursor grid_prev(cursorStep, beat_cells) ELSE move_cursor grid_prev(cursorStep, 1)
             ELSE
@@ -2748,7 +2774,7 @@ FUNCTION handle_key% (k AS LONG, ctrl AS INTEGER, shift AS INTEGER)
             END IF
         CASE 19712 '                                           Right
             IF selOn AND NOT ctrl THEN
-                nudge nudge_step, 0
+                nudge nudge_step(1), 0
             ELSEIF gridDiv THEN
                 IF ctrl THEN move_cursor grid_next(cursorStep, beat_cells) ELSE move_cursor grid_next(cursorStep, 1)
             ELSE
@@ -4419,14 +4445,14 @@ SUB draw_roll
         y = note_y(INT(mouseNote + 0.5))
         IF NOT snapOn THEN y = note_y(mouseNote)
         s = mouseStep
-        IF gridDiv THEN s = cell_start(cell_of(mouseStep))
+        IF grid_snap THEN s = cell_start(cell_of(mouseStep))
         x = CANVAS_X + (s - scrollX) * zoom
         LINE (x, y - 2)-(x + (note_tool_end(s) - s) * zoom - 2, y + 2), _RGBA32(255, 255, 255, 110), BF
     END IF
     IF mouseIn AND drawing = 0 AND (tool = TOOL_DRAW OR tool = TOOL_ERASE OR tool = TOOL_LINE OR tool = TOOL_WAVE) THEN
         y = note_y(INT(mouseNote + 0.5))
         IF NOT snapOn THEN y = note_y(mouseNote)
-        IF gridDiv THEN
+        IF grid_snap THEN
             x = CANVAS_X + (cell_start(cell_of(mouseStep)) - scrollX) * zoom
             LINE (x, y - 2)-(x + (cell_start(cell_of(mouseStep) + 1) - cell_start(cell_of(mouseStep))) * zoom - 2, y + 2), _RGBA32(255, 255, 255, 120), BF
         ELSE
