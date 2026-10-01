@@ -14212,3 +14212,236 @@
   $ Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
   $ EOF
   $ git log --oneline -1 && git push origin main 2>&1 | tail -1
+2026-10-01T00:27:34-0400  INFO     bash_end      [ok] 7L stdout
+  |  M .claude/activity.log
+  |  M qb64/SOUND/PC-SPEAKER/PCSEDIT.BAS
+  |  M qb64/SOUND/PC-SPEAKER/README.md
+  | ?? MYSOUNDS.SND
+  | warning: in the working copy of '.claude/activity.log', CRLF will be replaced by LF the next time Git touches it
+  | 639f2ada SOUND/PC-SPEAKER: PCSEDIT zoom out to 1/10 px a step, phrase selections
+  |    2ba66aa5..639f2ada  main -> main
+2026-10-01T00:29:32-0400  NOTICE   prompt        one more feature for tonight - when stuff is selected i'd like to be able to transform it - double it's time with like ctrl-up half it's time with ctrl-down, stretch it with the mouse by dragging the…
+  > one more feature for tonight - when stuff is selected i'd like to be able to transform it - double it's time with like ctrl-up half it's time with ctrl-down, stretch it with the mouse by dragging the edges left/right stretch it's distance/height with dragging top/bottom of the box - possible/ if not don't worry
+2026-10-01T00:30:05-0400  INFO     bash_start    cd /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER && grep -n "ELSEIF inCanvas AND b1 AND NOT wasDown AND tool = TOOL_SELECT THEN\|ELSEIF inCanvas AND b1 AND NOT wasDown AND tool = TOOL_MOVE THEN\|ELS…
+  > cwd: /home/grymmjack/git/qb64
+  $ cd /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER && grep -n "ELSEIF inCanvas AND b1 AND NOT wasDown AND tool = TOOL_SELECT THEN\|ELSEIF inCanvas AND b1 AND NOT wasDown AND tool = TOOL_MOVE THEN\|ELSEIF drawing = 5 THEN ' moving the selection\|    ' the selection box$" PCSEDIT.BAS; sed -n '/        CASE 18432 '"'"'  /,/        CASE 18688/p' PCSEDIT.BAS | head -30
+2026-10-01T00:30:05-0400  INFO     bash_end      [ok] 25L stdout
+  | 1240:        ELSEIF drawing = 5 THEN ' moving the selection
+  | 1279:    ELSEIF inCanvas AND b1 AND NOT wasDown AND tool = TOOL_SELECT THEN
+  | 1283:    ELSEIF inCanvas AND b1 AND NOT wasDown AND tool = TOOL_MOVE THEN
+  | 3255:    ' the selection box
+  |         CASE 18432 '                                           Up
+  |             IF selOn AND modAlt THEN
+  |                 fine_pitch -1 ' smaller divisor = higher pitch
+  |             ELSEIF selOn AND NOT ctrl THEN
+  |                 IF shift THEN nudge 0, 12 ELSE nudge 0, 1
+  |             ELSEIF ctrl THEN
+  |                 IF shift THEN transpose 12 ELSE transpose 1
+  |             ELSE
+  |                 user_select cur - 1
+  |             END IF
+  |         CASE 20480 '                                           Down
+  |             IF selOn AND modAlt THEN
+  |                 fine_pitch 1
+  |             ELSEIF selOn AND NOT ctrl THEN
+  |                 IF shift THEN nudge 0, -12 ELSE nudge 0, -1
+  |             ELSEIF ctrl THEN
+  |                 IF shift THEN transpose -12 ELSE transpose -1
+  |             ELSE
+  |                 user_select cur + 1
+  |             END IF
+  |         CASE 18688 '                                           PgUp
+2026-10-01T00:30:07-0400  INFO     bash_start    sed -n 3255,3270p PCSEDIT.BAS
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ sed -n 3255,3270p PCSEDIT.BAS
+2026-10-01T00:30:07-0400  INFO     bash_end      [ok] 16L stdout
+  |     ' the selection box
+  |     IF selOn THEN
+  |         x = CANVAS_X + (selS0 - scrollX) * zoom
+  |         endX = CANVAS_X + (selS1 - scrollX) * zoom
+  |         IF x < CANVAS_X THEN x = CANVAS_X
+  |         IF endX > CANVAS_X + CANVAS_W - 1 THEN endX = CANVAS_X + CANVAS_W - 1
+  |         IF endX > x THEN
+  |             y = note_y(selHi) - PX_SEMI \ 2
+  |             LINE (x, y)-(endX, note_y(selLo) + PX_SEMI \ 2), _RGBA32(90, 160, 255, 40), BF
+  |             LINE (x, y)-(endX, note_y(selLo) + PX_SEMI \ 2), _RGB32(90, 180, 255), B
+  |         END IF
+  |     END IF
+  | 
+  |     ' cursor, playhead, record head
+  |     x = CANVAS_X + (cursorStep - scrollX) * zoom
+  |     IF x >= CANVAS_X AND x < CANVAS_X + CANVAS_W THEN
+2026-10-01T00:30:45-0400  INFO     bash_start    python3 - <<'PYEOF' | p='PCSEDIT.BAS'; s=open(p).read() | def r(a,b,c=1): | global s | assert s.count(a)==c,(a[:70],s.count(a)); s=s.replace(a,b) | | # ---------- docs | r("""' M)ove drag the selecti…
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ python3 - <<'PYEOF'
+  $ p='PCSEDIT.BAS'; s=open(p).read()
+  $ def r(a,b,c=1):
+  $     global s
+  $     assert s.count(a)==c,(a[:70],s.count(a)); s=s.replace(a,b)
+  $ 
+  $ # ---------- docs
+  $ r("""'   M)ove    drag the selection (time and pitch); arrow keys nudge it,
+  $ '            Shift+Up/Down = an octave""","""'   M)ove    drag the selection (time and pitch); arrow keys nudge it,
+  $ '            Shift+Up/Down = an octave
+  $ '   With S)elect or M)ove, drag the selection box's edges to stretch it:
+  $ '   left/right = time, top/bottom = pitch range (past the other edge it
+  $ '   flips). Ctrl+Up / Ctrl+Down = double / halve the selection's length.""")
+  $ 
+  $ # ---------- state
+  $ r("""DIM SHARED moveDn AS LONG""","""DIM SHARED moveDn AS LONG
+  $ ' transform (stretch): the selection as lifted out, and its box before
+  $ REDIM SHARED tfV(0 TO 0) AS LONG ' value per step of the box (-1 = not selected)
+  $ DIM SHARED tfBase AS STRING
+  $ DIM SHARED tfS0 AS LONG
+  $ DIM SHARED tfS1 AS LONG
+  $ DIM SHARED tfLo AS LONG
+  $ DIM SHARED tfHi AS LONG""")
+  $ 
+  $ # ---------- mouse: continue edge drags
+  $ r("""        ELSEIF drawing = 5 THEN ' moving the selection""","""        ELSEIF drawing >= 9 AND drawing <= 12 THEN ' stretching the selection
+  $             IF b1 THEN
+  $                 tf_drag drawing, s, nt
+  $             ELSE
+  $                 drawing = 0
+  $                 set_status "Stretched: steps" + STR$(selS0) + " -" + STR$(selS1 - 1) + ", " + note_name(selLo) + " - " + note_name(selHi) + " (Ctrl+Z undoes)"
+  $             END IF
+  $         ELSEIF drawing = 5 THEN ' moving the selection""")
+  $ # ---------- mouse: start edge drag (before select / move)
+  $ r("""    ELSEIF inCanvas AND b1 AND NOT wasDown AND tool = TOOL_SELECT THEN""","""    ELSEIF inCanvas AND b1 AND NOT wasDown AND (tool = TOOL_SELECT OR tool = TOOL_MOVE) AND sel_edge(mx, my) > 0 THEN
+  $         IF playing THEN stop_playing
+  $         drawing = 8 + sel_edge(mx, my) ' 9 left, 10 right, 11 top, 12 bottom
+  $         tf_begin
+  $     ELSEIF inCanvas AND b1 AND NOT wasDown AND tool = TOOL_SELECT THEN""")
+  $ 
+  $ # ---------- keys: Ctrl+Up / Ctrl+Down with a selection
+  $ r("""            ELSEIF selOn AND NOT ctrl THEN
+  $                 IF shift THEN nudge 0, 12 ELSE nudge 0, 1
+  $             ELSEIF ctrl THEN
+  $                 IF shift THEN transpose 12 ELSE transpose 1""","""            ELSEIF selOn AND NOT ctrl THEN
+  $                 IF shift THEN nudge 0, 12 ELSE nudge 0, 1
+  $             ELSEIF selOn THEN
+  $                 tf_time 2 ' Ctrl+Up: twice as long
+  $             ELSEIF ctrl THEN
+  $                 IF shift THEN transpose 12 ELSE transpose 1""")
+  $ r("""            ELSEIF selOn AND NOT ctrl THEN
+  $                 IF shift THEN nudge 0, -12 ELSE nudge 0, -1
+  $             ELSEIF ctrl THEN
+  $                 IF shift THEN transpose -12 ELSE transpose -1""","""            ELSEIF selOn AND NOT ctrl THEN
+  $                 IF shift THEN nudge 0, -12 ELSE nudge 0, -1
+  $             ELSEIF selOn THEN
+  $                 tf_time 0.5 ' Ctrl+Down: half as long
+  $             ELSEIF ctrl THEN
+  $                 IF shift THEN transpose -12 ELSE transpose -1""")
+  $ 
+  $ # ---------- transform subs (before place_note)
+  $ r("""''
+  $ ' NOTE tool: put back the sound as it was when the button went down, then""","""'--- transform: stretch the selection in time and pitch ------------------------
+  $ 
+  $ ''
+  $ ' Which edge of the selection box (if any) is under screen point x, y:
+  $ ' 1 left, 2 right, 3 top, 4 bottom.
+  $ '
+  $ FUNCTION sel_edge% (x AS LONG, y AS LONG)
+  $     DIM xl AS LONG, xr AS LONG, yt AS LONG, yb AS LONG
+  $     IF NOT selOn THEN EXIT FUNCTION
+  $     xl = CANVAS_X + (selS0 - scrollX) * zoom
+  $     xr = CANVAS_X + (selS1 - scrollX) * zoom
+  $     yt = note_y(selHi) - PX_SEMI \\ 2
+  $     yb = note_y(selLo) + PX_SEMI \\ 2
+  $     IF y >= yt - 4 AND y <= yb + 4 THEN
+  $         IF ABS(x - xl) <= 4 THEN sel_edge = 1: EXIT FUNCTION
+  $         IF ABS(x - xr) <= 4 THEN sel_edge = 2: EXIT FUNCTION
+  $     END IF
+  $     IF x > xl + 4 AND x < xr - 4 THEN
+  $ ...[truncated]
+2026-10-01T00:30:48-0400  INFO     bash_end      [ok] 1L stdout
+  | Output: /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/PCSEDIT
+2026-10-01T00:31:08-0400  INFO     bash_start    sed -i 's/CHOOSE_X/choose_x/g' PCSEDIT.BAS && SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad; D=$PWD; /home/grymmjack/git/qb64pe/qb64pe -x PCSEDIT.BAS -o…
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ sed -i 's/CHOOSE_X/choose_x/g' PCSEDIT.BAS && SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad; D=$PWD; /home/grymmjack/git/qb64pe/qb64pe -x PCSEDIT.BAS -o $SP/PCSEDIT 2>&1 | grep -c "Output:"; rm -f $SP/chunk.SND
+  $ python3 - <<EOF
+  $ s=open('$D/PCSEDIT.BAS').read()
+  $ s=s.replace("'\$INCLUDE:'PCSPKR.BI'","'\$INCLUDE:'$D/PCSPKR.BI'").replace("'\$INCLUDE:'PCSPKR.BM'","'\$INCLUDE:'$D/PCSPKR.BM'")
+  $ a='    f = _SAVEFILEDIALOG\$("Save IFS sound bank", suggest_save, "*.snd|*.SND", "IFS sound bank (Duke Nukem / Keen format)")'
+  $ s=s.replace(a,'    f = "$SP/chunk"')
+  $ open('$SP/tst.bas','w').write(s)
+  $ EOF
+  $ cd $SP && /home/grymmjack/git/qb64pe/qb64pe -x tst.bas -o tst 2>&1 | grep -c "Output:"
+  $ cd $D; (Xvfb :99 -screen 0 1400x900x24 >/dev/null 2>&1 &); sleep 1.5; export DISPLAY=:99; unset WAYLAND_DISPLAY; xdpyinfo >/dev/null 2>&1 || exit 1
+  $ ( env -u XDG_CURRENT_DESKTOP -u KDE_FULL_SESSION PCSEDIT_NOMIDI=1 $SP/tst $SP/wave.snd & ); for i in $(seq 1 30); do W=$(xdotool search --name "PCSEDIT" 2>/dev/null | head -1); [ -n "$W" ] && break; sleep 0.3; done; sleep 2.5
+  $ K(){ xdotool key --window $W "$@"; sleep 0.25; }
+  $ ny(){ python3 -c "print(int(624-($1-33+0.5)*6))"; }
+  $ sx(){ python3 -c "print(int(268+$1*6))"; }
+  $ drag(){ xdotool mousemove $1 $2; xdotool mousedown 1; sleep 0.1; xdotool mousemove $(( ($1+$3)/2 )) $(( ($2+$4)/2 )); sleep 0.1; xdotool mousemove $3 $4; sleep 0.15; xdotool mouseup 1; sleep 0.3; }
+  $ K s
+  $ drag $(( $(sx 0)+3 )) $(ny 60) $(( $(sx 39)+3 )) $(ny 72)          # select the line: steps 0-39, C4-C5
+  $ K ctrl+Up; sleep 0.3                                                # x2 -> 80 steps
+  $ xwd -silent -root -out $SP/s.xwd; /usr/bin/convert $SP/s.xwd -crop 1280x20+0+52 $SP/t1.png
+  $ # right edge is now at step 80: drag it to step 60
+  $ yc=$(( ($(ny 60)+$(ny 72))/2 ))
+  $ drag $(sx 80) $yc $(sx 60) $yc
+  $ # top edge (C5 row top) up one octave
+  $ xm=$(sx 30); yt=$(( $(ny 72) - 3 ))
+  $ drag $xm $yt $xm $(ny 84)
+  $ xwd -silent -root -out $SP/s.xwd; /usr/bin/convert $SP/s.xwd -crop 1280x660+0+0 $SP/t2.png
+  $ K ctrl+shift+s; sleep 1
+  $ python3 - <<EOF
+  $ import struct, math
+  $ d=open('$SP/chunk.SND','rb').read(); off=struct.unpack_from('<H',d,16)[0]; w=[];p=off
+  $ while struct.unpack_from('<H',d,p)[0]!=0xffff: w.append(struct.unpack_from('<H',d,p)[0]); p+=2
+  $ names='C C# D D# E F F# G G# A A# B'.split()
+  $ def nn(v):
+  $     if v==0: return '-'
+  $     k=round(69+12*math.log2(1193181.67/v/440)); return names[k%12]+str(k//12-1)
+  $ print('steps 0..62:', ' '.join(nn(v) for v in w[0:63:3]))
+  $ EOF
+  $ pkill -x tst; sleep 0.3; kill $(pgrep -f "^Xvfb :99") 2>/dev/null; true
+2026-10-01T00:31:22-0400  INFO     bash_end      [ok] 3L stdout
+  | 1
+  | 1
+  | steps 0..62: C4 C4 D4 E4 E4 F#4 F#4 G#4 A#4 A#4 C5 C5 D5 E5 E5 F#5 F#5 G#5 A#5 A#5 C6
+2026-10-01T00:31:38-0400  INFO     bash_start    python3 - <<'PYEOF' | p='README.md'; s=open(p).read() | a="""With a selection, the **arrow keys** nudge it""" | assert s.count(a)==1 | s=s.replace(a,"""**Stretching a selection:** with the Select or …
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ python3 - <<'PYEOF'
+  $ p='README.md'; s=open(p).read()
+  $ a="""With a selection, the **arrow keys** nudge it"""
+  $ assert s.count(a)==1
+  $ s=s.replace(a,"""**Stretching a selection:** with the Select or Move tool, the selection box
+  $ has a handle on each edge, and the one under the pointer lights up.
+  $ 
+  $ * Drag the **left or right** edge to stretch or squash the selection in time.
+  $   The other edge stays put, and with the grid on, edges snap to grid cells.
+  $ * Drag the **top or bottom** edge to stretch or squash its pitch range. The
+  $   other edge stays put, and every pitch keeps its place within the range: a
+  $   run of semitones stretched twice as tall becomes whole tones. Drag past the
+  $   other edge and the passage turns upside down.
+  $ * **Ctrl+Up** makes the selection twice as long and **Ctrl+Down** half as
+  $   long, from its start. Without a selection, Ctrl+Up/Down still transpose the
+  $   whole sound.
+  $ 
+  $ Rests stretch along with the notes, so rhythm is kept. A stretched selection
+  $ writes over whatever was under its new area; Ctrl+Z undoes each stretch.
+  $ 
+  $ With a selection, the **arrow keys** nudge it""")
+  $ s=s.replace("""| Ctrl+Up / Ctrl+Down | transpose the sound a semitone (add Shift for an octave) |""","""| Ctrl+Up / Ctrl+Down | with a selection: twice / half as long; without: transpose the sound a semitone (add Shift for an octave) |""")
+  $ open(p,'w').write(s)
+  $ PYEOF
+  $ grep -c "Stretching a selection" README.md
+2026-10-01T00:31:38-0400  INFO     bash_end      [ok] 1L stdout
+  | 1
+2026-10-01T00:32:14-0400  NOTICE   prompt        commit and push
+  > commit and push
+2026-10-01T00:32:18-0400  INFO     bash_start    cd /home/grymmjack/git/qb64 && git add .claude/activity.log qb64/SOUND/PC-SPEAKER/PCSEDIT.BAS qb64/SOUND/PC-SPEAKER/README.md && git commit -q -F - <<'EOF' | SOUND/PC-SPEAKER: PCSEDIT stretch selecti…
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ cd /home/grymmjack/git/qb64 && git add .claude/activity.log qb64/SOUND/PC-SPEAKER/PCSEDIT.BAS qb64/SOUND/PC-SPEAKER/README.md && git commit -q -F - <<'EOF'
+  $ SOUND/PC-SPEAKER: PCSEDIT stretch selections in time and pitch
+  $ 
+  $ - With a selection, Ctrl+Up / Ctrl+Down make it twice / half as long.
+  $ - Select / Move tools show handles on the selection box: drag left/right
+  $   edges to stretch time (snaps to grid cells), top/bottom edges to scale
+  $   the pitch range (past the other edge flips it). Rests stretch too.
+  $ - README updated.
+  $ 
+  $ Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+  $ EOF
+  $ git log --oneline -1 && git push origin main 2>&1 | tail -1; git status --short

@@ -29,6 +29,9 @@
 '   S)elect  drag a box around steps
 '   M)ove    drag the selection (time and pitch); arrow keys nudge it,
 '            Shift+Up/Down = an octave
+'   With S)elect or M)ove, drag the selection box's edges to stretch it:
+'   left/right = time, top/bottom = pitch range (past the other edge it
+'   flips). Ctrl+Up / Ctrl+Down = double / halve the selection's length.
 '   C)ut / Ctrl+X, Ctrl+C copy, Ctrl+V paste at the cursor, Delete clears
 '   the selection, Esc deselects
 '   right drag erases with any tool
@@ -194,6 +197,13 @@ DIM SHARED moveS AS LONG ' where the move drag started
 DIM SHARED moveNt AS DOUBLE
 DIM SHARED moveDs AS LONG ' how far it has moved
 DIM SHARED moveDn AS LONG
+' transform (stretch): the selection as lifted out, and its box before
+REDIM SHARED tfV(0 TO 0) AS LONG ' value per step of the box (-1 = not selected)
+DIM SHARED tfBase AS STRING
+DIM SHARED tfS0 AS LONG
+DIM SHARED tfS1 AS LONG
+DIM SHARED tfLo AS LONG
+DIM SHARED tfHi AS LONG
 REDIM SHARED clipS(0 TO 0) AS LONG ' clipboard: step offsets and divisors
 REDIM SHARED clipV(0 TO 0) AS LONG
 DIM SHARED clipN AS LONG
@@ -1237,6 +1247,13 @@ SUB handle_mouse (mx AS LONG, my AS LONG, b1 AS INTEGER, b2 AS INTEGER)
                 lastStep = s: lastNote = nt
                 haveAnchor = -1
             END IF
+        ELSEIF drawing >= 9 AND drawing <= 12 THEN ' stretching the selection
+            IF b1 THEN
+                tf_drag drawing, s, nt
+            ELSE
+                drawing = 0
+                set_status "Stretched: steps" + STR$(selS0) + " -" + STR$(selS1 - 1) + ", " + note_name(selLo) + " - " + note_name(selHi) + " (Ctrl+Z undoes)"
+            END IF
         ELSEIF drawing = 5 THEN ' moving the selection
             IF b1 THEN
                 drag_move s, nt
@@ -1276,6 +1293,10 @@ SUB handle_mouse (mx AS LONG, my AS LONG, b1 AS INTEGER, b2 AS INTEGER)
         IF snapOn THEN lineNt = INT(nt + 0.5)
         draw_line s, lineNt, s, lineNt, 0
         drawing = 8
+    ELSEIF inCanvas AND b1 AND NOT wasDown AND (tool = TOOL_SELECT OR tool = TOOL_MOVE) AND sel_edge(mx, my) > 0 THEN
+        IF playing THEN stop_playing
+        drawing = 8 + sel_edge(mx, my) ' 9 left, 10 right, 11 top, 12 bottom
+        tf_begin
     ELSEIF inCanvas AND b1 AND NOT wasDown AND tool = TOOL_SELECT THEN
         drawing = 4
         boxS = s: boxN = nt
@@ -1767,6 +1788,130 @@ SUB sel_paste
 END SUB
 
 
+'--- transform: stretch the selection in time and pitch ------------------------
+
+''
+' Which edge of the selection box (if any) is under screen point x, y:
+' 1 left, 2 right, 3 top, 4 bottom.
+'
+FUNCTION sel_edge% (x AS LONG, y AS LONG)
+    DIM xl AS LONG, xr AS LONG, yt AS LONG, yb AS LONG
+    IF NOT selOn THEN EXIT FUNCTION
+    xl = CANVAS_X + (selS0 - scrollX) * zoom
+    xr = CANVAS_X + (selS1 - scrollX) * zoom
+    yt = note_y(selHi) - PX_SEMI \ 2
+    yb = note_y(selLo) + PX_SEMI \ 2
+    IF y >= yt - 4 AND y <= yb + 4 THEN
+        IF ABS(x - xl) <= 4 THEN sel_edge = 1: EXIT FUNCTION
+        IF ABS(x - xr) <= 4 THEN sel_edge = 2: EXIT FUNCTION
+    END IF
+    IF x > xl + 4 AND x < xr - 4 THEN
+        IF ABS(y - yt) <= 4 THEN sel_edge = 3: EXIT FUNCTION
+        IF ABS(y - yb) <= 4 THEN sel_edge = 4: EXIT FUNCTION
+    END IF
+END FUNCTION
+
+
+''
+' Lift the selection out (rests too) and remember the box, for stretching.
+'
+SUB tf_begin
+    DIM s AS LONG, v AS LONG
+    push_undo
+    tfS0 = selS0: tfS1 = selS1: tfLo = selLo: tfHi = selHi
+    REDIM tfV(0 TO tfS1 - tfS0) AS LONG
+    FOR s = tfS0 TO tfS1 - 1
+        v = get_step(cur, s)
+        IF in_sel(s, v) THEN
+            tfV(s - tfS0) = v
+            set_step cur, s, 0
+        ELSE
+            tfV(s - tfS0) = -1
+        END IF
+    NEXT
+    tfBase = sndData(cur)
+END SUB
+
+
+''
+' Put the lifted selection back stretched to steps n0..n1-1 and to the pitch
+' range pLo..pHi (each pitch keeps its place within the range; pLo above pHi
+' turns it upside down). The selection box follows.
+'
+SUB tf_apply (n0 AS LONG, n1 AS LONG, pLo AS DOUBLE, pHi AS DOUBLE)
+    DIM t AS LONG, oldLen AS LONG, newLen AS LONG, v AS LONG, nt AS DOUBLE
+    oldLen = tfS1 - tfS0
+    newLen = n1 - n0
+    IF newLen < 1 OR oldLen < 1 THEN EXIT SUB
+    sndData(cur) = tfBase
+    FOR t = n0 TO n1 - 1
+        IF t >= 0 AND t < MAX_STEPS THEN
+            v = tfV(INT((t - n0) * oldLen / newLen))
+            IF v > 0 AND (pLo <> tfLo OR pHi <> tfHi) THEN
+                nt = div_note(v)
+                IF tfHi = tfLo THEN
+                    nt = nt + (pLo - tfLo)
+                ELSE
+                    nt = pLo + (nt - tfLo) * (pHi - pLo) / (tfHi - tfLo)
+                END IF
+                IF snapOn THEN nt = INT(nt + 0.5)
+                v = note_div(nt)
+            END IF
+            IF v >= 0 THEN set_step cur, t, v
+        END IF
+    NEXT
+    selS0 = n0: selS1 = n1
+    selLo = INT(pLo + 0.5): selHi = INT(pHi + 0.5)
+    IF selLo > selHi THEN SWAP selLo, selHi
+END SUB
+
+
+''
+' Dragging an edge of the box (drawing 9-12) to step s / pitch nt.
+'
+SUB tf_drag (which AS INTEGER, s AS LONG, nt AS DOUBLE)
+    DIM e AS LONG, p AS DOUBLE
+    SELECT CASE which
+        CASE 9, 10 ' time: the edge snaps to grid cells when the grid is on
+            e = s
+            IF which = 10 THEN e = s + 1
+            IF gridDiv THEN e = snap_cell(e)
+            IF which = 9 THEN
+                IF e > tfS1 - 1 THEN e = tfS1 - 1
+                IF e < 0 THEN e = 0
+                tf_apply e, tfS1, tfLo, tfHi
+            ELSE
+                IF e < tfS0 + 1 THEN e = tfS0 + 1
+                tf_apply tfS0, e, tfLo, tfHi
+            END IF
+        CASE 11 ' top edge: the bottom stays put
+            p = nt
+            IF snapOn THEN p = INT(p + 0.5)
+            tf_apply tfS0, tfS1, tfLo, p
+        CASE 12 ' bottom edge: the top stays put
+            p = nt
+            IF snapOn THEN p = INT(p + 0.5)
+            tf_apply tfS0, tfS1, p, tfHi
+    END SELECT
+END SUB
+
+
+''
+' Ctrl+Up / Ctrl+Down: the selection twice / half as long (from its start).
+'
+SUB tf_time (f AS DOUBLE)
+    DIM n1 AS LONG
+    IF NOT selOn THEN EXIT SUB
+    IF playing THEN stop_playing
+    tf_begin
+    n1 = tfS0 + CLNG((tfS1 - tfS0) * f)
+    IF n1 < tfS0 + 1 THEN n1 = tfS0 + 1
+    IF n1 > MAX_STEPS THEN n1 = MAX_STEPS
+    tf_apply tfS0, n1, tfLo, tfHi
+    set_status "Selection" + MID$(" twice as long", 1, -14 * (f > 1)) + MID$(" half as long", 1, -13 * (f < 1)) + ":" + STR$(n1 - tfS0) + " steps (Ctrl+Z undoes)"
+END SUB
+
+
 ''
 ' NOTE tool: put back the sound as it was when the button went down, then
 ' write one steady note from noteS0 to wherever the mouse is now - at least
@@ -1906,6 +2051,8 @@ FUNCTION handle_key% (k AS LONG, ctrl AS INTEGER, shift AS INTEGER)
                 fine_pitch -1 ' smaller divisor = higher pitch
             ELSEIF selOn AND NOT ctrl THEN
                 IF shift THEN nudge 0, 12 ELSE nudge 0, 1
+            ELSEIF selOn THEN
+                tf_time 2 ' Ctrl+Up: twice as long
             ELSEIF ctrl THEN
                 IF shift THEN transpose 12 ELSE transpose 1
             ELSE
@@ -1916,6 +2063,8 @@ FUNCTION handle_key% (k AS LONG, ctrl AS INTEGER, shift AS INTEGER)
                 fine_pitch 1
             ELSEIF selOn AND NOT ctrl THEN
                 IF shift THEN nudge 0, -12 ELSE nudge 0, -1
+            ELSEIF selOn THEN
+                tf_time 0.5 ' Ctrl+Down: half as long
             ELSEIF ctrl THEN
                 IF shift THEN transpose -12 ELSE transpose -1
             ELSE
@@ -3262,6 +3411,10 @@ SUB draw_roll
             y = note_y(selHi) - PX_SEMI \ 2
             LINE (x, y)-(endX, note_y(selLo) + PX_SEMI \ 2), _RGBA32(90, 160, 255, 40), BF
             LINE (x, y)-(endX, note_y(selLo) + PX_SEMI \ 2), _RGB32(90, 180, 255), B
+            ' stretch handles (Select / Move tools); the one under the mouse lights up
+            IF tool = TOOL_SELECT OR tool = TOOL_MOVE THEN
+                draw_handles x, endX, y, note_y(selLo) + PX_SEMI \ 2
+            END IF
         END IF
     END IF
 
@@ -3312,6 +3465,31 @@ END SUB
 ''
 ' Time ruler with the grid off: a tick every 0.1 s, a label every second.
 '
+SUB draw_handles (xl AS LONG, xr AS LONG, yt AS LONG, yb AS LONG)
+    DIM hover AS INTEGER, ym AS LONG, xm AS LONG, c AS _UNSIGNED LONG, i AS INTEGER
+    hover = sel_edge(_MOUSEX, _MOUSEY)
+    IF drawing >= 9 AND drawing <= 12 THEN hover = drawing - 8
+    ym = (yt + yb) \ 2: xm = (xl + xr) \ 2
+    FOR i = 1 TO 4
+        IF hover = i THEN c = _RGB32(255, 220, 80) ELSE c = _RGB32(90, 180, 255)
+        SELECT CASE i
+            CASE 1: LINE (xl - 3, ym - 6)-(xl + 3, ym + 6), c, BF
+            CASE 2: LINE (xr - 3, ym - 6)-(xr + 3, ym + 6), c, BF
+            CASE 3: LINE (xm - 6, yt - 3)-(xm + 6, yt + 3), c, BF
+            CASE 4: LINE (xm - 6, yb - 3)-(xm + 6, yb + 3), c, BF
+        END SELECT
+    NEXT
+    IF hover = 1 OR hover = 2 THEN LINE (choose_x(hover, xl, xr), yt)-(choose_x(hover, xl, xr), yb), _RGB32(255, 220, 80)
+    IF hover = 3 THEN LINE (xl, yt)-(xr, yt), _RGB32(255, 220, 80)
+    IF hover = 4 THEN LINE (xl, yb)-(xr, yb), _RGB32(255, 220, 80)
+END SUB
+
+
+FUNCTION choose_x& (h AS INTEGER, a AS LONG, b AS LONG)
+    IF h = 1 THEN choose_x = a ELSE choose_x = b
+END FUNCTION
+
+
 SUB draw_seconds (vis AS LONG)
     DIM s AS LONG, x AS LONG, tk AS LONG, lb AS LONG
     ' ticks every 0.1 s, or every second when that would be too tight; a
@@ -3429,7 +3607,7 @@ SUB draw_help
     DIM x AS LONG, y AS LONG, i AS LONG, wMax AS LONG
     DIM t(1 TO 28) AS STRING
     t(1) = "PCSEDIT - PC speaker sound editor"
-    t(2) = "Selection: arrows nudge (Shift: octave, Alt+Up/Down: 1 PIT divisor), Delete, Esc"
+    t(2) = "Selection: arrows nudge (Shift octave, Alt 1 divisor); Ctrl+Up/Down x2 / half; drag edges to stretch"
     t(3) = "Tools   D)raw L)ine N)ote W)ave E)rase S)elect M)ove (letter w/ Caps off, Alt+letter, Tab)"
     t(4) = "        C)ut Ctrl+X  Ctrl+C copy  Ctrl+V paste  Ctrl+A all.  W)ave: 1-5 shape [ ] cycles"
     t(5) = "Notes   Z S X D C V G B H N J M ,   lower octave     F9/F10 octave  (Caps Lock ON)"

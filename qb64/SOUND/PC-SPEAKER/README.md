@@ -133,6 +133,22 @@ Sounds always use the games' 140 steps per second. That is what Duke Nukem,
 Keen, Wolfenstein 3D and DOOM played, so every bank PCSEDIT saves works in
 the same players the originals did.
 
+**Stretching a selection:** with the Select or Move tool, the selection box
+has a handle on each edge, and the one under the pointer lights up.
+
+* Drag the **left or right** edge to stretch or squash the selection in time.
+  The other edge stays put, and with the grid on, edges snap to grid cells.
+* Drag the **top or bottom** edge to stretch or squash its pitch range. The
+  other edge stays put, and every pitch keeps its place within the range: a
+  run of semitones stretched twice as tall becomes whole tones. Drag past the
+  other edge and the passage turns upside down.
+* **Ctrl+Up** makes the selection twice as long and **Ctrl+Down** half as
+  long, from its start. Without a selection, Ctrl+Up/Down still transpose the
+  whole sound.
+
+Rests stretch along with the notes, so rhythm is kept. A stretched selection
+writes over whatever was under its new area; Ctrl+Z undoes each stretch.
+
 With a selection, the **arrow keys** nudge it (**Shift+Up/Down** moves it an
 octave), **Delete** clears it, and **Esc** deselects. All of it can be undone.
 
@@ -249,7 +265,7 @@ zap, a blip, a little arpeggio) into an instrument you can play tunes with.
 | PageUp / PageDown | previous / next dot (where a new pitch starts); with the NOTE tool, previous / next bar |
 | Up / Down, Ctrl+PageUp / PageDown | previous / next sound in the bank |
 | Insert / Delete / Backspace | insert a step, delete a step, delete the step before the cursor |
-| Ctrl+Up / Ctrl+Down | transpose the sound a semitone (add Shift for an octave) |
+| Ctrl+Up / Ctrl+Down | with a selection: twice / half as long; without: transpose the sound a semitone (add Shift for an octave) |
 | Ctrl+G / Ctrl+Shift+G | grid size: off, 1/4, 1/8, 1/16, 1/32, 1/64, 1/128, 1/8T, 1/16T |
 | Ctrl+B | tempo (BPM) for the grid, the metronome and the count-in |
 | Ctrl+R | LIVE record from the cursor now, after the count-in |
