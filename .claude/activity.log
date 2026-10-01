@@ -11422,3 +11422,795 @@
   $ Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
   $ EOF
   $ git log --oneline -1 && git push origin main 2>&1 | tail -1
+2026-09-30T23:26:07-0400  INFO     bash_end      [ok] 2L stdout
+  | 72eef974 SOUND/PC-SPEAKER: PCSEDIT oscilloscope, fine pitch, grid lines, zoom
+  |    2e2e8a23..72eef974  main -> main
+2026-09-30T23:31:15-0400  NOTICE   prompt        let's make the file dialogs native for QB64 PE - check the docs they exist
+  > let's make the file dialogs native for QB64 PE - check the docs they exist
+2026-09-30T23:31:21-0400  INFO     bash_start    cd ~/git/qb64pe && /bin/ls internal/help 2>/dev/null | grep -i "dialog\|messagebox" ; for f in internal/help/_OPENFILEDIALOG\$.txt internal/help/_SAVEFILEDIALOG\$.txt; do [ -f "$f" ] && sed -n 1,40p …
+  > cwd: /home/grymmjack/git/qb64
+  $ cd ~/git/qb64pe && /bin/ls internal/help 2>/dev/null | grep -i "dialog\|messagebox" ; for f in internal/help/_OPENFILEDIALOG\$.txt internal/help/_SAVEFILEDIALOG\$.txt; do [ -f "$f" ] && sed -n 1,40p "$f"; done 2>/dev/null | head -90
+2026-09-30T23:31:21-0400  WARNING  bash_end      [stderr] 6L stdout / 2L stderr
+  | _COLORCHOOSERDIALOG__111111111111111111.txt
+  | _MESSAGEBOX__1111111111.txt
+  | _MESSAGEBOX_(function)__1111111111_(00000000).txt
+  | _OPENFILEDIALOG%24__11111111111111%24.txt
+  | _SAVEFILEDIALOG%24__11111111111111%24.txt
+  | _SELECTFOLDERDIALOG%24__111111111111111111%24.txt
+  ! 
+  ! Shell cwd was reset to /home/grymmjack/git/qb64
+2026-09-30T23:31:23-0400  INFO     bash_start    cd ~/git/qb64pe/internal/help && sed -n 1,60p "_OPENFILEDIALOG%24__11111111111111%24.txt"; echo =====; sed -n 1,45p "_SAVEFILEDIALOG%24__11111111111111%24.txt"; echo =====; sed -n 1,30p "_MESSAGEBOX_…
+  > cwd: /home/grymmjack/git/qb64
+  $ cd ~/git/qb64pe/internal/help && sed -n 1,60p "_OPENFILEDIALOG%24__11111111111111%24.txt"; echo =====; sed -n 1,45p "_SAVEFILEDIALOG%24__11111111111111%24.txt"; echo =====; sed -n 1,30p "_MESSAGEBOX_(function)__1111111111_(00000000).txt"
+2026-09-30T23:31:28-0400  INFO     bash_start    cd ~/git/qb64pe/internal/help && grep -A12 "PageSyntax" "_SAVEFILEDIALOG%24__11111111111111%24.txt" | head -14; echo; grep -A22 "PageSyntax" "_MESSAGEBOX_(function)__1111111111_(00000000).txt" | head…
+  > cwd: /home/grymmjack/git/qb64
+  $ cd ~/git/qb64pe/internal/help && grep -A12 "PageSyntax" "_SAVEFILEDIALOG%24__11111111111111%24.txt" | head -14; echo; grep -A22 "PageSyntax" "_MESSAGEBOX_(function)__1111111111_(00000000).txt" | head -24; grep -i "zenity\|kdialog\|linux" "_OPENFILEDIALOG%24__11111111111111%24.txt" | head; which zenity kdialog yad 2>/dev/null
+2026-09-30T23:31:44-0400  INFO     bash_start    cd ~/git/qb64pe/internal/help && f=$(/bin/ls | grep -i "^_INPUTBOX"); echo "$f"; grep -A16 "PageSyntax" "$f" | head -18
+  > cwd: /home/grymmjack/git/qb64
+  $ cd ~/git/qb64pe/internal/help && f=$(/bin/ls | grep -i "^_INPUTBOX"); echo "$f"; grep -A16 "PageSyntax" "$f" | head -18
+2026-09-30T23:31:44-0400  WARNING  bash_end      [stderr] 17L stdout / 2L stderr
+  | _INPUTBOX%24__11111111%24.txt
+  | {{PageSyntax}}
+  | : {{Parameter|result$}} = [[_INPUTBOX$]]([{{Parameter|title$}}][, {{Parameter|message$}}][, {{Parameter|defaultInput$}}])
+  | 
+  | 
+  | {{PageParameters}}
+  | * {{Parameter|title$}} is an optional dialog box title.
+  | * {{Parameter|message$}} is an optional message or prompt that will be displayed in the dialog box.
+  | * {{Parameter|defaultInput$}} is an optional string that is displayed in the text box as the default response if no other input is provided.
+  | 
+  | 
+  | {{PageDescription}}
+  | * Use {{Parameter|message$}} to specify instructions to the user.
+  | * All parameters are optional, hence omitting {{Parameter|defaultInput$}} will display a empty text box.
+  | ** However, if {{Parameter|defaultInput$}} is provided, but is an empty string ('''""'''), then a password box is shown, and the text input will be masked.
+  | * The {{Parameter|result$}} may be an empty string ('''""'''), if the user simply cancelled the dialog.
+  | * The dialog box automatically becomes a modal window, if the application window is visible.
+  ! 
+  ! Shell cwd was reset to /home/grymmjack/git/qb64
+2026-09-30T23:31:57-0400  INFO     bash_start    cd /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER && grep -n "promptKind\|start_prompt\|PROMPT_\|confirm_ok\|promptText\|promptLabel\|promptConfirm" PCSEDIT.BAS
+  > cwd: /home/grymmjack/git/qb64
+  $ cd /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER && grep -n "promptKind\|start_prompt\|PROMPT_\|confirm_ok\|promptText\|promptLabel\|promptConfirm" PCSEDIT.BAS
+2026-09-30T23:31:57-0400  INFO     bash_end      [ok] 56L stdout
+  | 107:CONST PROMPT_NONE = 0
+  | 108:CONST PROMPT_RENAME = 1
+  | 109:CONST PROMPT_PRIORITY = 2
+  | 110:CONST PROMPT_OPEN = 3
+  | 111:CONST PROMPT_SAVEAS = 4
+  | 112:CONST PROMPT_BPM = 5
+  | 260:DIM SHARED promptKind AS INTEGER
+  | 261:DIM SHARED promptLabel AS STRING
+  | 262:DIM SHARED promptText AS STRING
+  | 263:DIM SHARED promptConfirm AS STRING ' Save As: path waiting for "overwrite?"
+  | 350:        IF promptKind = PROMPT_NONE THEN handle_mouse _MOUSEX, _MOUSEY, _MOUSEBUTTON(1), _MOUSEBUTTON(2)
+  | 354:    IF wheel AND promptKind = PROMPT_NONE THEN
+  | 378:    IF promptKind = PROMPT_NONE THEN poll_piano ctrl
+  | 386:                IF promptKind THEN
+  | 403:        IF confirm_ok("quit") THEN EXIT DO
+  | 410:        IF confirm_ok("drop") THEN open_bank f
+  | 1566:            ELSEIF confirm_ok("quit") THEN
+  | 1641:        CASE 15360: start_prompt PROMPT_RENAME, "Name (up to 12 characters):", sndName(cur) ' F2
+  | 1668:            IF confirm_ok("delete") THEN delete_sound
+  | 1704:                    CASE "P": start_prompt PROMPT_PRIORITY, "Priority (0-255, higher wins in the game):", LTRIM$(STR$(sndPri(cur)))
+  | 1706:                        IF confirm_ok("new") THEN new_bank: set_status "New bank"
+  | 1708:                        IF confirm_ok("open") THEN start_prompt PROMPT_OPEN, "Open (any bank DN1PLAY can play):", default_dir
+  | 1711:                            start_prompt PROMPT_SAVEAS, "Save as IFS bank:", suggest_save
+  | 1727:                    CASE "B": start_prompt PROMPT_BPM, "Tempo in BPM (20-400):", LTRIM$(STR$(bpm))
+  | 1751:FUNCTION confirm_ok% (what AS STRING)
+  | 1752:    IF NOT dirty AND what <> "delete" THEN confirm_ok = -1: EXIT FUNCTION
+  | 1755:        confirm_ok = -1
+  | 2003:SUB start_prompt (kind AS INTEGER, label AS STRING, text AS STRING)
+  | 2004:    promptKind = kind
+  | 2005:    promptLabel = label
+  | 2006:    promptText = text
+  | 2007:    promptConfirm = ""
+  | 2015:            promptKind = PROMPT_NONE
+  | 2017:            IF LEN(promptText) THEN promptText = LEFT$(promptText, LEN(promptText) - 1)
+  | 2018:            promptConfirm = ""
+  | 2020:            promptText = ""
+  | 2021:            promptConfirm = ""
+  | 2023:            t = _TRIM$(promptText)
+  | 2024:            SELECT CASE promptKind
+  | 2025:                CASE PROMPT_RENAME
+  | 2030:                    promptKind = PROMPT_NONE
+  | 2031:                CASE PROMPT_PRIORITY
+  | 2037:                    promptKind = PROMPT_NONE
+  | 2038:                CASE PROMPT_BPM
+  | 2045:                    promptKind = PROMPT_NONE
+  | 2046:                CASE PROMPT_OPEN
+  | 2047:                    promptKind = PROMPT_NONE
+  | 2049:                CASE PROMPT_SAVEAS
+  | 2051:                    IF _FILEEXISTS(t) AND promptConfirm <> t THEN
+  | 2052:                        promptConfirm = t
+  | 2056:                    promptKind = PROMPT_NONE
+  | 2060:            IF LEN(promptText) < 200 THEN promptText = promptText + CHR$(k)
+  | 2061:            promptConfirm = ""
+  | 2523:    IF promptKind THEN
+  | 2526:        ln = promptLabel + " " + promptText
+  | 2540:    IF LEN(statusMsg) = 0 AND promptKind = PROMPT_NONE THEN
+2026-09-30T23:32:00-0400  INFO     bash_start    sed -n 380,412p PCSEDIT.BAS; sed -n 1745,1780p PCSEDIT.BAS; sed -n 1995,2065p PCSEDIT.BAS; sed -n 2515,2545p PCSEDIT.BAS; sed -n '/^SUB export_wav/,/^END SUB/p' PCSEDIT.BAS | head -30
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ sed -n 380,412p PCSEDIT.BAS; sed -n 1745,1780p PCSEDIT.BAS; sed -n 1995,2065p PCSEDIT.BAS; sed -n 2515,2545p PCSEDIT.BAS; sed -n '/^SUB export_wav/,/^END SUB/p' PCSEDIT.BAS | head -30
+2026-09-30T23:32:00-0400  INFO     bash_end      [ok] 198L stdout
+  |     DO WHILE k <> 0
+  |         SELECT CASE ABS(k)
+  |             CASE 100305, 100306: modCtrl = (k > 0)
+  |             CASE 100303, 100304: modShift = (k > 0)
+  |             CASE 100307, 100308: modAlt = (k > 0)
+  |             CASE ELSE
+  |                 IF promptKind THEN
+  |                     prompt_key k
+  |                 ELSEIF k > 0 THEN
+  |                     quitNow = handle_key(k, modCtrl, modShift)
+  |                     IF quitNow THEN EXIT DO
+  |                 END IF
+  |         END SELECT
+  |         k = _KEYHIT
+  |     LOOP
+  |     IF quitNow THEN EXIT DO
+  | 
+  |     ' ------------------------------------------------------------ close box
+  |     ' Handled here instead of letting QB64 end the program: that would skip
+  |     ' midi_stop, leave amidi running, and the program would then hang at
+  |     ' exit waiting for it - keeping the MIDI port busy with no window open.
+  |     osExitTrap = _EXIT
+  |     IF osExitTrap THEN
+  |         IF confirm_ok("quit") THEN EXIT DO
+  |     END IF
+  | 
+  |     ' ------------------------------------------------------------ drops
+  |     IF _TOTALDROPPEDFILES THEN
+  |         f = _DROPPEDFILE
+  |         _FINISHDROP
+  |         IF confirm_ok("drop") THEN open_bank f
+  |     END IF
+  | 
+  | 
+  | 
+  | ''
+  | ' Guard for actions that throw work away: with unsaved changes the first
+  | ' press only warns, a second press within 3 seconds goes ahead.
+  | '
+  | FUNCTION confirm_ok% (what AS STRING)
+  |     IF NOT dirty AND what <> "delete" THEN confirm_ok = -1: EXIT FUNCTION
+  |     IF confirmWhat = what AND TIMER(0.001) < confirmUntil AND TIMER(0.001) > confirmUntil - 10 THEN
+  |         confirmWhat = ""
+  |         confirm_ok = -1
+  |         EXIT FUNCTION
+  |     END IF
+  |     confirmWhat = what
+  |     confirmUntil = TIMER(0.001) + 3
+  |     SELECT CASE what
+  |         CASE "delete": set_status "Delete " + sndName(cur) + "? Press F8 again to delete it"
+  |         CASE "drop": set_status "Unsaved changes - drop the file again to open it anyway"
+  |         CASE "quit": set_status "Unsaved changes - press Esc or the close button again to quit anyway"
+  |         CASE ELSE: set_status "Unsaved changes - press again to " + what + " anyway"
+  |     END SELECT
+  | END FUNCTION
+  | 
+  | 
+  | ''
+  | ' Ctrl+K: plain notes <-> the selected sound as an instrument. With a
+  | ' different sound selected than the instrument, it becomes the instrument.
+  | '
+  | SUB toggle_keys_mode
+  |     voiceOn = 0
+  |     stop_recording
+  |     IF keysMode = KEYS_SOUND AND cur = instIdx THEN
+  |         keysMode = KEYS_NOTES
+  |         set_status "Keys play plain NOTES"
+  |         EXIT SUB
+  |     END IF
+  |     follow cursorStep
+  | END SUB
+  | 
+  | 
+  | '=============================================================================
+  | ' Prompts (rename, priority, open, save as)
+  | '=============================================================================
+  | 
+  | SUB start_prompt (kind AS INTEGER, label AS STRING, text AS STRING)
+  |     promptKind = kind
+  |     promptLabel = label
+  | ...[truncated]
+2026-09-30T23:32:35-0400  INFO     bash_start    python3 - <<'PYEOF' | p='PCSEDIT.BAS'; s=open(p).read() | def r(a,b,c=1): | global s | assert s.count(a)==c,(a[:70],s.count(a)); s=s.replace(a,b) | | # ---- constants / state | r("""CONST PROMPT_NONE…
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ python3 - <<'PYEOF'
+  $ p='PCSEDIT.BAS'; s=open(p).read()
+  $ def r(a,b,c=1):
+  $     global s
+  $     assert s.count(a)==c,(a[:70],s.count(a)); s=s.replace(a,b)
+  $ 
+  $ # ---- constants / state
+  $ r("""CONST PROMPT_NONE = 0
+  $ CONST PROMPT_RENAME = 1
+  $ CONST PROMPT_PRIORITY = 2
+  $ CONST PROMPT_OPEN = 3
+  $ CONST PROMPT_SAVEAS = 4
+  $ CONST PROMPT_BPM = 5
+  $ ""","""' file types the Open dialog lists (the native dialogs on Linux are case
+  $ ' sensitive, so both cases)
+  $ CONST OPEN_FILTER = "*.snd|*.SND|*.dn1|*.DN1|*.dn2|*.DN2|*.dn3|*.DN3|*.ck1|*.CK1|*.wad|*.WAD|*.lmp|*.LMP|*.cmp|*.CMP|*.stn|*.STN|*.ms1|*.MS1|*.ms2|*.MS2|*.ms3|*.MS3|*.hov|*.HOV|*.rov|*.ROV|*.ca2|*.CA2|*.slo|*.SLO|*.8|AUDIOT.*|audiot.*|AUDIOHED.*|audiohed.*"
+  $ """)
+  $ r("""DIM SHARED promptKind AS INTEGER
+  $ DIM SHARED promptLabel AS STRING
+  $ DIM SHARED promptText AS STRING
+  $ DIM SHARED promptConfirm AS STRING ' Save As: path waiting for "overwrite?"
+  $ ""","")
+  $ r("""DIM SHARED confirmWhat AS STRING ' "press again to ..." guard
+  $ DIM SHARED confirmUntil AS DOUBLE
+  $ ""","")
+  $ 
+  $ # ---- main loop
+  $ r("""        IF promptKind = PROMPT_NONE THEN handle_mouse _MOUSEX, _MOUSEY, _MOUSEBUTTON(1), _MOUSEBUTTON(2)""","""        handle_mouse _MOUSEX, _MOUSEY, _MOUSEBUTTON(1), _MOUSEBUTTON(2)""")
+  $ r("""    IF wheel AND promptKind = PROMPT_NONE THEN""","""    IF wheel THEN""")
+  $ r("""    IF promptKind = PROMPT_NONE THEN poll_piano ctrl""","""    poll_piano ctrl""")
+  $ r("""            CASE ELSE
+  $                 IF promptKind THEN
+  $                     prompt_key k
+  $                 ELSEIF k > 0 THEN
+  $                     quitNow = handle_key(k, modCtrl, modShift)
+  $                     IF quitNow THEN EXIT DO
+  $                 END IF""","""            CASE ELSE
+  $                 IF k > 0 THEN
+  $                     quitNow = handle_key(k, modCtrl, modShift)
+  $                     IF quitNow THEN EXIT DO
+  $                 END IF""")
+  $ r("""    IF osExitTrap THEN
+  $         IF confirm_ok("quit") THEN EXIT DO
+  $     END IF""","""    IF osExitTrap THEN
+  $         IF ok_to_lose("Quit") THEN EXIT DO
+  $     END IF""")
+  $ r("""        IF confirm_ok("drop") THEN open_bank f""","""        IF ok_to_lose("Open " + PCSPK_FilePart(f)) THEN open_bank f""")
+  $ 
+  $ # ---- keys
+  $ r("""            ELSEIF confirm_ok("quit") THEN""","""            ELSEIF ok_to_lose("Quit") THEN""")
+  $ r("""        CASE 15360: start_prompt PROMPT_RENAME, "Name (up to 12 characters):", sndName(cur) ' F2""","""        CASE 15360: rename_sound '                             F2""")
+  $ r("""            IF confirm_ok("delete") THEN delete_sound""","""            IF ask("Delete " + sndName(cur) + "?", "yesno", "question", 0) = 1 THEN delete_sound""")
+  $ r("""                    CASE "P": start_prompt PROMPT_PRIORITY, "Priority (0-255, higher wins in the game):", LTRIM$(STR$(sndPri(cur)))""","""                    CASE "P": ask_priority""")
+  $ r("""                        IF confirm_ok("new") THEN new_bank: set_status "New bank\"""","""                        IF ok_to_lose("New bank") THEN new_bank: set_status "New bank\"""")
+  $ r("""                        IF confirm_ok("open") THEN start_prompt PROMPT_OPEN, "Open (any bank DN1PLAY can play):", default_dir""","""                        IF ok_to_lose("Open") THEN open_dialog""")
+  $ r("""                    CASE "B": start_prompt PROMPT_BPM, "Tempo in BPM (20-400):", LTRIM$(STR$(bpm))""","""                    CASE "B": ask_bpm""")
+  $ a=s.index("""                    CASE "S"
+  $                         IF shift OR savePath = "" THEN""")
+  $ b=s.index("END IF", a)+len("END IF")
+  $ s=s[:a]+"""                    CASE "S"
+  $                         IF shift THEN save_as ELSE save_now"""+s[b:]
+  $ 
+  $ # ---- replace confirm_ok with native-dialog helpers
+  $ a=s.index("''\n' Guard for actions that throw work away")
+  $ b=s.index("END FUNCTION", a)+len("END FUNCTION")
+  $ s=s[:a]+"""'-----------------------------------------------------------------------------
+  $ ' Native dialogs (QB64-PE: _MESSAGEBOX, _INPUTBOX$, _OPENFILEDIALOG$,
+  $ ' _SAVEFILEDIALOG$ - zenity / kdialog on Linux)
+  $ '-----------------------------------------------------------------------------
+  $ 
+  $ ''
+  $ ' A modal dialog swallows keys and button releases, so afterwards forget the
+  $ ' modifier and mouse state and drop any keys that piled up.
+  $ '
+  $ SUB after_dialog
+  $     modCtrl = 0: modShift = 0: modAlt = 0
+  $     drawing = 0
+  $     _KEYCLEAR
+  $ END SUB
+  $ 
+  $ ...[truncated]
+2026-09-30T23:32:37-0400  INFO     bash_end      [ok] 1L stdout
+  | Output: /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/PCSEDIT
+2026-09-30T23:32:53-0400  INFO     bash_start    python3 - <<'PYEOF' | p='PCSEDIT.BAS'; s=open(p).read() | a=""" IF NOT _DIREXISTS(_STARTDIR$ + "EXPORT") THEN MKDIR _STARTDIR$ + "EXPORT" ' the dialog starts there""" | assert a in s | s=s.replace(a,…
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ python3 - <<'PYEOF'
+  $ p='PCSEDIT.BAS'; s=open(p).read()
+  $ a="""    IF NOT _DIREXISTS(_STARTDIR$ + "EXPORT") THEN MKDIR _STARTDIR$ + "EXPORT" ' the dialog starts there"""
+  $ assert a in s
+  $ s=s.replace(a,"""    IF NOT _DIREXISTS(start_dir + "EXPORT") THEN MKDIR start_dir + "EXPORT" ' the dialog starts there""")
+  $ s=s.replace("""_STARTDIR$ + "EXPORT/" + safe_name(bankName)""","""start_dir + "EXPORT/" + safe_name(bankName)""")
+  $ a="""FUNCTION default_dir$
+  $     DIM d AS STRING
+  $     d = _STARTDIR$
+  $     IF RIGHT$(d, 1) <> "/" AND RIGHT$(d, 1) <> "\\" THEN d = d + "/\""""
+  $ assert a in s
+  $ s=s.replace(a,"""''
+  $ ' The folder PCSEDIT was started from, ending with a separator.
+  $ '
+  $ FUNCTION start_dir$
+  $     DIM d AS STRING
+  $     d = _STARTDIR$
+  $     IF RIGHT$(d, 1) <> "/" AND RIGHT$(d, 1) <> "\\" THEN d = d + "/"
+  $     start_dir = d
+  $ END FUNCTION
+  $ 
+  $ 
+  $ FUNCTION default_dir$
+  $     DIM d AS STRING
+  $     d = start_dir""")
+  $ open(p,'w').write(s)
+  $ PYEOF
+  $ SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad; /home/grymmjack/git/qb64pe/qb64pe -x PCSEDIT.BAS -o $SP/PCSEDIT 2>&1 | grep -A3 -E "38;5;9m|Output:" | head -3; rm -f $SP/dlgtest.SND $SP/dlgtest.snd
+  $ (Xvfb :99 -screen 0 1400x900x24 >/dev/null 2>&1 &); sleep 1.5; export DISPLAY=:99; unset WAYLAND_DISPLAY; xdpyinfo >/dev/null 2>&1 || exit 1
+  $ (openbox --sm-disable >/dev/null 2>&1 &); sleep 1
+  $ ( PCSEDIT_NOMIDI=1 $SP/PCSEDIT & ); for i in $(seq 1 30); do W=$(xdotool search --name "PCSEDIT" 2>/dev/null | head -1); [ -n "$W" ] && break; sleep 0.3; done; sleep 2.5
+  $ echo "midi held by: $(fuser /dev/snd/midiC4D0 2>&1 | tr -s ' ')"
+  $ xdotool mousemove 400 400; xdotool click 1; sleep 0.3
+  $ xdotool key --window $W ctrl+s; sleep 2.5
+  $ xwd -silent -root -out $SP/s.xwd; /usr/bin/convert $SP/s.xwd -resize 70% $SP/dlg_save.png
+  $ D=$(xdotool search --name "Save IFS" 2>/dev/null | head -1); echo "save dialog window: $D"
+2026-09-30T23:33:04-0400  INFO     bash_end      [ok] 3L stdout
+  | Output: /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/PCSEDIT
+  | midi held by: 
+  | save dialog window:
+2026-09-30T23:33:10-0400  INFO     bash_start    export DISPLAY=:99; pgrep -af "zenity|kdialog|python.*tkinter" | head; xdotool search --name "" 2>/dev/null | while read w; do n=$(xdotool getwindowname $w 2>/dev/null); [ -n "$n" ] && echo "$w $n"; …
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ export DISPLAY=:99; pgrep -af "zenity|kdialog|python.*tkinter" | head; xdotool search --name "" 2>/dev/null | while read w; do n=$(xdotool getwindowname $w 2>/dev/null); [ -n "$n" ] && echo "$w $n"; done | head
+2026-09-30T23:33:11-0400  INFO     bash_end      [ok] 7L stdout
+  | 2838197 sh -c -- kdialog --attach=$(xprop -root 32x '?$0' _NET_ACTIVE_WINDOW | cut -f 2) --getsavefilename '/home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER/ASSETS/MYSOUNDS.SND' 'IFS sound bank (Duke Nukem / Keen format) ( *.snd *.SND)' --title 'Save IFS sound bank'
+  | 2838201 kdialog --attach=0x600007 --getsavefilename /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER/ASSETS/MYSOUNDS.SND IFS sound bank (Duke Nukem / Keen format) ( *.snd *.SND) --title Save IFS sound bank
+  | 2838222 /lib/x86_64-linux-gnu/libexec/kf6/kioworker /usr/lib/x86_64-linux-gnu/qt6/plugins/kf6/kio/tags.so tags  local:/run/user/1000/kdialogEgBgZK.1.kioworker.socket
+  | 2838233 /lib/x86_64-linux-gnu/libexec/kf6/kioworker /usr/lib/x86_64-linux-gnu/qt6/plugins/kf6/kio/thumbnail.so thumbnail  local:/run/user/1000/kdialogFdPnHX.7.kioworker.socket
+  | 2838466 /usr/bin/zsh -c source /home/grymmjack/.claude/shell-snapshots/snapshot-zsh-1790811241507-2alwlk.sh 2>/dev/null || true && setopt NO_EXTENDED_GLOB NO_BARE_GLOB_QUAL 2>/dev/null || true && { \builtin unalias -- 'unsetenv'; \builtin unset -f -- 'unsetenv'; } >/dev/null 2>&1 || true && eval 'export DISPLAY=:99; pgrep -af "zenity|kdialog|python.*tkinter" | head; xdotool search --name "" 2>/dev/null | while read w; do n=$(xdotool getwindowname $w 2>/dev/null); [ -n "$n" ] && echo "$w $n"; done | head' < /dev/null && pwd -P >| /tmp/claude-22e3-cwd
+  | 2097439 Openbox
+  | 6291463 PCSEDIT - PC speaker sound editor
+2026-09-30T23:33:16-0400  INFO     bash_start    kill 2838201 2838197 2>/dev/null; sleep 0.5; pgrep -af kdialog | grep -v pgrep || echo "kdialog closed"; cat /proc/$(pgrep -x PCSEDIT | head -1)/environ 2>/dev/null | tr '\0' '\n' | grep -E "^(DISPLA…
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ kill 2838201 2838197 2>/dev/null; sleep 0.5; pgrep -af kdialog | grep -v pgrep || echo "kdialog closed"; cat /proc/$(pgrep -x PCSEDIT | head -1)/environ 2>/dev/null | tr '\0' '\n' | grep -E "^(DISPLAY|WAYLAND|QT_QPA|XDG_SESSION)" 
+2026-09-30T23:33:16-0400  INFO     bash_end      [ok] 7L stdout
+  | kdialog closed
+  | DISPLAY=:99
+  | XDG_SESSION_CLASS=user
+  | XDG_SESSION_DESKTOP=KDE
+  | XDG_SESSION_ID=3
+  | XDG_SESSION_PATH=/org/freedesktop/DisplayManager/Session2
+  | XDG_SESSION_TYPE=wayland
+2026-09-30T23:33:16-0400  NOTICE   prompt        for the piano roll can we show the background color of the white notes a little brighter in the grid so i can see it as i'm editing - also status showing what key i'm pressing would be nice, black ke…
+  > for the piano roll can we show the background color of the white notes a little brighter in the grid so i can see it as i'm editing - also status showing what key i'm pressing would be nice, black keys can be a little darker, etc. ? and octave markers in the grid for the octave lines?
+2026-09-30T23:33:28-0400  INFO     bash_start    SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad; pkill -x PCSEDIT; sleep 0.3; export DISPLAY=:99; unset WAYLAND_DISPLAY; cd /home/grymmjack/git/qb64/qb64/…
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad; pkill -x PCSEDIT; sleep 0.3; export DISPLAY=:99; unset WAYLAND_DISPLAY; cd /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ ( env -u XDG_CURRENT_DESKTOP -u KDE_FULL_SESSION -u KDE_SESSION_VERSION -u DESKTOP_SESSION XDG_SESSION_TYPE=x11 PCSEDIT_NOMIDI=1 $SP/PCSEDIT & ); for i in $(seq 1 30); do W=$(xdotool search --name "PCSEDIT" 2>/dev/null | head -1); [ -n "$W" ] && break; sleep 0.3; done; sleep 2.5
+  $ eval $(xdotool getwindowgeometry --shell $W); xdotool mousemove $((X+400)) $((Y+400)); xdotool click 1; sleep 0.3
+  $ xdotool key --window $W ctrl+s; sleep 3
+  $ pgrep -af "zenity|kdialog" | grep -v pgrep | cut -c1-120
+  $ D=$(xdotool search --name "Save IFS" 2>/dev/null | head -1); echo "dialog window on :99: $D"
+  $ xwd -silent -root -out $SP/s.xwd; /usr/bin/convert $SP/s.xwd -resize 70% $SP/dlg_save.png
+2026-09-30T23:33:35-0400  INFO     bash_end      [ok] 7L stdout
+  | qt.svg.draw: The requested buffer size is too big, ignoring
+  | qt.svg.draw: The requested buffer size is too big, ignoring
+  | qt.svg.draw: The requested buffer size is too big, ignoring
+  | qt.svg.draw: The requested buffer size is too big, ignoring
+  | 2839123 sh -c -- kdialog --attach=$(xprop -root 32x '?$0' _NET_ACTIVE_WINDOW | cut -f 2) --getsavefilename '/home/grymmj
+  | 2839127 kdialog --attach=0x600007 --getsavefilename /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER/ASSETS/MYSOUNDS.SND I
+  | dialog window on :99: 4194311
+2026-09-30T23:33:46-0400  INFO     bash_start    SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad; export DISPLAY=:99; unset WAYLAND_DISPLAY; rm -f $SP/dlgtest* | D=$(xdotool search --name "Save IFS" | he…
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad; export DISPLAY=:99; unset WAYLAND_DISPLAY; rm -f $SP/dlgtest*
+  $ D=$(xdotool search --name "Save IFS" | head -1); xdotool windowactivate --sync $D 2>/dev/null; sleep 0.3
+  $ xdotool key --window $D ctrl+a; sleep 0.1; xdotool type --window $D --delay 5 "$SP/dlgtest"; sleep 0.3; xdotool key --window $D Return; sleep 1.5
+  $ /bin/ls -la $SP/dlgtest* 2>&1
+  $ W=$(xdotool search --name "PCSEDIT" | head -1); eval $(xdotool getwindowgeometry --shell $W)
+  $ xdotool mousemove $((X+500)) $((Y+300)); xdotool click 1; sleep 0.3
+  $ xdotool key --window $W Escape; sleep 2.5
+  $ xwd -silent -root -out $SP/s.xwd; /usr/bin/convert $SP/s.xwd -resize 70% $SP/dlg_quit.png
+  $ pgrep -af "kdialog" | grep -v pgrep | cut -c1-150
+2026-09-30T23:33:52-0400  INFO     bash_end      [ok] 2L stdout
+  | (eval):1: no matches found: /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/dlgtest*
+  | -rw-rw-r-- 1 grymmjack grymmjack 86 Sep 30 23:33 /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/dlgtest.SND
+2026-09-30T23:34:02-0400  INFO     bash_start    SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad; export DISPLAY=:99; unset WAYLAND_DISPLAY; W=$(xdotool search --name "PCSEDIT" | head -1); xdotool window…
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad; export DISPLAY=:99; unset WAYLAND_DISPLAY; W=$(xdotool search --name "PCSEDIT" | head -1); xdotool windowactivate --sync $W; sleep 0.3; xdotool key Escape; for i in 1 2 3 4 5 6; do sleep 0.5; pgrep -af kdialog | grep -v pgrep | cut -c1-160; done; xdotool search --name "" 2>/dev/null | while read w; do n=$(xdotool getwindowname $w 2>/dev/null); [ -n "$n" ] && echo "$w $n"; done
+2026-09-30T23:34:16-0400  INFO     bash_start    SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad; pkill -x kdialog; pkill -x PCSEDIT; sleep 0.5; kill $(pgrep -f "^openbox --sm-disable") $(pgrep -f "^Xvfb…
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad; pkill -x kdialog; pkill -x PCSEDIT; sleep 0.5; kill $(pgrep -f "^openbox --sm-disable") $(pgrep -f "^Xvfb :99") 2>/dev/null; rm -f $SP/dlgtest.SND; pgrep -af "kdialog|PCSEDIT" | grep -v pgrep || echo clean; cd /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER && sed -n '/    . piano keys + note rows/,/^    . past the end of the sound/p' PCSEDIT.BAS
+2026-09-30T23:34:17-0400  INFO     bash_end      [ok] 26L stdout
+  | clean
+  |     ' piano keys + note rows
+  |     LINE (CANVAS_X, CANVAS_Y)-(CANVAS_X + CANVAS_W - 1, CANVAS_Y + CANVAS_H - 1), _RGB32(10, 12, 18), BF
+  |     FOR nt = NOTE_LO TO NOTE_HI - 1
+  |         y = note_y(nt)
+  |         isBlack = MID$("010100101010", (nt MOD 12) + 1, 1) = "1"
+  |         IF isBlack THEN
+  |             LINE (RULER_X, y - PX_SEMI \ 2)-(RULER_X + 26, y + PX_SEMI \ 2 - 1), _RGB32(30, 30, 36), BF
+  |             LINE (CANVAS_X, y - PX_SEMI \ 2)-(CANVAS_X + CANVAS_W - 1, y + PX_SEMI \ 2 - 1), _RGB32(14, 16, 24), BF
+  |         ELSE
+  |             LINE (RULER_X, y - PX_SEMI \ 2)-(RULER_X + 40, y + PX_SEMI \ 2 - 1), _RGB32(200, 200, 205), BF
+  |         END IF
+  |         IF nt MOD 12 = 0 THEN
+  |             LINE (CANVAS_X, y + PX_SEMI \ 2 - 1)-(CANVAS_X + CANVAS_W - 1, y + PX_SEMI \ 2 - 1), _RGB32(40, 48, 66)
+  |             COLOR _RGB32(150, 160, 180)
+  |             _PRINTSTRING (RULER_X - 26, y - 8), "C" + LTRIM$(STR$(nt \ 12 - 1))
+  |         END IF
+  |     NEXT
+  |     nt = heldNote
+  |     IF nt < 0 THEN nt = auditionNote
+  |     IF nt >= NOTE_LO AND nt < NOTE_HI THEN
+  |         y = note_y(nt)
+  |         LINE (RULER_X, y - PX_SEMI \ 2)-(RULER_X + 40, y + PX_SEMI \ 2 - 1), _RGB32(255, 170, 40), BF
+  |     END IF
+  | 
+  |     ' past the end of the sound
+2026-09-30T23:34:47-0400  INFO     bash_start    python3 - <<'PYEOF' | p='PCSEDIT.BAS'; s=open(p).read() | def r(a,b): | global s | assert s.count(a)==1,a[:60]; s=s.replace(a,b) | r(""" ' piano keys + note rows | LINE (CANVAS_X, CANVAS_Y)-(CANVAS_X…
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ python3 - <<'PYEOF'
+  $ p='PCSEDIT.BAS'; s=open(p).read()
+  $ def r(a,b):
+  $     global s
+  $     assert s.count(a)==1,a[:60]; s=s.replace(a,b)
+  $ r("""    ' piano keys + note rows
+  $     LINE (CANVAS_X, CANVAS_Y)-(CANVAS_X + CANVAS_W - 1, CANVAS_Y + CANVAS_H - 1), _RGB32(10, 12, 18), BF
+  $     FOR nt = NOTE_LO TO NOTE_HI - 1
+  $         y = note_y(nt)
+  $         isBlack = MID$("010100101010", (nt MOD 12) + 1, 1) = "1"
+  $         IF isBlack THEN
+  $             LINE (RULER_X, y - PX_SEMI \\ 2)-(RULER_X + 26, y + PX_SEMI \\ 2 - 1), _RGB32(30, 30, 36), BF
+  $             LINE (CANVAS_X, y - PX_SEMI \\ 2)-(CANVAS_X + CANVAS_W - 1, y + PX_SEMI \\ 2 - 1), _RGB32(14, 16, 24), BF
+  $         ELSE
+  $             LINE (RULER_X, y - PX_SEMI \\ 2)-(RULER_X + 40, y + PX_SEMI \\ 2 - 1), _RGB32(200, 200, 205), BF
+  $         END IF
+  $         IF nt MOD 12 = 0 THEN
+  $             LINE (CANVAS_X, y + PX_SEMI \\ 2 - 1)-(CANVAS_X + CANVAS_W - 1, y + PX_SEMI \\ 2 - 1), _RGB32(40, 48, 66)
+  $             COLOR _RGB32(150, 160, 180)
+  $             _PRINTSTRING (RULER_X - 26, y - 8), "C" + LTRIM$(STR$(nt \\ 12 - 1))
+  $         END IF
+  $     NEXT
+  $     nt = heldNote
+  $     IF nt < 0 THEN nt = auditionNote
+  $     IF nt >= NOTE_LO AND nt < NOTE_HI THEN
+  $         y = note_y(nt)
+  $         LINE (RULER_X, y - PX_SEMI \\ 2)-(RULER_X + 40, y + PX_SEMI \\ 2 - 1), _RGB32(255, 170, 40), BF
+  $     END IF""","""    ' piano keys + note rows: white-key rows lighter, black-key rows darker,
+  $     ' like a piano roll, so you can see which row you are on
+  $     FOR nt = NOTE_LO TO NOTE_HI - 1
+  $         y = note_y(nt)
+  $         isBlack = MID$("010100101010", (nt MOD 12) + 1, 1) = "1"
+  $         IF isBlack THEN
+  $             LINE (RULER_X, y - PX_SEMI \\ 2)-(RULER_X + 26, y + PX_SEMI \\ 2 - 1), _RGB32(30, 30, 36), BF
+  $             LINE (CANVAS_X, y - PX_SEMI \\ 2)-(CANVAS_X + CANVAS_W - 1, y + PX_SEMI \\ 2 - 1), _RGB32(11, 12, 17), BF
+  $         ELSE
+  $             LINE (RULER_X, y - PX_SEMI \\ 2)-(RULER_X + 40, y + PX_SEMI \\ 2 - 1), _RGB32(200, 200, 205), BF
+  $             LINE (CANVAS_X, y - PX_SEMI \\ 2)-(CANVAS_X + CANVAS_W - 1, y + PX_SEMI \\ 2 - 1), _RGB32(26, 30, 42), BF
+  $         END IF
+  $     NEXT
+  $ 
+  $     ' the key being played (keyboard, MIDI or the piano keys): a band across
+  $     ' the grid as well as the lit key
+  $     nt = heldNote
+  $     IF nt < 0 THEN nt = auditionNote
+  $     IF nt >= NOTE_LO AND nt < NOTE_HI THEN
+  $         y = note_y(nt)
+  $         LINE (RULER_X, y - PX_SEMI \\ 2)-(RULER_X + 40, y + PX_SEMI \\ 2 - 1), _RGB32(255, 170, 40), BF
+  $         LINE (CANVAS_X, y - PX_SEMI \\ 2)-(CANVAS_X + CANVAS_W - 1, y + PX_SEMI \\ 2 - 1), _RGB32(70, 52, 22), BF
+  $     END IF""")
+  $ # past end: overlay so rows still show
+  $ r("""        LINE (endX, CANVAS_Y)-(CANVAS_X + CANVAS_W - 1, CANVAS_Y + CANVAS_H - 1), _RGB32(22, 24, 30), BF""","""        LINE (endX, CANVAS_Y)-(CANVAS_X + CANVAS_W - 1, CANVAS_Y + CANVAS_H - 1), _RGBA32(0, 0, 0, 110), BF""")
+  $ # octave lines + labels: draw after grid lines (before steps)
+  $ r("""    IF gridDiv THEN
+  $         draw_grid vis
+  $     ELSE
+  $         draw_seconds vis
+  $     END IF
+  $ 
+  $     ' the steps""","""    IF gridDiv THEN
+  $         draw_grid vis
+  $     ELSE
+  $         draw_seconds vis
+  $     END IF
+  $ 
+  $     ' octave markers: a brighter line under every C, labelled at both edges
+  $     ' of the grid (and on the piano keys)
+  $     FOR nt = NOTE_LO TO NOTE_HI - 1
+  $         IF nt MOD 12 = 0 THEN
+  $             y = note_y(nt) + PX_SEMI \\ 2 - 1
+  $             LINE (CANVAS_X, y)-(CANVAS_X + CANVAS_W - 1, y), _RGB32(64, 78, 104)
+  $             COLOR _RGB32(150, 160, 180)
+  $             _PRINTSTRING (RULER_X - 26, y - 13), "C" + LTRIM$(STR$(nt \\ 12 - 1))
+  $             COLOR _RGB32(90, 104, 132)
+  $             _PRINTSTRING (CANVAS_X + 3, y - 15), "C" + LTRIM$(STR$(nt \\ 12 - 1))
+  $             _PRINTSTRING (CANVAS_X + CANVAS_W - 22, y - 15), "C" + LTRIM$(STR$(nt \\ 12 - 1))
+  $         END IF
+  $     NEXT
+  $ 
+  $     ' the steps""")
+  $ ...[truncated]
+2026-09-30T23:34:49-0400  INFO     bash_end      [ok] 1L stdout
+  | Output: /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/PCSEDIT
+2026-09-30T23:34:57-0400  INFO     bash_start    SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad; cd /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER | (Xvfb :99 -screen 0 1400x900x24 >/dev/null 2>&1 &); s…
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad; cd /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ (Xvfb :99 -screen 0 1400x900x24 >/dev/null 2>&1 &); sleep 1.5; export DISPLAY=:99; unset WAYLAND_DISPLAY; xdpyinfo >/dev/null 2>&1 || exit 1
+  $ ( env -u XDG_CURRENT_DESKTOP -u KDE_FULL_SESSION PCSEDIT_NOMIDI=1 $SP/PCSEDIT $SP/wave.snd & ); for i in $(seq 1 30); do W=$(xdotool search --name "PCSEDIT" 2>/dev/null | head -1); [ -n "$W" ] && break; sleep 0.3; done; sleep 2.5
+  $ xdotool mousemove 240 $(python3 -c "print(int(624-(64-33+0.5)*6))"); xdotool mousedown 1; sleep 0.5
+  $ xwd -silent -root -out $SP/s.xwd; xdotool mouseup 1
+  $ /usr/bin/convert $SP/s.xwd -crop 1280x800+0+0 $SP/roll.png
+  $ pkill -x PCSEDIT; sleep 0.3; kill $(pgrep -f "^Xvfb :99") 2>/dev/null; true
+2026-09-30T23:35:02-0400  INFO     bash_end      [ok] 0L stdout
+2026-09-30T23:35:17-0400  INFO     bash_start    python3 - <<'PYEOF' | p='PCSEDIT.BAS'; s=open(p).read() | a=s.index(" ' past the end of the sound\n") | b=s.index(" END IF\n", a)+len(" END IF\n") | block=s[a:b] | s=s[:a]+s[b:] | anchor=""" _PRINTST…
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ python3 - <<'PYEOF'
+  $ p='PCSEDIT.BAS'; s=open(p).read()
+  $ a=s.index("    ' past the end of the sound\n")
+  $ b=s.index("    END IF\n", a)+len("    END IF\n")
+  $ block=s[a:b]
+  $ s=s[:a]+s[b:]
+  $ anchor="""            _PRINTSTRING (CANVAS_X + CANVAS_W - 22, y - 15), "C" + LTRIM$(STR$(nt \\ 12 - 1))
+  $         END IF
+  $     NEXT
+  $ """
+  $ assert s.count(anchor)==1
+  $ s=s.replace(anchor,anchor+"\n"+block.replace("    ' past the end of the sound","    ' past the end of the sound (over the lines, so it all dims evenly)"))
+  $ open(p,'w').write(s)
+  $ PYEOF
+  $ grep -n "past the end of the sound" -A6 PCSEDIT.BAS | head -8; /home/grymmjack/git/qb64pe/qb64pe -x PCSEDIT.BAS -o /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/PCSEDIT 2>&1 | grep -A3 -E "38;5;9m|Output:" | head -3
+2026-09-30T23:35:19-0400  INFO     bash_end      [ok] 8L stdout
+  | 2765:    ' past the end of the sound (over the lines, so it all dims evenly)
+  | 2766-    endX = CANVAS_X + (steps_of(cur) - scrollX) * zoom
+  | 2767-    IF endX < CANVAS_X THEN endX = CANVAS_X
+  | 2768-    IF endX < CANVAS_X + CANVAS_W THEN
+  | 2769-        LINE (endX, CANVAS_Y)-(CANVAS_X + CANVAS_W - 1, CANVAS_Y + CANVAS_H - 1), _RGBA32(0, 0, 0, 110), BF
+  | 2770-        LINE (endX, CANVAS_Y)-(endX, CANVAS_Y + CANVAS_H - 1), _RGB32(90, 90, 110)
+  | 2771-    END IF
+  | Output: /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/PCSEDIT
+2026-09-30T23:35:26-0400  INFO     bash_start    python3 - <<'PYEOF' | p='README.md'; s=open(p).read() | def r(a,b): | global s | assert s.count(a)==1,a[:60]; s=s.replace(a,b) | r("""The first save after opening a file always asks for a name""","""…
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ python3 - <<'PYEOF'
+  $ p='README.md'; s=open(p).read()
+  $ def r(a,b):
+  $     global s
+  $     assert s.count(a)==1,a[:60]; s=s.replace(a,b)
+  $ r("""The first save after opening a file always asks for a name""","""Opening, saving, exporting, renaming and setting the priority or tempo use
+  $ QB64-PE's native dialogs (`_OPENFILEDIALOG$`, `_SAVEFILEDIALOG$`,
+  $ `_INPUTBOX$`, `_MESSAGEBOX`), which use kdialog or zenity on Linux. With unsaved
+  $ changes, quitting, starting a new bank or opening another file asks **Save /
+  $ Don't save / Cancel**. Ctrl+E asks where to save the `.wav`, starting in
+  $ `EXPORT/`.
+  $ 
+  $ The first save after opening a file always asks for a name""")
+  $ r("""**Oscilloscope:**""","""**Reading the roll:** white-key rows are lighter and black-key rows darker, like
+  $ a piano roll. Every C has a brighter octave line, labelled at both edges of the
+  $ grid. While a key is held (computer keyboard, MIDI or the piano keys), its row
+  $ lights up across the grid and the title bar shows **KEY**, the note, its
+  $ frequency and its PIT divisor.
+  $ 
+  $ **Oscilloscope:**""")
+  $ open(p,'w').write(s)
+  $ PYEOF
+  $ grep -c "native dialogs\|Reading the roll" README.md
+2026-09-30T23:35:27-0400  INFO     bash_end      [ok] 1L stdout
+  | 2
+2026-09-30T23:38:24-0400  NOTICE   prompt        this rocks, it works, but when i have a bank loaded and switch sounds and i have ctrl-k playing the sounds with midi it does not play the sound/switch the sound it seems
+  > this rocks, it works, but when i have a bank loaded and switch sounds and i have ctrl-k playing the sounds with midi it does not play the sound/switch the sound it seems
+2026-09-30T23:38:44-0400  INFO     bash_start    grep -n "select_sound" PCSEDIT.BAS | grep -v "^.*SUB select_sound"; sed -n '/^SUB toggle_keys_mode/,/^END SUB/p;/^SUB ensure_target/,/^END SUB/p' PCSEDIT.BAS; grep -n '"Keys: " + CHR$(14)' PCSEDIT.BAS
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ grep -n "select_sound" PCSEDIT.BAS | grep -v "^.*SUB select_sound"; sed -n '/^SUB toggle_keys_mode/,/^END SUB/p;/^SUB ensure_target/,/^END SUB/p' PCSEDIT.BAS; grep -n '"Keys: " + CHR$(14)' PCSEDIT.BAS
+2026-09-30T23:38:44-0400  INFO     bash_end      [ok] 29L stdout
+  | 354:            select_sound cur + wheel
+  | 1036:            IF row <= sndCount THEN select_sound row
+  | 1599:                select_sound cur - 1
+  | 1609:                select_sound cur + 1
+  | 1612:            IF ctrl THEN select_sound cur - 1 ELSE jump_mark -1
+  | 1614:            IF ctrl THEN select_sound cur + 1 ELSE jump_mark 1
+  | 2160:    select_sound at
+  | 2183:    select_sound cur
+  | 2298:    IF s <> cur THEN select_sound s
+  | 2312:    IF s <> cur THEN select_sound s
+  | SUB ensure_target
+  |     IF keysMode <> KEYS_SOUND OR cur <> instIdx THEN EXIT SUB
+  |     add_sound "", ""
+  |     sndName(cur) = LEFT$(sndName(instIdx), 7) + "_TUNE"
+  |     set_status "Recording " + sndName(instIdx) + " into a new sound, " + sndName(cur)
+  | END SUB
+  | SUB toggle_keys_mode
+  |     voiceOn = 0
+  |     stop_recording
+  |     IF keysMode = KEYS_SOUND AND cur = instIdx THEN
+  |         keysMode = KEYS_NOTES
+  |         set_status "Keys play plain NOTES"
+  |         EXIT SUB
+  |     END IF
+  |     IF steps_of(cur) = 0 THEN set_status "This sound is empty - draw something first, then Ctrl+K": EXIT SUB
+  |     keysMode = KEYS_SOUND
+  |     instIdx = cur
+  |     set_status "Keys play " + sndName(cur) + " (C4 = as drawn), " + hold_name + ". Recording goes into another sound."
+  | END SUB
+2026-09-30T23:38:47-0400  INFO     bash_start    grep -n 'CHR$(14) + " " + LEFT$(sndName(instIdx)' PCSEDIT.BAS; grep -n 'CASE "K": toggle_keys_mode' PCSEDIT.BAS
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ grep -n 'CHR$(14) + " " + LEFT$(sndName(instIdx)' PCSEDIT.BAS; grep -n 'CASE "K": toggle_keys_mode' PCSEDIT.BAS
+2026-09-30T23:38:47-0400  INFO     bash_end      [ok] 1L stdout
+  | 1701:                    CASE "K": toggle_keys_mode
+2026-09-30T23:38:49-0400  INFO     bash_start    grep -n 'Keys: ' PCSEDIT.BAS
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ grep -n 'Keys: ' PCSEDIT.BAS
+2026-09-30T23:38:49-0400  INFO     bash_end      [ok] 2L stdout
+  | 2590:        _PRINTSTRING (LIST_X, 84), "Keys: " + CHR$(14) + " " + LEFT$(sndName(instIdx), 8) + " " + hold_name
+  | 2593:        _PRINTSTRING (LIST_X, 84), "Keys: notes (Ctrl+K)"
+2026-09-30T23:39:07-0400  INFO     bash_start    python3 - <<'PYEOF' | p='PCSEDIT.BAS'; s=open(p).read() | def r(a,b,c=1): | global s | assert s.count(a)==c,(a[:70],s.count(a)); s=s.replace(a,b) | r("""DIM SHARED instIdx AS LONG ' the instrument so…
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ python3 - <<'PYEOF'
+  $ p='PCSEDIT.BAS'; s=open(p).read()
+  $ def r(a,b,c=1):
+  $     global s
+  $     assert s.count(a)==c,(a[:70],s.count(a)); s=s.replace(a,b)
+  $ r("""DIM SHARED instIdx AS LONG ' the instrument sound (KEYS_SOUND)""","""DIM SHARED instIdx AS LONG ' the instrument sound (KEYS_SOUND)
+  $ DIM SHARED instLock AS INTEGER ' FALSE = the instrument follows the selected sound""")
+  $ # user selections
+  $ r("""            select_sound cur + wheel""","""            user_select cur + wheel""")
+  $ r("""            IF row <= sndCount THEN select_sound row""","""            IF row <= sndCount THEN user_select row""")
+  $ r("""                select_sound cur - 1
+  $ ""","""                user_select cur - 1
+  $ """)
+  $ r("""                select_sound cur + 1
+  $ ""","""                user_select cur + 1
+  $ """)
+  $ r("""            IF ctrl THEN select_sound cur - 1 ELSE jump_mark -1""","""            IF ctrl THEN user_select cur - 1 ELSE jump_mark -1""")
+  $ r("""            IF ctrl THEN select_sound cur + 1 ELSE jump_mark 1""","""            IF ctrl THEN user_select cur + 1 ELSE jump_mark 1""")
+  $ r("""SUB select_sound (i AS LONG)""","""''
+  $ ' A sound picked by you (keys, list, wheel). In SOUND keys mode the
+  $ ' instrument follows it - unless it is locked (Ctrl+Shift+K, or a recording
+  $ ' into another sound locked it).
+  $ '
+  $ SUB user_select (i AS LONG)
+  $     select_sound i
+  $     IF keysMode = KEYS_SOUND AND NOT instLock AND instIdx <> cur THEN
+  $         IF steps_of(cur) > 0 THEN
+  $             instIdx = cur
+  $             set_status "Keys play " + sndName(cur) + " (C4 = as drawn)"
+  $         ELSE
+  $             set_status sndName(cur) + " is empty - the keys still play " + sndName(instIdx)
+  $         END IF
+  $     END IF
+  $ END SUB
+  $ 
+  $ 
+  $ SUB select_sound (i AS LONG)""")
+  $ r("""SUB toggle_keys_mode
+  $     voiceOn = 0
+  $     stop_recording
+  $     IF keysMode = KEYS_SOUND AND cur = instIdx THEN
+  $         keysMode = KEYS_NOTES
+  $         set_status "Keys play plain NOTES"
+  $         EXIT SUB
+  $     END IF
+  $     IF steps_of(cur) = 0 THEN set_status "This sound is empty - draw something first, then Ctrl+K": EXIT SUB
+  $     keysMode = KEYS_SOUND
+  $     instIdx = cur
+  $     set_status "Keys play " + sndName(cur) + " (C4 = as drawn), " + hold_name + ". Recording goes into another sound."
+  $ END SUB""","""SUB toggle_keys_mode (lockIt AS INTEGER)
+  $     voiceOn = 0
+  $     stop_recording
+  $     ' Ctrl+Shift+K: lock / unlock the instrument to the sound it is now
+  $     IF lockIt THEN
+  $         IF keysMode <> KEYS_SOUND THEN set_status "Ctrl+K first - then Ctrl+Shift+K locks the instrument": EXIT SUB
+  $         instLock = NOT instLock
+  $         IF instLock THEN
+  $             set_status "Instrument locked to " + sndName(instIdx) + " - pick other sounds freely (Ctrl+Shift+K unlocks)"
+  $         ELSE
+  $             instIdx = cur
+  $             set_status "Instrument follows the selected sound again: " + sndName(cur)
+  $         END IF
+  $         EXIT SUB
+  $     END IF
+  $     IF keysMode = KEYS_SOUND THEN
+  $         keysMode = KEYS_NOTES
+  $         set_status "Keys play plain NOTES"
+  $         EXIT SUB
+  $     END IF
+  $     IF steps_of(cur) = 0 THEN set_status "This sound is empty - draw something first, then Ctrl+K": EXIT SUB
+  $     keysMode = KEYS_SOUND
+  $     instIdx = cur
+  $     instLock = 0
+  $     set_status "Keys play " + sndName(cur) + " (C4 = as drawn), " + hold_name + " - it follows the sound you pick (Ctrl+Shift+K locks)"
+  $ END SUB""")
+  $ r("""                    CASE "K": toggle_keys_mode""","""                    CASE "K": toggle_keys_mode shift""")
+  $ r("""    add_sound "", ""
+  $     sndName(cur) = LEFT$(sndName(instIdx), 7) + "_TUNE"
+  $     set_status "Recording " + sndName(instIdx) + " into a new sound, " + sndName(cur)""","""    add_sound "", ""
+  $     sndName(cur) = LEFT$(sndName(instIdx), 7) + "_TUNE"
+  $ ...[truncated]
+2026-09-30T23:39:09-0400  INFO     bash_end      [ok] 1L stdout
+  | Output: /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/PCSEDIT
+2026-09-30T23:39:20-0400  INFO     bash_start    SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad; cd /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER | (Xvfb :99 -screen 0 1400x900x24 >/dev/null 2>&1 &); s…
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad; cd /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ (Xvfb :99 -screen 0 1400x900x24 >/dev/null 2>&1 &); sleep 1.5; export DISPLAY=:99; unset WAYLAND_DISPLAY; xdpyinfo >/dev/null 2>&1 || exit 1
+  $ ( env -u XDG_CURRENT_DESKTOP -u KDE_FULL_SESSION PCSEDIT_NOMIDI=1 $SP/PCSEDIT ASSETS/duke1-b.dn1 & ); for i in $(seq 1 30); do W=$(xdotool search --name "PCSEDIT" 2>/dev/null | head -1); [ -n "$W" ] && break; sleep 0.3; done; sleep 2.5
+  $ K(){ xdotool key --window $W "$@"; sleep 0.3; }
+  $ shot(){ xwd -silent -root -out $SP/s.xwd; /usr/bin/convert $SP/s.xwd -crop 260x140+0+30 $SP/$1.png; xwd -silent -root -out $SP/s.xwd; /usr/bin/convert $SP/s.xwd -crop 1280x20+0+780 $SP/$1s.png; }
+  $ K ctrl+k; shot k1
+  $ K Down; K Down; shot k2
+  $ K ctrl+shift+k; K Down; shot k3
+  $ /usr/bin/convert $SP/k1.png $SP/k2.png $SP/k3.png +append $SP/kk.png; /usr/bin/convert $SP/k1s.png $SP/k2s.png $SP/k3s.png -append $SP/kks.png
+  $ pkill -x PCSEDIT; sleep 0.3; kill $(pgrep -f "^Xvfb :99") 2>/dev/null; true
+2026-09-30T23:39:27-0400  INFO     bash_end      [ok] 0L stdout
+2026-09-30T23:39:38-0400  INFO     bash_start    python3 - <<'PYEOF' | p='README.md'; s=open(p).read() | a=s.index("* The instrument is marked with ♪ in the list.") | b=s.index("\n", s.index("instrument selected to go back to plain notes.", a))+1 |…
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ python3 - <<'PYEOF'
+  $ p='README.md'; s=open(p).read()
+  $ a=s.index("* The instrument is marked with ♪ in the list.")
+  $ b=s.index("\n", s.index("instrument selected to go back to plain notes.", a))+1
+  $ s=s[:a]+"""* The instrument is marked with ♪ in the list. It **follows the sound you
+  $   pick**: press Up/Down or click another sound and the keys play that one.
+  $   Pressing **Ctrl+K** again goes back to plain notes.
+  $ * **Ctrl+Shift+K** locks the instrument to the sound it's on now, so you can
+  $   pick other sounds without changing what the keys play. The Keys line shows
+  $   **LOCK**; press Ctrl+Shift+K again to unlock it.
+  $ """+s[b:]
+  $ a="""  new sound called `<name>_TUNE` is made to record into."""
+  $ assert a in s
+  $ s=s.replace(a,"""  new sound called `<name>_TUNE` is made to record into, and the instrument
+  $   locks so you can keep working in the tune.""")
+  $ s=s.replace("""| Ctrl+K / Ctrl+H | keys play notes or the selected sound / GATE, ONE-SHOT, LOOP |""","""| Ctrl+K / Ctrl+Shift+K / Ctrl+H | keys play notes or the selected sound / lock the instrument / GATE, ONE-SHOT, LOOP |""")
+  $ open(p,'w').write(s)
+  $ PYEOF
+  $ grep -n "follows the sound you" README.md
+2026-09-30T23:39:38-0400  INFO     bash_end      [ok] 3L stdout
+  | Traceback (most recent call last):
+  |   File "<stdin>", line 3, in <module>
+  | ValueError: substring not found
+2026-09-30T23:39:40-0400  INFO     bash_start    grep -n "instrument" README.md | head -20
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ grep -n "instrument" README.md | head -20
+2026-09-30T23:39:40-0400  INFO     bash_end      [ok] 7L stdout
+  | 119:the instrument, and you see each pitch change as the wave's cycles get wider
+  | 188:**Playing a sound as an instrument:** by default a key plays a plain tone.
+  | 192:zap, a blip, a little arpeggio) into an instrument you can play tunes with.
+  | 194:* The instrument is marked with ♪ in the list. Select another sound and press
+  | 195:  **Ctrl+K** to make that the instrument; press it with the instrument
+  | 201:  the instrument. If the instrument is the selected sound when you start, a
+  | 203:  writes the instrument as if the key was held for *Len*; ONE-SHOT writes the
+2026-09-30T23:39:57-0400  INFO     bash_start    python3 - <<'PYEOF' | p='README.md'; s=open(p).read() | a="""| Ctrl+K / Ctrl+H | keys play notes or the selected sound / GATE, ONE-SHOT, LOOP |""" | if a in s: | s=s.replace(a,"""| Ctrl+K / Ctrl+Shif…
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ python3 - <<'PYEOF'
+  $ p='README.md'; s=open(p).read()
+  $ a="""| Ctrl+K / Ctrl+H | keys play notes or the selected sound / GATE, ONE-SHOT, LOOP |"""
+  $ if a in s:
+  $     s=s.replace(a,"""| Ctrl+K / Ctrl+Shift+K / Ctrl+H | keys play notes or the selected sound / lock the instrument / GATE, ONE-SHOT, LOOP |""")
+  $     open(p,'w').write(s); print("table updated")
+  $ EOF
+  $ sed -n 194,212p README.md
+2026-09-30T23:40:00-0400  INFO     bash_start    python3 -c " | p='README.md'; s=open(p).read() | a='| Ctrl+K / Ctrl+H | keys play notes or the selected sound / GATE, ONE-SHOT, LOOP |' | if a in s: | s=s.replace(a,'| Ctrl+K / Ctrl+Shift+K / Ctrl+H …
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ python3 -c "
+  $ p='README.md'; s=open(p).read()
+  $ a='| Ctrl+K / Ctrl+H | keys play notes or the selected sound / GATE, ONE-SHOT, LOOP |'
+  $ if a in s:
+  $     s=s.replace(a,'| Ctrl+K / Ctrl+Shift+K / Ctrl+H | keys play notes or the selected sound / lock the instrument / GATE, ONE-SHOT, LOOP |'); open(p,'w').write(s); print('table updated')
+  $ "; sed -n 194,210p README.md
+2026-09-30T23:40:00-0400  INFO     bash_end      [ok] 18L stdout
+  | table updated
+  | * The instrument is marked with ♪ in the list. It **follows the sound you
+  |   pick**: press Up/Down or click another sound and the keys play that one.
+  |   Pressing **Ctrl+K** again goes back to plain notes.
+  | * **Ctrl+Shift+K** locks the instrument to the sound it's on now, so you can
+  |   pick other sounds without changing what the keys play. The Keys line shows
+  |   **LOCK**; press Ctrl+Shift+K again to unlock it.
+  | * **Ctrl+H** sets how a note plays it: **GATE** sounds while the key is held,
+  |   **ONE-SHOT** always plays to the end, and **LOOP** repeats while the key is
+  |   held.
+  | * **STEP** and **LIVE** record what you play *into another sound*, never into
+  |   the instrument. If the instrument is the selected sound when you start, a
+  |   new sound called `<name>_TUNE` is made to record into, and the instrument
+  |   locks so you can keep working in the tune. In STEP, each note
+  |   writes the instrument as if the key was held for *Len*; ONE-SHOT writes the
+  |   whole sound.
+  | 
+  | | Key | What it does |
+2026-09-30T23:48:13-0400  NOTICE   prompt        thanks commit and push
+  > thanks commit and push
+2026-09-30T23:48:18-0400  INFO     bash_start    cd /home/grymmjack/git/qb64 && git status --short && git add .claude/activity.log qb64/SOUND/PC-SPEAKER/PCSEDIT.BAS qb64/SOUND/PC-SPEAKER/README.md && git commit -q -F - <<'EOF' | SOUND/PC-SPEAKER: P…
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ cd /home/grymmjack/git/qb64 && git status --short && git add .claude/activity.log qb64/SOUND/PC-SPEAKER/PCSEDIT.BAS qb64/SOUND/PC-SPEAKER/README.md && git commit -q -F - <<'EOF'
+  $ SOUND/PC-SPEAKER: PCSEDIT native dialogs, piano roll visuals, instrument follows
+  $ 
+  $ - Native QB64-PE dialogs: _OPENFILEDIALOG$ (Ctrl+O), _SAVEFILEDIALOG$
+  $   (save / save as / WAV export), _INPUTBOX$ (rename, priority, tempo),
+  $   _MESSAGEBOX (save-changes Yes/No/Cancel on quit/new/open/drop, delete).
+  $   The in-window prompt is gone.
+  $ - Piano roll: lighter white-key rows, darker black-key rows, octave lines
+  $   labelled at both edges, the held key lit across the grid, and a
+  $   KEY note / Hz / divisor readout in the title bar.
+  $ - Instrument mode: the instrument follows the selected sound;
+  $   Ctrl+Shift+K locks it (recording into a new _TUNE sound locks it too).
+  $ - README updated.
+  $ 
+  $ Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+  $ EOF
+  $ git log --oneline -1 && git push origin main 2>&1 | tail -1

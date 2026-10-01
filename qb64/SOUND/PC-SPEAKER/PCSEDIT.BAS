@@ -104,12 +104,9 @@ CONST UNDO_MAX = 100
 CONST REC_OFF = 0
 CONST REC_STEP = 1
 CONST REC_LIVE = 2
-CONST PROMPT_NONE = 0
-CONST PROMPT_RENAME = 1
-CONST PROMPT_PRIORITY = 2
-CONST PROMPT_OPEN = 3
-CONST PROMPT_SAVEAS = 4
-CONST PROMPT_BPM = 5
+' file types the Open dialog lists (the native dialogs on Linux are case
+' sensitive, so both cases)
+CONST OPEN_FILTER = "*.snd|*.SND|*.dn1|*.DN1|*.dn2|*.DN2|*.dn3|*.DN3|*.ck1|*.CK1|*.wad|*.WAD|*.lmp|*.LMP|*.cmp|*.CMP|*.stn|*.STN|*.ms1|*.MS1|*.ms2|*.MS2|*.ms3|*.MS3|*.hov|*.HOV|*.rov|*.ROV|*.ca2|*.CA2|*.slo|*.SLO|*.8|AUDIOT.*|audiot.*|AUDIOHED.*|audiohed.*"
 CONST BEATS_PER_BAR = 4 '                the grid is 4/4
 CONST KEYS_NOTES = 0 '                   what notes play: plain tones...
 CONST KEYS_SOUND = 1 '                   ...or the instrument sound, transposed
@@ -230,6 +227,7 @@ DIM SHARED linesOn AS INTEGER ' ' key: lines between note rows and grid cells / 
 DIM SHARED octave AS LONG
 DIM SHARED keysMode AS INTEGER
 DIM SHARED instIdx AS LONG ' the instrument sound (KEYS_SOUND)
+DIM SHARED instLock AS INTEGER ' FALSE = the instrument follows the selected sound
 DIM SHARED holdMode AS INTEGER
 DIM SHARED voiceOn AS INTEGER ' the instrument is sounding
 DIM SHARED voicePos AS LONG ' its step
@@ -257,12 +255,6 @@ DIM SHARED midiSysex AS INTEGER
 DIM SHARED midiBusy AS INTEGER ' amidi couldn't open the port
 
 ' --- UI
-DIM SHARED promptKind AS INTEGER
-DIM SHARED promptLabel AS STRING
-DIM SHARED promptText AS STRING
-DIM SHARED promptConfirm AS STRING ' Save As: path waiting for "overwrite?"
-DIM SHARED confirmWhat AS STRING ' "press again to ..." guard
-DIM SHARED confirmUntil AS DOUBLE
 DIM SHARED statusMsg AS STRING
 DIM SHARED statusUntil AS DOUBLE
 DIM SHARED helpOn AS INTEGER
@@ -347,11 +339,11 @@ DO
     wheel = 0
     DO WHILE _MOUSEINPUT
         wheel = wheel + _MOUSEWHEEL
-        IF promptKind = PROMPT_NONE THEN handle_mouse _MOUSEX, _MOUSEY, _MOUSEBUTTON(1), _MOUSEBUTTON(2)
+        handle_mouse _MOUSEX, _MOUSEY, _MOUSEBUTTON(1), _MOUSEBUTTON(2)
     LOOP
     ctrl = _KEYDOWN(100305) OR _KEYDOWN(100306)
     shift = _KEYDOWN(100303) OR _KEYDOWN(100304)
-    IF wheel AND promptKind = PROMPT_NONE THEN
+    IF wheel THEN
         IF ctrl THEN
             ' about a quarter per click, so 1 to 64 is a quick spin, not 60 clicks
             IF wheel < 0 THEN
@@ -360,7 +352,7 @@ DO
                 set_zoom_at zoom - (zoom \ 5 + 1), _MOUSEX
             END IF
         ELSEIF _MOUSEX < RULER_X THEN
-            select_sound cur + wheel
+            user_select cur + wheel
         ELSE
             scroll_to scrollX + wheel * (60 \ zoom + 1)
         END IF
@@ -375,7 +367,7 @@ DO
     ' Every key waiting is handled in order. Ctrl / Shift / Alt come from
     ' the same stream (their press and release events), so a quick Ctrl+C
     ' is still Ctrl+C even if Ctrl is already up by the time we get here.
-    IF promptKind = PROMPT_NONE THEN poll_piano ctrl
+    poll_piano ctrl
     k = _KEYHIT
     DO WHILE k <> 0
         SELECT CASE ABS(k)
@@ -383,9 +375,7 @@ DO
             CASE 100303, 100304: modShift = (k > 0)
             CASE 100307, 100308: modAlt = (k > 0)
             CASE ELSE
-                IF promptKind THEN
-                    prompt_key k
-                ELSEIF k > 0 THEN
+                IF k > 0 THEN
                     quitNow = handle_key(k, modCtrl, modShift)
                     IF quitNow THEN EXIT DO
                 END IF
@@ -400,14 +390,14 @@ DO
     ' exit waiting for it - keeping the MIDI port busy with no window open.
     osExitTrap = _EXIT
     IF osExitTrap THEN
-        IF confirm_ok("quit") THEN EXIT DO
+        IF ok_to_lose("Quit") THEN EXIT DO
     END IF
 
     ' ------------------------------------------------------------ drops
     IF _TOTALDROPPEDFILES THEN
         f = _DROPPEDFILE
         _FINISHDROP
-        IF confirm_ok("drop") THEN open_bank f
+        IF ok_to_lose("Open " + PCSPK_FilePart(f)) THEN open_bank f
     END IF
 
     draw_ui
@@ -536,7 +526,8 @@ SUB ensure_target
     IF keysMode <> KEYS_SOUND OR cur <> instIdx THEN EXIT SUB
     add_sound "", ""
     sndName(cur) = LEFT$(sndName(instIdx), 7) + "_TUNE"
-    set_status "Recording " + sndName(instIdx) + " into a new sound, " + sndName(cur)
+    instLock = -1 ' keep playing the instrument while you work in the tune
+    set_status "Recording " + sndName(instIdx) + " into a new sound, " + sndName(cur) + " (instrument locked; Ctrl+Shift+K unlocks)"
 END SUB
 
 
@@ -1044,7 +1035,7 @@ SUB handle_mouse (mx AS LONG, my AS LONG, b1 AS INTEGER, b2 AS INTEGER)
         ' --- sound list
         ELSEIF mx >= LIST_X AND mx < LIST_X + LIST_W AND my >= LIST_Y AND my < LIST_Y + LIST_ROWS * ROW_H THEN
             row = listTop + (my - LIST_Y) \ ROW_H + 1
-            IF row <= sndCount THEN select_sound row
+            IF row <= sndCount THEN user_select row
         END IF
     ELSEIF b1 AND my >= TIME_Y AND my < CANVAS_Y AND mx >= CANVAS_X THEN
         cursorStep = s ' drag along the ruler
@@ -1563,7 +1554,7 @@ FUNCTION handle_key% (k AS LONG, ctrl AS INTEGER, shift AS INTEGER)
                 stop_recording
             ELSEIF playing THEN
                 stop_playing
-            ELSEIF confirm_ok("quit") THEN
+            ELSEIF ok_to_lose("Quit") THEN
                 handle_key = -1
             END IF
         CASE 32 '                                              Space
@@ -1607,7 +1598,7 @@ FUNCTION handle_key% (k AS LONG, ctrl AS INTEGER, shift AS INTEGER)
             ELSEIF ctrl THEN
                 IF shift THEN transpose 12 ELSE transpose 1
             ELSE
-                select_sound cur - 1
+                user_select cur - 1
             END IF
         CASE 20480 '                                           Down
             IF selOn AND modAlt THEN
@@ -1617,12 +1608,12 @@ FUNCTION handle_key% (k AS LONG, ctrl AS INTEGER, shift AS INTEGER)
             ELSEIF ctrl THEN
                 IF shift THEN transpose -12 ELSE transpose -1
             ELSE
-                select_sound cur + 1
+                user_select cur + 1
             END IF
         CASE 18688 '                                           PgUp
-            IF ctrl THEN select_sound cur - 1 ELSE jump_mark -1
+            IF ctrl THEN user_select cur - 1 ELSE jump_mark -1
         CASE 20736 '                                           PgDn
-            IF ctrl THEN select_sound cur + 1 ELSE jump_mark 1
+            IF ctrl THEN user_select cur + 1 ELSE jump_mark 1
         CASE 20992: insert_step '                              Insert
         CASE 21248 '                                           Delete
             IF selOn THEN sel_clear -1 ELSE delete_step cursorStep
@@ -1638,7 +1629,7 @@ FUNCTION handle_key% (k AS LONG, ctrl AS INTEGER, shift AS INTEGER)
             ELSE
                 set_tool tb_tool((tb_index(tool) + 1) MOD TB_TOOLS)
             END IF
-        CASE 15360: start_prompt PROMPT_RENAME, "Name (up to 12 characters):", sndName(cur) ' F2
+        CASE 15360: rename_sound '                             F2
         CASE 15616: add_sound "", "" '                         F3
         CASE 15872: add_sound sndName(cur), sndData(cur) '     F4
         CASE 16128 '                                           F5
@@ -1665,7 +1656,7 @@ FUNCTION handle_key% (k AS LONG, ctrl AS INTEGER, shift AS INTEGER)
                 midi_start midiDevIdx + 1
             END IF
         CASE 16896 '                                           F8
-            IF confirm_ok("delete") THEN delete_sound
+            IF ask("Delete " + sndName(cur) + "?", "yesno", "question", 0) = 1 THEN delete_sound
         CASE 17152: set_octave octave - 1 '                    F9
         CASE 17408: set_octave octave + 1 '                    F10
         CASE 34048: set_note_len noteLen - 1 '                 F11
@@ -1701,19 +1692,15 @@ FUNCTION handle_key% (k AS LONG, ctrl AS INTEGER, shift AS INTEGER)
                         loopOn = NOT loopOn
                         IF loopOn THEN set_status "Loop ON" ELSE set_status "Loop OFF"
                     CASE "T": trim_end
-                    CASE "P": start_prompt PROMPT_PRIORITY, "Priority (0-255, higher wins in the game):", LTRIM$(STR$(sndPri(cur)))
+                    CASE "P": ask_priority
                     CASE "N"
-                        IF confirm_ok("new") THEN new_bank: set_status "New bank"
+                        IF ok_to_lose("New bank") THEN new_bank: set_status "New bank"
                     CASE "O"
-                        IF confirm_ok("open") THEN start_prompt PROMPT_OPEN, "Open (any bank DN1PLAY can play):", default_dir
+                        IF ok_to_lose("Open") THEN open_dialog
                     CASE "S"
-                        IF shift OR savePath = "" THEN
-                            start_prompt PROMPT_SAVEAS, "Save as IFS bank:", suggest_save
-                        ELSE
-                            save_bank savePath
-                        END IF
+                        IF shift THEN save_as ELSE save_now
                     CASE "E": export_wav
-                    CASE "K": toggle_keys_mode
+                    CASE "K": toggle_keys_mode shift
                     CASE "X": sel_cut
                     CASE "C": sel_copy
                     CASE "V": sel_paste
@@ -1724,7 +1711,7 @@ FUNCTION handle_key% (k AS LONG, ctrl AS INTEGER, shift AS INTEGER)
                         set_status "Instrument plays " + hold_name + " - " + hold_help
                     CASE "G"
                         IF shift THEN cycle_grid -1 ELSE cycle_grid 1
-                    CASE "B": start_prompt PROMPT_BPM, "Tempo in BPM (20-400):", LTRIM$(STR$(bpm))
+                    CASE "B": ask_bpm
                 END SELECT
             END IF
     END SELECT
@@ -1744,36 +1731,128 @@ FUNCTION ctrl_letter$ (k AS LONG)
 END FUNCTION
 
 
+'-----------------------------------------------------------------------------
+' Native dialogs (QB64-PE: _MESSAGEBOX, _INPUTBOX$, _OPENFILEDIALOG$,
+' _SAVEFILEDIALOG$ - zenity / kdialog on Linux)
+'-----------------------------------------------------------------------------
+
 ''
-' Guard for actions that throw work away: with unsaved changes the first
-' press only warns, a second press within 3 seconds goes ahead.
+' A modal dialog swallows keys and button releases, so afterwards forget the
+' modifier and mouse state and drop any keys that piled up.
 '
-FUNCTION confirm_ok% (what AS STRING)
-    IF NOT dirty AND what <> "delete" THEN confirm_ok = -1: EXIT FUNCTION
-    IF confirmWhat = what AND TIMER(0.001) < confirmUntil AND TIMER(0.001) > confirmUntil - 10 THEN
-        confirmWhat = ""
-        confirm_ok = -1
-        EXIT FUNCTION
-    END IF
-    confirmWhat = what
-    confirmUntil = TIMER(0.001) + 3
-    SELECT CASE what
-        CASE "delete": set_status "Delete " + sndName(cur) + "? Press F8 again to delete it"
-        CASE "drop": set_status "Unsaved changes - drop the file again to open it anyway"
-        CASE "quit": set_status "Unsaved changes - press Esc or the close button again to quit anyway"
-        CASE ELSE: set_status "Unsaved changes - press again to " + what + " anyway"
-    END SELECT
+SUB after_dialog
+    modCtrl = 0: modShift = 0: modAlt = 0
+    drawing = 0
+    _KEYCLEAR
+END SUB
+
+
+FUNCTION ask& (msg AS STRING, kind AS STRING, icon AS STRING, defaultBtn AS LONG)
+    ask = _MESSAGEBOX("PCSEDIT", msg, kind, icon, defaultBtn)
+    after_dialog
 END FUNCTION
+
+
+''
+' Before something that throws the bank away (quit, new, open): with
+' unsaved changes ask Save / Don't save / Cancel. TRUE = go ahead.
+'
+FUNCTION ok_to_lose% (what AS STRING)
+    DIM nm AS STRING
+    IF NOT dirty THEN ok_to_lose = -1: EXIT FUNCTION
+    nm = "this bank"
+    IF LEN(savePath) THEN nm = PCSPK_FilePart(savePath) ELSE IF LEN(openedPath) THEN nm = PCSPK_FilePart(openedPath)
+    SELECT CASE ask(what + ": save the changes to " + nm + " first?", "yesnocancel", "warning", 1)
+        CASE 1 '                                       Yes: save, then go on if it saved
+            save_now
+            ok_to_lose = NOT dirty
+        CASE 2 '                                       No: throw the changes away
+            ok_to_lose = -1
+    END SELECT '                                       Cancel (0): stay
+END FUNCTION
+
+
+''
+' Ctrl+S: save to the file saved before, or ask where (Save As).
+'
+SUB save_now
+    IF LEN(savePath) THEN save_bank savePath ELSE save_as
+END SUB
+
+
+SUB save_as
+    DIM f AS STRING
+    f = _SAVEFILEDIALOG$("Save IFS sound bank", suggest_save, "*.snd|*.SND", "IFS sound bank (Duke Nukem / Keen format)")
+    after_dialog
+    IF f = "" THEN set_status "Save cancelled": EXIT SUB
+    IF INSTR(PCSPK_FilePart(f), ".") = 0 THEN f = f + ".SND" ' the dialog doesn't add one
+    save_bank f
+END SUB
+
+
+SUB open_dialog
+    DIM f AS STRING
+    f = _OPENFILEDIALOG$("Open a PC speaker sound bank", default_dir, OPEN_FILTER, "Sound banks DN1PLAY can play")
+    after_dialog
+    IF LEN(f) THEN open_bank f
+END SUB
+
+
+SUB rename_sound
+    DIM t AS STRING
+    t = _TRIM$(_INPUTBOX$("Rename sound", "Name (up to 12 characters):", sndName(cur)))
+    after_dialog
+    IF LEN(t) THEN sndName(cur) = LEFT$(t, 12): dirty = -1
+END SUB
+
+
+SUB ask_priority
+    DIM t AS STRING, v AS LONG
+    t = _INPUTBOX$("Priority", "Priority of " + sndName(cur) + " (0-255, higher wins in the game):", LTRIM$(STR$(sndPri(cur))))
+    after_dialog
+    IF t = "" THEN EXIT SUB
+    v = VAL(t)
+    IF v < 0 THEN v = 0
+    IF v > 255 THEN v = 255
+    sndPri(cur) = v
+    dirty = -1
+END SUB
+
+
+SUB ask_bpm
+    DIM t AS STRING
+    t = _INPUTBOX$("Tempo", "Tempo for the grid, in BPM (20-400):", LTRIM$(STR$(bpm)))
+    after_dialog
+    IF t = "" THEN EXIT SUB
+    IF VAL(t) >= 20 AND VAL(t) <= 400 THEN
+        bpm = VAL(t)
+        set_status "Tempo" + STR$(bpm) + " BPM" + grid_info
+    ELSE
+        set_status "Tempo has to be between 20 and 400 BPM"
+    END IF
+END SUB
 
 
 ''
 ' Ctrl+K: plain notes <-> the selected sound as an instrument. With a
 ' different sound selected than the instrument, it becomes the instrument.
 '
-SUB toggle_keys_mode
+SUB toggle_keys_mode (lockIt AS INTEGER)
     voiceOn = 0
     stop_recording
-    IF keysMode = KEYS_SOUND AND cur = instIdx THEN
+    ' Ctrl+Shift+K: lock / unlock the instrument to the sound it is now
+    IF lockIt THEN
+        IF keysMode <> KEYS_SOUND THEN set_status "Ctrl+K first - then Ctrl+Shift+K locks the instrument": EXIT SUB
+        instLock = NOT instLock
+        IF instLock THEN
+            set_status "Instrument locked to " + sndName(instIdx) + " - pick other sounds freely (Ctrl+Shift+K unlocks)"
+        ELSE
+            instIdx = cur
+            set_status "Instrument follows the selected sound again: " + sndName(cur)
+        END IF
+        EXIT SUB
+    END IF
+    IF keysMode = KEYS_SOUND THEN
         keysMode = KEYS_NOTES
         set_status "Keys play plain NOTES"
         EXIT SUB
@@ -1781,7 +1860,8 @@ SUB toggle_keys_mode
     IF steps_of(cur) = 0 THEN set_status "This sound is empty - draw something first, then Ctrl+K": EXIT SUB
     keysMode = KEYS_SOUND
     instIdx = cur
-    set_status "Keys play " + sndName(cur) + " (C4 = as drawn), " + hold_name + ". Recording goes into another sound."
+    instLock = 0
+    set_status "Keys play " + sndName(cur) + " (C4 = as drawn), " + hold_name + " - it follows the sound you pick (Ctrl+Shift+K locks)"
 END SUB
 
 
@@ -1997,73 +2077,6 @@ END SUB
 
 
 '=============================================================================
-' Prompts (rename, priority, open, save as)
-'=============================================================================
-
-SUB start_prompt (kind AS INTEGER, label AS STRING, text AS STRING)
-    promptKind = kind
-    promptLabel = label
-    promptText = text
-    promptConfirm = ""
-END SUB
-
-
-SUB prompt_key (k AS LONG)
-    DIM t AS STRING, v AS LONG
-    SELECT CASE k
-        CASE 27
-            promptKind = PROMPT_NONE
-        CASE 8
-            IF LEN(promptText) THEN promptText = LEFT$(promptText, LEN(promptText) - 1)
-            promptConfirm = ""
-        CASE 21248 '                                   Delete clears the field
-            promptText = ""
-            promptConfirm = ""
-        CASE 13
-            t = _TRIM$(promptText)
-            SELECT CASE promptKind
-                CASE PROMPT_RENAME
-                    IF LEN(t) THEN
-                        sndName(cur) = LEFT$(t, 12)
-                        dirty = -1
-                    END IF
-                    promptKind = PROMPT_NONE
-                CASE PROMPT_PRIORITY
-                    v = VAL(t)
-                    IF v < 0 THEN v = 0
-                    IF v > 255 THEN v = 255
-                    sndPri(cur) = v
-                    dirty = -1
-                    promptKind = PROMPT_NONE
-                CASE PROMPT_BPM
-                    IF VAL(t) >= 20 AND VAL(t) <= 400 THEN
-                        bpm = VAL(t)
-                        set_status "Tempo" + STR$(bpm) + " BPM" + grid_info
-                    ELSE
-                        set_status "Tempo has to be between 20 and 400 BPM"
-                    END IF
-                    promptKind = PROMPT_NONE
-                CASE PROMPT_OPEN
-                    promptKind = PROMPT_NONE
-                    IF LEN(t) THEN open_bank t
-                CASE PROMPT_SAVEAS
-                    IF LEN(t) = 0 THEN EXIT SUB
-                    IF _FILEEXISTS(t) AND promptConfirm <> t THEN
-                        promptConfirm = t
-                        set_status "That file exists - press Enter again to replace it"
-                        EXIT SUB
-                    END IF
-                    promptKind = PROMPT_NONE
-                    save_bank t
-            END SELECT
-        CASE 32 TO 126
-            IF LEN(promptText) < 200 THEN promptText = promptText + CHR$(k)
-            promptConfirm = ""
-    END SELECT
-END SUB
-
-
-'=============================================================================
 ' The bank: sounds and steps
 '=============================================================================
 
@@ -2198,6 +2211,24 @@ SUB fix_undo_after_insert (at AS LONG)
     FOR i = 1 TO redoN
         IF redoSnd(i) >= at THEN redoSnd(i) = redoSnd(i) + 1
     NEXT
+END SUB
+
+
+''
+' A sound picked by you (keys, list, wheel). In SOUND keys mode the
+' instrument follows it - unless it is locked (Ctrl+Shift+K, or a recording
+' into another sound locked it).
+'
+SUB user_select (i AS LONG)
+    select_sound i
+    IF keysMode = KEYS_SOUND AND NOT instLock AND instIdx <> cur THEN
+        IF steps_of(cur) > 0 THEN
+            instIdx = cur
+            set_status "Keys play " + sndName(cur) + " (C4 = as drawn)"
+        ELSE
+            set_status sndName(cur) + " is empty - the keys still play " + sndName(instIdx)
+        END IF
+    END IF
 END SUB
 
 
@@ -2409,10 +2440,20 @@ FUNCTION u16$ (v AS LONG)
 END FUNCTION
 
 
-FUNCTION default_dir$
+''
+' The folder PCSEDIT was started from, ending with a separator.
+'
+FUNCTION start_dir$
     DIM d AS STRING
     d = _STARTDIR$
     IF RIGHT$(d, 1) <> "/" AND RIGHT$(d, 1) <> "\" THEN d = d + "/"
+    start_dir = d
+END FUNCTION
+
+
+FUNCTION default_dir$
+    DIM d AS STRING
+    d = start_dir
     IF _DIREXISTS(d + "ASSETS") THEN d = d + "ASSETS/"
     default_dir = d
 END FUNCTION
@@ -2446,14 +2487,17 @@ SUB export_wav
     IF steps_of(cur) = 0 THEN set_status "Nothing to export": EXIT SUB
     stop_playing
     errNum = 0
-    IF NOT _DIREXISTS("EXPORT") THEN MKDIR "EXPORT"
+    IF NOT _DIREXISTS(start_dir + "EXPORT") THEN MKDIR start_dir + "EXPORT" ' the dialog starts there
     bankName = "NEW"
     IF LEN(savePath) THEN
         bankName = PCSPK_FilePart(savePath)
     ELSEIF LEN(openedPath) THEN
         bankName = PCSPK_FilePart(openedPath)
     END IF
-    outName = "EXPORT/" + safe_name(bankName) + "_" + safe_name(sndName(cur)) + ".wav"
+    outName = _SAVEFILEDIALOG$("Export " + sndName(cur) + " as .wav", start_dir + "EXPORT/" + safe_name(bankName) + "_" + safe_name(sndName(cur)) + ".wav", "*.wav|*.WAV", "WAV audio")
+    after_dialog
+    IF outName = "" THEN set_status "Export cancelled": EXIT SUB
+    IF INSTR(PCSPK_FilePart(outName), ".") = 0 THEN outName = outName + ".wav"
     PCSPK_CaptureBegin
     lastV = -1
     FOR s = 0 TO steps_of(cur) - 1
@@ -2519,17 +2563,8 @@ SUB draw_ui
     draw_roll
     draw_scope
 
-    ' status / prompt line
-    IF promptKind THEN
-        LINE (0, SCR_H - 26)-(SCR_W - 1, SCR_H - 1), _RGB32(30, 40, 70), BF
-        COLOR _RGB32(255, 255, 255)
-        ln = promptLabel + " " + promptText
-        IF (TIMER * 2) MOD 2 = 0 THEN ln = ln + "_"
-        IF LEN(ln) > SCR_W \ 8 - 42 THEN ln = "..." + RIGHT$(ln, SCR_W \ 8 - 45)
-        _PRINTSTRING (8, SCR_H - 20), ln
-        COLOR _RGB32(130, 150, 190)
-        _PRINTSTRING (SCR_W - 8 * 38, SCR_H - 20), "Enter OK  Esc cancel  Delete clears"
-    ELSEIF LEN(statusMsg) THEN
+    ' status line
+    IF LEN(statusMsg) THEN
         IF TIMER(0.001) < statusUntil AND TIMER(0.001) > statusUntil - 10 THEN
             COLOR _RGB32(140, 230, 140)
             _PRINTSTRING (8, SCR_H - 20), statusMsg
@@ -2537,7 +2572,7 @@ SUB draw_ui
             statusMsg = ""
         END IF
     END IF
-    IF LEN(statusMsg) = 0 AND promptKind = PROMPT_NONE THEN
+    IF LEN(statusMsg) = 0 THEN
         COLOR _RGB32(100, 115, 140)
         _PRINTSTRING (8, SCR_H - 20), tool_help + "   right drag erases   Space play"
     END IF
@@ -2585,7 +2620,9 @@ SUB draw_info
     _PRINTSTRING (LIST_X, 68), LTRIM$(STR$(steps_of(cur))) + " steps, " + fmt2(steps_of(cur) / rateHz) + " s"
     IF keysMode = KEYS_SOUND THEN
         COLOR _RGB32(120, 230, 160)
-        _PRINTSTRING (LIST_X, 84), "Keys: " + CHR$(14) + " " + LEFT$(sndName(instIdx), 8) + " " + hold_name
+        s = "Keys: " + CHR$(14) + " " + LEFT$(sndName(instIdx), 8)
+        IF instLock THEN s = s + " LOCK" ELSE s = s + " " + LEFT$(hold_name, 4)
+        _PRINTSTRING (LIST_X, 84), s
     ELSE
         COLOR _RGB32(150, 160, 180)
         _PRINTSTRING (LIST_X, 84), "Keys: notes (Ctrl+K)"
@@ -2641,9 +2678,11 @@ SUB draw_info
     END IF
     _PRINTSTRING (x + 176, 76), s
     IF heldNote >= 0 OR auditionNote >= 0 THEN
-        COLOR _RGB32(255, 255, 255)
         IF heldNote >= 0 THEN v = heldNote ELSE v = auditionNote
-        _PRINTSTRING (SCR_W - 80, TB_Y + 3), note_name(v)
+        s = " KEY " + note_name(v) + "  " + LTRIM$(STR$(CLNG(note_hz(v)))) + " Hz  div" + STR$(note_div(v)) + " "
+        LINE (SCR_W - 8 * LEN(s) - 8, 2)-(SCR_W - 4, 21), _RGB32(255, 200, 60), BF
+        COLOR _RGB32(20, 20, 20)
+        _PRINTSTRING (SCR_W - 8 * LEN(s) - 6, 4), s
     END IF
 END SUB
 
@@ -2696,37 +2735,30 @@ SUB draw_roll
 
     vis = CANVAS_W \ zoom
 
-    ' piano keys + note rows
-    LINE (CANVAS_X, CANVAS_Y)-(CANVAS_X + CANVAS_W - 1, CANVAS_Y + CANVAS_H - 1), _RGB32(10, 12, 18), BF
+    ' piano keys + note rows: white-key rows lighter, black-key rows darker,
+    ' like a piano roll, so you can see which row you are on
     FOR nt = NOTE_LO TO NOTE_HI - 1
         y = note_y(nt)
         isBlack = MID$("010100101010", (nt MOD 12) + 1, 1) = "1"
         IF isBlack THEN
             LINE (RULER_X, y - PX_SEMI \ 2)-(RULER_X + 26, y + PX_SEMI \ 2 - 1), _RGB32(30, 30, 36), BF
-            LINE (CANVAS_X, y - PX_SEMI \ 2)-(CANVAS_X + CANVAS_W - 1, y + PX_SEMI \ 2 - 1), _RGB32(14, 16, 24), BF
+            LINE (CANVAS_X, y - PX_SEMI \ 2)-(CANVAS_X + CANVAS_W - 1, y + PX_SEMI \ 2 - 1), _RGB32(11, 12, 17), BF
         ELSE
             LINE (RULER_X, y - PX_SEMI \ 2)-(RULER_X + 40, y + PX_SEMI \ 2 - 1), _RGB32(200, 200, 205), BF
-        END IF
-        IF nt MOD 12 = 0 THEN
-            LINE (CANVAS_X, y + PX_SEMI \ 2 - 1)-(CANVAS_X + CANVAS_W - 1, y + PX_SEMI \ 2 - 1), _RGB32(40, 48, 66)
-            COLOR _RGB32(150, 160, 180)
-            _PRINTSTRING (RULER_X - 26, y - 8), "C" + LTRIM$(STR$(nt \ 12 - 1))
+            LINE (CANVAS_X, y - PX_SEMI \ 2)-(CANVAS_X + CANVAS_W - 1, y + PX_SEMI \ 2 - 1), _RGB32(26, 30, 42), BF
         END IF
     NEXT
+
+    ' the key being played (keyboard, MIDI or the piano keys): a band across
+    ' the grid as well as the lit key
     nt = heldNote
     IF nt < 0 THEN nt = auditionNote
     IF nt >= NOTE_LO AND nt < NOTE_HI THEN
         y = note_y(nt)
         LINE (RULER_X, y - PX_SEMI \ 2)-(RULER_X + 40, y + PX_SEMI \ 2 - 1), _RGB32(255, 170, 40), BF
+        LINE (CANVAS_X, y - PX_SEMI \ 2)-(CANVAS_X + CANVAS_W - 1, y + PX_SEMI \ 2 - 1), _RGB32(70, 52, 22), BF
     END IF
 
-    ' past the end of the sound
-    endX = CANVAS_X + (steps_of(cur) - scrollX) * zoom
-    IF endX < CANVAS_X THEN endX = CANVAS_X
-    IF endX < CANVAS_X + CANVAS_W THEN
-        LINE (endX, CANVAS_Y)-(CANVAS_X + CANVAS_W - 1, CANVAS_Y + CANVAS_H - 1), _RGB32(22, 24, 30), BF
-        LINE (endX, CANVAS_Y)-(endX, CANVAS_Y + CANVAS_H - 1), _RGB32(90, 90, 110)
-    END IF
 
     LINE (CANVAS_X, TIME_Y)-(CANVAS_X + CANVAS_W - 1, CANVAS_Y - 2), _RGB32(26, 32, 44), BF
 
@@ -2749,6 +2781,28 @@ SUB draw_roll
         draw_grid vis
     ELSE
         draw_seconds vis
+    END IF
+
+    ' octave markers: a brighter line under every C, labelled at both edges
+    ' of the grid (and on the piano keys)
+    FOR nt = NOTE_LO TO NOTE_HI - 1
+        IF nt MOD 12 = 0 THEN
+            y = note_y(nt) + PX_SEMI \ 2 - 1
+            LINE (CANVAS_X, y)-(CANVAS_X + CANVAS_W - 1, y), _RGB32(64, 78, 104)
+            COLOR _RGB32(150, 160, 180)
+            _PRINTSTRING (RULER_X - 26, y - 13), "C" + LTRIM$(STR$(nt \ 12 - 1))
+            COLOR _RGB32(90, 104, 132)
+            _PRINTSTRING (CANVAS_X + 3, y - 15), "C" + LTRIM$(STR$(nt \ 12 - 1))
+            _PRINTSTRING (CANVAS_X + CANVAS_W - 22, y - 15), "C" + LTRIM$(STR$(nt \ 12 - 1))
+        END IF
+    NEXT
+
+    ' past the end of the sound (over the lines, so it all dims evenly)
+    endX = CANVAS_X + (steps_of(cur) - scrollX) * zoom
+    IF endX < CANVAS_X THEN endX = CANVAS_X
+    IF endX < CANVAS_X + CANVAS_W THEN
+        LINE (endX, CANVAS_Y)-(CANVAS_X + CANVAS_W - 1, CANVAS_Y + CANVAS_H - 1), _RGBA32(0, 0, 0, 110), BF
+        LINE (endX, CANVAS_Y)-(endX, CANVAS_Y + CANVAS_H - 1), _RGB32(90, 90, 110)
     END IF
 
     ' the steps
@@ -2981,7 +3035,7 @@ SUB draw_help
     t(21) = "Opens anything DN1PLAY plays. Saving never replaces the file you"
     t(22) = "opened unless you choose its name in Save As."
     t(23) = ""
-    t(24) = "Ctrl+K  keys play the selected SOUND as an instrument (C4 = as drawn)"
+    t(24) = "Ctrl+K  keys play the selected SOUND (follows your pick; Ctrl+Shift+K locks it)"
     t(25) = "        Ctrl+H GATE / ONE-SHOT / LOOP; recording goes into another sound"
     t(26) = "Click and hold the piano keys to audition a pitch (drag to slide)"
     t(27) = ""

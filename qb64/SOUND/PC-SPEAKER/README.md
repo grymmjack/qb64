@@ -106,6 +106,12 @@ For a saw it is how much of the cycle the ramp takes (100% is a plain saw).
 With the grid on, the box snaps to cells; with snap on, the pitches snap to
 semitones (switch snap off with F6 for smooth slides).
 
+**Reading the roll:** white-key rows are lighter and black-key rows darker, like
+a piano roll. Every C has a brighter octave line, labelled at both edges of the
+grid. While a key is held (computer keyboard, MIDI or the piano keys), its row
+lights up across the grid and the title bar shows **KEY**, the note, its
+frequency and its PIT divisor.
+
 **Oscilloscope:** the panel under the roll is always on. It shows what the
 emulated speaker is putting out right now, after the speaker-cone filter: the
 real 1-bit square wave, about 42 ms of it, triggered on a rising edge like a
@@ -185,15 +191,19 @@ plays the whole sound, transposed, the way a sampler does. C4 plays it as
 drawn, C5 an octave higher, and so on. That turns a sound you have drawn (a
 zap, a blip, a little arpeggio) into an instrument you can play tunes with.
 
-* The instrument is marked with ♪ in the list. Select another sound and press
-  **Ctrl+K** to make that the instrument; press it with the instrument
-  selected to go back to plain notes.
+* The instrument is marked with ♪ in the list. It **follows the sound you
+  pick**: press Up/Down or click another sound and the keys play that one.
+  Pressing **Ctrl+K** again goes back to plain notes.
+* **Ctrl+Shift+K** locks the instrument to the sound it's on now, so you can
+  pick other sounds without changing what the keys play. The Keys line shows
+  **LOCK**; press Ctrl+Shift+K again to unlock it.
 * **Ctrl+H** sets how a note plays it: **GATE** sounds while the key is held,
   **ONE-SHOT** always plays to the end, and **LOOP** repeats while the key is
   held.
 * **STEP** and **LIVE** record what you play *into another sound*, never into
   the instrument. If the instrument is the selected sound when you start, a
-  new sound called `<name>_TUNE` is made to record into. In STEP, each note
+  new sound called `<name>_TUNE` is made to record into, and the instrument
+  locks so you can keep working in the tune. In STEP, each note
   writes the instrument as if the key was held for *Len*; ONE-SHOT writes the
   whole sound.
 
@@ -209,7 +219,7 @@ zap, a blip, a little arpeggio) into an instrument you can play tunes with.
 | Ctrl+G / Ctrl+Shift+G | grid size: off, 1/4, 1/8, 1/16, 1/32, 1/8T, 1/16T |
 | Ctrl+B | tempo (BPM) for the grid |
 | ' (apostrophe) | grid lines on/off: a line between every note row and at every grid cell (with the grid off: every step, when zoomed in). Off leaves just beats and bars. A # after the grid label means they are on. |
-| Ctrl+K / Ctrl+H | keys play notes or the selected sound / GATE, ONE-SHOT, LOOP |
+| Ctrl+K / Ctrl+Shift+K / Ctrl+H | keys play notes or the selected sound / lock the instrument / GATE, ONE-SHOT, LOOP |
 | D L N W E S M (Caps Lock off), Alt+letter, Tab | tools: Draw, Line, Note, Wave, Erase, Select, Move |
 | 1-5, [ ] (WAVE tool, Caps Lock off) | waveform shape (square, triangle, saw up, saw down, sine), fewer / more cycles |
 | C / Ctrl+X, Ctrl+C, Ctrl+V, Ctrl+A | cut, copy, paste at the cursor, select all |
@@ -222,6 +232,13 @@ zap, a blip, a little arpeggio) into an instrument you can play tunes with.
 | Ctrl+N / Ctrl+O / Ctrl+S / Ctrl+Shift+S | new bank, open, save, save as |
 | Ctrl+E | export the sound as a `.wav` in `EXPORT/` |
 | F1 | help |
+
+Opening, saving, exporting, renaming and setting the priority or tempo use
+QB64-PE's native dialogs (`_OPENFILEDIALOG$`, `_SAVEFILEDIALOG$`,
+`_INPUTBOX$`, `_MESSAGEBOX`), which use kdialog or zenity on Linux. With unsaved
+changes, quitting, starting a new bank or opening another file asks **Save /
+Don't save / Cancel**. Ctrl+E asks where to save the `.wav`, starting in
+`EXPORT/`.
 
 The first save after opening a file always asks for a name, and suggests
 `<name>-EDIT.SND`, so a game's own file is never overwritten by accident. An
