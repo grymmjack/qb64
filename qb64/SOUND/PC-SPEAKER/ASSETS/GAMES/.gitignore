@@ -1,0 +1,53 @@
+# Game files that are NOT freely redistributable stay out of git.
+#
+# Everything listed here is from a registered / commercial release. Keep
+# your own copies here locally (DN1PLAY will find them), but they are
+# never committed. The files NOT listed are shareware episode 1 files or
+# freeware - see README.md in this folder for what each one is.
+
+# --- registered episodes of shareware games ---
+COSMO2.STN
+COSMO3.STN
+VOLUME2A.MS2
+VOLUME3A.MS3
+MR2.8
+MR3.8
+CC2-*.SND
+CC3-*.SND
+
+# --- commercial (no free episode in this folder) ---
+SOUNDS.HOV
+SOUNDS.ROV
+SOUNDS.CA2
+SOUNDS.SLO
+NUKEM2.CMP
+AUDIOHED.WL6
+AUDIOT.WL6
+AUDIOHED.SOD
+AUDIOT.SOD
+AUDIOHED.BS6
+AUDIOT.BS6
+AUDIOHED.VSI
+AUDIOT.VSI
+AUDIOHED.CO7
+AUDIOT.CO7
+AUDIOHED.BC
+AUDIOT.BC
+AUDIOHED.N3D
+AUDIOT.N3D
+AUDIOHED.CHS
+AUDIOT.CHS
+AUDIOHED.FNG
+AUDIOT.FNG
+AUDIOHED.CIR
+AUDIOT.CIR
+DOOM.WAD
+DOOM2.WAD
+TNT.WAD
+PLUTONIA.WAD
+STRIFE1.WAD
+DARKWAR.WAD
+
+# --- given away free, but still copyrighted (General Mills) ---
+CHEX.WAD
+CHEX2.WAD

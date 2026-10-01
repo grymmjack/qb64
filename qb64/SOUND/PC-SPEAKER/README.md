@@ -1,10 +1,11 @@
 # PC-SPEAKER: the DOS PC speaker, rebuilt in QB64-PE
 
-**Short version:** this folder plays old-school PC speaker sounds, including the
-**Duke Nukem 1** (`.DN1`) and **Commander Keen** (`.CK1`) sound effects, and
-the PC speaker sounds of **DOOM** and every other DOOM engine game that has
-them, in QB64-PE on a modern computer. It is written entirely in QB64-PE, with no C and
-no `DECLARE LIBRARY`.
+**Short version:** this folder plays old-school PC speaker sound effects in
+QB64-PE on a modern computer: **Duke Nukem 1 and 2**, **Commander Keen**,
+**Wolfenstein 3D**, **Spear of Destiny**, **Blake Stone**, **Cosmo**,
+**Crystal Caves**, **DOOM**, **Rise of the Triad** and more (see
+[Supported games](#supported-games)). It is written entirely in QB64-PE, with
+no C and no `DECLARE LIBRARY`.
 
 ![DN1PLAY playing the Duke Nukem 1 BOMBEXPLODE sound](SCREENSHOTS/1-duke-bombexplode.png)
 
@@ -28,14 +29,27 @@ Built and tested with the QB64-PE **v4.7.0-GLFW** compiler.
 2. Press **F5**.
 3. Use the arrow keys to pick a sound, then press **Enter** to hear it.
 4. Press **A** to play every sound in order.
-5. Press **Tab** to switch to the Freedoom sounds, then again for the
-   Commander Keen sounds.
-6. Drop your own `DOOM.WAD` or `DOOM2.WAD` on the window to hear the real ones.
+5. Press **Left** to move to the file browser on the left. Pick the `GAMES`
+   folder with Enter, then any file with Enter to load it. **Tab** /
+   **Shift+Tab** load the next / previous file without leaving the sound list.
+6. Press **Right** to go back to the sound list.
+
+![DN1PLAY with the file browser open in ASSETS/GAMES, playing a Wolfenstein 3D sound](SCREENSHOTS/0-browser-wolf3d.png)
+
+The window has three parts. On the left is a file browser that works like an
+old DOS "open file" box: it starts in the loaded bank's folder and lists `..`,
+the sub folders (`<DIR>`) and every file DN1PLAY can load. The loaded file is
+shown in yellow. In the middle is the list of sounds in the bank. On the right
+are the details and graph for the selected sound. The highlighted panel is
+the one the arrow keys move in.
 
 | Key | What it does |
 | --- | --- |
-| Up / Down / PgUp / PgDn / Home / End, mouse wheel | pick a sound |
-| Enter / Space / mouse click | play it |
+| Left / Right | move between the file browser and the sound list |
+| Up / Down / PgUp / PgDn / Home / End, mouse wheel | move in that panel |
+| Enter / mouse click | browser: open the folder or load the file; sound list: play the sound |
+| Space | play the selected sound |
+| Backspace | browser: go up one folder |
 | A | play everything, starting at the selected sound (press A again to stop) |
 | S | stop |
 | + / - | speed the sound up or slow it down by 5 Hz |
@@ -43,12 +57,70 @@ Built and tested with the QB64-PE **v4.7.0-GLFW** compiler.
 | L | low-pass filter on/off (muffles the sound like a small speaker) |
 | W | save the selected sound as a `.wav` in `EXPORT/` |
 | E | save every sound as a `.wav` in `EXPORT/` |
-| Tab | load the next sound bank or WAD in the folder |
+| Tab / Shift+Tab | load the next / previous file in the browser's folder |
 | Esc | quit |
 
-You can also drag any `.DN1`/`.DN2`/`.DN3`/`.CK1`/`.CK2`/`.CK3` file, DOOM
-engine `.WAD` or `DP*.lmp` lump onto the window, or pass one on the command
-line: `DN1PLAY path/to/file.dn1` or `DN1PLAY ~/games/doom/DOOM2.WAD`.
+You can also drag any file from the [Supported games](#supported-games) table
+onto the window, or pass one on the command line:
+`DN1PLAY ~/games/wolf3d/AUDIOT.WL6` or `DN1PLAY ~/games/doom/DOOM2.WAD`.
+
+---
+
+## Supported games
+
+Browse to **`ASSETS/GAMES/`** in DN1PLAY and load any file there. The file
+type is worked out from its contents, not its name. The sound counts come from
+an eXoDOS collection.
+
+Only the shareware episode 1 and freeware files in that folder are committed:
+Keen 1, Duke 1, Cosmo 1, Major Stryker 1, Math Rescue 1, Crystal Caves 1 and
+Bio Menace. The other files are listed in `ASSETS/GAMES/.gitignore`, so
+copies you add yourself stay on your machine.
+[`ASSETS/GAMES/README.md`](ASSETS/GAMES/README.md) says what each file is and
+whether it can be passed on.
+
+| Game | File to load | Sounds | Format |
+| --- | --- | --- | --- |
+| Duke Nukem 1 | `DUKE1.DN1`, `DUKE1-B.DN1` | 24 + 24 | IFS bank |
+| Commander Keen 1 | `SOUNDS.CK1` | 63 | IFS bank |
+| Cosmo's Cosmic Adventure | `COSMO1.STN` (2, 3) | 72 | IFS banks inside the file |
+| Major Stryker | `VOLUME1A.MS1` (2, 3) | 48 | IFS banks inside the file |
+| Hovertank 3-D | `SOUNDS.HOV` | 24 | IFS bank |
+| Rescue Rover | `SOUNDS.ROV` | 24 | IFS bank |
+| Catacomb II | `SOUNDS.CA2` | 63 | IFS bank |
+| Slordax | `SOUNDS.SLO` | 63 | IFS bank |
+| Math Rescue | `MR1.8` (2, 3) | 24 | IFS bank |
+| Wolfenstein 3D | `AUDIOT.WL6` (or `.WL1`) | 87 | id AUDIOT |
+| Spear of Destiny | `AUDIOT.SOD` | 81 | id AUDIOT |
+| Blake Stone: Aliens of Gold | `AUDIOT.BS6` | 100 | id AUDIOT |
+| Blake Stone: Planet Strike | `AUDIOT.VSI` | 100 | id AUDIOT |
+| Corridor 7 | `AUDIOT.CO7` | 100 | id AUDIOT |
+| Operation Body Count | `AUDIOT.BC` | 100 | id AUDIOT |
+| Bio Menace | `AUDIOT.BM1` (2, 3) | 42 | id AUDIOT |
+| Super Noah's Ark 3-D | `AUDIOT.N3D` | 44 | id AUDIOT |
+| Cyberchess, Finagle, Circuitry | `AUDIOT.*` | 11, 6, 7 | id AUDIOT |
+| Duke Nukem II | `NUKEM2.CMP` | 34 | id AUDIOT inside the archive |
+| Crystal Caves | `CC1-1.SND` (and the other `CC?-?.SND`) | 12 per file | raw divisors |
+| DOOM, DOOM II, Final DOOM | `DOOM.WAD`, `DOOM2.WAD`, `TNT.WAD`, `PLUTONIA.WAD` | 67 / 107 | DOOM lumps |
+| Chex Quest, Freedoom | `CHEX.WAD`, `freedoom1.wad`, `freedoom2.wad` | 67 / 107 | DOOM lumps |
+| Strife | `STRIFE1.WAD` | 21 | DOOM lumps |
+| Rise of the Triad | `DARKWAR.WAD` | 86 | id AUDIOT chunks in the WAD |
+
+For the id AUDIOT games, `AUDIOHED.*` has to sit next to `AUDIOT.*`; you can
+load either one. Those files don't name their sounds, so they show as
+`SOUND000`, `SOUND001`, ... in the order the game numbers them.
+
+**Not supported yet:**
+
+* **Keen 4-6, Keen Dreams, Catacomb 3-D and Abyss, and other Softdisk games:**
+  the audio is compressed, and the table needed to decompress it is in the
+  EXE.
+* **Keen 2 and 3:** the sounds are inside the compressed EXE.
+* **Secret Agent:** the `.SND` files are scrambled.
+* **Jill of the Jungle, Kiloblaster, Xargon:** these use recorded 6 kHz
+  samples rather than tone lists.
+* **Heretic, Hexen, DOOM 64, Duke Nukem 3D:** they have no PC speaker sound
+  effects.
 
 ---
 
@@ -73,6 +145,11 @@ ticks along the bottom are silence, and the white line is the play position.
 **DOOM: `DPSAWUP` playing** (`DOOM.WAD`, 67 sounds: the chainsaw revving up)
 
 ![DN1PLAY playing the DOOM DPSAWUP sound](SCREENSHOTS/4-doom-sawup.png)
+
+**Wolfenstein 3D: sound 24 playing** (`AUDIOT.WL6`, 87 sounds, with the
+priority each one has in the game)
+
+![DN1PLAY playing Wolfenstein 3D sound 24](SCREENSHOTS/5-wolf3d.png)
 
 ---
 
@@ -212,6 +289,7 @@ A few things work out differently in QB64-PE:
 | `PWM.BAS` | Tries to play a sine wave on a 1-bit speaker. Press M to hear what the C really did (warbly noise) versus true PWM (a clean tone). | `PWM.C` |
 | `WAV.BAS` | Plays real 8-bit `.wav` files through the 1-bit speaker using PWM. Press C to compare with normal playback. | `WAV.C` |
 | `ASSETS/` | `duke1-b.dn1` (Duke), `SOUNDS.CK1` (Keen), and three test `.wav` files | original repo |
+| `ASSETS/GAMES/` | Sound files for the games in [Supported games](#supported-games). Only the shareware and freeware ones are committed; its `.gitignore` keeps the commercial ones local, and its `README.md` lists which is which. | the games themselves |
 | `ASSETS/freedoom-dp.wad` | The 107 PC speaker sounds from Freedoom: Phase 2, so there are DOOM engine sounds to play without an id Software WAD. BSD licensed, see `FREEDOOM-LICENSE.txt`. | [Freedoom](https://freedoom.github.io/) |
 | `SCREENSHOTS/` | The images in this README | |
 
@@ -249,11 +327,15 @@ a beeper. You'll also hear a high 8 kHz whine; real PC speakers made it too.
 * **Pre-render a sound:** call `PCSPK_CaptureBegin`, then `PCSPK_SetDivisor` and
   `PCSPK_AdvanceSeconds` as needed. `PCSPK_CaptureEnd&` returns a handle you can
   `_SNDPLAY`. `PCSPK_SaveWAV "file.wav"` writes the capture to a file.
-* **Duke/Keen banks and DOOM WADs:** `PCSPK_IFSLoad`, `PCSPK_IFSCount`,
-  `PCSPK_IFSName`, `PCSPK_IFSSamples`, `PCSPK_IFSValue`, `PCSPK_IFSOffset`,
-  `PCSPK_IFSPriority`, `PCSPK_IFSKind` (`PCSPK_KIND_IFS`, `_WAD` or `_LMP`),
+* **Sound banks (every game in [Supported games](#supported-games)):**
+  `PCSPK_IFSLoad`, `PCSPK_IFSCount`, `PCSPK_IFSName`, `PCSPK_IFSSamples`,
+  `PCSPK_IFSValue`, `PCSPK_IFSOffset`, `PCSPK_IFSPriority`,
   `PCSPK_IFSRender&(index, hz)`. `PCSPK_IFSLoad` works out the file type by
-  itself. `PCSPK_DoomDivisor&(tone)` turns a DOOM tone number into a divisor.
+  itself. `PCSPK_IFSKind` says what the file was (`PCSPK_KIND_IFS`, `_WAD`,
+  `_LMP`, `_IDAUDIO` or `_RAW`). `PCSPK_IFSFormat` / `PCSPK_IFSFormatName$` say
+  how one sound was stored (`PCSPK_FMT_IFS`, `_DOOM`, `_ID` or `_RAW`).
+  Whatever the format, `PCSPK_IFSValue` returns a PIT divisor.
+  `PCSPK_DoomDivisor&(tone)` turns a DOOM tone number into a divisor.
 * **8-bit WAV files:** `PCSPK_WavLoad`, `PCSPK_WavRate`, `PCSPK_WavLength`,
   `PCSPK_WavSample`, `PCSPK_WavError`
 
@@ -291,6 +373,57 @@ The original `BEEP4.C` reads the sound count from byte 8 instead of byte 6, so i
 reports 50 sounds for Duke and 60 for Keen. The real counts are **24** and
 **63**. The QB64-PE version reads the right field.
 
+Other Apogee games put the same kind of bank inside a bigger file. Cosmo's
+`COSMO1.STN` holds three banks and Major Stryker's `VOLUME1A.MS1` holds two.
+The loader searches the file for `"SND",0` and keeps each hit whose sound
+table looks valid. In those banks the sound offsets are counted from the start
+of the bank. Nameless sounds (`__UnNamed__` in the file) are listed as
+`UNNAMED<n>`.
+
+## File format: id Software `AUDIOHED` / `AUDIOT`
+
+The Wolfenstein 3D engine keeps all its audio in one file, `AUDIOT.ext`
+(Keen 4-6 use the same layout but compress it). `AUDIOHED.ext` is its table of contents:
+
+```
+AUDIOHED
+  uint32 per chunk: where the chunk starts in AUDIOT, plus one more for the end
+AUDIOT
+  chunks in four blocks: PC speaker sounds, AdLib sounds, digitized sound
+  placeholders, music. The last chunk of each block ends with "!ID!".
+PC speaker chunk
+  0   uint32         number of steps
+  4   uint16         priority
+  6   uint8 per step: 0 = silence, otherwise PIT divisor = value * 60. 140 steps per second.
+```
+
+The loader takes every chunk up to and including the first one tagged
+`!ID!`. That gives 87 sounds for Wolfenstein 3D and 81 for Spear of Destiny,
+which matches the games' own counts.
+
+Each step is one byte multiplied by 60, so these sounds only go down to
+about 78 Hz (a byte of 255 gives a divisor of 15300). They are also coarser
+than the Duke/Keen banks, which store the full 16-bit divisor.
+
+**Duke Nukem II** stores `AUDIOHED.MNI` and `AUDIOT.MNI` inside
+`NUKEM2.CMP`. That archive starts with a directory of 20-byte entries: a
+12-character name, a uint32 offset and a uint32 size.
+
+**Rise of the Triad** uses DMX and WAD files like DOOM does, but its PC speaker
+sounds are in the id format above: 86 lumps called `PCSP0` to `PCSP85`,
+between the marker lumps `PCSTART` and `PCSTOP` in `DARKWAR.WAD`.
+
+## File format: Crystal Caves `.SND`
+
+There is no header. The file is uint16 PIT divisors, with each sound ending in
+`$FFFF`. Crystal Caves pads between sounds with runs of zeros that also end
+in `$FFFF`; the loader skips those. Each file holds 12 sounds, followed by a
+5-word trailer. A file only counts as one of these if every value before the
+trailer is below `$8000` or is an end marker.
+
+Secret Agent, which uses the same engine, has `.SND` files of the same size,
+but their contents are scrambled, so they are not supported.
+
 ## File format: DOOM engine PC speaker lumps
 
 DOOM keeps two versions of every sound effect in the WAD: `DSPISTOL` is the
@@ -323,7 +456,7 @@ Which games have them:
 
 | Has PC speaker sounds | Doesn't |
 | --- | --- |
-| DOOM, DOOM II, Final DOOM (TNT, Plutonia), Chex Quest 1 and 2, Freedoom 1 and 2, Strife (21 sounds) | Heretic, Hexen, DOOM 64, Hacx |
+| DOOM, DOOM II, Final DOOM (TNT, Plutonia), Chex Quest 1 and 2, Freedoom 1 and 2, Strife (21 sounds), Rise of the Triad (in id format, see above) | Heretic, Hexen, DOOM 64, Hacx |
 
 Heretic and Hexen use the DOOM engine but have no `DP*` lumps in their WADs.
 
@@ -335,7 +468,9 @@ game code, not in the WAD.
 ## Notes and gotchas
 
 * **The 140 Hz playback rate is from memory, not checked against a source.** If
-  Duke sounds too fast or too slow, adjust it with +/- in `DN1PLAY`.
+  Duke sounds too fast or too slow, adjust it with +/- in `DN1PLAY`. DOOM's
+  140 Hz is confirmed by Chocolate Doom's source. Crystal Caves' rate is a
+  guess: it uses the same 140 Hz as the other Apogee games.
   `BEEP4.BAS` deliberately keeps the C code's timing: 7 ms per step, about
   143 Hz.
 * The original repo has `duke1-b.dn1`, `.dn2` and `.dn3`, but they are

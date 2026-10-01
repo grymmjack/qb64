@@ -17,7 +17,13 @@
 '     *.DN3) and Commander Keen 1-3 (SOUNDS.CK?) sound banks
 '   - DOOM engine PC speaker sounds (DP* lumps) straight out of a .WAD
 '     (Doom, Doom II, Final Doom, Chex Quest, Freedoom, Strife) or a lone
-'     .LMP - loaded into the same IFS bank, so the same calls play them
+'     .LMP, and Rise of the Triad's PCSP* lumps
+'   - id Software AUDIOHED/AUDIOT pairs (Wolfenstein 3D, Spear of Destiny,
+'     Blake Stone, Corridor 7, Bio Menace, ...) and Duke Nukem II's
+'     NUKEM2.CMP
+'   - IFS banks buried inside bigger files (Cosmo, Major Stryker) and
+'     Crystal Caves' raw divisor lists
+'   All of them load into the same bank, so the same calls play them.
 '   - 8-bit mono PCM WAV loader (for the PWM playback demo)
 '   - Offline render to a QB64PE sound handle (_SNDNEW) and to .WAV files
 '
@@ -43,6 +49,14 @@ $IF PCSPKR_BI = UNDEFINED THEN
     CONST PCSPK_KIND_IFS = 1 ' Duke Nukem 1 / Commander Keen "SND" bank
     CONST PCSPK_KIND_WAD = 2 ' DOOM engine IWAD/PWAD, DP* lumps
     CONST PCSPK_KIND_LMP = 3 ' a single DOOM PC speaker lump
+    CONST PCSPK_KIND_IDAUDIO = 4 ' id Software AUDIOHED + AUDIOT (or NUKEM2.CMP)
+    CONST PCSPK_KIND_RAW = 5 ' raw $FFFF-terminated divisor lists (Crystal Caves)
+
+    ' How one sound was stored before it was turned into divisors
+    CONST PCSPK_FMT_IFS = 1 ' uint16 PIT divisors
+    CONST PCSPK_FMT_DOOM = 2 ' uint8 index into the DMX tone table
+    CONST PCSPK_FMT_ID = 3 ' uint8, divisor = value * 60
+    CONST PCSPK_FMT_RAW = 4 ' uint16 PIT divisors, no header
 
     ' PIT counter modes we emulate on channel 2
     CONST PCSPK_MODE_ONESHOT = 0 ' mode 0: interrupt on terminal count
@@ -97,6 +111,7 @@ $IF PCSPKR_BI = UNDEFINED THEN
         rate AS INTEGER ' 4th byte in the entry (always 8 in known files)
         nam AS STRING * 12
         samples AS LONG ' number of 16-bit samples before the $FFFF end marker
+        fmt AS INTEGER ' PCSPK_FMT_*
     END TYPE
 
     DIM SHARED pcspk AS PCSPK_STATE

@@ -536,8 +536,10 @@ $IF PCSPKR_BM = UNDEFINED THEN
 
 
     '-------------------------------------------------------------------------
-    ' Inverse Frequency Sound (IFS) banks: Duke Nukem 1 (*.DN1-3) and
-    ' Commander Keen 1-3 (SOUNDS.CK1-3)
+    ' Inverse Frequency Sound (IFS) banks: Duke Nukem 1 (*.DN1-3),
+    ' Commander Keen 1 (SOUNDS.CK1), Hovertank, Rescue Rover, Catacomb II,
+    ' Slordax, Math Rescue - and inside Cosmo's *.STN and Major Stryker's
+    ' VOLUME*.MS* files
     '
     '   Header (16 bytes)
     '     0  char[4]  "SND",0
@@ -581,76 +583,180 @@ $IF PCSPKR_BM = UNDEFINED THEN
 
     ''
     ' Load a PC speaker sound bank. Returns TRUE on success. Understands:
-    '   - Duke Nukem 1 / Commander Keen IFS banks ("SND",0 header)
-    '   - DOOM engine WADs (IWAD / PWAD): every DP* lump becomes one sound
+    '   - Duke Nukem 1 / Commander Keen IFS banks ("SND",0 header), and IFS
+    '     banks inside a bigger file (Cosmo's COSMO?.STN, Major Stryker's
+    '     VOLUME?A.MS?) - every bank in the file is loaded
+    '   - DOOM engine WADs (IWAD / PWAD): every DP* lump becomes one sound,
+    '     and so does every lump between PCSTART and PCSTOP (Rise of the
+    '     Triad)
     '   - a single DOOM PC speaker lump on its own (e.g. DPPISTOL.LMP)
+    '   - id Software AUDIOHED.* / AUDIOT.* pairs - pass either one
+    '   - Duke Nukem II's NUKEM2.CMP (it holds AUDIOHED.MNI and AUDIOT.MNI)
+    '   - Crystal Caves' CC?-?.SND raw divisor lists
     ' Whatever the source, the sounds end up as PIT divisors at 140 Hz, so
     ' all the PCSPK_IFS* calls below work the same for every kind.
     '
     FUNCTION PCSPK_IFSLoad%% (fileName AS STRING)
-        DIM ff AS LONG, magic AS STRING * 4
+        DIM ff AS LONG, magic AS STRING * 4, fileLen AS LONG
+        DIM fname AS STRING, ext AS STRING, p AS LONG, d AS STRING, ok AS _BYTE
 
         pcspk_ifs_count = 0
         pcspk_ifs_kind = PCSPK_KIND_NONE
+        pcspk_ifs_data = ""
+        pcspk_ifs_word8 = 0
+        REDIM pcspk_ifs(0 TO 127) AS PCSPK_IFS_ENTRY
         IF NOT _FILEEXISTS(fileName) THEN EXIT FUNCTION
         ff = FREEFILE
         OPEN fileName FOR BINARY ACCESS READ AS #ff
-        IF LOF(ff) >= 4 THEN GET #ff, 1, magic
+        fileLen = LOF(ff)
+        IF fileLen >= 4 THEN GET #ff, 1, magic
         CLOSE #ff
+        pcspk_ifs_filesize = fileLen
 
-        IF magic = "SND" + CHR$(0) THEN
-            PCSPK_IFSLoad = PCSPK_IFSLoadSND(fileName)
-        ELSEIF magic = "IWAD" OR magic = "PWAD" THEN
-            PCSPK_IFSLoad = PCSPK_DoomLoadWAD(fileName)
+        fname = UCASE$(PCSPK_FilePart(fileName))
+        p = _INSTRREV(fname, ".")
+        IF p THEN ext = MID$(fname, p)
+
+        IF magic = "IWAD" OR magic = "PWAD" THEN
+            ok = PCSPK_DoomLoadWAD(fileName)
+            pcspk_ifs_kind = PCSPK_KIND_WAD
+        ELSEIF LEFT$(fname, 9) = "AUDIOHED." OR LEFT$(fname, 7) = "AUDIOT." THEN
+            ok = PCSPK_IdLoadPair(fileName)
+            pcspk_ifs_kind = PCSPK_KIND_IDAUDIO
+        ELSEIF ext = ".CMP" THEN
+            ok = PCSPK_IdLoadCMP(fileName)
+            pcspk_ifs_kind = PCSPK_KIND_IDAUDIO
+        ELSEIF fileLen <= 16777216 THEN
+            d = PCSPK_ReadFile(fileName)
+            IF PCSPK_IFSScan(d) THEN
+                ok = -1
+                pcspk_ifs_kind = PCSPK_KIND_IFS
+            ELSEIF PCSPK_DoomLumpOK(d) THEN
+                IF p > 1 THEN fname = LEFT$(fname, p - 1)
+                PCSPK_DoomAdd d, LEFT$(fname, 12), 0
+                ok = -1
+                pcspk_ifs_kind = PCSPK_KIND_LMP
+            ELSEIF PCSPK_RawLoad(d, fname) THEN
+                ok = -1
+                pcspk_ifs_kind = PCSPK_KIND_RAW
+            END IF
+        END IF
+
+        IF ok AND pcspk_ifs_count > 0 THEN
+            PCSPK_IFSLoad = -1
         ELSE
-            PCSPK_IFSLoad = PCSPK_DoomLoadLMP(fileName)
+            pcspk_ifs_count = 0
+            pcspk_ifs_kind = PCSPK_KIND_NONE
         END IF
     END FUNCTION
 
 
     ''
-    ' Load a Duke Nukem 1 / Commander Keen IFS bank.
+    ' File name without its folder.
     '
-    FUNCTION PCSPK_IFSLoadSND%% (fileName AS STRING)
-        DIM d AS STRING, n AS LONG, i AS LONG, p AS LONG, q AS LONG
-        DIM nm AS STRING, z AS LONG, cnt AS LONG
+    FUNCTION PCSPK_FilePart$ (path AS STRING)
+        DIM p AS LONG
+        p = _INSTRREV(path, "/")
+        IF _INSTRREV(path, "\") > p THEN p = _INSTRREV(path, "\")
+        PCSPK_FilePart = MID$(path, p + 1)
+    END FUNCTION
 
-        d = PCSPK_ReadFile(fileName)
-        IF LEN(d) < 16 THEN EXIT FUNCTION
-        IF LEFT$(d, 4) <> "SND" + CHR$(0) THEN EXIT FUNCTION
 
-        pcspk_ifs_data = d
-        pcspk_ifs_filesize = PCSPK_U16(d, 5)
-        n = PCSPK_U16(d, 7)
-        pcspk_ifs_word8 = PCSPK_U16(d, 9)
-        IF 16 + n * 16 > LEN(d) THEN n = (LEN(d) - 16) \ 16
-        IF n < 1 THEN EXIT FUNCTION
+    ''
+    ' Add one sound to the bank. dv holds its divisors as 16-bit words (no
+    ' end marker). If replaceSame is TRUE a sound with the same name is
+    ' replaced instead of added. Returns the sound's index.
+    '
+    FUNCTION PCSPK_AddSound& (dv AS STRING, nam AS STRING, filePos AS LONG, priority AS LONG, fmt AS INTEGER, replaceSame AS INTEGER)
+        DIM i AS LONG, idx AS LONG
 
-        REDIM pcspk_ifs(0 TO n - 1) AS PCSPK_IFS_ENTRY
-        FOR i = 0 TO n - 1
-            p = 17 + i * 16
-            pcspk_ifs(i).offset = PCSPK_U16(d, p)
-            pcspk_ifs(i).dataPos = pcspk_ifs(i).offset
-            pcspk_ifs(i).priority = ASC(d, p + 2)
-            pcspk_ifs(i).rate = ASC(d, p + 3)
-            nm = MID$(d, p + 4, 12)
-            z = INSTR(nm, CHR$(0))
-            IF z THEN nm = LEFT$(nm, z - 1)
-            pcspk_ifs(i).nam = nm
+        idx = pcspk_ifs_count
+        IF replaceSame THEN
+            FOR i = 0 TO pcspk_ifs_count - 1
+                IF RTRIM$(pcspk_ifs(i).nam) = nam THEN idx = i: EXIT FOR
+            NEXT
+        END IF
+        IF idx = pcspk_ifs_count THEN
+            IF idx > UBOUND(pcspk_ifs) THEN REDIM _PRESERVE pcspk_ifs(0 TO idx * 2 + 1) AS PCSPK_IFS_ENTRY
+            pcspk_ifs_count = pcspk_ifs_count + 1
+        END IF
 
-            ' count samples up to the $FFFF terminator
-            cnt = 0
-            q = pcspk_ifs(i).offset + 1
-            DO WHILE q + 1 <= LEN(d)
-                IF PCSPK_U16(d, q) = &HFFFF& THEN EXIT DO
-                cnt = cnt + 1
-                q = q + 2
-            LOOP
-            pcspk_ifs(i).samples = cnt
+        pcspk_ifs(idx).offset = filePos
+        pcspk_ifs(idx).dataPos = LEN(pcspk_ifs_data)
+        pcspk_ifs(idx).priority = priority
+        pcspk_ifs(idx).rate = 0
+        pcspk_ifs(idx).nam = nam
+        pcspk_ifs(idx).samples = LEN(dv) \ 2
+        pcspk_ifs(idx).fmt = fmt
+        pcspk_ifs_data = pcspk_ifs_data + dv + MKI$(-1) ' $FFFF end marker
+        PCSPK_AddSound = idx
+    END FUNCTION
+
+
+    ''
+    ' Find every IFS bank in d and add all their sounds. A bank at the very
+    ' start of the file is trusted as it is (Duke, Keen); one further in has
+    ' to have a sound table that looks right, so stray "SND" bytes in an EXE
+    ' or archive are skipped. Returns TRUE if any sound was added.
+    '
+    FUNCTION PCSPK_IFSScan%% (d AS STRING)
+        DIM sig AS STRING, p AS LONG, n AS LONG, i AS LONG, e AS LONG, ofs AS LONG
+        DIM good AS LONG, nm AS STRING, z AS LONG, q AS LONG, cnt AS LONG, idx AS LONG
+
+        sig = "SND" + CHR$(0)
+        p = INSTR(d, sig)
+        DO WHILE p
+            n = PCSPK_U16(d, p + 6)
+            IF n >= 1 AND n <= 300 AND p + 15 + n * 16 <= LEN(d) THEN
+                good = 0
+                FOR i = 0 TO n - 1
+                    e = p + 16 + i * 16
+                    ofs = PCSPK_U16(d, e)
+                    nm = PCSPK_CString(MID$(d, e + 4, 12))
+                    IF LEN(nm) > 0 AND ofs >= 16 + n * 16 AND p + ofs <= LEN(d) THEN good = good + 1
+                NEXT
+
+                IF p = 1 OR good * 5 >= n * 4 THEN
+                    IF p = 1 THEN pcspk_ifs_word8 = PCSPK_U16(d, 9)
+                    FOR i = 0 TO n - 1
+                        e = p + 16 + i * 16
+                        ofs = PCSPK_U16(d, e)
+                        nm = PCSPK_CString(MID$(d, e + 4, 12))
+                        IF nm = "__UnNamed__" OR nm = "" THEN nm = "UNNAMED" + LTRIM$(STR$(pcspk_ifs_count))
+
+                        ' samples run up to the $FFFF terminator
+                        cnt = 0
+                        q = p + ofs
+                        DO WHILE q + 1 <= LEN(d)
+                            IF PCSPK_U16(d, q) = &HFFFF& THEN EXIT DO
+                            cnt = cnt + 1
+                            q = q + 2
+                        LOOP
+                        idx = PCSPK_AddSound(MID$(d, p + ofs, cnt * 2), nm, p - 1 + ofs, ASC(d, e + 2), PCSPK_FMT_IFS, 0)
+                        pcspk_ifs(idx).rate = ASC(d, e + 3)
+                    NEXT
+                    p = p + 16 + n * 16 - 1
+                END IF
+            END IF
+            p = INSTR(p + 1, d, sig)
+        LOOP
+        PCSPK_IFSScan = pcspk_ifs_count > 0
+    END FUNCTION
+
+
+    ''
+    ' Text up to the first NUL, or "" if it has anything unprintable.
+    '
+    FUNCTION PCSPK_CString$ (s AS STRING)
+        DIM z AS LONG, i AS LONG, c AS LONG, t AS STRING
+        t = s
+        z = INSTR(t, CHR$(0))
+        IF z THEN t = LEFT$(t, z - 1)
+        FOR i = 1 TO LEN(t)
+            c = ASC(t, i)
+            IF c < 32 OR c > 126 THEN EXIT FUNCTION
         NEXT
-        pcspk_ifs_count = n
-        pcspk_ifs_kind = PCSPK_KIND_IFS
-        PCSPK_IFSLoadSND = -1
+        PCSPK_CString = t
     END FUNCTION
 
 
@@ -680,6 +786,10 @@ $IF PCSPKR_BM = UNDEFINED THEN
     '     0  int32    where the lump starts
     '     4  int32    lump size
     '     8  char[8]  name, NUL padded
+    '
+    ' Rise of the Triad's WAD has no DP* lumps. Its PC speaker sounds sit
+    ' between the PCSTART and PCSTOP marker lumps in id's AUDIOT format
+    ' (see PCSPK_IdAddChunk).
     '-------------------------------------------------------------------------
 
     SUB PCSPK_DoomInit
@@ -741,45 +851,26 @@ $IF PCSPKR_BM = UNDEFINED THEN
     ' IWAD in the game.
     '
     SUB PCSPK_DoomAdd (lump AS STRING, nam AS STRING, filePos AS LONG)
-        DIM cnt AS LONG, n AS LONG, i AS LONG, idx AS LONG, dv AS STRING
+        DIM cnt AS LONG, n AS LONG, dv AS STRING, idx AS LONG
 
         cnt = PCSPK_U16(lump, 3)
-        dv = SPACE$(cnt * 2 + 2)
+        dv = SPACE$(cnt * 2)
         FOR n = 0 TO cnt - 1
             MID$(dv, n * 2 + 1, 2) = MKI$(PCSPK_DoomDivisor(ASC(lump, 5 + n)))
         NEXT
-        MID$(dv, cnt * 2 + 1, 2) = MKI$(-1) ' $FFFF end marker, like IFS
-
-        idx = pcspk_ifs_count
-        FOR i = 0 TO pcspk_ifs_count - 1
-            IF RTRIM$(pcspk_ifs(i).nam) = nam THEN idx = i: EXIT FOR
-        NEXT
-        IF idx = pcspk_ifs_count THEN
-            IF idx > UBOUND(pcspk_ifs) THEN REDIM _PRESERVE pcspk_ifs(0 TO idx * 2 + 1) AS PCSPK_IFS_ENTRY
-            pcspk_ifs_count = pcspk_ifs_count + 1
-        END IF
-
-        pcspk_ifs(idx).offset = filePos
-        pcspk_ifs(idx).dataPos = LEN(pcspk_ifs_data)
-        pcspk_ifs(idx).priority = 0 ' kept in the game's code, not the WAD
-        pcspk_ifs(idx).rate = 0
-        pcspk_ifs(idx).nam = nam
-        pcspk_ifs(idx).samples = cnt
-        pcspk_ifs_data = pcspk_ifs_data + dv
+        idx = PCSPK_AddSound(dv, nam, filePos, 0, PCSPK_FMT_DOOM, -1) ' priority is in the game's code, not the WAD
     END SUB
 
 
     ''
-    ' Load every DP* lump in a DOOM engine WAD. Only the directory and the
-    ' DP* lumps are read, so a 600 MB WAD loads as quickly as a small one.
+    ' Load every PC speaker lump in a DOOM engine WAD. Only the directory and
+    ' the lumps wanted are read, so a 600 MB WAD loads as quickly as a small
+    ' one.
     '
     FUNCTION PCSPK_DoomLoadWAD%% (fileName AS STRING)
         DIM ff AS LONG, fileLen AS LONG, numLumps AS LONG, dirPos AS LONG, i AS LONG
         DIM dir AS STRING, fp AS LONG, sz AS LONG, nm AS STRING, z AS LONG, lump AS STRING
-
-        pcspk_ifs_data = ""
-        pcspk_ifs_count = 0
-        REDIM pcspk_ifs(0 TO 127) AS PCSPK_IFS_ENTRY
+        DIM inPC AS _BYTE
 
         ff = FREEFILE
         OPEN fileName FOR BINARY ACCESS READ AS #ff
@@ -798,57 +889,253 @@ $IF PCSPKR_BM = UNDEFINED THEN
                 z = INSTR(nm, CHR$(0))
                 IF z THEN nm = LEFT$(nm, z - 1)
                 nm = UCASE$(nm)
-                IF LEFT$(nm, 2) = "DP" AND sz >= 4 AND sz <= 65539 AND fp >= 0 AND fp <= fileLen - sz THEN
+                IF nm = "PCSTART" THEN
+                    inPC = -1
+                ELSEIF nm = "PCSTOP" THEN
+                    inPC = 0
+                ELSEIF sz >= 4 AND sz <= 65542 AND fp >= 0 AND fp <= fileLen - sz AND (inPC OR LEFT$(nm, 2) = "DP") THEN
                     lump = SPACE$(sz)
                     GET #ff, fp + 1, lump
-                    IF PCSPK_DoomLumpOK(lump) THEN PCSPK_DoomAdd lump, nm, fp
+                    IF inPC THEN
+                        PCSPK_IdAddChunk lump, nm, fp
+                    ELSEIF PCSPK_DoomLumpOK(lump) THEN
+                        PCSPK_DoomAdd lump, nm, fp
+                    END IF
                 END IF
             NEXT
         END IF
         CLOSE #ff
 
-        IF pcspk_ifs_count = 0 THEN EXIT FUNCTION
-        pcspk_ifs_filesize = fileLen
         pcspk_ifs_word8 = numLumps
-        pcspk_ifs_kind = PCSPK_KIND_WAD
-        PCSPK_DoomLoadWAD = -1
+        PCSPK_DoomLoadWAD = pcspk_ifs_count > 0
+    END FUNCTION
+
+
+    '-------------------------------------------------------------------------
+    ' id Software AUDIOHED / AUDIOT (Wolfenstein 3D engine and friends)
+    '
+    ' AUDIOHED.ext is a list of uint32 offsets into AUDIOT.ext, one per chunk
+    ' plus one for the end. The chunks come in blocks: all the PC speaker
+    ' sounds, then the AdLib versions, then digitized placeholders, then
+    ' music. The last chunk of each block has "!ID!" stuck on the end, which
+    ' is how the number of PC speaker sounds is found.
+    '
+    '   PC speaker chunk
+    '     0  uint32   number of steps
+    '     4  uint16   priority
+    '     6  uint8[]  one step per 1/140 second: 0 = silence, otherwise
+    '                 PIT divisor = value * 60
+    '
+    ' Used by Wolfenstein 3D, Spear of Destiny, Blake Stone, Corridor 7,
+    ' Operation Body Count, Bio Menace, Super Noah's Ark 3-D, Cyberchess and
+    ' more. Duke Nukem II keeps the same two files inside NUKEM2.CMP. The
+    ' files don't name the sounds, so they are numbered in game order.
+    '-------------------------------------------------------------------------
+
+    ''
+    ' Convert one id PC speaker chunk to divisors and add it to the bank.
+    '
+    SUB PCSPK_IdAddChunk (chunk AS STRING, nam AS STRING, filePos AS LONG)
+        DIM cnt AS LONG, n AS LONG, dv AS STRING, pri AS LONG, idx AS LONG
+        IF LEN(chunk) >= 6 THEN
+            cnt = PCSPK_U32(chunk, 1)
+            pri = PCSPK_U16(chunk, 5)
+            IF cnt > LEN(chunk) - 6 OR cnt < 0 THEN cnt = LEN(chunk) - 6
+        END IF
+        dv = SPACE$(cnt * 2)
+        FOR n = 0 TO cnt - 1
+            MID$(dv, n * 2 + 1, 2) = MKI$(ASC(chunk, 7 + n) * 60)
+        NEXT
+        idx = PCSPK_AddSound(dv, nam, filePos, pri, PCSPK_FMT_ID, 0)
+    END SUB
+
+
+    ''
+    ' Add the PC speaker sounds from an AUDIOHED/AUDIOT pair already in
+    ' memory. basePos is where AUDIOT starts in its file (for Offset).
+    '
+    FUNCTION PCSPK_IdParse%% (hed AS STRING, t AS STRING, basePos AS LONG)
+        DIM n AS LONG, i AS LONG, a AS LONG, b AS LONG, numPC AS LONG
+
+        n = LEN(hed) \ 4 - 1
+        IF n < 1 THEN EXIT FUNCTION
+
+        ' the PC block ends at the first chunk tagged "!ID!"
+        numPC = -1
+        FOR i = 0 TO n - 1
+            a = PCSPK_U32(hed, i * 4 + 1)
+            b = PCSPK_U32(hed, i * 4 + 5)
+            IF b > a AND a >= 0 AND b <= LEN(t) THEN
+                IF INSTR(MID$(t, a + 1, b - a), "!ID!") THEN numPC = i + 1: EXIT FOR
+            END IF
+        NEXT
+
+        ' no tag: take chunks while they look like PC speaker sounds
+        IF numPC < 0 THEN
+            numPC = 0
+            FOR i = 0 TO n - 1
+                a = PCSPK_U32(hed, i * 4 + 1)
+                b = PCSPK_U32(hed, i * 4 + 5)
+                IF b - a < 6 OR a < 0 OR b > LEN(t) THEN EXIT FOR
+                IF b - a - 6 - PCSPK_U32(t, a + 1) < 0 OR b - a - 6 - PCSPK_U32(t, a + 1) > 6 THEN EXIT FOR
+                numPC = i + 1
+            NEXT
+        END IF
+
+        FOR i = 0 TO numPC - 1
+            a = PCSPK_U32(hed, i * 4 + 1)
+            b = PCSPK_U32(hed, i * 4 + 5)
+            IF b < a OR a < 0 OR b > LEN(t) THEN b = a
+            PCSPK_IdAddChunk MID$(t, a + 1, b - a), "SOUND" + RIGHT$("00" + LTRIM$(STR$(i)), 3), basePos + a
+        NEXT
+        pcspk_ifs_word8 = n
+        PCSPK_IdParse = pcspk_ifs_count > 0
     END FUNCTION
 
 
     ''
-    ' Load a single DOOM PC speaker lump saved as its own file. The sound is
-    ' named after the file (DPPISTOL.LMP -> DPPISTOL).
+    ' Load an id AUDIOHED/AUDIOT pair. fileName can be either of the two;
+    ' the other one has to be next to it with the same extension.
     '
-    FUNCTION PCSPK_DoomLoadLMP%% (fileName AS STRING)
-        DIM d AS STRING, nm AS STRING, p AS LONG
+    FUNCTION PCSPK_IdLoadPair%% (fileName AS STRING)
+        DIM dir AS STRING, fil AS STRING, ext AS STRING, p AS LONG
+        DIM hedName AS STRING, tName AS STRING
 
-        d = PCSPK_ReadFile(fileName)
-        IF NOT PCSPK_DoomLumpOK(d) THEN EXIT FUNCTION
+        fil = PCSPK_FilePart(fileName)
+        dir = LEFT$(fileName, LEN(fileName) - LEN(fil))
+        p = _INSTRREV(fil, ".")
+        IF p = 0 THEN EXIT FUNCTION
+        ext = MID$(fil, p)
 
-        nm = fileName
-        p = _INSTRREV(nm, "/")
-        IF _INSTRREV(nm, "\") > p THEN p = _INSTRREV(nm, "\")
-        nm = MID$(nm, p + 1)
+        hedName = PCSPK_FirstFile(dir + "AUDIOHED" + ext, dir + "audiohed" + ext, dir + "AUDIOHED" + UCASE$(ext))
+        tName = PCSPK_FirstFile(dir + "AUDIOT" + ext, dir + "audiot" + ext, dir + "AUDIOT" + UCASE$(ext))
+        IF hedName = "" OR tName = "" THEN EXIT FUNCTION
+        PCSPK_IdLoadPair = PCSPK_IdParse(PCSPK_ReadFile(hedName), PCSPK_ReadFile(tName), 0)
+    END FUNCTION
+
+
+    FUNCTION PCSPK_FirstFile$ (a AS STRING, b AS STRING, c AS STRING)
+        IF _FILEEXISTS(a) THEN
+            PCSPK_FirstFile = a
+        ELSEIF _FILEEXISTS(b) THEN
+            PCSPK_FirstFile = b
+        ELSEIF _FILEEXISTS(c) THEN
+            PCSPK_FirstFile = c
+        END IF
+    END FUNCTION
+
+
+    ''
+    ' Load the PC speaker sounds from Duke Nukem II's NUKEM2.CMP.
+    '
+    '   Directory at the start (20 bytes per file, ends with an empty name)
+    '     0  char[12] name, NUL padded
+    '    12  uint32   where the file starts
+    '    16  uint32   file size
+    '
+    FUNCTION PCSPK_IdLoadCMP%% (fileName AS STRING)
+        DIM ff AS LONG, fileLen AS LONG, ent AS STRING * 20, i AS LONG, nm AS STRING
+        DIM fp AS LONG, sz AS LONG, hedPos AS LONG, hedLen AS LONG, tPos AS LONG, tLen AS LONG
+        DIM hed AS STRING, t AS STRING
+
+        ff = FREEFILE
+        OPEN fileName FOR BINARY ACCESS READ AS #ff
+        fileLen = LOF(ff)
+        hedLen = -1: tLen = -1
+        FOR i = 0 TO 999
+            IF i * 20 + 20 > fileLen THEN EXIT FOR
+            GET #ff, i * 20 + 1, ent
+            nm = UCASE$(PCSPK_CString(LEFT$(ent, 12)))
+            IF nm = "" THEN EXIT FOR
+            fp = CVL(MID$(ent, 13, 4))
+            sz = CVL(MID$(ent, 17, 4))
+            IF fp >= 0 AND sz >= 0 AND fp <= fileLen - sz THEN
+                IF nm = "AUDIOHED.MNI" THEN hedPos = fp: hedLen = sz
+                IF nm = "AUDIOT.MNI" THEN tPos = fp: tLen = sz
+            END IF
+        NEXT
+        IF hedLen > 0 AND tLen > 0 THEN
+            hed = SPACE$(hedLen): GET #ff, hedPos + 1, hed
+            t = SPACE$(tLen): GET #ff, tPos + 1, t
+        END IF
+        CLOSE #ff
+        IF LEN(hed) = 0 OR LEN(t) = 0 THEN EXIT FUNCTION
+        PCSPK_IdLoadCMP = PCSPK_IdParse(hed, t, tPos)
+    END FUNCTION
+
+
+    '-------------------------------------------------------------------------
+    ' Raw divisor lists (Crystal Caves CC?-?.SND)
+    '
+    ' No header: uint16 PIT divisors, each sound ending with $FFFF. Crystal
+    ' Caves pads between sounds with runs of zeros that also end in $FFFF;
+    ' those all-silent runs are skipped. Everything but the end markers has
+    ' to be below $8000, which is what tells these files apart from other
+    ' data. A few words after the last $FFFF (a trailer) are ignored.
+    '-------------------------------------------------------------------------
+
+    FUNCTION PCSPK_RawLoad%% (d AS STRING, fname AS STRING)
+        DIM n AS LONG, i AS LONG, w AS LONG, s AS LONG, hasTone AS _BYTE, last AS LONG
+        DIM nm AS STRING, p AS LONG, idx AS LONG
+
+        n = LEN(d) \ 2
+        IF n < 2 OR LEN(d) MOD 2 <> 0 OR LEN(d) > 262144 THEN EXIT FUNCTION
+        ' a short trailer after the last sound is allowed (Crystal Caves has 5 words)
+        last = -1
+        FOR i = n - 1 TO 0 STEP -1
+            IF PCSPK_U16(d, i * 2 + 1) = &HFFFF& THEN last = i: EXIT FOR
+        NEXT
+        IF last < 0 OR n - 1 - last > 16 THEN EXIT FUNCTION
+        FOR i = 0 TO last
+            IF PCSPK_U16(d, i * 2 + 1) >= &H8000& AND PCSPK_U16(d, i * 2 + 1) <> &HFFFF& THEN EXIT FUNCTION
+        NEXT
+
+        nm = fname
         p = _INSTRREV(nm, ".")
         IF p > 1 THEN nm = LEFT$(nm, p - 1)
-        nm = UCASE$(LEFT$(nm, 12))
+        nm = LEFT$(nm, 8)
 
-        pcspk_ifs_data = ""
-        pcspk_ifs_count = 0
-        REDIM pcspk_ifs(0 TO 0) AS PCSPK_IFS_ENTRY
-        PCSPK_DoomAdd d, nm, 0
-        pcspk_ifs_filesize = LEN(d)
-        pcspk_ifs_word8 = 0
-        pcspk_ifs_kind = PCSPK_KIND_LMP
-        PCSPK_DoomLoadLMP = -1
+        s = 0
+        hasTone = 0
+        FOR i = 0 TO last
+            w = PCSPK_U16(d, i * 2 + 1)
+            IF w = &HFFFF& THEN
+                IF hasTone THEN idx = PCSPK_AddSound(MID$(d, s * 2 + 1, (i - s) * 2), nm + "_" + LTRIM$(STR$(pcspk_ifs_count + 1)), s * 2, 0, PCSPK_FMT_RAW, 0)
+                s = i + 1
+                hasTone = 0
+            ELSEIF w THEN
+                hasTone = -1
+            END IF
+        NEXT
+        PCSPK_RawLoad = pcspk_ifs_count > 0
     END FUNCTION
 
 
     ''
-    ' Where the loaded bank came from: PCSPK_KIND_IFS, _WAD, _LMP or _NONE.
+    ' Where the loaded bank came from: PCSPK_KIND_IFS, _WAD, _LMP, _IDAUDIO,
+    ' _RAW or _NONE.
     '
     FUNCTION PCSPK_IFSKind%
         PCSPK_IFSKind = pcspk_ifs_kind
+    END FUNCTION
+
+
+    ''
+    ' How a sound was stored in its file: PCSPK_FMT_IFS, _DOOM, _ID or _RAW.
+    '
+    FUNCTION PCSPK_IFSFormat% (index AS LONG)
+        IF index < 0 OR index >= pcspk_ifs_count THEN EXIT FUNCTION
+        PCSPK_IFSFormat = pcspk_ifs(index).fmt
+    END FUNCTION
+
+
+    FUNCTION PCSPK_IFSFormatName$ (index AS LONG)
+        SELECT CASE PCSPK_IFSFormat(index)
+            CASE PCSPK_FMT_IFS: PCSPK_IFSFormatName = "IFS bank (16-bit divisors)"
+            CASE PCSPK_FMT_DOOM: PCSPK_IFSFormatName = "DOOM lump (tone table)"
+            CASE PCSPK_FMT_ID: PCSPK_IFSFormatName = "id AUDIOT (byte x 60)"
+            CASE PCSPK_FMT_RAW: PCSPK_IFSFormatName = "raw 16-bit divisors"
+        END SELECT
     END FUNCTION
 
 
