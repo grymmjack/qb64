@@ -14445,3 +14445,229 @@
   $ Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
   $ EOF
   $ git log --oneline -1 && git push origin main 2>&1 | tail -1; git status --short
+2026-10-01T00:32:19-0400  INFO     bash_end      [ok] 4L stdout
+  | warning: in the working copy of '.claude/activity.log', CRLF will be replaced by LF the next time Git touches it
+  | c43abdc9 SOUND/PC-SPEAKER: PCSEDIT stretch selections in time and pitch
+  |    639f2ada..c43abdc9  main -> main
+  | ?? MYSOUNDS.SND
+2026-10-01T00:40:13-0400  NOTICE   prompt        when we draw waveforms, can we have the same transform on it for the edges? so i can squish/stretch/resize?
+  > when we draw waveforms, can we have the same transform on it for the edges? so i can squish/stretch/resize?
+2026-10-01T00:40:27-0400  INFO     bash_start    cd /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER && grep -n "draw_handles\|IF waveLive AND s >= waveS0 AND s < waveS1\|ELSEIF drawing = 7 THEN ' adjusting\|' the live waveform's box" PCSEDIT.BAS; se…
+  > cwd: /home/grymmjack/git/qb64
+  $ cd /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER && grep -n "draw_handles\|IF waveLive AND s >= waveS0 AND s < waveS1\|ELSEIF drawing = 7 THEN ' adjusting\|' the live waveform's box" PCSEDIT.BAS; sed -n '/    . the live waveform.s box/,/^    END IF$/p' PCSEDIT.BAS
+2026-10-01T00:40:27-0400  INFO     bash_end      [ok] 19L stdout
+  | 1230:        ELSEIF drawing = 7 THEN ' adjusting duty / phase inside the live box
+  | 1275:        IF waveLive AND s >= waveS0 AND s < waveS1 AND nt >= waveLo - 0.5 AND nt <= waveHi + 0.5 THEN
+  | 3389:    ' the live waveform's box
+  | 3416:                draw_handles x, endX, y, note_y(selLo) + PX_SEMI \ 2
+  | 3468:SUB draw_handles (xl AS LONG, xr AS LONG, yt AS LONG, yb AS LONG)
+  |     ' the live waveform's box
+  |     IF waveLive AND tool = TOOL_WAVE THEN
+  |         x = CANVAS_X + (waveS0 - scrollX) * zoom
+  |         endX = CANVAS_X + (waveS1 - scrollX) * zoom
+  |         IF x < CANVAS_X THEN x = CANVAS_X
+  |         IF endX > CANVAS_X + CANVAS_W - 1 THEN endX = CANVAS_X + CANVAS_W - 1
+  |         IF endX > x THEN
+  |             y = note_y(waveHi) - PX_SEMI \ 2
+  |             LINE (x, y)-(endX, note_y(waveLo) + PX_SEMI \ 2), _RGBA32(255, 120, 220, 30), BF
+  |             LINE (x, y)-(endX, note_y(waveLo) + PX_SEMI \ 2), _RGB32(255, 120, 220), B
+  |             COLOR _RGB32(255, 160, 230)
+  |             _PRINTSTRING (x + 2, y - 17), wave_name + STR$(waveCycles) + "x duty" + STR$(CLNG(waveDuty * 100)) + "% ph" + STR$(CLNG(wavePhase * 100)) + "%"
+  |         END IF
+  |     END IF
+2026-10-01T00:40:30-0400  INFO     bash_start    sed -n 1270,1290p PCSEDIT.BAS; sed -n '/^SUB draw_handles/,/^END SUB/p' PCSEDIT.BAS | head -6
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ sed -n 1270,1290p PCSEDIT.BAS; sed -n '/^SUB draw_handles/,/^END SUB/p' PCSEDIT.BAS | head -6
+2026-10-01T00:40:30-0400  INFO     bash_end      [ok] 27L stdout
+  |         ELSE
+  |             drawing = 0
+  |             haveAnchor = -1
+  |         END IF
+  |     ELSEIF inCanvas AND b1 AND NOT wasDown AND tool = TOOL_WAVE THEN
+  |         IF waveLive AND s >= waveS0 AND s < waveS1 AND nt >= waveLo - 0.5 AND nt <= waveHi + 0.5 THEN
+  |             drawing = 7 ' inside the live box: adjust it
+  |             adjX = mx: adjY = my: adjDuty = waveDuty: adjPhase = wavePhase
+  |         ELSE
+  |             wave_done
+  |             IF playing THEN stop_playing
+  |             push_undo
+  |             waveBase = sndData(cur)
+  |             waveLive = -1
+  |             waveAS = s: waveAN = nt
+  |             wave_box s, nt, s, nt
+  |             drawing = 6
+  |         END IF
+  |     ELSEIF inCanvas AND b1 AND NOT wasDown AND tool = TOOL_LINE THEN
+  |         IF playing THEN stop_playing
+  |         push_undo
+  | SUB draw_handles (xl AS LONG, xr AS LONG, yt AS LONG, yb AS LONG)
+  |     DIM hover AS INTEGER, ym AS LONG, xm AS LONG, c AS _UNSIGNED LONG, i AS INTEGER
+  |     hover = sel_edge(_MOUSEX, _MOUSEY)
+  |     IF drawing >= 9 AND drawing <= 12 THEN hover = drawing - 8
+  |     ym = (yt + yb) \ 2: xm = (xl + xr) \ 2
+  |     FOR i = 1 TO 4
+2026-10-01T00:40:52-0400  INFO     bash_start    python3 - <<'PYEOF' | p='PCSEDIT.BAS'; s=open(p).read() | def r(a,b,c=1): | global s | assert s.count(a)==c,(a[:70],s.count(a)); s=s.replace(a,b) | | # ---------- start: edges first, then inside = ad…
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ python3 - <<'PYEOF'
+  $ p='PCSEDIT.BAS'; s=open(p).read()
+  $ def r(a,b,c=1):
+  $     global s
+  $     assert s.count(a)==c,(a[:70],s.count(a)); s=s.replace(a,b)
+  $ 
+  $ # ---------- start: edges first, then inside = adjust
+  $ r("""    ELSEIF inCanvas AND b1 AND NOT wasDown AND tool = TOOL_WAVE THEN
+  $         IF waveLive AND s >= waveS0 AND s < waveS1 AND nt >= waveLo - 0.5 AND nt <= waveHi + 0.5 THEN""","""    ELSEIF inCanvas AND b1 AND NOT wasDown AND tool = TOOL_WAVE THEN
+  $         IF waveLive AND wave_edge(mx, my) > 0 THEN
+  $             drawing = 12 + wave_edge(mx, my) ' 13 left, 14 right, 15 top, 16 bottom
+  $             waveTopIsHi = (waveHi >= waveLo)
+  $         ELSEIF waveLive AND s >= waveS0 AND s < waveS1 AND nt >= wave_min - 0.5 AND nt <= wave_max + 0.5 THEN""")
+  $ # ---------- continue: edge drags
+  $ r("""        ELSEIF drawing = 7 THEN ' adjusting duty / phase inside the live box""","""        ELSEIF drawing >= 13 AND drawing <= 16 THEN ' resizing the live waveform's box
+  $             IF b1 THEN
+  $                 wave_resize drawing, s, nt
+  $             ELSE
+  $                 drawing = 0
+  $                 set_status wave_info + "  - steps" + STR$(waveS0) + " -" + STR$(waveS1 - 1) + ", " + note_name(wave_min) + " - " + note_name(wave_max)
+  $             END IF
+  $         ELSEIF drawing = 7 THEN ' adjusting duty / phase inside the live box""")
+  $ # ---------- state
+  $ r("""DIM SHARED adjPhase AS DOUBLE""","""DIM SHARED adjPhase AS DOUBLE
+  $ DIM SHARED waveTopIsHi AS INTEGER ' resizing: the top edge is waveHi (not flipped)""")
+  $ # ---------- helpers after wave_box
+  $ r("""''
+  $ ' Put the sound back as it was, then write the waveform into the box.""","""FUNCTION wave_min#
+  $     IF waveLo <= waveHi THEN wave_min = waveLo ELSE wave_min = waveHi
+  $ END FUNCTION
+  $ 
+  $ 
+  $ FUNCTION wave_max#
+  $     IF waveLo <= waveHi THEN wave_max = waveHi ELSE wave_max = waveLo
+  $ END FUNCTION
+  $ 
+  $ 
+  $ ''
+  $ ' Which edge of the live waveform's box is under x, y (as sel_edge).
+  $ '
+  $ FUNCTION wave_edge% (x AS LONG, y AS LONG)
+  $     DIM xl AS LONG, xr AS LONG, yt AS LONG, yb AS LONG
+  $     IF NOT waveLive THEN EXIT FUNCTION
+  $     xl = CANVAS_X + (waveS0 - scrollX) * zoom
+  $     xr = CANVAS_X + (waveS1 - scrollX) * zoom
+  $     yt = note_y(wave_max) - PX_SEMI \\ 2
+  $     yb = note_y(wave_min) + PX_SEMI \\ 2
+  $     IF y >= yt - 4 AND y <= yb + 4 THEN
+  $         IF ABS(x - xl) <= 4 THEN wave_edge = 1: EXIT FUNCTION
+  $         IF ABS(x - xr) <= 4 THEN wave_edge = 2: EXIT FUNCTION
+  $     END IF
+  $     IF x > xl + 4 AND x < xr - 4 THEN
+  $         IF ABS(y - yt) <= 4 THEN wave_edge = 3: EXIT FUNCTION
+  $         IF ABS(y - yb) <= 4 THEN wave_edge = 4: EXIT FUNCTION
+  $     END IF
+  $ END FUNCTION
+  $ 
+  $ 
+  $ ''
+  $ ' Drag an edge of the live waveform's box (drawing 13-16). Time edges keep
+  $ ' the number of cycles, so each cycle stretches; pitch edges move the top or
+  $ ' bottom of its swing, and past the other edge the shape turns upside down.
+  $ '
+  $ SUB wave_resize (which AS INTEGER, s AS LONG, nt AS DOUBLE)
+  $     DIM e AS LONG, p AS DOUBLE
+  $     SELECT CASE which
+  $         CASE 13
+  $             e = s
+  $             IF gridDiv THEN e = snap_cell(e)
+  $             IF e > waveS1 - 1 THEN e = waveS1 - 1
+  $             IF e < 0 THEN e = 0
+  $             waveS0 = e
+  $         CASE 14
+  $             e = s + 1
+  $             IF gridDiv THEN e = snap_cell(e)
+  $             IF e < waveS0 + 1 THEN e = waveS0 + 1
+  $             waveS1 = e
+  $         CASE 15, 16
+  $             p = nt
+  $             IF snapOn THEN p = INT(p + 0.5)
+  $ ...[truncated]
+2026-10-01T00:40:52-0400  INFO     bash_end      [ok] 5L stdout
+  | 3356:    DIM nt AS LONG, y AS LONG, x AS LONG, s AS LONG, v AS LONG, vis AS LONG, endX AS LONG
+  | 3355:SUB draw_roll
+  | 3356-    DIM nt AS LONG, y AS LONG, x AS LONG, s AS LONG, v AS LONG, vis AS LONG, endX AS LONG
+  | 3357-    DIM w AS LONG, nn AS DOUBLE, col AS _UNSIGNED LONG, hp AS LONG, isBlack AS INTEGER, prevY AS LONG
+  | 3358-
+2026-10-01T00:40:56-0400  INFO     bash_start    sed -i '3357s/prevY AS LONG$/prevY AS LONG, hv AS INTEGER/' PCSEDIT.BAS && sed -n 3357p PCSEDIT.BAS && grep -n "nt <= waveHi + 0.5" PCSEDIT.BAS; /home/grymmjack/git/qb64pe/qb64pe -x PCSEDIT.BAS -o /t…
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ sed -i '3357s/prevY AS LONG$/prevY AS LONG, hv AS INTEGER/' PCSEDIT.BAS && sed -n 3357p PCSEDIT.BAS && grep -n "nt <= waveHi + 0.5" PCSEDIT.BAS; /home/grymmjack/git/qb64pe/qb64pe -x PCSEDIT.BAS -o /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/PCSEDIT 2>&1 | grep -A3 -E "38;5;9m|Output:" | head -3
+2026-10-01T00:40:59-0400  INFO     bash_end      [ok] 2L stdout
+  |     DIM w AS LONG, nn AS DOUBLE, col AS _UNSIGNED LONG, hp AS LONG, isBlack AS INTEGER, prevY AS LONG, hv AS INTEGER
+  | Output: /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/PCSEDIT
+2026-10-01T00:41:14-0400  INFO     bash_start    SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad; D=/home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER; rm -f $SP/chunk.SND | python3 - <<EOF | s=open('$D/PCSE…
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad; D=/home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER; rm -f $SP/chunk.SND
+  $ python3 - <<EOF
+  $ s=open('$D/PCSEDIT.BAS').read()
+  $ s=s.replace("'\$INCLUDE:'PCSPKR.BI'","'\$INCLUDE:'$D/PCSPKR.BI'").replace("'\$INCLUDE:'PCSPKR.BM'","'\$INCLUDE:'$D/PCSPKR.BM'")
+  $ s=s.replace('    f = _SAVEFILEDIALOG\$("Save IFS sound bank", suggest_save, "*.snd|*.SND", "IFS sound bank (Duke Nukem / Keen format)")','    f = "$SP/chunk"')
+  $ open('$SP/tst.bas','w').write(s)
+  $ EOF
+  $ cd $SP && /home/grymmjack/git/qb64pe/qb64pe -x tst.bas -o tst 2>&1 | grep -c "Output:"
+  $ cd $D; (Xvfb :99 -screen 0 1400x900x24 >/dev/null 2>&1 &); sleep 1.5; export DISPLAY=:99; unset WAYLAND_DISPLAY; xdpyinfo >/dev/null 2>&1 || exit 1
+  $ ( env -u XDG_CURRENT_DESKTOP -u KDE_FULL_SESSION PCSEDIT_NOMIDI=1 $SP/tst & ); for i in $(seq 1 30); do W=$(xdotool search --name "PCSEDIT" 2>/dev/null | head -1); [ -n "$W" ] && break; sleep 0.3; done; sleep 2.5
+  $ K(){ xdotool key --window $W "$@"; sleep 0.25; }
+  $ ny(){ python3 -c "print(int(624-($1-33+0.5)*6))"; }
+  $ sx(){ python3 -c "print(int(268+$1*6))"; }
+  $ drag(){ xdotool mousemove $1 $2; xdotool mousedown 1; sleep 0.1; xdotool mousemove $(( ($1+$3)/2 )) $(( ($2+$4)/2 )); sleep 0.1; xdotool mousemove $3 $4; sleep 0.15; xdotool mouseup 1; sleep 0.3; }
+  $ K w
+  $ drag $(( $(sx 0)+3 )) $(ny 60) $(( $(sx 99)+3 )) $(ny 72)            # wave box 0..99, C4..C5 (square, 4 cycles)
+  $ yc=$(ny 66)
+  $ drag $(sx 100) $yc $(sx 150) $yc                                        # right edge 100 -> 150
+  $ xwd -silent -root -out $SP/s.xwd; /usr/bin/convert $SP/s.xwd -crop 1280x660+0+0 $SP/w1.png
+  $ drag $(sx 60) $(( $(ny 72)-3 )) $(sx 60) $(ny 79)                       # top edge C5 -> G5
+  $ K Return
+  $ K ctrl+shift+s; sleep 1
+  $ python3 - <<EOF
+  $ import struct, math
+  $ d=open('$SP/chunk.SND','rb').read(); off=struct.unpack_from('<H',d,16)[0]; w=[];p=off
+  $ while struct.unpack_from('<H',d,p)[0]!=0xffff: w.append(struct.unpack_from('<H',d,p)[0]); p+=2
+  $ names='C C# D D# E F F# G G# A A# B'.split()
+  $ def nn(v):
+  $     if v==0: return '-'
+  $     k=round(69+12*math.log2(1193181.67/v/440)); return names[k%12]+str(k//12-1)
+  $ runs=[]
+  $ for i,v in enumerate(w):
+  $     t=nn(v)
+  $     if runs and runs[-1][0]==t: runs[-1][1]+=1
+  $     else: runs.append([t,1,i])
+  $ print(len(w),'steps:', ' '.join(f'{t}x{c}@{i}' for t,c,i in runs))
+  $ EOF
+  $ pkill -x tst; sleep 0.3; kill $(pgrep -f "^Xvfb :99") 2>/dev/null; true
+2026-10-01T00:41:25-0400  INFO     bash_end      [ok] 2L stdout
+  | 1
+  | 151 steps: G5x19@0 C4x19@19 G5x19@38 C4x19@57 G5x19@76 C4x19@95 G5x19@114 C4x18@133
+2026-10-01T00:41:35-0400  INFO     bash_start    python3 - <<'PYEOF' | p='README.md'; s=open(p).read() | a="""Drag inside the box left/right for the **duty cycle** and up/down for the **phase**.""" | assert s.count(a)==1, s.count(a) | s=s.replace(a…
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ python3 - <<'PYEOF'
+  $ p='README.md'; s=open(p).read()
+  $ a="""Drag inside the box left/right for the **duty cycle** and up/down for the **phase**."""
+  $ assert s.count(a)==1, s.count(a)
+  $ s=s.replace(a,"""Drag inside the box left/right for the **duty cycle** and up/down for the **phase**. Drag the box's **edges** to resize it: left/right stretch or squash it in time (the cycles stretch with it), top/bottom move the top or bottom of its pitch swing (past the other edge, it turns upside down).""")
+  $ open(p,'w').write(s)
+  $ PYEOF
+  $ grep -c "Drag the box's \*\*edges\*\*" README.md
+2026-10-01T00:41:35-0400  INFO     bash_end      [ok] 1L stdout
+  | 1
+2026-10-01T00:41:55-0400  NOTICE   prompt        commit and push
+  > commit and push
+2026-10-01T00:41:59-0400  INFO     bash_start    cd /home/grymmjack/git/qb64 && git add .claude/activity.log qb64/SOUND/PC-SPEAKER/PCSEDIT.BAS qb64/SOUND/PC-SPEAKER/README.md && git commit -q -F - <<'EOF' | SOUND/PC-SPEAKER: PCSEDIT resize live wav…
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ cd /home/grymmjack/git/qb64 && git add .claude/activity.log qb64/SOUND/PC-SPEAKER/PCSEDIT.BAS qb64/SOUND/PC-SPEAKER/README.md && git commit -q -F - <<'EOF'
+  $ SOUND/PC-SPEAKER: PCSEDIT resize live waveforms by their edges
+  $ 
+  $ - The live WAVE box gets edge handles like selections: left/right stretch
+  $   it in time (cycles stretch with it, edges snap to grid cells), top/bottom
+  $   move the ends of the pitch swing (past the other edge flips it).
+  $ - draw_handles shared by selection and waveform boxes. README updated.
+  $ 
+  $ Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+  $ EOF
+  $ git log --oneline -1 && git push origin main 2>&1 | tail -1

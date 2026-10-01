@@ -179,6 +179,7 @@ DIM SHARED adjX AS LONG ' adjusting: where the drag started
 DIM SHARED adjY AS LONG
 DIM SHARED adjDuty AS DOUBLE
 DIM SHARED adjPhase AS DOUBLE
+DIM SHARED waveTopIsHi AS INTEGER ' resizing: the top edge is waveHi (not flipped)
 DIM SHARED pianoOn AS INTEGER ' computer keyboard plays notes (else letters pick tools)
 
 ' selection: steps selS0 to selS1 - 1, pitches selLo to selHi (semitones)
@@ -1227,6 +1228,13 @@ SUB handle_mouse (mx AS LONG, my AS LONG, b1 AS INTEGER, b2 AS INTEGER)
                 wave_box waveAS, waveAN, s, nt
                 set_status wave_info + "   - drag inside: duty / phase, 1-5 shape, [ ] cycles, Enter = done"
             END IF
+        ELSEIF drawing >= 13 AND drawing <= 16 THEN ' resizing the live waveform's box
+            IF b1 THEN
+                wave_resize drawing, s, nt
+            ELSE
+                drawing = 0
+                set_status wave_info + "  - steps" + STR$(waveS0) + " -" + STR$(waveS1 - 1) + ", " + note_name(wave_min) + " - " + note_name(wave_max)
+            END IF
         ELSEIF drawing = 7 THEN ' adjusting duty / phase inside the live box
             IF b1 THEN
                 waveDuty = adjDuty + (mx - adjX) / 400
@@ -1272,7 +1280,10 @@ SUB handle_mouse (mx AS LONG, my AS LONG, b1 AS INTEGER, b2 AS INTEGER)
             haveAnchor = -1
         END IF
     ELSEIF inCanvas AND b1 AND NOT wasDown AND tool = TOOL_WAVE THEN
-        IF waveLive AND s >= waveS0 AND s < waveS1 AND nt >= waveLo - 0.5 AND nt <= waveHi + 0.5 THEN
+        IF waveLive AND wave_edge(mx, my) > 0 THEN
+            drawing = 12 + wave_edge(mx, my) ' 13 left, 14 right, 15 top, 16 bottom
+            waveTopIsHi = (waveHi >= waveLo)
+        ELSEIF waveLive AND s >= waveS0 AND s < waveS1 AND nt >= wave_min - 0.5 AND nt <= wave_max + 0.5 THEN
             drawing = 7 ' inside the live box: adjust it
             adjX = mx: adjY = my: adjDuty = waveDuty: adjPhase = wavePhase
         ELSE
@@ -1490,6 +1501,66 @@ SUB wave_box (sa AS LONG, na AS DOUBLE, sb AS LONG, nb AS DOUBLE)
     waveLo = na: waveHi = nb
     IF waveLo > waveHi THEN SWAP waveLo, waveHi
     IF snapOn THEN waveLo = INT(waveLo + 0.5): waveHi = INT(waveHi + 0.5)
+    wave_render
+END SUB
+
+
+FUNCTION wave_min#
+    IF waveLo <= waveHi THEN wave_min = waveLo ELSE wave_min = waveHi
+END FUNCTION
+
+
+FUNCTION wave_max#
+    IF waveLo <= waveHi THEN wave_max = waveHi ELSE wave_max = waveLo
+END FUNCTION
+
+
+''
+' Which edge of the live waveform's box is under x, y (as sel_edge).
+'
+FUNCTION wave_edge% (x AS LONG, y AS LONG)
+    DIM xl AS LONG, xr AS LONG, yt AS LONG, yb AS LONG
+    IF NOT waveLive THEN EXIT FUNCTION
+    xl = CANVAS_X + (waveS0 - scrollX) * zoom
+    xr = CANVAS_X + (waveS1 - scrollX) * zoom
+    yt = note_y(wave_max) - PX_SEMI \ 2
+    yb = note_y(wave_min) + PX_SEMI \ 2
+    IF y >= yt - 4 AND y <= yb + 4 THEN
+        IF ABS(x - xl) <= 4 THEN wave_edge = 1: EXIT FUNCTION
+        IF ABS(x - xr) <= 4 THEN wave_edge = 2: EXIT FUNCTION
+    END IF
+    IF x > xl + 4 AND x < xr - 4 THEN
+        IF ABS(y - yt) <= 4 THEN wave_edge = 3: EXIT FUNCTION
+        IF ABS(y - yb) <= 4 THEN wave_edge = 4: EXIT FUNCTION
+    END IF
+END FUNCTION
+
+
+''
+' Drag an edge of the live waveform's box (drawing 13-16). Time edges keep
+' the number of cycles, so each cycle stretches; pitch edges move the top or
+' bottom of its swing, and past the other edge the shape turns upside down.
+'
+SUB wave_resize (which AS INTEGER, s AS LONG, nt AS DOUBLE)
+    DIM e AS LONG, p AS DOUBLE
+    SELECT CASE which
+        CASE 13
+            e = s
+            IF gridDiv THEN e = snap_cell(e)
+            IF e > waveS1 - 1 THEN e = waveS1 - 1
+            IF e < 0 THEN e = 0
+            waveS0 = e
+        CASE 14
+            e = s + 1
+            IF gridDiv THEN e = snap_cell(e)
+            IF e < waveS0 + 1 THEN e = waveS0 + 1
+            waveS1 = e
+        CASE 15, 16
+            p = nt
+            IF snapOn THEN p = INT(p + 0.5)
+            ' top edge = the higher end of the swing (as it was when the drag began)
+            IF (which = 15) = (waveTopIsHi <> 0) THEN waveHi = p ELSE waveLo = p
+    END SELECT
     wave_render
 END SUB
 
@@ -3283,7 +3354,7 @@ END SUB
 
 SUB draw_roll
     DIM nt AS LONG, y AS LONG, x AS LONG, s AS LONG, v AS LONG, vis AS LONG, endX AS LONG
-    DIM w AS LONG, nn AS DOUBLE, col AS _UNSIGNED LONG, hp AS LONG, isBlack AS INTEGER, prevY AS LONG
+    DIM w AS LONG, nn AS DOUBLE, col AS _UNSIGNED LONG, hp AS LONG, isBlack AS INTEGER, prevY AS LONG, hv AS INTEGER
 
     vis = INT(CANVAS_W / zoom)
 
@@ -3393,9 +3464,12 @@ SUB draw_roll
         IF x < CANVAS_X THEN x = CANVAS_X
         IF endX > CANVAS_X + CANVAS_W - 1 THEN endX = CANVAS_X + CANVAS_W - 1
         IF endX > x THEN
-            y = note_y(waveHi) - PX_SEMI \ 2
-            LINE (x, y)-(endX, note_y(waveLo) + PX_SEMI \ 2), _RGBA32(255, 120, 220, 30), BF
-            LINE (x, y)-(endX, note_y(waveLo) + PX_SEMI \ 2), _RGB32(255, 120, 220), B
+            y = note_y(wave_max) - PX_SEMI \ 2
+            LINE (x, y)-(endX, note_y(wave_min) + PX_SEMI \ 2), _RGBA32(255, 120, 220, 30), BF
+            LINE (x, y)-(endX, note_y(wave_min) + PX_SEMI \ 2), _RGB32(255, 120, 220), B
+            hv = wave_edge(_MOUSEX, _MOUSEY)
+            IF drawing >= 13 AND drawing <= 16 THEN hv = drawing - 12
+            draw_handles x, endX, y, note_y(wave_min) + PX_SEMI \ 2, hv, _RGB32(255, 120, 220)
             COLOR _RGB32(255, 160, 230)
             _PRINTSTRING (x + 2, y - 17), wave_name + STR$(waveCycles) + "x duty" + STR$(CLNG(waveDuty * 100)) + "% ph" + STR$(CLNG(wavePhase * 100)) + "%"
         END IF
@@ -3413,7 +3487,9 @@ SUB draw_roll
             LINE (x, y)-(endX, note_y(selLo) + PX_SEMI \ 2), _RGB32(90, 180, 255), B
             ' stretch handles (Select / Move tools); the one under the mouse lights up
             IF tool = TOOL_SELECT OR tool = TOOL_MOVE THEN
-                draw_handles x, endX, y, note_y(selLo) + PX_SEMI \ 2
+                hv = sel_edge(_MOUSEX, _MOUSEY)
+                IF drawing >= 9 AND drawing <= 12 THEN hv = drawing - 8
+                draw_handles x, endX, y, note_y(selLo) + PX_SEMI \ 2, hv, _RGB32(90, 180, 255)
             END IF
         END IF
     END IF
@@ -3465,13 +3541,11 @@ END SUB
 ''
 ' Time ruler with the grid off: a tick every 0.1 s, a label every second.
 '
-SUB draw_handles (xl AS LONG, xr AS LONG, yt AS LONG, yb AS LONG)
-    DIM hover AS INTEGER, ym AS LONG, xm AS LONG, c AS _UNSIGNED LONG, i AS INTEGER
-    hover = sel_edge(_MOUSEX, _MOUSEY)
-    IF drawing >= 9 AND drawing <= 12 THEN hover = drawing - 8
+SUB draw_handles (xl AS LONG, xr AS LONG, yt AS LONG, yb AS LONG, hover AS INTEGER, baseCol AS _UNSIGNED LONG)
+    DIM ym AS LONG, xm AS LONG, c AS _UNSIGNED LONG, i AS INTEGER
     ym = (yt + yb) \ 2: xm = (xl + xr) \ 2
     FOR i = 1 TO 4
-        IF hover = i THEN c = _RGB32(255, 220, 80) ELSE c = _RGB32(90, 180, 255)
+        IF hover = i THEN c = _RGB32(255, 220, 80) ELSE c = baseCol
         SELECT CASE i
             CASE 1: LINE (xl - 3, ym - 6)-(xl + 3, ym + 6), c, BF
             CASE 2: LINE (xr - 3, ym - 6)-(xr + 3, ym + 6), c, BF
