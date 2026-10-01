@@ -15493,3 +15493,56 @@
   $ Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
   $ EOF
   $ git log --oneline -1 && git push origin main 2>&1 | tail -1
+2026-10-01T00:56:47-0400  INFO     bash_end      [ok] 3L stdout
+  | warning: in the working copy of '.claude/activity.log', CRLF will be replaced by LF the next time Git touches it
+  | 3134d083 SOUND/PC-SPEAKER: PCSEDIT loop region in the time ruler
+  |    76d59a9f..3134d083  main -> main
+2026-10-01T00:58:44-0400  NOTICE   prompt        when i have a loop range it stops drawing the playhead at the last event - can it show the playhead spanning the loop - that white bar stops on that right edge of the last note - i'd like to see it g…
+  > when i have a loop range it stops drawing the playhead at the last event - can it show the playhead spanning the loop - that white bar stops on that right edge of the last note - i'd like to see it go all the way to the end of my loop range...
+2026-10-01T00:58:51-0400  INFO     bash_start    cd /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER && grep -n "IF hp > steps_of(cur) THEN hp = steps_of(cur)" PCSEDIT.BAS && python3 - <<'PYEOF' | p='PCSEDIT.BAS'; s=open(p).read() | a=""" IF hp > ste…
+  > cwd: /home/grymmjack/git/qb64
+  $ cd /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER && grep -n "IF hp > steps_of(cur) THEN hp = steps_of(cur)" PCSEDIT.BAS && python3 - <<'PYEOF'
+  $ p='PCSEDIT.BAS'; s=open(p).read()
+  $ a="""        IF hp > steps_of(cur) THEN hp = steps_of(cur)"""
+  $ assert s.count(a)==1
+  $ s=s.replace(a,"""        ' up to the end of what is playing: a loop region may run past the
+  $         ' last note
+  $         IF hp > loop_end AND loop_end >= steps_of(cur) THEN hp = loop_end
+  $         IF hp > steps_of(cur) AND loop_end <= steps_of(cur) THEN hp = steps_of(cur)""")
+  $ open(p,'w').write(s)
+  $ PYEOF
+  $ /home/grymmjack/git/qb64pe/qb64pe -x PCSEDIT.BAS -o /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/PCSEDIT 2>&1 | grep -A3 -E "38;5;9m|Output:" | head -3
+2026-10-01T00:58:54-0400  INFO     bash_end      [ok] 2L stdout
+  | 3679:        IF hp > steps_of(cur) THEN hp = steps_of(cur)
+  | Output: /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/PCSEDIT
+2026-10-01T00:59:04-0400  INFO     bash_start    SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad; cd /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER; rm -rf $SP/home; mkdir -p $SP/home | (Xvfb :99 -screen…
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad; cd /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER; rm -rf $SP/home; mkdir -p $SP/home
+  $ (Xvfb :99 -screen 0 1400x900x24 >/dev/null 2>&1 &); sleep 1.5; export DISPLAY=:99; unset WAYLAND_DISPLAY; xdpyinfo >/dev/null 2>&1 || exit 1
+  $ ( env -u XDG_CURRENT_DESKTOP -u KDE_FULL_SESSION HOME=$SP/home PCSEDIT_NOMIDI=1 $SP/PCSEDIT $SP/wave.snd & ); for i in $(seq 1 30); do W=$(xdotool search --name "PCSEDIT" 2>/dev/null | head -1); [ -n "$W" ] && break; sleep 0.3; done; sleep 2.5
+  $ K(){ xdotool key --window $W "$@"; sleep 0.25; }
+  $ sx(){ python3 -c "print(int(268+$1*3+2))"; }
+  $ # zoom 3 px/step so 280 steps fit
+  $ xdotool mousemove 300 400; xdotool keydown ctrl; xdotool click 5; sleep 0.1; xdotool click 5; sleep 0.1; xdotool keyup ctrl; sleep 0.3
+  $ xdotool keydown shift; xdotool mousemove 290 110; xdotool mousedown 1; sleep 0.1; xdotool mousemove 500 110; sleep 0.1; xdotool mousemove 700 110; sleep 0.15; xdotool mouseup 1; xdotool keyup shift; sleep 0.3
+  $ K space
+  $ pos=""; for t in $(seq 1 12); do sleep 0.17; xwd -silent -root -out $SP/s.xwd; x=$(/usr/bin/convert $SP/s.xwd -crop 1004x1+268+500 -depth 8 txt:- 2>/dev/null | grep -i "#FFFFFF" | head -1 | cut -d, -f1); pos="$pos $x"; done
+  $ K space
+  $ xwd -silent -root -out $SP/s.xwd; /usr/bin/convert $SP/s.xwd -crop 1280x20+0+76 $SP/zl.png
+  $ echo "playhead x px:$pos"
+  $ pkill -x PCSEDIT; sleep 0.3; kill $(pgrep -f "^Xvfb :99") 2>/dev/null; true
+2026-10-01T00:59:13-0400  INFO     bash_end      [ok] 1L stdout
+  | playhead x px: 200 316 432 568 684 808 936 80 56 172 296 424
+2026-10-01T00:59:28-0400  NOTICE   prompt        commit and push
+  > commit and push
+2026-10-01T00:59:31-0400  INFO     bash_start    cd /home/grymmjack/git/qb64 && git add .claude/activity.log qb64/SOUND/PC-SPEAKER/PCSEDIT.BAS && git commit -q -F - <<'EOF' | SOUND/PC-SPEAKER: PCSEDIT playhead runs to the end of a longer loop regio…
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ cd /home/grymmjack/git/qb64 && git add .claude/activity.log qb64/SOUND/PC-SPEAKER/PCSEDIT.BAS && git commit -q -F - <<'EOF'
+  $ SOUND/PC-SPEAKER: PCSEDIT playhead runs to the end of a longer loop region
+  $ 
+  $ The playhead was capped at the last note; with a loop region that runs
+  $ past the end of the sound it now travels to the end of the region.
+  $ 
+  $ Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+  $ EOF
+  $ git log --oneline -1 && git push origin main 2>&1 | tail -1

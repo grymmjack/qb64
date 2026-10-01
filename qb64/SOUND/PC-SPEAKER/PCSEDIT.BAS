@@ -3676,7 +3676,10 @@ SUB draw_roll
     END IF
     IF playing THEN
         hp = heard_pos(playPos)
-        IF hp > steps_of(cur) THEN hp = steps_of(cur)
+        ' up to the end of what is playing: a loop region may run past the
+        ' last note
+        IF hp > loop_end AND loop_end >= steps_of(cur) THEN hp = loop_end
+        IF hp > steps_of(cur) AND loop_end <= steps_of(cur) THEN hp = steps_of(cur)
         x = CANVAS_X + (hp - scrollX) * zoom
         IF x >= CANVAS_X AND x < CANVAS_X + CANVAS_W THEN LINE (x, CANVAS_Y)-(x, CANVAS_Y + CANVAS_H - 1), _RGB32(255, 255, 255)
     END IF
