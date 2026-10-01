@@ -32,6 +32,11 @@
 '   With S)elect or M)ove, drag the selection box's edges to stretch it:
 '   left/right = time, top/bottom = pitch range (past the other edge it
 '   flips). Ctrl+Up / Ctrl+Down = double / halve the selection's length.
+'   Voices: a sound has up to 4 voice lanes (Ctrl+1-4 or the chips above the
+'   sound list pick the one you edit; the others show dimmed). Ctrl+J: ARP
+'   (voices take turns step by step - the classic fake chord, saves to IFS)
+'   or PWM (real simultaneous voices mixed onto the 1-bit speaker; playback
+'   and WAV only). In STEP record, notes pressed together become a chord.
 '   C)ut / Ctrl+X, Ctrl+C copy, Ctrl+V paste at the cursor, Delete clears
 '   the selection, Esc deselects
 '   right drag erases with any tool
@@ -112,7 +117,7 @@ CONST MIN_LW = 1000 '                    smallest logical size the layout fits i
 CONST MIN_LH = 640
 CONST ROW_H = 16
 CONST LIST_X = 8
-CONST LIST_Y = 120
+CONST LIST_Y = 144 '                     (the voice chips are on the row above the list)
 CONST LIST_W = 200
 CONST RULER_X = 224 '                    piano keys
 CONST CANVAS_X = 268 '                   piano roll
@@ -138,6 +143,10 @@ CONST HOLD_GATE = 0
 CONST HOLD_ONESHOT = 1
 CONST HOLD_LOOP = 2
 CONST ROOT_NOTE = 60 '                   C4 plays the instrument as drawn
+CONST VOICES = 4 '                       voice lanes per sound
+CONST POLY_ARP = 0 '                     voices take turns, one step each
+CONST POLY_PWM = 1 '                     voices mixed with pulse-width modulation
+CONST PWM_DIV = 76 '                     PWM carrier: PIT clock / 76 = 15.7 kHz
 CONST TOOL_DRAW = 0
 CONST TOOL_NOTE = 1
 CONST TOOL_ERASE = 2
@@ -159,7 +168,16 @@ CONST TB_BUTTONS = 11 '                  ...and a Loop toggle
 ' --- the bank being edited
 DIM SHARED sndName(1 TO MAX_SOUNDS) AS STRING
 DIM SHARED sndPri(1 TO MAX_SOUNDS) AS LONG
-DIM SHARED sndData(1 TO MAX_SOUNDS) AS STRING ' 2 bytes (little endian divisor) per step
+DIM SHARED sndData(1 TO MAX_SOUNDS) AS STRING ' 2 bytes (little endian divisor) per step - the voice being edited
+DIM SHARED sndV(1 TO MAX_SOUNDS, 1 TO VOICES) AS STRING ' the other voices (the edited one's slot is empty)
+DIM SHARED sndAct(1 TO MAX_SOUNDS) AS INTEGER ' which voice sndData holds
+DIM SHARED polyMode AS INTEGER ' POLY_ARP / POLY_PWM
+DIM SHARED pwmPh(1 TO 8) AS DOUBLE ' PWM: each voice's place in its square wave (PIT clocks)
+DIM SHARED spkLast AS LONG ' the divisor the speaker was last set to (see speaker)
+DIM SHARED tickN AS LONG ' 140 Hz ticks, for arpeggiating held chords
+DIM SHARED chordS0 AS LONG ' STEP record: where the last note went, for chord notes
+DIM SHARED chordS1 AS LONG
+DIM SHARED chordN AS LONG ' notes in the chord being entered
 DIM SHARED sndCount AS LONG
 DIM SHARED cur AS LONG
 DIM SHARED listTop AS LONG
@@ -237,6 +255,8 @@ DIM SHARED mouseStep AS LONG
 DIM SHARED mouseNote AS DOUBLE
 DIM SHARED mouseIn AS INTEGER
 DIM SHARED undoSnd(1 TO UNDO_MAX) AS LONG
+DIM SHARED undoVc(1 TO UNDO_MAX) AS INTEGER
+DIM SHARED redoVc(1 TO UNDO_MAX) AS INTEGER
 DIM SHARED undoData(1 TO UNDO_MAX) AS STRING
 DIM SHARED undoN AS LONG
 DIM SHARED redoSnd(1 TO UNDO_MAX) AS LONG
@@ -376,6 +396,8 @@ countIn = VAL(cfg_get("countin", "1"))
 IF countIn < 0 OR countIn > 2 THEN countIn = 1
 quantOn = VAL(cfg_get("quantize", "-1"))
 loopOn = VAL(cfg_get("loop", "0"))
+polyMode = VAL(cfg_get("poly", "0"))
+IF polyMode < 0 OR polyMode > 1 THEN polyMode = POLY_ARP
 clickHi = make_click(1760, 0.03)
 clickLo = make_click(1175, 0.025)
 midiDevIdx = -1
@@ -415,9 +437,13 @@ set_status "Caps Lock ON = computer keyboard plays notes, OFF = letters pick too
 
 DO
     ' ------------------------------------------------------------ audio
-    DO WHILE PCSPK_Tick
-        on_tick
-    LOOP
+    IF pwm_needed THEN
+        pump_pwm
+    ELSE
+        DO WHILE PCSPK_Tick
+            on_tick
+        LOOP
+    END IF
 
     ' ------------------------------------------------------------ MIDI
     midi_poll
@@ -529,9 +555,10 @@ RESUME NEXT
 
 SUB on_tick
     DIM v AS LONG
+    tickN = tickN + 1
     IF playing THEN
         IF playPos >= loop_end THEN
-            IF loopOn AND steps_of(cur) > 0 THEN
+            IF loopOn AND snd_len(cur) > 0 THEN
                 playPos = loop_start
                 lastBeat = -999999 ' the metronome starts over with the loop
             ELSE
@@ -540,7 +567,7 @@ SUB on_tick
                 EXIT SUB
             END IF
         END IF
-        speaker get_step(cur, playPos)
+        speaker mix_step(cur, playPos)
         playPos = playPos + 1
         EXIT SUB
     END IF
@@ -556,6 +583,8 @@ SUB on_tick
                 voicePos = voicePos + 1
             END IF
         END IF
+    ELSEIF held_count >= 2 AND NOT recording THEN
+        v = note_div(held_note(tickN MOD held_count)) ' a chord: take turns (ARP)
     ELSEIF heldNote >= 0 THEN
         v = note_div(heldNote)
     ELSEIF auditionNote >= 0 THEN
@@ -592,9 +621,8 @@ END SUB
 ' (The games' sound code and PCSPK_IFSRenderInto do the same.)
 '
 SUB speaker (v AS LONG)
-    STATIC lastV AS LONG
-    IF v = lastV THEN EXIT SUB
-    lastV = v
+    IF v = spkLast THEN EXIT SUB
+    spkLast = v
     PCSPK_SetDivisor v
 END SUB
 
@@ -605,7 +633,7 @@ END SUB
 '
 FUNCTION voice_div& (stepPos AS LONG, nt AS LONG)
     DIM ln AS LONG, p AS LONG, v AS LONG
-    ln = steps_of(instIdx)
+    ln = snd_len(instIdx)
     p = stepPos
     IF ln = 0 THEN voice_div = -1: EXIT FUNCTION
     IF p >= ln THEN
@@ -616,7 +644,7 @@ FUNCTION voice_div& (stepPos AS LONG, nt AS LONG)
             EXIT FUNCTION
         END IF
     END IF
-    v = get_step(instIdx, p)
+    v = mix_step(instIdx, p)
     IF v THEN
         v = CLNG(v / 2 ^ ((nt - ROOT_NOTE) / 12))
         IF v < 1 THEN v = 1
@@ -664,16 +692,230 @@ SUB audition_stop
 END SUB
 
 
-SUB play_from (s AS LONG)
+'-----------------------------------------------------------------------------
+' Voices and polyphony
+'-----------------------------------------------------------------------------
+
+FUNCTION voice_data$ (i AS LONG, k AS LONG)
+    IF k = sndAct(i) THEN voice_data = sndData(i) ELSE voice_data = sndV(i, k)
+END FUNCTION
+
+
+FUNCTION voice_step& (i AS LONG, k AS LONG, s AS LONG)
+    DIM d AS STRING
+    IF k = sndAct(i) THEN voice_step = get_step(i, s): EXIT FUNCTION
+    d = sndV(i, k)
+    IF s < 0 OR s * 2 + 2 > LEN(d) THEN EXIT FUNCTION
+    voice_step = ASC(d, s * 2 + 1) + ASC(d, s * 2 + 2) * 256&
+END FUNCTION
+
+
+FUNCTION voices_used& (i AS LONG)
+    DIM k AS LONG, n AS LONG
+    FOR k = 1 TO VOICES
+        IF LEN(voice_data(i, k)) THEN n = n + 1
+    NEXT
+    voices_used = n
+END FUNCTION
+
+
+''
+' The sound's length: its longest voice.
+'
+FUNCTION snd_len& (i AS LONG)
+    DIM k AS LONG, n AS LONG
+    IF i < 1 OR i > sndCount THEN EXIT FUNCTION
+    FOR k = 1 TO VOICES
+        IF LEN(voice_data(i, k)) \ 2 > n THEN n = LEN(voice_data(i, k)) \ 2
+    NEXT
+    snd_len = n
+END FUNCTION
+
+
+''
+' Step s of sound i with its voices combined the ARP way: the notes sounding
+' at that step take turns, one per step (a lone note just plays).
+'
+FUNCTION mix_step& (i AS LONG, s AS LONG)
+    DIM k AS LONG, n AS LONG, v AS LONG, notes(1 TO VOICES) AS LONG
+    IF i < 1 OR i > sndCount THEN EXIT FUNCTION
+    FOR k = 1 TO VOICES
+        v = voice_step(i, k, s)
+        IF v THEN n = n + 1: notes(n) = v
+    NEXT
+    IF n THEN mix_step = notes((s MOD n) + 1)
+END FUNCTION
+
+
+''
+' Edit voice k of the current sound: swap it into sndData, so every tool,
+' recording and selection work on it unchanged.
+'
+SUB switch_voice (k AS LONG)
+    IF k < 1 OR k > VOICES OR k = sndAct(cur) THEN EXIT SUB
     stop_recording
-    IF steps_of(cur) = 0 THEN set_status "Nothing to play - draw or play some notes first": EXIT SUB
+    selOn = 0
+    sndV(cur, sndAct(cur)) = sndData(cur)
+    sndData(cur) = sndV(cur, k)
+    sndV(cur, k) = ""
+    sndAct(cur) = k
+    set_status "Editing voice" + STR$(k) + "  (" + LTRIM$(STR$(voices_used(cur))) + " voice(s) in this sound; Ctrl+J " + poly_name + ")"
+END SUB
+
+
+SUB toggle_poly
+    polyMode = 1 - polyMode
+    IF polyMode = POLY_PWM THEN
+        set_status "PWM: voices sound together (mixed onto the 1-bit speaker). Banks still save the ARP version for games"
+    ELSE
+        set_status "ARP: voices take turns step by step - the way the games play it"
+    END IF
+END SUB
+
+
+FUNCTION poly_name$
+    IF polyMode = POLY_PWM THEN poly_name = "PWM" ELSE poly_name = "ARP"
+END FUNCTION
+
+
+FUNCTION voice_col~& (k AS LONG)
+    SELECT CASE k
+        CASE 1: voice_col = _RGB32(255, 170, 40)
+        CASE 2: voice_col = _RGB32(110, 230, 120)
+        CASE 3: voice_col = _RGB32(240, 110, 210)
+        CASE ELSE: voice_col = _RGB32(120, 170, 255)
+    END SELECT
+END FUNCTION
+
+
+FUNCTION held_count&
+    DIM i AS LONG, n AS LONG
+    FOR i = 0 TO 127
+        IF noteStamp(i) THEN n = n + 1
+    NEXT
+    held_count = n
+END FUNCTION
+
+
+''
+' The n-th held note (0 based, lowest first).
+'
+FUNCTION held_note& (n AS LONG)
+    DIM i AS LONG, c AS LONG
+    FOR i = 0 TO 127
+        IF noteStamp(i) THEN
+            IF c = n THEN held_note = i: EXIT FUNCTION
+            c = c + 1
+        END IF
+    NEXT
+END FUNCTION
+
+
+''
+' PWM is used when its mode is on and there is more than one voice to hear:
+' a multi-voice sound playing, or a chord held on the keys.
+'
+FUNCTION pwm_needed%
+    IF polyMode <> POLY_PWM THEN EXIT FUNCTION
+    IF playing THEN
+        pwm_needed = voices_used(cur) > 1
+    ELSE
+        pwm_needed = held_count >= 2 AND keysMode = KEYS_NOTES AND NOT recording
+    END IF
+END FUNCTION
+
+
+''
+' Render one 140 Hz tick with PWM: every carrier period (PWM_DIV clocks) the
+' speaker gets one pulse whose width is how many of the voices' square waves
+' are high right now - the same trick WAV.BAS uses for recorded sound.
+'
+SUB render_pwm_tick (d() AS LONG, n AS LONG)
+    DIM p AS LONG, periods AS LONG, k AS LONG, hi AS LONG, cnt AS LONG, clk AS DOUBLE
+    clk = pcspk.tickClk
+    IF n = 0 THEN
+        PCSPK_SpeakerOff
+        PCSPK_AdvanceClocks clk
+        EXIT SUB
+    END IF
+    PCSPK_SpeakerOn
+    periods = INT(clk / PWM_DIV)
+    FOR p = 1 TO periods
+        hi = 0
+        FOR k = 1 TO n
+            pwmPh(k) = pwmPh(k) + PWM_DIV
+            IF pwmPh(k) >= d(k) THEN pwmPh(k) = pwmPh(k) - d(k) * INT(pwmPh(k) / d(k))
+            IF pwmPh(k) < d(k) / 2 THEN hi = hi + 1
+        NEXT
+        cnt = 1 + CLNG(hi * (PWM_DIV - 2) / n)
+        PCSPK_PitWrite PCSPK_MODE_ONESHOT, cnt
+        PCSPK_AdvanceClocks PWM_DIV
+    NEXT
+    PCSPK_AdvanceClocks clk - periods * PWM_DIV
+END SUB
+
+
+''
+' The divisors sounding at step s of sound i (for PWM).
+'
+FUNCTION step_divs& (i AS LONG, s AS LONG, d() AS LONG)
+    DIM k AS LONG, n AS LONG, v AS LONG
+    FOR k = 1 TO VOICES
+        v = voice_step(i, k, s)
+        IF v THEN n = n + 1: d(n) = v
+    NEXT
+    step_divs = n
+END FUNCTION
+
+
+''
+' Keep the audio stream fed in PWM mode (instead of PCSPK_Tick / on_tick).
+'
+SUB pump_pwm
+    DIM d(1 TO 8) AS LONG, n AS LONG, k AS LONG
+    IF pcspk.sink <> PCSPK_SINK_STREAM THEN PCSPK_StreamOpen
+    spkLast = -1 ' the PIT is in one-shot mode now: the next tone must be written
+    DO WHILE PCSPK_Buffered < pcspk.lead
+        tickN = tickN + 1
+        IF playing THEN
+            IF playPos >= loop_end THEN
+                IF loopOn AND snd_len(cur) > 0 THEN
+                    playPos = loop_start
+                    lastBeat = -999999
+                ELSE
+                    playing = 0
+                    PCSPK_Off
+                    EXIT DO
+                END IF
+            END IF
+            n = step_divs(cur, playPos, d())
+            playPos = playPos + 1
+        ELSE
+            n = held_count
+            IF n > 8 THEN n = 8
+            FOR k = 1 TO n
+                d(k) = note_div(held_note(k - 1))
+            NEXT
+            IF n < 2 THEN EXIT DO ' chord let go: back to the normal path
+        END IF
+        render_pwm_tick d(), n
+    LOOP
+    PCSPK_StreamFlush
+END SUB
+
+
+SUB play_from (s AS LONG)
+    DIM spkI AS LONG
+    stop_recording
+    IF snd_len(cur) = 0 THEN set_status "Nothing to play - draw or play some notes first": EXIT SUB
     playPos = s
     ' looping a selection: start inside it
     IF loopOn AND (selOn OR loopSet) THEN
         IF playPos < loop_start OR playPos >= loop_end THEN playPos = loop_start
-    ELSEIF playPos >= steps_of(cur) THEN
+    ELSEIF playPos >= snd_len(cur) THEN
         playPos = 0
     END IF
+    FOR spkI = 1 TO 8: pwmPh(spkI) = 0: NEXT
     lastBeat = -999999
     playing = -1
 END SUB
@@ -696,9 +938,9 @@ END FUNCTION
 
 
 FUNCTION loop_end&
-    loop_end = steps_of(cur)
+    loop_end = snd_len(cur)
     IF loopOn AND selOn THEN
-        IF selS1 < steps_of(cur) THEN loop_end = selS1
+        IF selS1 < snd_len(cur) THEN loop_end = selS1
     ELSEIF loopOn AND loopSet THEN
         loop_end = loopB ' may run past the end of the sound: silence until it loops
     END IF
@@ -879,8 +1121,20 @@ END SUB
 ' STEP record: write the note for noteLen steps at the cursor and move on.
 '
 SUB step_enter (n AS LONG)
-    DIM i AS LONG, c AS LONG, s0 AS LONG, s1 AS LONG, last AS LONG, v AS LONG
+    DIM i AS LONG, c AS LONG, s0 AS LONG, s1 AS LONG, last AS LONG, v AS LONG, k AS LONG
     push_undo
+    ' a key pressed while another is still down: a chord note, in the next
+    ' voice at the same steps (plain notes only)
+    IF held_count >= 2 AND keysMode = KEYS_NOTES AND chordS1 > chordS0 THEN
+        chordN = chordN + 1
+        k = chord_voice(chordN)
+        IF k = 0 THEN set_status "Only" + STR$(VOICES) + " voices - that note was left out": EXIT SUB
+        FOR i = chordS0 TO chordS1 - 1
+            set_voice_step cur, k, i, note_div(n)
+        NEXT
+        set_status "Chord: " + note_name(n) + " in voice" + STR$(k)
+        EXIT SUB
+    END IF
     IF gridDiv THEN
         ' whole cells: noteLen of them, from the cell the cursor is at the
         ' start of (or the next one, if it is part way into a cell)
@@ -897,7 +1151,7 @@ SUB step_enter (n AS LONG)
     ' writes the whole sound (the next note may cover its tail)
     last = s1 - 1
     IF keysMode = KEYS_SOUND AND holdMode = HOLD_ONESHOT THEN
-        IF s0 + steps_of(instIdx) - 1 > last THEN last = s0 + steps_of(instIdx) - 1
+        IF s0 + snd_len(instIdx) - 1 > last THEN last = s0 + snd_len(instIdx) - 1
     END IF
     FOR i = s0 TO last
         IF i >= MAX_STEPS THEN EXIT FOR
@@ -909,9 +1163,51 @@ SUB step_enter (n AS LONG)
         END IF
         set_step cur, i, v
     NEXT
+    ' the other voices are cleared here, so a new chord doesn't mix with old notes
+    FOR k = 1 TO VOICES
+        IF k <> sndAct(cur) AND LEN(sndV(cur, k)) THEN
+            FOR i = s0 TO s1 - 1
+                IF i * 2 + 2 <= LEN(sndV(cur, k)) THEN set_voice_step cur, k, i, 0
+            NEXT
+        END IF
+    NEXT
+    chordS0 = s0: chordS1 = s1: chordN = 1
     cursorStep = s1
     IF cursorStep > MAX_STEPS THEN cursorStep = MAX_STEPS
     follow cursorStep
+END SUB
+
+
+''
+' The voice the n-th note of a chord goes to: the edited voice takes the
+' first, the others follow in order.
+'
+FUNCTION chord_voice& (n AS LONG)
+    DIM k AS LONG, c AS LONG
+    IF n <= 1 THEN chord_voice = sndAct(cur): EXIT FUNCTION
+    c = 1
+    FOR k = 1 TO VOICES
+        IF k <> sndAct(cur) THEN
+            c = c + 1
+            IF c = n THEN chord_voice = k: EXIT FUNCTION
+        END IF
+    NEXT
+END FUNCTION
+
+
+SUB set_voice_step (i AS LONG, k AS LONG, s AS LONG, v AS LONG)
+    DIM need AS LONG, d AS LONG
+    IF k = sndAct(i) THEN set_step i, s, v: EXIT SUB
+    IF s < 0 OR s >= MAX_STEPS THEN EXIT SUB
+    d = v
+    IF d < 0 THEN d = 0
+    IF d > 65534 THEN d = 65534
+    need = s * 2 + 2
+    IF LEN(sndV(i, k)) < need THEN sndV(i, k) = sndV(i, k) + STRING$(need - LEN(sndV(i, k)), 0)
+    MID$(sndV(i, k), s * 2 + 1, 2) = CHR$(d AND 255) + CHR$(d \ 256)
+    ' a voice of nothing but rests is no voice
+    IF sndV(i, k) = STRING$(LEN(sndV(i, k)), 0) THEN sndV(i, k) = ""
+    dirty = -1
 END SUB
 
 
@@ -1018,7 +1314,7 @@ SUB render_take (final AS INTEGER)
                 e = snap_cell(e)
             END IF
             IF e <= ns(nn) THEN e = cell_start(cell_of(ns(nn)) + 1)
-            IF keysMode = KEYS_SOUND AND holdMode = HOLD_ONESHOT THEN e = ns(nn) + steps_of(instIdx)
+            IF keysMode = KEYS_SOUND AND holdMode = HOLD_ONESHOT THEN e = ns(nn) + snd_len(instIdx)
             ne(nn) = e
             nn = nn + 1
         END IF
@@ -1487,6 +1783,9 @@ SUB handle_mouse (mx AS LONG, my AS LONG, b1 AS INTEGER, b2 AS INTEGER)
                 IF ABS(mx - (CANVAS_X + (loopB - scrollX) * zoom)) <= 4 THEN drawing = 19
             END IF
             IF drawing = 17 THEN cursorStep = s
+        ' --- voice chips
+        ELSEIF voice_chip_hit(mx, my) THEN
+            IF voice_chip_hit(mx, my) = 5 THEN toggle_poly ELSE switch_voice voice_chip_hit(mx, my)
         ' --- sound list
         ELSEIF mx >= LIST_X AND mx < LIST_X + LIST_W AND my >= LIST_Y AND my < LIST_Y + LIST_ROWS * ROW_H THEN
             row = listTop + (my - LIST_Y) \ ROW_H + 1
@@ -2269,7 +2568,7 @@ FUNCTION handle_key% (k AS LONG, ctrl AS INTEGER, shift AS INTEGER)
                 IF ctrl THEN move_cursor cursorStep + 14 ELSE move_cursor cursorStep + 1
             END IF
         CASE 18176: move_cursor 0 '                            Home
-        CASE 20224: move_cursor steps_of(cur) '                End
+        CASE 20224: move_cursor snd_len(cur) '                End
         CASE 18432 '                                           Up
             IF selOn AND modAlt THEN
                 fine_pitch -1 ' smaller divisor = higher pitch
@@ -2380,11 +2679,13 @@ FUNCTION handle_key% (k AS LONG, ctrl AS INTEGER, shift AS INTEGER)
                     CASE 61, 43: set_ui_scale 1 '                   Ctrl+= / Ctrl++
                     CASE 45, 95: set_ui_scale -1 '                  Ctrl+- / Ctrl+_
                     CASE 48, 41: set_ui_scale 0 '                   Ctrl+0
+                    CASE 49 TO 52: switch_voice k - 48 '            Ctrl+1-4: voice
                 END SELECT
                 SELECT CASE ctrl_letter$(k)
                     CASE "Z": undo
                     CASE "Y": redo
                     CASE "L": toggle_loop
+                    CASE "J": toggle_poly
                     CASE "T": trim_end
                     CASE "P": ask_priority
                     CASE "N"
@@ -2589,7 +2890,7 @@ SUB toggle_keys_mode (lockIt AS INTEGER)
         set_status "Keys play plain NOTES"
         EXIT SUB
     END IF
-    IF steps_of(cur) = 0 THEN set_status "This sound is empty - draw something first, then Ctrl+K": EXIT SUB
+    IF snd_len(cur) = 0 THEN set_status "This sound is empty - draw something first, then Ctrl+K": EXIT SUB
     keysMode = KEYS_SOUND
     instIdx = cur
     instLock = 0
@@ -2925,23 +3226,32 @@ END SUB
 ' otherwise it is a copy (F4).
 '
 SUB add_sound (nam AS STRING, dat AS STRING)
-    DIM i AS LONG, at AS LONG
+    DIM i AS LONG, at AS LONG, k AS LONG, src AS LONG
     IF sndCount >= MAX_SOUNDS THEN set_status "The bank is full (" + LTRIM$(STR$(MAX_SOUNDS)) + " sounds)": EXIT SUB
     at = cur + 1
     IF at < 1 THEN at = 1
     IF at > sndCount + 1 THEN at = sndCount + 1
     FOR i = sndCount TO at STEP -1
         sndName(i + 1) = sndName(i): sndPri(i + 1) = sndPri(i): sndData(i + 1) = sndData(i)
+        sndAct(i + 1) = sndAct(i)
+        FOR k = 1 TO VOICES: sndV(i + 1, k) = sndV(i, k): NEXT
     NEXT
     sndCount = sndCount + 1
     IF nam = "" THEN
         sndName(at) = "SOUND" + LTRIM$(STR$(sndCount))
         sndPri(at) = 10
         sndData(at) = ""
+        sndAct(at) = 1
+        FOR k = 1 TO VOICES: sndV(at, k) = "": NEXT
     ELSE
+        ' a copy (F4): all its voices come along
+        src = cur
+        IF src >= at THEN src = src + 1
         sndName(at) = LEFT$(nam, 10) + "_2"
-        sndPri(at) = sndPri(cur)
+        sndPri(at) = sndPri(src)
         sndData(at) = dat
+        sndAct(at) = sndAct(src)
+        FOR k = 1 TO VOICES: sndV(at, k) = sndV(src, k): NEXT
     END IF
     fix_undo_after_insert at
     IF at <= instIdx THEN instIdx = instIdx + 1
@@ -2951,11 +3261,13 @@ END SUB
 
 
 SUB delete_sound
-    DIM i AS LONG
+    DIM i AS LONG, k AS LONG
     stop_playing
     stop_recording
     IF sndCount <= 1 THEN
         sndData(1) = ""
+        sndAct(1) = 1
+        FOR k = 1 TO VOICES: sndV(1, k) = "": NEXT
         set_status "Cleared the only sound"
     ELSE
         set_status "Deleted " + sndName(cur)
@@ -2963,6 +3275,8 @@ SUB delete_sound
         IF cur < instIdx THEN instIdx = instIdx - 1
         FOR i = cur TO sndCount - 1
             sndName(i) = sndName(i + 1): sndPri(i) = sndPri(i + 1): sndData(i) = sndData(i + 1)
+            sndAct(i) = sndAct(i + 1)
+            FOR k = 1 TO VOICES: sndV(i, k) = sndV(i + 1, k): NEXT
         NEXT
         sndCount = sndCount - 1
     END IF
@@ -2995,7 +3309,7 @@ END SUB
 SUB user_select (i AS LONG)
     select_sound i
     IF keysMode = KEYS_SOUND AND NOT instLock AND instIdx <> cur THEN
-        IF steps_of(cur) > 0 THEN
+        IF snd_len(cur) > 0 THEN
             instIdx = cur
             set_status "Keys play " + sndName(cur) + " (C4 = as drawn)"
         ELSE
@@ -3015,7 +3329,7 @@ SUB select_sound (i AS LONG)
     IF cur < 1 THEN cur = 1
     IF cur - 1 < listTop THEN listTop = cur - 1
     IF cur - 1 >= listTop + LIST_ROWS THEN listTop = cur - LIST_ROWS
-    IF cursorStep > steps_of(cur) THEN cursorStep = steps_of(cur)
+    IF cursorStep > snd_len(cur) THEN cursorStep = snd_len(cur)
     haveAnchor = 0
     follow cursorStep
 END SUB
@@ -3075,6 +3389,34 @@ END SUB
 
 '--- undo / redo ----------------------------------------------------------------
 
+''
+' A sound's voices as one string (for undo): the edited voice, then each
+' voice's length and data.
+'
+FUNCTION pack_voices$ (i AS LONG)
+    DIM k AS LONG, r AS STRING
+    r = MKI$(sndAct(i))
+    FOR k = 1 TO VOICES
+        r = r + MKL$(LEN(voice_data(i, k))) + voice_data(i, k)
+    NEXT
+    pack_voices = r
+END FUNCTION
+
+
+SUB unpack_voices (i AS LONG, p AS STRING)
+    DIM k AS LONG, n AS LONG, o AS LONG
+    sndAct(i) = CVI(LEFT$(p, 2))
+    o = 3
+    FOR k = 1 TO VOICES
+        n = CVL(MID$(p, o, 4))
+        sndV(i, k) = MID$(p, o + 4, n)
+        o = o + 4 + n
+    NEXT
+    sndData(i) = sndV(i, sndAct(i))
+    sndV(i, sndAct(i)) = ""
+END SUB
+
+
 SUB push_undo
     DIM i AS LONG
     IF undoN = UNDO_MAX THEN
@@ -3085,7 +3427,7 @@ SUB push_undo
     END IF
     undoN = undoN + 1
     undoSnd(undoN) = cur
-    undoData(undoN) = sndData(cur)
+    undoData(undoN) = pack_voices(cur)
     redoN = 0
 END SUB
 
@@ -3098,8 +3440,8 @@ SUB undo
     waveLive = 0
     s = undoSnd(undoN)
     IF redoN < UNDO_MAX THEN redoN = redoN + 1
-    redoSnd(redoN) = s: redoData(redoN) = sndData(s)
-    sndData(s) = undoData(undoN)
+    redoSnd(redoN) = s: redoData(redoN) = pack_voices(s)
+    unpack_voices s, undoData(undoN)
     undoN = undoN - 1
     IF s <> cur THEN select_sound s
     dirty = -1
@@ -3112,8 +3454,8 @@ SUB redo
     stop_playing
     s = redoSnd(redoN)
     IF undoN < UNDO_MAX THEN undoN = undoN + 1
-    undoSnd(undoN) = s: undoData(undoN) = sndData(s)
-    sndData(s) = redoData(redoN)
+    undoSnd(undoN) = s: undoData(undoN) = pack_voices(s)
+    unpack_voices s, redoData(redoN)
     redoN = redoN - 1
     IF s <> cur THEN select_sound s
     dirty = -1
@@ -3128,7 +3470,7 @@ END SUB
 ' Open any bank PCSPKR.BM understands; every sound comes in as divisors.
 '
 SUB open_bank (fileName AS STRING)
-    DIM i AS LONG, n AS LONG, ok AS INTEGER, full AS STRING, d AS STRING, v AS LONG
+    DIM i AS LONG, n AS LONG, ok AS INTEGER, full AS STRING, d AS STRING, v AS LONG, k AS LONG
 
     errNum = 0
     full = _FULLPATH$(fileName)
@@ -3156,7 +3498,10 @@ SUB open_bank (fileName AS STRING)
             MID$(d, n * 2 + 1, 2) = CHR$(v AND 255) + CHR$(v \ 256)
         NEXT
         sndData(sndCount) = d
+        sndAct(sndCount) = 1
+        FOR k = 1 TO VOICES: sndV(sndCount, k) = "": NEXT
     NEXT
+    attach_voices
     openedPath = full
     savePath = "" ' never overwrite a game's file by accident: first save asks
     undoN = 0
@@ -3177,20 +3522,49 @@ END SUB
 '
 SUB save_bank (fileName AS STRING)
     DIM hdr AS STRING, tbl AS STRING, body AS STRING, i AS LONG, ofs AS LONG, total AS LONG
-    DIM ff AS LONG, nm AS STRING
+    DIM ff AS LONG, nm AS STRING, entries AS LONG, d AS STRING, s AS LONG, v AS LONG, k AS LONG
 
-    ofs = 16 + sndCount * 16
+    ' A sound with several voices is saved as its ARP mix (what any IFS
+    ' player can play) plus one NAME~k entry per voice, so PCSEDIT can take
+    ' them apart again when the bank is opened.
+    entries = 0
     FOR i = 1 TO sndCount
+        entries = entries + 1
+        IF voices_used(i) > 1 THEN entries = entries + voices_used(i)
+    NEXT
+    ofs = 16 + entries * 16
+    FOR i = 1 TO sndCount
+        IF voices_used(i) > 1 THEN
+            d = SPACE$(snd_len(i) * 2)
+            FOR s = 0 TO snd_len(i) - 1
+                v = mix_step(i, s)
+                MID$(d, s * 2 + 1, 2) = CHR$(v AND 255) + CHR$(v \ 256)
+            NEXT
+        ELSE
+            d = sndData(i)
+            FOR k = 1 TO VOICES ' a lone voice that isn't the one being edited
+                IF LEN(voice_data(i, k)) THEN d = voice_data(i, k)
+            NEXT
+        END IF
         nm = LEFT$(sndName(i) + STRING$(12, 0), 12)
         tbl = tbl + u16$(ofs + LEN(body)) + CHR$(sndPri(i) AND 255) + CHR$(8) + nm
-        body = body + sndData(i) + CHR$(255) + CHR$(255)
+        body = body + d + CHR$(255) + CHR$(255)
+        IF voices_used(i) > 1 THEN
+            FOR k = 1 TO VOICES
+                IF LEN(voice_data(i, k)) THEN
+                    nm = LEFT$(LEFT$(sndName(i), 10) + "~" + LTRIM$(STR$(k)) + STRING$(12, 0), 12)
+                    tbl = tbl + u16$(ofs + LEN(body)) + CHR$(sndPri(i) AND 255) + CHR$(8) + nm
+                    body = body + voice_data(i, k) + CHR$(255) + CHR$(255)
+                END IF
+            NEXT
+        END IF
     NEXT
     total = ofs + LEN(body)
     IF total > 65535 THEN
         set_status "Too big for an IFS bank (" + LTRIM$(STR$(total)) + " bytes, the limit is 65535) - shorten or split it"
         EXIT SUB
     END IF
-    hdr = "SND" + CHR$(0) + u16$(total) + u16$(sndCount) + u16$(0) + STRING$(6, 0)
+    hdr = "SND" + CHR$(0) + u16$(total) + u16$(entries) + u16$(0) + STRING$(6, 0)
 
     errNum = 0
     IF _FILEEXISTS(fileName) THEN KILL fileName
@@ -3205,6 +3579,41 @@ SUB save_bank (fileName AS STRING)
     savePath = fileName
     dirty = 0
     set_status "Saved " + fileName + " -" + STR$(sndCount) + " sounds," + STR$(total) + " bytes"
+END SUB
+
+
+''
+' After opening: NAME~1 ... NAME~4 entries become the voices of the sound
+' NAME before them (saved by PCSEDIT for multi-voice sounds).
+'
+SUB attach_voices
+    DIM i AS LONG, j AS LONG, bnm AS STRING, k AS LONG, t AS LONG, nm AS STRING, p AS LONG
+    i = 1
+    DO WHILE i <= sndCount
+        nm = sndName(i)
+        p = INSTR(nm, "~")
+        k = 0
+        IF p > 1 AND p = LEN(nm) - 1 THEN k = VAL(MID$(nm, p + 1))
+        IF k >= 1 AND k <= VOICES THEN
+            bnm = LEFT$(nm, p - 1)
+            t = 0
+            FOR j = i - 1 TO 1 STEP -1 ' the sound it belongs to
+                IF LEFT$(sndName(j), 10) = bnm AND INSTR(sndName(j), "~") = 0 THEN t = j: EXIT FOR
+            NEXT
+            IF t THEN
+                IF k = 1 THEN sndData(t) = sndData(i) ELSE sndV(t, k) = sndData(i)
+                ' drop the entry
+                FOR j = i TO sndCount - 1
+                    sndName(j) = sndName(j + 1): sndPri(j) = sndPri(j + 1): sndData(j) = sndData(j + 1)
+                    sndAct(j) = sndAct(j + 1)
+                    FOR p = 1 TO VOICES: sndV(j, p) = sndV(j + 1, p): NEXT
+                NEXT
+                sndCount = sndCount - 1
+                i = i - 1
+            END IF
+        END IF
+        i = i + 1
+    LOOP
 END SUB
 
 
@@ -3257,7 +3666,8 @@ END FUNCTION
 '
 SUB export_wav
     DIM s AS LONG, h AS LONG, outName AS STRING, bankName AS STRING, v AS LONG, lastV AS LONG
-    IF steps_of(cur) = 0 THEN set_status "Nothing to export": EXIT SUB
+    DIM d(1 TO 8) AS LONG, n AS LONG
+    IF snd_len(cur) = 0 THEN set_status "Nothing to export": EXIT SUB
     stop_playing
     errNum = 0
     IF NOT _DIREXISTS(start_dir + "EXPORT") THEN MKDIR start_dir + "EXPORT" ' the dialog starts there
@@ -3273,10 +3683,17 @@ SUB export_wav
     IF INSTR(PCSPK_FilePart(outName), ".") = 0 THEN outName = outName + ".wav"
     PCSPK_CaptureBegin
     lastV = -1
-    FOR s = 0 TO steps_of(cur) - 1
-        v = get_step(cur, s)
-        IF v <> lastV THEN PCSPK_SetDivisor v: lastV = v ' only on a change, see speaker
-        PCSPK_AdvanceClocks PCSPK_PIT_HZ / rateHz
+    FOR s = 1 TO 8: pwmPh(s) = 0: NEXT
+    FOR s = 0 TO snd_len(cur) - 1
+        IF polyMode = POLY_PWM AND voices_used(cur) > 1 THEN
+            n = step_divs(cur, s, d())
+            render_pwm_tick d(), n
+            lastV = -1
+        ELSE
+            v = mix_step(cur, s)
+            IF v <> lastV THEN PCSPK_SetDivisor v: lastV = v ' only on a change, see speaker
+            PCSPK_AdvanceClocks PCSPK_PIT_HZ / rateHz
+        END IF
     NEXT
     PCSPK_Off
     PCSPK_AdvanceSeconds 0.05
@@ -3391,7 +3808,7 @@ SUB draw_info
     _PRINTSTRING (LIST_X, 36), sndName(cur)
     COLOR _RGB32(190, 200, 215)
     _PRINTSTRING (LIST_X, 52), "Priority" + STR$(sndPri(cur))
-    _PRINTSTRING (LIST_X, 68), LTRIM$(STR$(steps_of(cur))) + " steps, " + fmt2(steps_of(cur) / rateHz) + " s"
+    _PRINTSTRING (LIST_X, 68), LTRIM$(STR$(snd_len(cur))) + " steps, " + fmt2(snd_len(cur) / rateHz) + " s"
     IF keysMode = KEYS_SOUND THEN
         COLOR _RGB32(120, 230, 160)
         s = "Keys: " + CHR$(14) + " " + LEFT$(sndName(instIdx), 8)
@@ -3486,6 +3903,7 @@ END FUNCTION
 
 SUB draw_list
     DIM i AS LONG, n AS LONG, y AS LONG, s AS STRING
+    draw_voice_chips
     COLOR _RGB32(120, 140, 170)
     _PRINTSTRING (LIST_X, LIST_Y - 20), "  # NAME          LEN"
     FOR i = 0 TO LIST_ROWS - 1
@@ -3498,8 +3916,9 @@ SUB draw_list
         ELSE
             COLOR _RGB32(190, 200, 215)
         END IF
-        s = RIGHT$("  " + LTRIM$(STR$(n)), 3) + " " + LEFT$(sndName(n) + SPACE$(12), 12) + RIGHT$(SPACE$(6) + STR$(steps_of(n)), 6)
+        s = RIGHT$("  " + LTRIM$(STR$(n)), 3) + " " + LEFT$(sndName(n) + SPACE$(12), 12) + RIGHT$(SPACE$(6) + STR$(snd_len(n)), 6)
         IF keysMode = KEYS_SOUND AND n = instIdx THEN s = s + " " + CHR$(14) ' the instrument
+        IF voices_used(n) > 1 THEN s = s + " " + LTRIM$(STR$(voices_used(n))) + "v"
         _PRINTSTRING (LIST_X, y), s
     NEXT
     IF sndCount > LIST_ROWS THEN
@@ -3510,9 +3929,54 @@ SUB draw_list
 END SUB
 
 
+''
+' "Voice 1 2 3 4  ARP" above the sound list: the voice being edited, which
+' voices have notes, and the mode. All clickable (see voice_chip_hit).
+'
+SUB draw_voice_chips
+    DIM k AS LONG, x AS LONG, y AS LONG, c AS _UNSIGNED LONG
+    y = LIST_Y - 40
+    COLOR _RGB32(120, 140, 170)
+    _PRINTSTRING (LIST_X, y), "Voice"
+    FOR k = 1 TO VOICES
+        x = LIST_X + 48 + (k - 1) * 22
+        c = voice_col(k)
+        IF k = sndAct(cur) THEN
+            LINE (x - 3, y - 2)-(x + 12, y + 15), c, BF
+            COLOR _RGB32(0, 0, 0)
+        ELSE
+            LINE (x - 3, y - 2)-(x + 12, y + 15), c, B
+            IF LEN(voice_data(cur, k)) THEN COLOR c ELSE COLOR _RGB32(90, 100, 120)
+        END IF
+        _PRINTSTRING (x + 1, y), LTRIM$(STR$(k))
+    NEXT
+    x = LIST_X + 48 + VOICES * 22 + 6
+    LINE (x - 3, y - 2)-(x + 28, y + 15), _RGB32(120, 140, 180), B
+    IF polyMode = POLY_PWM THEN COLOR _RGB32(120, 230, 255) ELSE COLOR _RGB32(255, 200, 60)
+    _PRINTSTRING (x + 1, y), poly_name
+END SUB
+
+
+''
+' A click at (mx, my) on the voice chips: 1-4 picks a voice, 5 is the mode.
+'
+FUNCTION voice_chip_hit& (mx AS LONG, my AS LONG)
+    DIM k AS LONG, x AS LONG, y AS LONG
+    y = LIST_Y - 40
+    IF my < y - 2 OR my > y + 15 THEN EXIT FUNCTION
+    FOR k = 1 TO VOICES
+        x = LIST_X + 48 + (k - 1) * 22
+        IF mx >= x - 3 AND mx <= x + 12 THEN voice_chip_hit = k: EXIT FUNCTION
+    NEXT
+    x = LIST_X + 48 + VOICES * 22 + 6
+    IF mx >= x - 3 AND mx <= x + 28 THEN voice_chip_hit = 5
+END FUNCTION
+
+
 SUB draw_roll
     DIM nt AS LONG, y AS LONG, x AS LONG, s AS LONG, v AS LONG, vis AS LONG, endX AS LONG
     DIM w AS LONG, nn AS DOUBLE, col AS _UNSIGNED LONG, hp AS LONG, isBlack AS INTEGER, prevY AS LONG, hv AS INTEGER, yb AS LONG
+    DIM k AS LONG
 
     vis = INT(CANVAS_W / zoom)
 
@@ -3594,7 +4058,7 @@ SUB draw_roll
     NEXT
 
     ' past the end of the sound (over the lines, so it all dims evenly)
-    endX = CANVAS_X + (steps_of(cur) - scrollX) * zoom
+    endX = CANVAS_X + (snd_len(cur) - scrollX) * zoom
     IF endX < CANVAS_X THEN endX = CANVAS_X
     IF endX < CANVAS_X + CANVAS_W THEN
         LINE (endX, CANVAS_Y)-(CANVAS_X + CANVAS_W - 1, CANVAS_Y + CANVAS_H - 1), _RGBA32(0, 0, 0, 110), BF
@@ -3604,6 +4068,25 @@ SUB draw_roll
     ' the steps
     w = INT(zoom) - 1
     IF w < 1 THEN w = 1
+
+    ' the other voices, dimmed in their own colours, under the edited one
+    FOR k = 1 TO VOICES
+        IF k <> sndAct(cur) AND LEN(sndV(cur, k)) THEN
+            col = voice_col(k)
+            col = _RGB32(_RED32(col) * 0.55, _GREEN32(col) * 0.55, _BLUE32(col) * 0.55)
+            FOR s = scrollX TO scrollX + vis
+                v = voice_step(cur, k, s)
+                IF v THEN
+                    nn = div_note(v)
+                    IF nn >= NOTE_HI THEN nn = NOTE_HI - 0.5
+                    IF nn < NOTE_LO THEN nn = NOTE_LO
+                    y = note_y(nn)
+                    x = CANVAS_X + (s - scrollX) * zoom
+                    LINE (x, y - 1)-(x + w, y + 1), col, BF
+                END IF
+            NEXT
+        END IF
+    NEXT
     ' Each step is one pitch (a dot). Like DN1PLAY's graph, a thin line joins
     ' two sounding steps in a row, so jumps and slides read as one shape;
     ' silence breaks the line.
@@ -3678,8 +4161,8 @@ SUB draw_roll
         hp = heard_pos(playPos)
         ' up to the end of what is playing: a loop region may run past the
         ' last note
-        IF hp > loop_end AND loop_end >= steps_of(cur) THEN hp = loop_end
-        IF hp > steps_of(cur) AND loop_end <= steps_of(cur) THEN hp = steps_of(cur)
+        IF hp > loop_end AND loop_end >= snd_len(cur) THEN hp = loop_end
+        IF hp > snd_len(cur) AND loop_end <= snd_len(cur) THEN hp = snd_len(cur)
         x = CANVAS_X + (hp - scrollX) * zoom
         IF x >= CANVAS_X AND x < CANVAS_X + CANVAS_W THEN LINE (x, CANVAS_Y)-(x, CANVAS_Y + CANVAS_H - 1), _RGB32(255, 255, 255)
     END IF
@@ -3887,7 +4370,7 @@ SUB draw_help
     t(16) = "F2 rename   F3 new sound   F4 duplicate   F8 delete   Ctrl+P priority"
     t(17) = "Ctrl+N new  Ctrl+O open  Ctrl+S save  Ctrl+Shift+S save as  Ctrl+= / - / 0 display scale"
     t(18) = "Ctrl+E export the sound as .wav (EXPORT/)     drop a file to open it"
-    t(19) = ""
+    t(19) = "Ctrl+1-4 edit voice 1-4 (chords: hold keys in STEP rec)   Ctrl+J chords ARP / PWM"
     t(20) = "Saves IFS banks (Duke Nukem / Keen format, 140 steps per second)."
     t(21) = "Opens anything DN1PLAY plays. Saving never replaces the file you"
     t(22) = "opened unless you choose its name in Save As."
@@ -4065,6 +4548,7 @@ SUB settings_save
     PRINT #ff, "quantize="; LTRIM$(STR$(quantOn))
     PRINT #ff, "follow="; LTRIM$(STR$(followOn))
     PRINT #ff, "loop="; LTRIM$(STR$(loopOn))
+    PRINT #ff, "poly="; LTRIM$(STR$(polyMode))
     CLOSE #ff
 END SUB
 

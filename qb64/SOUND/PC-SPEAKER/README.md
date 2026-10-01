@@ -252,6 +252,33 @@ when it's on) repeats, in order of priority:
 Space starts inside whatever is looping. The metronome starts over from
 beat 1 each time round.
 
+**Chords: voices, ARP and PWM.** The speaker can only play one square wave at
+a time, so the games are monophonic. PCSEDIT gives each sound up to **4
+voices** and two ways to hear them together:
+
+* **Voices:** **Ctrl+1** to **Ctrl+4**, or the **Voice 1 2 3 4** chips above
+  the sound list, pick the voice you edit. Every tool, recording and
+  selection works on that voice. The other voices show dimmed in their own
+  colours (green, pink, blue), and the list marks multi-voice sounds (`3v`).
+* **Chords from the keys:** in STEP record, hold a note and press more. The
+  first note goes in the voice you're editing and the others go in the next
+  voices, at the same steps.
+* **ARP** (the default): the voices take turns, one step each. That's the
+  classic fast-arpeggio fake chord, it is what the games could really do,
+  and it is what gets saved.
+* **PWM** (**Ctrl+J**, or click the mode chip): the voices really sound at
+  once. PCSEDIT sends the speaker a 15.7 kHz stream of pulses whose width
+  follows how many voices are "high" at each moment, the same trick
+  `WAV.BAS` uses for recorded sound. Held chords, playback and Ctrl+E export
+  all use it. It is too heavy for the games' 140 Hz timer, so it never goes
+  into the bank.
+
+**Saving a sound with voices:** the bank holds the ARP mix under the sound's
+name, so DN1PLAY and the games play it. It also holds one `NAME~1` ...
+`NAME~4` entry per voice, so PCSEDIT can split the voices apart again when
+the bank is opened. The game would see those as extra sounds, and they cost
+space in the 64 KB limit.
+
 **Follow** (**Ctrl+F**, on by default): while playing, the view pages along
 with the playhead so it never runs off the right edge.
 
@@ -285,6 +312,7 @@ zap, a blip, a little arpeggio) into an instrument you can play tunes with.
 | Key | What it does |
 | --- | --- |
 | Space / Enter | play from the start / from the cursor (Ctrl+L loops) |
+| Ctrl+1 ... Ctrl+4 / Ctrl+J | edit voice 1-4 / chords as ARP or PWM |
 | Left / Right | move the cursor a step (a grid cell with the grid on); Ctrl: a beat, or 0.1 s with the grid off. With a selection they nudge it instead. |
 | Home / End | cursor to the start / end of the sound |
 | PageUp / PageDown | previous / next dot (where a new pitch starts); with the NOTE tool, previous / next bar |
