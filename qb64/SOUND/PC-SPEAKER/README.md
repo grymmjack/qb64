@@ -357,7 +357,8 @@ zap, a blip, a little arpeggio) into an instrument you can play tunes with.
 | Ctrl+Z / Ctrl+Y | undo / redo |
 | F2 / F3 / F4 / F8 | rename, new sound, duplicate, delete (press F8 twice) |
 | Ctrl+P | set the sound's priority |
-| Ctrl+N / Ctrl+O / Ctrl+S / Ctrl+Shift+S | new bank, open, save, save as |
+| Ctrl+N / Ctrl+O / Ctrl+S / Ctrl+Shift+S | new bank, open (a `.mid` or `.mml` is imported as a new sound), save, save as |
+| Ctrl+Shift+V | import a QB64 PLAY string from the clipboard as a new sound |
 | Ctrl+E | export the sound as a `.wav` in `EXPORT/` |
 | F1 | help |
 
@@ -380,6 +381,116 @@ writes the keyboard's bytes to a temp file. The editor reads anything new in
 that file every frame. When PCSEDIT quits, it stops `amidi` and deletes the
 file. This needs Linux, the `alsa-utils` package, and your user in the `audio`
 group. On other systems, use the computer keyboard.
+
+**Importing MIDI files and PLAY music:** open (**Ctrl+O**) or drop a `.mid`
+or `.mml` file, or copy a QB64 `PLAY` string (or a whole `PLAY "..."` line
+from a program) and press **Ctrl+Shift+V**. It is added to the bank as a new
+sound, with its notes spread over the 4 voices.
+Its melody usually goes to voice 1. If more than 4 notes play at once, the
+extra ones are left out, and the drums (channel 10) are skipped. For more
+control (channels, transposing, a single-voice version for a game) use
+`MID2SND`, below.
+
+---
+
+## MID2SND: MIDI files and PLAY music to PC speaker banks
+
+`MID2SND.BAS` is a command-line converter. It turns a MIDI file, or QB64
+`PLAY` music (MML), into one
+sound with up to 4 voices, saved the way PCSEDIT saves voices (see
+[Chords](#pcsedit-make-your-own-sounds)). The bank holds the ARP mix that
+DN1PLAY and the games can play, plus the separate voices for PCSEDIT, which
+can play them together in PWM mode.
+
+```
+qb64pe -x MID2SND.BAS
+./MID2SND song.mid -i                 # what's in it: channels, notes, length
+./MID2SND song.mid                    # -> song.snd, 4 voices
+./MID2SND song.mid tune.snd -v 1      # 1 voice: the top note only, for a game
+./MID2SND song.mid tunes.snd -a -n THEME -c 1,2 -t -12 -s 30
+./MID2SND tune.mml                    # QB64 PLAY strings in a text file
+./MID2SND -p "T160 O2 L8 CDEFGAB>C" scale.snd
+```
+
+| Option | What it does |
+| --- | --- |
+| `-v N` | voices, 1 to 4 (default 4). `-v 1` keeps the highest note at every moment, a melody line a game can play as-is. |
+| `-t N` | transpose by N semitones |
+| `-c LIST` | MIDI channels to use, like `-c 1,2,4` (default: all but the drums on 10) |
+| `-n NAME` | the sound's name, up to 10 letters (default: from the file name) |
+| `-a` | add the sound to the bank instead of replacing the file. A sound with the same name is replaced. |
+| `-s SECS` | stop after SECS seconds |
+| `-g` | no one-step rest between repeated notes of the same pitch (by default there is one, so they don't run together into one long note) |
+| `-p MML` | convert this PLAY string instead of a file |
+| `-i` | list the file's channels, notes, length and the most notes at once |
+
+### PLAY strings (MML)
+
+QB64's `PLAY` statement takes *Music Macro Language*. MID2SND and PCSEDIT
+read it the way QB64-PE's own `PLAY` does (its `audio.cpp`), so a string
+sounds at the same pitches and speed:
+
+* notes `A`-`G` with `#`/`+` (sharp) or `-` (flat), a length (`C8`) and dots;
+  `N0`-`N84` by number; rests `P`/`R`;
+* `O0`-`O6`, `<` `>`, `L`, `T`, and `MN` / `ML` / `MS` (a note sounds 7/8,
+  all, or 3/4 of its length). In QB64-PE, **`O2 C` is middle C** and `O4 A`,
+  the default octave, is 1760 Hz;
+* QB64-PE's **commas**: a comma after a note plays the next note with it,
+  so `"L2 C,E,G"` is a chord;
+* QB64-PE's **multi-voice PLAY**: `PLAY a$, b$, c$, d$` plays four voices at
+  once. Each string becomes a voice.
+
+Volume, waveform, envelope and panning commands (`V W @ Q / \ ^ _ Y S`) are
+skipped, because the speaker has none of them. `X` + `VARPTR$` can't be
+followed.
+
+A `.mml` file is plain text. Each line is one of:
+
+```
+' a comment (or # ...)
+PLAY "T132 O2 L8 CDEFG", "T132 O1 L2 C,E"   ' pasted from a program: one voice per string
+V2: O1 L4 CGCG                              ' more for voice 2 (V1: to V4:)
+T120 O2 L4 CDE                              ' anything else: more for voice 1
+```
+
+Lines for the same voice are joined, so a long tune can span many lines.
+`ASSETS/TUNES/PLAYDEMO.mml` is a short 3-voice example.
+
+### How notes become voices
+
+Tempo changes are followed, and the tune starts at its first note. Notes are
+given to voices top note first. Each note goes to the free voice whose last
+note was nearest in pitch, so a melody tends to stay in voice 1.
+
+An IFS bank holds 64 KB, and every step costs 2 bytes per voice plus 2 for
+the mix. That's about **46 seconds with 4 voices**, a minute with 3, and over
+3 minutes with 1. MID2SND says so when a tune doesn't fit.
+
+### Example tunes (`ASSETS/TUNES/`)
+
+Open any of these in PCSEDIT. Press **Ctrl+J** for PWM to hear the voices
+together, or play them in DN1PLAY to hear the ARP version the games would
+play.
+
+| Bank | Tune |
+| --- | --- |
+| `ODETOJOY.SND` | Ode to Joy (Beethoven) |
+| `FURELISE.SND` | Für Elise, the opening (Beethoven) |
+| `KOROBEINIK.SND` | Korobeiniki, the Tetris theme (Russian folk song) |
+| `GREENSLEEV.SND` | Greensleeves (English, 16th century) |
+| `MINUETG.SND` | Minuet in G (Petzold, from the Notebook for Anna Magdalena Bach) |
+| `CANOND.SND` | Canon in D (Pachelbel) |
+| `MTNKING.SND` | In the Hall of the Mountain King (Grieg), speeding up as it goes |
+| `BIRTHDAY.SND` | Happy Birthday |
+| `JINGLEBELL.SND` | Jingle Bells, the chorus |
+| `CHIPLOOP.SND` | an original chiptune loop |
+| `JINGLES.SND` | three original game jingles: FANFARE, LEVELUP, GAMEOVER |
+| `PLAYDEMO.SND` | an original march, written as QB64 PLAY strings in `PLAYDEMO.mml` |
+
+They are all public domain or written for this project. The arrangements are
+in `make_tunes.py` as plain note lists, so they are easy to change or add to.
+`make_tunes.sh` writes the MIDI files (`ASSETS/TUNES/MIDI/`) and runs
+MID2SND on each one.
 
 ---
 
@@ -609,6 +720,9 @@ A few things work out differently in QB64-PE:
 | `ASSETS/` | `duke1-b.dn1` (Duke), `SOUNDS.CK1` (Keen), and three test `.wav` files | original repo |
 | `ASSETS/GAMES/` | Sound files for the games in [Supported games](#supported-games). Only the shareware and freeware ones are committed; its `.gitignore` keeps the commercial ones local, and its `README.md` lists which is which. | the games themselves |
 | `ASSETS/freedoom-dp.wad` | The 107 PC speaker sounds from Freedoom: Phase 2, so there are DOOM engine sounds to play without an id Software WAD. BSD licensed, see `FREEDOOM-LICENSE.txt`. | [Freedoom](https://freedoom.github.io/) |
+| **`MID2SND.BAS`** | **Command-line MIDI / PLAY (MML) to IFS bank converter (up to 4 voices).** | new |
+| `PCSMIDI.BI` + `PCSMIDI.BM` | The MIDI file and PLAY string reader both PCSEDIT and MID2SND use | new |
+| `ASSETS/TUNES/` | Example tunes as IFS banks and MIDI files, and the script that makes them | new |
 | `SCREENSHOTS/` | The images in this README | |
 
 ### PWM: playing recordings on a speaker with two positions

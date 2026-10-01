@@ -95,6 +95,7 @@
 OPTION _EXPLICIT
 $RESIZE:ON
 '$INCLUDE:'PCSPKR.BI'
+'$INCLUDE:'PCSMIDI.BI'
 
 ' Window layout. The screen is drawn at a "logical" size (the window size
 ' divided by the display scale, Ctrl+= / Ctrl+-) and scaled up to the window;
@@ -138,7 +139,7 @@ CONST REC_STEP = 1
 CONST REC_LIVE = 2
 ' file types the Open dialog lists (the native dialogs on Linux are case
 ' sensitive, so both cases)
-CONST OPEN_FILTER = "*.snd|*.SND|*.dn1|*.DN1|*.dn2|*.DN2|*.dn3|*.DN3|*.ck1|*.CK1|*.wad|*.WAD|*.lmp|*.LMP|*.cmp|*.CMP|*.stn|*.STN|*.ms1|*.MS1|*.ms2|*.MS2|*.ms3|*.MS3|*.hov|*.HOV|*.rov|*.ROV|*.ca2|*.CA2|*.slo|*.SLO|*.8|AUDIOT.*|audiot.*|AUDIOHED.*|audiohed.*"
+CONST OPEN_FILTER = "*.snd|*.SND|*.mid|*.MID|*.midi|*.MIDI|*.mml|*.MML|*.dn1|*.DN1|*.dn2|*.DN2|*.dn3|*.DN3|*.ck1|*.CK1|*.wad|*.WAD|*.lmp|*.LMP|*.cmp|*.CMP|*.stn|*.STN|*.ms1|*.MS1|*.ms2|*.MS2|*.ms3|*.MS3|*.hov|*.HOV|*.rov|*.ROV|*.ca2|*.CA2|*.slo|*.SLO|*.8|AUDIOT.*|audiot.*|AUDIOHED.*|audiohed.*"
 CONST BEATS_PER_BAR = 4 '                the grid is 4/4
 CONST KEYS_NOTES = 0 '                   what notes play: plain tones...
 CONST KEYS_SOUND = 1 '                   ...or the instrument sound, transposed
@@ -523,7 +524,11 @@ DO
     IF _TOTALDROPPEDFILES THEN
         f = _DROPPEDFILE
         _FINISHDROP
-        IF ok_to_lose("Open " + PCSPK_FilePart(f)) THEN open_bank f
+        IF is_midi(f) THEN
+            import_midi f ' adds a sound: nothing to lose
+        ELSEIF ok_to_lose("Open " + PCSPK_FilePart(f)) THEN
+            open_bank f
+        END IF
     END IF
 
     ' follow playback: page the view along so the playhead stays on screen
@@ -3050,7 +3055,8 @@ FUNCTION handle_key% (k AS LONG, ctrl AS INTEGER, shift AS INTEGER)
                         END IF
                     CASE "X": sel_cut
                     CASE "C": sel_copy
-                    CASE "V": sel_paste
+                    CASE "V"
+                        IF shift THEN import_play_clip ELSE sel_paste
                     CASE "A": select_all
 
                     CASE "H"
@@ -3141,7 +3147,77 @@ SUB open_dialog
     DIM f AS STRING
     f = _OPENFILEDIALOG$("Open a PC speaker sound bank", default_dir, OPEN_FILTER, "Sound banks DN1PLAY can play")
     after_dialog
-    IF LEN(f) THEN open_bank f
+    IF LEN(f) = 0 THEN EXIT SUB
+    IF is_midi(f) THEN import_midi f ELSE open_bank f
+END SUB
+
+
+FUNCTION is_midi% (f AS STRING)
+    DIM e AS STRING
+    e = LCASE$(MID$(f, _INSTRREV(f, ".") + 1))
+    is_midi = (e = "mid" OR e = "midi" OR e = "mml") AND _INSTRREV(f, ".") > 0
+END FUNCTION
+
+
+''
+' A MIDI file becomes a new sound after the current one, its notes spread
+' over the voices (PCSMIDI.BM; MID2SND.BAS does the same from the command
+' line, with more options).
+'
+SUB import_midi (fileName AS STRING)
+    DIM k AS LONG, nm AS STRING, i AS LONG, c AS STRING, ok AS INTEGER
+    IF LCASE$(RIGHT$(fileName, 4)) = ".mml" THEN ok = PCSMIDI_LoadMMLFile(fileName) ELSE ok = PCSMIDI_Load(fileName)
+    IF NOT ok THEN set_status pcsmidiError: EXIT SUB
+    import_notes fileName
+END SUB
+
+
+''
+' Ctrl+Shift+V: QB64 PLAY music from the clipboard - a PLAY "..." line
+' copied from a program, or bare MML (see PCSMIDI_LoadMML).
+'
+SUB import_play_clip
+    DIM t AS STRING
+    t = _CLIPBOARD$
+    IF _TRIM$(t) = "" THEN set_status "The clipboard is empty - copy a PLAY string (or a PLAY " + CHR$(34) + "..." + CHR$(34) + " line) first": EXIT SUB
+    IF NOT PCSMIDI_LoadMML(t) THEN set_status "PLAY string: " + pcsmidiError: EXIT SUB
+    import_notes "PLAY"
+END SUB
+
+
+''
+' The notes PCSMIDI loaded become a new sound after the current one.
+'
+SUB import_notes (fileName AS STRING)
+    DIM k AS LONG, nm AS STRING, i AS LONG, c AS STRING
+    PCSMIDI_Render VOICES, 0, 0, 1, MAX_STEPS
+    IF pcsmidiUsed = 0 THEN set_status "No notes to import in " + PCSPK_FilePart(fileName) + " (only drums?)": EXIT SUB
+    IF fileName = "PLAY" THEN fileName = "PLAY.mml" ' (the name for the sound)
+    stop_playing
+    stop_recording
+    IF sndCount >= MAX_SOUNDS THEN set_status "The bank is full": EXIT SUB
+    add_sound "", ""
+    ' its name: the file's, in IFS letters, with room for ~1 ... ~4
+    nm = UCASE$(PCSPK_FilePart(fileName))
+    IF _INSTRREV(nm, ".") THEN nm = LEFT$(nm, _INSTRREV(nm, ".") - 1)
+    sndName(cur) = ""
+    FOR i = 1 TO LEN(nm)
+        c = MID$(nm, i, 1)
+        IF INSTR("ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_", c) THEN sndName(cur) = sndName(cur) + c
+    NEXT
+    sndName(cur) = LEFT$(sndName(cur), 10)
+    IF sndName(cur) = "" THEN sndName(cur) = "MIDI"
+    sndAct(cur) = 1
+    sndData(cur) = pcsmidiVoice(1)
+    FOR k = 2 TO VOICES: sndV(cur, k) = pcsmidiVoice(k): NEXT
+    undoN = 0: redoN = 0
+    dirty = -1
+    selOn = 0: cursorStep = 0: scrollX = 0
+    IF fileName = "PLAY.mml" THEN c = "Imported the PLAY string:" ELSE c = "Imported " + PCSPK_FilePart(fileName) + ":"
+    c = c + STR$(pcsmidiPlaced) + " notes," + STR$(pcsmidiUsed) + " voice(s), " + fmt2(pcsmidiSteps / rateHz) + " s"
+    IF pcsmidiDropped THEN c = c + " -" + STR$(pcsmidiDropped) + " notes left out (more than 4 at once)"
+    IF pcsmidiCut THEN c = c + " - cut at" + STR$(MAX_STEPS \ 140) + " s"
+    set_status c
 END SUB
 
 
@@ -4750,7 +4826,7 @@ SUB draw_help
     t(14) = "Ctrl+Z / Ctrl+Y  undo / redo     A  hear what you draw while drawing (on/off)"
     t(16) = "F2 rename   F3 new sound   F4 duplicate   F8 delete   Ctrl+P priority"
     t(17) = "Ctrl+N new  Ctrl+O open  Ctrl+S save  Ctrl+Shift+S save as  Ctrl+= / - / 0 display scale"
-    t(18) = "Ctrl+E export the sound as .wav (EXPORT/)     drop a file to open it"
+    t(18) = "Ctrl+E export .wav   drop a file to open it (.mid/.mml: import)   Ctrl+Shift+V paste a PLAY string"
     t(19) = "Ctrl+1-4 voice 1-4  Ctrl+5 G all voices  Ctrl+J chords ARP / PWM  (STEP rec: hold keys)"
     t(20) = "Saves IFS banks (Duke Nukem / Keen format, 140 steps per second)."
     t(21) = "Opens anything DN1PLAY plays. Saving never replaces the file you"
@@ -4948,3 +5024,4 @@ END FUNCTION
 
 
 '$INCLUDE:'PCSPKR.BM'
+'$INCLUDE:'PCSMIDI.BM'

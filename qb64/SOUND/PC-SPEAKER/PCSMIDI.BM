@@ -1,0 +1,585 @@
+''
+' PCSMIDI.BM - Standard MIDI File (.mid) to PC speaker voices
+' (see PCSMIDI.BI)
+'
+$IF PCSMIDI_BM = UNDEFINED THEN
+    $LET PCSMIDI_BM = TRUE
+
+    ''
+    ' Load a .mid file's notes (all tracks, all channels). FALSE with
+    ' pcsmidiError set when it can't.
+    '
+    FUNCTION PCSMIDI_Load% (fileName AS STRING)
+        DIM ff AS LONG, d AS STRING, q AS LONG, hdrLen AS LONG, fmt AS LONG, ntrk AS LONG
+        DIM division AS LONG, t AS LONG, trkLen AS LONG, trkEnd AS LONG
+        DIM tick AS _INTEGER64, st AS LONG, rs AS LONG, typ AS LONG, ln AS LONG
+        DIM ch AS LONG, nt AS LONG, vel AS LONG, i AS LONG
+        DIM openNote(0 TO 2047) AS LONG
+
+        pcsmidiCount = 0: pcsmidiError = "": pcsmidiTitle = "": pcsmidiTracks = 0
+        pcsmidiChanMask = 0
+        pcsmidiTempoN = 0
+        PCSMIDI_AddTempo 0, 500000 ' 120 BPM until told otherwise
+
+        IF NOT _FILEEXISTS(fileName) THEN pcsmidiError = "File not found: " + fileName: EXIT FUNCTION
+        ff = FREEFILE
+        OPEN fileName FOR BINARY AS #ff
+        d = SPACE$(LOF(ff))
+        GET #ff, 1, d
+        CLOSE #ff
+
+        IF LEN(d) < 14 OR LEFT$(d, 4) <> "MThd" THEN pcsmidiError = "Not a MIDI file (no MThd header)": EXIT FUNCTION
+        hdrLen = PCSMIDI_BE(d, 5, 4)
+        fmt = PCSMIDI_BE(d, 9, 2)
+        ntrk = PCSMIDI_BE(d, 11, 2)
+        division = PCSMIDI_BE(d, 13, 2)
+        IF fmt > 1 THEN pcsmidiError = "MIDI type 2 files (separate songs per track) aren't supported": EXIT FUNCTION
+
+        q = 9 + hdrLen
+        FOR t = 1 TO ntrk
+            ' find the next MTrk chunk (skipping any other chunk)
+            DO
+                IF q + 8 > LEN(d) + 1 THEN EXIT FOR
+                trkLen = PCSMIDI_BE(d, q + 4, 4)
+                IF MID$(d, q, 4) = "MTrk" THEN EXIT DO
+                q = q + 8 + trkLen
+            LOOP
+            pcsmidiTracks = pcsmidiTracks + 1
+            trkEnd = q + 8 + trkLen
+            IF trkEnd > LEN(d) + 1 THEN trkEnd = LEN(d) + 1
+            q = q + 8
+            tick = 0: rs = 0
+            FOR i = 0 TO 2047: openNote(i) = -1: NEXT
+
+            DO WHILE q < trkEnd
+                tick = tick + PCSMIDI_VLQ(d, q)
+                IF q >= trkEnd THEN EXIT DO
+                st = ASC(d, q)
+                IF st < &H80 THEN
+                    st = rs ' running status: this byte is data
+                    IF st = 0 THEN EXIT DO ' broken file
+                ELSE
+                    q = q + 1
+                    IF st < &HF0 THEN rs = st
+                END IF
+                SELECT CASE st
+                    CASE &HFF ' meta event
+                        typ = ASC(d, q): q = q + 1
+                        ln = PCSMIDI_VLQ(d, q)
+                        IF typ = &H51 AND ln = 3 THEN
+                            PCSMIDI_AddTempo tick, PCSMIDI_BE(d, q, 3)
+                        ELSEIF typ = 3 AND pcsmidiTitle = "" AND ln > 0 THEN
+                            pcsmidiTitle = MID$(d, q, ln)
+                        END IF
+                        q = q + ln
+                        IF typ = &H2F THEN EXIT DO ' end of track
+                    CASE &HF0, &HF7 ' sysex
+                        ln = PCSMIDI_VLQ(d, q)
+                        q = q + ln
+                    CASE ELSE
+                        ch = st AND 15
+                        SELECT CASE st AND &HF0
+                            CASE &HC0, &HD0 ' program change, channel pressure
+                                q = q + 1
+                            CASE &H90, &H80
+                                nt = ASC(d, q) AND 127
+                                vel = ASC(d, q + 1) AND 127
+                                q = q + 2
+                                i = ch * 128 + nt
+                                ' a note-on of a note already on ends it first
+                                IF openNote(i) >= 0 THEN
+                                    pcsmidiNote(openNote(i)).tk1 = tick
+                                    openNote(i) = -1
+                                END IF
+                                IF (st AND &HF0) = &H90 AND vel > 0 THEN
+                                    IF pcsmidiCount > UBOUND(pcsmidiNote) THEN REDIM _PRESERVE pcsmidiNote(0 TO pcsmidiCount * 2 + 64) AS PCSMIDI_NOTE
+                                    pcsmidiNote(pcsmidiCount).tk0 = tick
+                                    pcsmidiNote(pcsmidiCount).tk1 = -1
+                                    pcsmidiNote(pcsmidiCount).pitch = nt
+                                    pcsmidiNote(pcsmidiCount).chan = ch
+                                    pcsmidiNote(pcsmidiCount).trk = pcsmidiTracks
+                                    openNote(i) = pcsmidiCount
+                                    pcsmidiCount = pcsmidiCount + 1
+                                    pcsmidiChanMask = pcsmidiChanMask OR _SHL(1, ch)
+                                END IF
+                            CASE ELSE ' key pressure, controllers, pitch bend
+                                q = q + 2
+                        END SELECT
+                END SELECT
+            LOOP
+            ' notes still on at the end of the track end there
+            FOR i = 0 TO 2047
+                IF openNote(i) >= 0 THEN pcsmidiNote(openNote(i)).tk1 = tick
+            NEXT
+            q = trkEnd
+        NEXT
+
+        IF pcsmidiCount = 0 THEN pcsmidiError = "No notes in that MIDI file": EXIT FUNCTION
+
+        ' ticks to seconds
+        FOR i = 0 TO pcsmidiCount - 1
+            pcsmidiNote(i).t0 = PCSMIDI_TickSec(pcsmidiNote(i).tk0, division)
+            pcsmidiNote(i).t1 = PCSMIDI_TickSec(pcsmidiNote(i).tk1, division)
+        NEXT
+        PCSMIDI_Load = -1
+    END FUNCTION
+
+
+    ''
+    ' Load QB64-PE PLAY strings (MML) as notes, ready for PCSMIDI_Render.
+    ' txt is one or more lines:
+    '   PLAY "T150 O3 L8 CDEFG", "O1 L2 C<G>"   a PLAY statement pasted from
+    '                         code: each quoted string (joined with +) is
+    '                         a voice, commas outside the quotes start the
+    '                         next voice; PLAY lines after it go on from there
+    '   V2: O2 L4 CEG        a line for voice 2 (V1: - V4:)
+    '   T120 O4 CDE          anything else: voice 1
+    '   ' or # ...           comments
+    ' Pitches, lengths and tempo are QB64-PE's (audio.cpp): O0 C is 65 Hz,
+    ' O4 A is 1760 Hz, N45 is 440 Hz. A comma after a note plays the next one
+    ' with it (a chord). Volume, waveform and envelope commands are skipped.
+    '
+    FUNCTION PCSMIDI_LoadMML% (txt AS STRING)
+        DIM ln AS STRING, i AS LONG, j AS LONG, k AS LONG, c AS STRING, u AS STRING, inQ AS INTEGER
+        DIM vs(1 TO PCSMIDI_VOICES) AS STRING, t AS STRING
+        pcsmidiCount = 0: pcsmidiError = "": pcsmidiTitle = "": pcsmidiTracks = 0: pcsmidiChanMask = 0
+        t = txt + CHR$(10)
+        DO WHILE LEN(t)
+            i = INSTR(t, CHR$(10))
+            ln = _TRIM$(LEFT$(t, i - 1))
+            t = MID$(t, i + 1)
+            IF RIGHT$(ln, 1) = CHR$(13) THEN ln = _TRIM$(LEFT$(ln, LEN(ln) - 1))
+            u = UCASE$(ln)
+            IF ln = "" OR LEFT$(ln, 1) = "'" OR LEFT$(ln, 1) = "#" OR LEFT$(u, 4) = "REM " THEN
+                ' a comment
+            ELSEIF LEFT$(u, 5) = "PLAY " OR LEFT$(u, 5) = "PLAY" + CHR$(34) THEN
+                k = 1: inQ = 0
+                FOR j = 5 TO LEN(ln)
+                    c = MID$(ln, j, 1)
+                    IF c = CHR$(34) THEN
+                        inQ = NOT inQ
+                    ELSEIF inQ THEN
+                        vs(k) = vs(k) + c
+                    ELSEIF c = "," THEN
+                        IF k < PCSMIDI_VOICES THEN k = k + 1
+                    ELSEIF c = "'" THEN
+                        EXIT FOR ' a comment after the statement
+                    END IF
+                NEXT
+            ELSEIF LEFT$(u, 1) = "V" AND MID$(u, 3, 1) = ":" AND INSTR("1234", MID$(u, 2, 1)) > 0 THEN
+                k = VAL(MID$(u, 2, 1))
+                vs(k) = vs(k) + " " + MID$(ln, 4)
+            ELSE
+                vs(1) = vs(1) + " " + ln
+            END IF
+        LOOP
+        FOR k = 1 TO PCSMIDI_VOICES
+            IF LEN(_TRIM$(vs(k))) THEN
+                pcsmidiTracks = pcsmidiTracks + 1
+                IF NOT PCSMIDI_ParseMML(vs(k), k - 1) THEN EXIT FUNCTION
+            END IF
+        NEXT
+        IF pcsmidiCount = 0 THEN
+            IF pcsmidiError = "" THEN pcsmidiError = "No notes in that PLAY string"
+            EXIT FUNCTION
+        END IF
+        PCSMIDI_LoadMML = -1
+    END FUNCTION
+
+
+    FUNCTION PCSMIDI_LoadMMLFile% (fileName AS STRING)
+        DIM ff AS LONG, d AS STRING
+        IF NOT _FILEEXISTS(fileName) THEN pcsmidiError = "File not found: " + fileName: EXIT FUNCTION
+        ff = FREEFILE
+        OPEN fileName FOR BINARY AS #ff
+        d = SPACE$(LOF(ff))
+        GET #ff, 1, d
+        CLOSE #ff
+        PCSMIDI_LoadMMLFile = PCSMIDI_LoadMML(d)
+    END FUNCTION
+
+
+    ''
+    ' One voice's MML into notes on channel ch (as QB64-PE's PLAY reads it).
+    '
+    FUNCTION PCSMIDI_ParseMML% (mml AS STRING, ch AS LONG)
+        DIM m AS STRING, q AS LONG, c AS STRING, tempo AS LONG, octave AS LONG, length AS LONG
+        DIM pause AS DOUBLE, cursor AS DOUBLE, dur AS DOUBLE, dd AS DOUBLE, n AS LONG, num AS LONG
+        DIM hasNum AS INTEGER, dots AS LONG, i AS LONG, isRest AS INTEGER, together AS INTEGER
+        m = UCASE$(mml)
+        tempo = 120: octave = 4: length = 4: pause = 1 / 8
+        q = 1
+        DO WHILE q <= LEN(m)
+            c = MID$(m, q, 1): q = q + 1
+            SELECT CASE c
+                CASE "A" TO "G", "N", "P", "R"
+                    isRest = 0
+                    IF c = "N" THEN
+                        num = PCSMIDI_MMLNum(m, q, hasNum)
+                        IF NOT hasNum OR num > 84 THEN pcsmidiError = "N needs a note number 0-84": EXIT FUNCTION
+                        n = 24 + num ' N45 = A 440
+                        isRest = (num = 0)
+                        hasNum = 0
+                    ELSEIF c = "P" OR c = "R" THEN
+                        isRest = -1
+                        num = PCSMIDI_MMLNum(m, q, hasNum)
+                    ELSE
+                        n = INSTR("C D EF G A B", c) - 1
+                        IF q <= LEN(m) THEN
+                            SELECT CASE MID$(m, q, 1)
+                                CASE "#", "+": n = n + 1: q = q + 1
+                                CASE "-": n = n - 1: q = q + 1
+                            END SELECT
+                        END IF
+                        n = n + 12 * octave + 36 ' O4 C = MIDI 84, as QB64-PE plays it
+                        num = PCSMIDI_MMLNum(m, q, hasNum)
+                    END IF
+                    ' the length: 1/num of a whole note, or L's
+                    IF hasNum AND num > 0 THEN
+                        IF num > 64 THEN pcsmidiError = "Note lengths go from 1 to 64": EXIT FUNCTION
+                        dur = 240 / tempo / num
+                    ELSE
+                        dur = 240 / tempo / length
+                    END IF
+                    dots = 0
+                    DO WHILE q <= LEN(m)
+                        IF MID$(m, q, 1) <> "." THEN EXIT DO
+                        dots = dots + 1: q = q + 1
+                    LOOP
+                    dd = dur
+                    FOR i = 1 TO dots: dd = dd / 2: dur = dur + dd: NEXT
+                    together = 0
+                    DO WHILE q <= LEN(m) ' spaces before a chord comma
+                        IF MID$(m, q, 1) <> " " THEN EXIT DO
+                        q = q + 1
+                    LOOP
+                    IF q <= LEN(m) THEN
+                        IF MID$(m, q, 1) = "," THEN together = -1: q = q + 1
+                    END IF
+                    IF NOT isRest THEN
+                        IF pcsmidiCount > UBOUND(pcsmidiNote) THEN REDIM _PRESERVE pcsmidiNote(0 TO pcsmidiCount * 2 + 64) AS PCSMIDI_NOTE
+                        pcsmidiNote(pcsmidiCount).t0 = cursor
+                        pcsmidiNote(pcsmidiCount).t1 = cursor + dur * (1 - pause)
+                        pcsmidiNote(pcsmidiCount).pitch = n
+                        pcsmidiNote(pcsmidiCount).chan = ch
+                        pcsmidiNote(pcsmidiCount).trk = ch + 1
+                        pcsmidiCount = pcsmidiCount + 1
+                        pcsmidiChanMask = pcsmidiChanMask OR _SHL(1, ch)
+                    END IF
+                    IF NOT together THEN cursor = cursor + dur
+                CASE "O"
+                    num = PCSMIDI_MMLNum(m, q, hasNum)
+                    IF NOT hasNum OR num > 7 THEN pcsmidiError = "O needs an octave 0-7": EXIT FUNCTION
+                    octave = num
+                CASE "<": IF octave > 0 THEN octave = octave - 1
+                CASE ">": IF octave < 6 THEN octave = octave + 1
+                CASE "L"
+                    num = PCSMIDI_MMLNum(m, q, hasNum)
+                    IF NOT hasNum OR num < 1 OR num > 64 THEN pcsmidiError = "L needs a length 1-64": EXIT FUNCTION
+                    length = num
+                CASE "T"
+                    num = PCSMIDI_MMLNum(m, q, hasNum)
+                    IF num < 32 OR num > 255 THEN num = 120 ' (QB64-PE does the same)
+                    tempo = num
+                CASE "M"
+                    IF q <= LEN(m) THEN
+                        SELECT CASE MID$(m, q, 1)
+                            CASE "L": pause = 0
+                            CASE "N": pause = 1 / 8
+                            CASE "S": pause = 1 / 4
+                        END SELECT ' MB / MF: background / foreground - nothing to do
+                        q = q + 1
+                    END IF
+                CASE "V", "S" ' volume, panning: n, + or -
+                    IF q <= LEN(m) THEN
+                        IF MID$(m, q, 1) = "+" OR MID$(m, q, 1) = "-" THEN q = q + 1 ELSE num = PCSMIDI_MMLNum(m, q, hasNum)
+                    END IF
+                CASE "W", "@", "Q", "/", "", "^", "_", "Y" ' waveform, envelope: a 1-bit speaker has neither
+                    num = PCSMIDI_MMLNum(m, q, hasNum)
+                CASE "X" ' X + VARPTR$(a$): can't follow it from here
+                    q = q + 3
+                CASE ELSE ' spaces, ; and anything else
+            END SELECT
+        LOOP
+        PCSMIDI_ParseMML = -1
+    END FUNCTION
+
+
+    ''
+    ' The number at q (spaces before it allowed); hasNum says if there was one.
+    '
+    FUNCTION PCSMIDI_MMLNum& (m AS STRING, q AS LONG, hasNum AS INTEGER)
+        DIM v AS LONG, c AS LONG
+        hasNum = 0
+        DO WHILE q <= LEN(m)
+            IF MID$(m, q, 1) <> " " THEN EXIT DO
+            q = q + 1
+        LOOP
+        DO WHILE q <= LEN(m)
+            c = ASC(m, q)
+            IF c < 48 OR c > 57 THEN EXIT DO
+            v = v * 10 + c - 48: hasNum = -1
+            q = q + 1
+        LOOP
+        PCSMIDI_MMLNum = v
+    END FUNCTION
+
+
+    ''
+    ' Turn the loaded notes into voices (pcsmidiVoice):
+    '   maxV      1-4 voices; 1 = the top note wins (a melody line)
+    '   semis     transpose by this many semitones
+    '   chanKeep  bit n keeps channel n (1-16 in MIDI speak); 0 = every
+    '             channel but the drums (10)
+    '   gap       1 = a one-step rest between repeated notes of the same
+    '             pitch, so they don't run together into one long note
+    '   maxSteps  cut the tune here
+    ' The tune starts at its first note. Notes with no voice free are dropped
+    ' (pcsmidiDropped); voices are filled top note first.
+    '
+    SUB PCSMIDI_Render (maxV AS LONG, semis AS LONG, chanKeep AS LONG, gap AS LONG, maxSteps AS LONG)
+        DIM i AS LONG, j AS LONG, n AS LONG, k AS LONG, s AS LONG, a AS LONG, b AS LONG
+        DIM first AS LONG, total AS LONG, best AS LONG, cost AS LONG, bestCost AS LONG
+        DIM nv AS LONG, dv AS LONG, h AS LONG, ta AS LONG, tp AS LONG, ti AS LONG, keep AS INTEGER
+        DIM vEnd(1 TO PCSMIDI_VOICES) AS LONG, vLast(1 TO PCSMIDI_VOICES) AS LONG, vStart(1 TO PCSMIDI_VOICES) AS LONG
+
+        FOR k = 1 TO PCSMIDI_VOICES: pcsmidiVoice(k) = "": NEXT
+        pcsmidiUsed = 0: pcsmidiSteps = 0: pcsmidiPlaced = 0: pcsmidiDropped = 0: pcsmidiCut = 0
+        nv = maxV
+        IF nv < 1 THEN nv = 1
+        IF nv > PCSMIDI_VOICES THEN nv = PCSMIDI_VOICES
+        IF pcsmidiCount = 0 THEN EXIT SUB
+
+        ' the notes to use, in steps
+        REDIM na(0 TO pcsmidiCount) AS LONG, nb(0 TO pcsmidiCount) AS LONG, np(0 TO pcsmidiCount) AS LONG
+        first = 2147483647
+        FOR i = 0 TO pcsmidiCount - 1
+            IF chanKeep = 0 THEN
+                keep = pcsmidiNote(i).chan <> 9
+            ELSE
+                keep = (chanKeep AND _SHL(1, pcsmidiNote(i).chan)) <> 0
+            END IF
+            IF keep THEN
+                na(n) = CLNG(pcsmidiNote(i).t0 * PCSMIDI_RATE)
+                nb(n) = CLNG(pcsmidiNote(i).t1 * PCSMIDI_RATE)
+                IF nb(n) <= na(n) THEN nb(n) = na(n) + 1
+                np(n) = pcsmidiNote(i).pitch + semis
+                IF na(n) < first THEN first = na(n)
+                n = n + 1
+            END IF
+        NEXT
+        IF n = 0 THEN EXIT SUB
+        FOR i = 0 TO n - 1
+            na(i) = na(i) - first: nb(i) = nb(i) - first
+            IF nb(i) > total THEN total = nb(i)
+        NEXT
+        IF total > maxSteps THEN total = maxSteps
+
+        ' by start, then highest first (shell sort)
+        h = 1
+        DO WHILE h < n \ 3: h = h * 3 + 1: LOOP
+        DO WHILE h >= 1
+            FOR i = h TO n - 1
+                ta = na(i): tp = np(i): ti = nb(i)
+                j = i
+                DO WHILE j >= h
+                    IF na(j - h) < ta OR (na(j - h) = ta AND np(j - h) >= tp) THEN EXIT DO
+                    na(j) = na(j - h): np(j) = np(j - h): nb(j) = nb(j - h)
+                    j = j - h
+                LOOP
+                na(j) = ta: np(j) = tp: nb(j) = ti
+            NEXT
+            h = h \ 3
+        LOOP
+
+        REDIM vv(1 TO PCSMIDI_VOICES, 0 TO total) AS LONG
+        IF nv = 1 THEN
+            ' one voice: at every step the highest note sounding
+            REDIM topP(0 TO total) AS LONG, startAt(0 TO total) AS INTEGER
+            FOR s = 0 TO total: topP(s) = -1: NEXT
+            FOR i = 0 TO n - 1
+                IF na(i) >= total THEN
+                    pcsmidiCut = pcsmidiCut + 1
+                ELSE
+                    b = nb(i): IF b > total THEN b = total
+                    dv = PCSMIDI_Div(np(i))
+                    keep = 0
+                    FOR s = na(i) TO b - 1
+                        IF np(i) > topP(s) THEN
+                            topP(s) = np(i): vv(1, s) = dv: keep = -1
+                            startAt(s) = (s = na(i))
+                        END IF
+                    NEXT
+                    IF keep THEN pcsmidiPlaced = pcsmidiPlaced + 1 ELSE pcsmidiDropped = pcsmidiDropped + 1
+                END IF
+            NEXT
+            IF gap THEN
+                FOR s = 2 TO total - 1
+                    IF startAt(s) AND vv(1, s - 1) = vv(1, s) AND vv(1, s - 2) = vv(1, s) THEN vv(1, s - 1) = 0
+                NEXT
+            END IF
+        ELSE
+            FOR k = 1 TO nv: vLast(k) = -1: vEnd(k) = 0: NEXT
+            FOR i = 0 TO n - 1
+                a = na(i)
+                IF a >= total THEN
+                    pcsmidiCut = pcsmidiCut + 1
+                ELSE
+                    b = nb(i): IF b > total THEN b = total
+                    ' the free voice nearest in pitch to its last note (a
+                    ' voice ending up to 2 steps late counts as free: sloppy
+                    ' legato in a single line shouldn't split it in two)
+                    best = 0: bestCost = 2147483647
+                    FOR k = 1 TO nv
+                        IF vEnd(k) <= a + 2 THEN
+                            IF vLast(k) < 0 THEN cost = 1000 + k ELSE cost = ABS(vLast(k) - np(i))
+                            IF cost < bestCost THEN bestCost = cost: best = k
+                        END IF
+                    NEXT
+                    IF best = 0 THEN
+                        pcsmidiDropped = pcsmidiDropped + 1
+                    ELSE
+                        ' cut the voice's last note where this one starts
+                        FOR s = a TO vEnd(best) - 1
+                            IF s <= total THEN vv(best, s) = 0
+                        NEXT
+                        IF gap AND vLast(best) = np(i) AND vEnd(best) >= a AND a - 1 > vStart(best) AND a > 0 THEN vv(best, a - 1) = 0
+                        dv = PCSMIDI_Div(np(i))
+                        FOR s = a TO b - 1
+                            vv(best, s) = dv
+                        NEXT
+                        vEnd(best) = b: vLast(best) = np(i): vStart(best) = a
+                        pcsmidiPlaced = pcsmidiPlaced + 1
+                    END IF
+                END IF
+            NEXT
+        END IF
+
+        ' voices with notes, packed into 1, 2, ... ; trailing rests dropped
+        FOR k = 1 TO nv
+            b = 0
+            FOR s = total - 1 TO 0 STEP -1
+                IF vv(k, s) THEN b = s + 1: EXIT FOR
+            NEXT
+            IF b > 0 THEN
+                pcsmidiUsed = pcsmidiUsed + 1
+                pcsmidiVoice(pcsmidiUsed) = SPACE$(b * 2)
+                FOR s = 0 TO b - 1
+                    MID$(pcsmidiVoice(pcsmidiUsed), s * 2 + 1, 2) = CHR$(vv(k, s) AND 255) + CHR$(vv(k, s) \ 256)
+                NEXT
+                IF b > pcsmidiSteps THEN pcsmidiSteps = b
+            END IF
+        NEXT
+    END SUB
+
+
+    ''
+    ' The voices combined the ARP way (what a game can play): the notes
+    ' sounding at a step take turns, one per step. Same as PCSEDIT's.
+    '
+    FUNCTION PCSMIDI_ArpMix$
+        DIM r AS STRING, s AS LONG, k AS LONG, n AS LONG, v AS LONG
+        DIM notes(1 TO PCSMIDI_VOICES) AS LONG
+        r = SPACE$(pcsmidiSteps * 2)
+        FOR s = 0 TO pcsmidiSteps - 1
+            n = 0
+            FOR k = 1 TO pcsmidiUsed
+                IF s * 2 + 2 <= LEN(pcsmidiVoice(k)) THEN
+                    v = ASC(pcsmidiVoice(k), s * 2 + 1) + ASC(pcsmidiVoice(k), s * 2 + 2) * 256&
+                    IF v THEN n = n + 1: notes(n) = v
+                END IF
+            NEXT
+            v = 0
+            IF n THEN v = notes((s MOD n) + 1)
+            MID$(r, s * 2 + 1, 2) = CHR$(v AND 255) + CHR$(v \ 256)
+        NEXT
+        PCSMIDI_ArpMix = r
+    END FUNCTION
+
+
+    ''
+    ' PIT divisor for a MIDI note (too low for the PIT: up an octave).
+    '
+    FUNCTION PCSMIDI_Div& (pitch AS LONG)
+        DIM v AS DOUBLE
+        v = PCSMIDI_PIT / (440 * 2 ^ ((pitch - 69) / 12))
+        DO WHILE v > 65534: v = v / 2: LOOP
+        IF v < 1 THEN v = 1
+        PCSMIDI_Div = CLNG(v)
+    END FUNCTION
+
+
+    SUB PCSMIDI_AddTempo (tick AS _INTEGER64, us AS LONG)
+        DIM i AS LONG
+        IF us <= 0 THEN EXIT SUB
+        IF pcsmidiTempoN > UBOUND(pcsmidiTempoTk) THEN
+            REDIM _PRESERVE pcsmidiTempoTk(0 TO pcsmidiTempoN * 2 + 8) AS _INTEGER64
+            REDIM _PRESERVE pcsmidiTempoUs(0 TO pcsmidiTempoN * 2 + 8) AS LONG
+        END IF
+        ' keep the list in tick order (tracks can come in any order)
+        i = pcsmidiTempoN
+        DO WHILE i > 0
+            IF pcsmidiTempoTk(i - 1) <= tick THEN EXIT DO
+            pcsmidiTempoTk(i) = pcsmidiTempoTk(i - 1): pcsmidiTempoUs(i) = pcsmidiTempoUs(i - 1)
+            i = i - 1
+        LOOP
+        pcsmidiTempoTk(i) = tick: pcsmidiTempoUs(i) = us
+        pcsmidiTempoN = pcsmidiTempoN + 1
+    END SUB
+
+
+    ''
+    ' Seconds at a tick, through the tempo map. A negative division is
+    ' SMPTE time: frames per second and ticks per frame.
+    '
+    FUNCTION PCSMIDI_TickSec# (tick AS _INTEGER64, division AS LONG)
+        DIM i AS LONG, sec AS DOUBLE, tpq AS DOUBLE, fps AS LONG
+        IF division AND &H8000& THEN
+            fps = 256 - (division \ 256)
+            PCSMIDI_TickSec = tick / (fps * (division AND 255))
+            EXIT FUNCTION
+        END IF
+        tpq = division
+        IF tpq <= 0 THEN tpq = 96
+        FOR i = 0 TO pcsmidiTempoN - 1
+            IF i = pcsmidiTempoN - 1 THEN
+                sec = sec + (tick - pcsmidiTempoTk(i)) * pcsmidiTempoUs(i) / 1000000 / tpq
+                EXIT FOR
+            ELSEIF tick <= pcsmidiTempoTk(i + 1) THEN
+                sec = sec + (tick - pcsmidiTempoTk(i)) * pcsmidiTempoUs(i) / 1000000 / tpq
+                EXIT FOR
+            ELSE
+                sec = sec + (pcsmidiTempoTk(i + 1) - pcsmidiTempoTk(i)) * pcsmidiTempoUs(i) / 1000000 / tpq
+            END IF
+        NEXT
+        PCSMIDI_TickSec = sec
+    END FUNCTION
+
+
+    ''
+    ' Big-endian number of n bytes at position p (1 based).
+    '
+    FUNCTION PCSMIDI_BE& (d AS STRING, p AS LONG, n AS LONG)
+        DIM i AS LONG, v AS LONG
+        FOR i = 0 TO n - 1
+            IF p + i <= LEN(d) THEN v = v * 256 + ASC(d, p + i) ELSE v = v * 256
+        NEXT
+        PCSMIDI_BE = v
+    END FUNCTION
+
+
+    ''
+    ' A MIDI variable-length number at q (moves q past it).
+    '
+    FUNCTION PCSMIDI_VLQ& (d AS STRING, q AS LONG)
+        DIM v AS LONG, c AS LONG, i AS LONG
+        DO
+            IF q > LEN(d) THEN EXIT DO
+            c = ASC(d, q): q = q + 1
+            v = v * 128 + (c AND 127)
+            i = i + 1
+            IF (c AND 128) = 0 OR i >= 4 THEN EXIT DO
+        LOOP
+        PCSMIDI_VLQ = v
+    END FUNCTION
+$END IF

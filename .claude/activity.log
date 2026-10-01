@@ -18959,3 +18959,1653 @@
   $ git add .claude/activity.log && git commit -q -m "Update activity log
   $ 
   $ Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>" && timeout 100 git push -q; git log --oneline -1; git status -sb | head -1
+2026-10-01T01:36:32-0400  INFO     bash_end      [ok] 3L stdout
+  | warning: in the working copy of '.claude/activity.log', CRLF will be replaced by LF the next time Git touches it
+  | 3e1e9fa8 Update activity log
+  | ## main...origin/main
+2026-10-01T01:36:59-0400  NOTICE   prompt        make a bunch of example tune4s for me! also i'd love that utility to convert midi into our format...
+  > make a bunch of example tune4s for me! also i'd love that utility to convert midi into our format...
+2026-10-01T01:38:24-0400  INFO     bash_start    cd /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER && grep -n "CONST MAX_STEPS\|OPEN_FILTER\|_ACCEPTFILEDROP\|_DROPPEDFILE\|^SUB open_dialog" PCSEDIT.BAS | head; sed -n "$(grep -n '^SUB open_dialog' P…
+  > cwd: /home/grymmjack/git/qb64
+  $ cd /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER && grep -n "CONST MAX_STEPS\|OPEN_FILTER\|_ACCEPTFILEDROP\|_DROPPEDFILE\|^SUB open_dialog" PCSEDIT.BAS | head; sed -n "$(grep -n '^SUB open_dialog' PCSEDIT.BAS | cut -d: -f1),+8p" PCSEDIT.BAS; sed -n "$(grep -n '^SUB open_bank' PCSEDIT.BAS | cut -d: -f1),+45p" PCSEDIT.BAS; ls; ls ASSETS
+2026-10-01T01:38:24-0400  INFO     bash_end      [ok] 69L stdout
+  | 134:CONST MAX_STEPS = 9000 '                 64 seconds
+  | 141:CONST OPEN_FILTER = "*.snd|*.SND|*.dn1|*.DN1|*.dn2|*.DN2|*.dn3|*.DN3|*.ck1|*.CK1|*.wad|*.WAD|*.lmp|*.LMP|*.cmp|*.CMP|*.stn|*.STN|*.ms1|*.MS1|*.ms2|*.MS2|*.ms3|*.MS3|*.hov|*.HOV|*.rov|*.ROV|*.ca2|*.CA2|*.slo|*.SLO|*.8|AUDIOT.*|audiot.*|AUDIOHED.*|audiohed.*"
+  | 377:_ACCEPTFILEDROP ON
+  | 524:        f = _DROPPEDFILE
+  | 3140:SUB open_dialog
+  | 3142:    f = _OPENFILEDIALOG$("Open a PC speaker sound bank", default_dir, OPEN_FILTER, "Sound banks DN1PLAY can play")
+  | SUB open_dialog
+  |     DIM f AS STRING
+  |     f = _OPENFILEDIALOG$("Open a PC speaker sound bank", default_dir, OPEN_FILTER, "Sound banks DN1PLAY can play")
+  |     after_dialog
+  |     IF LEN(f) THEN open_bank f
+  | END SUB
+  | 
+  | 
+  | SUB rename_sound
+  | SUB open_bank (fileName AS STRING)
+  |     DIM i AS LONG, n AS LONG, ok AS INTEGER, full AS STRING, d AS STRING, v AS LONG, k AS LONG
+  | 
+  |     errNum = 0
+  |     full = _FULLPATH$(fileName)
+  |     IF errNum OR full = "" THEN full = fileName
+  |     errNum = 0
+  |     ok = PCSPK_IFSLoad(full)
+  |     IF errNum THEN set_status "Can't read " + full: EXIT SUB
+  |     IF NOT ok THEN set_status "No PC speaker sounds in " + full: EXIT SUB
+  | 
+  |     stop_playing
+  |     stop_recording
+  |     sndCount = 0
+  |     keysMode = KEYS_NOTES
+  |     voiceOn = 0
+  |     instIdx = 0
+  |     FOR i = 0 TO PCSPK_IFSCount - 1
+  |         IF sndCount >= MAX_SOUNDS THEN EXIT FOR
+  |         sndCount = sndCount + 1
+  |         sndName(sndCount) = LEFT$(PCSPK_IFSName(i), 12)
+  |         sndPri(sndCount) = PCSPK_IFSPriority(i)
+  |         d = SPACE$(PCSPK_IFSSamples(i) * 2)
+  |         FOR n = 0 TO PCSPK_IFSSamples(i) - 1
+  |             v = PCSPK_IFSValue(i, n)
+  |             IF v > 65534 THEN v = 65534
+  |             MID$(d, n * 2 + 1, 2) = CHR$(v AND 255) + CHR$(v \ 256)
+  |         NEXT
+  |         sndData(sndCount) = d
+  |         sndAct(sndCount) = 1
+  |         FOR k = 1 TO VOICES: sndV(sndCount, k) = "": NEXT
+  |     NEXT
+  |     attach_voices
+  |     openedPath = full
+  |     savePath = "" ' never overwrite a game's file by accident: first save asks
+  |     undoN = 0
+  |     redoN = 0
+  |     dirty = 0
+  |     cur = 1
+  |     listTop = 0
+  |     cursorStep = 0
+  |     scrollX = 0
+  |     set_status "Opened " + PCSPK_FilePart(full) + " -" + STR$(sndCount) + " sounds (Ctrl+S saves a copy as an IFS bank)"
+  | END SUB
+  | 
+  | 
+  | duke1-b.dn1
+  | freedoom-dp.wad
+  | FREEDOOM-LICENSE.txt
+  | GAMES
+  | scene17.wav
+  | scene20.wav
+  | SOUNDS.CK1
+  | xp8.wav
+2026-10-01T01:38:26-0400  INFO     bash_start    ls -1 | head -40; sed -n 518,532p PCSEDIT.BAS; head -30 PCSPKR.BI
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ ls -1 | head -40; sed -n 518,532p PCSEDIT.BAS; head -30 PCSPKR.BI
+2026-10-01T01:38:26-0400  INFO     bash_end      [ok] 45L stdout
+  |     IF osExitTrap THEN
+  |         IF ok_to_lose("Quit") THEN EXIT DO
+  |     END IF
+  | 
+  |     ' ------------------------------------------------------------ drops
+  |     IF _TOTALDROPPEDFILES THEN
+  |         f = _DROPPEDFILE
+  |         _FINISHDROP
+  |         IF ok_to_lose("Open " + PCSPK_FilePart(f)) THEN open_bank f
+  |     END IF
+  | 
+  |     ' follow playback: page the view along so the playhead stays on screen
+  |     IF playing AND followOn THEN follow_page heard_pos(playPos)
+  | 
+  |     ' window resized (or maximised): new window image, re-fit the layout
+  | ''
+  | ' PCSPKR.BI - Native QB64PE IBM PC speaker emulator (header)
+  | '
+  | ' A pure QB64PE port of the ideas in https://github.com/grymmjack/ncot-pc-speaker
+  | ' (Borland C / MS-DOS). No C, no DECLARE LIBRARY - everything is emulated in
+  | ' BASIC and pushed out through QB64PE's own audio engine.
+  | '
+  | ' What is emulated:
+  | '   - PIT (8253/8254) channel 2 in mode 3 (square wave) and mode 0 (one-shot)
+  | '   - Port 61h speaker gate / data bits (on / off)
+  | '   - PIT channel 0 / BIOS INT 1Ch style "timer ticks" driven by the AUDIO
+  | '     clock, so tick handlers are sample-accurate and jitter free
+  | '   - The speaker cone (DC blocking + optional low-pass)
+  | '
+  | ' Extras:
+  | '   - Inverse Frequency Sound (IFS) loader for Duke Nukem 1 (*.DN1, *.DN2,
+  | '     *.DN3) and Commander Keen 1-3 (SOUNDS.CK?) sound banks
+  | '   - DOOM engine PC speaker sounds (DP* lumps) straight out of a .WAD
+  | '     (Doom, Doom II, Final Doom, Chex Quest, Freedoom, Strife) or a lone
+  | '     .LMP, and Rise of the Triad's PCSP* lumps
+  | '   - id Software AUDIOHED/AUDIOT pairs (Wolfenstein 3D, Spear of Destiny,
+  | '     Blake Stone, Corridor 7, Bio Menace, ...) and Duke Nukem II's
+  | '     NUKEM2.CMP
+  | '   - IFS banks buried inside bigger files (Cosmo, Major Stryker) and
+  | '     Crystal Caves' raw divisor lists
+  | '   All of them load into the same bank, so the same calls play them.
+  | '   - 8-bit mono PCM WAV loader (for the PWM playback demo)
+  | '   - Offline render to a QB64PE sound handle (_SNDNEW) and to .WAV files
+  | '
+  | ' Usage:
+2026-10-01T01:38:29-0400  INFO     bash_start    find . -maxdepth 1 | sort; cat .gitignore 2>/dev/null; cat ASSETS/GAMES/.gitignore | head -5
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ find . -maxdepth 1 | sort; cat .gitignore 2>/dev/null; cat ASSETS/GAMES/.gitignore | head -5
+2026-10-01T01:38:29-0400  INFO     bash_end      [ok] 23L stdout
+  | .
+  | ./ASSETS
+  | ./BEEP2.BAS
+  | ./BEEP3.BAS
+  | ./BEEP4.BAS
+  | ./BEEP.BAS
+  | ./DN1PLAY.BAS
+  | ./DN1PLAY.run
+  | ./INTTEST.BAS
+  | ./NOTES.BI
+  | ./PCSEDIT.BAS
+  | ./PCSEDIT.run
+  | ./PCSPKR.BI
+  | ./PCSPKR.BM
+  | ./PWM.BAS
+  | ./README.md
+  | ./SCREENSHOTS
+  | ./WAV.BAS
+  | # Game files that are NOT freely redistributable stay out of git.
+  | #
+  | # Everything listed here is from a registered / commercial release. Keep
+  | # your own copies here locally (DN1PLAY will find them), but they are
+  | # never committed. The files NOT listed are shareware episode 1 files or
+2026-10-01T01:41:25-0400  INFO     bash_start    python3 - <<'EOF' | p='MID2SND.BAS'; s=open(p).read() | s=s.replace(""" ' the most notes at once (all channels but the drums) | REDIM ev(0 TO pcsmidiCount * 2) AS DOUBLE, dl(0 TO pcsmidiCount * 2) AS…
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ python3 - <<'EOF'
+  $ p='MID2SND.BAS'; s=open(p).read()
+  $ s=s.replace("""    ' the most notes at once (all channels but the drums)
+  $     REDIM ev(0 TO pcsmidiCount * 2) AS DOUBLE, dl(0 TO pcsmidiCount * 2) AS LONG
+  $ ""","")
+  $ s=s.replace("DIM c AS LONG, i AS LONG, n AS LONG, lo AS LONG, hi AS LONG, last AS DOUBLE, most AS LONG","DIM c AS LONG, i AS LONG, n AS LONG, lo AS LONG, hi AS LONG, last AS DOUBLE")
+  $ s=s.replace("tbl = tbl + MKI$(ofs + LEN(body))","tbl = tbl + u16$(ofs + LEN(body))")
+  $ s=s.replace('d = "SND" + CHR$(0) + MKI$(total) + MKI$(en) + MKI$(0)','d = "SND" + CHR$(0) + u16$(total) + u16$(en) + u16$(0)')
+  $ s=s.replace("""FUNCTION clean_name$""","""FUNCTION u16$ (v AS LONG)
+  $     u16 = CHR$(v AND 255) + CHR$((v \\ 256) AND 255)
+  $ END FUNCTION
+  $ 
+  $ 
+  $ FUNCTION clean_name$""")
+  $ s=s.replace("oldN = CVI(MID$(d, 7, 2))","oldN = CVI(MID$(d, 7, 2)) AND &HFFFF&")
+  $ open(p,'w').write(s)
+  $ EOF
+  $ SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad; /home/grymmjack/git/qb64pe/qb64pe -x MID2SND.BAS -o $SP/MID2SND 2>&1 | grep -iv "^\[" | grep -i "error\|line\|output\|warn" | head
+2026-10-01T01:41:26-0400  INFO     bash_end      [ok] 2L stdout
+  | Beginning C++ output from QB64 code... 
+  | Output: /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/MID2SND
+2026-10-01T01:44:11-0400  INFO     bash_start    cd /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER/ASSETS/TUNES && python3 - <<'EOF' | p='make_tunes.py'; s=open(p).read() | a="""cl_arp = ' '.join(' '.join(n + ':s' for n in (arp[c] + ' ') * 4 if Fal…
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ cd /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER/ASSETS/TUNES && python3 - <<'EOF'
+  $ p='make_tunes.py'; s=open(p).read()
+  $ a="""cl_arp = ' '.join(' '.join(n + ':s' for n in (arp[c] + ' ') * 4 if False else (arp[c].split() * 4))
+  $                   for c in cl_ch)"""
+  $ assert a in s
+  $ s=s.replace(a,"""cl_arp = ' '.join(n + ':s' for c in cl_ch for n in arp[c].split() * 4)""")
+  $ a="""c_bass = ' '.join(CH[c][1].replace('3', '2') + ':h' if CH[c][1].endswith('3') else CH[c][1] + ':h'
+  $                   for c in cprog)"""
+  $ assert a in s
+  $ s=s.replace(a,"""c_bass = 'D3:h A2:h B2:h F#2:h G2:h D2:h G2:h A2:h'""")
+  $ open(p,'w').write(s)
+  $ EOF
+  $ python3 make_tunes.py
+2026-10-01T01:44:11-0400  INFO     bash_end      [ok] 13L stdout
+  | ODETOJOY    3 parts, lengths in beats: 64 64 64
+  | FURELISE    4 parts, lengths in beats: 30.5 30.5 30.5 30.5
+  | KOROBEINIK  3 parts, lengths in beats: 96 96 96
+  | GREENSLEEV  3 parts, lengths in beats: 97 97 97
+  | MINUETG     2 parts, lengths in beats: 48 45
+  | CANOND      3 parts, lengths in beats: 84 92 100
+  | MTNKING     3 parts, lengths in beats: 81 81 81
+  | BIRTHDAY    3 parts, lengths in beats: 25 25 25
+  | JINGLEBELL  3 parts, lengths in beats: 64 64 64
+  | FANFARE     3 parts, lengths in beats: 8 8 8
+  | LEVELUP     3 parts, lengths in beats: 5 5 5
+  | GAMEOVER    3 parts, lengths in beats: 6 6 6
+  | CHIPLOOP    3 parts, lengths in beats: 32 32 32
+2026-10-01T01:44:27-0400  INFO     bash_start    python3 - <<'EOF' | p='make_tunes.py'; s=open(p).read() | def r(a,b): | global s | assert s.count(a)==1,a; s=s.replace(a,b) | r('"B3:h A3:q G3:h B3:q C4:h. B3:q C4:q B3:q A3:h G3:q D4:q D3:q F#3:q G3…
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER/ASSETS/TUNES
+  $ python3 - <<'EOF'
+  $ p='make_tunes.py'; s=open(p).read()
+  $ def r(a,b):
+  $     global s
+  $     assert s.count(a)==1,a; s=s.replace(a,b)
+  $ r('"B3:h A3:q G3:h B3:q C4:h. B3:q C4:q B3:q A3:h G3:q D4:q D3:q F#3:q G3:h. "',
+  $   '"B3:h A3:q G3:h B3:q C4:h. B3:q C4:q B3:q A3:h G3:q B3:h. D4:q D3:q F#3:q G3:h."')
+  $ r("""c_mel = ("r:w r:w r:w r:w \"""","""c_mel = ("r:w r:w r:w r:w \"""")
+  $ r("""    'r:w r:w ' + ' '.join([c_ch] * 5) + ' D4+F#4:w',
+  $     ' '.join([c_bass] * 6) + ' D2:w'])""","""    'r:w r:w r:w r:w ' + ' '.join([c_ch] * 4) + ' D4+F#4:w',
+  $     ' '.join([c_bass] * 5) + ' D3:w'])""")
+  $ open(p,'w').write(s)
+  $ EOF
+  $ python3 make_tunes.py | grep -E "MINUET|CANON"; ls MIDI
+2026-10-01T01:44:27-0400  INFO     bash_end      [ok] 15L stdout
+  | MINUETG     2 parts, lengths in beats: 48 48
+  | CANOND      3 parts, lengths in beats: 84 84 84
+  | birthday.mid
+  | canond.mid
+  | chiploop.mid
+  | fanfare.mid
+  | furelise.mid
+  | gameover.mid
+  | greensleev.mid
+  | jinglebell.mid
+  | korobeinik.mid
+  | levelup.mid
+  | minuetg.mid
+  | mtnking.mid
+  | odetojoy.mid
+2026-10-01T01:44:32-0400  INFO     bash_start    M=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/MID2SND; for f in MIDI/*.mid; do $M $f -i | grep -v "^ channel"; done
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER/ASSETS/TUNES
+  $ M=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/MID2SND; for f in MIDI/*.mid; do $M $f -i | grep -v "^  channel"; done
+2026-10-01T01:44:32-0400  INFO     bash_end      [ok] 13L stdout
+  | File not found: MIDI/birthday.mid
+  | File not found: MIDI/canond.mid
+  | File not found: MIDI/chiploop.mid
+  | File not found: MIDI/fanfare.mid
+  | File not found: MIDI/furelise.mid
+  | File not found: MIDI/gameover.mid
+  | File not found: MIDI/greensleev.mid
+  | File not found: MIDI/jinglebell.mid
+  | File not found: MIDI/korobeinik.mid
+  | File not found: MIDI/levelup.mid
+  | File not found: MIDI/minuetg.mid
+  | File not found: MIDI/mtnking.mid
+  | File not found: MIDI/odetojoy.mid
+2026-10-01T01:44:38-0400  INFO     bash_start    cd /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER && python3 - <<'EOF' | p='MID2SND.BAS'; s=open(p).read() | a="nv = 4: gap = 1\n" | assert s.count(a)==1 | s=s.replace(a,"CHDIR _STARTDIR$ ' file name…
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER/ASSETS/TUNES
+  $ cd /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER && python3 - <<'EOF'
+  $ p='MID2SND.BAS'; s=open(p).read()
+  $ a="nv = 4: gap = 1\n"
+  $ assert s.count(a)==1
+  $ s=s.replace(a,"CHDIR _STARTDIR$ ' file names are relative to where it was run from, not where it lives\n"+a)
+  $ open(p,'w').write(s)
+  $ EOF
+  $ M=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/MID2SND; /home/grymmjack/git/qb64pe/qb64pe -x MID2SND.BAS -o $M 2>&1 | grep -i "error\|Output"; cd ASSETS/TUNES && for f in MIDI/*.mid; do $M $f -i | grep -v "^  channel"; done
+2026-10-01T01:44:40-0400  INFO     bash_end      [ok] 67L stdout
+  | Beginning C++ output from QB64 code... 
+  | Output: /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/MID2SND
+  | birthday.mid
+  |   title: Happy Birthday
+  |   4 track(s), 65 notes
+  |   length 12.5 s
+  |   plays up to 4 notes at once (voices fit 4; more are left out)
+  | canond.mid
+  |   title: Canon in D
+  |   4 track(s), 156 notes
+  |   length 60 s
+  |   plays up to 4 notes at once (voices fit 4; more are left out)
+  | chiploop.mid
+  |   title: Chip loop
+  |   4 track(s), 220 notes
+  |   length 13.7 s
+  |   plays up to 3 notes at once (voices fit 4; more are left out)
+  | fanfare.mid
+  |   title: Fanfare
+  |   4 track(s), 28 notes
+  |   length 3.6 s
+  |   plays up to 3 notes at once (voices fit 4; more are left out)
+  | furelise.mid
+  |   title: Fur Elise
+  |   5 track(s), 135 notes
+  |   length 16.3 s
+  |   plays up to 4 notes at once (voices fit 4; more are left out)
+  | gameover.mid
+  |   title: Game over
+  |   4 track(s), 12 notes
+  |   length 4.7 s
+  |   plays up to 3 notes at once (voices fit 4; more are left out)
+  | greensleev.mid
+  |   title: Greensleeves
+  |   4 track(s), 232 notes
+  |   length 41.6 s
+  |   plays up to 4 notes at once (voices fit 4; more are left out)
+  | jinglebell.mid
+  |   title: Jingle Bells
+  |   4 track(s), 179 notes
+  |   length 24 s
+  |   plays up to 4 notes at once (voices fit 4; more are left out)
+  | korobeinik.mid
+  |   title: Korobeiniki
+  |   4 track(s), 330 notes
+  |   length 38.4 s
+  |   plays up to 4 notes at once (voices fit 4; more are left out)
+  | levelup.mid
+  |   title: Level up
+  |   4 track(s), 22 notes
+  |   length 2 s
+  |   plays up to 4 notes at once (voices fit 4; more are left out)
+  | minuetg.mid
+  |   title: Minuet in G
+  |   3 track(s), 92 notes
+  |   length 24 s
+  |   plays up to 3 notes at once (voices fit 4; more are left out)
+  | mtnking.mid
+  |   title: In the Hall of the Mountain King
+  |   4 track(s), 317 notes
+  |   length 35.9 s
+  |   plays up to 3 notes at once (voices fit 4; more are left out)
+  | odetojoy.mid
+  |   title: Ode to Joy
+  |   4 track(s), 190 notes
+  |   length 29.1 s
+  |   plays up to 4 notes at once (voices fit 4; more are left out)
+2026-10-01T01:44:54-0400  INFO     bash_start    python3 - <<'EOF' | p='make_tunes.py'; s=open(p).read() | def r(a,b): | global s | assert s.count(a)==1,a; s=s.replace(a,b) | r('c_mel = ("r:w r:w r:w r:w "\n "F#5:h','c_mel = ("F#5:h') | r(""" 'r:w …
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER/ASSETS/TUNES
+  $ python3 - <<'EOF'
+  $ p='make_tunes.py'; s=open(p).read()
+  $ def r(a,b):
+  $     global s
+  $     assert s.count(a)==1,a; s=s.replace(a,b)
+  $ r('c_mel = ("r:w r:w r:w r:w "\n         "F#5:h','c_mel = ("F#5:h')
+  $ r("""    'r:w r:w r:w r:w ' + ' '.join([c_ch] * 4) + ' D4+F#4:w',
+  $     ' '.join([c_bass] * 5) + ' D3:w'])""","""    ' '.join([c_ch] * 4) + ' D4+F#4:w',
+  $     ' '.join([c_bass] * 4) + ' D3:w'])""")
+  $ r("TUNES['CANOND'] = dict(title='Canon in D', tempo=84,","TUNES['CANOND'] = dict(title='Canon in D', tempo=96,")
+  $ open(p,'w').write(s)
+  $ EOF
+  $ cat > make_tunes.sh <<'EOF'
+  $ #!/bin/sh
+  $ # Rebuild the example tunes: MIDI files from make_tunes.py, then one IFS
+  $ # bank per tune with MID2SND (4 voices), and the short jingles together in
+  $ # JINGLES.SND. Needs MID2SND compiled next to it or on the PATH:
+  $ #   qb64pe -x ../../MID2SND.BAS -o MID2SND
+  $ cd "$(dirname "$0")" || exit 1
+  $ M=./MID2SND
+  $ [ -x "$M" ] || M=MID2SND
+  $ python3 make_tunes.py || exit 1
+  $ for t in odetojoy furelise korobeinik greensleev minuetg canond mtnking birthday jinglebell chiploop; do
+  $     "$M" "MIDI/$t.mid" "$(echo $t | tr a-z A-Z).SND" || exit 1
+  $ done
+  $ rm -f JINGLES.SND
+  $ for t in fanfare levelup gameover; do
+  $     "$M" "MIDI/$t.mid" JINGLES.SND -a || exit 1
+  $ done
+  $ EOF
+  $ chmod +x make_tunes.sh; cp /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/MID2SND ./MID2SND && ./make_tunes.sh 2>&1 | grep -v "parts, lengths"; rm MID2SND; ls -la *.SND
+2026-10-01T01:44:55-0400  INFO     bash_end      [ok] 50L stdout
+  | odetojoy.mid -> ODETOJOY.SND as ODETOJOY
+  |   190 notes, 4 voice(s), 4073 steps (29.1 s)
+  |   saved ODETOJOY.SND: 5 entries, 40772 bytes
+  | furelise.mid -> FURELISE.SND as FURELISE
+  |   135 notes, 4 voice(s), 2287 steps (16.3 s)
+  |   saved FURELISE.SND: 5 entries, 22976 bytes
+  | korobeinik.mid -> KOROBEINIK.SND as KOROBEINIK
+  |   330 notes, 4 voice(s), 5376 steps (38.4 s)
+  |   saved KOROBEINIK.SND: 5 entries, 53866 bytes
+  | greensleev.mid -> GREENSLEEV.SND as GREENSLEEV
+  |   232 notes, 4 voice(s), 5820 steps (41.6 s)
+  |   saved GREENSLEEV.SND: 5 entries, 58306 bytes
+  | minuetg.mid -> MINUETG.SND as MINUETG
+  |   92 notes, 3 voice(s), 3360 steps (24 s)
+  |   saved MINUETG.SND: 4 entries, 25008 bytes
+  | canond.mid -> CANOND.SND as CANOND
+  |   148 notes, 4 voice(s), 5950 steps (42.5 s)
+  |   saved CANOND.SND: 5 entries, 59606 bytes
+  | mtnking.mid -> MTNKING.SND as MTNKING
+  |   317 notes, 3 voice(s), 5033 steps (36 s)
+  |   saved MTNKING.SND: 4 entries, 40352 bytes
+  | birthday.mid -> BIRTHDAY.SND as BIRTHDAY
+  |   65 notes, 4 voice(s), 1750 steps (12.5 s)
+  |   saved BIRTHDAY.SND: 5 entries, 17606 bytes
+  | jinglebell.mid -> JINGLEBELL.SND as JINGLEBELL
+  |   179 notes, 4 voice(s), 3360 steps (24 s)
+  |   saved JINGLEBELL.SND: 5 entries, 33654 bytes
+  | chiploop.mid -> CHIPLOOP.SND as CHIPLOOP
+  |   220 notes, 3 voice(s), 1920 steps (13.7 s)
+  |   saved CHIPLOOP.SND: 4 entries, 15448 bytes
+  | fanfare.mid -> JINGLES.SND as FANFARE
+  |   28 notes, 3 voice(s), 509 steps (3.6 s)
+  |   saved JINGLES.SND: 4 entries, 4160 bytes
+  | levelup.mid -> JINGLES.SND as LEVELUP
+  |   22 notes, 4 voice(s), 280 steps (2 s)
+  |   saved JINGLES.SND: 9 entries, 7050 bytes
+  | gameover.mid -> JINGLES.SND as GAMEOVER
+  |   12 notes, 3 voice(s), 663 steps (4.7 s)
+  |   saved JINGLES.SND: 13 entries, 12426 bytes
+  | .rw-rw-r-- 18k grymmjack  1 Oct 01:44 BIRTHDAY.SND
+  | .rw-rw-r-- 60k grymmjack  1 Oct 01:44 CANOND.SND
+  | .rw-rw-r-- 15k grymmjack  1 Oct 01:44 CHIPLOOP.SND
+  | .rw-rw-r-- 23k grymmjack  1 Oct 01:44 FURELISE.SND
+  | .rw-rw-r-- 58k grymmjack  1 Oct 01:44 GREENSLEEV.SND
+  | .rw-rw-r-- 34k grymmjack  1 Oct 01:44 JINGLEBELL.SND
+  | .rw-rw-r-- 12k grymmjack  1 Oct 01:44 JINGLES.SND
+  | .rw-rw-r-- 54k grymmjack  1 Oct 01:44 KOROBEINIK.SND
+  | .rw-rw-r-- 25k grymmjack  1 Oct 01:44 MINUETG.SND
+  | .rw-rw-r-- 40k grymmjack  1 Oct 01:44 MTNKING.SND
+  | .rw-rw-r-- 41k grymmjack  1 Oct 01:44 ODETOJOY.SND
+2026-10-01T01:44:59-0400  INFO     bash_start    cd /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER && grep -n "\$INCLUDE" PCSEDIT.BAS
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER/ASSETS/TUNES
+  $ cd /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER && grep -n "\$INCLUDE" PCSEDIT.BAS
+2026-10-01T01:44:59-0400  INFO     bash_end      [ok] 0L stdout
+2026-10-01T01:45:00-0400  INFO     bash_start    cd /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER && grep -n "INCLUDE" PCSEDIT.BAS DN1PLAY.BAS | head
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER/ASSETS/TUNES
+  $ cd /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER && grep -n "INCLUDE" PCSEDIT.BAS DN1PLAY.BAS | head
+2026-10-01T01:45:00-0400  INFO     bash_end      [ok] 4L stdout
+  | DN1PLAY.BAS:43:'$INCLUDE:'PCSPKR.BI'
+  | DN1PLAY.BAS:841:'$INCLUDE:'PCSPKR.BM'
+  | PCSEDIT.BAS:97:'$INCLUDE:'PCSPKR.BI'
+  | PCSEDIT.BAS:4950:'$INCLUDE:'PCSPKR.BM'
+2026-10-01T01:45:15-0400  INFO     bash_start    python3 - <<'PYEOF' | p='PCSEDIT.BAS'; s=open(p).read() | def r(a,b,c=1): | global s | assert s.count(a)==c,(a[:90],s.count(a)); s=s.replace(a,b) | r("'$INCLUDE:'PCSPKR.BI'\n","'$INCLUDE:'PCSPKR.BI'\…
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ python3 - <<'PYEOF'
+  $ p='PCSEDIT.BAS'; s=open(p).read()
+  $ def r(a,b,c=1):
+  $     global s
+  $     assert s.count(a)==c,(a[:90],s.count(a)); s=s.replace(a,b)
+  $ r("'$INCLUDE:'PCSPKR.BI'\n","'$INCLUDE:'PCSPKR.BI'\n'$INCLUDE:'PCSMIDI.BI'\n")
+  $ r("'$INCLUDE:'PCSPKR.BM'","'$INCLUDE:'PCSPKR.BM'\n'$INCLUDE:'PCSMIDI.BM'")
+  $ r('CONST OPEN_FILTER = "*.snd|*.SND|','CONST OPEN_FILTER = "*.snd|*.SND|*.mid|*.MID|*.midi|*.MIDI|')
+  $ r("""        IF ok_to_lose("Open " + PCSPK_FilePart(f)) THEN open_bank f""","""        IF is_midi(f) THEN
+  $             import_midi f ' adds a sound: nothing to lose
+  $         ELSEIF ok_to_lose("Open " + PCSPK_FilePart(f)) THEN
+  $             open_bank f
+  $         END IF""")
+  $ r("""    after_dialog
+  $     IF LEN(f) THEN open_bank f
+  $ END SUB""","""    after_dialog
+  $     IF LEN(f) = 0 THEN EXIT SUB
+  $     IF is_midi(f) THEN import_midi f ELSE open_bank f
+  $ END SUB
+  $ 
+  $ 
+  $ FUNCTION is_midi% (f AS STRING)
+  $     DIM e AS STRING
+  $     e = LCASE$(MID$(f, _INSTRREV(f, ".") + 1))
+  $     is_midi = (e = "mid" OR e = "midi") AND _INSTRREV(f, ".") > 0
+  $ END FUNCTION
+  $ 
+  $ 
+  $ ''
+  $ ' A MIDI file becomes a new sound after the current one, its notes spread
+  $ ' over the voices (PCSMIDI.BM; MID2SND.BAS does the same from the command
+  $ ' line, with more options).
+  $ '
+  $ SUB import_midi (fileName AS STRING)
+  $     DIM k AS LONG, nm AS STRING, i AS LONG, c AS STRING
+  $     IF NOT PCSMIDI_Load(fileName) THEN set_status pcsmidiError: EXIT SUB
+  $     PCSMIDI_Render VOICES, 0, 0, 1, MAX_STEPS
+  $     IF pcsmidiUsed = 0 THEN set_status "No notes to import in " + PCSPK_FilePart(fileName) + " (only drums?)": EXIT SUB
+  $     stop_playing
+  $     stop_recording
+  $     IF sndCount >= MAX_SOUNDS THEN set_status "The bank is full": EXIT SUB
+  $     add_sound "", ""
+  $     ' its name: the file's, in IFS letters, with room for ~1 ... ~4
+  $     nm = UCASE$(PCSPK_FilePart(fileName))
+  $     IF _INSTRREV(nm, ".") THEN nm = LEFT$(nm, _INSTRREV(nm, ".") - 1)
+  $     FOR i = 1 TO LEN(nm)
+  $         c = MID$(nm, i, 1)
+  $         IF INSTR("ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_", c) THEN sndName(cur) = sndName(cur) + c
+  $     NEXT
+  $     sndName(cur) = LEFT$(MID$(sndName(cur), LEN("SOUND" + LTRIM$(STR$(sndCount))) + 1), 10)
+  $     IF sndName(cur) = "" THEN sndName(cur) = "MIDI"
+  $     sndAct(cur) = 1
+  $     sndData(cur) = pcsmidiVoice(1)
+  $     FOR k = 2 TO VOICES: sndV(cur, k) = pcsmidiVoice(k): NEXT
+  $     undoN = 0: redoN = 0
+  $     dirty = -1
+  $     selOn = 0: cursorStep = 0: scrollX = 0
+  $     c = "Imported " + PCSPK_FilePart(fileName) + ":" + STR$(pcsmidiPlaced) + " notes," + STR$(pcsmidiUsed) + " voice(s), " + fmt2(pcsmidiSteps / rateHz) + " s"
+  $     IF pcsmidiDropped THEN c = c + " -" + STR$(pcsmidiDropped) + " notes left out (more than 4 at once)"
+  $     IF pcsmidiCut THEN c = c + " - cut at" + STR$(MAX_STEPS \\ 140) + " s"
+  $     set_status c
+  $ END SUB""")
+  $ open(p,'w').write(s)
+  $ PYEOF
+  $ SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad && /home/grymmjack/git/qb64pe/qb64pe -x PCSEDIT.BAS -o $SP/PCSEDIT 2>&1 | grep -i "error\|line [0-9]\|Output"
+2026-10-01T01:45:16-0400  INFO     bash_end      [ok] 2L stdout
+  | Beginning C++ output from QB64 code... 
+  | [38;5;9mName already in use (transpose) in line 140 of /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER/PCSMIDI.BM included
+2026-10-01T01:45:25-0400  INFO     bash_start    python3 - <<'PYEOF' | p='PCSMIDI.BM'; s=open(p).read() | s=s.replace("SUB PCSMIDI_Render (maxV AS LONG, transpose AS LONG,","SUB PCSMIDI_Render (maxV AS LONG, semis AS LONG,") | s=s.replace("np(n) = …
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ python3 - <<'PYEOF'
+  $ p='PCSMIDI.BM'; s=open(p).read()
+  $ s=s.replace("SUB PCSMIDI_Render (maxV AS LONG, transpose AS LONG,","SUB PCSMIDI_Render (maxV AS LONG, semis AS LONG,")
+  $ s=s.replace("np(n) = pcsmidiNote(i).pitch + transpose","np(n) = pcsmidiNote(i).pitch + semis")
+  $ s=s.replace("'   transpose semitones","'   semis     transpose by this many semitones")
+  $ open(p,'w').write(s)
+  $ p='PCSEDIT.BAS'; s=open(p).read()
+  $ a="""    FOR i = 1 TO LEN(nm)
+  $         c = MID$(nm, i, 1)
+  $         IF INSTR("ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_", c) THEN sndName(cur) = sndName(cur) + c
+  $     NEXT
+  $     sndName(cur) = LEFT$(MID$(sndName(cur), LEN("SOUND" + LTRIM$(STR$(sndCount))) + 1), 10)
+  $     IF sndName(cur) = "" THEN sndName(cur) = "MIDI\""""
+  $ assert a in s
+  $ s=s.replace(a,"""    sndName(cur) = ""
+  $     FOR i = 1 TO LEN(nm)
+  $         c = MID$(nm, i, 1)
+  $         IF INSTR("ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_", c) THEN sndName(cur) = sndName(cur) + c
+  $     NEXT
+  $     sndName(cur) = LEFT$(sndName(cur), 10)
+  $     IF sndName(cur) = "" THEN sndName(cur) = "MIDI\"""")
+  $ open(p,'w').write(s)
+  $ PYEOF
+  $ grep -n "transpose" PCSMIDI.BM; SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad && /home/grymmjack/git/qb64pe/qb64pe -x PCSEDIT.BAS -o $SP/PCSEDIT 2>&1 | grep -i "error\|line [0-9]\|Output"; /home/grymmjack/git/qb64pe/qb64pe -x MID2SND.BAS -o $SP/MID2SND 2>&1 | grep -i "error\|Output"
+2026-10-01T01:45:28-0400  INFO     bash_end      [ok] 5L stdout
+  | 131:    '   semis     transpose by this many semitones
+  | Beginning C++ output from QB64 code... 
+  | Output: /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/PCSEDIT
+  | Beginning C++ output from QB64 code... 
+  | Output: /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/MID2SND
+2026-10-01T01:45:37-0400  INFO     bash_start    export SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad && python3 - <<'PYEOF' | import os,glob | SP=os.environ['SP']; here=os.getcwd() | s=open('PCSEDIT.B…
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ export SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad && python3 - <<'PYEOF'
+  $ import os,glob
+  $ SP=os.environ['SP']; here=os.getcwd()
+  $ s=open('PCSEDIT.BAS').read()
+  $ lines=s.split('\n'); i=lines.index('DO')
+  $ t=['DIM tsF AS LONG, tsK AS LONG','tsF = FREEFILE: OPEN "%s/pt/tunes.txt" FOR OUTPUT AS #tsF' % SP]
+  $ for f in sorted(glob.glob('ASSETS/TUNES/*.SND')):
+  $     t.append('open_bank "%s/%s"' % (here,f))
+  $     t.append('FOR tsK = 1 TO sndCount: PRINT #tsF, "%s "; sndName(tsK); " used"; voices_used(tsK); " len"; snd_len(tsK); " s0:"; voice_step(tsK, 1, 0); voice_step(tsK, 2, 0); voice_step(tsK, 3, 0); voice_step(tsK, 4, 0): NEXT' % os.path.basename(f))
+  $ t.append('new_bank: import_midi "%s/ASSETS/TUNES/MIDI/odetojoy.mid"' % here)
+  $ t.append('PRINT #tsF, "import: "; sndName(cur); " cur"; cur; " used"; voices_used(cur); " len"; snd_len(cur); " ["; status; "]"')
+  $ t.append('PRINT #tsF, "want F#5 F#4 A4 D3:"; note_div(78); note_div(66); note_div(69); note_div(50)')
+  $ t.append('polyMode = POLY_PWM')
+  $ t.append('CLOSE #tsF')
+  $ t.append('SYSTEM')
+  $ lines.insert(i,'\n'.join(t))
+  $ open(SP+'/pt/T.BAS','w').write('\n'.join(lines))
+  $ PYEOF
+  $ grep -n "DIM SHARED status\b\|statusMsg\|SUB set_status" -A2 PCSEDIT.BAS | head -5
+2026-10-01T01:45:37-0400  INFO     bash_end      [ok] 5L stdout
+  | 349:DIM SHARED statusMsg AS STRING
+  | 350-DIM SHARED statusUntil AS DOUBLE
+  | 351-DIM SHARED helpOn AS INTEGER
+  | --
+  | 4172:    IF LEN(statusMsg) THEN
+2026-10-01T01:45:41-0400  INFO     bash_start    cd /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/pt && sed -i 's/ \["; status; "\]"/ ["; statusMsg; "]"/' T.BAS && cp /home/grymmjack/git/qb64/qb64/SOUND/P…
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ cd /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/pt && sed -i 's/ \["; status; "\]"/ ["; statusMsg; "]"/' T.BAS && cp /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER/PCSMIDI.B? . && cp /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER/PCSPKR.B? . && /home/grymmjack/git/qb64pe/qb64pe -x T.BAS -o ./T 2>&1 | grep -i "error\|Output"; HOME=$PWD/home PCSEDIT_NOMIDI=1 DISPLAY=:99 timeout 30 ./T; cat tunes.txt
+2026-10-01T01:45:44-0400  WARNING  bash_end      [stderr] 17L stdout / 2L stderr
+  | Beginning C++ output from QB64 code... 
+  | Output: /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/pt/T
+  | BIRTHDAY.SND BIRTHDAY used 4  len 1750  s0: 3044  0  0  0 
+  | CANOND.SND CANOND used 4  len 5950  s0: 1612  3225  4063  8126 
+  | CHIPLOOP.SND CHIPLOOP used 3  len 1920  s0: 1356  5424  10847  0 
+  | FURELISE.SND FURELISE used 4  len 2287  s0: 1810  0  0  0 
+  | GREENSLEEV.SND GREENSLEEV used 4  len 5820  s0: 2712  0  0  0 
+  | JINGLEBELL.SND JINGLEBELL used 4  len 3360  s0: 1810  9121  0  0 
+  | JINGLES.SND FANFARE used 3  len 509  s0: 2280  3620  9121  0 
+  | JINGLES.SND LEVELUP used 4  len 280  s0: 2280  3620  9121  0 
+  | JINGLES.SND GAMEOVER used 3  len 663  s0: 3044  3620  9121  0 
+  | KOROBEINIK.SND KOROBEINIK used 4  len 5376  s0: 1810  4832  5746  7240 
+  | MINUETG.SND MINUETG used 3  len 3360  s0: 2032  4832  6088  0 
+  | MTNKING.SND MTNKING used 3  len 5033  s0: 4832  9664  0  0 
+  | ODETOJOY.SND ODETOJOY used 4  len 4073  s0: 1612  2712  3225  8126 
+  | import: ODETOJOY cur 2  used 4  len 4073  [Imported odetojoy.mid: 190 notes, 4 voice(s), 29.09 s]
+  | want F#5 F#4 A4 D3: 1612  3225  2712  8126
+  ! 
+  ! Shell cwd was reset to /home/grymmjack/git/qb64
+2026-10-01T01:45:55-0400  INFO     bash_start    cd /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER && grep -n "^## \|^### " README.md | head -30; grep -n "drop a file" PCSEDIT.BAS README.md; git -C /home/grymmjack/git/qb64 status --short
+  > cwd: /home/grymmjack/git/qb64
+  $ cd /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER && grep -n "^## \|^### " README.md | head -30; grep -n "drop a file" PCSEDIT.BAS README.md; git -C /home/grymmjack/git/qb64 status --short
+2026-10-01T01:45:56-0400  INFO     bash_end      [ok] 26L stdout
+  | 26:## Quick start
+  | 69:## PCSEDIT: make your own sounds
+  | 386:## Supported games
+  | 444:## Screenshots
+  | 473:## What we did, in plain English
+  | 475:### 1. How the real PC speaker worked
+  | 500:### 2. How Duke Nukem 1 and Keen stored sounds
+  | 514:### 3. How we rebuilt it in QB64-PE
+  | 554:## Follow along with the video
+  | 594:## What's in this folder
+  | 614:### PWM: playing recordings on a speaker with two positions
+  | 625:## Cheat sheet: C to QB64-PE
+  | 638:## Library reference (`PCSPKR.BM`)
+  | 672:## File format: `.DN1` / `.CK1` (Inverse Frequency Sound)
+  | 701:## File format: id Software `AUDIOHED` / `AUDIOT`
+  | 734:## File format: Crystal Caves `.SND`
+  | 745:## File format: DOOM engine PC speaker lumps
+  | 786:## Notes and gotchas
+  | PCSEDIT.BAS:4803:    t(18) = "Ctrl+E export the sound as .wav (EXPORT/)     drop a file to open it"
+  |  M .claude/activity.log
+  |  M qb64/SOUND/PC-SPEAKER/PCSEDIT.BAS
+  | ?? MYSOUNDS.SND
+  | ?? qb64/SOUND/PC-SPEAKER/ASSETS/TUNES/
+  | ?? qb64/SOUND/PC-SPEAKER/MID2SND.BAS
+  | ?? qb64/SOUND/PC-SPEAKER/PCSMIDI.BI
+  | ?? qb64/SOUND/PC-SPEAKER/PCSMIDI.BM
+2026-10-01T01:45:58-0400  INFO     bash_start    sed -n 380,386p README.md; sed -n 594,614p README.md; grep -n "Ctrl+O\b\|Ctrl+O " README.md | head
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ sed -n 380,386p README.md; sed -n 594,614p README.md; grep -n "Ctrl+O\b\|Ctrl+O " README.md | head
+2026-10-01T01:45:58-0400  INFO     bash_end      [ok] 29L stdout
+  | that file every frame. When PCSEDIT quits, it stops `amidi` and deletes the
+  | file. This needs Linux, the `alsa-utils` package, and your user in the `audio`
+  | group. On other systems, use the computer keyboard.
+  | 
+  | ---
+  | 
+  | ## Supported games
+  | ## What's in this folder
+  | 
+  | | File | What it is | Ported from |
+  | | --- | --- | --- |
+  | | **`DN1PLAY.BAS`** | **The Duke Nukem / Keen sound player. Start here.** | new |
+  | | **`PCSEDIT.BAS`** | **The sound editor: draw sounds, or play them in from the keyboard or a MIDI keyboard, and save them as IFS banks.** | new |
+  | | `PCSPKR.BI` + `PCSPKR.BM` | The fake PC speaker library. Put the `.BI` at the top of your program and the `.BM` at the bottom. | `BEEPER.C`, `WAVLOAD.C`, `LOADFILE.C`, `BEEP4.C` |
+  | | `NOTES.BI` | Named divisors for musical notes (`NOTE_A4`, `NOTE_C5`, ...) | `NOTES.H` |
+  | | `BEEP.BAS` | The smallest possible example: 440 Hz for 5 timer ticks | `BEEP.C` |
+  | | `INTTEST.BAS` | Hooks the timer and counts 18 ticks. No sound; uses QB64's `ON TIMER`. | `INTTEST.C` |
+  | | `BEEP2.BAS` | A tone plus a timer countdown | `BEEP2.C` |
+  | | `BEEP3.BAS` | A music player driven by the timer interrupt (press 1 or 2 to pick a tune) | `BEEP3.C` + `MELODY.C` |
+  | | `BEEP4.BAS` | Plays the first 20 Commander Keen sounds, the same way the C did | `BEEP4.C` |
+  | | `PWM.BAS` | Tries to play a sine wave on a 1-bit speaker. Press M to hear what the C really did (warbly noise) versus true PWM (a clean tone). | `PWM.C` |
+  | | `WAV.BAS` | Plays real 8-bit `.wav` files through the 1-bit speaker using PWM. Press C to compare with normal playback. | `WAV.C` |
+  | | `ASSETS/` | `duke1-b.dn1` (Duke), `SOUNDS.CK1` (Keen), and three test `.wav` files | original repo |
+  | | `ASSETS/GAMES/` | Sound files for the games in [Supported games](#supported-games). Only the shareware and freeware ones are committed; its `.gitignore` keeps the commercial ones local, and its `README.md` lists which is which. | the games themselves |
+  | | `ASSETS/freedoom-dp.wad` | The 107 PC speaker sounds from Freedoom: Phase 2, so there are DOOM engine sounds to play without an id Software WAD. BSD licensed, see `FREEDOOM-LICENSE.txt`. | [Freedoom](https://freedoom.github.io/) |
+  | | `SCREENSHOTS/` | The images in this README | |
+  | 
+  | ### PWM: playing recordings on a speaker with two positions
+  | 360:| Ctrl+N / Ctrl+O / Ctrl+S / Ctrl+Shift+S | new bank, open, save, save as |
+2026-10-01T01:46:17-0400  INFO     bash_start    python3 - <<'PYEOF' | p='README.md'; s=open(p).read() | def r(a,b): | global s | assert s.count(a)==1,a; s=s.replace(a,b) | r("""group. On other systems, use the computer keyboard. | | --- | | ## Sup…
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ python3 - <<'PYEOF'
+  $ p='README.md'; s=open(p).read()
+  $ def r(a,b):
+  $     global s
+  $     assert s.count(a)==1,a; s=s.replace(a,b)
+  $ r("""group. On other systems, use the computer keyboard.
+  $ 
+  $ ---
+  $ 
+  $ ## Supported games""","""group. On other systems, use the computer keyboard.
+  $ 
+  $ **Importing MIDI files:** open (**Ctrl+O**) or drop a `.mid` file and it is
+  $ added to the bank as a new sound, with its notes spread over the 4 voices.
+  $ Its melody usually goes to voice 1. If more than 4 notes play at once, the
+  $ extra ones are left out, and the drums (channel 10) are skipped. For more
+  $ control (channels, transposing, a single-voice version for a game) use
+  $ `MID2SND`, below.
+  $ 
+  $ ---
+  $ 
+  $ ## MID2SND: MIDI files to PC speaker banks
+  $ 
+  $ `MID2SND.BAS` is a command-line converter. It turns a MIDI file into one
+  $ sound with up to 4 voices, saved the way PCSEDIT saves voices (see
+  $ [Chords](#pcsedit-make-your-own-sounds)). The bank holds the ARP mix that
+  $ DN1PLAY and the games can play, plus the separate voices for PCSEDIT, which
+  $ can play them together in PWM mode.
+  $ 
+  $ ```
+  $ qb64pe -x MID2SND.BAS
+  $ ./MID2SND song.mid -i                 # what's in it: channels, notes, length
+  $ ./MID2SND song.mid                    # -> song.snd, 4 voices
+  $ ./MID2SND song.mid tune.snd -v 1      # 1 voice: the top note only, for a game
+  $ ./MID2SND song.mid tunes.snd -a -n THEME -c 1,2 -t -12 -s 30
+  $ ```
+  $ 
+  $ | Option | What it does |
+  $ | --- | --- |
+  $ | `-v N` | voices, 1 to 4 (default 4). `-v 1` keeps the highest note at every moment, a melody line a game can play as-is. |
+  $ | `-t N` | transpose by N semitones |
+  $ | `-c LIST` | MIDI channels to use, like `-c 1,2,4` (default: all but the drums on 10) |
+  $ | `-n NAME` | the sound's name, up to 10 letters (default: from the file name) |
+  $ | `-a` | add the sound to the bank instead of replacing the file. A sound with the same name is replaced. |
+  $ | `-s SECS` | stop after SECS seconds |
+  $ | `-g` | no one-step rest between repeated notes of the same pitch (by default there is one, so they don't run together into one long note) |
+  $ | `-i` | list the file's channels, notes, length and the most notes at once |
+  $ 
+  $ Tempo changes are followed, and the tune starts at its first note. Notes are
+  $ given to voices top note first. Each note goes to the free voice whose last
+  $ note was nearest in pitch, so a melody tends to stay in voice 1.
+  $ 
+  $ An IFS bank holds 64 KB, and every step costs 2 bytes per voice plus 2 for
+  $ the mix. That's about **46 seconds with 4 voices**, a minute with 3, and over
+  $ 3 minutes with 1. MID2SND says so when a tune doesn't fit.
+  $ 
+  $ ### Example tunes (`ASSETS/TUNES/`)
+  $ 
+  $ Open any of these in PCSEDIT. Press **Ctrl+J** for PWM to hear the voices
+  $ together, or play them in DN1PLAY to hear the ARP version the games would
+  $ play.
+  $ 
+  $ | Bank | Tune |
+  $ | --- | --- |
+  $ | `ODETOJOY.SND` | Ode to Joy (Beethoven) |
+  $ | `FURELISE.SND` | Für Elise, the opening (Beethoven) |
+  $ | `KOROBEINIK.SND` | Korobeiniki, the Tetris theme (Russian folk song) |
+  $ | `GREENSLEEV.SND` | Greensleeves (English, 16th century) |
+  $ | `MINUETG.SND` | Minuet in G (Petzold, from the Notebook for Anna Magdalena Bach) |
+  $ | `CANOND.SND` | Canon in D (Pachelbel) |
+  $ | `MTNKING.SND` | In the Hall of the Mountain King (Grieg), speeding up as it goes |
+  $ | `BIRTHDAY.SND` | Happy Birthday |
+  $ | `JINGLEBELL.SND` | Jingle Bells, the chorus |
+  $ | `CHIPLOOP.SND` | an original chiptune loop |
+  $ | `JINGLES.SND` | three original game jingles: FANFARE, LEVELUP, GAMEOVER |
+  $ 
+  $ They are all public domain or written for this project. The arrangements are
+  $ in `make_tunes.py` as plain note lists, so they are easy to change or add to.
+  $ `make_tunes.sh` writes the MIDI files (`ASSETS/TUNES/MIDI/`) and runs
+  $ MID2SND on each one.
+  $ 
+  $ ...[truncated]
+2026-10-01T01:46:20-0400  INFO     bash_end      [ok] 37L stdout
+  | Beginning C++ output from QB64 code... 
+  | Output: /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/PCSEDIT
+  |  M .claude/activity.log
+  |  M qb64/SOUND/PC-SPEAKER/PCSEDIT.BAS
+  |  M qb64/SOUND/PC-SPEAKER/README.md
+  | ?? MYSOUNDS.SND
+  | ?? qb64/SOUND/PC-SPEAKER/ASSETS/TUNES/BIRTHDAY.SND
+  | ?? qb64/SOUND/PC-SPEAKER/ASSETS/TUNES/CANOND.SND
+  | ?? qb64/SOUND/PC-SPEAKER/ASSETS/TUNES/CHIPLOOP.SND
+  | ?? qb64/SOUND/PC-SPEAKER/ASSETS/TUNES/FURELISE.SND
+  | ?? qb64/SOUND/PC-SPEAKER/ASSETS/TUNES/GREENSLEEV.SND
+  | ?? qb64/SOUND/PC-SPEAKER/ASSETS/TUNES/JINGLEBELL.SND
+  | ?? qb64/SOUND/PC-SPEAKER/ASSETS/TUNES/JINGLES.SND
+  | ?? qb64/SOUND/PC-SPEAKER/ASSETS/TUNES/KOROBEINIK.SND
+  | ?? qb64/SOUND/PC-SPEAKER/ASSETS/TUNES/MIDI/birthday.mid
+  | ?? qb64/SOUND/PC-SPEAKER/ASSETS/TUNES/MIDI/canond.mid
+  | ?? qb64/SOUND/PC-SPEAKER/ASSETS/TUNES/MIDI/chiploop.mid
+  | ?? qb64/SOUND/PC-SPEAKER/ASSETS/TUNES/MIDI/fanfare.mid
+  | ?? qb64/SOUND/PC-SPEAKER/ASSETS/TUNES/MIDI/furelise.mid
+  | ?? qb64/SOUND/PC-SPEAKER/ASSETS/TUNES/MIDI/gameover.mid
+  | ?? qb64/SOUND/PC-SPEAKER/ASSETS/TUNES/MIDI/greensleev.mid
+  | ?? qb64/SOUND/PC-SPEAKER/ASSETS/TUNES/MIDI/jinglebell.mid
+  | ?? qb64/SOUND/PC-SPEAKER/ASSETS/TUNES/MIDI/korobeinik.mid
+  | ?? qb64/SOUND/PC-SPEAKER/ASSETS/TUNES/MIDI/levelup.mid
+  | ?? qb64/SOUND/PC-SPEAKER/ASSETS/TUNES/MIDI/minuetg.mid
+  | ?? qb64/SOUND/PC-SPEAKER/ASSETS/TUNES/MIDI/mtnking.mid
+  | ?? qb64/SOUND/PC-SPEAKER/ASSETS/TUNES/MIDI/odetojoy.mid
+  | ?? qb64/SOUND/PC-SPEAKER/ASSETS/TUNES/MINUETG.SND
+  | ?? qb64/SOUND/PC-SPEAKER/ASSETS/TUNES/MTNKING.SND
+  | ?? qb64/SOUND/PC-SPEAKER/ASSETS/TUNES/ODETOJOY.SND
+  | ?? qb64/SOUND/PC-SPEAKER/ASSETS/TUNES/make_tunes.py
+  | ?? qb64/SOUND/PC-SPEAKER/ASSETS/TUNES/make_tunes.sh
+  | ?? qb64/SOUND/PC-SPEAKER/MID2SND.BAS
+  | ?? qb64/SOUND/PC-SPEAKER/PCSMIDI.BI
+  | ?? qb64/SOUND/PC-SPEAKER/PCSMIDI.BM
+  | .gitignore:3:*	ASSETS/TUNES/MID2SND
+  | .gitignore:3:*	MID2SND
+2026-10-01T10:40:43-0400  NOTICE   prompt        it would be sweet if we could translate PLAY syntax too - which i think is MML?
+  > it would be sweet if we could translate PLAY syntax too - which i think is MML?
+2026-10-01T10:40:58-0400  INFO     bash_start    cd /home/grymmjack/git/qb64pe && grep -rln "MML\|sub_play\|PLAY" internal/c/parts/audio/*.cpp internal/c/parts/audio/*.h 2>/dev/null | head; ls internal/c/parts/audio/
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ cd /home/grymmjack/git/qb64pe && grep -rln "MML\|sub_play\|PLAY" internal/c/parts/audio/*.cpp internal/c/parts/audio/*.h 2>/dev/null | head; ls internal/c/parts/audio/
+2026-10-01T10:40:58-0400  WARNING  bash_end      [stderr] 10L stdout / 2L stderr
+  | internal/c/parts/audio/audio.cpp
+  | audio.a
+  | audio.cpp
+  | audio.o
+  | build.mk
+  | extras
+  | framework.h
+  | miniaudio
+  | stub_audio.cpp
+  | stub_audio.o
+  ! 
+  ! Shell cwd was reset to /home/grymmjack/git/qb64
+2026-10-01T10:40:58-0400  NOTICE   prompt        that's a qb64pe native one
+  > that's a qb64pe native one
+2026-10-01T10:41:01-0400  INFO     bash_start    cd /home/grymmjack/git/qb64pe/internal/c/parts/audio && grep -n "class MML\|struct MML\|case 'O'\|case 'T'\|case 'L'\|case 'N'\|case 'M'\|case 'V'\|case '@'\|case 'Q'\|case 'W'\|case 'Y'\|case 'S'\|c…
+  > cwd: /home/grymmjack/git/qb64
+  $ cd /home/grymmjack/git/qb64pe/internal/c/parts/audio && grep -n "class MML\|struct MML\|case 'O'\|case 'T'\|case 'L'\|case 'N'\|case 'M'\|case 'V'\|case '@'\|case 'Q'\|case 'W'\|case 'Y'\|case 'S'\|case 'I'\|case 'P'\|case 'R'\|case '<'\|case '>'\|case ','\|case '&'\|440\|octave\|tempo\|MAX_VOICE\|voices" audio.cpp | head -80
+2026-10-01T10:41:01-0400  WARNING  bash_end      [stderr] 38L stdout / 2L stderr
+  | 695:        static const auto FREQUENCY_DEFAULT = 440;                                                     // the default frequency in Hz
+  | 702:        static const auto MML_TEMPO_MIN = 32;                                                          // the minimum MML tempo allowed
+  | 703:        static const auto MML_TEMPO_MAX = 255;                                                         // the maximum MML tempo allowed
+  | 704:        static const auto MML_TEMPO_DEFAULT = 120;                                                     // the default MML tempo
+  | 705:        static const auto MML_OCTAVE_MIN = 0;                                                          // the minimum MML octave allowed
+  | 706:        static const auto MML_OCTAVE_MAX = 7;                                                          // the maximum MML octave allowed
+  | 707:        static const auto MML_OCTAVE_DEFAULT = 4;                                                      // the default MML octave
+  | 997:        std::vector<float> noteBuffer;            // note frames are rendered here temporarily before it is mixed to waveBuffer
+  | 1010:        int tempo;                    // the tempo of the MML tune (this impacts all lengths)
+  | 1011:        int octave;                   // the current octave that we'll use for MML notes
+  | 1188:            tempo = MML_TEMPO_DEFAULT;
+  | 1189:            octave = MML_OCTAVE_DEFAULT;
+  | 1402:        /// frequency = 440.0 * pow(2.0, (note + (octave - 2.0) * 12.0 - 9.0) / 12.0)
+  | 1411:        //	261.63f,  277.18f,  293.67f,  311.13f,  329.63f,  349.23f,  370.00f,  392.00f,  415.31f,  440.00f,  466.17f,  493.89f,  // Octave 4
+  | 1428:            auto noDotDuration = 1.0 / (tempo / 60.0) * (4.0 / length);
+  | 1828:                            duration = 1.0 / (tempo / 60.0) * (4.0 / ((double)number));
+  | 1872:                        tempo = number;
+  | 1873:                        noDotDuration = 1.0 / (tempo / 60.0) * (4.0 / length);
+  | 1885:                        case 'L': // legato
+  | 1888:                        case 'N': // normal
+  | 1891:                        case 'S': // staccato
+  | 1945:                        octave = number;
+  | 1965:                        noDotDuration = 1.0 / (tempo / 60.0) * (4.0 / length);
+  | 2006:                                duration = 1.0 / (tempo / 60.0) * (4.0 / ((double)number));
+  | 2020:                        SetFrequency(pow(2.0, ((double)noteOffset) / 12.0) * 440.0);
+  | 2070:                        noteOffset = noteOffset + (octave - 2) * 12 - 9;
+  | 2082:                    } else if (processedChar == 'O') { // octave
+  | 2085:                    } else if (processedChar == 'T') { // tempo
+  | 2088:                    } else if (processedChar == '<') { // octave --
+  | 2089:                        --octave;
+  | 2090:                        if (octave < 0)
+  | 2091:                            octave = 0;
+  | 2093:                    } else if (processedChar == '>') { // octave ++
+  | 2094:                        ++octave;
+  | 2095:                        if (octave > 6)
+  | 2096:                            octave = 6;
+  | 2482:            // This enables better voice syncronization when all voices are activated and nothing is playing
+  | 3747:                            // Note that this means that temporary looping sounds will never close
+  ! 
+  ! Shell cwd was reset to /home/grymmjack/git/qb64
+2026-10-01T10:41:03-0400  INFO     bash_start    cd /home/grymmjack/git/qb64pe/internal/c/parts/audio && sed -n 1395,1440p audio.cpp; sed -n 1700,2140p audio.cpp
+  > cwd: /home/grymmjack/git/qb64
+  $ cd /home/grymmjack/git/qb64pe/internal/c/parts/audio && sed -n 1395,1440p audio.cpp; sed -n 1700,2140p audio.cpp
+2026-10-01T10:41:03-0400  WARNING  bash_end      [stderr] 487L stdout / 2L stderr
+  |         /// https://qb64phoenix.com/qb64wiki/index.php/PLAY
+  |         /// http://vgmpf.com/Wiki/index.php?title=Music_Macro_Language
+  |         /// https://en.wikipedia.org/wiki/Music_Macro_Language
+  |         /// https://sneslab.net/wiki/Music_Macro_Language
+  |         /// http://www.mirbsd.org/htman/i386/man4/speaker.htm
+  |         /// https://www.qbasic.net/en/reference/qb11/Statement/PLAY-006.htm
+  |         /// https://woolyss.com/chipmusic-mml.php
+  |         /// frequency = 440.0 * pow(2.0, (note + (octave - 2.0) * 12.0 - 9.0) / 12.0)
+  |         // const float FREQUENCY_TABLE[] = {
+  |         //	0,
+  |         //	//1       2         3         4         5         6         7         8         9         10        11        12
+  |         //	//C       C#        D         D#        E         F         F#        G         G#        A         A#        B
+  |         //	16.35f,   17.32f,   18.35f,   19.45f,   20.60f,   21.83f,   23.12f,   24.50f,   25.96f,   27.50f,   29.14f,   30.87f,   // Octave 0
+  |         //	32.70f,   34.65f,   36.71f,   38.89f,   41.20f,   43.65f,   46.25f,   49.00f,   51.91f,   55.00f,   58.27f,   61.74f,   // Octave 1
+  |         //	65.41f,   69.30f,   73.42f,   77.78f,   82.41f,   87.31f,   92.50f,   98.00f,   103.83f,  110.00f,  116.54f,  123.47f,  // Octave 2
+  |         //	130.81f,  138.59f,  146.83f,  155.56f,  164.81f,  174.62f,  185.00f,  196.00f,  207.65f,  220.00f,  233.08f,  246.94f,  // Octave 3
+  |         //	261.63f,  277.18f,  293.67f,  311.13f,  329.63f,  349.23f,  370.00f,  392.00f,  415.31f,  440.00f,  466.17f,  493.89f,  // Octave 4
+  |         //	523.25f,  554.37f,  587.33f,  622.26f,  659.26f,  698.46f,  739.99f,  783.99f,  830.61f,  880.00f,  932.33f,  987.77f,  // Octave 5
+  |         //	1046.51f, 1108.74f, 1174.67f, 1244.51f, 1318.52f, 1396.92f, 1479.99f, 1567.99f, 1661.23f, 1760.01f, 1864.66f, 1975.54f, // Octave 6
+  |         //	2093.02f, 2217.47f, 2349.33f, 2489.03f, 2637.03f, 2793.84f, 2959.97f, 3135.98f, 3322.45f, 3520.02f, 3729.33f, 3951.09f, // Octave 7
+  |         // };
+  |         /// @param mml A string containing the MML tune
+  |         void Play(const qbs *mml) {
+  |             if (!mml || !mml->len) // exit if string is empty
+  |                 return;
+  | 
+  |             auto currentChar = 0;
+  |             auto processedChar = 0;
+  |             auto numberEntered = 0;
+  |             int64_t number = 0;
+  |             bool noteShifted = false;
+  |             auto noteOffset = 0;
+  |             auto followUp = 0;
+  |             auto noDotDuration = 1.0 / (tempo / 60.0) * (4.0 / length);
+  | 
+  |             playIt = false;
+  | 
+  |             stateStack.push({mml->chr, mml->len}); // push the string to the state stack
+  | 
+  |             // Process until our state stack is empty
+  |             while (!stateStack.empty()) {
+  |                 // Pop and use the top item in the state stack
+  |                 currentState = stateStack.top();
+  |                 stateStack.pop();
+  | 
+  |                 while ((currentState.length--) || followUp) {
+  |                             return;
+  |                         }
+  | 
+  |                         envelope.SetSustain(double(number) / double(MML_SUSTAIN_MAX));
+  | 
+  |                         followUp = 0;
+  | 
+  |                         if (currentState.length < 0) {
+  |                             break;
+  |                         }
+  |                     } else if (followUp == 12) { // \...
+  |                         if (!numberEntered) {
+  |                             error(QB_ERROR_ILLEGAL_FUNCTION_CALL);
+  |                             return;
+  |                         }
+  | 
+  |                         numberEntered = 0;
+  | 
+  |                         if (number < MML_DECAY_MIN || number > MML_DECAY_MAX) {
+  |                             error(QB_ERROR_ILLEGAL_FUNCTION_CALL);
+  |                             return;
+  |                         }
+  | 
+  |                         envelope.SetDecay(double(number) / double(MML_DECAY_MAX));
+  | 
+  |                         followUp = 0;
+  | 
+  |                         if (currentState.length < 0) {
+  |                             break;
+  |                         }
+  |                     } else if (followUp == 11) { // /...
+  |                         if (!numberEntered) {
+  |                             error(QB_ERROR_ILLEGAL_FUNCTION_CALL);
+  |                             return;
+  | ...[truncated]
+  ! 
+  ! Shell cwd was reset to /home/grymmjack/git/qb64
+2026-10-01T10:41:15-0400  INFO     bash_start    cd /home/grymmjack/git/qb64pe/internal/c/parts/audio && grep -n "void SetFrequency" -A12 audio.cpp | head -30; grep -n "frequency" audio.cpp | sed -n 1,40p | grep -i "phase\|/ 2\|\* 2\|0.5" 
+  > cwd: /home/grymmjack/git/qb64
+  $ cd /home/grymmjack/git/qb64pe/internal/c/parts/audio && grep -n "void SetFrequency" -A12 audio.cpp | head -30; grep -n "frequency" audio.cpp | sed -n 1,40p | grep -i "phase\|/ 2\|\* 2\|0.5" 
+2026-10-01T10:41:16-0400  WARNING  bash_end      [stderr] 33L stdout / 2L stderr
+  | 853:            void SetFrequency(uint32_t frequency) {
+  | 854-                this->frequency = std::max(frequency, 1u);
+  | 855-                updateInterval = (float(clockRate) / float(frequency)) * resampleRatio;
+  | 856-                counter = 0;
+  | 857-            }
+  | 858-
+  | 859-            void SetAmplitude(float amplitude) {
+  | 860-                this->amplitude = std::clamp(amplitude, VOLUME_MIN, VOLUME_MAX);
+  | 861-            }
+  | 862-
+  | 863-            float GenerateSample() {
+  | 864-                if (counter >= updateInterval) {
+  | 865-                    StepLFSR();
+  | --
+  | 920:            void SetFrequency(float frequency) {
+  | 921-                this->frequency = std::max(frequency, 0.0f);
+  | 922-
+  | 923-                UpdatePhaseIncrement();
+  | 924-            }
+  | 925-
+  | 926-            void SetAmplitude(float amplitude) {
+  | 927-                this->amplitude = std::clamp(amplitude, VOLUME_MIN, VOLUME_MAX);
+  | 928-            }
+  | 929-
+  | 930-            /// @brief Update the internal waveform data with a new user-defined waveform.
+  | 931-            /// @param newWaveform A pointer to the new waveform data.
+  | 932-            /// @param newWaveformSize The number of samples in the new waveform data.
+  | --
+  | 1104:        void SetFrequency(double frequency) {
+  | 1105-            maResult = ma_waveform_set_frequency(&maWaveform, frequency);
+  | 905:                : frequency(float(FREQUENCY_DEFAULT)), amplitude(VOLUME_DEFAULT), sampleRate(systemSampleRate), phase(0.0f) {
+  | 971:            /// @brief Update the phase increment based on the frequency, sample rate, and waveform size.
+  | 973:                phaseIncrement = (frequency * float(waveform.size())) / float(sampleRate);
+  ! 
+  ! Shell cwd was reset to /home/grymmjack/git/qb64
+2026-10-01T10:41:30-0400  INFO     bash_start    cd /home/grymmjack/git/qb64pe && grep -rn "middle C\|Middle C" --include=*.txt --include=*.md --include=*.bas --include=*.cpp . 2>/dev/null | head; git log --oneline -S"(octave - 2) * 12" -- internal…
+  > cwd: /home/grymmjack/git/qb64
+  $ cd /home/grymmjack/git/qb64pe && grep -rn "middle C\|Middle C" --include=*.txt --include=*.md --include=*.bas --include=*.cpp . 2>/dev/null | head; git log --oneline -S"(octave - 2) * 12" -- internal/c/parts/audio/audio.cpp | tail -3
+2026-10-01T10:41:30-0400  WARNING  bash_end      [stderr] 2L stdout / 2L stderr
+  | (eval):1: no matches found: --include=*.txt
+  | ef5d29e5f Implement PSG class
+  ! 
+  ! Shell cwd was reset to /home/grymmjack/git/qb64
+2026-10-01T10:41:33-0400  INFO     bash_start    cd /home/grymmjack/git/qb64pe && git show ef5d29e5f -- internal/c/parts/audio/audio.cpp | grep -n "octave - \|noteOffset = noteOffset\|-45\|frequency = 440" | head; git log --oneline -3 -- internal/c…
+  > cwd: /home/grymmjack/git/qb64
+  $ cd /home/grymmjack/git/qb64pe && git show ef5d29e5f -- internal/c/parts/audio/audio.cpp | grep -n "octave - \|noteOffset = noteOffset\|-45\|frequency = 440" | head; git log --oneline -3 -- internal/c/parts/audio/audio.cpp; git show ef5d29e5f^:internal/c/parts/audio/audio.cpp 2>/dev/null | grep -n "octave\b.*\*\|noteOffset = noteOffset\|-45" | head
+2026-10-01T10:41:33-0400  WARNING  bash_end      [stderr] 9L stdout / 2L stderr
+  | 344:+    /// frequency = 440.0 * pow(2.0, (note + (octave - 2.0) * 12.0 - 9.0) / 12.0)
+  | 707:+                    noteOffset = -45 + number;
+  | 806:+                    if (noteOffset > -45) // this ensures that we correctly handle N0 as rest
+  | 848:+                    noteOffset = noteOffset + (octave - 2) * 12 - 9;
+  | 1469:-            n = -45 + number; // #217: fixes incorrect octave
+  | 5a9132509 Refactor includes, improve code organization and implement GLUTEmu::WindowSetIcon
+  | 6ad3293e3 8bpp image loading improvements + cleanup (#683)
+  | 89300dc00 Fix log levels
+  | 1145:            n = -45 + number; // #217: fixes incorrect octave
+  ! 
+  ! Shell cwd was reset to /home/grymmjack/git/qb64
+2026-10-01T10:41:36-0400  INFO     bash_start    cd /home/grymmjack/git/qb64pe && git show ef5d29e5f^:internal/c/parts/audio/audio.cpp | sed -n 1100,1160p | grep -n "octave\|n = \|n +=\|440\|pow" 
+  > cwd: /home/grymmjack/git/qb64
+  $ cd /home/grymmjack/git/qb64pe && git show ef5d29e5f^:internal/c/parts/audio/audio.cpp | sed -n 1100,1160p | grep -n "octave\|n = \|n +=\|440\|pow" 
+2026-10-01T10:41:36-0400  WARNING  bash_end      [stderr] 1L stdout / 2L stderr
+  | 46:            n = -45 + number; // #217: fixes incorrect octave
+  ! 
+  ! Shell cwd was reset to /home/grymmjack/git/qb64
+2026-10-01T10:41:38-0400  INFO     bash_start    cd /home/grymmjack/git/qb64pe && git show ef5d29e5f^:internal/c/parts/audio/audio.cpp | grep -n "o - 2\|o-2\|(o\b\|octave\|440" | head -20
+  > cwd: /home/grymmjack/git/qb64
+  $ cd /home/grymmjack/git/qb64pe && git show ef5d29e5f^:internal/c/parts/audio/audio.cpp | grep -n "o - 2\|o-2\|(o\b\|octave\|440" | head -20
+2026-10-01T10:41:38-0400  WARNING  bash_end      [stderr] 6L stdout / 2L stderr
+  | 1145:            n = -45 + number; // #217: fixes incorrect octave
+  | 1224:            // frequency=(2^(note/12))*440
+  | 1225:            frequency = pow(2.0, ((double)n) / 12.0) * 440.0;
+  | 1307:            n = n + (o - 2) * 12 - 9;
+  | 1339:            if (o < 0)
+  | 1346:            if (o > 6)
+  ! 
+  ! Shell cwd was reset to /home/grymmjack/git/qb64
+2026-10-01T10:41:42-0400  INFO     bash_start    cd /home/grymmjack/git/qb64pe && git show ef5d29e5f^:internal/c/parts/audio/audio.cpp | sed -n 1280,1310p; git show ef5d29e5f^:internal/c/parts/audio/audio.cpp | grep -n "^ *static int o\|int o = \|o…
+  > cwd: /home/grymmjack/git/qb64
+  $ cd /home/grymmjack/git/qb64pe && git show ef5d29e5f^:internal/c/parts/audio/audio.cpp | sed -n 1280,1310p; git show ef5d29e5f^:internal/c/parts/audio/audio.cpp | grep -n "^ *static int o\|int o = \|o = 4\|o=4" | head
+2026-10-01T10:41:43-0400  WARNING  bash_end      [stderr] 32L stdout / 2L stderr
+  |         if (a >= 65 && a <= 71) {
+  |             // modify a to represent a semitonal note (n) interval
+  |             switch (a) {
+  |                 //[c][ ][d][ ][e][f][ ][g][ ][a][ ][b]
+  |                 // 0  1  2  3  4  5  6  7  8  9  0  1
+  |             case 65:
+  |                 n = 9;
+  |                 break;
+  |             case 66:
+  |                 n = 11;
+  |                 break;
+  |             case 67:
+  |                 n = 0;
+  |                 break;
+  |             case 68:
+  |                 n = 2;
+  |                 break;
+  |             case 69:
+  |                 n = 4;
+  |                 break;
+  |             case 70:
+  |                 n = 5;
+  |                 break;
+  |             case 71:
+  |                 n = 7;
+  |                 break;
+  |             }
+  |             n = n + (o - 2) * 12 - 9;
+  |             followup = 1;
+  |             goto next_byte;
+  |         }              // a
+  | 833:    static int o = 4;
+  ! 
+  ! Shell cwd was reset to /home/grymmjack/git/qb64
+2026-10-01T10:41:56-0400  INFO     bash_start    cd /home/grymmjack/git/qb64pe && ls internal/help 2>/dev/null | grep -i "^play" | head; f=$(ls internal/help/PLAY* 2>/dev/null | head -1); [ -n "$f" ] && grep -n -i "octave\|middle\|440\|N n\|tempo" …
+  > cwd: /home/grymmjack/git/qb64
+  $ cd /home/grymmjack/git/qb64pe && ls internal/help 2>/dev/null | grep -i "^play" | head; f=$(ls internal/help/PLAY* 2>/dev/null | head -1); [ -n "$f" ] && grep -n -i "octave\|middle\|440\|N n\|tempo" "$f" | head -30
+2026-10-01T10:41:56-0400  WARNING  bash_end      [stderr] 3L stdout / 2L stderr
+  | PLAY_(function)_1111_(00000000).txt
+  | PLAY_1111.txt
+  | 18:* When nothing is left to play, this function returns zero.
+  ! 
+  ! Shell cwd was reset to /home/grymmjack/git/qb64
+2026-10-01T10:41:58-0400  INFO     bash_start    cd /home/grymmjack/git/qb64pe/internal/help && grep -n -i "octave\|middle\|440\|N n\|tempo\|voice\|, \"" PLAY_1111.txt | head -40
+  > cwd: /home/grymmjack/git/qb64
+  $ cd /home/grymmjack/git/qb64pe/internal/help && grep -n -i "octave\|middle\|440\|N n\|tempo\|voice\|, \"" PLAY_1111.txt | head -40
+2026-10-01T10:41:58-0400  WARNING  bash_end      [stderr] 30L stdout / 2L stderr
+  | 13::*'''O''' n - Sets the current octave (from 0 to 6). Example: '''{{Text|PLAY "O3"|green}}'''
+  | 14::*'''<''' - Down one octave (cannot be below zero). Example: '''{{Text|PLAY "<<"|green}}''' 'goes down two octaves.
+  | 15::*'''>''' - Up one octave (cannot be above 6). Example: '''{{Text|PLAY ">>"|green}}''' ' goes up two octaves.
+  | 16::*'''A''', '''B''', '''C''', '''D''', '''E''', '''F''' or '''G''' are the notes in the current octave. The following suffixes can be used:
+  | 19::*'''N''' n - Plays a note n by number(n can be between 0 to 84 in the 7 octaves, where 0 is a rest). Example: '''{{Text|PLAY "N42"|green}}'''
+  | 24:::*'''R'''/'''P''' n - Specifies a rest/pause (1 - 64). P1 is a whole-note pause, P2 is a half-note pause, etc.  (The pause is 1/n note in length.) Example: '''{{Text|PLAY "P32"|green}}'''
+  | 25:::*'''T''' n - Tempo sets the number of L4 quarter notes per minute (n can be 32 to 255 where 120 is the default). Example: '''{{Text|PLAY "T180"|green}}'''
+  | 29::*'''V''' n - Voice volume in '''QB64 only''' can be any volume from 0 (none) to 100 (full).  The default level is 50 when '''n''' is not specified.
+  | 30::*'''V-'''/'''V+''' - Decrement / Increment the voice volume in '''QB64-PE only'''.
+  | 34::*'''W'''/'''@''' n - Select waveform in '''QB64-PE only''' can be ('''1''' for square (default), '''2''' for sawtooth, '''3''' for triangle, '''4''' for sine, '''5''' for white noise, '''6''' for pink noise, '''7''' for Brownian noise, '''8''' for LFSR noise, '''9''' for pulse or '''10''' for a waveform defined by the [[_WAVE]] statement.
+  | 38::*'''^''' n - Sustain volume in '''QB64-PE only''' can be a percentage of the voice volume ('''V''') from 0 to 100.
+  | 63:** Support for multi-voice MML playback. Advanced BASIC (for the IBM PCjr and Tandy 1000) multi-voice MML can now play in QB64-PE.
+  | 96:    {{Cl|IF}} X = {{Text|1|#F580B1}} {{Cl|THEN}} {{Cl|PRINT}} {{Text|<nowiki>"with a corn cob pipe and a button nose and two eyes made out of coal."</nowiki>|#FFB100}}
+  | 97:    {{Cl|IF}} X = {{Text|2|#F580B1}} {{Cl|THEN}} {{Cl|PRINT}} {{Text|<nowiki>"so he said Let's run and we'll have some fun now before I melt away."</nowiki>|#FFB100}}
+  | 198:            n$ = n$ + note$ + {{Text|<nowiki>","</nowiki>|#FFB100}} {{Text|<nowiki>'comma plays 2 or more column notes simultaneously</nowiki>|#919191}}
+  | 368:{{Text|<nowiki>'Play scale in 7 different octaves</nowiki>|#919191}}
+  | 380:;Example 7:Multi-voice '''PLAY''' demo.
+  | 383:{{Text|<nowiki>' QB64-PE v4.0.0 multi-voice PLAY Demo by a740g</nowiki>|#919191}}
+  | 393:{{Cl|CONST}} APP_NAME = {{Text|<nowiki>"Multi-voice PLAY Demo"</nowiki>|#FFB100}}
+  | 506:    {{Cl|DO...LOOP|LOOP WHILE}} {{Text|DisplayVoiceStats|#55FF55}}
+  | 525:{{Cl|FUNCTION}} {{Text|DisplayVoiceStats%%|#55FF55}}
+  | 526:    {{Cl|STATIC}} voiceTotalTime({{Text|0|#F580B1}} {{Cl|TO}} {{Text|3|#F580B1}}) {{Cl|AS}} {{Cl|DOUBLE}}
+  | 528:    {{Cl|DIM}} voiceElapsedTime({{Text|0|#F580B1}} {{Cl|TO}} {{Text|3|#F580B1}}) {{Cl|AS}} {{Cl|DOUBLE}}
+  | 532:        voiceElapsedTime(i) = {{Cl|PLAY (function)|PLAY}}(i)
+  | 534:        {{Cl|IF}} voiceElapsedTime(i) > voiceTotalTime(i) {{Cl|THEN}}
+  | 535:            voiceTotalTime(i) = voiceElapsedTime(i)
+  | 538:        {{Cl|PRINT USING}} {{Text|<nowiki>"Voice #: ### of ### seconds left"</nowiki>|#FFB100}}; i; voiceElapsedTime(i); voiceTotalTime(i)
+  | 541:    {{Cl|DIM}} playing {{Cl|AS}} {{Cl|_BYTE}}: playing = voiceElapsedTime({{Text|0|#F580B1}}) > {{Text|0|#F580B1}} {{Cl|_ORELSE}} voiceElapsedTime({{Text|1|#F580B1}}) > {{Text|0|#F580B1}} {{Cl|_ORELSE}} voiceElapsedTime({{Text|2|#F580B1}}) > {{Text|0|#F580B1}} {{Cl|_ORELSE}} voiceElapsedTime({{Text|3|#F580B1}}) > {{Text|0|#F580B1}}
+  | 545:            voiceTotalTime(i) = {{Text|0|#F580B1}}
+  | 549:    {{Text|DisplayVoiceStats|#55FF55}} = playing
+  ! 
+  ! Shell cwd was reset to /home/grymmjack/git/qb64
+2026-10-01T10:42:02-0400  INFO     bash_start    cd /home/grymmjack/git/qb64pe/internal/help && sed -n 16,23p PLAY_1111.txt; sed -n 26,28p PLAY_1111.txt; sed -n 55,70p PLAY_1111.txt; sed -n 395,420p PLAY_1111.txt | sed 's/{{[^|]*|//g; s/}}//g' | he…
+  > cwd: /home/grymmjack/git/qb64
+  $ cd /home/grymmjack/git/qb64pe/internal/help && sed -n 16,23p PLAY_1111.txt; sed -n 26,28p PLAY_1111.txt; sed -n 55,70p PLAY_1111.txt; sed -n 395,420p PLAY_1111.txt | sed 's/{{[^|]*|//g; s/}}//g' | head -30
+2026-10-01T10:42:02-0400  WARNING  bash_end      [stderr] 52L stdout / 2L stderr
+  | :*'''A''', '''B''', '''C''', '''D''', '''E''', '''F''' or '''G''' are the notes in the current octave. The following suffixes can be used:
+  | ::*'''+''' or '''#''' for a sharp note. Example: '''{{Text|PLAY "C#"|green}}'''
+  | ::*'''-''' for a flat note. Example: '''{{Text|PLAY "C-"|green}}'''
+  | :*'''N''' n - Plays a note n by number(n can be between 0 to 84 in the 7 octaves, where 0 is a rest). Example: '''{{Text|PLAY "N42"|green}}'''
+  | :*'''L''' n - Sets length of a note (n can be 1 to 64 where 1 is a whole note and 4 is a quarter of a note etc.). Example: '''{{Text|PLAY "L4"|green}}'''
+  | ::*'''MS''' - Each note plays 3/4 of length set by L (staccato)
+  | ::*'''MN''' - Each note plays 7/8 of length set by L (normal)
+  | ::*'''ML''' - Each note plays a full-length set by L (legato)
+  | :::*''' .  '''  - period after a note plays 1½ times the note length determined by L * T.
+  | :::*'''.. '''  - two periods plays 1-3/4 times the note length determined by L * T.
+  | :*''',  '''  - '''commas in QB64''' stop play advancement to allow more than one note to be played simultaneously. Example: '''{{Text|PLAY "C,E,G,"|green}}'''
+  | File:Lnx.png|'''yes'''
+  | File:Osx.png|'''yes'''
+  | </gallery>
+  | <!-- additional availability notes go below here -->
+  | * The following features have been added in '''QB64-PE v3.8.0''':
+  | ** Complete support for '''X''' '''+''' [[VARPTR$]](string-expression).
+  | ** Support for '''@''' and '''Q''' commands.
+  | * The following features have been added in '''QB64-PE v4.0.0''':
+  | ** Support for multi-voice MML playback. Advanced BASIC (for the IBM PCjr and Tandy 1000) multi-voice MML can now play in QB64-PE.
+  | ** Support for '''W''', '''/''', '''\''', '''^''', '''_''', '''Y''', '''S''', '''S-''', '''S+''', '''R''', '''V-''', and '''V+''' commands.
+  | ** Support for 6, 7, 8, 9, and 10 (user-defined [[_WAVE]]) waveforms.
+  | 
+  | 
+  | {{PageExamples}}
+  | ;Example 1:Plays a sound with the volume and note varying from 0 to 50. The maximum note can only be 84.
+  | {{CodeStart}}
+  | 
+  | _TITLE APP_NAME
+  | 
+  | DIM AS STRING CH0Verse_1, CH0Verse_2, CH1Verse_1, CH1Verse_2, CH2Verse_1, CH2Verse_2, CH2Verse_3, CH3Verse_1
+  | DIM AS STRING Channel_0, Channel_1, Channel_2, Channel_3, Caption
+  | DIM c AS LONG
+  | 
+  | DO
+  |     DO
+  |         CLS
+  |         PRINT
+  |         PRINT <nowiki>"Enter number for a tune to play."</nowiki>|#FFB100
+  |         PRINT
+  |         PRINT <nowiki>"1. Demo 1 by J. Baker"</nowiki>|#FFB100
+  |         PRINT <nowiki>"2. Demo 2 by Wilbert Brants"</nowiki>|#FFB100
+  |         PRINT <nowiki>"3. Demo 3 by Wilbert Brants"</nowiki>|#FFB100
+  |         PRINT <nowiki>"4. Demo 4 by J. Baker"</nowiki>|#FFB100
+  |         PRINT <nowiki>"5. Demo 5 by Wilbert Brants"</nowiki>|#FFB100
+  |         PRINT
+  |         INPUT <nowiki>"Your choice (0 exits)"</nowiki>|#FFB100; c
+  |     DO...LOOP|LOOP WHILE c < 0|#F580B1 OR (boolean)|OR c > 7|#F580B1
+  | 
+  |     SELECT CASE c
+  |         CASE 1|#F580B1
+  |             Caption = <nowiki>"Demo 1 by J. Baker"</nowiki>|#FFB100
+  ! 
+  ! Shell cwd was reset to /home/grymmjack/git/qb64
+2026-10-01T10:42:06-0400  INFO     bash_start    cd /home/grymmjack/git/qb64pe/internal/help && sed -n 420,505p PLAY_1111.txt | sed 's/{{[^|]*|//g; s/}}//g; s/<nowiki>//g; s/<\/nowiki>//g; s/|#[0-9A-F]*//g' | head -60
+  > cwd: /home/grymmjack/git/qb64
+  $ cd /home/grymmjack/git/qb64pe/internal/help && sed -n 420,505p PLAY_1111.txt | sed 's/{{[^|]*|//g; s/}}//g; s/<nowiki>//g; s/<\/nowiki>//g; s/|#[0-9A-F]*//g' | head -60
+2026-10-01T10:42:06-0400  WARNING  bash_end      [stderr] 58L stdout / 2L stderr
+  |             144
+  |             CH0Verse_1 = "t144 l4 q0 w1 o0 ^75_100 v32 w1 ^75_100 o0 dd2 w8 ^100_80 o4 c"
+  |             CH0Verse_2 = "w4 ^75_100 o0 d2 w8 ^100_80 o4 cd"
+  | 
+  |             CH1Verse_1 = "t144 q0 w1 o2 /1^100_99 v31 l1 gba /1\20^25_79 l4 gab2"
+  |             CH1Verse_2 = "v40 /9^100\1 l1 gba \2 l4 gab2"
+  | 
+  |             CH2Verse_1 = "t144 l4 w2 o3 q20 v33 r1r1"
+  |             CH2Verse_2 = "cd>d<e"
+  |             CH2Verse_3 = "cd>d2<"
+  | 
+  |             CH3Verse_1 = "t144 q0 w9 y15 o3 _100 v29 l8 d"
+  | 
+  |             Channel_0 = RepeatVerse(CH0Verse_1 + CH0Verse_1 + CH0Verse_1 + CH0Verse_1 + CH0Verse_1 + CH0Verse_1 + CH0Verse_1 + CH0Verse_1 + CH0Verse_2 + CH0Verse_2 + CH0Verse_2 + CH0Verse_2, LOOPS)
+  |             Channel_1 = RepeatVerse(CH1Verse_1 + CH1Verse_1 + CH1Verse_2, LOOPS)
+  |             Channel_2 = RepeatVerse(CH2Verse_1 + CH2Verse_1 + CH2Verse_1 + CH2Verse_1 + CH2Verse_2 + CH2Verse_2 + CH2Verse_2 + CH2Verse_3, LOOPS)
+  |             Channel_3 = RepeatVerse(CH3Verse_1, 96 * LOOPS)
+  | 
+  |         CASE 2
+  |             Caption = "Demo 2 by Wilbert Brants"
+  | 
+  |             CH0Verse_1 = "t103 w2 o0 q8 v38 L8 G4B-B-G4B-B-  G4>E-E-<G4>E-E-<  A>CF4<A>CF4<  F4AAGB->D4<"
+  |             CH1Verse_1 = "t103 w1 o1 q2 v33 L8 GB->D4<GB->D4<  GB->E-<B-GB->E-<B-  A>CF4<A>CF4<  FA>C<AGB->D4<"
+  |             CH2Verse_1 = "t103 w1 o3 q1 v35 L4 GG2G8F8 E-E-2E-8D8 CCCD E-2D2"
+  |             CH2Verse_2 = "B-B-2B-8A8 GG2G8F8 CCCD E-2D2"
+  |             CH2Verse_3 = "B-B-2B-8A8 GG2G8F8 ACFA G2D2"
+  | 
+  |             Channel_0 = CH0Verse_1 + CH0Verse_1 + CH0Verse_1 + CH0Verse_1
+  |             Channel_1 = CH1Verse_1 + CH1Verse_1 + CH1Verse_1 + CH1Verse_1
+  |             Channel_2 = CH2Verse_1 + CH2Verse_2 + CH2Verse_1 + CH2Verse_3
+  |             Channel_3 = _STR_EMPTY
+  | 
+  |         CASE 3
+  |             Caption = "Demo 3 by Wilbert Brants"
+  | 
+  |             CH0Verse_1 = "t144 w2 o0 q16 v22 l8 v+cv-ceeg4 v+ f v- faa>cc< v+ c v- ceeg4 v+ f v- faa>cc< ggbb>d4< q8 g4c2"
+  |             CH1Verse_1 = "t144 w1 o1 q2 v20 l4 gec f2a8c8 gec f2a8c8 gbd ec2"
+  |             CH2Verse_1 = "t144 w3 o3 q2 v22 l8 cegceg l4 caf l8 cegceg l4 caf l8 gbdgbd l4 cgg"
+  | 
+  |             Channel_0 = RepeatVerse(CH0Verse_1, LOOPS)
+  |             Channel_1 = RepeatVerse(CH1Verse_1, LOOPS)
+  |             Channel_2 = RepeatVerse(CH2Verse_1, LOOPS)
+  |             Channel_3 = _STR_EMPTY
+  | 
+  |         CASE 4
+  |             Caption = "Demo 4 by J. Baker"
+  | 
+  |             Channel_0 = "t120 w1 o0 q2 v20 l8 <dced> dcge4 l4 q1 <d1> r8 l8 q2 dg l4 q1 <d1> l8 q2 dge q1 <d1> q2 dcdrr v+ <<dd>> v- r"
+  |             Channel_1 = "t120 w1 o1 q1 v21 l8 >dcde< dcde#4 l4 >d1< l8 de l4 >f1 l8 ddfe1< dedfe dd r4"
+  |             Channel_2 = _STR_EMPTY
+  |             Channel_3 = _STR_EMPTY
+  | 
+  |         CASE 5
+  |             Caption = "Demo 5 by Wilbert Brants"
+  | 
+  |             CH0Verse_1 = "T103 q16 O0 V22 W2 L4 V+CV-E8E8 <FA> <V+GV-B8B8> CE"
+  |             CH1Verse_1 = "T103 q8 O2 V22 W1 L8 CEG>C< <FA>CF <GB>DG CEG>C<"
+  |             CH2Verse_1 = "T103 q1 O3 v60 W4 L4 CEC<G> CEC2 CEC<G> CE16R16E16R16C2 CEC<G> CEC2 CEC<G> C<G16>R16E16R16C2"
+  ! 
+  ! Shell cwd was reset to /home/grymmjack/git/qb64
+2026-10-01T10:43:14-0400  INFO     bash_start    cd /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER && python3 - <<'PYEOF' | p='PCSMIDI.BM'; s=open(p).read() | a=""" '' | ' Turn the loaded notes into voices (pcsmidiVoice):""" | assert s.count(a)==1 …
+  > cwd: /home/grymmjack/git/qb64
+  $ cd /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER && python3 - <<'PYEOF'
+  $ p='PCSMIDI.BM'; s=open(p).read()
+  $ a="""    ''
+  $     ' Turn the loaded notes into voices (pcsmidiVoice):"""
+  $ assert s.count(a)==1
+  $ s=s.replace(a,"""    ''
+  $     ' Load QB64-PE PLAY strings (MML) as notes, ready for PCSMIDI_Render.
+  $     ' txt is one or more lines:
+  $     '   PLAY "T150 O3 L8 CDEFG", "O1 L2 C<G>"   a PLAY statement pasted from
+  $     '                         code: each quoted string (joined with +) is
+  $     '                         a voice, commas outside the quotes start the
+  $     '                         next voice; PLAY lines after it go on from there
+  $     '   V2: O2 L4 CEG        a line for voice 2 (V1: - V4:)
+  $     '   T120 O4 CDE          anything else: voice 1
+  $     '   ' or # ...           comments
+  $     ' Pitches, lengths and tempo are QB64-PE's (audio.cpp): O0 C is 65 Hz,
+  $     ' O4 A is 1760 Hz, N45 is 440 Hz. A comma after a note plays the next one
+  $     ' with it (a chord). Volume, waveform and envelope commands are skipped.
+  $     '
+  $     FUNCTION PCSMIDI_LoadMML% (txt AS STRING)
+  $         DIM ln AS STRING, i AS LONG, j AS LONG, k AS LONG, c AS STRING, u AS STRING, inQ AS INTEGER
+  $         DIM vs(1 TO PCSMIDI_VOICES) AS STRING, t AS STRING
+  $         pcsmidiCount = 0: pcsmidiError = "": pcsmidiTitle = "": pcsmidiTracks = 0: pcsmidiChanMask = 0
+  $         t = txt + CHR$(10)
+  $         DO WHILE LEN(t)
+  $             i = INSTR(t, CHR$(10))
+  $             ln = _TRIM$(LEFT$(t, i - 1))
+  $             t = MID$(t, i + 1)
+  $             IF RIGHT$(ln, 1) = CHR$(13) THEN ln = _TRIM$(LEFT$(ln, LEN(ln) - 1))
+  $             u = UCASE$(ln)
+  $             IF ln = "" OR LEFT$(ln, 1) = "'" OR LEFT$(ln, 1) = "#" OR LEFT$(u, 4) = "REM " THEN
+  $                 ' a comment
+  $             ELSEIF LEFT$(u, 5) = "PLAY " OR LEFT$(u, 5) = "PLAY" + CHR$(34) THEN
+  $                 k = 1: inQ = 0
+  $                 FOR j = 5 TO LEN(ln)
+  $                     c = MID$(ln, j, 1)
+  $                     IF c = CHR$(34) THEN
+  $                         inQ = NOT inQ
+  $                     ELSEIF inQ THEN
+  $                         vs(k) = vs(k) + c
+  $                     ELSEIF c = "," THEN
+  $                         IF k < PCSMIDI_VOICES THEN k = k + 1
+  $                     ELSEIF c = "'" THEN
+  $                         EXIT FOR ' a comment after the statement
+  $                     END IF
+  $                 NEXT
+  $             ELSEIF LEFT$(u, 1) = "V" AND MID$(u, 3, 1) = ":" AND INSTR("1234", MID$(u, 2, 1)) > 0 THEN
+  $                 k = VAL(MID$(u, 2, 1))
+  $                 vs(k) = vs(k) + " " + MID$(ln, 4)
+  $             ELSE
+  $                 vs(1) = vs(1) + " " + ln
+  $             END IF
+  $         LOOP
+  $         FOR k = 1 TO PCSMIDI_VOICES
+  $             IF LEN(_TRIM$(vs(k))) THEN
+  $                 pcsmidiTracks = pcsmidiTracks + 1
+  $                 IF NOT PCSMIDI_ParseMML(vs(k), k - 1) THEN EXIT FUNCTION
+  $             END IF
+  $         NEXT
+  $         IF pcsmidiCount = 0 THEN
+  $             IF pcsmidiError = "" THEN pcsmidiError = "No notes in that PLAY string"
+  $             EXIT FUNCTION
+  $         END IF
+  $         PCSMIDI_LoadMML = -1
+  $     END FUNCTION
+  $ 
+  $ 
+  $     FUNCTION PCSMIDI_LoadMMLFile% (fileName AS STRING)
+  $         DIM ff AS LONG, d AS STRING
+  $         IF NOT _FILEEXISTS(fileName) THEN pcsmidiError = "File not found: " + fileName: EXIT FUNCTION
+  $         ff = FREEFILE
+  $         OPEN fileName FOR BINARY AS #ff
+  $         d = SPACE$(LOF(ff))
+  $         GET #ff, 1, d
+  $         CLOSE #ff
+  $         PCSMIDI_LoadMMLFile = PCSMIDI_LoadMML(d)
+  $     END FUNCTION
+  $ 
+  $ 
+  $     ''
+  $ ...[truncated]
+2026-10-01T10:43:14-0400  INFO     bash_end      [ok] 1L stdout
+  | ok
+2026-10-01T10:43:21-0400  INFO     bash_start    python3 - <<'PYEOF' | p='PCSMIDI.BM'; s=open(p).read() | a=""" n = VAL(MID$("9 11 0 2 4 5 7 ", (ASC(c) - 65) * 2 + 1 - ((ASC(c) - 65) > 1) * 1, 2)) | n = INSTR("C D EF G A B", c) - 1 | IF q <= LEN(m)…
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ python3 - <<'PYEOF'
+  $ p='PCSMIDI.BM'; s=open(p).read()
+  $ a="""                        n = VAL(MID$("9 11 0 2 4 5 7 ", (ASC(c) - 65) * 2 + 1 - ((ASC(c) - 65) > 1) * 1, 2))
+  $                         n = INSTR("C D EF G A B", c) - 1
+  $                         IF q <= LEN(m) THEN
+  $                             IF MID$(m, q, 1) = "#" OR MID$(m, q, 1) = "+" THEN n = n + 1: q = q + 1 ELSE IF MID$(m, q, 1) = "-" THEN n = n - 1: q = q + 1
+  $                         END IF"""
+  $ assert a in s
+  $ s=s.replace(a,"""                        n = INSTR("C D EF G A B", c) - 1
+  $                         IF q <= LEN(m) THEN
+  $                             SELECT CASE MID$(m, q, 1)
+  $                                 CASE "#", "+": n = n + 1: q = q + 1
+  $                                 CASE "-": n = n - 1: q = q + 1
+  $                             END SELECT
+  $                         END IF""")
+  $ open(p,'w').write(s)
+  $ PYEOF
+  $ echo ok
+2026-10-01T10:43:21-0400  INFO     bash_end      [ok] 1L stdout
+  | ok
+2026-10-01T10:43:50-0400  INFO     bash_start    python3 - <<'PYEOF' | p='MID2SND.BAS'; s=open(p).read() | def r(a,b,c=1): | global s | assert s.count(a)==c,(a[:90],s.count(a)); s=s.replace(a,b) | r("""'' | ' MID2SND - convert a MIDI file (.mid) in…
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ python3 - <<'PYEOF'
+  $ p='MID2SND.BAS'; s=open(p).read()
+  $ def r(a,b,c=1):
+  $     global s
+  $     assert s.count(a)==c,(a[:90],s.count(a)); s=s.replace(a,b)
+  $ r("""''
+  $ ' MID2SND - convert a MIDI file (.mid) into a PC speaker IFS sound bank
+  $ '""","""''
+  $ ' MID2SND - convert a MIDI file (.mid) or QB64 PLAY music (MML) into a PC
+  $ ' speaker IFS sound bank
+  $ '""")
+  $ r("""'   MID2SND song.mid [out.snd] [options]
+  $ '""","""'   MID2SND song.mid [out.snd] [options]
+  $ '   MID2SND tune.mml [out.snd] [options]      PLAY strings in a text file
+  $ '   MID2SND -p "T160 O3 L8 CDEFG" out.snd     a PLAY string right here
+  $ '
+  $ ' A .mml (or .txt / .bas) file holds PLAY strings: PLAY "..." lines copied
+  $ ' from a program (each string after a comma is another voice), lines
+  $ ' starting V1: to V4: for one voice, or bare MML for voice 1.
+  $ '""")
+  $ r("""'   -i       just list the file's channels, notes and length""","""'   -p MML   convert this PLAY string (in quotes) instead of a file
+  $ '   -i       just list the file's channels, notes and length""")
+  $ r("""DIM maxSteps AS LONG, k AS LONG, p AS LONG, c AS LONG, t AS STRING""","""DIM maxSteps AS LONG, k AS LONG, p AS LONG, c AS LONG, t AS STRING, mml AS STRING, ok AS INTEGER, ext AS STRING""")
+  $ r("""        CASE "-i": infoOnly = -1""","""        CASE "-i": infoOnly = -1
+  $         CASE "-p": i = i + 1: mml = COMMAND$(i)""")
+  $ r("""IF inFile = "" THEN usage
+  $ IF nv < 1 OR nv > 4 THEN PRINT "-v takes 1 to 4": SYSTEM 1
+  $ 
+  $ IF NOT PCSMIDI_Load(inFile) THEN PRINT pcsmidiError: SYSTEM 1
+  $ ""","""IF inFile = "" AND mml = "" THEN usage
+  $ IF nv < 1 OR nv > 4 THEN PRINT "-v takes 1 to 4": SYSTEM 1
+  $ 
+  $ IF LEN(mml) THEN
+  $     ' -p: the out file is the only file name given
+  $     IF outFile = "" THEN outFile = inFile
+  $     IF outFile = "" THEN outFile = "play.snd"
+  $     inFile = outFile
+  $     IF nm = "" THEN nm = "PLAY"
+  $     ok = PCSMIDI_LoadMML(mml)
+  $ ELSE
+  $     ext = LCASE$(MID$(inFile, _INSTRREV(inFile, ".") + 1))
+  $     IF ext = "mml" OR ext = "txt" OR ext = "bas" THEN ok = PCSMIDI_LoadMMLFile(inFile) ELSE ok = PCSMIDI_Load(inFile)
+  $ END IF
+  $ IF NOT ok THEN PRINT pcsmidiError: SYSTEM 1
+  $ """)
+  $ r("""PRINT file_part(inFile); " -> \"""","""IF LEN(mml) THEN PRINT "PLAY string"; ELSE PRINT file_part(inFile);
+  $ PRINT " -> \"""")
+  $ r("""    PRINT "MID2SND - convert a MIDI file into a PC speaker IFS sound bank"
+  $     PRINT
+  $     PRINT "  MID2SND song.mid [out.snd] [options]"
+  $     PRINT""","""    PRINT "MID2SND - convert a MIDI file or QB64 PLAY music into a PC speaker IFS sound bank"
+  $     PRINT
+  $     PRINT "  MID2SND song.mid [out.snd] [options]"
+  $     PRINT "  MID2SND tune.mml [out.snd] [options]     PLAY strings in a text file"
+  $     PRINT "  MID2SND -p ";CHR$(34);"T160 O3 L8 CDEFG";CHR$(34);" out.snd    a PLAY string"
+  $     PRINT""")
+  $ r("""    PRINT "  -i       list the file's channels, notes and length\"""","""    PRINT "  -p MML   convert this PLAY string instead of a file"
+  $     PRINT "  -i       list the file's channels, notes and length\"""")
+  $ r("""    IF LEN(pcsmidiTitle) THEN PRINT "  title: "; pcsmidiTitle
+  $     PRINT "  "; LTRIM$(STR$(pcsmidiTracks)); " track(s), \"""","""    IF LEN(pcsmidiTitle) THEN PRINT "  title: "; pcsmidiTitle
+  $     PRINT "  "; LTRIM$(STR$(pcsmidiTracks)); " track(s) / PLAY voice(s), \"""")
+  $ open(p,'w').write(s)
+  $ 
+  $ p='PCSEDIT.BAS'; s=open(p).read()
+  $ def r(a,b,c=1):
+  $     global s
+  $     assert s.count(a)==c,(a[:90],s.count(a)); s=s.replace(a,b)
+  $ r('CONST OPEN_FILTER = "*.snd|*.SND|*.mid|*.MID|*.midi|*.MIDI|','CONST OPEN_FILTER = "*.snd|*.SND|*.mid|*.MID|*.midi|*.MIDI|*.mml|*.MML|')
+  $ r("""    is_midi = (e = "mid" OR e = "midi") AND _INSTRREV(f, ".") > 0""","""    is_midi = (e = "mid" OR e = "midi" OR e = "mml") AND _INSTRREV(f, ".") > 0""")
+  $ r("""SUB import_midi (fileName AS STRING)
+  $     DIM k AS LONG, nm AS STRING, i AS LONG, c AS STRING
+  $     IF NOT PCSMIDI_Load(fileName) THEN set_status pcsmidiError: EXIT SUB
+  $     PCSMIDI_Render VOICES, 0, 0, 1, MAX_STEPS""","""SUB import_midi (fileName AS STRING)
+  $     DIM k AS LONG, nm AS STRING, i AS LONG, c AS STRING, ok AS INTEGER
+  $     IF LCASE$(RIGHT$(fileName, 4)) = ".mml" THEN ok = PCSMIDI_LoadMMLFile(fileName) ELSE ok = PCSMIDI_Load(fileName)
+  $     IF NOT ok THEN set_status pcsmidiError: EXIT SUB
+  $     import_notes fileName
+  $ END SUB
+  $ 
+  $ 
+  $ ...[truncated]
+2026-10-01T10:43:54-0400  INFO     bash_end      [ok] 4L stdout
+  | Beginning C++ output from QB64 code... 
+  | Output: /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/PCSEDIT
+  | Beginning C++ output from QB64 code... 
+  | Output: /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/MID2SND
+2026-10-01T10:44:05-0400  INFO     bash_start    cd /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad && mkdir -p mml && cd mml && M=../MID2SND | echo "== O2 A should be A4 (440), N45 too:"; $M -p "T120 O2 A …
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ cd /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad && mkdir -p mml && cd mml && M=../MID2SND
+  $ echo "== O2 A should be A4 (440), N45 too:"; $M -p "T120 O2 A N45" -i | grep -E "channel|notes|length"
+  $ echo "== chord C,E,G half notes at T120 = 1 s, then D quarter:"; $M -p "T120 O2 L2 C,E,G, L4 D" -i | grep -E "notes|length|at once"
+  $ cat > demo2.mml <<'EOF'
+  $ ' Demo 2 by Wilbert Brants (QB64-PE wiki, PLAY example 7)
+  $ PLAY "t103 w2 o0 q8 v38 L8 G4B-B-G4B-B-  G4>E-E-<G4>E-E-<  A>CF4<A>CF4<  F4AAGB->D4<", "t103 w1 o1 q2 v33 L8 GB->D4<GB->D4<  GB->E-<B-GB->E-<B-  A>CF4<A>CF4<  FA>C<AGB->D4<", "t103 w1 o3 q1 v35 L4 GG2G8F8 E-E-2E-8D8 CCCD E-2D2"
+  $ EOF
+  $ echo "== demo2.mml:"; $M demo2.mml -i; $M demo2.mml demo2.snd
+  $ cat > voices.mml <<'EOF'
+  $ # two voices by line
+  $ V1: T140 O3 L8 CDEFGAB>C
+  $ V2: T140 O1 L2 C G
+  $ T140 O3 L4 R1 R1
+  $ EOF
+  $ echo "== voices.mml:"; $M voices.mml -i | grep -E "voice|channel|length|at once"
+2026-10-01T10:44:05-0400  WARNING  bash_end      [stderr] 28L stdout / 2L stderr
+  | == O2 A should be A4 (440), N45 too:
+  |   1 track(s) / PLAY voice(s), 2 notes
+  |   length .9 s
+  |   channel 1 : 2 notes, A4 - A4
+  |   plays up to 1 notes at once (voices fit 4; more are left out)
+  | == chord C,E,G half notes at T120 = 1 s, then D quarter:
+  |   1 track(s) / PLAY voice(s), 4 notes
+  |   length .9 s
+  |   channel 1 : 4 notes, C4 - G4
+  |   plays up to 4 notes at once (voices fit 4; more are left out)
+  | == demo2.mml:
+  | demo2.mml
+  |   3 track(s) / PLAY voice(s), 65 notes
+  |   length 9.2 s
+  |   channel 1 : 24 notes, F2 - F3
+  |   channel 2 : 27 notes, F3 - F4
+  |   channel 3 : 14 notes, C5 - G5
+  |   plays up to 3 notes at once (voices fit 4; more are left out)
+  | demo2.mml -> demo2.snd as DEMO2
+  |   65 notes, 3 voice(s), 1295 steps (9.300000000000001 s)
+  |   saved demo2.snd: 4 entries, 10426 bytes
+  | == voices.mml:
+  | voices.mml
+  |   2 track(s) / PLAY voice(s), 10 notes
+  |   length 1.7 s
+  |   channel 1 : 8 notes, C5 - C6
+  |   channel 2 : 2 notes, C3 - G3
+  |   plays up to 2 notes at once (voices fit 4; more are left out)
+  ! 
+  ! Shell cwd was reset to /home/grymmjack/git/qb64
+2026-10-01T10:44:21-0400  INFO     bash_start    cd /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER && python3 - <<'PYEOF' | p='MID2SND.BAS'; s=open(p).read() | a="""FUNCTION fmt1$ (x AS DOUBLE) | fmt1 = LTRIM$(STR$(INT(x * 10 + 0.5) / 10)) | END FU…
+  > cwd: /home/grymmjack/git/qb64
+  $ cd /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER && python3 - <<'PYEOF'
+  $ p='MID2SND.BAS'; s=open(p).read()
+  $ a="""FUNCTION fmt1$ (x AS DOUBLE)
+  $     fmt1 = LTRIM$(STR$(INT(x * 10 + 0.5) / 10))
+  $ END FUNCTION"""
+  $ assert a in s
+  $ s=s.replace(a,"""FUNCTION fmt1$ (x AS DOUBLE)
+  $     DIM w AS LONG
+  $     w = INT(x * 10 + 0.5)
+  $     fmt1 = LTRIM$(STR$(w \\ 10)) + "." + LTRIM$(STR$(w MOD 10))
+  $ END FUNCTION""")
+  $ open(p,'w').write(s)
+  $ PYEOF
+  $ export SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad; /home/grymmjack/git/qb64pe/qb64pe -x MID2SND.BAS -o $SP/MID2SND 2>&1 | grep -i "error\|Output"
+  $ python3 - <<'PYEOF'
+  $ import os
+  $ SP=os.environ['SP']
+  $ s=open('PCSEDIT.BAS').read()
+  $ lines=s.split('\n'); i=lines.index('DO')
+  $ lines.insert(i,'''DIM tsF AS LONG
+  $ tsF = FREEFILE: OPEN "%s/pt/mml.txt" FOR OUTPUT AS #tsF
+  $ import_midi "%s/mml/demo2.mml"
+  $ PRINT #tsF, sndName(cur); " used"; voices_used(cur); " len"; snd_len(cur); " ["; statusMsg; "]"
+  $ _CLIPBOARD$ = "PLAY " + CHR$(34) + "T120 O2 L4 A" + CHR$(34) + ", " + CHR$(34) + "T120 O1 L4 A" + CHR$(34)
+  $ import_play_clip
+  $ PRINT #tsF, sndName(cur); " used"; voices_used(cur); " len"; snd_len(cur); " v1"; voice_step(cur, 1, 0); " v2"; voice_step(cur, 2, 0); " want"; note_div(69); note_div(57); " ["; statusMsg; "]"
+  $ CLOSE #tsF
+  $ SYSTEM''' % (SP,SP))
+  $ open(SP+'/pt/T2.BAS','w').write('\n'.join(lines))
+  $ PYEOF
+  $ cp PCSMIDI.B? $SP/pt/ && cd $SP/pt && /home/grymmjack/git/qb64pe/qb64pe -x T2.BAS -o ./T2 2>&1 | grep -i "error\|Output"; HOME=$SP/pt/home PCSEDIT_NOMIDI=1 DISPLAY=:99 timeout 20 ./T2; cat mml.txt
+2026-10-01T10:44:26-0400  WARNING  bash_end      [stderr] 6L stdout / 2L stderr
+  | Beginning C++ output from QB64 code... 
+  | Output: /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/MID2SND
+  | Beginning C++ output from QB64 code... 
+  | Output: /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/pt/T2
+  | DEMO2 used 3  len 1295  [Imported demo2.mml: 65 notes, 3 voice(s), 9.25 s]
+  | PLAY used 2  len 61  v1 2712  v2 5424  want 2712  5424  [Imported PLAY.mml: 2 notes, 2 voice(s), 0.44 s]
+  ! 
+  ! Shell cwd was reset to /home/grymmjack/git/qb64
+2026-10-01T10:44:50-0400  INFO     bash_start    cd /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER && python3 - <<'PYEOF' | p='PCSEDIT.BAS'; s=open(p).read() | a=""" c = "Imported " + PCSPK_FilePart(fileName) + ":\"""" | assert s.count(a)==1 | s=s.…
+  > cwd: /home/grymmjack/git/qb64
+  $ cd /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER && python3 - <<'PYEOF'
+  $ p='PCSEDIT.BAS'; s=open(p).read()
+  $ a="""    c = "Imported " + PCSPK_FilePart(fileName) + ":\""""
+  $ assert s.count(a)==1
+  $ s=s.replace(a,"""    IF fileName = "PLAY.mml" THEN c = "Imported the PLAY string:" ELSE c = "Imported " + PCSPK_FilePart(fileName) + ":"
+  $     c = c + \"""")
+  $ open(p,'w').write(s)
+  $ PYEOF
+  $ grep -n 'c = c + "' PCSEDIT.BAS | head -3; cat > ASSETS/TUNES/PLAYDEMO.mml <<'EOF'
+  $ ' PLAYDEMO.mml - a little march written as QB64-PE PLAY strings (MML).
+  $ '
+  $ ' MID2SND and PCSEDIT read this the way QB64-PE's PLAY does. The PLAY line
+  $ ' below is ordinary QB64-PE code (try it in a program): each string after a
+  $ ' comma is another voice. In a string, a comma after a note plays the next
+  $ ' note with it, so "E2,G2" is a two-note chord.
+  $ '
+  $ '   voice 1  the tune         O3 (C5 and up, as QB64-PE pitches it)
+  $ '   voice 2  chords           O2, two notes each
+  $ '   voice 3  the bass         O1
+  $ '
+  $ PLAY "T132 MN O3 L8 G>CEGEC<G>C D4<B4G2 >C<B>CDEDC<B A4>D4C2", "T132 MN O2 L2 E,GE,G D,GD,F E,GD,G F,AE,G", "T132 MN O1 L4 CGCG GDG2 CGFC FGC2"
+  $ EOF
+  $ SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad; $SP/MID2SND ASSETS/TUNES/PLAYDEMO.mml -i
+2026-10-01T10:44:51-0400  INFO     bash_end      [ok] 10L stdout
+  | 3217:    c = c + " + STR$(pcsmidiPlaced) + " notes," + STR$(pcsmidiUsed) + " voice(s), " + fmt2(pcsmidiSteps / rateHz) + " s"
+  | 3218:    IF pcsmidiDropped THEN c = c + " -" + STR$(pcsmidiDropped) + " notes left out (more than 4 at once)"
+  | 3219:    IF pcsmidiCut THEN c = c + " - cut at" + STR$(MAX_STEPS \ 140) + " s"
+  | PLAYDEMO.mml
+  |   3 track(s) / PLAY voice(s), 52 notes
+  |   length 7.2 s
+  |   channel 1 : 22 notes, G5 - G6
+  |   channel 2 : 16 notes, D4 - A4
+  |   channel 3 : 14 notes, C3 - G3
+  |   plays up to 4 notes at once (voices fit 4; more are left out)
+2026-10-01T10:45:02-0400  INFO     bash_start    sed -i '3217s/ c = c + " + STR\$(pcsmidiPlaced)/ c = c + STR$(pcsmidiPlaced)/' PCSEDIT.BAS && sed -n 3216,3217p PCSEDIT.BAS && python3 - <<'PYEOF' | p='ASSETS/TUNES/PLAYDEMO.mml'; s=open(p).read() | …
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ sed -i '3217s/    c = c + " + STR\$(pcsmidiPlaced)/    c = c + STR$(pcsmidiPlaced)/' PCSEDIT.BAS && sed -n 3216,3217p PCSEDIT.BAS && python3 - <<'PYEOF'
+  $ p='ASSETS/TUNES/PLAYDEMO.mml'; s=open(p).read()
+  $ s=s.replace("'   voice 1  the tune         O3 (C5 and up, as QB64-PE pitches it)\n'   voice 2  chords           O2, two notes each\n'   voice 3  the bass         O1",
+  $             "'   voice 1  the tune         O2 (in QB64-PE, O2 C is middle C)\n'   voice 2  chords           O1, two notes each\n'   voice 3  the bass         O0")
+  $ s=s.replace('"T132 MN O3 L8','"T132 MN O2 L8').replace('"T132 MN O2 L2','"T132 MN O1 L2').replace('"T132 MN O1 L4','"T132 MN O0 L4')
+  $ open(p,'w').write(s)
+  $ PYEOF
+  $ tail -1 ASSETS/TUNES/PLAYDEMO.mml; SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad; $SP/MID2SND ASSETS/TUNES/PLAYDEMO.mml -i | grep channel; /home/grymmjack/git/qb64pe/qb64pe -x PCSEDIT.BAS -o $SP/PCSEDIT 2>&1 | grep -i "error\|line [0-9]\|Output"
+2026-10-01T10:45:04-0400  INFO     bash_end      [ok] 8L stdout
+  |     IF fileName = "PLAY.mml" THEN c = "Imported the PLAY string:" ELSE c = "Imported " + PCSPK_FilePart(fileName) + ":"
+  |     c = c + STR$(pcsmidiPlaced) + " notes," + STR$(pcsmidiUsed) + " voice(s), " + fmt2(pcsmidiSteps / rateHz) + " s"
+  | PLAY "T132 MN O2 L8 G>CEGEC<G>C D4<B4G2 >C<B>CDEDC<B A4>D4C2", "T132 MN O1 L2 E,GE,G D,GD,F E,GD,G F,AE,G", "T132 MN O0 L4 CGCG GDG2 CGFC FGC2"
+  |   channel 1 : 22 notes, G4 - G5
+  |   channel 2 : 16 notes, D3 - A3
+  |   channel 3 : 14 notes, C2 - G2
+  | Beginning C++ output from QB64 code... 
+  | Output: /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/PCSEDIT
+2026-10-01T10:45:27-0400  INFO     bash_start    python3 - <<'PYEOF' | p='ASSETS/TUNES/make_tunes.sh'; s=open(p).read() | a="""rm -f JINGLES.SND""" | assert a in s | s=s.replace(a,""""$M" PLAYDEMO.mml PLAYDEMO.SND || exit 1 | rm -f JINGLES.SND""") …
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ python3 - <<'PYEOF'
+  $ p='ASSETS/TUNES/make_tunes.sh'; s=open(p).read()
+  $ a="""rm -f JINGLES.SND"""
+  $ assert a in s
+  $ s=s.replace(a,""""$M" PLAYDEMO.mml PLAYDEMO.SND || exit 1
+  $ rm -f JINGLES.SND""")
+  $ s=s.replace("# Rebuild the example tunes: MIDI files from make_tunes.py, then one IFS\n# bank per tune with MID2SND (4 voices), and the short jingles together in\n# JINGLES.SND.","# Rebuild the example tunes: MIDI files from make_tunes.py, then one IFS\n# bank per tune with MID2SND (4 voices), PLAYDEMO.mml (QB64 PLAY strings),\n# and the short jingles together in JINGLES.SND.")
+  $ open(p,'w').write(s)
+  $ 
+  $ p='README.md'; s=open(p).read()
+  $ def r(a,b):
+  $     global s
+  $     assert s.count(a)==1,a; s=s.replace(a,b)
+  $ r("""**Importing MIDI files:** open (**Ctrl+O**) or drop a `.mid` file and it is
+  $ added to the bank as a new sound, with its notes spread over the 4 voices.""","""**Importing MIDI files and PLAY music:** open (**Ctrl+O**) or drop a `.mid`
+  $ or `.mml` file, or copy a QB64 `PLAY` string (or a whole `PLAY "..."` line
+  $ from a program) and press **Ctrl+Shift+V**. It is added to the bank as a new
+  $ sound, with its notes spread over the 4 voices.""")
+  $ r("""## MID2SND: MIDI files to PC speaker banks
+  $ 
+  $ `MID2SND.BAS` is a command-line converter. It turns a MIDI file into one""","""## MID2SND: MIDI files and PLAY music to PC speaker banks
+  $ 
+  $ `MID2SND.BAS` is a command-line converter. It turns a MIDI file, or QB64
+  $ `PLAY` music (MML), into one""")
+  $ r("""./MID2SND song.mid tunes.snd -a -n THEME -c 1,2 -t -12 -s 30
+  $ ```""","""./MID2SND song.mid tunes.snd -a -n THEME -c 1,2 -t -12 -s 30
+  $ ./MID2SND tune.mml                    # QB64 PLAY strings in a text file
+  $ ./MID2SND -p "T160 O2 L8 CDEFGAB>C" scale.snd
+  $ ```""")
+  $ r("""| `-i` | list the file's channels, notes, length and the most notes at once |""","""| `-p MML` | convert this PLAY string instead of a file |
+  $ | `-i` | list the file's channels, notes, length and the most notes at once |""")
+  $ r("""Tempo changes are followed, and the tune starts at its first note.""","""### PLAY strings (MML)
+  $ 
+  $ QB64's `PLAY` statement takes *Music Macro Language*. MID2SND and PCSEDIT
+  $ read it the way QB64-PE's own `PLAY` does (its `audio.cpp`), so a string
+  $ sounds at the same pitches and speed:
+  $ 
+  $ * notes `A`-`G` with `#`/`+` (sharp) or `-` (flat), a length (`C8`) and dots;
+  $   `N0`-`N84` by number; rests `P`/`R`;
+  $ * `O0`-`O6`, `<` `>`, `L`, `T`, and `MN` / `ML` / `MS` (a note sounds 7/8,
+  $   all, or 3/4 of its length). In QB64-PE, **`O2 C` is middle C** and `O4 A`,
+  $   the default octave, is 1760 Hz;
+  $ * QB64-PE's **commas**: a comma after a note plays the next note with it,
+  $   so `"L2 C,E,G"` is a chord;
+  $ * QB64-PE's **multi-voice PLAY**: `PLAY a$, b$, c$, d$` plays four voices at
+  $   once. Each string becomes a voice.
+  $ 
+  $ Volume, waveform, envelope and panning commands (`V W @ Q / \\ ^ _ Y S`) are
+  $ skipped, because the speaker has none of them. `X` + `VARPTR$` can't be
+  $ followed.
+  $ 
+  $ A `.mml` file is plain text. Each line is one of:
+  $ 
+  $ ```
+  $ ' a comment (or # ...)
+  $ PLAY "T132 O2 L8 CDEFG", "T132 O1 L2 C,E"   ' pasted from a program: one voice per string
+  $ V2: O1 L4 CGCG                              ' more for voice 2 (V1: to V4:)
+  $ T120 O2 L4 CDE                              ' anything else: more for voice 1
+  $ ```
+  $ 
+  $ Lines for the same voice are joined, so a long tune can span many lines.
+  $ `ASSETS/TUNES/PLAYDEMO.mml` is a short 3-voice example.
+  $ 
+  $ ### How notes become voices
+  $ 
+  $ Tempo changes are followed, and the tune starts at its first note.""")
+  $ r("""| `JINGLES.SND` | three original game jingles: FANFARE, LEVELUP, GAMEOVER |""","""| `JINGLES.SND` | three original game jingles: FANFARE, LEVELUP, GAMEOVER |
+  $ | `PLAYDEMO.SND` | an original march, written as QB64 PLAY strings in `PLAYDEMO.mml` |""")
+  $ r("""| **`MID2SND.BAS`** | **Command-line MIDI to IFS bank converter (up to 4 voices).** | new |
+  $ | `PCSMIDI.BI` + `PCSMIDI.BM` | The MIDI file reader both PCSEDIT and MID2SND use | new |""","""| **`MID2SND.BAS`** | **Command-line MIDI / PLAY (MML) to IFS bank converter (up to 4 voices).** | new |
+  $ | `PCSMIDI.BI` + `PCSMIDI.BM` | The MIDI file and PLAY string reader both PCSEDIT and MID2SND use | new |""")
+  $ r("| Ctrl+N / Ctrl+O / Ctrl+S / Ctrl+Shift+S | new bank, open (a `.mid` is imported as a new sound), save, save as |","| Ctrl+N / Ctrl+O / Ctrl+S / Ctrl+Shift+S | new bank, open (a `.mid` or `.mml` is imported as a new sound), save, save as |\n| Ctrl+Shift+V | import a QB64 PLAY string from the clipboard as a new sound |")
+  $ open(p,'w').write(s)
+  $ PYEOF
+  $ cd ASSETS/TUNES && cp /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/MID2SND . && ./make_tunes.sh 2>&1 | grep -iE "PLAYDEMO|left out|error|too big|saved JINGLES.*13"; rm MID2SND; git -C /home/grymmjack/git/qb64 status --short | grep -v "TUNES/MIDI"
+2026-10-01T10:45:28-0400  INFO     bash_end      [ok] 11L stdout
+  | PLAYDEMO.mml -> PLAYDEMO.SND as PLAYDEMO
+  |   saved PLAYDEMO.SND: 5 entries, 10126 bytes
+  |   saved JINGLES.SND: 13 entries, 12426 bytes
+  |  M .claude/activity.log
+  |  M qb64/SOUND/PC-SPEAKER/PCSEDIT.BAS
+  |  M qb64/SOUND/PC-SPEAKER/README.md
+  | ?? MYSOUNDS.SND
+  | ?? qb64/SOUND/PC-SPEAKER/ASSETS/TUNES/
+  | ?? qb64/SOUND/PC-SPEAKER/MID2SND.BAS
+  | ?? qb64/SOUND/PC-SPEAKER/PCSMIDI.BI
+  | ?? qb64/SOUND/PC-SPEAKER/PCSMIDI.BM
+2026-10-01T11:49:16-0400  NOTICE   prompt        yes push and commit
+  > yes push and commit
+2026-10-01T11:49:25-0400  INFO     bash_start    cd /home/grymmjack/git/qb64 && git add .claude/activity.log qb64/SOUND/PC-SPEAKER/PCSEDIT.BAS qb64/SOUND/PC-SPEAKER/README.md qb64/SOUND/PC-SPEAKER/ASSETS/TUNES qb64/SOUND/PC-SPEAKER/MID2SND.BAS qb64…
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER/ASSETS/TUNES
+  $ cd /home/grymmjack/git/qb64 && git add .claude/activity.log qb64/SOUND/PC-SPEAKER/PCSEDIT.BAS qb64/SOUND/PC-SPEAKER/README.md qb64/SOUND/PC-SPEAKER/ASSETS/TUNES qb64/SOUND/PC-SPEAKER/MID2SND.BAS qb64/SOUND/PC-SPEAKER/PCSMIDI.BI qb64/SOUND/PC-SPEAKER/PCSMIDI.BM && git status --short && git commit -q -m "SOUND/PC-SPEAKER: MIDI and PLAY (MML) import, MID2SND, example tunes
+  $ 
+  $ PCSMIDI.BI/BM reads Standard MIDI Files (with tempo changes) and QB64-PE
+  $ PLAY strings (MML, with chord commas and multi-voice PLAY, pitched as
+  $ QB64-PE plays them) and spreads the notes over up to 4 voices.
+  $ 
+  $ MID2SND.BAS converts them to IFS banks from the command line. PCSEDIT
+  $ imports .mid / .mml files (open or drop) and PLAY strings from the
+  $ clipboard (Ctrl+Shift+V) as new sounds.
+  $ 
+  $ ASSETS/TUNES holds example tunes (public domain pieces and originals) as
+  $ banks, MIDI files and a PLAY demo, with the scripts that build them.
+  $ 
+  $ Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>" && timeout 100 git push -q; git log --oneline -1; git status -sb | head -1

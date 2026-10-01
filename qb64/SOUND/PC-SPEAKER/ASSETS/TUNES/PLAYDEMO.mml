@@ -1,0 +1,12 @@
+' PLAYDEMO.mml - a little march written as QB64-PE PLAY strings (MML).
+'
+' MID2SND and PCSEDIT read this the way QB64-PE's PLAY does. The PLAY line
+' below is ordinary QB64-PE code (try it in a program): each string after a
+' comma is another voice. In a string, a comma after a note plays the next
+' note with it, so "E2,G2" is a two-note chord.
+'
+'   voice 1  the tune         O2 (in QB64-PE, O2 C is middle C)
+'   voice 2  chords           O1, two notes each
+'   voice 3  the bass         O0
+'
+PLAY "T132 MN O2 L8 G>CEGEC<G>C D4<B4G2 >C<B>CDEDC<B A4>D4C2", "T132 MN O1 L2 E,GE,G D,GD,F E,GD,G F,AE,G", "T132 MN O0 L4 CGCG GDG2 CGFC FGC2"
