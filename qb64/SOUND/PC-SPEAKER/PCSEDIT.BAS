@@ -270,6 +270,13 @@ DIM SHARED drawAud AS LONG ' the divisor to hear right now (0 = nothing)
 ' metronome / count-in / quantize (LIVE recording)
 DIM SHARED metroMode AS INTEGER ' 0 off, 1 while recording, 2 recording + playback
 DIM SHARED followOn AS INTEGER ' page the view along with the playhead
+DIM SHARED loopA AS LONG ' loop region from the time ruler: steps loopA to loopB - 1
+DIM SHARED loopB AS LONG
+DIM SHARED loopSet AS INTEGER
+DIM SHARED rulerAnchor AS LONG ' where a drag in the ruler began
+DIM SHARED rulerPressX AS LONG
+DIM SHARED loopSetByDrag AS INTEGER ' this ruler drag has become a loop region
+DIM SHARED rulerCursor AS LONG ' the cursor before the press (put back if it becomes a drag)
 DIM SHARED metroVol AS SINGLE
 DIM SHARED clickHi AS LONG ' QB64 sounds for the clicks (bar / beat), mixed
 DIM SHARED clickLo AS LONG ' alongside the speaker, never recorded
@@ -662,8 +669,11 @@ SUB play_from (s AS LONG)
     IF steps_of(cur) = 0 THEN set_status "Nothing to play - draw or play some notes first": EXIT SUB
     playPos = s
     ' looping a selection: start inside it
-    IF loopOn AND selOn AND (playPos < loop_start OR playPos >= loop_end) THEN playPos = loop_start
-    IF playPos >= steps_of(cur) THEN playPos = 0
+    IF loopOn AND (selOn OR loopSet) THEN
+        IF playPos < loop_start OR playPos >= loop_end THEN playPos = loop_start
+    ELSEIF playPos >= steps_of(cur) THEN
+        playPos = 0
+    END IF
     lastBeat = -999999
     playing = -1
 END SUB
@@ -672,8 +682,16 @@ END SUB
 ''
 ' What Loop repeats: the selection's time span, or the whole sound.
 '
+''
+' What Loop repeats: the selection if there is one, else the loop region
+' dragged in the time ruler, else the whole sound.
+'
 FUNCTION loop_start&
-    IF loopOn AND selOn THEN loop_start = selS0
+    IF loopOn AND selOn THEN
+        loop_start = selS0
+    ELSEIF loopOn AND loopSet THEN
+        loop_start = loopA
+    END IF
 END FUNCTION
 
 
@@ -681,6 +699,59 @@ FUNCTION loop_end&
     loop_end = steps_of(cur)
     IF loopOn AND selOn THEN
         IF selS1 < steps_of(cur) THEN loop_end = selS1
+    ELSEIF loopOn AND loopSet THEN
+        loop_end = loopB ' may run past the end of the sound: silence until it loops
+    END IF
+END FUNCTION
+
+
+''
+' Dragging in the time ruler (drawing 17 = new: a click moves the cursor, a
+' drag makes a loop region; 18 / 19 = the region's start / end). Edges snap
+' to grid cells with the grid on, to whole bars with Shift.
+'
+SUB ruler_drag (which AS INTEGER, s AS LONG, mx AS LONG)
+    DIM a AS LONG, b AS LONG
+    SELECT CASE which
+        CASE 17
+            IF ABS(mx - rulerPressX) <= 3 AND NOT loopSetByDrag THEN
+                cursorStep = s
+                EXIT SUB
+            END IF
+            IF NOT loopSetByDrag THEN cursorStep = rulerCursor ' a drag, not a click
+            loopSetByDrag = -1
+            a = rulerAnchor: b = s
+            IF a > b THEN SWAP a, b
+            loopA = ruler_snap(a, 0)
+            loopB = ruler_snap(b + 1, 1)
+            loopSet = -1
+            loopOn = -1
+        CASE 18
+            loopA = ruler_snap(s, 0)
+            IF loopA >= loopB THEN loopA = loopB - 1
+        CASE 19
+            loopB = ruler_snap(s + 1, 1)
+            IF loopB <= loopA THEN loopB = loopA + 1
+    END SELECT
+    IF loopA < 0 THEN loopA = 0
+END SUB
+
+
+''
+' Snap a loop edge: whole bars with Shift, grid cells with the grid on,
+' otherwise the step itself. isEnd rounds ends up so a region is never empty.
+'
+FUNCTION ruler_snap& (s AS LONG, isEnd AS INTEGER)
+    DIM barLen AS DOUBLE, b AS LONG
+    IF modShift OR _KEYDOWN(100303) OR _KEYDOWN(100304) THEN
+        barLen = BEATS_PER_BAR * 60 * rateHz / bpm
+        b = INT(s / barLen + 0.5)
+        IF isEnd AND b < 1 THEN b = 1
+        ruler_snap = INT(b * barLen + 0.5)
+    ELSEIF gridDiv THEN
+        ruler_snap = snap_cell(s)
+    ELSE
+        ruler_snap = s
     END IF
 END FUNCTION
 
@@ -1308,6 +1379,13 @@ SUB handle_mouse (mx AS LONG, my AS LONG, b1 AS INTEGER, b2 AS INTEGER)
                 lastStep = s: lastNote = nt
                 haveAnchor = -1
             END IF
+        ELSEIF drawing >= 17 AND drawing <= 19 THEN ' time ruler: cursor / loop region
+            IF b1 THEN
+                ruler_drag drawing, s, mx
+            ELSE
+                drawing = 0
+                IF loopSet THEN set_status "Loop region: steps" + STR$(loopA) + " -" + STR$(loopB - 1) + "  (drag its ends, right-click the ruler clears it, Ctrl+L loop on/off)"
+            END IF
         ELSEIF drawing >= 9 AND drawing <= 12 THEN ' stretching the selection
             IF b1 THEN
                 tf_drag drawing, s, nt
@@ -1397,16 +1475,25 @@ SUB handle_mouse (mx AS LONG, my AS LONG, b1 AS INTEGER, b2 AS INTEGER)
         ' --- toolbar
         IF my >= TB_Y AND my < TB_Y + TB_H AND mx >= RULER_X AND mx < RULER_X + TB_BUTTONS * TB_W THEN
             toolbar_click (mx - RULER_X) \ TB_W
-        ' --- time ruler: move the cursor
+        ' --- time ruler: click = cursor, drag = loop region (or drag its ends)
         ELSEIF my >= TIME_Y AND my < CANVAS_Y AND mx >= CANVAS_X THEN
-            cursorStep = s
+            rulerPressX = mx
+            rulerAnchor = s
+            loopSetByDrag = 0
+            rulerCursor = cursorStep
+            drawing = 17
+            IF loopSet THEN
+                IF ABS(mx - (CANVAS_X + (loopA - scrollX) * zoom)) <= 4 THEN drawing = 18
+                IF ABS(mx - (CANVAS_X + (loopB - scrollX) * zoom)) <= 4 THEN drawing = 19
+            END IF
+            IF drawing = 17 THEN cursorStep = s
         ' --- sound list
         ELSEIF mx >= LIST_X AND mx < LIST_X + LIST_W AND my >= LIST_Y AND my < LIST_Y + LIST_ROWS * ROW_H THEN
             row = listTop + (my - LIST_Y) \ ROW_H + 1
             IF row <= sndCount THEN user_select row
         END IF
-    ELSEIF b1 AND my >= TIME_Y AND my < CANVAS_Y AND mx >= CANVAS_X THEN
-        cursorStep = s ' drag along the ruler
+    ELSEIF b2 AND NOT wasDown AND my >= TIME_Y AND my < CANVAS_Y AND mx >= CANVAS_X THEN
+        IF loopSet THEN loopSet = 0: set_status "Loop region cleared"
     END IF
     wasDown = b1 OR b2
 
@@ -3475,6 +3562,21 @@ SUB draw_roll
         draw_grid vis
     ELSE
         draw_seconds vis
+    END IF
+
+    ' the loop region from the time ruler: a band in the ruler, brackets down
+    ' the roll (dimmer when Loop is off or a selection is looping instead)
+    IF loopSet THEN
+        x = CANVAS_X + (loopA - scrollX) * zoom
+        endX = CANVAS_X + (loopB - scrollX) * zoom
+        IF loopOn AND NOT selOn THEN col = _RGB32(255, 190, 60) ELSE col = _RGB32(120, 100, 60)
+        IF endX >= CANVAS_X AND x <= CANVAS_X + CANVAS_W - 1 THEN
+            IF x < CANVAS_X THEN x = CANVAS_X
+            IF endX > CANVAS_X + CANVAS_W - 1 THEN endX = CANVAS_X + CANVAS_W - 1
+            LINE (x, TIME_Y + 12)-(endX, CANVAS_Y - 3), col, BF
+            IF x > CANVAS_X THEN LINE (x, TIME_Y)-(x, CANVAS_Y + CANVAS_H - 1), col
+            IF endX < CANVAS_X + CANVAS_W - 1 THEN LINE (endX, TIME_Y)-(endX, CANVAS_Y + CANVAS_H - 1), col
+        END IF
     END IF
 
     ' octave markers: a brighter line under every C, labelled at both edges

@@ -15289,3 +15289,207 @@
   $ Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
   $ EOF
   $ git log --oneline -1 && git push origin main 2>&1 | tail -1
+2026-10-01T00:53:39-0400  INFO     bash_end      [ok] 3L stdout
+  | warning: in the working copy of '.claude/activity.log', CRLF will be replaced by LF the next time Git touches it
+  | 76d59a9f SOUND/PC-SPEAKER: PCSEDIT resizable window, display scale, saved settings
+  |    4f03b7ac..76d59a9f  main -> main
+2026-10-01T00:54:41-0400  NOTICE   prompt        can i have a loop length marker by dragging in the timeline at the top? and can i also have that snap to bars, or grid units, or whatever - when i have selection with selection tool it should loop th…
+  > can i have a loop length marker by dragging in the timeline at the top? and can i also have that snap to bars, or grid units, or whatever - when i have selection with selection tool it should loop that stuf though :) i love that feature.
+2026-10-01T00:55:07-0400  INFO     bash_start    cd /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER && grep -n "time ruler: move the cursor" -A10 PCSEDIT.BAS | head -14; grep -n "ELSEIF b1 AND my >= TIME_Y AND my < CANVAS_Y AND mx >= CANVAS_X THEN" …
+  > cwd: /home/grymmjack/git/qb64
+  $ cd /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER && grep -n "time ruler: move the cursor" -A10 PCSEDIT.BAS | head -14; grep -n "ELSEIF b1 AND my >= TIME_Y AND my < CANVAS_Y AND mx >= CANVAS_X THEN" -A2 PCSEDIT.BAS; sed -n '/^FUNCTION loop_start/,/^END FUNCTION/p;/^FUNCTION loop_end/,/^END FUNCTION/p' PCSEDIT.BAS; grep -n "    ' octave markers: a brighter line under every C" PCSEDIT.BAS
+2026-10-01T00:55:07-0400  INFO     bash_end      [ok] 24L stdout
+  | 1400:        ' --- time ruler: move the cursor
+  | 1401-        ELSEIF my >= TIME_Y AND my < CANVAS_Y AND mx >= CANVAS_X THEN
+  | 1402-            cursorStep = s
+  | 1403-        ' --- sound list
+  | 1404-        ELSEIF mx >= LIST_X AND mx < LIST_X + LIST_W AND my >= LIST_Y AND my < LIST_Y + LIST_ROWS * ROW_H THEN
+  | 1405-            row = listTop + (my - LIST_Y) \ ROW_H + 1
+  | 1406-            IF row <= sndCount THEN user_select row
+  | 1407-        END IF
+  | 1408-    ELSEIF b1 AND my >= TIME_Y AND my < CANVAS_Y AND mx >= CANVAS_X THEN
+  | 1409-        cursorStep = s ' drag along the ruler
+  | 1410-    END IF
+  | 1408:    ELSEIF b1 AND my >= TIME_Y AND my < CANVAS_Y AND mx >= CANVAS_X THEN
+  | 1409-        cursorStep = s ' drag along the ruler
+  | 1410-    END IF
+  | FUNCTION loop_start&
+  |     IF loopOn AND selOn THEN loop_start = selS0
+  | END FUNCTION
+  | FUNCTION loop_end&
+  |     loop_end = steps_of(cur)
+  |     IF loopOn AND selOn THEN
+  |         IF selS1 < steps_of(cur) THEN loop_end = selS1
+  |     END IF
+  | END FUNCTION
+  | 3480:    ' octave markers: a brighter line under every C, labelled at both edges
+2026-10-01T00:55:38-0400  INFO     bash_start    python3 - <<'PYEOF' | p='PCSEDIT.BAS'; s=open(p).read() | def r(a,b,c=1): | global s | assert s.count(a)==c,(a[:70],s.count(a)); s=s.replace(a,b) | | # ---------- state | r("""DIM SHARED followOn AS …
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ python3 - <<'PYEOF'
+  $ p='PCSEDIT.BAS'; s=open(p).read()
+  $ def r(a,b,c=1):
+  $     global s
+  $     assert s.count(a)==c,(a[:70],s.count(a)); s=s.replace(a,b)
+  $ 
+  $ # ---------- state
+  $ r("""DIM SHARED followOn AS INTEGER ' page the view along with the playhead""","""DIM SHARED followOn AS INTEGER ' page the view along with the playhead
+  $ DIM SHARED loopA AS LONG ' loop region from the time ruler: steps loopA to loopB - 1
+  $ DIM SHARED loopB AS LONG
+  $ DIM SHARED loopSet AS INTEGER
+  $ DIM SHARED rulerAnchor AS LONG ' where a drag in the ruler began
+  $ DIM SHARED rulerPressX AS LONG""")
+  $ 
+  $ # ---------- continue ruler drags (in the drawing chain)
+  $ r("""        ELSEIF drawing >= 9 AND drawing <= 12 THEN ' stretching the selection""","""        ELSEIF drawing >= 17 AND drawing <= 19 THEN ' time ruler: cursor / loop region
+  $             IF b1 THEN
+  $                 ruler_drag drawing, s, mx
+  $             ELSE
+  $                 drawing = 0
+  $                 IF loopSet THEN set_status "Loop region: steps" + STR$(loopA) + " -" + STR$(loopB - 1) + "  (drag its ends, right-click the ruler clears it, Ctrl+L loop on/off)"
+  $             END IF
+  $         ELSEIF drawing >= 9 AND drawing <= 12 THEN ' stretching the selection""")
+  $ # ---------- start ruler drag / right-click clear
+  $ r("""        ' --- time ruler: move the cursor
+  $         ELSEIF my >= TIME_Y AND my < CANVAS_Y AND mx >= CANVAS_X THEN
+  $             cursorStep = s""","""        ' --- time ruler: click = cursor, drag = loop region (or drag its ends)
+  $         ELSEIF my >= TIME_Y AND my < CANVAS_Y AND mx >= CANVAS_X THEN
+  $             rulerPressX = mx
+  $             rulerAnchor = s
+  $             drawing = 17
+  $             IF loopSet THEN
+  $                 IF ABS(mx - (CANVAS_X + (loopA - scrollX) * zoom)) <= 4 THEN drawing = 18
+  $                 IF ABS(mx - (CANVAS_X + (loopB - scrollX) * zoom)) <= 4 THEN drawing = 19
+  $             END IF
+  $             IF drawing = 17 THEN cursorStep = s""")
+  $ r("""    ELSEIF b1 AND my >= TIME_Y AND my < CANVAS_Y AND mx >= CANVAS_X THEN
+  $         cursorStep = s ' drag along the ruler
+  $     END IF""","""    ELSEIF b2 AND NOT wasDown AND my >= TIME_Y AND my < CANVAS_Y AND mx >= CANVAS_X THEN
+  $         IF loopSet THEN loopSet = 0: set_status "Loop region cleared"
+  $     END IF""")
+  $ 
+  $ # ---------- loop range priority
+  $ r("""FUNCTION loop_start&
+  $     IF loopOn AND selOn THEN loop_start = selS0
+  $ END FUNCTION""","""''
+  $ ' What Loop repeats: the selection if there is one, else the loop region
+  $ ' dragged in the time ruler, else the whole sound.
+  $ '
+  $ FUNCTION loop_start&
+  $     IF loopOn AND selOn THEN
+  $         loop_start = selS0
+  $     ELSEIF loopOn AND loopSet THEN
+  $         loop_start = loopA
+  $     END IF
+  $ END FUNCTION""")
+  $ r("""FUNCTION loop_end&
+  $     loop_end = steps_of(cur)
+  $     IF loopOn AND selOn THEN
+  $         IF selS1 < steps_of(cur) THEN loop_end = selS1
+  $     END IF
+  $ END FUNCTION""","""FUNCTION loop_end&
+  $     loop_end = steps_of(cur)
+  $     IF loopOn AND selOn THEN
+  $         IF selS1 < steps_of(cur) THEN loop_end = selS1
+  $     ELSEIF loopOn AND loopSet THEN
+  $         loop_end = loopB ' may run past the end of the sound: silence until it loops
+  $     END IF
+  $ END FUNCTION
+  $ 
+  $ 
+  $ ''
+  $ ' Dragging in the time ruler (drawing 17 = new: a click moves the cursor, a
+  $ ' drag makes a loop region; 18 / 19 = the region's start / end). Edges snap
+  $ ' to grid cells with the grid on, to whole bars with Shift.
+  $ '
+  $ SUB ruler_drag (which AS INTEGER, s AS LONG, mx AS LONG)
+  $     DIM a AS LONG, b AS LONG
+  $     SELECT CASE which
+  $         CASE 17
+  $ ...[truncated]
+2026-10-01T00:55:41-0400  INFO     bash_end      [ok] 1L stdout
+  | Output: /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/PCSEDIT
+2026-10-01T00:55:58-0400  INFO     bash_start    SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad; cd /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER; rm -rf $SP/home; mkdir -p $SP/home | (Xvfb :99 -screen…
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad; cd /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER; rm -rf $SP/home; mkdir -p $SP/home
+  $ (Xvfb :99 -screen 0 1400x900x24 >/dev/null 2>&1 &); sleep 1.5; export DISPLAY=:99; unset WAYLAND_DISPLAY; xdpyinfo >/dev/null 2>&1 || exit 1
+  $ ( env -u XDG_CURRENT_DESKTOP -u KDE_FULL_SESSION HOME=$SP/home PCSEDIT_NOMIDI=1 $SP/PCSEDIT $SP/wave.snd & ); for i in $(seq 1 30); do W=$(xdotool search --name "PCSEDIT" 2>/dev/null | head -1); [ -n "$W" ] && break; sleep 0.3; done; sleep 2.5
+  $ K(){ xdotool key --window $W "$@"; sleep 0.25; }
+  $ sx(){ python3 -c "print(int(268+$1*6+3))"; }
+  $ K ctrl+g; K ctrl+g; K ctrl+g
+  $ # drag in ruler (y=110) from step 20 to 75
+  $ xdotool mousemove $(sx 20) 110; xdotool mousedown 1; sleep 0.1; xdotool mousemove $(sx 50) 110; sleep 0.1; xdotool mousemove $(sx 75) 110; sleep 0.15; xdotool mouseup 1; sleep 0.3
+  $ xwd -silent -root -out $SP/s.xwd; /usr/bin/convert $SP/s.xwd -crop 1280x660+0+0 $SP/lr1.png
+  $ /usr/bin/convert $SP/s.xwd -crop 1280x20+0+780 $SP/lr1s.png
+  $ K space
+  $ pos=""; for t in 1 2 3 4 5 6; do sleep 0.13; xwd -silent -root -out $SP/s.xwd; x=$(/usr/bin/convert $SP/s.xwd -crop 1004x1+268+500 -depth 8 txt:- 2>/dev/null | grep -i "#FFFFFF" | head -1 | cut -d, -f1); pos="$pos $(( x/6 ))"; done
+  $ K space
+  $ echo "playhead (region 18-69):$pos"
+  $ # right-click ruler clears; then shift-drag new region 10 -> 120 (snaps to bar: 0-280)
+  $ xdotool mousemove $(sx 40) 110; xdotool click 3; sleep 0.3
+  $ xdotool keydown shift; xdotool mousemove $(sx 10) 110; xdotool mousedown 1; sleep 0.1; xdotool mousemove $(sx 60) 110; sleep 0.1; xdotool mousemove $(sx 120) 110; sleep 0.15; xdotool mouseup 1; xdotool keyup shift; sleep 0.3
+  $ xwd -silent -root -out $SP/s.xwd; /usr/bin/convert $SP/s.xwd -crop 1280x20+0+780 $SP/lr2s.png
+  $ /usr/bin/convert $SP/lr1s.png $SP/lr2s.png -append $SP/lrs.png
+  $ pkill -x PCSEDIT; sleep 0.3; kill $(pgrep -f "^Xvfb :99") 2>/dev/null; true
+2026-10-01T00:56:07-0400  INFO     bash_end      [ok] 1L stdout
+  | playhead (region 18-69): 60 35 58 33 56 30
+2026-10-01T00:56:25-0400  INFO     bash_start    python3 - <<'PYEOF' | p='PCSEDIT.BAS'; s=open(p).read() | def r(a,b): | global s | assert s.count(a)==1,a[:60]; s=s.replace(a,b) | r("""DIM SHARED loopSetByDrag AS INTEGER ' this ruler drag has becom…
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ python3 - <<'PYEOF'
+  $ p='PCSEDIT.BAS'; s=open(p).read()
+  $ def r(a,b):
+  $     global s
+  $     assert s.count(a)==1,a[:60]; s=s.replace(a,b)
+  $ r("""DIM SHARED loopSetByDrag AS INTEGER ' this ruler drag has become a loop region""","""DIM SHARED loopSetByDrag AS INTEGER ' this ruler drag has become a loop region
+  $ DIM SHARED rulerCursor AS LONG ' the cursor before the press (put back if it becomes a drag)""")
+  $ r("""            loopSetByDrag = 0
+  $             drawing = 17""","""            loopSetByDrag = 0
+  $             rulerCursor = cursorStep
+  $             drawing = 17""")
+  $ r("""            loopSetByDrag = -1
+  $             a = rulerAnchor: b = s""","""            IF NOT loopSetByDrag THEN cursorStep = rulerCursor ' a drag, not a click
+  $             loopSetByDrag = -1
+  $             a = rulerAnchor: b = s""")
+  $ open(p,'w').write(s)
+  $ p='README.md'; s=open(p).read()
+  $ a="""**Loop** (**Ctrl+L**, or the **Loop** button on the toolbar, which lights up
+  $ when it's on): playback repeats the whole sound, or just the selection's time
+  $ span when something is selected (Space then starts at the selection). The
+  $ metronome starts over from beat 1 each time round."""
+  $ assert a in s
+  $ s=s.replace(a,"""**Loop** (**Ctrl+L**, or the **Loop** button on the toolbar, which lights up
+  $ when it's on) repeats, in order of priority:
+  $ 
+  $ 1. the **selection's** time span, when something is selected;
+  $ 2. the **loop region**: drag in the time ruler above the roll to make one.
+  $    It shows as an orange band with brackets down the roll, and turns Loop on.
+  $    Its ends snap to grid cells with the grid on, or to **whole bars with
+  $    Shift**. Drag either end to adjust it, **right-click** the ruler to clear
+  $    it. A plain click in the ruler still just moves the cursor. A region can
+  $    run past the end of the sound; the rest plays as silence;
+  $ 3. otherwise, the whole sound.
+  $ 
+  $ Space starts inside whatever is looping. The metronome starts over from
+  $ beat 1 each time round.""")
+  $ open(p,'w').write(s)
+  $ PYEOF
+  $ /home/grymmjack/git/qb64pe/qb64pe -x PCSEDIT.BAS -o /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/PCSEDIT 2>&1 | grep -A3 -E "38;5;9m|Output:" | head -3
+2026-10-01T00:56:27-0400  INFO     bash_end      [ok] 1L stdout
+  | Output: /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/PCSEDIT
+2026-10-01T00:56:41-0400  NOTICE   prompt        commit and push
+  > commit and push
+2026-10-01T00:56:46-0400  INFO     bash_start    cd /home/grymmjack/git/qb64 && git add .claude/activity.log qb64/SOUND/PC-SPEAKER/PCSEDIT.BAS qb64/SOUND/PC-SPEAKER/README.md && git commit -q -F - <<'EOF' | SOUND/PC-SPEAKER: PCSEDIT loop region in …
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ cd /home/grymmjack/git/qb64 && git add .claude/activity.log qb64/SOUND/PC-SPEAKER/PCSEDIT.BAS qb64/SOUND/PC-SPEAKER/README.md && git commit -q -F - <<'EOF'
+  $ SOUND/PC-SPEAKER: PCSEDIT loop region in the time ruler
+  $ 
+  $ - Drag in the time ruler to set a loop region (orange band + brackets);
+  $   it turns Loop on. Ends snap to grid cells, or to whole bars with Shift;
+  $   drag an end to adjust, right-click the ruler to clear. A click still
+  $   moves the cursor.
+  $ - Loop plays the selection first, then the loop region, then the whole
+  $   sound; a region may run past the end (silence).
+  $ - README updated.
+  $ 
+  $ Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+  $ EOF
+  $ git log --oneline -1 && git push origin main 2>&1 | tail -1

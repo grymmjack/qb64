@@ -238,9 +238,19 @@ at its quantized release (GATE) or played in full (ONE-SHOT). If the grid is
 off when you start recording, it is set to 1/16.
 
 **Loop** (**Ctrl+L**, or the **Loop** button on the toolbar, which lights up
-when it's on): playback repeats the whole sound, or just the selection's time
-span when something is selected (Space then starts at the selection). The
-metronome starts over from beat 1 each time round.
+when it's on) repeats, in order of priority:
+
+1. the **selection's** time span, when something is selected;
+2. the **loop region**: drag in the time ruler above the roll to make one.
+   It shows as an orange band with brackets down the roll, and turns Loop on.
+   Its ends snap to grid cells with the grid on, or to **whole bars with
+   Shift**. Drag either end to adjust it, **right-click** the ruler to clear
+   it. A plain click in the ruler still just moves the cursor. A region can
+   run past the end of the sound; the rest plays as silence;
+3. otherwise, the whole sound.
+
+Space starts inside whatever is looping. The metronome starts over from
+beat 1 each time round.
 
 **Follow** (**Ctrl+F**, on by default): while playing, the view pages along
 with the playhead so it never runs off the right edge.
