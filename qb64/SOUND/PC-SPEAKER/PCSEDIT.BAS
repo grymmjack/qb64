@@ -185,6 +185,7 @@ DIM SHARED tickN AS LONG ' 140 Hz ticks, for arpeggiating held chords
 DIM SHARED chordS0 AS LONG ' STEP record: where the last note went, for chord notes
 DIM SHARED chordS1 AS LONG
 DIM SHARED chordN AS LONG ' notes in the chord being entered
+DIM SHARED recStartLenV(1 TO VOICES) AS LONG ' each voice's length when recording began
 DIM SHARED sndCount AS LONG
 DIM SHARED cur AS LONG
 DIM SHARED listTop AS LONG
@@ -564,8 +565,9 @@ RESUME NEXT
 '=============================================================================
 
 SUB on_tick
-    DIM v AS LONG
+    DIM v AS LONG, vp AS LONG
     tickN = tickN + 1
+    vp = -1
     IF playing THEN
         IF playPos >= loop_end THEN
             IF loopOn AND snd_len(cur) > 0 THEN
@@ -590,6 +592,7 @@ SUB on_tick
                 voiceOn = 0
                 v = 0
             ELSE
+                vp = voicePos
                 voicePos = voicePos + 1
             END IF
         END IF
@@ -603,25 +606,81 @@ SUB on_tick
     ' drawing audition (A): the step under the pointer, when no key is down
     IF v = 0 AND drawAud > 0 AND NOT recording THEN v = drawAud
 
-    IF recording THEN
-        IF recPos < recFrom THEN
-            recPos = recPos + 1 ' counting in: clicks only, nothing written
-        ELSEIF recPos < MAX_STEPS THEN
-            ' a key already down when the count-in ends is a note from step one
-            IF recPos = recFrom AND evCount = 0 AND heldNote >= 0 THEN add_event recFrom, heldNote, -1
-            ' silence must not cut a note that was quantized longer than played
-            IF NOT (v = 0 AND recPos < protectUntil) THEN set_step cur, recPos, v
-            IF v <> 0 OR (keysMode = KEYS_SOUND AND voiceOn <> 0) THEN recLastNote = recPos
-            recPos = recPos + 1
-            cursorStep = recPos
-            follow cursorStep
-        ELSE
-            stop_recording
-        END IF
-    END IF
+    IF recording THEN rec_tick v, vp
 
     speaker v
 END SUB
+
+
+''
+' One 140 Hz tick of LIVE recording: v is what sounded (the ARP mix), vp the
+' instrument step that played (-1: none).
+'
+SUB rec_tick (v AS LONG, vp AS LONG)
+    IF recPos < recFrom THEN
+        recPos = recPos + 1 ' counting in: clicks only, nothing written
+    ELSEIF recPos < MAX_STEPS THEN
+        ' a key already down when the count-in ends is a note from step one
+        IF recPos = recFrom AND evCount = 0 AND heldNote >= 0 THEN add_event recFrom, heldNote, -1
+        ' silence must not cut a note that was quantized longer than played
+        IF NOT (v = 0 AND recPos < protectUntil) THEN rec_write recPos, v, vp, voiceNote
+        IF v <> 0 OR (keysMode = KEYS_SOUND AND voiceOn <> 0) THEN recLastNote = recPos
+        recPos = recPos + 1
+        cursorStep = recPos
+        follow cursorStep
+    ELSE
+        stop_recording
+    END IF
+END SUB
+
+
+''
+' Recording with an instrument that has several voices: each of its voices
+' goes into the same voice of the sound being recorded, so the chords keep
+' their voices (and play back with PWM).
+'
+FUNCTION rec_multi%
+    rec_multi = keysMode = KEYS_SOUND AND instIdx <> cur AND voices_used(instIdx) > 1
+END FUNCTION
+
+
+''
+' Write recorded step s: v (one voice), or with a multi-voice instrument its
+' voices at step vp (-1 = silence) played at note nt.
+'
+SUB rec_write (s AS LONG, v AS LONG, vp AS LONG, nt AS LONG)
+    DIM k AS LONG, vk AS LONG
+    IF NOT rec_multi THEN set_step cur, s, v: EXIT SUB
+    FOR k = 1 TO VOICES
+        vk = 0
+        IF vp >= 0 THEN vk = inst_voice_div(k, vp, nt)
+        IF vk < 0 THEN vk = 0
+        ' (a rest in a voice that has nothing yet doesn't start it)
+        IF vk <> 0 OR k = sndAct(cur) OR s * 2 < LEN(voice_data(cur, k)) THEN set_voice_step cur, k, s, vk
+    NEXT
+END SUB
+
+
+''
+' Voice k of the instrument at its step pos, played at note nt: the
+' divisor, 0 for a rest, -1 once the instrument has finished.
+'
+FUNCTION inst_voice_div& (k AS LONG, stepPos AS LONG, nt AS LONG)
+    DIM ln AS LONG, p AS LONG, v AS LONG
+    ln = snd_len(instIdx)
+    p = stepPos
+    IF ln = 0 THEN inst_voice_div = -1: EXIT FUNCTION
+    IF p >= ln THEN
+        IF holdMode = HOLD_LOOP THEN p = p MOD ln ELSE inst_voice_div = -1: EXIT FUNCTION
+    END IF
+    v = voice_step(instIdx, k, p)
+    IF v THEN
+        v = CLNG(v / 2 ^ ((nt - ROOT_NOTE) / 12))
+        IF v < 1 THEN v = 1
+        IF v > 65534 THEN v = 65534
+    END IF
+    inst_voice_div = v
+END FUNCTION
 
 
 ''
@@ -910,9 +969,37 @@ FUNCTION pwm_needed%
     IF polyMode <> POLY_PWM THEN EXIT FUNCTION
     IF playing THEN
         pwm_needed = voices_used(cur) > 1
+    ELSEIF keysMode = KEYS_SOUND THEN
+        ' Ctrl+K: an instrument with several voices
+        pwm_needed = voiceOn <> 0 AND voices_used(instIdx) > 1 ' (recording too: see pump_pwm)
     ELSE
-        pwm_needed = held_count >= 2 AND keysMode = KEYS_NOTES AND NOT recording
+        pwm_needed = held_count >= 2 AND NOT recording
     END IF
+END FUNCTION
+
+
+''
+' The instrument's voices at its step pos, played at note nt (for PWM):
+' how many sound, or -1 once it has finished (see voice_div).
+'
+FUNCTION inst_divs& (stepPos AS LONG, nt AS LONG, d() AS LONG)
+    DIM ln AS LONG, p AS LONG, n AS LONG, k AS LONG, v AS LONG
+    ln = snd_len(instIdx)
+    p = stepPos
+    IF ln = 0 THEN inst_divs = -1: EXIT FUNCTION
+    IF p >= ln THEN
+        IF holdMode = HOLD_LOOP THEN p = p MOD ln ELSE inst_divs = -1: EXIT FUNCTION
+    END IF
+    FOR k = 1 TO VOICES
+        v = voice_step(instIdx, k, p)
+        IF v THEN
+            v = CLNG(v / 2 ^ ((nt - ROOT_NOTE) / 12))
+            IF v < 1 THEN v = 1
+            IF v > 65534 THEN v = 65534
+            n = n + 1: d(n) = v
+        END IF
+    NEXT
+    inst_divs = n
 END FUNCTION
 
 
@@ -963,7 +1050,7 @@ END FUNCTION
 ' Keep the audio stream fed in PWM mode (instead of PCSPK_Tick / on_tick).
 '
 SUB pump_pwm
-    DIM d(1 TO 8) AS LONG, n AS LONG, k AS LONG
+    DIM d(1 TO 8) AS LONG, n AS LONG, k AS LONG, vp AS LONG, v AS LONG
     IF pcspk.sink <> PCSPK_SINK_STREAM THEN PCSPK_StreamOpen
     spkLast = -1 ' the PIT is in one-shot mode now: the next tone must be written
     DO WHILE PCSPK_Buffered < pcspk.lead
@@ -981,6 +1068,17 @@ SUB pump_pwm
             END IF
             n = step_divs(cur, playPos, d())
             playPos = playPos + 1
+        ELSEIF keysMode = KEYS_SOUND THEN
+            IF voiceOn = 0 THEN EXIT DO ' let go: back to the normal path
+            vp = voicePos
+            n = inst_divs(vp, voiceNote, d())
+            IF n < 0 THEN voiceOn = 0: EXIT DO ' the instrument has finished
+            voicePos = voicePos + 1
+            IF recording THEN
+                v = voice_div(vp, voiceNote)
+                IF v < 0 THEN v = 0
+                rec_tick v, vp
+            END IF
         ELSE
             n = held_count
             IF n > 8 THEN n = 8
@@ -1250,14 +1348,16 @@ SUB step_enter (n AS LONG)
         IF keysMode = KEYS_SOUND THEN
             v = voice_div(i - s0, n)
             IF v < 0 THEN v = 0
+            rec_write i, v, i - s0, n
         ELSE
             v = note_div(n)
+            set_step cur, i, v
         END IF
-        set_step cur, i, v
     NEXT
-    ' the other voices are cleared here, so a new chord doesn't mix with old notes
+    ' the other voices are cleared here, so a new chord doesn't mix with old
+    ' notes (not when a multi-voice instrument has just written them)
     FOR k = 1 TO VOICES
-        IF k <> sndAct(cur) AND LEN(sndV(cur, k)) THEN
+        IF k <> sndAct(cur) AND LEN(sndV(cur, k)) > 0 AND NOT rec_multi THEN
             FOR i = s0 TO s1 - 1
                 IF i * 2 + 2 <= LEN(sndV(cur, k)) THEN set_voice_step cur, k, i, 0
             NEXT
@@ -1307,11 +1407,13 @@ END SUB
 ' Start LIVE recording at step at, after countBars bars of count-in.
 '
 SUB begin_live (at AS LONG, countBars AS LONG)
+    DIM k AS LONG
     recording = -1
     recFrom = at
     recPos = at - CLNG(countBars * BEATS_PER_BAR * 60 * rateHz / bpm)
     recPos0 = recPos
     recStartLen = steps_of(cur)
+    FOR k = 1 TO VOICES: recStartLenV(k) = LEN(voice_data(cur, k)) \ 2: NEXT
     recLastNote = -1
     evCount = 0: protectUntil = 0
     lastBeat = -999999
@@ -1442,7 +1544,11 @@ SUB render_take (final AS INTEGER)
                 v = note_div(nk(best))
             END IF
         END IF
-        set_step cur, s, v
+        IF best >= 0 AND rec_multi THEN
+            rec_write s, v, s - ns(best), nk(best)
+        ELSE
+            rec_write s, v, -1, 0
+        END IF
         IF v <> 0 AND s > recLastNote THEN recLastNote = s
     NEXT
 END SUB
@@ -1502,15 +1608,15 @@ END FUNCTION
 
 
 SUB stop_recording
-    DIM keepLen AS LONG
+    DIM keepLen AS LONG, k AS LONG
     IF NOT recording THEN EXIT SUB
     recording = 0
     IF quantOn AND gridDiv <> 0 AND evCount > 0 THEN
         render_take -1
         ' re-find the last note: quantizing may have moved it either way
         recLastNote = -1
-        FOR keepLen = steps_of(cur) - 1 TO recFrom STEP -1
-            IF get_step(cur, keepLen) THEN recLastNote = keepLen: EXIT FOR
+        FOR keepLen = snd_len(cur) - 1 TO recFrom STEP -1
+            IF mix_step(cur, keepLen) THEN recLastNote = keepLen: EXIT FOR
         NEXT
     END IF
     ' drop the silence recorded after the last note (but never cut what was
@@ -1518,6 +1624,13 @@ SUB stop_recording
     keepLen = recLastNote + 1
     IF keepLen < recStartLen THEN keepLen = recStartLen
     IF keepLen < steps_of(cur) THEN sndData(cur) = LEFT$(sndData(cur), keepLen * 2)
+    FOR k = 1 TO VOICES ' the other voices' recorded silence too
+        IF k <> sndAct(cur) THEN
+            IF LEN(sndV(cur, k)) > keepLen * 2 AND LEN(sndV(cur, k)) > recStartLenV(k) * 2 THEN
+                sndV(cur, k) = LEFT$(sndV(cur, k), _MAX(keepLen, recStartLenV(k)) * 2)
+            END IF
+        END IF
+    NEXT
     IF recLastNote >= 0 THEN cursorStep = recLastNote + 1
     set_status "Recorded up to step" + STR$(recLastNote + 1)
 END SUB

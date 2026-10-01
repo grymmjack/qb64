@@ -18089,3 +18089,562 @@
   $ Holding Alt places by single steps instead.
   $ 
   $ Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>" && git push -q && git log --oneline -1 && git status --short
+2026-10-01T01:24:22-0400  INFO     bash_end      [ok] 2L stdout
+  | warning: in the working copy of '.claude/activity.log', CRLF will be replaced by LF the next time Git touches it
+  | cf855e05 SOUND/PC-SPEAKER: PCSEDIT tools honour grid snap, Alt places freely
+2026-10-01T01:28:45-0400  NOTICE   prompt        can we make ctrl+k play the pwm?
+  > can we make ctrl+k play the pwm?
+2026-10-01T01:28:52-0400  INFO     bash_start    cd /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER && n=$(grep -n "^FUNCTION voice_div" PCSEDIT.BAS | cut -d: -f1); sed -n "$((n-8)),$((n+30))p" PCSEDIT.BAS; grep -n "^FUNCTION pwm_needed" -A10 PCSEDI…
+  > cwd: /home/grymmjack/git/qb64
+  $ cd /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER && n=$(grep -n "^FUNCTION voice_div" PCSEDIT.BAS | cut -d: -f1); sed -n "$((n-8)),$((n+30))p" PCSEDIT.BAS; grep -n "^FUNCTION pwm_needed" -A10 PCSEDIT.BAS; grep -n "^SUB pump_pwm" -A40 PCSEDIT.BAS
+2026-10-01T01:28:52-0400  INFO     bash_end      [ok] 91L stdout
+  |     PCSPK_SetDivisor v
+  | END SUB
+  | 
+  | 
+  | ''
+  | ' Step pos of the instrument played at note nt (-1 once it has finished).
+  | ' Transposing divides the divisor: an octave up halves it.
+  | '
+  | FUNCTION voice_div& (stepPos AS LONG, nt AS LONG)
+  |     DIM ln AS LONG, p AS LONG, v AS LONG
+  |     ln = snd_len(instIdx)
+  |     p = stepPos
+  |     IF ln = 0 THEN voice_div = -1: EXIT FUNCTION
+  |     IF p >= ln THEN
+  |         IF holdMode = HOLD_LOOP THEN
+  |             p = p MOD ln
+  |         ELSE
+  |             voice_div = -1
+  |             EXIT FUNCTION
+  |         END IF
+  |     END IF
+  |     v = mix_step(instIdx, p)
+  |     IF v THEN
+  |         v = CLNG(v / 2 ^ ((nt - ROOT_NOTE) / 12))
+  |         IF v < 1 THEN v = 1
+  |         IF v > 65534 THEN v = 65534
+  |     END IF
+  |     voice_div = v
+  | END FUNCTION
+  | 
+  | 
+  | SUB start_voice (n AS LONG)
+  |     IF keysMode <> KEYS_SOUND THEN EXIT SUB
+  |     voiceOn = -1
+  |     voicePos = 0
+  |     voiceNote = n
+  | END SUB
+  | 
+  | 
+  | 909:FUNCTION pwm_needed%
+  | 910-    IF polyMode <> POLY_PWM THEN EXIT FUNCTION
+  | 911-    IF playing THEN
+  | 912-        pwm_needed = voices_used(cur) > 1
+  | 913-    ELSE
+  | 914-        pwm_needed = held_count >= 2 AND keysMode = KEYS_NOTES AND NOT recording
+  | 915-    END IF
+  | 916-END FUNCTION
+  | 917-
+  | 918-
+  | 919-''
+  | 965:SUB pump_pwm
+  | 966-    DIM d(1 TO 8) AS LONG, n AS LONG, k AS LONG
+  | 967-    IF pcspk.sink <> PCSPK_SINK_STREAM THEN PCSPK_StreamOpen
+  | 968-    spkLast = -1 ' the PIT is in one-shot mode now: the next tone must be written
+  | 969-    DO WHILE PCSPK_Buffered < pcspk.lead
+  | 970-        tickN = tickN + 1
+  | 971-        IF playing THEN
+  | 972-            IF playPos >= loop_end THEN
+  | 973-                IF loopOn AND snd_len(cur) > 0 THEN
+  | 974-                    playPos = loop_start
+  | 975-                    lastBeat = -999999
+  | 976-                ELSE
+  | 977-                    playing = 0
+  | 978-                    PCSPK_Off
+  | 979-                    EXIT DO
+  | 980-                END IF
+  | 981-            END IF
+  | 982-            n = step_divs(cur, playPos, d())
+  | 983-            playPos = playPos + 1
+  | 984-        ELSE
+  | 985-            n = held_count
+  | 986-            IF n > 8 THEN n = 8
+  | 987-            FOR k = 1 TO n
+  | 988-                d(k) = note_div(held_note(k - 1))
+  | 989-            NEXT
+  | 990-            IF n < 2 THEN EXIT DO ' chord let go: back to the normal path
+  | 991-        END IF
+  | 992-        render_pwm_tick d(), n
+  | 993-    LOOP
+  | 994-    PCSPK_StreamFlush
+  | ...[truncated]
+2026-10-01T01:29:05-0400  INFO     bash_start    python3 - <<'PYEOF' | p='PCSEDIT.BAS'; s=open(p).read() | def r(a,b,c=1): | global s | assert s.count(a)==c,(a[:90],s.count(a)); s=s.replace(a,b) | r(""" ELSE | pwm_needed = held_count >= 2 AND keysM…
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ python3 - <<'PYEOF'
+  $ p='PCSEDIT.BAS'; s=open(p).read()
+  $ def r(a,b,c=1):
+  $     global s
+  $     assert s.count(a)==c,(a[:90],s.count(a)); s=s.replace(a,b)
+  $ r("""    ELSE
+  $         pwm_needed = held_count >= 2 AND keysMode = KEYS_NOTES AND NOT recording
+  $     END IF
+  $ END FUNCTION""","""    ELSEIF keysMode = KEYS_SOUND THEN
+  $         ' Ctrl+K: an instrument with several voices
+  $         pwm_needed = voiceOn <> 0 AND voices_used(instIdx) > 1 AND NOT recording
+  $     ELSE
+  $         pwm_needed = held_count >= 2 AND NOT recording
+  $     END IF
+  $ END FUNCTION
+  $ 
+  $ 
+  $ ''
+  $ ' The instrument's voices at its step pos, played at note nt (for PWM):
+  $ ' how many sound, or -1 once it has finished (see voice_div).
+  $ '
+  $ FUNCTION inst_divs& (stepPos AS LONG, nt AS LONG, d() AS LONG)
+  $     DIM ln AS LONG, p AS LONG, n AS LONG, k AS LONG, v AS LONG
+  $     ln = snd_len(instIdx)
+  $     p = stepPos
+  $     IF ln = 0 THEN inst_divs = -1: EXIT FUNCTION
+  $     IF p >= ln THEN
+  $         IF holdMode = HOLD_LOOP THEN p = p MOD ln ELSE inst_divs = -1: EXIT FUNCTION
+  $     END IF
+  $     FOR k = 1 TO VOICES
+  $         v = voice_step(instIdx, k, p)
+  $         IF v THEN
+  $             v = CLNG(v / 2 ^ ((nt - ROOT_NOTE) / 12))
+  $             IF v < 1 THEN v = 1
+  $             IF v > 65534 THEN v = 65534
+  $             n = n + 1: d(n) = v
+  $         END IF
+  $     NEXT
+  $     inst_divs = n
+  $ END FUNCTION""")
+  $ r("""            n = step_divs(cur, playPos, d())
+  $             playPos = playPos + 1
+  $         ELSE""","""            n = step_divs(cur, playPos, d())
+  $             playPos = playPos + 1
+  $         ELSEIF keysMode = KEYS_SOUND THEN
+  $             IF voiceOn = 0 THEN EXIT DO ' let go: back to the normal path
+  $             n = inst_divs(voicePos, voiceNote, d())
+  $             IF n < 0 THEN voiceOn = 0: EXIT DO ' the instrument has finished
+  $             voicePos = voicePos + 1
+  $         ELSE""")
+  $ open(p,'w').write(s)
+  $ p='README.md'; s=open(p).read()
+  $ a="""all use it. It is too heavy"""
+  $ assert a in s
+  $ s=s.replace("Held chords, playback and Ctrl+E export\n  all use it.","Held chords, playback, Ctrl+E export and\n  a multi-voice sound played on the keys with **Ctrl+K** all use it.")
+  $ open(p,'w').write(s)
+  $ PYEOF
+  $ grep -n "Ctrl+K\*\* all use" README.md; grep -n "SUB note_off" PCSEDIT.BAS
+2026-10-01T01:29:05-0400  INFO     bash_end      [ok] 2L stdout
+  | 286:  a multi-voice sound played on the keys with **Ctrl+K** all use it. It is too heavy for the games' 140 Hz timer, so it never goes
+  | 1224:SUB note_off (n AS LONG)
+2026-10-01T01:29:06-0400  NOTICE   prompt        as an option? and record it?
+  > as an option? and record it?
+2026-10-01T01:29:15-0400  INFO     bash_start    n=$(grep -n "^SUB begin_live" PCSEDIT.BAS | cut -d: -f1); m=$(grep -n "^SUB stop_recording" PCSEDIT.BAS | cut -d: -f1); sed -n "$n,$((m+30))p" PCSEDIT.BAS
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ n=$(grep -n "^SUB begin_live" PCSEDIT.BAS | cut -d: -f1); m=$(grep -n "^SUB stop_recording" PCSEDIT.BAS | cut -d: -f1); sed -n "$n,$((m+30))p" PCSEDIT.BAS
+2026-10-01T01:29:15-0400  INFO     bash_end      [ok] 226L stdout
+  | SUB begin_live (at AS LONG, countBars AS LONG)
+  |     recording = -1
+  |     recFrom = at
+  |     recPos = at - CLNG(countBars * BEATS_PER_BAR * 60 * rateHz / bpm)
+  |     recPos0 = recPos
+  |     recStartLen = steps_of(cur)
+  |     recLastNote = -1
+  |     evCount = 0: protectUntil = 0
+  |     lastBeat = -999999
+  |     IF quantOn AND gridDiv = 0 THEN
+  |         gridDiv = 16
+  |         set_status "Quantize needs a grid - set to 1/16 (Ctrl+G changes it, Ctrl+Q turns quantize off)"
+  |     END IF
+  | END SUB
+  | 
+  | 
+  | ''
+  | ' Ctrl+R: record now from the cursor, with the count-in.
+  | '
+  | SUB record_now
+  |     IF recording THEN stop_recording: EXIT SUB
+  |     IF playing THEN stop_playing
+  |     recMode = REC_LIVE
+  |     ensure_target
+  |     push_undo
+  |     begin_live cursorStep, countIn
+  |     IF countIn THEN set_status "Count-in..." ELSE set_status "Recording - Space or F5 stops"
+  | END SUB
+  | 
+  | 
+  | ''
+  | ' Note on / off while recording: remember it (timed by what you heard, not
+  | ' by what is queued ahead) and, with quantize on, re-draw the take.
+  | '
+  | SUB rec_event (n AS LONG, isOn AS INTEGER)
+  |     DIM t AS LONG
+  |     IF NOT recording OR recPos < recFrom THEN EXIT SUB
+  |     t = recPos - CLNG(PCSPK_Buffered * rateHz)
+  |     IF t < recFrom THEN t = recFrom
+  |     add_event t, n, isOn
+  |     IF quantOn AND gridDiv <> 0 THEN render_take 0
+  | END SUB
+  | 
+  | 
+  | SUB add_event (t AS LONG, n AS LONG, isOn AS INTEGER)
+  |     IF evCount > UBOUND(evS) THEN
+  |         REDIM _PRESERVE evS(0 TO evCount * 2) AS LONG
+  |         REDIM _PRESERVE evN(0 TO evCount * 2) AS LONG
+  |         REDIM _PRESERVE evOn(0 TO evCount * 2) AS INTEGER
+  |     END IF
+  |     evS(evCount) = t: evN(evCount) = n: evOn(evCount) = isOn
+  |     evCount = evCount + 1
+  | END SUB
+  | 
+  | 
+  | ''
+  | ' Snap a step to the nearest grid cell edge.
+  | '
+  | FUNCTION snap_cell& (t AS LONG)
+  |     DIM c AS LONG
+  |     c = cell_of(t)
+  |     IF t - cell_start(c) >= cell_start(c + 1) - t THEN c = c + 1
+  |     snap_cell = cell_start(c)
+  | END FUNCTION
+  | 
+  | 
+  | ''
+  | ' Re-draw the take from its events with every note snapped to the grid:
+  | ' start to the nearest cell, end to the nearest cell edge (at least a cell).
+  | ' Plain notes write their pitch; with the instrument (Ctrl+K) each note plays
+  | ' the instrument from its own start. Notes still held run to recPos
+  | ' (unfinished = FALSE) or end there (final = TRUE, when recording stops).
+  | '
+  | SUB render_take (final AS INTEGER)
+  |     DIM i AS LONG, j AS LONG, k AS LONG, nn AS LONG, s AS LONG, e AS LONG, v AS LONG
+  |     DIM best AS LONG, endS AS LONG
+  |     IF evCount = 0 THEN EXIT SUB
+  |     REDIM ns(0 TO evCount) AS LONG ' note start, end, number (quantized)
+  |     REDIM ne(0 TO evCount) AS LONG
+  |     REDIM nk(0 TO evCount) AS LONG
+  | ...[truncated]
+2026-10-01T01:30:07-0400  INFO     bash_start    python3 - <<'PYEOF' | p='PCSEDIT.BAS'; s=open(p).read() | def r(a,b,c=1): | global s | assert s.count(a)==c,(a[:90],s.count(a)); s=s.replace(a,b) | | # ---- on_tick: remember the instrument position,…
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ python3 - <<'PYEOF'
+  $ p='PCSEDIT.BAS'; s=open(p).read()
+  $ def r(a,b,c=1):
+  $     global s
+  $     assert s.count(a)==c,(a[:90],s.count(a)); s=s.replace(a,b)
+  $ 
+  $ # ---- on_tick: remember the instrument position, recording -> rec_tick
+  $ r("""SUB on_tick
+  $     DIM v AS LONG
+  $     tickN = tickN + 1""","""SUB on_tick
+  $     DIM v AS LONG, vp AS LONG
+  $     tickN = tickN + 1
+  $     vp = -1""")
+  $ r("""        IF voiceOn THEN
+  $             v = voice_div(voicePos, voiceNote)
+  $             IF v < 0 THEN
+  $                 voiceOn = 0
+  $                 v = 0
+  $             ELSE
+  $                 voicePos = voicePos + 1
+  $             END IF
+  $         END IF""","""        IF voiceOn THEN
+  $             v = voice_div(voicePos, voiceNote)
+  $             IF v < 0 THEN
+  $                 voiceOn = 0
+  $                 v = 0
+  $             ELSE
+  $                 vp = voicePos
+  $                 voicePos = voicePos + 1
+  $             END IF
+  $         END IF""")
+  $ r("""    IF recording THEN
+  $         IF recPos < recFrom THEN
+  $             recPos = recPos + 1 ' counting in: clicks only, nothing written
+  $         ELSEIF recPos < MAX_STEPS THEN
+  $             ' a key already down when the count-in ends is a note from step one
+  $             IF recPos = recFrom AND evCount = 0 AND heldNote >= 0 THEN add_event recFrom, heldNote, -1
+  $             ' silence must not cut a note that was quantized longer than played
+  $             IF NOT (v = 0 AND recPos < protectUntil) THEN set_step cur, recPos, v
+  $             IF v <> 0 OR (keysMode = KEYS_SOUND AND voiceOn <> 0) THEN recLastNote = recPos
+  $             recPos = recPos + 1
+  $             cursorStep = recPos
+  $             follow cursorStep
+  $         ELSE
+  $             stop_recording
+  $         END IF
+  $     END IF
+  $ 
+  $     speaker v
+  $ END SUB""","""    IF recording THEN rec_tick v, vp
+  $ 
+  $     speaker v
+  $ END SUB
+  $ 
+  $ 
+  $ ''
+  $ ' One 140 Hz tick of LIVE recording: v is what sounded (the ARP mix), vp the
+  $ ' instrument step that played (-1: none).
+  $ '
+  $ SUB rec_tick (v AS LONG, vp AS LONG)
+  $     IF recPos < recFrom THEN
+  $         recPos = recPos + 1 ' counting in: clicks only, nothing written
+  $     ELSEIF recPos < MAX_STEPS THEN
+  $         ' a key already down when the count-in ends is a note from step one
+  $         IF recPos = recFrom AND evCount = 0 AND heldNote >= 0 THEN add_event recFrom, heldNote, -1
+  $         ' silence must not cut a note that was quantized longer than played
+  $         IF NOT (v = 0 AND recPos < protectUntil) THEN rec_write recPos, v, vp, voiceNote
+  $         IF v <> 0 OR (keysMode = KEYS_SOUND AND voiceOn <> 0) THEN recLastNote = recPos
+  $         recPos = recPos + 1
+  $         cursorStep = recPos
+  $         follow cursorStep
+  $     ELSE
+  $         stop_recording
+  $     END IF
+  $ END SUB
+  $ 
+  $ 
+  $ ''
+  $ ' Recording with an instrument that has several voices: each of its voices
+  $ ' goes into the same voice of the sound being recorded, so the chords keep
+  $ ...[truncated]
+2026-10-01T01:30:09-0400  INFO     bash_end      [ok] 2L stdout
+  | Beginning C++ output from QB64 code... 
+  | Output: /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/PCSEDIT
+2026-10-01T01:30:09-0400  NOTICE   prompt        also re: metronome not on during pwm/poly - you can deviate from the pure by using another qb64pe feature - simply play the sound in a separate channel ? :)
+  > also re: metronome not on during pwm/poly - you can deviate from the pure by using another qb64pe feature - simply play the sound in a separate channel ? :)
+2026-10-01T01:30:09-0400  NOTICE   prompt        the metronome never gets into the song anyway
+  > the metronome never gets into the song anyway
+2026-10-01T01:30:13-0400  INFO     bash_start    grep -n "metronome$\|metronome '\|^ metronome\|pump_pwm$\|IF pwm_needed" PCSEDIT.BAS; n=$(grep -n "IF pwm_needed THEN" PCSEDIT.BAS | head -1 | cut -d: -f1); sed -n "$((n-12)),$((n+12))p" PCSEDIT.BAS
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ grep -n "metronome$\|metronome '\|^    metronome\|pump_pwm$\|IF pwm_needed" PCSEDIT.BAS; n=$(grep -n "IF pwm_needed THEN" PCSEDIT.BAS | head -1 | cut -d: -f1); sed -n "$((n-12)),$((n+12))p" PCSEDIT.BAS
+2026-10-01T01:30:13-0400  INFO     bash_end      [ok] 30L stdout
+  | 451:    IF pwm_needed THEN
+  | 452:        pump_pwm
+  | 461:    metronome
+  | 1052:SUB pump_pwm
+  | 1560:SUB metronome
+  | IF ENVIRON$("PCSEDIT_NOMIDI") = "" THEN
+  |     midi_scan
+  |     IF midiDevCount > 0 THEN midi_start 0
+  | END IF
+  | tool = TOOL_NOTE
+  | waveShape = WAVE_SQUARE
+  | waveCycles = 4
+  | waveDuty = 0.5
+  | set_status "Caps Lock ON = computer keyboard plays notes, OFF = letters pick tools (D L N W E S M, C cut)"
+  | 
+  | DO
+  |     ' ------------------------------------------------------------ audio
+  |     IF pwm_needed THEN
+  |         pump_pwm
+  |     ELSE
+  |         DO WHILE PCSPK_Tick
+  |             on_tick
+  |         LOOP
+  |     END IF
+  | 
+  |     ' ------------------------------------------------------------ MIDI
+  |     midi_poll
+  |     metronome
+  | 
+  |     ' ------------------------------------------------------------ mouse
+2026-10-01T01:30:25-0400  INFO     bash_start    export SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad && python3 - <<'PYEOF' | import os | SP=os.environ['SP'] | s=open('PCSEDIT.BAS').read() | lines=s.s…
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ export SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad && python3 - <<'PYEOF'
+  $ import os
+  $ SP=os.environ['SP']
+  $ s=open('PCSEDIT.BAS').read()
+  $ lines=s.split('\n'); i=lines.index('DO')
+  $ lines.insert(i,'''DIM SHARED tsClicks AS LONG
+  $ DIM tsI AS LONG, tsT AS DOUBLE
+  $ FOR tsI = 0 TO 279: set_step cur, tsI, note_div(60): NEXT
+  $ switch_voice 2
+  $ FOR tsI = 0 TO 279: set_step cur, tsI, note_div(64): NEXT
+  $ switch_voice 1
+  $ polyMode = POLY_PWM: metroMode = 2: loopOn = -1: bpm = 120
+  $ play_from 0
+  $ tsT = TIMER''')
+  $ s='\n'.join(lines)
+  $ s=s.replace("""    midi_poll
+  $     metronome
+  $ ""","""    midi_poll
+  $     metronome
+  $     IF TIMER - tsT > 3 THEN tsI = FREEFILE: OPEN "SPX/pt/metro.txt" FOR OUTPUT AS #tsI: PRINT #tsI, "clicks"; tsClicks; " pwm"; pwm_needed: CLOSE #tsI: SYSTEM
+  $ """.replace('SPX',SP),1)
+  $ s=s.replace("IF clickHi > 0 THEN _SNDVOL clickHi, metroVol: _SNDPLAY clickHi","tsClicks = tsClicks + 1: IF clickHi > 0 THEN _SNDVOL clickHi, metroVol: _SNDPLAY clickHi")
+  $ s=s.replace("IF clickLo > 0 THEN _SNDVOL clickLo, metroVol: _SNDPLAY clickLo","tsClicks = tsClicks + 1: IF clickLo > 0 THEN _SNDVOL clickLo, metroVol: _SNDPLAY clickLo")
+  $ open(SP+'/pt/PCSEDIT8.BAS','w').write(s)
+  $ PYEOF
+  $ cd $SP/pt && /home/grymmjack/git/qb64pe/qb64pe -x PCSEDIT8.BAS -o ./PCSEDIT8 2>&1 | tail -1; HOME=$SP/pt/home PCSEDIT_NOMIDI=1 DISPLAY=:99 timeout 20 ./PCSEDIT8; cat metro.txt
+2026-10-01T01:30:31-0400  WARNING  bash_end      [stderr] 2L stdout / 2L stderr
+  | Output: /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/pt/PCSEDIT8
+  | clicks 7  pwm-1
+  ! 
+  ! Shell cwd was reset to /home/grymmjack/git/qb64
+2026-10-01T01:30:43-0400  INFO     bash_start    cd /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER && grep -n "^SUB ensure_target" -A15 PCSEDIT.BAS | head -20; grep -n "holdMode = \|HOLD_GATE\b" PCSEDIT.BAS | head -5
+  > cwd: /home/grymmjack/git/qb64
+  $ cd /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER && grep -n "^SUB ensure_target" -A15 PCSEDIT.BAS | head -20; grep -n "holdMode = \|HOLD_GATE\b" PCSEDIT.BAS | head -5
+2026-10-01T01:30:43-0400  INFO     bash_end      [ok] 21L stdout
+  | 738:SUB ensure_target
+  | 739-    IF keysMode <> KEYS_SOUND OR cur <> instIdx THEN EXIT SUB
+  | 740-    add_sound "", ""
+  | 741-    sndName(cur) = LEFT$(sndName(instIdx), 7) + "_TUNE"
+  | 742-    instLock = -1 ' keep playing the instrument while you work in the tune
+  | 743-    set_status "Recording " + sndName(instIdx) + " into a new sound, " + sndName(cur) + " (instrument locked; Ctrl+Shift+K unlocks)"
+  | 744-END SUB
+  | 745-
+  | 746-
+  | 747-''
+  | 748-' Piano keys clicked with the mouse: hear the pitch, never record it.
+  | 749-'
+  | 750-SUB audition_start (n AS LONG)
+  | 751-    IF recording OR n < 0 OR n > 127 THEN EXIT SUB
+  | 752-    IF playing THEN stop_playing
+  | 753-    auditionNote = n
+  | 145:CONST HOLD_GATE = 0
+  | 674:        IF holdMode = HOLD_LOOP THEN p = p MOD ln ELSE inst_voice_div = -1: EXIT FUNCTION
+  | 709:        IF holdMode = HOLD_LOOP THEN
+  | 991:        IF holdMode = HOLD_LOOP THEN p = p MOD ln ELSE inst_divs = -1: EXIT FUNCTION
+  | 1343:    IF keysMode = KEYS_SOUND AND holdMode = HOLD_ONESHOT THEN
+2026-10-01T01:30:52-0400  INFO     bash_start    export SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad && python3 - <<'PYEOF' | import os | SP=os.environ['SP'] | s=open('PCSEDIT.BAS').read() | lines=s.s…
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ export SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad && python3 - <<'PYEOF'
+  $ import os
+  $ SP=os.environ['SP']
+  $ s=open('PCSEDIT.BAS').read()
+  $ lines=s.split('\n'); i=lines.index('DO')
+  $ lines.insert(i,'''DIM tsI AS LONG, tsF AS LONG
+  $ FOR tsI = 0 TO 7: set_step cur, tsI, note_div(60): NEXT
+  $ switch_voice 2
+  $ FOR tsI = 0 TO 7: set_step cur, tsI, note_div(67): NEXT
+  $ switch_voice 1
+  $ toggle_keys_mode 0
+  $ tsF = FREEFILE: OPEN "SPX/pt/rec.txt" FOR OUTPUT AS #tsF
+  $ PRINT #tsF, "keys"; keysMode; " inst"; instIdx; " hold"; holdMode
+  $ recMode = REC_STEP: gridDiv = 0: noteLen = 4
+  $ note_on 72: note_off 72
+  $ PRINT #tsF, "STEP cur"; cur; sndName(cur); " used"; voices_used(cur); " v1@0"; voice_step(cur, 1, 0); " v2@0"; voice_step(cur, 2, 0); " want"; note_div(72); note_div(79); " len"; snd_len(cur)
+  $ recMode = REC_OFF: quantOn = 0: countIn = 0
+  $ cursorStep = 10
+  $ record_now
+  $ note_on 60
+  $ FOR tsI = 1 TO 6: on_tick: NEXT
+  $ note_off 60
+  $ FOR tsI = 1 TO 6: on_tick: NEXT
+  $ stop_recording
+  $ PRINT #tsF, "LIVE used"; voices_used(cur); " v1@11"; voice_step(cur, 1, 11); " v2@11"; voice_step(cur, 2, 11); " v2@17"; voice_step(cur, 2, 17); " len v1/v2"; LEN(voice_data(cur, 1)) \\ 2; LEN(voice_data(cur, 2)) \\ 2
+  $ CLOSE #tsF
+  $ SYSTEM'''.replace('SPX',SP))
+  $ open(SP+'/pt/PCSEDIT9.BAS','w').write('\n'.join(lines))
+  $ PYEOF
+  $ grep -n "CONST REC_" PCSEDIT.BAS | head -3; cd $SP/pt && /home/grymmjack/git/qb64pe/qb64pe -x PCSEDIT9.BAS -o ./PCSEDIT9 2>&1 | tail -1; HOME=$SP/pt/home PCSEDIT_NOMIDI=1 DISPLAY=:99 timeout 20 ./PCSEDIT9; cat rec.txt
+2026-10-01T01:30:55-0400  WARNING  bash_end      [stderr] 7L stdout / 2L stderr
+  | 136:CONST REC_OFF = 0
+  | 137:CONST REC_STEP = 1
+  | 138:CONST REC_LIVE = 2
+  | Output: /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/pt/PCSEDIT9
+  | keys 1  inst 1  hold 0 
+  | STEP cur 2 SOUND1_TUNE used 1  v1@0 2280  v2@0 0  want 2280  1522  len 4 
+  | LIVE used 2  v1@11 4561  v2@11 3044  v2@17 0  len v1/v2 16  16
+  ! 
+  ! Shell cwd was reset to /home/grymmjack/git/qb64
+2026-10-01T01:31:07-0400  INFO     bash_start    cd /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER && python3 - <<'PYEOF' | p='PCSEDIT.BAS'; s=open(p).read() | a=""" ' the other voices are cleared here, so a new chord doesn't mix with old notes | F…
+  > cwd: /home/grymmjack/git/qb64
+  $ cd /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER && python3 - <<'PYEOF'
+  $ p='PCSEDIT.BAS'; s=open(p).read()
+  $ a="""    ' the other voices are cleared here, so a new chord doesn't mix with old notes
+  $     FOR k = 1 TO VOICES
+  $         IF k <> sndAct(cur) AND LEN(sndV(cur, k)) THEN"""
+  $ assert s.count(a)==1
+  $ s=s.replace(a,"""    ' the other voices are cleared here, so a new chord doesn't mix with old
+  $     ' notes (not when a multi-voice instrument has just written them)
+  $     FOR k = 1 TO VOICES
+  $         IF k <> sndAct(cur) AND LEN(sndV(cur, k)) > 0 AND NOT rec_multi THEN""")
+  $ open(p,'w').write(s)
+  $ PYEOF
+  $ export SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad; python3 - <<'PYEOF'
+  $ import os
+  $ SP=os.environ['SP']
+  $ t=open(SP+'/pt/PCSEDIT9.BAS').read()
+  $ s=open('/home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER/PCSEDIT.BAS').read()
+  $ i=t.index("DIM tsI AS LONG, tsF AS LONG"); j=t.index("SYSTEM",i)+6
+  $ lines=s.split('\n'); k=lines.index('DO'); lines.insert(k,t[i:j])
+  $ open(SP+'/pt/PCSEDIT9.BAS','w').write('\n'.join(lines))
+  $ PYEOF
+  $ cd $SP/pt && /home/grymmjack/git/qb64pe/qb64pe -x PCSEDIT9.BAS -o ./PCSEDIT9 2>&1 | tail -1; HOME=$SP/pt/home PCSEDIT_NOMIDI=1 DISPLAY=:99 timeout 20 ./PCSEDIT9; cat rec.txt; /home/grymmjack/git/qb64pe/qb64pe -x /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER/PCSEDIT.BAS -o $SP/PCSEDIT 2>&1 | grep -i "error\|Output"
+2026-10-01T01:31:13-0400  WARNING  bash_end      [stderr] 6L stdout / 2L stderr
+  | Output: /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/pt/PCSEDIT9
+  | keys 1  inst 1  hold 0 
+  | STEP cur 2 SOUND1_TUNE used 2  v1@0 2280  v2@0 1522  want 2280  1522  len 4 
+  | LIVE used 2  v1@11 4561  v2@11 3044  v2@17 0  len v1/v2 16  16 
+  | Beginning C++ output from QB64 code... 
+  | Output: /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/PCSEDIT
+  ! 
+  ! Shell cwd was reset to /home/grymmjack/git/qb64
+2026-10-01T01:31:15-0400  INFO     bash_start    cd /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER && grep -n "Playing a sound as an instrument" -A24 README.md | head -30
+  > cwd: /home/grymmjack/git/qb64
+  $ cd /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER && grep -n "Playing a sound as an instrument" -A24 README.md | head -30
+2026-10-01T01:31:15-0400  INFO     bash_end      [ok] 25L stdout
+  | 303:**Playing a sound as an instrument:** by default a key plays a plain tone.
+  | 304-Press **Ctrl+K** and the keys play *the selected sound* instead: every note
+  | 305-plays the whole sound, transposed, the way a sampler does. C4 plays it as
+  | 306-drawn, C5 an octave higher, and so on. That turns a sound you have drawn (a
+  | 307-zap, a blip, a little arpeggio) into an instrument you can play tunes with.
+  | 308-
+  | 309-* The instrument is marked with ♪ in the list. It **follows the sound you
+  | 310-  pick**: press Up/Down or click another sound and the keys play that one.
+  | 311-  Pressing **Ctrl+K** again goes back to plain notes.
+  | 312-* **Ctrl+Shift+K** locks the instrument to the sound it's on now, so you can
+  | 313-  pick other sounds without changing what the keys play. The Keys line shows
+  | 314-  **LOCK**; press Ctrl+Shift+K again to unlock it.
+  | 315-* **Ctrl+H** sets how a note plays it: **GATE** sounds while the key is held,
+  | 316-  **ONE-SHOT** always plays to the end, and **LOOP** repeats while the key is
+  | 317-  held.
+  | 318-* **STEP** and **LIVE** record what you play *into another sound*, never into
+  | 319-  the instrument. If the instrument is the selected sound when you start, a
+  | 320-  new sound called `<name>_TUNE` is made to record into, and the instrument
+  | 321-  locks so you can keep working in the tune. In STEP, each note
+  | 322-  writes the instrument as if the key was held for *Len*; ONE-SHOT writes the
+  | 323-  whole sound.
+  | 324-
+  | 325-| Key | What it does |
+  | 326-| --- | --- |
+  | 327-| Space / Enter | play from the start / from the cursor (Ctrl+L loops) |
+2026-10-01T01:31:18-0400  INFO     bash_start    python3 - <<'PYEOF' | p='README.md'; s=open(p).read() | a=""" writes the instrument as if the key was held for *Len*; ONE-SHOT writes the | whole sound. | """ | assert s.count(a)==1 | s=s.replace(a,a…
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ python3 - <<'PYEOF'
+  $ p='README.md'; s=open(p).read()
+  $ a="""  writes the instrument as if the key was held for *Len*; ONE-SHOT writes the
+  $   whole sound.
+  $ """
+  $ assert s.count(a)==1
+  $ s=s.replace(a,a+"""* An instrument with **several voices** (a chord, say) plays with PWM when
+  $   the mode is PWM (**Ctrl+J**), so its notes really sound together, even
+  $   while recording. Recording keeps its voices apart: the instrument's voice
+  $   1 goes into voice 1 of the tune, voice 2 into voice 2, and so on. The tune
+  $   plays back as PWM or ARP like any other multi-voice sound.
+  $ """)
+  $ open(p,'w').write(s)
+  $ PYEOF
+  $ git -C /home/grymmjack/git/qb64 status --short
+2026-10-01T01:31:18-0400  INFO     bash_end      [ok] 4L stdout
+  |  M .claude/activity.log
+  |  M qb64/SOUND/PC-SPEAKER/PCSEDIT.BAS
+  |  M qb64/SOUND/PC-SPEAKER/README.md
+  | ?? MYSOUNDS.SND
+2026-10-01T01:31:50-0400  NOTICE   prompt        yes - also we need a new screenshot of PCSEDIT for the readme lol it's grown quite a bit
+  > yes - also we need a new screenshot of PCSEDIT for the readme lol it's grown quite a bit
+2026-10-01T01:31:53-0400  INFO     bash_start    cd /home/grymmjack/git/qb64 && git add .claude/activity.log qb64/SOUND/PC-SPEAKER/PCSEDIT.BAS qb64/SOUND/PC-SPEAKER/README.md && git commit -q -m "SOUND/PC-SPEAKER: PCSEDIT Ctrl+K plays multi-voice i…
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ cd /home/grymmjack/git/qb64 && git add .claude/activity.log qb64/SOUND/PC-SPEAKER/PCSEDIT.BAS qb64/SOUND/PC-SPEAKER/README.md && git commit -q -m "SOUND/PC-SPEAKER: PCSEDIT Ctrl+K plays multi-voice instruments with PWM
+  $ 
+  $ A Ctrl+K instrument with several voices sounds them together in PWM mode,
+  $ also while recording. STEP and LIVE takes keep its voices apart: each goes
+  $ into the same voice of the tune.
+  $ 
+  $ Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>" && git push -q && git log --oneline -1; cd qb64/SOUND/PC-SPEAKER && grep -n "png\|jpg\|gif" README.md; ls *.png ASSETS/*.png 2>/dev/null; ls

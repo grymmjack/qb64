@@ -282,8 +282,8 @@ voices** and two ways to hear them together:
 * **PWM** (**Ctrl+J**, or click the mode chip): the voices really sound at
   once. PCSEDIT sends the speaker a 15.7 kHz stream of pulses whose width
   follows how many voices are "high" at each moment, the same trick
-  `WAV.BAS` uses for recorded sound. Held chords, playback and Ctrl+E export
-  all use it. It is too heavy for the games' 140 Hz timer, so it never goes
+  `WAV.BAS` uses for recorded sound. Held chords, playback, Ctrl+E export and
+  a multi-voice sound played on the keys with **Ctrl+K** all use it. It is too heavy for the games' 140 Hz timer, so it never goes
   into the bank.
 
 **Saving a sound with voices:** the bank holds the ARP mix under the sound's
@@ -321,6 +321,11 @@ zap, a blip, a little arpeggio) into an instrument you can play tunes with.
   locks so you can keep working in the tune. In STEP, each note
   writes the instrument as if the key was held for *Len*; ONE-SHOT writes the
   whole sound.
+* An instrument with **several voices** (a chord, say) plays with PWM when
+  the mode is PWM (**Ctrl+J**), so its notes really sound together, even
+  while recording. Recording keeps its voices apart: the instrument's voice
+  1 goes into voice 1 of the tune, voice 2 into voice 2, and so on. The tune
+  plays back as PWM or ARP like any other multi-voice sound.
 
 | Key | What it does |
 | --- | --- |
