@@ -80,7 +80,7 @@ OPTION _EXPLICIT
 '$INCLUDE:'PCSPKR.BI'
 
 CONST SCR_W = 1280
-CONST SCR_H = 720
+CONST SCR_H = 800
 CONST ROW_H = 16
 CONST LIST_X = 8
 CONST LIST_Y = 120
@@ -92,6 +92,9 @@ CONST CANVAS_Y = 120
 CONST CANVAS_W = 1004
 CONST CANVAS_H = 504
 CONST TIME_Y = 100 '                     time ruler, above the roll
+CONST SCOPE_Y = 652 '                    oscilloscope, under the roll
+CONST SCOPE_H = 104
+CONST SCOPE_SPP = 2 '                    samples per pixel: 1004 px = about 42 ms at 48 kHz
 CONST NOTE_LO = 33 '                     A1, 55 Hz at the bottom edge
 CONST NOTE_HI = 117 '                    A8, 7040 Hz at the top edge
 CONST PX_SEMI = 6 '                      (NOTE_HI - NOTE_LO) * PX_SEMI = CANVAS_H
@@ -223,6 +226,7 @@ DIM SHARED recLastNote AS LONG
 DIM SHARED noteLen AS LONG
 DIM SHARED gridDiv AS LONG ' 0 = off, else cells per whole note: 4 8 16 32, 12 = 1/8T, 24 = 1/16T
 DIM SHARED bpm AS DOUBLE
+DIM SHARED linesOn AS INTEGER ' ' key: lines between note rows and grid cells / steps
 DIM SHARED octave AS LONG
 DIM SHARED keysMode AS INTEGER
 DIM SHARED instIdx AS LONG ' the instrument sound (KEYS_SOUND)
@@ -291,6 +295,7 @@ zoom = 6
 snapOn = -1
 noteLen = 4
 bpm = 120
+linesOn = -1
 octave = 4
 heldNote = -1
 auditionNote = -1
@@ -317,13 +322,17 @@ $ELSE
                 "case $(ps -o comm= -p $g 2>/dev/null) in PCSEDIT*) ;; *) " + _
                 "f=$(ps -o args= -p $p | sed 's/.* -r //'); kill $p; rm -f $f;; esac; done 2>/dev/null"
 $END IF
-midi_scan
-IF midiDevCount > 0 THEN midi_start 0
+' PCSEDIT_NOMIDI=1 in the environment leaves the MIDI keyboard alone - for
+' test runs, so they don't take the port from an editor you are using
+IF ENVIRON$("PCSEDIT_NOMIDI") = "" THEN
+    midi_scan
+    IF midiDevCount > 0 THEN midi_start 0
+END IF
 tool = TOOL_NOTE
 waveShape = WAVE_SQUARE
 waveCycles = 4
 waveDuty = 0.5
-set_status "Caps Lock ON = computer keyboard plays notes, OFF = letters pick tools (D N E S M C)"
+set_status "Caps Lock ON = computer keyboard plays notes, OFF = letters pick tools (D L N W E S M, C cut)"
 
 DO
     ' ------------------------------------------------------------ audio
@@ -344,7 +353,12 @@ DO
     shift = _KEYDOWN(100303) OR _KEYDOWN(100304)
     IF wheel AND promptKind = PROMPT_NONE THEN
         IF ctrl THEN
-            set_zoom_at zoom - SGN(wheel), _MOUSEX
+            ' about a quarter per click, so 1 to 64 is a quick spin, not 60 clicks
+            IF wheel < 0 THEN
+                set_zoom_at zoom + (zoom \ 4 + 1), _MOUSEX
+            ELSE
+                set_zoom_at zoom - (zoom \ 5 + 1), _MOUSEX
+            END IF
         ELSEIF _MOUSEX < RULER_X THEN
             select_sound cur + wheel
         ELSE
@@ -1368,6 +1382,28 @@ SUB nudge (ds AS LONG, dn AS LONG)
 END SUB
 
 
+''
+' Alt+Up/Down: change every selected step's PIT divisor by one - the
+' finest pitch change the file (and the real hardware) can make.
+'
+SUB fine_pitch (dv AS LONG)
+    DIM s AS LONG, v AS LONG, n AS LONG
+    IF NOT selOn THEN EXIT SUB
+    push_undo
+    FOR s = selS0 TO selS1 - 1
+        v = get_step(cur, s)
+        IF in_sel(s, v) THEN
+            v = v + dv
+            IF v >= 1 AND v <= 65534 THEN set_step cur, s, v: n = n + 1
+        END IF
+    NEXT
+    IF n THEN
+        v = get_step(cur, selS0)
+        set_status "Fine pitch: divisors " + MID$("+-", 1 - (dv < 0), 1) + "1 on" + STR$(n) + " steps (Alt+Up/Down)"
+    END IF
+END SUB
+
+
 FUNCTION nudge_step&
     IF gridDiv THEN nudge_step = CLNG(cell_steps) ELSE nudge_step = 1
 END FUNCTION
@@ -1564,7 +1600,9 @@ FUNCTION handle_key% (k AS LONG, ctrl AS INTEGER, shift AS INTEGER)
         CASE 18176: move_cursor 0 '                            Home
         CASE 20224: move_cursor steps_of(cur) '                End
         CASE 18432 '                                           Up
-            IF selOn AND NOT ctrl THEN
+            IF selOn AND modAlt THEN
+                fine_pitch -1 ' smaller divisor = higher pitch
+            ELSEIF selOn AND NOT ctrl THEN
                 IF shift THEN nudge 0, 12 ELSE nudge 0, 1
             ELSEIF ctrl THEN
                 IF shift THEN transpose 12 ELSE transpose 1
@@ -1572,7 +1610,9 @@ FUNCTION handle_key% (k AS LONG, ctrl AS INTEGER, shift AS INTEGER)
                 select_sound cur - 1
             END IF
         CASE 20480 '                                           Down
-            IF selOn AND NOT ctrl THEN
+            IF selOn AND modAlt THEN
+                fine_pitch 1
+            ELSEIF selOn AND NOT ctrl THEN
                 IF shift THEN nudge 0, -12 ELSE nudge 0, -1
             ELSEIF ctrl THEN
                 IF shift THEN transpose -12 ELSE transpose -1
@@ -1630,6 +1670,13 @@ FUNCTION handle_key% (k AS LONG, ctrl AS INTEGER, shift AS INTEGER)
         CASE 17408: set_octave octave + 1 '                    F10
         CASE 34048: set_note_len noteLen - 1 '                 F11
         CASE 34304: set_note_len noteLen + 1 '                 F12
+        CASE 39 '                                              ' (apostrophe)
+            linesOn = NOT linesOn
+            IF linesOn THEN
+                set_status "Grid lines ON - between note rows and every cell (or step, zoomed in)"
+            ELSE
+                set_status "Grid lines OFF - just beats and bars"
+            END IF
         CASE ELSE
             ' tool letters: always with Alt, and plain while the piano is off
             IF NOT ctrl AND (NOT pianoOn OR modAlt) THEN
@@ -1885,7 +1932,7 @@ SUB set_zoom_at (z AS LONG, x AS LONG)
     at = scrollX + px / zoom ' the step under x, before zooming
     zoom = z
     IF zoom < 1 THEN zoom = 1
-    IF zoom > 24 THEN zoom = 24
+    IF zoom > 64 THEN zoom = 64 ' 64 px a step: about 15 steps (0.1 s) on screen
     scroll_to CLNG(at - px / zoom)
 END SUB
 
@@ -2470,6 +2517,7 @@ SUB draw_ui
     draw_info
     draw_list
     draw_roll
+    draw_scope
 
     ' status / prompt line
     IF promptKind THEN
@@ -2553,9 +2601,9 @@ SUB draw_info
     _PRINTSTRING (x, 52), s
     COLOR _RGB32(150, 200, 255)
     IF gridDiv THEN
-        _PRINTSTRING (RULER_X + TB_BUTTONS * TB_W + 12, TB_Y + 3), "Grid " + grid_name + " @" + STR$(bpm) + " BPM (" + fmt2(cell_steps) + ")"
+        _PRINTSTRING (RULER_X + TB_BUTTONS * TB_W + 12, TB_Y + 3), "Grid " + grid_name + " @" + STR$(bpm) + " BPM" + MID$(" #", 1 - linesOn, 1)
     ELSE
-        _PRINTSTRING (RULER_X + TB_BUTTONS * TB_W + 12, TB_Y + 3), "Grid off (Ctrl+G)"
+        _PRINTSTRING (RULER_X + TB_BUTTONS * TB_W + 12, TB_Y + 3), "Grid off (Ctrl+G)" + MID$(" #", 1 - linesOn, 1)
     END IF
     COLOR _RGB32(190, 200, 215)
     IF mouseIn THEN
@@ -2681,6 +2729,22 @@ SUB draw_roll
     END IF
 
     LINE (CANVAS_X, TIME_Y)-(CANVAS_X + CANVAS_W - 1, CANVAS_Y - 2), _RGB32(26, 32, 44), BF
+
+    ' grid lines (' key): one between every note row, and one per step when
+    ' the grid is off and there is room (draw_grid does cells when it is on)
+    IF linesOn THEN
+        FOR nt = NOTE_LO TO NOTE_HI - 1
+            y = note_y(nt) - PX_SEMI \ 2 - 1
+            IF nt MOD 12 <> 11 THEN LINE (CANVAS_X, y)-(CANVAS_X + CANVAS_W - 1, y), _RGB32(30, 36, 50)
+        NEXT
+        IF gridDiv = 0 AND zoom >= 4 THEN
+            FOR s = scrollX TO scrollX + vis
+                x = CANVAS_X + (s - scrollX) * zoom
+                LINE (x, CANVAS_Y)-(x, CANVAS_Y + CANVAS_H - 1), _RGB32(38, 46, 64)
+            NEXT
+        END IF
+    END IF
+
     IF gridDiv THEN
         draw_grid vis
     ELSE
@@ -2830,12 +2894,64 @@ SUB draw_grid (vis AS LONG)
             ELSEIF onBeat THEN
                 LINE (x, CANVAS_Y - 10)-(x, CANVAS_Y - 2), _RGB32(120, 135, 160)
                 LINE (x, CANVAS_Y)-(x, CANVAS_Y + CANVAS_H - 1), _RGB32(52, 60, 82)
-            ELSEIF (cell_steps * zoom) >= 4 THEN
+            ELSEIF linesOn AND (cell_steps * zoom) >= 4 THEN
                 LINE (x, CANVAS_Y - 5)-(x, CANVAS_Y - 2), _RGB32(80, 90, 110)
-                LINE (x, CANVAS_Y)-(x, CANVAS_Y + CANVAS_H - 1), _RGB32(30, 36, 50)
+                LINE (x, CANVAS_Y)-(x, CANVAS_Y + CANVAS_H - 1), _RGB32(38, 46, 64)
             END IF
         END IF
     NEXT
+END SUB
+
+
+''
+' The oscilloscope: what the emulated speaker is sending out right now,
+' after the cone filter - the real 1-bit square wave. It triggers on a
+' rising edge, like a real scope, so a steady note holds still.
+'
+SUB draw_scope
+    DIM x AS LONG, y AS LONG, py AS LONG, k AS LONG, start AS LONG, span AS LONG
+    DIM heard AS LONG, mid AS LONG, gain AS DOUBLE, v AS SINGLE, ms AS DOUBLE, found AS INTEGER
+
+    mid = SCOPE_Y + SCOPE_H \ 2
+    LINE (CANVAS_X, SCOPE_Y)-(CANVAS_X + CANVAS_W - 1, SCOPE_Y + SCOPE_H - 1), _RGB32(6, 14, 10), BF
+    FOR x = CANVAS_X TO CANVAS_X + CANVAS_W - 1 STEP 100
+        LINE (x, SCOPE_Y)-(x, SCOPE_Y + SCOPE_H - 1), _RGB32(16, 34, 24)
+    NEXT
+    LINE (CANVAS_X, mid)-(CANVAS_X + CANVAS_W - 1, mid), _RGB32(20, 48, 32)
+    LINE (CANVAS_X - 1, SCOPE_Y - 1)-(CANVAS_X + CANVAS_W, SCOPE_Y + SCOPE_H), _RGB32(70, 80, 100), B
+
+    ms = CANVAS_W * SCOPE_SPP * 1000 / pcspk.rate
+    COLOR _RGB32(110, 200, 140)
+    _PRINTSTRING (RULER_X - 26, SCOPE_Y), "SCOPE"
+    COLOR _RGB32(80, 130, 100)
+    _PRINTSTRING (RULER_X - 26, SCOPE_Y + 18), LTRIM$(STR$(CLNG(ms))) + "ms"
+    _PRINTSTRING (RULER_X - 26, SCOPE_Y + 34), "10/div"
+
+    ' skip what is queued but not heard yet, then find a rising edge
+    span = CANVAS_W * SCOPE_SPP
+    heard = CLNG(PCSPK_Buffered * pcspk.rate)
+    IF heard < 0 THEN heard = 0
+    IF heard + span + 1600 >= PCSPK_SCOPE_N THEN heard = PCSPK_SCOPE_N - span - 1601
+    start = heard + span
+    FOR k = heard + span + 1600 TO heard + span STEP -1
+        IF PCSPK_ScopeSample(k) <= 0 AND PCSPK_ScopeSample(k - 1) > 0 THEN start = k: found = -1: EXIT FOR
+    NEXT
+
+    ' a full-scale square from the speaker is about +/- the volume (0.25)
+    gain = (SCOPE_H / 2 - 6) / 0.3
+    py = -1
+    FOR x = 0 TO CANVAS_W - 1
+        v = PCSPK_ScopeSample(start - x * SCOPE_SPP)
+        y = mid - CLNG(v * gain)
+        IF y < SCOPE_Y + 1 THEN y = SCOPE_Y + 1
+        IF y > SCOPE_Y + SCOPE_H - 2 THEN y = SCOPE_Y + SCOPE_H - 2
+        IF py >= 0 THEN LINE (CANVAS_X + x - 1, py)-(CANVAS_X + x, y), _RGB32(90, 255, 140) ELSE PSET (CANVAS_X + x, y), _RGB32(90, 255, 140)
+        py = y
+    NEXT
+    IF found THEN
+        COLOR _RGB32(80, 130, 100)
+        _PRINTSTRING (RULER_X - 26, SCOPE_Y + 50), "trig"
+    END IF
 END SUB
 
 
@@ -2843,14 +2959,14 @@ SUB draw_help
     DIM x AS LONG, y AS LONG, i AS LONG, wMax AS LONG
     DIM t(1 TO 28) AS STRING
     t(1) = "PCSEDIT - PC speaker sound editor"
-    t(2) = "Selection: arrows nudge (Shift+Up/Down octave), Delete clears, Esc deselects"
+    t(2) = "Selection: arrows nudge (Shift: octave, Alt+Up/Down: 1 PIT divisor), Delete, Esc"
     t(3) = "Tools   D)raw L)ine N)ote W)ave E)rase S)elect M)ove (letter w/ Caps off, Alt+letter, Tab)"
     t(4) = "        C)ut Ctrl+X  Ctrl+C copy  Ctrl+V paste  Ctrl+A all.  W)ave: 1-5 shape [ ] cycles"
     t(5) = "Notes   Z S X D C V G B H N J M ,   lower octave     F9/F10 octave  (Caps Lock ON)"
     t(6) = "        Q 2 W 3 E R 5 T 6 Y 7 U I   upper octave     or a MIDI keyboard"
     t(7) = "        wheel scroll   Ctrl+wheel zoom   click the time ruler: cursor"
     t(8) = "F5      record: OFF / STEP (note = Len steps at cursor) / LIVE"
-    t(9) = "F6 snap to semitones  F7 MIDI device  F11/F12 note length  Ctrl+G grid  Ctrl+B BPM"
+    t(9) = "F6 snap  F7 MIDI device  F11/F12 note length  Ctrl+G grid  Ctrl+B BPM  ' lines"
     t(10) = "Space   play / stop            Enter  play from cursor     Ctrl+L  loop"
     t(11) = "Left/Right cursor  Home/End  PgUp/PgDn next dot (NOTE tool: bar)  Up/Down sound"
     t(12) = "Insert / Delete  step at cursor    Backspace  delete step before cursor"

@@ -306,6 +306,8 @@ $IF PCSPKR_BM = UNDEFINED THEN
 
         SELECT CASE pcspk.sink
             CASE PCSPK_SINK_STREAM
+                pcspk_scope(pcspk_scopePos) = y
+                pcspk_scopePos = (pcspk_scopePos + 1) MOD PCSPK_SCOPE_N
                 pcspk_sbuf(pcspk.bufN) = y
                 pcspk.bufN = pcspk.bufN + 1
                 IF pcspk.bufN >= PCSPK_STREAM_CHUNK THEN PCSPK_StreamFlush
@@ -377,6 +379,16 @@ $IF PCSPKR_BM = UNDEFINED THEN
             IF b < 0 THEN pcspk.rendered = el - q: b = 0
             PCSPK_Buffered = b
         END IF
+    END FUNCTION
+
+
+    ''
+    ' Oscilloscope: sample n of the speaker stream, counting back from the
+    ' newest (n = 0). Only the last PCSPK_SCOPE_N samples are kept.
+    '
+    FUNCTION PCSPK_ScopeSample! (n AS LONG)
+        IF n < 0 OR n >= PCSPK_SCOPE_N THEN EXIT FUNCTION
+        PCSPK_ScopeSample = pcspk_scope((pcspk_scopePos - 1 - n + PCSPK_SCOPE_N * 2) MOD PCSPK_SCOPE_N)
     END FUNCTION
 
 

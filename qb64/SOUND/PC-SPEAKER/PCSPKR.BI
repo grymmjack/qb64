@@ -117,6 +117,11 @@ $IF PCSPKR_BI = UNDEFINED THEN
     DIM SHARED pcspk AS PCSPK_STATE
     DIM SHARED pcspk_saved AS PCSPK_STATE ' voice/sink saved during a capture
     DIM SHARED pcspk_sbuf(0 TO PCSPK_STREAM_CHUNK - 1) AS SINGLE
+    ' The last PCSPK_SCOPE_N samples sent to the speaker stream, for drawing
+    ' an oscilloscope (PCSPK_ScopeSample). pcspk_scopePos is the next slot.
+    CONST PCSPK_SCOPE_N = 8192
+    DIM SHARED pcspk_scope(0 TO PCSPK_SCOPE_N - 1) AS SINGLE
+    DIM SHARED pcspk_scopePos AS LONG
     REDIM SHARED pcspk_cap(0 TO 0) AS SINGLE
 
     ' IFS bank

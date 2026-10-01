@@ -106,6 +106,24 @@ For a saw it is how much of the cycle the ramp takes (100% is a plain saw).
 With the grid on, the box snaps to cells; with snap on, the pitches snap to
 semitones (switch snap off with F6 for smooth slides).
 
+**Oscilloscope:** the panel under the roll is always on. It shows what the
+emulated speaker is putting out right now, after the speaker-cone filter: the
+real 1-bit square wave, about 42 ms of it, triggered on a rising edge like a
+real scope, so a steady note holds still. Play a sound, hold a note, or play
+the instrument, and you see each pitch change as the wave's cycles get wider
+or narrower. The slight slope on the flat parts is the cone's filter; a real
+PC speaker droops the same way.
+
+**Fine pitch:** the mouse places pitches about 1/6 of a semitone apart, and
+snap places them on whole semitones. To go finer, select the steps and press
+**Alt+Up/Down**. That moves each one by a single PIT divisor, the smallest
+pitch change the hardware (and the file) can make: about 0.6 cents at 440 Hz.
+The info line shows the divisor under the mouse.
+
+Sounds always use the games' 140 steps per second. That is what Duke Nukem,
+Keen, Wolfenstein 3D and DOOM played, so every bank PCSEDIT saves works in
+the same players the originals did.
+
 With a selection, the **arrow keys** nudge it (**Shift+Up/Down** moves it an
 octave), **Delete** clears it, and **Esc** deselects. All of it can be undone.
 
@@ -190,11 +208,12 @@ zap, a blip, a little arpeggio) into an instrument you can play tunes with.
 | Ctrl+Up / Ctrl+Down | transpose the sound a semitone (add Shift for an octave) |
 | Ctrl+G / Ctrl+Shift+G | grid size: off, 1/4, 1/8, 1/16, 1/32, 1/8T, 1/16T |
 | Ctrl+B | tempo (BPM) for the grid |
+| ' (apostrophe) | grid lines on/off: a line between every note row and at every grid cell (with the grid off: every step, when zoomed in). Off leaves just beats and bars. A # after the grid label means they are on. |
 | Ctrl+K / Ctrl+H | keys play notes or the selected sound / GATE, ONE-SHOT, LOOP |
 | D L N W E S M (Caps Lock off), Alt+letter, Tab | tools: Draw, Line, Note, Wave, Erase, Select, Move |
 | 1-5, [ ] (WAVE tool, Caps Lock off) | waveform shape (square, triangle, saw up, saw down, sine), fewer / more cycles |
 | C / Ctrl+X, Ctrl+C, Ctrl+V, Ctrl+A | cut, copy, paste at the cursor, select all |
-| Arrows / Delete / Esc (with a selection) | nudge it (Shift+Up/Down = octave) / clear it / deselect |
+| Arrows / Delete / Esc (with a selection) | nudge it (Shift+Up/Down = octave, Alt+Up/Down = one PIT divisor) / clear it / deselect |
 | Caps Lock | on = the keyboard plays notes, off = letters pick tools |
 | Ctrl+T | trim silence off the end |
 | Ctrl+Z / Ctrl+Y | undo / redo |
