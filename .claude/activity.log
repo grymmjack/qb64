@@ -17107,3 +17107,488 @@
   $ the ARP mix plus NAME~k voice entries that PCSEDIT reattaches on open.
   $ 
   $ Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>" && git push -q && git log --oneline -1 && git status --short
+2026-10-01T01:15:28-0400  INFO     bash_start    sed -n 2070,2091p PCSEDIT.BAS; sed -n 220,250p PCSEDIT.BAS; grep -n "^SUB switch_voice" -A12 PCSEDIT.BAS
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ sed -n 2070,2091p PCSEDIT.BAS; sed -n 220,250p PCSEDIT.BAS; grep -n "^SUB switch_voice" -A12 PCSEDIT.BAS
+2026-10-01T01:15:28-0400  INFO     bash_end      [ok] 66L stdout
+  | SUB set_box (sa AS LONG, na AS DOUBLE, sb AS LONG, nb AS DOUBLE, snapIt AS INTEGER)
+  |     DIM a AS LONG, b AS LONG, beatLen AS DOUBLE
+  |     IF sa <= sb THEN a = sa: b = sb ELSE a = sb: b = sa
+  |     ' Shift held: whole grid cells (or whole beats with the grid off), so a
+  |     ' selection is a clean musical chunk; otherwise exact steps
+  |     IF snapIt AND gridDiv <> 0 THEN
+  |         selS0 = cell_start(cell_of(a))
+  |         selS1 = cell_start(cell_of(b) + 1)
+  |     ELSEIF snapIt THEN
+  |         beatLen = 60 * rateHz / bpm
+  |         selS0 = INT(INT(a / beatLen) * beatLen + 0.5)
+  |         selS1 = INT((INT(b / beatLen) + 1) * beatLen + 0.5)
+  |     ELSE
+  |         selS0 = a
+  |         selS1 = b + 1
+  |     END IF
+  |     selLo = INT(na + 0.5): selHi = INT(nb + 0.5)
+  |     IF selLo > selHi THEN SWAP selLo, selHi
+  |     selOn = -1
+  | END SUB
+  | 
+  | 
+  | DIM SHARED selOn AS INTEGER
+  | DIM SHARED selS0 AS LONG
+  | DIM SHARED selS1 AS LONG
+  | DIM SHARED selLo AS LONG
+  | DIM SHARED selHi AS LONG
+  | DIM SHARED boxS AS LONG ' marquee anchor while dragging
+  | DIM SHARED boxN AS DOUBLE
+  | REDIM SHARED itemS(0 TO 0) AS LONG ' the selected steps, picked up for a move
+  | REDIM SHARED itemV(0 TO 0) AS LONG
+  | DIM SHARED itemN AS LONG
+  | DIM SHARED moveBase AS STRING ' the sound before the move, minus the selection
+  | DIM SHARED moveS AS LONG ' where the move drag started
+  | DIM SHARED moveNt AS DOUBLE
+  | DIM SHARED moveDs AS LONG ' how far it has moved
+  | DIM SHARED moveDn AS LONG
+  | ' transform (stretch): the selection as lifted out, and its box before
+  | REDIM SHARED tfV(0 TO 0) AS LONG ' value per step of the box (-1 = not selected)
+  | DIM SHARED tfBase AS STRING
+  | DIM SHARED tfS0 AS LONG
+  | DIM SHARED tfS1 AS LONG
+  | DIM SHARED tfLo AS LONG
+  | DIM SHARED tfHi AS LONG
+  | REDIM SHARED clipS(0 TO 0) AS LONG ' clipboard: step offsets and divisors
+  | REDIM SHARED clipV(0 TO 0) AS LONG
+  | DIM SHARED clipN AS LONG
+  | DIM SHARED clipLen AS LONG
+  | DIM SHARED clipLo AS LONG
+  | DIM SHARED clipHi AS LONG
+  | DIM SHARED noteBase AS STRING ' the sound before the note being placed
+  | DIM SHARED noteS0 AS LONG ' where the note being placed starts
+  | DIM SHARED noteNt AS DOUBLE ' and its pitch
+  | 754:SUB switch_voice (k AS LONG)
+  | 755-    IF k < 1 OR k > VOICES OR k = sndAct(cur) THEN EXIT SUB
+  | 756-    stop_recording
+  | 757-    selOn = 0
+  | 758-    sndV(cur, sndAct(cur)) = sndData(cur)
+  | 759-    sndData(cur) = sndV(cur, k)
+  | 760-    sndV(cur, k) = ""
+  | 761-    sndAct(cur) = k
+  | 762-    set_status "Editing voice" + STR$(k) + "  (" + LTRIM$(STR$(voices_used(cur))) + " voice(s) in this sound; Ctrl+J " + poly_name + ")"
+  | 763-END SUB
+  | 764-
+  | 765-
+  | 766-SUB toggle_poly
+2026-10-01T01:15:38-0400  INFO     bash_start    python3 - <<'PYEOF' | p='PCSEDIT.BAS'; s=open(p).read() | def r(a,b,c=1): | global s | assert s.count(a)==c,(a[:90],s.count(a)); s=s.replace(a,b) | | # ---------- state | r("""REDIM SHARED itemV(0 TO…
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ python3 - <<'PYEOF'
+  $ p='PCSEDIT.BAS'; s=open(p).read()
+  $ def r(a,b,c=1):
+  $     global s
+  $     assert s.count(a)==c,(a[:90],s.count(a)); s=s.replace(a,b)
+  $ 
+  $ # ---------- state
+  $ r("""REDIM SHARED itemV(0 TO 0) AS LONG
+  $ DIM SHARED itemN AS LONG
+  $ DIM SHARED moveBase AS STRING ' the sound before the move, minus the selection""","""REDIM SHARED itemV(0 TO 0) AS LONG
+  $ REDIM SHARED itemK(0 TO 0) AS LONG ' and the voice each one is in
+  $ DIM SHARED itemN AS LONG
+  $ DIM SHARED moveBaseV(1 TO VOICES) AS STRING ' each voice before the move, minus the selection""")
+  $ r("""REDIM SHARED tfV(0 TO 0) AS LONG ' value per step of the box (-1 = not selected)
+  $ DIM SHARED tfBase AS STRING""","""REDIM SHARED tfV(1 TO VOICES, 0 TO 0) AS LONG ' value per voice and step of the box (-1 = not selected)
+  $ DIM SHARED tfBaseV(1 TO VOICES) AS STRING""")
+  $ r("""REDIM SHARED clipV(0 TO 0) AS LONG
+  $ DIM SHARED clipN AS LONG""","""REDIM SHARED clipV(0 TO 0) AS LONG
+  $ REDIM SHARED clipK(0 TO 0) AS LONG ' and voices (used when clipAll)
+  $ DIM SHARED clipAll AS INTEGER ' copied with G on: paste puts each step back in its voice
+  $ DIM SHARED clipN AS LONG""")
+  $ r("""DIM SHARED polyMode AS INTEGER ' POLY_ARP / POLY_PWM""","""DIM SHARED polyMode AS INTEGER ' POLY_ARP / POLY_PWM
+  $ DIM SHARED allVoices AS INTEGER ' G: the editing tools act on every voice at once
+  $ DIM SHARED vMask(1 TO VOICES) AS INTEGER ' the voices the edit in progress works on
+  $ DIM SHARED noteHome AS LONG ' G + NOTE tool: the voice to go back to after placing a note""")
+  $ r("""CONST PWM_DIV = 76 '                     PIT clock / 76 = 15.7 kHz""","""CONST PWM_DIV = 76 '                     PIT clock / 76 = 15.7 kHz
+  $ CONST ERASE_REACH = 2 '                  G: the eraser takes notes this many semitones from the pointer""") if "CONST PWM_DIV = 76 '                     PIT clock / 76 = 15.7 kHz" in s else None
+  $ open(p,'w').write(s)
+  $ PYEOF
+  $ grep -n "CONST PWM_DIV" PCSEDIT.BAS
+2026-10-01T01:15:38-0400  INFO     bash_end      [ok] 1L stdout
+  | 149:CONST PWM_DIV = 76 '                     PWM carrier: PIT clock / 76 = 15.7 kHz
+2026-10-01T01:16:44-0400  INFO     bash_start    python3 - <<'PYEOF' | p='PCSEDIT.BAS'; s=open(p).read() | def r(a,b,c=1): | global s | assert s.count(a)==c,(a[:90],s.count(a)); s=s.replace(a,b) | | r("""CONST PWM_DIV = 76 ' PWM carrier: PIT clock …
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ python3 - <<'PYEOF'
+  $ p='PCSEDIT.BAS'; s=open(p).read()
+  $ def r(a,b,c=1):
+  $     global s
+  $     assert s.count(a)==c,(a[:90],s.count(a)); s=s.replace(a,b)
+  $ 
+  $ r("""CONST PWM_DIV = 76 '                     PWM carrier: PIT clock / 76 = 15.7 kHz""","""CONST PWM_DIV = 76 '                     PWM carrier: PIT clock / 76 = 15.7 kHz
+  $ CONST ERASE_REACH = 2 '                  G: the eraser takes notes this many semitones from the pointer""")
+  $ 
+  $ # ---------- voice helpers
+  $ r("""SUB switch_voice (k AS LONG)
+  $     IF k < 1 OR k > VOICES OR k = sndAct(cur) THEN EXIT SUB
+  $     stop_recording""","""SUB switch_voice (k AS LONG)
+  $     IF k < 1 OR k > VOICES THEN EXIT SUB
+  $     IF allVoices THEN allVoices = 0 ' picking one voice leaves G
+  $     IF k = sndAct(cur) THEN set_status "Editing voice" + STR$(k) + " only": EXIT SUB
+  $     stop_recording""")
+  $ r("""SUB toggle_poly""","""''
+  $ ' G: the tools work on all voices at once (or back to just the one picked).
+  $ '
+  $ SUB toggle_all
+  $     allVoices = NOT allVoices
+  $     IF allVoices THEN
+  $         set_status "G: select / move / stretch / cut / copy / paste / erase / transpose hit every voice; NOTE fills a free voice; Draw/Line/Wave go in voice" + STR$(sndAct(cur))
+  $     ELSE
+  $         set_status "Editing voice" + STR$(sndAct(cur)) + " only"
+  $     END IF
+  $ END SUB
+  $ 
+  $ 
+  $ ''
+  $ ' Put voice k in sndData without any of switch_voice's side effects, so an
+  $ ' edit can visit every voice in turn. A voice left with nothing but rests
+  $ ' becomes empty.
+  $ '
+  $ SUB vswap (k AS LONG)
+  $     DIM h AS LONG
+  $     IF k < 1 OR k > VOICES OR k = sndAct(cur) THEN EXIT SUB
+  $     h = sndAct(cur)
+  $     IF sndData(cur) = STRING$(LEN(sndData(cur)), 0) THEN sndData(cur) = ""
+  $     sndV(cur, h) = sndData(cur)
+  $     sndData(cur) = sndV(cur, k)
+  $     sndV(cur, k) = ""
+  $     sndAct(cur) = k
+  $ END SUB
+  $ 
+  $ 
+  $ ''
+  $ ' Which voices an edit works on: the edited one, plus every voice that has
+  $ ' something in it when G is on.
+  $ '
+  $ SUB set_vmask
+  $     DIM k AS LONG
+  $     FOR k = 1 TO VOICES
+  $         vMask(k) = (k = sndAct(cur)) OR (allVoices AND LEN(voice_data(cur, k)) > 0)
+  $     NEXT
+  $ END SUB
+  $ 
+  $ 
+  $ ''
+  $ ' G + NOTE tool: a voice with nothing between steps a and b-1 (the edited
+  $ ' one if it is free), so clicked notes stack up into chords.
+  $ '
+  $ FUNCTION free_voice& (a AS LONG, b AS LONG)
+  $     DIM k AS LONG, t AS LONG, i AS LONG, ok AS INTEGER
+  $     FOR t = 0 TO VOICES
+  $         IF t = 0 THEN k = sndAct(cur) ELSE k = t
+  $         ok = -1
+  $         FOR i = a TO b - 1
+  $             IF voice_step(cur, k, i) THEN ok = 0: EXIT FOR
+  $         NEXT
+  $         IF ok THEN free_voice = k: EXIT FUNCTION
+  $     NEXT
+  $     free_voice = sndAct(cur) ' all full: draw over the edited voice
+  $ END FUNCTION
+  $ 
+  $ 
+  $ ''
+  $ ' Erasing at step s near pitch nt: with G, only notes near the pointer (in
+  $ ' any voice), so one note of a chord can go; otherwise the whole step.
+  $ ...[truncated]
+2026-10-01T01:16:44-0400  INFO     bash_end      [ok] 1L stdout
+  | ok
+2026-10-01T01:17:15-0400  INFO     bash_start    python3 - <<'PYEOF' | p='PCSEDIT.BAS'; s=open(p).read() | def r(a,b,c=1): | global s | assert s.count(a)==c,(a[:90],s.count(a)); s=s.replace(a,b) | r("""SUB trim_end | DIM n AS LONG, k AS LONG, home …
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ python3 - <<'PYEOF'
+  $ p='PCSEDIT.BAS'; s=open(p).read()
+  $ def r(a,b,c=1):
+  $     global s
+  $     assert s.count(a)==c,(a[:90],s.count(a)); s=s.replace(a,b)
+  $ r("""SUB trim_end
+  $     DIM n AS LONG, k AS LONG, home AS LONG, was AS LONG
+  $     was = snd_len(cur)""","""SUB trim_end
+  $     DIM n AS LONG, k AS LONG, home AS LONG, was AS STRING
+  $     was = pack_voices(cur)""")
+  $ r("""    IF snd_len(cur) = was AND (allVoices OR steps_of(cur) * 2 = LEN(sndData(cur))) THEN""","""    IF pack_voices(cur) = was THEN""")
+  $ 
+  $ # ---------- NOTE tool in G
+  $ r("""        IF b1 AND tool = TOOL_NOTE THEN
+  $             ' NOTE tool: the pitch is fixed where you click
+  $             drawing = 3
+  $             noteBase = sndData(cur)
+  $             noteNt = nt
+  $             IF snapOn THEN noteNt = INT(nt + 0.5)
+  $             noteS0 = s
+  $             IF gridDiv THEN noteS0 = cell_start(cell_of(s))
+  $             place_note s""","""        IF b1 AND tool = TOOL_NOTE THEN
+  $             ' NOTE tool: the pitch is fixed where you click
+  $             drawing = 3
+  $             noteNt = nt
+  $             IF snapOn THEN noteNt = INT(nt + 0.5)
+  $             noteS0 = s
+  $             IF gridDiv THEN noteS0 = cell_start(cell_of(s))
+  $             ' G: into a voice that is free there, so notes stack into chords
+  $             noteHome = 0
+  $             IF allVoices THEN
+  $                 noteHome = sndAct(cur)
+  $                 vswap free_voice(noteS0, note_tool_end(noteS0))
+  $             END IF
+  $             noteBase = sndData(cur)
+  $             place_note s""")
+  $ r("""        ELSEIF drawing = 3 THEN
+  $             drawing = 0""","""        ELSEIF drawing = 3 THEN
+  $             drawing = 0
+  $             IF noteHome THEN
+  $                 IF sndAct(cur) <> noteHome THEN set_status "Note in voice" + STR$(sndAct(cur))
+  $                 vswap noteHome
+  $                 noteHome = 0
+  $             END IF""")
+  $ 
+  $ # ---------- chips: 1-4 voices, 5 = G, 6 = mode
+  $ r("""            IF voice_chip_hit(mx, my) = 5 THEN toggle_poly ELSE switch_voice voice_chip_hit(mx, my)""","""            SELECT CASE voice_chip_hit(mx, my)
+  $                 CASE 5: toggle_all
+  $                 CASE 6: toggle_poly
+  $                 CASE ELSE: switch_voice voice_chip_hit(mx, my)
+  $             END SELECT""")
+  $ r("""        IF k = sndAct(cur) THEN
+  $             LINE (x - 3, y - 2)-(x + 12, y + 15), c, BF
+  $             COLOR _RGB32(0, 0, 0)
+  $         ELSE""","""        IF k = sndAct(cur) OR (allVoices AND LEN(voice_data(cur, k)) > 0) THEN
+  $             LINE (x - 3, y - 2)-(x + 12, y + 15), c, BF
+  $             IF k = sndAct(cur) THEN LINE (x - 3, y + 15)-(x + 12, y + 15), _RGB32(255, 255, 255)
+  $             COLOR _RGB32(0, 0, 0)
+  $         ELSE""")
+  $ r("""    x = LIST_X + 48 + VOICES * 22 + 6
+  $     LINE (x - 3, y - 2)-(x + 28, y + 15), _RGB32(120, 140, 180), B
+  $     IF polyMode""","""    x = LIST_X + 48 + VOICES * 22 ' G: all voices
+  $     IF allVoices THEN
+  $         LINE (x - 3, y - 2)-(x + 12, y + 15), _RGB32(235, 235, 235), BF
+  $         COLOR _RGB32(0, 0, 0)
+  $     ELSE
+  $         LINE (x - 3, y - 2)-(x + 12, y + 15), _RGB32(150, 150, 160), B
+  $         COLOR _RGB32(190, 190, 200)
+  $     END IF
+  $     _PRINTSTRING (x + 1, y), "G"
+  $     x = LIST_X + 48 + (VOICES + 1) * 22 + 6
+  $     LINE (x - 3, y - 2)-(x + 28, y + 15), _RGB32(120, 140, 180), B
+  $     IF polyMode""")
+  $ r("""    FOR k = 1 TO VOICES
+  $         x = LIST_X + 48 + (k - 1) * 22
+  $         IF mx >= x - 3 AND mx <= x + 12 THEN voice_chip_hit = k: EXIT FUNCTION
+  $     NEXT
+  $     x = LIST_X + 48 + VOICES * 22 + 6
+  $     IF mx >= x - 3 AND mx <= x + 28 THEN voice_chip_hit = 5""","""    FOR k = 1 TO VOICES + 1 ' the voices, then G
+  $         x = LIST_X + 48 + (k - 1) * 22
+  $ ...[truncated]
+2026-10-01T01:17:17-0400  INFO     bash_end      [ok] 6L stdout
+  | Traceback (most recent call last):
+  |   File "<stdin>", line 119, in <module>
+  |   File "<stdin>", line 4, in r
+  | AssertionError: ('    DIM k AS LONG\n', 2)
+  | Beginning C++ output from QB64 code... 
+  | Output: /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/PCSEDIT
+2026-10-01T01:17:20-0400  INFO     bash_start    grep -n "^ DIM k AS LONG$" PCSEDIT.BAS; grep -n "hv AS INTEGER, yb AS LONG" -A1 PCSEDIT.BAS
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ grep -n "^    DIM k AS LONG$" PCSEDIT.BAS; grep -n "hv AS INTEGER, yb AS LONG" -A1 PCSEDIT.BAS
+2026-10-01T01:17:20-0400  INFO     bash_end      [ok] 4L stdout
+  | 810:    DIM k AS LONG
+  | 4186:    DIM k AS LONG
+  | 4185:    DIM w AS LONG, nn AS DOUBLE, col AS _UNSIGNED LONG, hp AS LONG, isBlack AS INTEGER, prevY AS LONG, hv AS INTEGER, yb AS LONG
+  | 4186-    DIM k AS LONG
+2026-10-01T01:17:23-0400  INFO     bash_start    sed -i '4186s/ DIM k AS LONG/ DIM k AS LONG, vc AS _UNSIGNED LONG/' PCSEDIT.BAS && sed -n 4186p PCSEDIT.BAS
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ sed -i '4186s/    DIM k AS LONG/    DIM k AS LONG, vc AS _UNSIGNED LONG/' PCSEDIT.BAS && sed -n 4186p PCSEDIT.BAS
+2026-10-01T01:17:23-0400  INFO     bash_end      [ok] 1L stdout
+  |     DIM k AS LONG, vc AS _UNSIGNED LONG
+2026-10-01T01:17:48-0400  INFO     bash_start    python3 - <<'PYEOF' | p='PCSEDIT.BAS'; s=open(p).read() | def r(a,b,c=1): | global s | assert s.count(a)==c,(a[:90],s.count(a)); s=s.replace(a,b) | r("""SUB trim_end | DIM n AS LONG, k AS LONG, home …
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ python3 - <<'PYEOF'
+  $ p='PCSEDIT.BAS'; s=open(p).read()
+  $ def r(a,b,c=1):
+  $     global s
+  $     assert s.count(a)==c,(a[:90],s.count(a)); s=s.replace(a,b)
+  $ r("""SUB trim_end
+  $     DIM n AS LONG, k AS LONG, home AS LONG, was AS LONG
+  $     was = snd_len(cur)""","""SUB trim_end
+  $     DIM n AS LONG, k AS LONG, home AS LONG, was AS STRING
+  $     was = pack_voices(cur)""")
+  $ r("""    IF snd_len(cur) = was AND (allVoices OR steps_of(cur) * 2 = LEN(sndData(cur))) THEN""","""    IF pack_voices(cur) = was THEN""")
+  $ r("""        IF b1 AND tool = TOOL_NOTE THEN
+  $             ' NOTE tool: the pitch is fixed where you click
+  $             drawing = 3
+  $             noteBase = sndData(cur)
+  $             noteNt = nt
+  $             IF snapOn THEN noteNt = INT(nt + 0.5)
+  $             noteS0 = s
+  $             IF gridDiv THEN noteS0 = cell_start(cell_of(s))
+  $             place_note s""","""        IF b1 AND tool = TOOL_NOTE THEN
+  $             ' NOTE tool: the pitch is fixed where you click
+  $             drawing = 3
+  $             noteNt = nt
+  $             IF snapOn THEN noteNt = INT(nt + 0.5)
+  $             noteS0 = s
+  $             IF gridDiv THEN noteS0 = cell_start(cell_of(s))
+  $             ' G: into a voice that is free there, so notes stack into chords
+  $             noteHome = 0
+  $             IF allVoices THEN
+  $                 noteHome = sndAct(cur)
+  $                 vswap free_voice(noteS0, note_tool_end(noteS0))
+  $             END IF
+  $             noteBase = sndData(cur)
+  $             place_note s""")
+  $ r("""        ELSEIF drawing = 3 THEN
+  $             drawing = 0""","""        ELSEIF drawing = 3 THEN
+  $             drawing = 0
+  $             IF noteHome THEN
+  $                 IF sndAct(cur) <> noteHome THEN set_status "Note in voice" + STR$(sndAct(cur))
+  $                 vswap noteHome
+  $                 noteHome = 0
+  $             END IF""")
+  $ r("""            IF voice_chip_hit(mx, my) = 5 THEN toggle_poly ELSE switch_voice voice_chip_hit(mx, my)""","""            SELECT CASE voice_chip_hit(mx, my)
+  $                 CASE 5: toggle_all
+  $                 CASE 6: toggle_poly
+  $                 CASE ELSE: switch_voice voice_chip_hit(mx, my)
+  $             END SELECT""")
+  $ r("""        IF k = sndAct(cur) THEN
+  $             LINE (x - 3, y - 2)-(x + 12, y + 15), c, BF
+  $             COLOR _RGB32(0, 0, 0)
+  $         ELSE""","""        IF k = sndAct(cur) OR (allVoices AND LEN(voice_data(cur, k)) > 0) THEN
+  $             LINE (x - 3, y - 2)-(x + 12, y + 15), c, BF
+  $             IF k = sndAct(cur) THEN LINE (x - 3, y + 15)-(x + 12, y + 15), _RGB32(255, 255, 255)
+  $             COLOR _RGB32(0, 0, 0)
+  $         ELSE""")
+  $ r("""    x = LIST_X + 48 + VOICES * 22 + 6
+  $     LINE (x - 3, y - 2)-(x + 28, y + 15), _RGB32(120, 140, 180), B
+  $     IF polyMode""","""    x = LIST_X + 48 + VOICES * 22 ' G: all voices
+  $     IF allVoices THEN
+  $         LINE (x - 3, y - 2)-(x + 12, y + 15), _RGB32(235, 235, 235), BF
+  $         COLOR _RGB32(0, 0, 0)
+  $     ELSE
+  $         LINE (x - 3, y - 2)-(x + 12, y + 15), _RGB32(150, 150, 160), B
+  $         COLOR _RGB32(190, 190, 200)
+  $     END IF
+  $     _PRINTSTRING (x + 1, y), "G"
+  $     x = LIST_X + 48 + (VOICES + 1) * 22 + 6
+  $     LINE (x - 3, y - 2)-(x + 28, y + 15), _RGB32(120, 140, 180), B
+  $     IF polyMode""")
+  $ r("""    FOR k = 1 TO VOICES
+  $         x = LIST_X + 48 + (k - 1) * 22
+  $         IF mx >= x - 3 AND mx <= x + 12 THEN voice_chip_hit = k: EXIT FUNCTION
+  $     NEXT
+  $     x = LIST_X + 48 + VOICES * 22 + 6
+  $     IF mx >= x - 3 AND mx <= x + 28 THEN voice_chip_hit = 5""","""    FOR k = 1 TO VOICES + 1 ' the voices, then G
+  $         x = LIST_X + 48 + (k - 1) * 22
+  $         IF mx >= x - 3 AND mx <= x + 12 THEN voice_chip_hit = k: EXIT FUNCTION
+  $     NEXT
+  $     x = LIST_X + 48 + (VOICES + 1) * 22 + 6
+  $     IF mx >= x - 3 AND mx <= x + 28 THEN voice_chip_hit = 6""")
+  $ ...[truncated]
+2026-10-01T01:17:51-0400  INFO     bash_end      [ok] 2L stdout
+  | Beginning C++ output from QB64 code... 
+  | Output: /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/PCSEDIT
+2026-10-01T01:18:07-0400  INFO     bash_start    grep -n "moveBase\b\|tfBase\b\|tfV(s\|tfV(INT" PCSEDIT.BAS; export SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad && python3 - <<'PYEOF' | import os | SP…
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ grep -n "moveBase\b\|tfBase\b\|tfV(s\|tfV(INT" PCSEDIT.BAS; export SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad && python3 - <<'PYEOF'
+  $ import os
+  $ SP=os.environ['SP']
+  $ s=open('PCSEDIT.BAS').read()
+  $ lines=s.split('\n'); i=lines.index('DO')
+  $ lines.insert(i,'''DIM tsI AS LONG, tsF AS LONG
+  $ FOR tsI = 10 TO 29: set_step cur, tsI, note_div(60): NEXT
+  $ switch_voice 2
+  $ FOR tsI = 10 TO 29: set_step cur, tsI, note_div(64): NEXT
+  $ switch_voice 3
+  $ FOR tsI = 10 TO 29: set_step cur, tsI, note_div(67): NEXT
+  $ switch_voice 1
+  $ tsF = FREEFILE: OPEN "SPX/pt/g.txt" FOR OUTPUT AS #tsF
+  $ toggle_all
+  $ selS0 = 5: selS1 = 40: selLo = 55: selHi = 70: selOn = -1
+  $ PRINT #tsF, "count"; sel_count
+  $ nudge 5, 2
+  $ PRINT #tsF, "nudge v1@15"; voice_step(1, 1, 15); " v2@15"; voice_step(1, 2, 15); " v3@15"; voice_step(1, 3, 15); " v3@34"; voice_step(1, 3, 34); " v3@35"; voice_step(1, 3, 35); " want"; note_div(62); note_div(66); note_div(69)
+  $ undo
+  $ PRINT #tsF, "undo v2@10"; voice_step(1, 2, 10); " act"; sndAct(1)
+  $ erase_at 12, 64.3
+  $ PRINT #tsF, "erase E: v1"; voice_step(1, 1, 12); " v2"; voice_step(1, 2, 12); " v3"; voice_step(1, 3, 12)
+  $ sel_copy: cursorStep = 100: sel_paste
+  $ PRINT #tsF, "paste v1"; voice_step(1, 1, 105); " v2"; voice_step(1, 2, 105); " v3"; voice_step(1, 3, 105); " len"; snd_len(1)
+  $ selS0 = 100: selS1 = 135: selOn = -1: sel_clear 0
+  $ PRINT #tsF, "clear len v1-3"; steps_of(1); LEN(sndV(1, 2)) \\ 2; LEN(sndV(1, 3)) \\ 2
+  $ trim_end
+  $ PRINT #tsF, "trim len"; snd_len(1); " used"; voices_used(1)
+  $ transpose 12
+  $ PRINT #tsF, "transp v1"; voice_step(1, 1, 15); " v3"; voice_step(1, 3, 15)
+  $ transpose -12
+  $ selS0 = 10: selS1 = 30: selLo = 55: selHi = 70: tf_time 2
+  $ PRINT #tsF, "stretch len"; snd_len(1); " v3@49"; voice_step(1, 3, 49); " v2@49"; voice_step(1, 2, 49)
+  $ cursorStep = 0: delete_step 0
+  $ PRINT #tsF, "delstep v2@19"; voice_step(1, 2, 19); " v2@9"; voice_step(1, 2, 9)
+  $ PRINT #tsF, "free voice 60..70"; free_voice(60, 70); " 10..20"; free_voice(10, 20)
+  $ CLOSE #tsF
+  $ SYSTEM'''.replace('SPX',SP))
+  $ open(SP+'/pt/PCSEDIT5.BAS','w').write('\n'.join(lines))
+  $ PYEOF
+  $ cd $SP/pt && /home/grymmjack/git/qb64pe/qb64pe -x PCSEDIT5.BAS -o ./PCSEDIT5 2>&1 | tail -1; HOME=$SP/pt/home PCSEDIT_NOMIDI=1 DISPLAY=:99 timeout 20 ./PCSEDIT5; echo rc=$?; cat g.txt
+2026-10-01T01:18:10-0400  WARNING  bash_end      [stderr] 14L stdout / 2L stderr
+  | 2274:' the sound without them in moveBase.
+  | Output: /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/pt/PCSEDIT5
+  | rc=0
+  | count 75 
+  | nudge v1@15 4063  v2@15 3225  v3@15 2712  v3@34 2712  v3@35 0  want 4063  3225  2712 
+  | undo v2@10 3620  act 1 
+  | erase E: v1 4561  v2 0  v3 3044 
+  | paste v1 4561  v2 3620  v3 3044  len 135 
+  | clear len v1-3 135  120  120 
+  | trim len 30  used 3 
+  | transp v1 2280  v3 1522 
+  | stretch len 50  v3@49 3044  v2@49 3620 
+  | delstep v2@19 3620  v2@9 3620 
+  | free voice 60..70 1  10..20 4
+  ! 
+  ! Shell cwd was reset to /home/grymmjack/git/qb64
+2026-10-01T01:18:20-0400  INFO     bash_start    cd /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER && sed -i '2274s/the sound without them in moveBase./each voice without them in moveBaseV./' PCSEDIT.BAS && sed -n 2272,2275p PCSEDIT.BAS && export S…
+  > cwd: /home/grymmjack/git/qb64
+  $ cd /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER && sed -i '2274s/the sound without them in moveBase./each voice without them in moveBaseV./' PCSEDIT.BAS && sed -n 2272,2275p PCSEDIT.BAS && export SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad && python3 - <<'PYEOF'
+  $ import os
+  $ SP=os.environ['SP']
+  $ s=open('PCSEDIT.BAS').read()
+  $ lines=s.split('\n'); i=lines.index('DO')
+  $ lines.insert(i,'''DIM tsI AS LONG
+  $ FOR tsI = 10 TO 69: set_step cur, tsI, note_div(60): NEXT
+  $ switch_voice 2
+  $ FOR tsI = 10 TO 69: set_step cur, tsI, note_div(64): NEXT
+  $ switch_voice 3
+  $ FOR tsI = 10 TO 39: set_step cur, tsI, note_div(67): NEXT
+  $ switch_voice 1
+  $ toggle_all
+  $ set_zoom 8
+  $ selS0 = 20: selS1 = 50: selLo = 62: selHi = 70: selOn = -1''')
+  $ open(SP+'/pt/PCSEDIT6.BAS','w').write('\n'.join(lines))
+  $ PYEOF
+  $ cd $SP/pt && /home/grymmjack/git/qb64pe/qb64pe -x PCSEDIT6.BAS -o ./PCSEDIT6 2>&1 | tail -1; (HOME=$SP/pt/home PCSEDIT_NOMIDI=1 DISPLAY=:99 ./PCSEDIT6 &>/dev/null &); sleep 3; DISPLAY=:99 xwd -root -silent > shot.xwd; pkill -x PCSEDIT6; python3 -c "
+  $ import struct,zlib
+  $ d=open('shot.xwd','rb').read()
+  $ hs=struct.unpack('>I',d[:4])[0]; w,h=960,800; bpl=struct.unpack('>I',d[48:52])[0]; ncol=struct.unpack('>I',d[76:80])[0]
+  $ off=hs+ncol*12
+  $ rows=b''.join(b'\x00'+b''.join(bytes((d[off+y*bpl+x*4+2],d[off+y*bpl+x*4+1],d[off+y*bpl+x*4])) for x in range(w)) for y in range(h))
+  $ def ch(t,b): return struct.pack('>I',len(b))+t+b+struct.pack('>I',zlib.crc32(t+b))
+  $ open('shot.png','wb').write(b'\x89PNG\r\n\x1a\n'+ch(b'IHDR',struct.pack('>IIBBBBB',w,h,8,2,0,0,0))+ch(b'IDAT',zlib.compress(rows))+ch(b'IEND',b''))"
+2026-10-01T01:18:26-0400  WARNING  bash_end      [stderr] 5L stdout / 2L stderr
+  | ''
+  | ' Lift the selected steps out of the sound: remember them in item*, and keep
+  | ' each voice without them in moveBaseV.
+  | '
+  | Output: /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/pt/PCSEDIT6
+  ! 
+  ! Shell cwd was reset to /home/grymmjack/git/qb64
+2026-10-01T01:18:50-0400  NOTICE   prompt        commit and push
+  > commit and push
+2026-10-01T01:18:53-0400  INFO     bash_start    git add .claude/activity.log qb64/SOUND/PC-SPEAKER/PCSEDIT.BAS qb64/SOUND/PC-SPEAKER/README.md && git commit -q -m "SOUND/PC-SPEAKER: PCSEDIT G mode edits all voices at once | | A G chip (Ctrl+5) nex…
+  > cwd: /home/grymmjack/git/qb64
+  $ git add .claude/activity.log qb64/SOUND/PC-SPEAKER/PCSEDIT.BAS qb64/SOUND/PC-SPEAKER/README.md && git commit -q -m "SOUND/PC-SPEAKER: PCSEDIT G mode edits all voices at once
+  $ 
+  $ A G chip (Ctrl+5) next to the voice chips makes select, move, stretch,
+  $ clipboard, delete, fine pitch, transpose, insert/delete step and trim act
+  $ on every voice. The eraser takes notes near the pointer in any voice, and
+  $ the NOTE tool puts each note in a free voice so clicks build chords.
+  $ 
+  $ Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>" && git push -q && git log --oneline -1 && git status --short

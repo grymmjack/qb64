@@ -37,6 +37,9 @@
 '   (voices take turns step by step - the classic fake chord, saves to IFS)
 '   or PWM (real simultaneous voices mixed onto the 1-bit speaker; playback
 '   and WAV only). In STEP record, notes pressed together become a chord.
+'   G (Ctrl+5 or its chip): the tools act on all voices at once - select,
+'   move, stretch, clipboard, erase (near the pointer), transpose, steps;
+'   the NOTE tool puts each note in a free voice.
 '   C)ut / Ctrl+X, Ctrl+C copy, Ctrl+V paste at the cursor, Delete clears
 '   the selection, Esc deselects
 '   right drag erases with any tool
@@ -147,6 +150,7 @@ CONST VOICES = 4 '                       voice lanes per sound
 CONST POLY_ARP = 0 '                     voices take turns, one step each
 CONST POLY_PWM = 1 '                     voices mixed with pulse-width modulation
 CONST PWM_DIV = 76 '                     PWM carrier: PIT clock / 76 = 15.7 kHz
+CONST ERASE_REACH = 2 '                  G: the eraser takes notes this many semitones from the pointer
 CONST TOOL_DRAW = 0
 CONST TOOL_NOTE = 1
 CONST TOOL_ERASE = 2
@@ -172,6 +176,9 @@ DIM SHARED sndData(1 TO MAX_SOUNDS) AS STRING ' 2 bytes (little endian divisor) 
 DIM SHARED sndV(1 TO MAX_SOUNDS, 1 TO VOICES) AS STRING ' the other voices (the edited one's slot is empty)
 DIM SHARED sndAct(1 TO MAX_SOUNDS) AS INTEGER ' which voice sndData holds
 DIM SHARED polyMode AS INTEGER ' POLY_ARP / POLY_PWM
+DIM SHARED allVoices AS INTEGER ' G: the editing tools act on every voice at once
+DIM SHARED vMask(1 TO VOICES) AS INTEGER ' the voices the edit in progress works on
+DIM SHARED noteHome AS LONG ' G + NOTE tool: the voice to go back to after placing a note
 DIM SHARED pwmPh(1 TO 8) AS DOUBLE ' PWM: each voice's place in its square wave (PIT clocks)
 DIM SHARED spkLast AS LONG ' the divisor the speaker was last set to (see speaker)
 DIM SHARED tickN AS LONG ' 140 Hz ticks, for arpeggiating held chords
@@ -226,21 +233,24 @@ DIM SHARED boxS AS LONG ' marquee anchor while dragging
 DIM SHARED boxN AS DOUBLE
 REDIM SHARED itemS(0 TO 0) AS LONG ' the selected steps, picked up for a move
 REDIM SHARED itemV(0 TO 0) AS LONG
+REDIM SHARED itemK(0 TO 0) AS LONG ' and the voice each one is in
 DIM SHARED itemN AS LONG
-DIM SHARED moveBase AS STRING ' the sound before the move, minus the selection
+DIM SHARED moveBaseV(1 TO VOICES) AS STRING ' each voice before the move, minus the selection
 DIM SHARED moveS AS LONG ' where the move drag started
 DIM SHARED moveNt AS DOUBLE
 DIM SHARED moveDs AS LONG ' how far it has moved
 DIM SHARED moveDn AS LONG
 ' transform (stretch): the selection as lifted out, and its box before
-REDIM SHARED tfV(0 TO 0) AS LONG ' value per step of the box (-1 = not selected)
-DIM SHARED tfBase AS STRING
+REDIM SHARED tfV(1 TO VOICES, 0 TO 0) AS LONG ' value per voice and step of the box (-1 = not selected)
+DIM SHARED tfBaseV(1 TO VOICES) AS STRING
 DIM SHARED tfS0 AS LONG
 DIM SHARED tfS1 AS LONG
 DIM SHARED tfLo AS LONG
 DIM SHARED tfHi AS LONG
 REDIM SHARED clipS(0 TO 0) AS LONG ' clipboard: step offsets and divisors
 REDIM SHARED clipV(0 TO 0) AS LONG
+REDIM SHARED clipK(0 TO 0) AS LONG ' and voices (used when clipAll)
+DIM SHARED clipAll AS INTEGER ' copied with G on: paste puts each step back in its voice
 DIM SHARED clipN AS LONG
 DIM SHARED clipLen AS LONG
 DIM SHARED clipLo AS LONG
@@ -752,7 +762,9 @@ END FUNCTION
 ' recording and selection work on it unchanged.
 '
 SUB switch_voice (k AS LONG)
-    IF k < 1 OR k > VOICES OR k = sndAct(cur) THEN EXIT SUB
+    IF k < 1 OR k > VOICES THEN EXIT SUB
+    IF allVoices THEN allVoices = 0 ' picking one voice leaves G
+    IF k = sndAct(cur) THEN set_status "Editing voice" + STR$(k) + " only": EXIT SUB
     stop_recording
     selOn = 0
     sndV(cur, sndAct(cur)) = sndData(cur)
@@ -760,6 +772,85 @@ SUB switch_voice (k AS LONG)
     sndV(cur, k) = ""
     sndAct(cur) = k
     set_status "Editing voice" + STR$(k) + "  (" + LTRIM$(STR$(voices_used(cur))) + " voice(s) in this sound; Ctrl+J " + poly_name + ")"
+END SUB
+
+
+''
+' G: the tools work on all voices at once (or back to just the one picked).
+'
+SUB toggle_all
+    allVoices = NOT allVoices
+    IF allVoices THEN
+        set_status "G: select / move / stretch / cut / copy / paste / erase / transpose hit every voice; NOTE fills a free voice; Draw/Line/Wave go in voice" + STR$(sndAct(cur))
+    ELSE
+        set_status "Editing voice" + STR$(sndAct(cur)) + " only"
+    END IF
+END SUB
+
+
+''
+' Put voice k in sndData without any of switch_voice's side effects, so an
+' edit can visit every voice in turn. A voice left with nothing but rests
+' becomes empty.
+'
+SUB vswap (k AS LONG)
+    DIM h AS LONG
+    IF k < 1 OR k > VOICES OR k = sndAct(cur) THEN EXIT SUB
+    h = sndAct(cur)
+    IF sndData(cur) = STRING$(LEN(sndData(cur)), 0) THEN sndData(cur) = ""
+    sndV(cur, h) = sndData(cur)
+    sndData(cur) = sndV(cur, k)
+    sndV(cur, k) = ""
+    sndAct(cur) = k
+END SUB
+
+
+''
+' Which voices an edit works on: the edited one, plus every voice that has
+' something in it when G is on.
+'
+SUB set_vmask
+    DIM k AS LONG
+    FOR k = 1 TO VOICES
+        vMask(k) = (k = sndAct(cur)) OR (allVoices AND LEN(voice_data(cur, k)) > 0)
+    NEXT
+END SUB
+
+
+''
+' G + NOTE tool: a voice with nothing between steps a and b-1 (the edited
+' one if it is free), so clicked notes stack up into chords.
+'
+FUNCTION free_voice& (a AS LONG, b AS LONG)
+    DIM k AS LONG, t AS LONG, i AS LONG, ok AS INTEGER
+    FOR t = 0 TO VOICES
+        IF t = 0 THEN k = sndAct(cur) ELSE k = t
+        ok = -1
+        FOR i = a TO b - 1
+            IF voice_step(cur, k, i) THEN ok = 0: EXIT FOR
+        NEXT
+        IF ok THEN free_voice = k: EXIT FUNCTION
+    NEXT
+    free_voice = sndAct(cur) ' all full: draw over the edited voice
+END FUNCTION
+
+
+''
+' Erasing at step s near pitch nt: with G, only notes near the pointer (in
+' any voice), so one note of a chord can go; otherwise the whole step.
+'
+SUB erase_at (s AS LONG, nt AS DOUBLE)
+    DIM k AS LONG, v AS LONG
+    IF NOT allVoices THEN
+        IF s < steps_of(cur) THEN set_step cur, s, 0
+        EXIT SUB
+    END IF
+    FOR k = 1 TO VOICES
+        v = voice_step(cur, k, s)
+        IF v THEN
+            IF ABS(div_note(v) - nt) <= ERASE_REACH THEN set_voice_step cur, k, s, 0
+        END IF
+    NEXT
 END SUB
 
 
@@ -1632,6 +1723,11 @@ SUB handle_mouse (mx AS LONG, my AS LONG, b1 AS INTEGER, b2 AS INTEGER)
             place_note s
         ELSEIF drawing = 3 THEN
             drawing = 0
+            IF noteHome THEN
+                IF sndAct(cur) <> noteHome THEN set_status "Note in voice" + STR$(sndAct(cur))
+                vswap noteHome
+                noteHome = 0
+            END IF
         ELSEIF drawing = 4 THEN ' marquee
             IF b1 THEN
                 set_box boxS, boxN, s, nt, shift
@@ -1755,11 +1851,17 @@ SUB handle_mouse (mx AS LONG, my AS LONG, b1 AS INTEGER, b2 AS INTEGER)
         IF b1 AND tool = TOOL_NOTE THEN
             ' NOTE tool: the pitch is fixed where you click
             drawing = 3
-            noteBase = sndData(cur)
             noteNt = nt
             IF snapOn THEN noteNt = INT(nt + 0.5)
             noteS0 = s
             IF gridDiv THEN noteS0 = cell_start(cell_of(s))
+            ' G: into a voice that is free there, so notes stack into chords
+            noteHome = 0
+            IF allVoices THEN
+                noteHome = sndAct(cur)
+                vswap free_voice(noteS0, note_tool_end(noteS0))
+            END IF
+            noteBase = sndData(cur)
             place_note s
         ELSEIF b1 AND shift AND haveAnchor THEN
             draw_line lastStep, lastNote, s, nt, 0
@@ -1785,7 +1887,11 @@ SUB handle_mouse (mx AS LONG, my AS LONG, b1 AS INTEGER, b2 AS INTEGER)
             IF drawing = 17 THEN cursorStep = s
         ' --- voice chips
         ELSEIF voice_chip_hit(mx, my) THEN
-            IF voice_chip_hit(mx, my) = 5 THEN toggle_poly ELSE switch_voice voice_chip_hit(mx, my)
+            SELECT CASE voice_chip_hit(mx, my)
+                CASE 5: toggle_all
+                CASE 6: toggle_poly
+                CASE ELSE: switch_voice voice_chip_hit(mx, my)
+            END SELECT
         ' --- sound list
         ELSEIF mx >= LIST_X AND mx < LIST_X + LIST_W AND my >= LIST_Y AND my < LIST_Y + LIST_ROWS * ROW_H THEN
             row = listTop + (my - LIST_Y) \ ROW_H + 1
@@ -2113,27 +2219,46 @@ END FUNCTION
 
 
 FUNCTION sel_count&
-    DIM s AS LONG, n AS LONG
+    DIM s AS LONG, n AS LONG, k AS LONG, v AS LONG
     FOR s = selS0 TO selS1 - 1
         IF in_sel(s, get_step(cur, s)) THEN n = n + 1
     NEXT
+    IF allVoices THEN ' and the other voices' notes
+        FOR k = 1 TO VOICES
+            IF k <> sndAct(cur) THEN
+                FOR s = selS0 TO selS1 - 1
+                    v = voice_step(cur, k, s)
+                    IF v THEN
+                        IF in_sel(s, v) THEN n = n + 1
+                    END IF
+                NEXT
+            END IF
+        NEXT
+    END IF
     sel_count = n
 END FUNCTION
 
 
 SUB select_all
-    DIM s AS LONG, v AS LONG, n AS LONG, lo AS LONG, hi AS LONG
-    IF steps_of(cur) = 0 THEN EXIT SUB
-    selS0 = 0: selS1 = steps_of(cur)
+    DIM s AS LONG, v AS LONG, n AS LONG, lo AS LONG, hi AS LONG, k AS LONG
+    set_vmask
+    selS1 = steps_of(cur)
+    IF allVoices THEN selS1 = snd_len(cur)
+    IF selS1 = 0 THEN EXIT SUB
+    selS0 = 0
     ' the box spans the notes the sound actually uses (so its top / bottom
     ' stretch handles sit on the music, inside the roll)
     lo = 999: hi = -999
-    FOR s = 0 TO steps_of(cur) - 1
-        v = get_step(cur, s)
-        IF v THEN
-            n = INT(div_note(v) + 0.5)
-            IF n < lo THEN lo = n
-            IF n > hi THEN hi = n
+    FOR k = 1 TO VOICES
+        IF vMask(k) THEN
+            FOR s = 0 TO selS1 - 1
+                v = voice_step(cur, k, s)
+                IF v THEN
+                    n = INT(div_note(v) + 0.5)
+                    IF n < lo THEN lo = n
+                    IF n > hi THEN hi = n
+                END IF
+            NEXT
         END IF
     NEXT
     IF hi < lo THEN lo = NOTE_LO: hi = NOTE_HI - 1
@@ -2146,22 +2271,34 @@ END SUB
 
 ''
 ' Lift the selected steps out of the sound: remember them in item*, and keep
-' the sound without them in moveBase.
+' each voice without them in moveBaseV.
 '
 SUB begin_move
-    DIM s AS LONG, v AS LONG
+    DIM s AS LONG, v AS LONG, k AS LONG, home AS LONG
     push_undo
     itemN = 0
-    REDIM itemS(0 TO selS1 - selS0) AS LONG
-    REDIM itemV(0 TO selS1 - selS0) AS LONG
-    FOR s = selS0 TO selS1 - 1
-        v = get_step(cur, s)
-        IF in_sel(s, v) THEN
-            itemS(itemN) = s: itemV(itemN) = v: itemN = itemN + 1
-            set_step cur, s, 0
+    REDIM itemS(0 TO (selS1 - selS0) * VOICES) AS LONG
+    REDIM itemV(0 TO (selS1 - selS0) * VOICES) AS LONG
+    REDIM itemK(0 TO (selS1 - selS0) * VOICES) AS LONG
+    set_vmask
+    home = sndAct(cur)
+    FOR k = 1 TO VOICES
+        IF vMask(k) THEN
+            vswap k
+            FOR s = selS0 TO selS1 - 1
+                ' the other voices: only notes and rests inside the voice
+                IF k = home OR s < steps_of(cur) THEN
+                    v = get_step(cur, s)
+                    IF in_sel(s, v) THEN
+                        itemS(itemN) = s: itemV(itemN) = v: itemK(itemN) = k: itemN = itemN + 1
+                        set_step cur, s, 0
+                    END IF
+                END IF
+            NEXT
+            moveBaseV(k) = sndData(cur)
         END IF
     NEXT
-    moveBase = sndData(cur)
+    vswap home
     moveDs = 0: moveDn = 0
 END SUB
 
@@ -2170,19 +2307,26 @@ END SUB
 ' Put the lifted steps back, moved ds steps and dn semitones.
 '
 SUB put_moved (ds AS LONG, dn AS LONG)
-    DIM i AS LONG, s AS LONG, v AS LONG
-    sndData(cur) = moveBase
-    FOR i = 0 TO itemN - 1
-        s = itemS(i) + ds
-        IF s >= 0 AND s < MAX_STEPS THEN
-            v = itemV(i)
-            IF v THEN ' rests stay rests
-                v = CLNG(v / 2 ^ (dn / 12))
-                IF v < 1 THEN v = 1
-            END IF
-            set_step cur, s, v
+    DIM i AS LONG, s AS LONG, v AS LONG, k AS LONG, home AS LONG
+    home = sndAct(cur)
+    FOR k = 1 TO VOICES
+        IF vMask(k) THEN
+            vswap k
+            sndData(cur) = moveBaseV(k)
+            FOR i = 0 TO itemN - 1
+                s = itemS(i) + ds
+                IF itemK(i) = k AND s >= 0 AND s < MAX_STEPS THEN
+                    v = itemV(i)
+                    IF v THEN ' rests stay rests
+                        v = CLNG(v / 2 ^ (dn / 12))
+                        IF v < 1 THEN v = 1
+                    END IF
+                    set_step cur, s, v
+                END IF
+            NEXT
         END IF
     NEXT
+    vswap home
     moveDs = ds: moveDn = dn
 END SUB
 
@@ -2233,18 +2377,22 @@ END SUB
 ' finest pitch change the file (and the real hardware) can make.
 '
 SUB fine_pitch (dv AS LONG)
-    DIM s AS LONG, v AS LONG, n AS LONG
+    DIM s AS LONG, v AS LONG, n AS LONG, k AS LONG
     IF NOT selOn THEN EXIT SUB
     push_undo
-    FOR s = selS0 TO selS1 - 1
-        v = get_step(cur, s)
-        IF v <> 0 AND in_sel(s, v) THEN
-            v = v + dv
-            IF v >= 1 AND v <= 65534 THEN set_step cur, s, v: n = n + 1
+    set_vmask
+    FOR k = 1 TO VOICES
+        IF vMask(k) THEN
+            FOR s = selS0 TO selS1 - 1
+                v = voice_step(cur, k, s)
+                IF v <> 0 AND in_sel(s, v) THEN
+                    v = v + dv
+                    IF v >= 1 AND v <= 65534 THEN set_voice_step cur, k, s, v: n = n + 1
+                END IF
+            NEXT
         END IF
     NEXT
     IF n THEN
-        v = get_step(cur, selS0)
         set_status "Fine pitch: divisors " + MID$("+-", 1 - (dv < 0), 1) + "1 on" + STR$(n) + " steps (Alt+Up/Down)"
     END IF
 END SUB
@@ -2256,14 +2404,24 @@ END FUNCTION
 
 
 SUB sel_copy
-    DIM s AS LONG, v AS LONG
+    DIM s AS LONG, v AS LONG, k AS LONG
     IF NOT selOn THEN set_status "Nothing selected - use the S tool to drag a box": EXIT SUB
     clipN = 0
-    REDIM clipS(0 TO selS1 - selS0) AS LONG
-    REDIM clipV(0 TO selS1 - selS0) AS LONG
-    FOR s = selS0 TO selS1 - 1
-        v = get_step(cur, s)
-        IF in_sel(s, v) THEN clipS(clipN) = s - selS0: clipV(clipN) = v: clipN = clipN + 1
+    REDIM clipS(0 TO (selS1 - selS0) * VOICES) AS LONG
+    REDIM clipV(0 TO (selS1 - selS0) * VOICES) AS LONG
+    REDIM clipK(0 TO (selS1 - selS0) * VOICES) AS LONG
+    set_vmask
+    clipAll = allVoices
+    FOR k = 1 TO VOICES
+        IF vMask(k) THEN
+            FOR s = selS0 TO selS1 - 1
+                v = voice_step(cur, k, s)
+                ' rests: the edited voice's (it is the timing); notes: all
+                IF in_sel(s, v) AND (v <> 0 OR k = sndAct(cur)) THEN
+                    clipS(clipN) = s - selS0: clipV(clipN) = v: clipK(clipN) = k: clipN = clipN + 1
+                END IF
+            NEXT
+        END IF
     NEXT
     clipLen = selS1 - selS0
     clipLo = selLo: clipHi = selHi
@@ -2275,11 +2433,19 @@ END SUB
 ' Clear the selected steps (Delete), or copy them first (cut).
 '
 SUB sel_clear (announce AS INTEGER)
-    DIM s AS LONG
+    DIM s AS LONG, k AS LONG, v AS LONG
     IF NOT selOn THEN set_status "Nothing selected": EXIT SUB
     push_undo
-    FOR s = selS0 TO selS1 - 1
-        IF in_sel(s, get_step(cur, s)) THEN set_step cur, s, 0
+    set_vmask
+    FOR k = 1 TO VOICES
+        IF vMask(k) THEN
+            FOR s = selS0 TO selS1 - 1
+                v = voice_step(cur, k, s)
+                IF v <> 0 OR k = sndAct(cur) THEN
+                    IF in_sel(s, v) THEN set_voice_step cur, k, s, 0
+                END IF
+            NEXT
+        END IF
     NEXT
     IF announce THEN set_status "Cleared the selection"
 END SUB
@@ -2302,7 +2468,13 @@ SUB sel_paste
     IF clipN = 0 THEN set_status "The clipboard is empty - Ctrl+C or cut a selection first": EXIT SUB
     push_undo
     FOR i = 0 TO clipN - 1
-        IF cursorStep + clipS(i) < MAX_STEPS THEN set_step cur, cursorStep + clipS(i), clipV(i)
+        IF cursorStep + clipS(i) < MAX_STEPS THEN
+            IF clipAll THEN
+                set_voice_step cur, clipK(i), cursorStep + clipS(i), clipV(i)
+            ELSE
+                set_step cur, cursorStep + clipS(i), clipV(i)
+            END IF
+        END IF
     NEXT
     selS0 = cursorStep: selS1 = cursorStep + clipLen
     selLo = clipLo: selHi = clipHi
@@ -2339,20 +2511,28 @@ END FUNCTION
 ' Lift the selection out (rests too) and remember the box, for stretching.
 '
 SUB tf_begin
-    DIM s AS LONG, v AS LONG
+    DIM s AS LONG, v AS LONG, k AS LONG, home AS LONG
     push_undo
     tfS0 = selS0: tfS1 = selS1: tfLo = selLo: tfHi = selHi
-    REDIM tfV(0 TO tfS1 - tfS0) AS LONG
-    FOR s = tfS0 TO tfS1 - 1
-        v = get_step(cur, s)
-        IF in_sel(s, v) THEN
-            tfV(s - tfS0) = v
-            set_step cur, s, 0
-        ELSE
-            tfV(s - tfS0) = -1
+    REDIM tfV(1 TO VOICES, 0 TO tfS1 - tfS0) AS LONG
+    set_vmask
+    home = sndAct(cur)
+    FOR k = 1 TO VOICES
+        IF vMask(k) THEN
+            vswap k
+            FOR s = tfS0 TO tfS1 - 1
+                v = get_step(cur, s)
+                IF in_sel(s, v) AND (k = home OR s < steps_of(cur)) THEN
+                    tfV(k, s - tfS0) = v
+                    set_step cur, s, 0
+                ELSE
+                    tfV(k, s - tfS0) = -1
+                END IF
+            NEXT
+            tfBaseV(k) = sndData(cur)
         END IF
     NEXT
-    tfBase = sndData(cur)
+    vswap home
 END SUB
 
 
@@ -2362,27 +2542,34 @@ END SUB
 ' turns it upside down). The selection box follows.
 '
 SUB tf_apply (n0 AS LONG, n1 AS LONG, pLo AS DOUBLE, pHi AS DOUBLE)
-    DIM t AS LONG, oldLen AS LONG, newLen AS LONG, v AS LONG, nt AS DOUBLE
+    DIM t AS LONG, oldLen AS LONG, newLen AS LONG, v AS LONG, nt AS DOUBLE, k AS LONG, home AS LONG
     oldLen = tfS1 - tfS0
     newLen = n1 - n0
     IF newLen < 1 OR oldLen < 1 THEN EXIT SUB
-    sndData(cur) = tfBase
-    FOR t = n0 TO n1 - 1
-        IF t >= 0 AND t < MAX_STEPS THEN
-            v = tfV(INT((t - n0) * oldLen / newLen))
-            IF v > 0 AND (pLo <> tfLo OR pHi <> tfHi) THEN
-                nt = div_note(v)
-                IF tfHi = tfLo THEN
-                    nt = nt + (pLo - tfLo)
-                ELSE
-                    nt = pLo + (nt - tfLo) * (pHi - pLo) / (tfHi - tfLo)
+    home = sndAct(cur)
+    FOR k = 1 TO VOICES
+        IF vMask(k) THEN
+            vswap k
+            sndData(cur) = tfBaseV(k)
+            FOR t = n0 TO n1 - 1
+                IF t >= 0 AND t < MAX_STEPS THEN
+                    v = tfV(k, INT((t - n0) * oldLen / newLen))
+                    IF v > 0 AND (pLo <> tfLo OR pHi <> tfHi) THEN
+                        nt = div_note(v)
+                        IF tfHi = tfLo THEN
+                            nt = nt + (pLo - tfLo)
+                        ELSE
+                            nt = pLo + (nt - tfLo) * (pHi - pLo) / (tfHi - tfLo)
+                        END IF
+                        IF snapOn THEN nt = INT(nt + 0.5)
+                        v = note_div(nt)
+                    END IF
+                    IF v >= 0 THEN set_step cur, t, v
                 END IF
-                IF snapOn THEN nt = INT(nt + 0.5)
-                v = note_div(nt)
-            END IF
-            IF v >= 0 THEN set_step cur, t, v
+            NEXT
         END IF
     NEXT
+    vswap home
     selS0 = n0: selS1 = n1
     selLo = INT(pLo + 0.5): selHi = INT(pHi + 0.5)
     IF selLo > selHi THEN SWAP selLo, selHi
@@ -2494,7 +2681,7 @@ SUB draw_line (s0 AS LONG, n0 AS DOUBLE, s1 AS LONG, n1 AS DOUBLE, erasing AS IN
             v = note_div(nt)
             FOR s = cell_start(c) TO cell_start(c + 1) - 1
                 IF erasing THEN
-                    IF s < steps_of(cur) THEN set_step cur, s, 0
+                    erase_at s, nt
                 ELSE
                     set_step cur, s, v
                 END IF
@@ -2504,10 +2691,10 @@ SUB draw_line (s0 AS LONG, n0 AS DOUBLE, s1 AS LONG, n1 AS DOUBLE, erasing AS IN
     END IF
 
     FOR s = a TO b
+        IF b > a THEN nt = na + (nb - na) * (s - a) / (b - a) ELSE nt = na
         IF erasing THEN
-            IF s < steps_of(cur) THEN set_step cur, s, 0
+            erase_at s, nt
         ELSE
-            IF b > a THEN nt = na + (nb - na) * (s - a) / (b - a) ELSE nt = na
             IF snapOn THEN nt = INT(nt + 0.5)
             set_step cur, s, note_div(nt)
         END IF
@@ -2680,6 +2867,7 @@ FUNCTION handle_key% (k AS LONG, ctrl AS INTEGER, shift AS INTEGER)
                     CASE 45, 95: set_ui_scale -1 '                  Ctrl+- / Ctrl+_
                     CASE 48, 41: set_ui_scale 0 '                   Ctrl+0
                     CASE 49 TO 52: switch_voice k - 48 '            Ctrl+1-4: voice
+                    CASE 53, 37: toggle_all '                       Ctrl+5: G, all voices
                 END SELECT
                 SELECT CASE ctrl_letter$(k)
                     CASE "Z": undo
@@ -3335,36 +3523,62 @@ SUB select_sound (i AS LONG)
 END SUB
 
 
+' (With G these work on every voice, so chords stay lined up.)
+
 SUB insert_step
-    DIM p AS LONG
-    IF steps_of(cur) >= MAX_STEPS THEN EXIT SUB
+    DIM p AS LONG, k AS LONG, home AS LONG
+    IF snd_len(cur) >= MAX_STEPS THEN EXIT SUB
     push_undo
-    IF cursorStep > steps_of(cur) THEN set_step cur, cursorStep - 1, 0
-    p = cursorStep * 2
-    sndData(cur) = LEFT$(sndData(cur), p) + STRING$(2, 0) + MID$(sndData(cur), p + 1)
+    set_vmask
+    home = sndAct(cur)
+    FOR k = 1 TO VOICES
+        IF vMask(k) THEN
+            vswap k
+            IF k = home AND cursorStep > steps_of(cur) THEN set_step cur, cursorStep - 1, 0
+            IF cursorStep <= steps_of(cur) THEN
+                p = cursorStep * 2
+                sndData(cur) = LEFT$(sndData(cur), p) + STRING$(2, 0) + MID$(sndData(cur), p + 1)
+            END IF
+        END IF
+    NEXT
+    vswap home
     dirty = -1
 END SUB
 
 
 SUB delete_step (s AS LONG)
-    IF s < 0 OR s >= steps_of(cur) THEN EXIT SUB
+    DIM k AS LONG, home AS LONG
+    IF s < 0 OR s >= snd_len(cur) THEN EXIT SUB
     push_undo
-    sndData(cur) = LEFT$(sndData(cur), s * 2) + MID$(sndData(cur), s * 2 + 3)
+    set_vmask
+    home = sndAct(cur)
+    FOR k = 1 TO VOICES
+        IF vMask(k) THEN
+            vswap k
+            IF s < steps_of(cur) THEN sndData(cur) = LEFT$(sndData(cur), s * 2) + MID$(sndData(cur), s * 2 + 3)
+        END IF
+    NEXT
+    vswap home
     dirty = -1
 END SUB
 
 
 SUB transpose (semis AS LONG)
-    DIM s AS LONG, v AS LONG, f AS DOUBLE
-    IF steps_of(cur) = 0 THEN EXIT SUB
+    DIM s AS LONG, v AS LONG, f AS DOUBLE, k AS LONG
+    IF snd_len(cur) = 0 THEN EXIT SUB
     push_undo
+    set_vmask
     f = 2 ^ (-semis / 12)
-    FOR s = 0 TO steps_of(cur) - 1
-        v = get_step(cur, s)
-        IF v THEN
-            v = CLNG(v * f)
-            IF v < 1 THEN v = 1
-            set_step cur, s, v
+    FOR k = 1 TO VOICES
+        IF vMask(k) THEN
+            FOR s = 0 TO LEN(voice_data(cur, k)) \ 2 - 1
+                v = voice_step(cur, k, s)
+                IF v THEN
+                    v = CLNG(v * f)
+                    IF v < 1 THEN v = 1
+                    set_voice_step cur, k, s, v
+                END IF
+            NEXT
         END IF
     NEXT
     set_status "Transposed" + STR$(semis) + " semitone(s)"
@@ -3372,18 +3586,30 @@ END SUB
 
 
 SUB trim_end
-    DIM n AS LONG
-    n = steps_of(cur)
-    DO WHILE n > 0
-        IF get_step(cur, n - 1) THEN EXIT DO
-        n = n - 1
-    LOOP
-    IF n = steps_of(cur) THEN set_status "No silence at the end": EXIT SUB
+    DIM n AS LONG, k AS LONG, home AS LONG, was AS STRING
+    was = pack_voices(cur)
     push_undo
-    sndData(cur) = LEFT$(sndData(cur), n * 2)
-    IF cursorStep > n THEN cursorStep = n
+    set_vmask
+    home = sndAct(cur)
+    FOR k = 1 TO VOICES
+        IF vMask(k) THEN
+            vswap k
+            n = steps_of(cur)
+            DO WHILE n > 0
+                IF get_step(cur, n - 1) THEN EXIT DO
+                n = n - 1
+            LOOP
+            sndData(cur) = LEFT$(sndData(cur), n * 2)
+        END IF
+    NEXT
+    vswap home
+    IF pack_voices(cur) = was THEN
+        IF undoN > 0 THEN undoN = undoN - 1
+        set_status "No silence at the end": EXIT SUB
+    END IF
+    IF cursorStep > snd_len(cur) THEN cursorStep = snd_len(cur)
     dirty = -1
-    set_status "Trimmed to" + STR$(n) + " steps"
+    set_status "Trimmed to" + STR$(snd_len(cur)) + " steps"
 END SUB
 
 
@@ -3930,7 +4156,7 @@ END SUB
 
 
 ''
-' "Voice 1 2 3 4  ARP" above the sound list: the voice being edited, which
+' "Voice 1 2 3 4 G  ARP" above the sound list: the voice being edited, which
 ' voices have notes, and the mode. All clickable (see voice_chip_hit).
 '
 SUB draw_voice_chips
@@ -3941,8 +4167,9 @@ SUB draw_voice_chips
     FOR k = 1 TO VOICES
         x = LIST_X + 48 + (k - 1) * 22
         c = voice_col(k)
-        IF k = sndAct(cur) THEN
+        IF k = sndAct(cur) OR (allVoices AND LEN(voice_data(cur, k)) > 0) THEN
             LINE (x - 3, y - 2)-(x + 12, y + 15), c, BF
+            IF k = sndAct(cur) THEN LINE (x - 3, y + 15)-(x + 12, y + 15), _RGB32(255, 255, 255)
             COLOR _RGB32(0, 0, 0)
         ELSE
             LINE (x - 3, y - 2)-(x + 12, y + 15), c, B
@@ -3950,7 +4177,16 @@ SUB draw_voice_chips
         END IF
         _PRINTSTRING (x + 1, y), LTRIM$(STR$(k))
     NEXT
-    x = LIST_X + 48 + VOICES * 22 + 6
+    x = LIST_X + 48 + VOICES * 22 ' G: all voices
+    IF allVoices THEN
+        LINE (x - 3, y - 2)-(x + 12, y + 15), _RGB32(235, 235, 235), BF
+        COLOR _RGB32(0, 0, 0)
+    ELSE
+        LINE (x - 3, y - 2)-(x + 12, y + 15), _RGB32(150, 150, 160), B
+        COLOR _RGB32(190, 190, 200)
+    END IF
+    _PRINTSTRING (x + 1, y), "G"
+    x = LIST_X + 48 + (VOICES + 1) * 22 + 6
     LINE (x - 3, y - 2)-(x + 28, y + 15), _RGB32(120, 140, 180), B
     IF polyMode = POLY_PWM THEN COLOR _RGB32(120, 230, 255) ELSE COLOR _RGB32(255, 200, 60)
     _PRINTSTRING (x + 1, y), poly_name
@@ -3958,25 +4194,26 @@ END SUB
 
 
 ''
-' A click at (mx, my) on the voice chips: 1-4 picks a voice, 5 is the mode.
+' A click at (mx, my) on the voice chips: 1-4 picks a voice, 5 is G (all
+' voices), 6 the ARP / PWM mode.
 '
 FUNCTION voice_chip_hit& (mx AS LONG, my AS LONG)
     DIM k AS LONG, x AS LONG, y AS LONG
     y = LIST_Y - 40
     IF my < y - 2 OR my > y + 15 THEN EXIT FUNCTION
-    FOR k = 1 TO VOICES
+    FOR k = 1 TO VOICES + 1 ' the voices, then G
         x = LIST_X + 48 + (k - 1) * 22
         IF mx >= x - 3 AND mx <= x + 12 THEN voice_chip_hit = k: EXIT FUNCTION
     NEXT
-    x = LIST_X + 48 + VOICES * 22 + 6
-    IF mx >= x - 3 AND mx <= x + 28 THEN voice_chip_hit = 5
+    x = LIST_X + 48 + (VOICES + 1) * 22 + 6
+    IF mx >= x - 3 AND mx <= x + 28 THEN voice_chip_hit = 6
 END FUNCTION
 
 
 SUB draw_roll
     DIM nt AS LONG, y AS LONG, x AS LONG, s AS LONG, v AS LONG, vis AS LONG, endX AS LONG
     DIM w AS LONG, nn AS DOUBLE, col AS _UNSIGNED LONG, hp AS LONG, isBlack AS INTEGER, prevY AS LONG, hv AS INTEGER, yb AS LONG
-    DIM k AS LONG
+    DIM k AS LONG, vc AS _UNSIGNED LONG
 
     vis = INT(CANVAS_W / zoom)
 
@@ -4072,8 +4309,9 @@ SUB draw_roll
     ' the other voices, dimmed in their own colours, under the edited one
     FOR k = 1 TO VOICES
         IF k <> sndAct(cur) AND LEN(sndV(cur, k)) THEN
-            col = voice_col(k)
-            col = _RGB32(_RED32(col) * 0.55, _GREEN32(col) * 0.55, _BLUE32(col) * 0.55)
+            vc = voice_col(k)
+            ' dimmed, unless G makes them editable too
+            IF NOT allVoices THEN vc = _RGB32(_RED32(vc) * 0.55, _GREEN32(vc) * 0.55, _BLUE32(vc) * 0.55)
             FOR s = scrollX TO scrollX + vis
                 v = voice_step(cur, k, s)
                 IF v THEN
@@ -4082,6 +4320,10 @@ SUB draw_roll
                     IF nn < NOTE_LO THEN nn = NOTE_LO
                     y = note_y(nn)
                     x = CANVAS_X + (s - scrollX) * zoom
+                    col = vc
+                    IF allVoices THEN
+                        IF in_sel(s, v) THEN col = _RGB32(90, 220, 255)
+                    END IF
                     LINE (x, y - 1)-(x + w, y + 1), col, BF
                 END IF
             NEXT
@@ -4370,7 +4612,7 @@ SUB draw_help
     t(16) = "F2 rename   F3 new sound   F4 duplicate   F8 delete   Ctrl+P priority"
     t(17) = "Ctrl+N new  Ctrl+O open  Ctrl+S save  Ctrl+Shift+S save as  Ctrl+= / - / 0 display scale"
     t(18) = "Ctrl+E export the sound as .wav (EXPORT/)     drop a file to open it"
-    t(19) = "Ctrl+1-4 edit voice 1-4 (chords: hold keys in STEP rec)   Ctrl+J chords ARP / PWM"
+    t(19) = "Ctrl+1-4 voice 1-4  Ctrl+5 G all voices  Ctrl+J chords ARP / PWM  (STEP rec: hold keys)"
     t(20) = "Saves IFS banks (Duke Nukem / Keen format, 140 steps per second)."
     t(21) = "Opens anything DN1PLAY plays. Saving never replaces the file you"
     t(22) = "opened unless you choose its name in Save As."

@@ -260,6 +260,14 @@ voices** and two ways to hear them together:
   the sound list, pick the voice you edit. Every tool, recording and
   selection works on that voice. The other voices show dimmed in their own
   colours (green, pink, blue), and the list marks multi-voice sounds (`3v`).
+* **G, all voices at once:** **Ctrl+5** or the **G** chip. Then every
+  voice shows bright, and select, move, stretch, cut / copy / paste, Delete,
+  fine pitch, transpose, insert / delete step and trim act on all of them, so
+  chords move as one. The eraser takes the notes near the pointer, in any
+  voice, so you can remove a single chord note. The **Note** tool puts each
+  note in a voice that is free there, so clicking notes above each other
+  builds a chord. Draw, Line and Wave still draw in the voice whose chip is
+  underlined. Picking a voice (Ctrl+1-4) leaves G.
 * **Chords from the keys:** in STEP record, hold a note and press more. The
   first note goes in the voice you're editing and the others go in the next
   voices, at the same steps.
@@ -312,7 +320,7 @@ zap, a blip, a little arpeggio) into an instrument you can play tunes with.
 | Key | What it does |
 | --- | --- |
 | Space / Enter | play from the start / from the cursor (Ctrl+L loops) |
-| Ctrl+1 ... Ctrl+4 / Ctrl+J | edit voice 1-4 / chords as ARP or PWM |
+| Ctrl+1 ... Ctrl+4 / Ctrl+5 / Ctrl+J | edit voice 1-4 / G: all voices / chords as ARP or PWM |
 | Left / Right | move the cursor a step (a grid cell with the grid on); Ctrl: a beat, or 0.1 s with the grid off. With a selection they nudge it instead. |
 | Home / End | cursor to the start / end of the sound |
 | PageUp / PageDown | previous / next dot (where a new pitch starts); with the NOTE tool, previous / next bar |
