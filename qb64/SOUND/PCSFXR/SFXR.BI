@@ -26,6 +26,12 @@ $IF SFXR_BI = UNDEFINED THEN
     CONST SFXR_SAWTOOTH = 1
     CONST SFXR_SINE = 2
     CONST SFXR_NOISE = 3
+    ' more waves (QB64-PE's SOUND / PLAY have these too); sfxr.me only knows 0-3
+    CONST SFXR_TRIANGLE = 4
+    CONST SFXR_PINK = 5 '   pink noise: softer, more "hiss"
+    CONST SFXR_BROWN = 6 '  brown noise: a low rumble
+    CONST SFXR_METAL = 7 '  1-bit LFSR noise: metallic, buzzy (old consoles)
+    CONST SFXR_WAVES = 8 '  how many there are
 
     CONST SFXR_MODE_BEEPER = 0
     CONST SFXR_MODE_PWM = 1
@@ -110,6 +116,8 @@ $IF SFXR_BI = UNDEFINED THEN
     DIM SHARED sfxr_pcmN AS LONG
     DIM SHARED sfxr_clipped AS LONG
     REDIM SHARED sfxr_div(0 TO 0) AS LONG ' beeper: one PIT divisor per tick
+    REDIM SHARED sfxr_tickHzOut(0 TO 0) AS SINGLE ' and per tick: the pitch (Hz) and envelope level
+    REDIM SHARED sfxr_tickEnv(0 TO 0) AS SINGLE
     DIM SHARED sfxr_divN AS LONG
     DIM SHARED sfxr_outMode AS INTEGER ' mode of the last SFXR_Render
 $END IF

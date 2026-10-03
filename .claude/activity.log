@@ -26809,3 +26809,1862 @@
 2026-10-03T14:46:20-0400  INFO     bash_start    cd /home/grymmjack/git/qb64 && git add -A .claude/activity.log qb64/SOUND/PC-SPEAKER qb64/SOUND/PCSFXR && git status --short | grep -v "^?? MYSOUNDS.SND"
   > cwd: /home/grymmjack/git/qb64/qb64/SOUND
   $ cd /home/grymmjack/git/qb64 && git add -A .claude/activity.log qb64/SOUND/PC-SPEAKER qb64/SOUND/PCSFXR && git status --short | grep -v "^?? MYSOUNDS.SND"
+2026-10-03T14:46:20-0400  INFO     bash_end      [ok] 17L stdout
+  | warning: in the working copy of '.claude/activity.log', CRLF will be replaced by LF the next time Git touches it
+  | M  .claude/activity.log
+  | M  qb64/SOUND/PC-SPEAKER/MID2SND.BAS
+  | M  qb64/SOUND/PC-SPEAKER/PCSEDIT.BAS
+  | M  qb64/SOUND/PC-SPEAKER/PCSMIDI.BM
+  | A  qb64/SOUND/PC-SPEAKER/PCSPDEMO.BAS
+  | A  qb64/SOUND/PC-SPEAKER/PCSPLAY.BI
+  | A  qb64/SOUND/PC-SPEAKER/PCSPLAY.BM
+  | M  qb64/SOUND/PC-SPEAKER/README.md
+  | R  qb64/SOUND/PCFXR/PCFXR.BAS -> qb64/SOUND/PCSFXR/PCSFXR.BAS
+  | R  qb64/SOUND/PCFXR/README.md -> qb64/SOUND/PCSFXR/README.md
+  | R  qb64/SOUND/PCFXR/SCREENSHOTS/1-beeper-explosion.png -> qb64/SOUND/PCSFXR/SCREENSHOTS/1-beeper-explosion.png
+  | R  qb64/SOUND/PCFXR/SCREENSHOTS/2-pwm-laser.png -> qb64/SOUND/PCSFXR/SCREENSHOTS/2-pwm-laser.png
+  | R  qb64/SOUND/PCFXR/SCREENSHOTS/3-sfxr-powerup.png -> qb64/SOUND/PCSFXR/SCREENSHOTS/3-sfxr-powerup.png
+  | R  qb64/SOUND/PCFXR/SFXDEMO.BAS -> qb64/SOUND/PCSFXR/SFXDEMO.BAS
+  | R  qb64/SOUND/PCFXR/SFXR.BI -> qb64/SOUND/PCSFXR/SFXR.BI
+  | R  qb64/SOUND/PCFXR/SFXR.BM -> qb64/SOUND/PCSFXR/SFXR.BM
+2026-10-03T14:46:27-0400  INFO     bash_start    git commit -q -m "SOUND: PCSPLAY game library, QB64 code export, RAD import, PCSFXR | | - PCSPLAY.BI/BM: PC speaker music + sound effects for QB64-PE games | (banks from files / strings / hex, IFS-pr…
+  > cwd: /home/grymmjack/git/qb64
+  $ git commit -q -m "SOUND: PCSPLAY game library, QB64 code export, RAD import, PCSFXR
+  $ 
+  $ - PCSPLAY.BI/BM: PC speaker music + sound effects for QB64-PE games
+  $   (banks from files / strings / hex, IFS-priority effects over looping
+  $   music, PWM or ARP multi-voice, beep / sweep / noise, volume); PCSPDEMO
+  $ - PCSEDIT Ctrl+Shift+E exports a bank as a QB64 code folder: embedded bank
+  $   + SFX_/MUSIC_ subs for PCSPLAY, SOUND_ subs (QB64-PE SOUND, exact Hz,
+  $   voices 0-3) and PLAY_ subs (MML, @1 / V / MB), with demos
+  $ - Reality AdLib Tracker v1 (.rad) import in MID2SND and PCSEDIT; MID2SND
+  $   cuts a tune to fit a bank instead of failing
+  $ - PCSEDIT: wider left panel and a compact mode line (no overlapping text);
+  $   an inbox that takes sounds sent from PCSFXR into the open bank
+  $ - PCFXR renamed PCSFXR (PC Speaker FXer): .SND exports resampled to 140
+  $   steps a second, Save bank asks where and can add to an existing bank,
+  $   Send to PCSEDIT button
+  $ 
+  $ Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>" && timeout 100 git push -q; git log --oneline -1; git status -sb | head -2
+2026-10-03T14:46:29-0400  INFO     bash_end      [ok] 3L stdout
+  | 0f33b395 SOUND: PCSPLAY game library, QB64 code export, RAD import, PCSFXR
+  | ## main...origin/main
+  |  M .claude/activity.log
+2026-10-03T14:48:53-0400  NOTICE   prompt        this is fantastic. it works great. one thing when opening a sound from PCSFXR it should use ARP playback - ask the user / inform them when they open the sound if it's using PCM instead - only ask thi…
+  > this is fantastic. it works great. one thing when opening a sound from PCSFXR it should use ARP playback - ask the user / inform them when they open the sound if it's using PCM instead - only ask this question 1 time and remember the choice - if they say "yes" switch to ARP always do that from now on when importing a sound from PCSFXR
+2026-10-03T14:49:08-0400  INFO     bash_start    [t=300000ms] cd /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER && python3 - <<'PYEOF' | p='PCSEDIT.BAS'; s=open(p).read() | def r(a,b): | global s | assert s.count(a)==1,a[:80]; s=s.replace(a,b) | r(…
+  > cwd: /home/grymmjack/git/qb64
+  $ cd /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER && python3 - <<'PYEOF'
+  $ p='PCSEDIT.BAS'; s=open(p).read()
+  $ def r(a,b):
+  $     global s
+  $     assert s.count(a)==1,a[:80]; s=s.replace(a,b)
+  $ r("""DIM SHARED glideSteps AS LONG""","""DIM SHARED fxrArp AS LONG ' sounds from PCSFXR: 0 = ask (once), 1 = switch to ARP, 2 = leave the mode
+  $ DIM SHARED glideSteps AS LONG""")
+  $ r("""\ncfg_load\n""","""\ncfg_load\nfxrArp = VAL(cfg_get("pcsfxr_arp", "0"))\n""")
+  $ r("""    PRINT #ff, "arprate="; LTRIM$(STR$(arpRate))""","""    PRINT #ff, "arprate="; LTRIM$(STR$(arpRate))
+  $     PRINT #ff, "pcsfxr_arp="; LTRIM$(STR$(fxrArp))""")
+  $ r("""    IF got THEN
+  $         cursorStep = 0: scrollX = 0
+  $         set_status "From PCSFXR: " + sndName(last) + " - added to the bank as sound" + STR$(last)
+  $     END IF""","""    IF got THEN
+  $         cursorStep = 0: scrollX = 0
+  $         set_status "From PCSFXR: " + sndName(last) + " - added to the bank as sound" + STR$(last)
+  $         ' PCSFXR's sounds are made for ARP (how games play them): in PWM mode,
+  $         ' ask once whether to switch, and remember the answer
+  $         IF polyMode = POLY_PWM THEN
+  $             IF fxrArp = 0 THEN
+  $                 IF ask("PCSEDIT is playing in PWM mode (voices mixed with pulse-width modulation)." + CHR$(10) + CHR$(10) + "Sounds from PCSFXR are made for ARP mode - the way DOS games play them. Switch to ARP now, and every time a sound comes from PCSFXR?" + CHR$(10) + CHR$(10) + "(This is only asked once. Ctrl+J switches between ARP and PWM any time.)", "yesno", "question", 1) = 1 THEN fxrArp = 1 ELSE fxrArp = 2
+  $                 settings_save ' (remembered now, not only at quit)
+  $             END IF
+  $             IF fxrArp = 1 THEN
+  $                 polyMode = POLY_ARP
+  $                 set_status "From PCSFXR: " + sndName(last) + " - added as sound" + STR$(last) + ", playing in ARP mode (Ctrl+J: PWM)"
+  $             END IF
+  $         END IF
+  $     END IF""")
+  $ open(p,'w').write(s)
+  $ PYEOF
+  $ SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad && timeout 280 /home/grymmjack/git/qb64pe/qb64pe -x PCSEDIT.BAS -o $SP/PCSEDIT 2>&1 | grep -iE "error|line [0-9]|Output"
+2026-10-03T14:49:11-0400  INFO     bash_end      [ok] 2L stdout
+  | Beginning C++ output from QB64 code... 
+  | Output: /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/PCSEDIT
+2026-10-03T14:49:11-0400  NOTICE   prompt        if they say no, never do it
+  > if they say no, never do it
+2026-10-03T14:49:23-0400  INFO     bash_start    [t=320000ms] export SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad; cd /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER && python3 - <<'PYEOF' | import os …
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ export SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad; cd /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER && python3 - <<'PYEOF'
+  $ import os
+  $ SP=os.environ['SP']
+  $ s=open('PCSEDIT.BAS').read()
+  $ a='''IF ask("PCSEDIT is playing in PWM mode'''
+  $ i=s.index(a); j=s.index('"yesno", "question", 1) = 1 THEN',i)
+  $ s=s[:i]+'IF VAL(ENVIRON$("ANS")) = 1 THEN'+s[j+len('"yesno", "question", 1) = 1 THEN'):]
+  $ lines=s.split('\n'); k=lines.index('DO')
+  $ lines.insert(k,'''DIM tsF AS LONG
+  $ polyMode = POLY_PWM
+  $ OPEN "SPX/ib/arp.txt" FOR APPEND AS #9
+  $ inbox_import "SPX/ib/zap.snd": PRINT #9, "ans "; ENVIRON$("ANS"); ": fxrArp"; fxrArp; " mode"; polyMode
+  $ polyMode = POLY_PWM
+  $ inbox_import "SPX/ib/zap.snd": PRINT #9, "  2nd import: fxrArp"; fxrArp; " mode"; polyMode
+  $ CLOSE #9
+  $ SYSTEM'''.replace('SPX',SP))
+  $ open(SP+'/help/_ARP.BAS','w').write('\n'.join(lines))
+  $ PYEOF
+  $ python3 -c "
+  $ import struct
+  $ d=b''.join(struct.pack('<H',v) for v in [2000]*10)
+  $ hdr=b'SND\0'+struct.pack('<HHH',16+16+len(d)+2,1,0)+b'\0'*6
+  $ open('$SP/ib/zap.snd','wb').write(hdr+struct.pack('<H',32)+bytes([10,8])+b'ZAP'+b'\0'*9+d+b'\xff\xff')"
+  $ cd $SP/help && timeout 280 /home/grymmjack/git/qb64pe/qb64pe -x _ARP.BAS -o ./ARP 2>&1 | grep -iE "error|line [0-9]|Output"; rm -f $SP/ib/arp.txt; for a in 1 2; do rm -rf $SP/ib/h$a; mkdir -p $SP/ib/h$a; env -u WAYLAND_DISPLAY -u XDG_CURRENT_DESKTOP -u KDE_FULL_SESSION -u XDG_SESSION_TYPE QT_QPA_PLATFORM=xcb DISPLAY=:99 HOME=$SP/ib/h$a PCSEDIT_NOMIDI=1 ANS=$a timeout 20 ./ARP >/dev/null 2>&1; grep pcsfxr_arp $SP/ib/h$a/.config/pcsedit.ini; done; cat $SP/ib/arp.txt
+2026-10-03T14:49:27-0400  WARNING  bash_end      [stderr] 8L stdout / 2L stderr
+  | Beginning C++ output from QB64 code... 
+  | Output: /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/help/ARP
+  | pcsfxr_arp=1
+  | pcsfxr_arp=2
+  | ans 1: fxrArp 1  mode 0 
+  |   2nd import: fxrArp 1  mode 0 
+  | ans 2: fxrArp 2  mode 1 
+  |   2nd import: fxrArp 2  mode 1
+  ! 
+  ! Shell cwd was reset to /home/grymmjack/git/qb64
+2026-10-03T14:49:33-0400  NOTICE   prompt        are we able to make PWMSFXR ? that uses PWM with multiple voices, channels, etc. and more sound types and waveforms from QB64PE since it supports lots of different ones?
+  > are we able to make PWMSFXR ? that uses PWM with multiple voices, channels, etc. and more sound types and waveforms from QB64PE since it supports lots of different ones?
+2026-10-03T14:51:04-0400  INFO     bash_start    cd /home/grymmjack/git/qb64/qb64/SOUND/PCSFXR && grep -n "^ SUB \|^ FUNCTION " SFXR.BM; grep -n "waveShape" SFXR.BM | head -20
+  > cwd: /home/grymmjack/git/qb64
+  $ cd /home/grymmjack/git/qb64/qb64/SOUND/PCSFXR && grep -n "^    SUB \|^    FUNCTION " SFXR.BM; grep -n "waveShape" SFXR.BM | head -20
+2026-10-03T14:51:04-0400  INFO     bash_end      [ok] 57L stdout
+  | 14:    SUB SFXR_Init
+  | 54:    SUB SFXR_DefParam (i AS LONG, pkey AS STRING, plabel AS STRING, psigned AS INTEGER)
+  | 65:    SUB SFXR_Reset
+  | 79:    FUNCTION SFXR_Default# (i AS LONG)
+  | 92:    SUB SFXR_Clamp
+  | 107:    FUNCTION SFXR_Frnd# (range AS DOUBLE)
+  | 112:    FUNCTION SFXR_Rndr# (lo AS DOUBLE, hi AS DOUBLE)
+  | 117:    FUNCTION SFXR_Rnd& (max AS LONG)
+  | 122:    FUNCTION SFXR_Cube# (x AS DOUBLE)
+  | 135:    SUB SFXR_Preset (kind AS STRING)
+  | 142:    SUB SFXR_PresetInto (kind AS STRING)
+  | 354:    FUNCTION SFXR_Pow5# (x AS DOUBLE)
+  | 362:    SUB SFXR_Mutate
+  | 378:    SUB SFXR_InitRepeat
+  | 397:    SUB SFXR_InitVoice
+  | 433:    SUB SFXR_Synth
+  | 592:    FUNCTION SFXR_EnvLen& (stage AS LONG)
+  | 606:    SUB SFXR_AddTick (rfperiod AS DOUBLE, envVol AS DOUBLE)
+  | 634:    FUNCTION SFXR_Render&
+  | 649:    FUNCTION SFXR_SpeakerVolume!
+  | 657:    FUNCTION SFXR_RenderBeeper&
+  | 680:    FUNCTION SFXR_RenderPWM&
+  | 717:    FUNCTION SFXR_PWMDivisor&
+  | 726:    FUNCTION SFXR_PWMBits!
+  | 731:    FUNCTION SFXR_Peak#
+  | 740:    FUNCTION SFXR_RenderClean&
+  | 759:    FUNCTION SFXR_OutFrames&
+  | 764:    FUNCTION SFXR_OutRate&
+  | 769:    FUNCTION SFXR_OutSample! (i AS LONG)
+  | 774:    FUNCTION SFXR_Seconds#
+  | 783:    FUNCTION SFXR_W16$ (v AS LONG)
+  | 791:    SUB SFXR_SaveWAV (fileName AS STRING)
+  | 817:    FUNCTION SFXR_WavHeader$ (rate AS LONG, bits AS LONG, dataBytes AS LONG)
+  | 828:    SUB SFXR_Save8BitWAV (fileName AS STRING, rate AS LONG)
+  | 862:    FUNCTION SFXR_DivisorData$
+  | 877:    FUNCTION SFXR_BuildIFS$ (names() AS STRING, datas() AS STRING, count AS LONG)
+  | 891:    SUB SFXR_SaveText (fileName AS STRING, text AS STRING)
+  | 905:    FUNCTION SFXR_BasCode$ (nam AS STRING)
+  | 950:    FUNCTION SFXR_SafeName$ (s AS STRING)
+  | 966:    FUNCTION SFXR_Num$ (x AS DOUBLE)
+  | 988:    FUNCTION SFXR_ToJSON$
+  | 1012:    FUNCTION SFXR_JsonNum# (text AS STRING, jkey AS STRING, found AS INTEGER)
+  | 1037:    FUNCTION SFXR_FromJSON%% (text AS STRING)
+  | 1063:    FUNCTION SFXR_B58Alphabet$
+  | 1071:    FUNCTION SFXR_ToB58$
+  | 1108:    FUNCTION SFXR_FromB58%% (code AS STRING)
+  | 1155:    FUNCTION SFXR_Import%% (text AS STRING)
+  | 1174:    FUNCTION SFXR_Prec4$ (x AS DOUBLE)
+  | 1189:    FUNCTION SFXR_Fixed$ (a AS DOUBLE, d AS LONG)
+  | 1202:    FUNCTION SFXR_Exp3$ (x AS DOUBLE)
+  | 1220:    FUNCTION SFXR_ParamText$ (i AS LONG)
+  | 1273:    FUNCTION SFXR_GainText$
+  | 1287:    FUNCTION SFXR_BeeperUses%% (i AS LONG)
+  | 399:        sfxr_v.waveShape = sfxr_p(0)
+  | 532:                    IF sfxr_v.waveShape = SFXR_NOISE THEN
+  | 541:                SELECT CASE sfxr_v.waveShape
+  | 610:            IF sfxr_v.waveShape = SFXR_NOISE THEN
+2026-10-03T14:51:05-0400  INFO     bash_start    sed -n 433,760p SFXR.BM
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PCSFXR
+  $ sed -n 433,760p SFXR.BM
+2026-10-03T14:51:05-0400  INFO     bash_end      [ok] 328L stdout
+  |     SUB SFXR_Synth
+  |         DIM fltp AS DOUBLE, fltdp AS DOUBLE, fltphp AS DOUBLE, pp AS DOUBLE
+  |         DIM noise(0 TO 31) AS DOUBLE, flanger(0 TO 1023) AS DOUBLE
+  |         DIM envStage AS LONG, envElapsed AS LONG, envLen AS LONG
+  |         DIM vibratoPhase AS DOUBLE, phase AS LONG, ipp AS LONG, iphase AS LONG
+  |         DIM t AS LONG, maxT AS LONG, i AS LONG, si AS LONG
+  |         DIM rfperiod AS DOUBLE, iperiod AS LONG, envVol AS DOUBLE, envf AS DOUBLE
+  |         DIM sample AS DOUBLE, subSample AS DOUBLE, fp AS DOUBLE
+  |         DIM tickLen AS DOUBLE, nextTick AS DOUBLE
+  | 
+  |         SFXR_Init
+  |         SFXR_InitVoice
+  |         FOR i = 0 TO 31
+  |             noise(i) = RND * 2 - 1
+  |         NEXT
+  | 
+  |         sfxr_pcmN = 0
+  |         sfxr_divN = 0
+  |         sfxr_clipped = 0
+  |         REDIM sfxr_pcm(0 TO 65535) AS SINGLE
+  |         REDIM sfxr_div(0 TO 255) AS LONG
+  |         IF sfxr_tickHz <= 0 THEN sfxr_tickHz = PCSPK_IFS_DEFAULT_HZ
+  |         tickLen = SFXR_RATE / sfxr_tickHz
+  |         nextTick = 0
+  |         maxT = SFXR_RATE * SFXR_MAX_SECONDS
+  | 
+  |         FOR t = 0 TO maxT
+  |             ' repeats
+  |             IF sfxr_v.repeatTime <> 0 THEN
+  |                 sfxr_v.elapsedSinceRepeat = sfxr_v.elapsedSinceRepeat + 1
+  |                 IF sfxr_v.elapsedSinceRepeat >= sfxr_v.repeatTime THEN SFXR_InitRepeat
+  |             END IF
+  | 
+  |             ' arpeggio (single)
+  |             IF sfxr_v.arpeggioTime <> 0 AND t >= sfxr_v.arpeggioTime THEN
+  |                 sfxr_v.arpeggioTime = 0
+  |                 sfxr_v.period = sfxr_v.period * sfxr_v.arpeggioMultiplier
+  |             END IF
+  | 
+  |             ' frequency slide, and frequency slide slide!
+  |             sfxr_v.periodMult = sfxr_v.periodMult + sfxr_v.periodMultSlide
+  |             sfxr_v.period = sfxr_v.period * sfxr_v.periodMult
+  |             IF sfxr_v.period > sfxr_v.periodMax THEN
+  |                 sfxr_v.period = sfxr_v.periodMax
+  |                 IF sfxr_v.enableFrequencyCutoff THEN EXIT FOR
+  |             END IF
+  | 
+  |             ' vibrato
+  |             rfperiod = sfxr_v.period
+  |             IF sfxr_v.vibratoAmplitude > 0 THEN
+  |                 vibratoPhase = vibratoPhase + sfxr_v.vibratoSpeed
+  |                 rfperiod = sfxr_v.period * (1 + SIN(vibratoPhase) * sfxr_v.vibratoAmplitude)
+  |             END IF
+  |             iperiod = INT(rfperiod)
+  |             IF iperiod < SFXR_OVERSAMPLING THEN iperiod = SFXR_OVERSAMPLING
+  | 
+  |             ' square wave duty cycle
+  |             sfxr_v.dutyCycle = sfxr_v.dutyCycle + sfxr_v.dutyCycleSlide
+  |             IF sfxr_v.dutyCycle < 0 THEN sfxr_v.dutyCycle = 0
+  |             IF sfxr_v.dutyCycle > 0.5 THEN sfxr_v.dutyCycle = 0.5
+  | 
+  |             ' volume envelope
+  |             envElapsed = envElapsed + 1
+  |             IF envElapsed > SFXR_EnvLen(envStage) THEN
+  |                 envElapsed = 0
+  |                 envStage = envStage + 1
+  |                 IF envStage > 2 THEN EXIT FOR
+  |             END IF
+  |             envLen = SFXR_EnvLen(envStage)
+  |             IF envLen > 0 THEN envf = envElapsed / envLen ELSE envf = 0
+  |             SELECT CASE envStage
+  |                 CASE 0: envVol = envf
+  |                 CASE 1: envVol = 1 + (1 - envf) * 2 * sfxr_v.envelopePunch
+  |                 CASE ELSE: envVol = 1 - envf
+  |             END SELECT
+  | 
+  |             ' flanger step
+  |             sfxr_v.flangerOffset = sfxr_v.flangerOffset + sfxr_v.flangerOffsetSlide
+  |             iphase = ABS(INT(sfxr_v.flangerOffset))
+  |             IF iphase > 1023 THEN iphase = 1023
+  | ...[truncated]
+2026-10-03T14:51:49-0400  INFO     bash_start    sed -n 14,135p SFXR.BM | grep -n "sfxr_p(0)\|SFXR_NOISE\|Clamp\|wave" ; sed -n 92,106p SFXR.BM; sed -n 397,432p SFXR.BM
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PCSFXR
+  $ sed -n 14,135p SFXR.BM | grep -n "sfxr_p(0)\|SFXR_NOISE\|Clamp\|wave" ; sed -n 92,106p SFXR.BM; sed -n 397,432p SFXR.BM
+2026-10-03T14:51:49-0400  INFO     bash_end      [ok] 56L stdout
+  | 29:        sfxr_key(0) = "wave_type"
+  | 58:        sfxr_p(0) = SFXR_SQUARE
+  | 79:    SUB SFXR_Clamp
+  | 87:        sfxr_p(0) = INT(sfxr_p(0))
+  | 88:        IF sfxr_p(0) < 0 OR sfxr_p(0) > 3 THEN sfxr_p(0) = SFXR_SQUARE
+  |     SUB SFXR_Clamp
+  |         DIM i AS LONG, lo AS DOUBLE
+  |         FOR i = 1 TO SFXR_NPARAMS
+  |             IF sfxr_p(i) <> sfxr_p(i) THEN sfxr_p(i) = 0 ' NaN
+  |             IF sfxr_signed(i) THEN lo = -1 ELSE lo = 0
+  |             IF sfxr_p(i) < lo THEN sfxr_p(i) = lo
+  |             IF sfxr_p(i) > 1 THEN sfxr_p(i) = 1
+  |         NEXT
+  |         sfxr_p(0) = INT(sfxr_p(0))
+  |         IF sfxr_p(0) < 0 OR sfxr_p(0) > 3 THEN sfxr_p(0) = SFXR_SQUARE
+  |         IF sfxr_vol < 0 THEN sfxr_vol = 0
+  |         IF sfxr_vol > 1 THEN sfxr_vol = 1
+  |     END SUB
+  | 
+  | 
+  |     SUB SFXR_InitVoice
+  |         SFXR_InitRepeat
+  |         sfxr_v.waveShape = sfxr_p(0)
+  | 
+  |         sfxr_v.fltw = SFXR_Cube(sfxr_p(SP_LPF_FREQ)) * 0.1
+  |         sfxr_v.enableLowPassFilter = (sfxr_p(SP_LPF_FREQ) <> 1)
+  |         sfxr_v.fltw_d = 1 + sfxr_p(SP_LPF_RAMP) * 0.0001
+  |         sfxr_v.fltdmp = 5 / (1 + sfxr_p(SP_LPF_RESONANCE) ^ 2 * 20) * (0.01 + sfxr_v.fltw)
+  |         IF sfxr_v.fltdmp > 0.8 THEN sfxr_v.fltdmp = 0.8
+  |         sfxr_v.flthp = sfxr_p(SP_HPF_FREQ) ^ 2 * 0.1
+  |         sfxr_v.flthp_d = 1 + sfxr_p(SP_HPF_RAMP) * 0.0003
+  | 
+  |         sfxr_v.vibratoSpeed = sfxr_p(SP_VIB_SPEED) ^ 2 * 0.01
+  |         sfxr_v.vibratoAmplitude = sfxr_p(SP_VIB_STRENGTH) * 0.5
+  | 
+  |         sfxr_v.envLen0 = INT(sfxr_p(SP_ATTACK) * sfxr_p(SP_ATTACK) * 100000)
+  |         sfxr_v.envLen1 = INT(sfxr_p(SP_SUSTAIN) * sfxr_p(SP_SUSTAIN) * 100000)
+  |         sfxr_v.envLen2 = INT(sfxr_p(SP_DECAY) * sfxr_p(SP_DECAY) * 100000)
+  |         sfxr_v.envelopePunch = sfxr_p(SP_PUNCH)
+  | 
+  |         sfxr_v.flangerOffset = sfxr_p(SP_PHA_OFFSET) ^ 2 * 1020
+  |         IF sfxr_p(SP_PHA_OFFSET) < 0 THEN sfxr_v.flangerOffset = -sfxr_v.flangerOffset
+  |         sfxr_v.flangerOffsetSlide = sfxr_p(SP_PHA_RAMP) ^ 2
+  |         IF sfxr_p(SP_PHA_RAMP) < 0 THEN sfxr_v.flangerOffsetSlide = -sfxr_v.flangerOffsetSlide
+  | 
+  |         sfxr_v.repeatTime = INT((1 - sfxr_p(SP_REPEAT_SPEED)) ^ 2 * 20000 + 32)
+  |         IF sfxr_p(SP_REPEAT_SPEED) = 0 THEN sfxr_v.repeatTime = 0
+  | 
+  |         sfxr_v.gain = EXP(sfxr_vol) - 1
+  |     END SUB
+  | 
+  | 
+  |     ''
+  |     ' Run the synth. Fills sfxr_pcm() with the clean sfxr sound at 44100 Hz
+  |     ' and sfxr_div() with one PIT divisor per beeper tick.
+  |     '
+2026-10-03T14:52:11-0400  INFO     bash_start    [t=300000ms] python3 - <<'PYEOF' | p='SFXR.BI'; s=open(p).read() | def r(a,b): | global s | assert s.count(a)==1,a[:80]; s=s.replace(a,b) | r(""" CONST SFXR_NOISE = 3 | """,""" CONST SFXR_NOISE = 3 |…
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PCSFXR
+  $ python3 - <<'PYEOF'
+  $ p='SFXR.BI'; s=open(p).read()
+  $ def r(a,b):
+  $     global s
+  $     assert s.count(a)==1,a[:80]; s=s.replace(a,b)
+  $ r("""    CONST SFXR_NOISE = 3
+  $ ""","""    CONST SFXR_NOISE = 3
+  $     ' more waves (QB64-PE's SOUND / PLAY have these too); sfxr.me only knows 0-3
+  $     CONST SFXR_TRIANGLE = 4
+  $     CONST SFXR_PINK = 5 '   pink noise: softer, more "hiss"
+  $     CONST SFXR_BROWN = 6 '  brown noise: a low rumble
+  $     CONST SFXR_METAL = 7 '  1-bit LFSR noise: metallic, buzzy (old consoles)
+  $     CONST SFXR_WAVES = 8 '  how many there are
+  $ """)
+  $ r("""    REDIM SHARED sfxr_div(0 TO 0) AS LONG ' beeper: one PIT divisor per tick""","""    REDIM SHARED sfxr_div(0 TO 0) AS LONG ' beeper: one PIT divisor per tick
+  $     REDIM SHARED sfxr_tickHzOut(0 TO 0) AS SINGLE ' and per tick: the pitch (Hz) and envelope level
+  $     REDIM SHARED sfxr_tickEnv(0 TO 0) AS SINGLE""")
+  $ open(p,'w').write(s)
+  $ 
+  $ p='SFXR.BM'; s=open(p).read()
+  $ r("""        IF sfxr_p(0) < 0 OR sfxr_p(0) > 3 THEN sfxr_p(0) = SFXR_SQUARE""","""        IF sfxr_p(0) < 0 OR sfxr_p(0) >= SFXR_WAVES THEN sfxr_p(0) = SFXR_SQUARE""")
+  $ r("""        DIM tickLen AS DOUBLE, nextTick AS DOUBLE
+  $ ""","""        DIM tickLen AS DOUBLE, nextTick AS DOUBLE
+  $         DIM pk0 AS DOUBLE, pk1 AS DOUBLE, pk2 AS DOUBLE, wn AS DOUBLE, br AS DOUBLE, lfsr AS LONG
+  $ """)
+  $ r("""        REDIM sfxr_div(0 TO 255) AS LONG""","""        REDIM sfxr_div(0 TO 255) AS LONG
+  $         REDIM sfxr_tickHzOut(0 TO 255) AS SINGLE
+  $         REDIM sfxr_tickEnv(0 TO 255) AS SINGLE
+  $         lfsr = &H7FFF""")
+  $ r("""                    IF sfxr_v.waveShape = SFXR_NOISE THEN
+  $                         FOR i = 0 TO 31
+  $                             noise(i) = RND * 2 - 1
+  $                         NEXT
+  $                     END IF""","""                    SELECT CASE sfxr_v.waveShape
+  $                         CASE SFXR_NOISE
+  $                             FOR i = 0 TO 31
+  $                                 noise(i) = RND * 2 - 1
+  $                             NEXT
+  $                         CASE SFXR_PINK ' white noise through Paul Kellet's pink filter
+  $                             FOR i = 0 TO 31
+  $                                 wn = RND * 2 - 1
+  $                                 pk0 = 0.99765 * pk0 + wn * 0.099046
+  $                                 pk1 = 0.963 * pk1 + wn * 0.2965164
+  $                                 pk2 = 0.57 * pk2 + wn * 1.0526913
+  $                                 noise(i) = (pk0 + pk1 + pk2 + wn * 0.1848) * 0.3
+  $                             NEXT
+  $                         CASE SFXR_BROWN ' a random walk (leaky, so it stays put)
+  $                             FOR i = 0 TO 31
+  $                                 br = (br + (RND * 2 - 1) * 0.12) * 0.995
+  $                                 IF br > 1 THEN br = 1
+  $                                 IF br < -1 THEN br = -1
+  $                                 noise(i) = br * 1.6
+  $                             NEXT
+  $                         CASE SFXR_METAL ' a short 7-bit LFSR: a metallic, pitched buzz
+  $                             FOR i = 0 TO 31
+  $                                 lfsr = ((lfsr \\ 2) OR ((((lfsr XOR (lfsr \\ 2)) AND 1)) * 64)) AND 127
+  $                                 IF lfsr = 0 THEN lfsr = 1
+  $                                 IF lfsr AND 1 THEN noise(i) = 0.5 ELSE noise(i) = -0.5
+  $                             NEXT
+  $                     END SELECT""")
+  $ r("""                    CASE SFXR_SINE
+  $                         subSample = SIN(fp * 2 * _PI)
+  $                     CASE ELSE""","""                    CASE SFXR_SINE
+  $                         subSample = SIN(fp * 2 * _PI)
+  $                     CASE SFXR_TRIANGLE
+  $                         subSample = 1 - 4 * ABS(fp - 0.5)
+  $                     CASE ELSE ' the noises""")
+  $ r("""            IF sfxr_v.waveShape = SFXR_NOISE THEN
+  $                 f = f * 8 * 2 ^ (RND * 3 - 1.5)""","""            IF SFXR_IsNoise(sfxr_v.waveShape) THEN
+  $                 f = f * 8 * 2 ^ (RND * 3 - 1.5)""")
+  $ r("""        IF sfxr_divN > UBOUND(sfxr_div) THEN REDIM _PRESERVE sfxr_div(0 TO UBOUND(sfxr_div) * 2 + 1) AS LONG
+  $         sfxr_div(sfxr_divN) = d
+  $         sfxr_divN = sfxr_divN + 1
+  $     END SUB""","""        IF sfxr_divN > UBOUND(sfxr_div) THEN
+  $             REDIM _PRESERVE sfxr_div(0 TO UBOUND(sfxr_div) * 2 + 1) AS LONG
+  $             REDIM _PRESERVE sfxr_tickHzOut(0 TO UBOUND(sfxr_div)) AS SINGLE
+  $             REDIM _PRESERVE sfxr_tickEnv(0 TO UBOUND(sfxr_div)) AS SINGLE
+  $         END IF
+  $         sfxr_div(sfxr_divN) = d
+  $         ' the pitch and level too, for players that have volume (QB64-PE SOUND / PLAY)
+  $ ...[truncated]
+2026-10-03T14:52:13-0400  INFO     bash_end      [ok] 7L stdout
+  | PCSFXR.BAS:311:    IF ui_button(MID_X + bw * 3, y, MID_W - bw * 3, 28, "Noise", -(sfxr_p(0) = SFXR_NOISE)) THEN set_wave SFXR_NOISE
+  | PCSFXR.BAS:316:        IF sfxr_p(0) = SFXR_NOISE THEN
+  | SFXR.BM:189:                sfxr_p(0) = SFXR_NOISE
+  | SFXR.BM:240:                IF sfxr_p(0) = SFXR_SINE THEN sfxr_p(0) = SFXR_NOISE
+  | SFXR.BM:661:        SFXR_IsNoise = (w = SFXR_NOISE OR w = SFXR_PINK OR w = SFXR_BROWN OR w = SFXR_METAL)
+  | Beginning C++ output from QB64 code... 
+  | Output: /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/PCSFXR
+2026-10-03T14:52:46-0400  INFO     bash_start    cd /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER && python3 - <<'PYEOF' | p='PCSPLAY.BI'; s=open(p).read() | def r(a,b): | global s | assert s.count(a)==1,a[:80]; s=s.replace(a,b) | r(""" REDIM SHAR…
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PCSFXR
+  $ cd /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER && python3 - <<'PYEOF'
+  $ p='PCSPLAY.BI'; s=open(p).read()
+  $ def r(a,b):
+  $     global s
+  $     assert s.count(a)==1,a[:80]; s=s.replace(a,b)
+  $ r("""    REDIM SHARED pcspNV(0 TO 0) AS INTEGER ' how many voices it has (1 = just pcspData)""","""    REDIM SHARED pcspNV(0 TO 0) AS INTEGER ' how many voices it has (1 = just pcspData)
+  $     REDIM SHARED pcspRate(0 TO 0) AS LONG ' 0: IFS divisors; else a PCM sample (8-bit, this many Hz) played with PWM""")
+  $ r("""    DIM SHARED pcspTemp AS LONG ' the slot PCSP_Beep / Sweep / Noise use""","""    DIM SHARED pcspTemp AS LONG ' the slot PCSP_Beep / Sweep / Noise use
+  $     DIM SHARED pcspSfxPh AS DOUBLE ' a sample effect: where it is (in samples)""")
+  $ r("""'   PCSP_Music "THEME", PCSP_LOOP""","""'   i = PCSP_LoadWav("BOOM", "BOOM.WAV") ' a sample (PWMSFXR), played with PWM
+  $ '   PCSP_Music "THEME", PCSP_LOOP""")
+  $ open(p,'w').write(s)
+  $ 
+  $ p='PCSPLAY.BM'; s=open(p).read()
+  $ r("""            REDIM _PRESERVE pcspNV(0 TO pcspCount * 2 + 8) AS INTEGER""","""            REDIM _PRESERVE pcspNV(0 TO pcspCount * 2 + 8) AS INTEGER
+  $             REDIM _PRESERVE pcspRate(0 TO pcspCount * 2 + 8) AS LONG""")
+  $ r("""        pcspNV(pcspCount) = 1
+  $         PCSP_AddSound = pcspCount""","""        pcspNV(pcspCount) = 1
+  $         pcspRate(pcspCount) = 0
+  $         PCSP_AddSound = pcspCount""")
+  $ r("""    ''
+  $     ' A sound's number by name (any case), -1 if there's none.""","""    ''
+  $     ' A sample (a .wav: PCM, 8 or 16-bit, mono or stereo - PWMSFXR saves
+  $     ' them) as a sound effect called nm; it plays through the speaker with
+  $     ' PWM. Returns its number (-1 if it isn't a WAV it can read).
+  $     '
+  $     FUNCTION PCSP_LoadWav& (nm AS STRING, fileName AS STRING)
+  $         DIM ff AS LONG, d AS STRING
+  $         PCSP_LoadWav = -1
+  $         IF NOT _FILEEXISTS(fileName) THEN EXIT FUNCTION
+  $         ff = FREEFILE
+  $         OPEN fileName FOR BINARY AS #ff
+  $         d = SPACE$(LOF(ff))
+  $         GET #ff, 1, d
+  $         CLOSE #ff
+  $         PCSP_LoadWav = PCSP_LoadWavData(nm, d)
+  $     END FUNCTION
+  $ 
+  $ 
+  $     FUNCTION PCSP_LoadWavHex& (nm AS STRING, h AS STRING)
+  $         DIM d AS STRING, i AS LONG
+  $         d = SPACE$(LEN(h) \\ 2)
+  $         FOR i = 1 TO LEN(h) \\ 2
+  $             MID$(d, i, 1) = CHR$(VAL("&H" + MID$(h, i * 2 - 1, 2)))
+  $         NEXT
+  $         PCSP_LoadWavHex = PCSP_LoadWavData(nm, d)
+  $     END FUNCTION
+  $ 
+  $ 
+  $     FUNCTION PCSP_LoadWavData& (nm AS STRING, d AS STRING)
+  $         DIM p AS LONG, ck AS STRING, ln AS LONG, ch AS LONG, rate AS LONG, bits AS LONG, fmtOK AS INTEGER
+  $         DIM pcm AS STRING, n AS LONG, i AS LONG, v AS LONG, k AS LONG, a AS LONG
+  $         PCSP_LoadWavData = -1
+  $         PCSP_Init
+  $         IF LEFT$(d, 4) <> "RIFF" OR MID$(d, 9, 4) <> "WAVE" THEN EXIT FUNCTION
+  $         p = 13
+  $         DO WHILE p + 8 <= LEN(d)
+  $             ck = MID$(d, p, 4)
+  $             ln = CVL(MID$(d, p + 4, 4))
+  $             IF ck = "fmt " THEN
+  $                 fmtOK = (CVI(MID$(d, p + 8, 2)) = 1) ' PCM
+  $                 ch = CVI(MID$(d, p + 10, 2))
+  $                 rate = CVL(MID$(d, p + 12, 4))
+  $                 bits = CVI(MID$(d, p + 22, 2))
+  $             ELSEIF ck = "data" AND fmtOK AND ch >= 1 AND (bits = 8 OR bits = 16) THEN
+  $                 ' to 8-bit unsigned mono
+  $                 n = ln \\ (ch * bits \\ 8)
+  $                 pcm = SPACE$(n)
+  $                 FOR i = 0 TO n - 1
+  $                     a = 0
+  $                     FOR k = 0 TO ch - 1
+  $                         IF bits = 8 THEN
+  $                             v = ASC(d, p + 8 + i * ch + k) - 128
+  $                         ELSE
+  $                             v = CVI(MID$(d, p + 8 + (i * ch + k) * 2, 2)) \\ 256
+  $                         END IF
+  $                         a = a + v
+  $                     NEXT
+  $                     v = a \\ ch + 128
+  $                     IF v < 0 THEN v = 0
+  $ ...[truncated]
+2026-10-03T14:52:46-0400  INFO     bash_end      [ok] 1L stdout
+  | ok
+2026-10-03T14:52:54-0400  INFO     bash_start    cd /home/grymmjack/git/qb64/qb64/SOUND/PCSFXR && sed -n 1,215p PCSFXR.BAS
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ cd /home/grymmjack/git/qb64/qb64/SOUND/PCSFXR && sed -n 1,215p PCSFXR.BAS
+2026-10-03T14:52:54-0400  INFO     bash_end      [ok] 215L stdout
+  | ''
+  | ' PCSFXR.BAS - sfxr for the PC speaker
+  | '
+  | ' A QB64-PE take on sfxr.me (jsfxr): roll random game sound effects, tweak
+  | ' them with sliders, and hear them the way a DOS PC would play them:
+  | '
+  | '   Beeper  sfxr's pitch engine sampled at a tick rate (140 Hz like Duke
+  | '           Nukem 1 and Commander Keen) and played as PIT divisors through
+  | '           the emulated PC speaker. Export it as a Duke/Keen .SND bank, a
+  | '           ready-to-run .BAS program, or a .WAV.
+  | '   PWM     the full sfxr waveform played through the 1-bit speaker with
+  | '           pulse width modulation - the RealSound / demo scene trick.
+  | '   sfxr    the original sfxr sound, for comparison.
+  | '
+  | ' Sounds load and save as jsfxr .json files and sfxr.me links, so you can
+  | ' design a sound on https://sfxr.me and paste it here, or the other way round.
+  | '
+  | ' Mouse: click buttons, drag sliders, right-click a slider to reset it.
+  | ' Keys:  Space play, Ctrl+C copy sfxr.me link, Ctrl+V paste link/json, Esc quit
+  | ' Drop a .json file on the window to load it.
+  | '
+  | OPTION _EXPLICIT
+  | '$INCLUDE:'../PC-SPEAKER/PCSPKR.BI'
+  | '$INCLUDE:'SFXR.BI'
+  | 
+  | CONST SCR_W = 1190
+  | CONST SCR_H = 800
+  | 
+  | CONST LEFT_X = 16
+  | CONST LEFT_W = 172
+  | CONST MID_X = 212
+  | CONST MID_W = 596
+  | CONST TRACK_W = 190
+  | CONST RIGHT_X = 832
+  | CONST RIGHT_W = 342
+  | CONST COL_Y = 84
+  | 
+  | CONST PLOT_Y = 432
+  | CONST PLOT_H = 128
+  | CONST PLOT_N = 342
+  | 
+  | CONST ID_GAIN = 100
+  | CONST ID_GATE = 101
+  | 
+  | ' --- UI input state (immediate-mode GUI) ---
+  | DIM SHARED mx AS LONG, my AS LONG, mb AS INTEGER, mb2 AS INTEGER
+  | DIM SHARED pressEdge AS INTEGER, rpressEdge AS INTEGER
+  | DIM SHARED dragId AS LONG, releasedId AS LONG, resetId AS LONG
+  | 
+  | ' --- app state ---
+  | DIM SHARED snd AS LONG
+  | DIM SHARED sndName AS STRING
+  | DIM SHARED statusMsg AS STRING
+  | DIM SHARED statusUntil AS DOUBLE
+  | DIM SHARED coneLP AS INTEGER
+  | DIM SHARED needRender AS INTEGER
+  | DIM SHARED playAfter AS INTEGER
+  | DIM SHARED quitApp AS INTEGER
+  | REDIM SHARED bankName(0 TO 15) AS STRING
+  | REDIM SHARED bankData(0 TO 15) AS STRING
+  | DIM SHARED bankCount AS LONG
+  | DIM SHARED plotMin(0 TO PLOT_N - 1) AS SINGLE
+  | DIM SHARED plotMax(0 TO PLOT_N - 1) AS SINGLE
+  | DIM SHARED logoImg AS LONG, logoShadow AS LONG
+  | 
+  | ' colours
+  | DIM SHARED cBg AS _UNSIGNED LONG, cText AS _UNSIGNED LONG, cDim AS _UNSIGNED LONG
+  | DIM SHARED cBtn AS _UNSIGNED LONG, cBtnHi AS _UNSIGNED LONG, cOrange AS _UNSIGNED LONG
+  | DIM SHARED cGreen AS _UNSIGNED LONG, cTrack AS _UNSIGNED LONG, cLine AS _UNSIGNED LONG
+  | DIM SHARED cBlue AS _UNSIGNED LONG
+  | 
+  | DIM k AS LONG, f AS STRING, prevMb AS INTEGER, prevMb2 AS INTEGER, pressX AS LONG, pressY AS LONG
+  | 
+  | cBg = _RGB32(255, 255, 255)
+  | cText = _RGB32(20, 20, 20)
+  | cDim = _RGB32(170, 170, 170)
+  | cBtn = _RGB32(96, 96, 96)
+  | cBtnHi = _RGB32(120, 120, 120)
+  | cOrange = _RGB32(243, 140, 18)
+  | cGreen = _RGB32(52, 150, 40)
+  | ...[truncated]
+2026-10-03T14:52:56-0400  INFO     bash_start    sed -n 268,460p PCSFXR.BAS; sed -n 545,620p PCSFXR.BAS
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PCSFXR
+  $ sed -n 268,460p PCSFXR.BAS; sed -n 545,620p PCSFXR.BAS
+2026-10-03T14:52:56-0400  INFO     bash_end      [ok] 267L stdout
+  |     y = y + 30: IF ui_button(LEFT_X, y, LEFT_W, 26, "Laser/shoot", 0) THEN generate "laserShoot"
+  |     y = y + 30: IF ui_button(LEFT_X, y, LEFT_W, 26, "Explosion", 0) THEN generate "explosion"
+  |     y = y + 30: IF ui_button(LEFT_X, y, LEFT_W, 26, "Powerup", 0) THEN generate "powerUp"
+  |     y = y + 30: IF ui_button(LEFT_X, y, LEFT_W, 26, "Hit/hurt", 0) THEN generate "hitHurt"
+  |     y = y + 30: IF ui_button(LEFT_X, y, LEFT_W, 26, "Jump", 0) THEN generate "jump"
+  |     y = y + 30: IF ui_button(LEFT_X, y, LEFT_W, 26, "Click", 0) THEN generate "click"
+  |     y = y + 30: IF ui_button(LEFT_X, y, LEFT_W, 26, "Blip/select", 0) THEN generate "blipSelect"
+  |     y = y + 30: IF ui_button(LEFT_X, y, LEFT_W, 26, "Synth", 0) THEN generate "synth"
+  |     y = y + 30: IF ui_button(LEFT_X, y, LEFT_W, 26, "Tone", 0) THEN generate "tone"
+  |     y = y + 44
+  |     IF ui_button(LEFT_X, y, LEFT_W, 26, "Mutate", 0) THEN
+  |         SFXR_Mutate
+  |         needRender = -1
+  |         playAfter = -1
+  |     END IF
+  |     y = y + 40
+  |     IF ui_button(LEFT_X, y, LEFT_W, 30, "Play", 2) THEN play_sound
+  | 
+  |     COLOR _RGB32(110, 110, 110)
+  |     y = y + 50
+  |     _PRINTSTRING (LEFT_X, y), "Space    play"
+  |     _PRINTSTRING (LEFT_X, y + 16), "Ctrl+C   copy link"
+  |     _PRINTSTRING (LEFT_X, y + 32), "Ctrl+V   paste link"
+  |     _PRINTSTRING (LEFT_X, y + 48), "R-click  reset slider"
+  |     _PRINTSTRING (LEFT_X, y + 64), "Esc      quit"
+  |     COLOR _RGB32(150, 150, 150)
+  |     _PRINTSTRING (LEFT_X, y + 96), "Sound: " + sndName
+  | END SUB
+  | 
+  | 
+  | '-----------------------------------------------------------------------------
+  | ' Middle column: wave type + all the sfxr sliders
+  | '-----------------------------------------------------------------------------
+  | 
+  | SUB draw_settings
+  |     DIM y AS LONG, bw AS LONG, i AS LONG, isBeep AS INTEGER
+  | 
+  |     title MID_X, MID_W, "Manual Settings"
+  |     bw = MID_W \ 4
+  |     y = COL_Y + 24
+  |     IF ui_button(MID_X, y, bw, 28, "Square", -(sfxr_p(0) = SFXR_SQUARE)) THEN set_wave SFXR_SQUARE
+  |     IF ui_button(MID_X + bw, y, bw, 28, "Sawtooth", -(sfxr_p(0) = SFXR_SAWTOOTH)) THEN set_wave SFXR_SAWTOOTH
+  |     IF ui_button(MID_X + bw * 2, y, bw, 28, "Sine", -(sfxr_p(0) = SFXR_SINE)) THEN set_wave SFXR_SINE
+  |     IF ui_button(MID_X + bw * 3, y, MID_W - bw * 3, 28, "Noise", -(sfxr_p(0) = SFXR_NOISE)) THEN set_wave SFXR_NOISE
+  | 
+  |     isBeep = (sfxr_mode = SFXR_MODE_BEEPER)
+  |     IF isBeep THEN
+  |         COLOR _RGB32(150, 90, 0)
+  |         IF sfxr_p(0) = SFXR_NOISE THEN
+  |             _PRINTSTRING (MID_X, y + 34), "Beeper: noise = a random pitch every tick (DOS explosion style)"
+  |         ELSE
+  |             _PRINTSTRING (MID_X, y + 34), "Beeper: the PC speaker only plays square waves at 50% duty"
+  |         END IF
+  |     END IF
+  | 
+  |     y = COL_Y + 80
+  |     y = section(y, "Envelope", 0)
+  |     FOR i = SP_ATTACK TO SP_DECAY: y = param_row(y, i): NEXT
+  |     y = section(y, "Frequency", 0)
+  |     FOR i = SP_BASE_FREQ TO SP_FREQ_DRAMP: y = param_row(y, i): NEXT
+  |     y = section(y, "Vibrato", 0)
+  |     FOR i = SP_VIB_STRENGTH TO SP_VIB_SPEED: y = param_row(y, i): NEXT
+  |     y = section(y, "Arpeggiation", 0)
+  |     FOR i = SP_ARP_MOD TO SP_ARP_SPEED: y = param_row(y, i): NEXT
+  |     y = section(y, "Duty Cycle", isBeep)
+  |     FOR i = SP_DUTY TO SP_DUTY_RAMP: y = param_row(y, i): NEXT
+  |     y = section(y, "Retrigger", 0)
+  |     y = param_row(y, SP_REPEAT_SPEED)
+  |     y = section(y, "Flanger", isBeep)
+  |     FOR i = SP_PHA_OFFSET TO SP_PHA_RAMP: y = param_row(y, i): NEXT
+  |     y = section(y, "Low-Pass Filter", isBeep)
+  |     FOR i = SP_LPF_FREQ TO SP_LPF_RESONANCE: y = param_row(y, i): NEXT
+  |     y = section(y, "High-Pass Filter", isBeep)
+  |     FOR i = SP_HPF_FREQ TO SP_HPF_RAMP: y = param_row(y, i): NEXT
+  | END SUB
+  | 
+  | 
+  | SUB set_wave (w AS LONG)
+  |     sfxr_p(0) = w
+  |     needRender = -1
+  | ...[truncated]
+2026-10-03T14:52:58-0400  INFO     bash_start    n=$(grep -n "^SUB title" PCSFXR.BAS | cut -d: -f1); sed -n "$n,\$p" PCSFXR.BAS | grep -v "^$" | head -90; grep -n "SUB set_status" -A8 PCSFXR.BAS | head -10; sed -n 135,145p SFXR.BM; grep -n "CASE \"…
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PCSFXR
+  $ n=$(grep -n "^SUB title" PCSFXR.BAS | cut -d: -f1); sed -n "$n,\$p" PCSFXR.BAS | grep -v "^$" | head -90; grep -n "SUB set_status" -A8 PCSFXR.BAS | head -10; sed -n 135,145p SFXR.BM; grep -n "CASE \"" SFXR.BM | head -20
+2026-10-03T14:52:58-0400  INFO     bash_end      [ok] 93L stdout
+  | SUB title (x AS LONG, w AS LONG, s AS STRING)
+  |     COLOR cText
+  |     _PRINTSTRING (x + (w - 8 * LEN(s)) \ 2, COL_Y), s
+  |     _PRINTSTRING (x + (w - 8 * LEN(s)) \ 2 + 1, COL_Y), s
+  | END SUB
+  | ''
+  | ' Draw a button; returns TRUE when it was clicked this frame.
+  | ' style: 0 = grey, 1 = selected (orange), 2 = green (play)
+  | '
+  | FUNCTION ui_button%% (x AS LONG, y AS LONG, w AS LONG, h AS LONG, label AS STRING, style AS INTEGER)
+  |     DIM over AS INTEGER, c AS _UNSIGNED LONG, c2 AS _UNSIGNED LONG
+  |     over = (mx >= x AND mx < x + w AND my >= y AND my < y + h AND dragId = 0)
+  |     SELECT CASE style
+  |         CASE 1: c = cOrange: c2 = _RGB32(255, 170, 60)
+  |         CASE 2: c = cGreen: c2 = _RGB32(80, 180, 64)
+  |         CASE ELSE: c = cBtn: c2 = cBtnHi
+  |     END SELECT
+  |     IF over THEN SWAP c, c2
+  |     LINE (x + 1, y)-(x + w - 2, y + h - 1), c, BF
+  |     LINE (x + 1, y + h \ 2)-(x + w - 2, y + h - 1), _RGBA32(0, 0, 0, 30), BF
+  |     LINE (x + 1, y)-(x + w - 2, y + h - 1), _RGB32(70, 70, 70), B
+  |     COLOR _RGB32(255, 255, 255)
+  |     _PRINTSTRING (x + (w - 8 * LEN(label)) \ 2, y + (h - 16) \ 2), label
+  |     IF over AND pressEdge THEN ui_button = -1
+  | END FUNCTION
+  | ''
+  | ' Draw a slider and handle dragging it. Returns the (possibly new) value.
+  | ' Sets releasedId when a drag ends and resetId on right-click.
+  | '
+  | FUNCTION ui_slider# (id AS LONG, x AS LONG, y AS LONG, w AS LONG, value AS DOUBLE, lo AS DOUBLE, hi AS DOUBLE, enabled AS INTEGER)
+  |     DIM v AS DOUBLE, kx AS LONG, over AS INTEGER, kc AS _UNSIGNED LONG
+  |     v = value
+  |     over = (mx >= x - 8 AND mx <= x + w + 8 AND my >= y - 2 AND my < y + 16)
+  |     IF enabled THEN
+  |         IF over AND pressEdge AND dragId = 0 THEN dragId = id
+  |         IF over AND rpressEdge AND dragId = 0 THEN resetId = id
+  |         IF dragId = id THEN
+  |             v = lo + (mx - x) / w * (hi - lo)
+  |             IF v < lo THEN v = lo
+  |             IF v > hi THEN v = hi
+  |         END IF
+  |     END IF
+  |     LINE (x, y + 3)-(x + w, y + 12), cTrack, BF
+  |     IF lo < 0 THEN LINE (x + w \ 2, y + 3)-(x + w \ 2, y + 12), _RGB32(90, 90, 90)
+  |     kx = x + CLNG((v - lo) / (hi - lo) * w)
+  |     IF enabled THEN kc = cOrange ELSE kc = cDim
+  |     fill_circle kx, y + 7, 7, _RGB32(60, 60, 60)
+  |     fill_circle kx, y + 7, 5, kc
+  |     ui_slider = v
+  | END FUNCTION
+  | SUB fill_circle (cx AS LONG, cy AS LONG, r AS LONG, c AS _UNSIGNED LONG)
+  |     DIM dy AS LONG, dx AS LONG
+  |     FOR dy = -r TO r
+  |         dx = INT(SQR(r * r - dy * dy))
+  |         LINE (cx - dx, cy + dy)-(cx + dx, cy + dy), c
+  |     NEXT
+  | END SUB
+  | FUNCTION fmtnum$ (x AS DOUBLE, d AS LONG)
+  |     fmtnum = SFXR_Fixed(ABS(x), d)
+  |     IF x < 0 THEN fmtnum = "-" + SFXR_Fixed(ABS(x), d)
+  | END FUNCTION
+  | '$INCLUDE:'../PC-SPEAKER/PCSPKR.BM'
+  | '$INCLUDE:'SFXR.BM'
+  | 923:SUB set_status (msg AS STRING)
+  | 924-    statusMsg = msg
+  | 925-    statusUntil = TIMER(0.001) + 5
+  | 926-END SUB
+  | 927-
+  | 928-
+  | 929-'-----------------------------------------------------------------------------
+  | 930-' Immediate-mode widgets
+  | 931-'-----------------------------------------------------------------------------
+  |     SUB SFXR_Preset (kind AS STRING)
+  |         SFXR_Reset
+  |         SFXR_PresetInto kind
+  |         SFXR_Clamp
+  |     END SUB
+  | 
+  | 
+  |     SUB SFXR_PresetInto (kind AS STRING)
+  | ...[truncated]
+2026-10-03T14:57:12-0400  INFO     bash_start    [t=300000ms] cd /home/grymmjack/git/qb64/qb64/SOUND/PWMSFXR && python3 - <<'PYEOF' | import re | p='PWMSFXR.BAS'; s=open(p).read() | def r(a,b,c=1): | global s | assert s.count(a)==c,(a[:90],s.count(…
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PCSFXR
+  $ cd /home/grymmjack/git/qb64/qb64/SOUND/PWMSFXR && python3 - <<'PYEOF'
+  $ import re
+  $ p='PWMSFXR.BAS'; s=open(p).read()
+  $ def r(a,b,c=1):
+  $     global s
+  $     assert s.count(a)==c,(a[:90],s.count(a)); s=s.replace(a,b)
+  $ # off -> ofs
+  $ r("""    DIM k AS LONG, i AS LONG, off AS LONG, gl AS SINGLE""","""    DIM k AS LONG, i AS LONG, ofs AS LONG, gl AS SINGLE""")
+  $ s=s.replace("            off = CLNG(vDelay(k) * SFXR_RATE)","            ofs = CLNG(vDelay(k) * SFXR_RATE)")
+  $ s=s.replace("            n = off + sfxr_pcmN","            n = ofs + sfxr_pcmN")
+  $ s=s.replace("                mixL(off + i) = mixL(off + i) + sfxr_pcm(i) * gl\n                mixR(off + i) = mixR(off + i) + sfxr_pcm(i) * gr","                mixL(ofs + i) = mixL(ofs + i) + sfxr_pcm(i) * gl\n                mixR(ofs + i) = mixR(ofs + i) + sfxr_pcm(i) * gr")
+  $ # ON button style
+  $ r("""    IF ui_button(MID_X, y, 70, 52, lab, -(vOn(sel) <> 0) - 2 * (vOn(sel) <> 0)) THEN""","""    IF vOn(sel) THEN i = 2 ELSE i = 0
+  $     IF ui_button(MID_X, y, 70, 52, lab, i) THEN""")
+  $ # wave_name
+  $ i=s.index("FUNCTION wave_name$ (w AS DOUBLE)"); j=s.index("END FUNCTION",i)+12
+  $ s=s[:i]+"""FUNCTION wave_name$ (w AS DOUBLE)
+  $     SELECT CASE w
+  $         CASE SFXR_SQUARE: wave_name = "square"
+  $         CASE SFXR_SAWTOOTH: wave_name = "sawtooth"
+  $         CASE SFXR_SINE: wave_name = "sine"
+  $         CASE SFXR_TRIANGLE: wave_name = "triangle"
+  $         CASE SFXR_NOISE: wave_name = "noise"
+  $         CASE SFXR_PINK: wave_name = "pink noise"
+  $         CASE SFXR_BROWN: wave_name = "brown noise"
+  $         CASE ELSE: wave_name = "metal (LFSR)"
+  $     END SELECT
+  $ END FUNCTION"""+s[j:]
+  $ # SOUND_/PLAY_ in demo
+  $ r("""    PRINT #ff, "        CASE "; CHR$(34); " "; CHR$(34); ": "; MID$("SOUND_PLAY_", kind * 6 + 1, 5 + (kind = 0) * -1); id""","""    IF kind = 0 THEN lst = "SOUND_" ELSE lst = "PLAY_"
+  $     PRINT #ff, "        CASE "; CHR$(34); " "; CHR$(34); ": "; lst; id
+  $     lst = \"\"""")
+  $ # write_sound: run -> rn
+  $ i=s.index("SUB write_sound"); j=s.index("END SUB",i)
+  $ blk=s[i:j]
+  $ blk=re.sub(r'\brun\b','rn',blk)
+  $ s=s[:i]+blk+s[j:]
+  $ # write_play rewrite
+  $ i=s.index("''\n' A voice as MML"); j=s.index("FUNCTION fmt_n$")
+  $ s=s[:i]+"""''
+  $ ' A voice as MML: at T255 a 1/n note is 131.76 / n ticks of 1/140 s, so
+  $ ' each run of one note and level (and the delay, as a rest) becomes the
+  $ ' notes that fill it, keeping the total within about a tick.
+  $ '
+  $ SUB write_play (ff AS LONG, k AS LONG, v AS STRING)
+  $     CONST UNIT = 131.7647058823529
+  $     DIM n AS LONG, t AS LONG, nt AS LONG, vol AS LONG, rn AS LONG, cnt AS LONG, i AS LONG
+  $     DIM m AS STRING, ideal AS DOUBLE, done AS DOUBLE, nl AS LONG, lastL AS LONG, lastV AS LONG, hz AS SINGLE
+  $     n = LEN(tHz(k)) \\ 4
+  $     ' the runs: note (0 = rest), level 0-100, ticks
+  $     REDIM rNt(0 TO n + 1) AS LONG, rVol(0 TO n + 1) AS LONG, rLen(0 TO n + 1) AS LONG
+  $     IF tDelay(k) > 0 THEN rNt(0) = 0: rVol(0) = 0: rLen(0) = tDelay(k): cnt = 1
+  $     FOR t = 0 TO n - 1
+  $         hz = CVS(MID$(tHz(k), t * 4 + 1, 4))
+  $         vol = CLNG(tick_vol(k, t) * 100)
+  $         nt = 0
+  $         IF hz >= 30 AND vol > 0 THEN nt = CLNG(12 * LOG(hz / 440) / LOG(2)) + 45 ' (N45 = A 440)
+  $         IF nt > 84 THEN nt = 84
+  $         IF nt < 0 THEN nt = 0
+  $         IF nt = 0 THEN vol = 0
+  $         IF cnt > 0 THEN
+  $             IF rNt(cnt - 1) = nt AND ABS(rVol(cnt - 1) - vol) <= 6 THEN rLen(cnt - 1) = rLen(cnt - 1) + 1: _CONTINUE
+  $         END IF
+  $         rNt(cnt) = nt: rVol(cnt) = vol: rLen(cnt) = 1: cnt = cnt + 1
+  $     NEXT
+  $     m = "MB T255 ML @" + LTRIM$(STR$(qb_wave(k))) + " "
+  $     lastV = -1
+  $     FOR i = 0 TO cnt - 1
+  $         ideal = ideal + rLen(i)
+  $         DO
+  $             IF ideal - done < UNIT / 128 THEN EXIT DO ' (under half the shortest note: carried on)
+  $             nl = -INT(-UNIT / (ideal - done))
+  $             IF nl < 1 THEN nl = 1
+  $             IF nl > 64 THEN nl = 64
+  $             IF nl <> lastL THEN m = m + "L" + LTRIM$(STR$(nl)): lastL = nl
+  $             IF rNt(i) > 0 THEN
+  $                 IF rVol(i) <> lastV THEN m = m + "V" + LTRIM$(STR$(rVol(i))): lastV = rVol(i)
+  $                 m = m + "N" + LTRIM$(STR$(rNt(i)))
+  $             ELSE
+  $                 m = m + "N0"
+  $ ...[truncated]
+2026-10-03T14:57:14-0400  INFO     bash_end      [ok] 5L stdout
+  | 318:    IF mixN = 0 THEN set_status "Every voice is off": EXIT SUB
+  | 531:        IF vOn(k) THEN lab = lab + " (" + MID$("SqSaSiTrNoPiBrMe", vp(k, 0) * 2 + 1, 2) + ")" ELSE lab = lab + " - off"
+  | 1105:                IF CVS(MID$(tEnv(k), t * 4 + 1, 4)) * vVol(k) < 0.02 THEN v = 0 ' (silent: off)
+  | Beginning C++ output from QB64 code... 
+  | Output: /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/PWMSFXR
+2026-10-03T14:57:29-0400  INFO     bash_start    [t=400000ms] export SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad; rm -rf $SP/pw && mkdir -p $SP/pw/home $SP/pw/run && cd /home/grymmjack/git/qb64/qb64/…
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PWMSFXR
+  $ export SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad; rm -rf $SP/pw && mkdir -p $SP/pw/home $SP/pw/run && cd /home/grymmjack/git/qb64/qb64/SOUND/PWMSFXR && python3 - <<'PYEOF'
+  $ import os
+  $ SP=os.environ['SP']
+  $ s=open('PWMSFXR.BAS').read()
+  $ s=s.replace('f = _SAVEFILEDIALOG$("Save the sound", export_path(".pwmsfx"), "*.pwmsfx|*.PWMSFX", "PWMSFXR sounds")','f = "EXPORT/test.pwmsfx"')
+  $ a="""    _DISPLAY
+  $     _LIMIT 60
+  $ LOOP UNTIL quitApp"""
+  $ assert a in s
+  $ s=s.replace(a,"""    _DISPLAY
+  $     STATIC tsN AS LONG
+  $     tsN = tsN + 1
+  $     IF tsN = 5 THEN
+  $         _SAVEIMAGE "SPX/pw/ui.png", 0
+  $         OPEN "SPX/pw/t.txt" FOR OUTPUT AS #9
+  $         PRINT #9, "mixN"; mixN; " voices"; voices_on; " name "; sndName
+  $         export_wav 0: export_wav 1: export_wav 2: PRINT #9, statusMsg
+  $         export_pcsplay: PRINT #9, statusMsg
+  $         export_code 0: PRINT #9, statusMsg
+  $         export_code 1: PRINT #9, statusMsg
+  $         send_to_pcsedit: PRINT #9, statusMsg
+  $         save_patch: PRINT #9, statusMsg
+  $         vOn(1) = 0: vOn(2) = 0: load_patch "EXPORT/test.pwmsfx": PRINT #9, statusMsg; " on:"; vOn(1); vOn(2); vOn(3); vOn(4)
+  $         CLOSE #9
+  $         quitApp = -1
+  $     END IF
+  $     _LIMIT 60
+  $ LOOP UNTIL quitApp""".replace('SPX',SP))
+  $ open('_PWT.BAS','w').write(s)
+  $ PYEOF
+  $ timeout 290 /home/grymmjack/git/qb64pe/qb64pe -x _PWT.BAS -o $SP/pw/PWT 2>&1 | grep -iE "error|line [0-9]|Output"; rm -f _PWT.BAS; cd $SP/pw/run && env -u WAYLAND_DISPLAY -u XDG_CURRENT_DESKTOP -u KDE_FULL_SESSION -u XDG_SESSION_TYPE QT_QPA_PLATFORM=xcb DISPLAY=:99 HOME=$SP/pw/home timeout 60 ../PWT 2>&1 | grep -v kf.window | tail -3; cat ../t.txt; ls -la EXPORT/; ls ../home/.config/pcsedit-inbox/
+2026-10-03T14:57:41-0400  INFO     bash_start    [t=400000ms] export SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad; cd /home/grymmjack/git/qb64/qb64/SOUND/PWMSFXR && python3 - <<'PYEOF' | import os | S…
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PWMSFXR
+  $ export SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad; cd /home/grymmjack/git/qb64/qb64/SOUND/PWMSFXR && python3 - <<'PYEOF'
+  $ import os
+  $ SP=os.environ['SP']
+  $ s=open('PWMSFXR.BAS').read()
+  $ s=s.replace('f = _SAVEFILEDIALOG$("Save the sound", export_path(".pwmsfx"), "*.pwmsfx|*.PWMSFX", "PWMSFXR sounds")','f = "EXPORT/test.pwmsfx"')
+  $ s=s.replace("DIM k AS LONG, f AS STRING, prevMb AS INTEGER","DIM tsN AS LONG\nDIM k AS LONG, f AS STRING, prevMb AS INTEGER",1)
+  $ a="""    _DISPLAY
+  $     _LIMIT 60
+  $ LOOP UNTIL quitApp"""
+  $ s=s.replace(a,"""    _DISPLAY
+  $     tsN = tsN + 1
+  $     IF tsN = 5 THEN
+  $         _SAVEIMAGE "SPX/pw/ui.png", 0
+  $         OPEN "SPX/pw/t.txt" FOR OUTPUT AS #9
+  $         PRINT #9, "mixN"; mixN; " voices"; voices_on; " name "; sndName
+  $         export_wav 0: export_wav 1: export_wav 2: PRINT #9, statusMsg
+  $         export_pcsplay: PRINT #9, statusMsg
+  $         export_code 0: PRINT #9, statusMsg
+  $         export_code 1: PRINT #9, statusMsg
+  $         send_to_pcsedit: PRINT #9, statusMsg
+  $         save_patch: PRINT #9, statusMsg
+  $         vOn(1) = 0: vOn(2) = 0: load_patch "EXPORT/test.pwmsfx": PRINT #9, statusMsg; " on:"; vOn(1); vOn(2); vOn(3); vOn(4)
+  $         CLOSE #9
+  $         quitApp = -1
+  $     END IF
+  $     _LIMIT 60
+  $ LOOP UNTIL quitApp""".replace('SPX',SP))
+  $ open('_PWT.BAS','w').write(s)
+  $ PYEOF
+  $ timeout 290 /home/grymmjack/git/qb64pe/qb64pe -x _PWT.BAS -o $SP/pw/PWT 2>&1 | grep -iE "error|line [0-9]|Output|not |already|expected" | head -5; rm -f _PWT.BAS; cd $SP/pw/run && env -u WAYLAND_DISPLAY -u XDG_CURRENT_DESKTOP -u KDE_FULL_SESSION -u XDG_SESSION_TYPE QT_QPA_PLATFORM=xcb DISPLAY=:99 HOME=$SP/pw/home timeout 60 ../PWT 2>&1 | grep -v kf.window | tail -3; cat ../t.txt; ls -la EXPORT/; ls ../home/.config/pcsedit-inbox/
+2026-10-03T14:57:43-0400  WARNING  bash_end      [stderr] 12L stdout / 2L stderr
+  | Beginning C++ output from QB64 code... 
+  | Output: /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/pw/PWT
+  | mixN 10832  voices 3  name explosion
+  | Saved EXPORT/EXPLOSION-8bit.wav
+  | Saved EXPORT/EXPLOSION_PCSPLAY.BM and EXPORT/EXPLOSION.wav (PCSP_LoadWav)
+  | Saved EXPORT/EXPLOSION_SOUND.BAS - open it in QB64-PE and press F5
+  | Saved EXPORT/EXPLOSION_PLAY.BAS - open it in QB64-PE and press F5
+  | EXPLOSION is waiting in PCSEDIT's inbox - start PCSEDIT to get it
+  | Saved EXPORT/test.pwmsfx
+  | Loaded EXPORT/test.pwmsfx on:-1 -1 -1  0 
+  | "EXPORT/": No such file or directory (os error 2)
+  | pwmsfxr_20261003_5386390_0001.snd
+  ! 
+  ! Shell cwd was reset to /home/grymmjack/git/qb64
+2026-10-03T14:57:51-0400  INFO     bash_start    cd /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/pw && ls -la EXPORT/; sed -n 1,30p EXPORT/EXPLOSION_SOUND.BAS | cut -c1-200; grep -c "SOUND " EXPORT/EXPLO…
+  > cwd: /home/grymmjack/git/qb64
+  $ cd /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/pw && ls -la EXPORT/; sed -n 1,30p EXPORT/EXPLOSION_SOUND.BAS | cut -c1-200; grep -c "SOUND " EXPORT/EXPLOSION_SOUND.BAS; sed -n 18,30p EXPORT/EXPLOSION_PLAY.BAS | cut -c1-140
+2026-10-03T14:57:51-0400  WARNING  bash_end      [stderr] 48L stdout / 2L stderr
+  | .rw-rw-r-- 2.8k grymmjack  3 Oct 14:57 EXPLOSION-8bit.wav
+  | .rw-rw-r--  28k grymmjack  3 Oct 14:57 EXPLOSION-pwm.wav
+  | .rw-rw-r-- 2.8k grymmjack  3 Oct 14:57 EXPLOSION.wav
+  | .rw-rw-r-- 6.7k grymmjack  3 Oct 14:57 EXPLOSION_PCSPLAY.BM
+  | .rw-rw-r--  716 grymmjack  3 Oct 14:57 EXPLOSION_PLAY.BAS
+  | .rw-rw-r-- 1.0k grymmjack  3 Oct 14:57 EXPLOSION_SOUND.BAS
+  | .rw-rw-r-- 2.9k grymmjack  3 Oct 14:57 test.pwmsfx
+  | ''
+  | ' EXPLOSION - a PWMSFXR sound as QB64-PE SOUND statements (QB64-PE 4+)
+  | '
+  | ' Each voice is a SOUND voice with its waveform, volume and pan, queued
+  | ' (SOUND WAIT ... SOUND RESUME) so it plays while your program goes on.
+  | ' Copy SOUND_EXPLOSION into your game. (Filters and flanger are left out:
+  | ' SOUND has no such thing.)
+  | '
+  | PRINT "EXPLOSION: Space plays it, Esc quits"
+  | DO
+  |     SELECT CASE INKEY$
+  |         CASE " ": SOUND_EXPLOSION
+  |         CASE CHR$(27): EXIT DO
+  |     END SELECT
+  |     _LIMIT 60
+  | LOOP
+  | SYSTEM
+  | 
+  | SUB SOUND_EXPLOSION
+  |     SOUND WAIT
+  |     ' voice 1 - noise
+  |     SOUND 0, 3.51, 0, 0, 5, 0, 0
+  |     ' voice 2 - brown noise
+  |     SOUND 0, 4.55, 0, 0, 7, 0, 1
+  |     ' voice 3 - sine
+  |     SOUND 94, 0.13, 1, 0, 4, 0, 2: SOUND 82, 0.13, 0.78, 0, 4, 0, 2: SOUND 72, 0.13, 0.52, 0, 4, 0, 2
+  |     SOUND 63, 0.13, 0.5, 0, 4, 0, 2: SOUND 55, 0.13, 0.48, 0, 4, 0, 2: SOUND 48, 0.13, 0.46, 0, 4, 0, 2
+  |     SOUND 42, 0.13, 0.44, 0, 4, 0, 2: SOUND 0, 3.12, 0, 0, 4, 0, 2
+  |     SOUND RESUME
+  | END SUB
+  | 11
+  | SUB PLAY_EXPLOSION
+  |     DIM a AS STRING, b AS STRING, c AS STRING, d AS STRING
+  |     a = ""
+  |     a = a + "MB T255 ML @5 L5N0"
+  |     b = ""
+  |     b = b + "MB T255 ML @7 L4N0L64N0"
+  |     c = ""
+  |     c = c + "MB T255 ML @4 L64V77N16V49N11V46N7V42N2L6N0"
+  |     PLAY a, b, c
+  | END SUB
+  ! 
+  ! Shell cwd was reset to /home/grymmjack/git/qb64
+2026-10-03T14:58:08-0400  INFO     bash_start    cd /home/grymmjack/git/qb64/qb64/SOUND/PWMSFXR && python3 - <<'PYEOF' | p='PWMSFXR.BAS'; s=open(p).read() | n=s.count('"SqSaSiTrNoPiBrMe"'); assert n==2, n | s=s.replace('"SqSaSiTrNoPiBrMe"','"SqSaSi…
+  > cwd: /home/grymmjack/git/qb64
+  $ cd /home/grymmjack/git/qb64/qb64/SOUND/PWMSFXR && python3 - <<'PYEOF'
+  $ p='PWMSFXR.BAS'; s=open(p).read()
+  $ n=s.count('"SqSaSiTrNoPiBrMe"'); assert n==2, n
+  $ s=s.replace('"SqSaSiTrNoPiBrMe"','"SqSaSiNoTrPiBrMe"')
+  $ def r(a,b):
+  $     global s
+  $     assert s.count(a)==1,a[:80]; s=s.replace(a,b)
+  $ r("""            hz = CVS(MID$(tHz(k), t * 4 + 1, 4)): vol = tick_vol(k, t)
+  $             IF hz < 37""","""            hz = tick_hz(k, t): vol = tick_vol(k, t)
+  $             IF hz < 37""")
+  $ r("""        hz = CVS(MID$(tHz(k), t * 4 + 1, 4))
+  $         vol = CLNG(tick_vol(k, t) * 100)""","""        hz = tick_hz(k, t)
+  $         vol = CLNG(tick_vol(k, t) * 100)""")
+  $ r("""SUB write_sound (ff AS LONG, k AS LONG, ch AS LONG)""","""''
+  $ ' A voice's pitch at tick t for SOUND / PLAY. sfxr's noise holds 32 random
+  $ ' values a period, so a noise voice's real rate is 32 times its pitch.
+  $ '
+  $ FUNCTION tick_hz! (k AS LONG, t AS LONG)
+  $     DIM hz AS SINGLE
+  $     hz = CVS(MID$(tHz(k), t * 4 + 1, 4))
+  $     IF SFXR_IsNoise(vp(k, 0)) THEN
+  $         hz = hz * 32
+  $         IF hz > 16000 THEN hz = 16000
+  $     END IF
+  $     tick_hz = hz
+  $ END FUNCTION
+  $ 
+  $ 
+  $ SUB write_sound (ff AS LONG, k AS LONG, ch AS LONG)""")
+  $ open(p,'w').write(s)
+  $ PYEOF
+  $ echo ok
+2026-10-03T14:58:08-0400  INFO     bash_end      [ok] 1L stdout
+  | ok
+2026-10-03T14:58:23-0400  INFO     bash_start    [BG] export SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad; cd /home/grymmjack/git/qb64/qb64/SOUND/PWMSFXR && python3 - <<'PYEOF' | import os | SP=os.env…
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PWMSFXR
+  $ export SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad; cd /home/grymmjack/git/qb64/qb64/SOUND/PWMSFXR && python3 - <<'PYEOF'
+  $ import os
+  $ SP=os.environ['SP']
+  $ s=open('PWMSFXR.BAS').read()
+  $ s=s.replace('f = _SAVEFILEDIALOG$("Save the sound", export_path(".pwmsfx"), "*.pwmsfx|*.PWMSFX", "PWMSFXR sounds")','f = "EXPORT/test.pwmsfx"')
+  $ s=s.replace("DIM k AS LONG, f AS STRING, prevMb AS INTEGER","DIM tsN AS LONG\nDIM k AS LONG, f AS STRING, prevMb AS INTEGER",1)
+  $ a="""    _DISPLAY
+  $     _LIMIT 60
+  $ LOOP UNTIL quitApp"""
+  $ s=s.replace(a,"""    _DISPLAY
+  $     tsN = tsN + 1
+  $     IF tsN = 5 THEN
+  $         _SAVEIMAGE "SPX/pw/ui.png", 0
+  $         export_wav 2: export_pcsplay: export_code 0: export_code 1
+  $         quitApp = -1
+  $     END IF
+  $     _LIMIT 60
+  $ LOOP UNTIL quitApp""".replace('SPX',SP))
+  $ open('_PWT.BAS','w').write(s)
+  $ PYEOF
+  $ timeout 290 /home/grymmjack/git/qb64pe/qb64pe -x _PWT.BAS -o $SP/pw/PWT 2>&1 | grep -iE "error|line [0-9]|Output"; rm -f _PWT.BAS; cd $SP/pw/run && env -u WAYLAND_DISPLAY -u XDG_CURRENT_DESKTOP -u KDE_FULL_SESSION -u XDG_SESSION_TYPE QT_QPA_PLATFORM=xcb DISPLAY=:99 HOME=$SP/pw/home timeout 60 ../PWT >/dev/null 2>&1; cd $SP/pw/EXPORT && sed -n 19,26p EXPLOSION_SOUND.BAS | cut -c1-160; for f in EXPLOSION_SOUND EXPLOSION_PLAY; do timeout 250 /home/grymmjack/git/qb64pe/qb64pe -x $f.BAS -o $SP/pw/$f 2>&1 | grep -iE "error|line [0-9]|Output"; done; cp /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER/PCSPKR.B? /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER/PCSPLAY.B? . && cat > PT.BAS <<'EOF'
+  $ $CONSOLE:ONLY
+  $ '$INCLUDE:'PCSPKR.BI'
+  $ '$INCLUDE:'PCSPLAY.BI'
+  $ DIM i AS LONG, h AS LONG
+  $ EXPLOSION_Load
+  $ PRINT "sounds"; PCSP_Count; " rate"; pcspRate(0); " bytes"; LEN(pcspData(0))
+  $ PCSPK_CaptureBegin
+  $ SFX_EXPLOSION
+  $ FOR i = 1 TO 70: PCSP_Tick: NEXT
+  $ PRINT "sfx after 0.5 s:"; pcspSfx
+  $ h = PCSPK_CaptureEnd: PCSPK_SaveWAV "pt.wav"
+  $ SYSTEM
+  $ '$INCLUDE:'PCSPKR.BM'
+  $ '$INCLUDE:'PCSPLAY.BM'
+  $ '$INCLUDE:'EXPLOSION_PCSPLAY.BM'
+  $ EOF
+  $ timeout 250 /home/grymmjack/git/qb64pe/qb64pe -x PT.BAS -o ./PT 2>&1 | grep -iE "error|line [0-9]|Output"; ./PT; python3 -c "
+  $ import wave,struct,math
+  $ w=wave.open('pt.wav'); sr=w.getframerate(); r=w.readframes(w.getnframes()); x=struct.unpack('<%dh'%(len(r)//2),r)[::w.getnchannels()]
+  $ for a,b in [(0,0.25),(0.3,0.45)]:
+  $     seg=x[int(a*sr):int(b*sr)]; m=sum(seg)/len(seg); print(a,b,'rms %.0f'%math.sqrt(sum((v-m)**2 for v in seg)/len(seg)))"
+2026-10-03T14:58:23-0400  INFO     bash_end      [ok] 0L stdout
+2026-10-03T14:58:41-0400  INFO     bash_start    cat > /home/grymmjack/git/qb64/qb64/SOUND/PWMSFXR/README.md <<'EOF' | # PWMSFXR: layered sfxr through the PC speaker | | **Short version:** [PCSFXR](../PCSFXR)'s big sibling. Build a sound effect fro…
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PWMSFXR
+  $ cat > /home/grymmjack/git/qb64/qb64/SOUND/PWMSFXR/README.md <<'EOF'
+  $ # PWMSFXR: layered sfxr through the PC speaker
+  $ 
+  $ **Short version:** [PCSFXR](../PCSFXR)'s big sibling. Build a sound effect from
+  $ **up to four voices**, each a full sfxr generator with **any of eight
+  $ waveforms** (square / pulse, sawtooth, sine, triangle, white noise, pink
+  $ noise, brown noise and a metallic 1-bit "LFSR" buzz), its own volume, pan
+  $ and start delay. Hear the mix through the emulated PC speaker with **PWM**
+  $ (the RealSound / demo scene trick that gets real audio out of a 1-bit
+  $ speaker), or clean in stereo. Then use it in a game, as QB64-PE code, as a
+  $ `.wav`, or in [PCSEDIT](../PC-SPEAKER).
+  $ 
+  $ Written entirely in QB64-PE, on top of the PC speaker emulator in
+  $ [`../PC-SPEAKER`](../PC-SPEAKER) and the sfxr engine in
+  $ [`../PCSFXR`](../PCSFXR).
+  $ 
+  $ ## Quick start
+  $ 
+  $ 1. Open **`PWMSFXR.BAS`** in QB64-PE and press **F5**.
+  $ 2. Click a **Generator** button. Each one rolls a new *layered* sound:
+  $    an explosion is white noise + a brown-noise rumble + a sine "thump", a
+  $    coin is a square blip with a triangle an octave up, and so on.
+  $ 3. Pick a voice (**Voice 1-4** tabs or keys **1**-**4**), change its
+  $    waveform, volume, pan, delay and sfxr sliders. It plays again when you
+  $    let go of a slider.
+  $ 4. **One voice: ...** re-rolls just the voice you're on, keeping its wave.
+  $    **Mutate** nudges every voice a little.
+  $ 
+  $ | Input | What it does |
+  $ | --- | --- |
+  $ | Space | play |
+  $ | 1-4 | pick a voice |
+  $ | ON / OFF | that voice in the mix or not |
+  $ | Right-click a slider | reset it |
+  $ | Drop a `.pwmsfx` on the window | load it |
+  $ | Esc | quit |
+  $ 
+  $ ## Output
+  $ 
+  $ * **PC speaker (PWM):** the mix (in mono) through the 1-bit speaker: every
+  $   carrier period the speaker gets one pulse, as wide as the sound is high.
+  $   The carrier (8, 11, 16 or 22 kHz) trades resolution against whine; the
+  $   speaker cone filter softens it.
+  $ * **Clean (stereo):** the mix as it is, with the pans.
+  $ 
+  $ ## Using a sound
+  $ 
+  $ | Button | What you get |
+  $ | --- | --- |
+  $ | Save .WAV | the clean mix, 16-bit stereo 44.1 kHz |
+  $ | Save PWM .WAV | what the speaker plays |
+  $ | Save 8-bit .WAV | 8-bit mono 11025 Hz (plays in `PC-SPEAKER/WAV.BAS`) |
+  $ | For PCSPLAY (game) | `NAME.WAV` and `NAME_PCSPLAY.BM` for a game using [PCSPLAY](../PC-SPEAKER/README.md#your-sounds-in-your-own-game-pcsplay): `NAME_Load` once, then `SFX_NAME` plays it through the speaker with PWM, over your PCSEDIT music. Or `PCSP_LoadWav "NAME", "NAME.WAV"`. |
+  $ | SOUND code .BAS | a ready-to-run program: every voice is a QB64-PE [`SOUND`](https://qb64phoenix.com/qb64wiki/index.php/SOUND) voice (0-3) with its waveform, volume and pan, pitch and level per 1/140 s, queued with `SOUND WAIT` / `SOUND RESUME`. Copy `SOUND_NAME` into your game. No library. |
+  $ | PLAY code .BAS | the same as [`PLAY`](https://qb64phoenix.com/qb64wiki/index.php/PLAY) strings (`@` waveform, `V` volume, `MB`), pitches rounded to semitones |
+  $ | Save / Load .pwmsfx | the whole sound: each voice's settings and its sfxr `.json` |
+  $ | Send to PCSEDIT | each voice's **pitch line** as a multi-voice sound in the bank PCSEDIT has open (see PCSFXR's README for how the inbox works). The PC speaker plays pitches, not waveforms, so noise voices become random pitches, the way DOS games made explosions. |
+  $ 
+  $ QB64-PE's SOUND and PLAY have no filters or flanger, so those sliders only
+  $ count in PWM / clean / WAV / PCSPLAY. Square waves with the duty cycle away
+  $ from 50% become SOUND's pulse wave.
+  $ EOF
+  $ cd /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER && python3 - <<'PYEOF'
+  $ p='README.md'; s=open(p).read()
+  $ a="""| `PCSP_Music name, PCSP_LOOP` (or `PCSP_ONCE`) / `PCSP_MusicNum i, ...` | music, by name or number |"""
+  $ assert a in s
+  $ s=s.replace(a,"""| `PCSP_LoadWav&(name, file)` / `PCSP_LoadWavData&` / `PCSP_LoadWavHex&` | a sample (8 or 16-bit PCM `.wav`, from [PWMSFXR](../PWMSFXR) say) as a sound effect; it plays through the speaker with PWM |
+  $ | `PCSP_SetPriority i, pri` | a sound's IFS priority (samples load with 50) |
+  $ """+a)
+  $ open(p,'w').write(s)
+  $ PYEOF
+  $ echo ok
+2026-10-03T14:58:41-0400  INFO     bash_end      [ok] 1L stdout
+  | ok
+2026-10-03T14:58:41-0400  NOTICE   prompt        <task-notification>
+  > <task-notification>
+  > <task-id>b2v1okcdy</task-id>
+  > <tool-use-id>toolu_01FXJGPivp9pAQggQMz8upMm</tool-use-id>
+  > <output-file>/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/tasks/b2v1okcdy.output</output-file>
+  > <status>completed</status>
+  > <summary>Background command "export SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad; cd /home/grymmjack/git/qb64/qb64/SOUND/PWMSFXR &amp;&amp; python3 - &lt;&lt;'PYEOF'
+  > import os
+  > SP=os.environ['SP']
+  > s=open('PWMSFXR.BAS').read()
+  > s=s.replace('f = _SAVEFILEDIALOG$("Save the sound", export_path(".pwmsfx"), "*.pwmsfx|*.PWMSFX", "PWMSFXR sounds")','f = "EXPORT/test.pwmsfx"')
+  > s=s.replace("DIM k AS LONG, f AS STRING, prevMb AS INTEGER","DIM tsN AS LONG\nDIM k AS LONG, f AS STRING, prevMb AS INTEGER",1)
+  > a="""    _DISPLAY
+  >     _LIMIT 60
+  > LOOP UNTIL quitApp"""
+  > s=s.replace(a,"""    _DISPLAY
+  >     tsN = tsN + 1
+  >     IF tsN = 5 THEN
+  >         _SAVEIMAGE "SPX/pw/ui.png", 0
+  >         export_wav 2: export_pcsplay: export_code 0: export_code 1
+  >         quitApp = -1
+  >     END IF
+  >     _LIMIT 60
+  > LOOP UNTIL quitApp""".replace('SPX',SP))
+  > open('_PWT.BAS','w').write(s)
+  > PYEOF
+  > timeout 290 /home/grymmjack/git/qb64pe/qb64pe -x _PWT.BAS -o $SP/pw/PWT 2&gt;&amp;1 | grep -iE "error|line [0-9]|Output"; rm -f _PWT.BAS; cd $SP/pw/run &amp;&amp; env -u WAYLAND_DISPLAY -u XDG_CURRENT_DESKTOP -u KDE_FULL_SESSION -u XDG_SESSION_TYPE QT_QPA_PLATFORM=xcb DISPLAY=:99 HOME=$SP/pw/home timeout 60 ../PWT &gt;/dev/null 2&gt;&amp;1; cd $SP/pw/EXPORT &amp;&amp; sed -n 19,26p EXPLOSION_SOUND.BAS | cut -c1-160; for f in EXPLOSION_SOUND EXPLOSION_PLAY; do timeout 250 /home/grymmjack/git/qb64pe/qb64pe -x $f.BAS -o $SP/pw/$f 2&gt;&amp;1 | grep -iE "error|line [0-9]|Output"; done; cp /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER/PCSPKR.B? /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER/PCSPLAY.B? . &amp;&amp; cat &gt; PT.BAS &lt;&lt;'EOF'
+  > $CONSOLE:ONLY
+  > '$INCLUDE:'PCSPKR.BI'
+  > '$INCLUDE:'PCSPLAY.BI'
+  > DIM i AS LONG, h AS LONG
+  > EXPLOSION_Load
+  > PRINT "sounds"; PCSP_Count; " rate"; pcspRate(0); " bytes"; LEN(pcspData(0))
+  > PCSPK_CaptureBegin
+  > SFX_EXPLOSION
+  > FOR i = 1 TO 70: PCSP_Tick: NEXT
+  > PRINT "sfx after 0.5 s:"; pcspSfx
+  > h = PCSPK_CaptureEnd: PCSPK_SaveWAV "pt.wav"
+  > SYSTEM
+  > '$INCLUDE:'PCSPKR.BM'
+  > '$INCLUDE:'PCSPLAY.BM'
+  > '$INCLUDE:'EXPLOSION_PCSPLAY.BM'
+  > EOF
+  > timeout 250 /home/grymmjack/git/qb64pe/qb64pe -x PT.BAS -o ./PT 2&gt;&amp;1 | grep -iE "error|line [0-9]|Output"; ./PT; python3 -c "
+  > import wave,struct,math
+  > w=wave.open('pt.wav'); sr=w.getframerate(); r=w.readframes(w.getnframes()); x=struct.unpack('&lt;%dh'%(len(r)//2),r)[::w.getnchannels()]
+  > for a,b in [(0,0.25),(0.3,0.45)]:
+  >     seg=x[int(a*sr):int(b*sr)]; m=sum(seg)/len(seg); print(a,b,'rms %.0f'%math.sqrt(sum((v-m)**2 for v in seg)/len(seg)))"" completed (exit code 0)</summary>
+  > </task-notification>
+2026-10-03T14:58:44-0400  INFO     bash_start    cat /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/tasks/b2v1okcdy.output | cut -c1-170
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ cat /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/tasks/b2v1okcdy.output | cut -c1-170
+2026-10-03T14:58:44-0400  INFO     bash_end      [ok] 22L stdout
+  | Beginning C++ output from QB64 code... 
+  | Output: /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/pw/PWT
+  | SUB SOUND_EXPLOSION
+  |     SOUND WAIT
+  |     ' voice 1 - noise
+  |     SOUND 523, 0.13, 0.8, 0, 5, 0, 0: SOUND 522, 0.13, 0.8, 0, 5, 0, 0: SOUND 522, 0.13, 0.78, 0, 5, 0, 0
+  |     SOUND 521, 0.13, 0.76, 0, 5, 0, 0: SOUND 520, 0.13, 0.76, 0, 5, 0, 0: SOUND 519, 0.13, 0.74, 0, 5, 0, 0
+  |     SOUND 519, 0.13, 0.72, 0, 5, 0, 0: SOUND 518, 0.13, 0.72, 0, 5, 0, 0: SOUND 517, 0.26, 0.7, 0, 5, 0, 0
+  |     SOUND 516, 0.13, 0.68, 0, 5, 0, 0: SOUND 515, 0.13, 0.66, 0, 5, 0, 0: SOUND 514, 0.13, 0.66, 0, 5, 0, 0
+  |     SOUND 514, 0.13, 0.64, 0, 5, 0, 0: SOUND 513, 0.13, 0.62, 0, 5, 0, 0: SOUND 512, 0.13, 0.62, 0, 5, 0, 0
+  | Beginning C++ output from QB64 code... 
+  | Output: /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/pw/EXPLOSION_SOUND
+  | Beginning C++ output from QB64 code... 
+  | Output: /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/pw/EXPLOSION_PLAY
+  | Beginning C++ output from QB64 code... 
+  | Output: /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/pw/EXPORT/PT
+  | sounds 1  rate 11025  bytes 11805 
+  | sfx after 0.5 s: 0 
+  | 0 0.25 rms 6208
+  | 0.3 0.45 rms 6164
+  | 
+  | [exited with code 0]
+2026-10-03T15:02:38-0400  NOTICE   prompt        /summarize
+  > /summarize
+2026-10-03T15:04:28-0400  NOTICE   prompt        <ide_opened_file>The user opened the file /home/grymmjack/git/qb64/qb64/SOUND/PWMSFXR/PWMSFXR.BAS in the IDE. This may or may not be related to the current task.</ide_opened_file>
+  > <ide_opened_file>The user opened the file /home/grymmjack/git/qb64/qb64/SOUND/PWMSFXR/PWMSFXR.BAS in the IDE. This may or may not be related to the current task.</ide_opened_file>
+  > PWMSFXR is awesome. well done - there is a pop and a click in the beginning and end though can we smooth that out?
+2026-10-03T15:04:43-0400  INFO     bash_start    sed -n 225,330p PCSPKR.BM
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ sed -n 225,330p PCSPKR.BM
+2026-10-03T15:04:43-0400  INFO     bash_end      [ok] 105L stdout
+  |     ''
+  |     ' Area under a unit square wave (high for the first half cycle) from
+  |     ' phase 0 to phase ph (in cycles).
+  |     '
+  |     FUNCTION PCSPK_SqInt# (ph AS DOUBLE)
+  |         DIM w AS DOUBLE, f AS DOUBLE
+  |         w = INT(ph)
+  |         f = ph - w
+  |         IF f > 0.5 THEN f = 0.5
+  |         PCSPK_SqInt = w * 0.5 + f
+  |     END FUNCTION
+  | 
+  | 
+  |     ''
+  |     ' Integral of the speaker level over the next `clocks` PIT clocks, and
+  |     ' advance the PIT state by that much.
+  |     '
+  |     FUNCTION PCSPK_Integrate# (clocks AS DOUBLE)
+  |         DIM ph1 AS DOUBLE, lowPart AS DOUBLE
+  |         IF NOT pcspk.enabled THEN EXIT FUNCTION ' gate low: counter paused, cone in
+  |         IF pcspk.mode = PCSPK_MODE_SQUARE THEN
+  |             ph1 = pcspk.phase + clocks / pcspk.divisor
+  |             PCSPK_Integrate = pcspk.divisor * (PCSPK_SqInt(ph1) - PCSPK_SqInt(pcspk.phase))
+  |             pcspk.phase = ph1 - INT(ph1)
+  |         ELSE
+  |             lowPart = clocks
+  |             IF lowPart > pcspk.osRemain THEN lowPart = pcspk.osRemain
+  |             pcspk.osRemain = pcspk.osRemain - lowPart
+  |             PCSPK_Integrate = clocks - lowPart
+  |         END IF
+  |     END FUNCTION
+  | 
+  | 
+  |     ''
+  |     ' Run the emulated hardware forward by `clocks` PIT clocks with its
+  |     ' current state, sending audio to the current sink.
+  |     '
+  |     SUB PCSPK_AdvanceClocks (clocks AS DOUBLE)
+  |         DIM remain AS DOUBLE, room AS DOUBLE
+  |         PCSPK_Init
+  |         remain = clocks
+  |         DO WHILE remain > 0
+  |             room = pcspk.clkPerSample - pcspk.sampPos
+  |             IF remain >= room THEN
+  |                 pcspk.sampAcc = pcspk.sampAcc + PCSPK_Integrate(room)
+  |                 remain = remain - room
+  |                 PCSPK_Emit pcspk.sampAcc / pcspk.clkPerSample
+  |                 pcspk.sampPos = 0
+  |                 pcspk.sampAcc = 0
+  |             ELSE
+  |                 pcspk.sampAcc = pcspk.sampAcc + PCSPK_Integrate(remain)
+  |                 pcspk.sampPos = pcspk.sampPos + remain
+  |                 remain = 0
+  |             END IF
+  |         LOOP
+  |     END SUB
+  | 
+  | 
+  |     SUB PCSPK_AdvanceSeconds (seconds AS DOUBLE)
+  |         PCSPK_AdvanceClocks seconds * PCSPK_PIT_HZ
+  |     END SUB
+  | 
+  | 
+  |     ''
+  |     ' Turn an average speaker level (0..1) into an output sample.
+  |     '
+  |     SUB PCSPK_Emit (level AS DOUBLE)
+  |         DIM x AS SINGLE, y AS SINGLE
+  |         x = level * 2 - 1
+  |         y = x - pcspk.dcX + pcspk.dcR * pcspk.dcY
+  |         pcspk.dcX = x
+  |         pcspk.dcY = y
+  |         IF pcspk.lpHz > 0 THEN
+  |             pcspk.lp1 = pcspk.lp1 + pcspk.lpA * (y - pcspk.lp1)
+  |             pcspk.lp2 = pcspk.lp2 + pcspk.lpA * (pcspk.lp1 - pcspk.lp2)
+  |             y = pcspk.lp2
+  |         END IF
+  |         y = y * pcspk.volume
+  |         IF y > 1 THEN y = 1
+  |         IF y < -1 THEN y = -1
+  | ...[truncated]
+2026-10-03T15:05:27-0400  INFO     bash_start    cd /home/grymmjack/git/qb64/qb64/SOUND && python3 - <<'PYEOF' | # --- PWMSFXR render_pwm | p='PWMSFXR/PWMSFXR.BAS'; s=open(p).read() | def r(a,b,c=1): | global s | assert s.count(a)==c,(a[:90],s.coun…
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ cd /home/grymmjack/git/qb64/qb64/SOUND && python3 - <<'PYEOF'
+  $ # --- PWMSFXR render_pwm
+  $ p='PWMSFXR/PWMSFXR.BAS'; s=open(p).read()
+  $ def r(a,b,c=1):
+  $     global s
+  $     assert s.count(a)==c,(a[:90],s.count(a)); s=s.replace(a,b)
+  $ r("""''
+  $ ' The mix (in mono) through the 1-bit speaker: every carrier period a
+  $ ' one-shot pulse as wide as the sound is high.
+  $ '
+  $ FUNCTION render_pwm&
+  $     DIM d AS LONG, stp AS DOUBLE, ppos AS DOUBLE, k AS LONG, n AS LONG
+  $     DIM a AS LONG, b AS LONG, i AS LONG, s AS DOUBLE, w AS LONG, pk AS DOUBLE""","""''
+  $ ' The mix (in mono) through the 1-bit speaker: every carrier period a
+  $ ' one-shot pulse as wide as the sound is high. A PWM "silence" is a half-
+  $ ' width pulse (the cone half way out) but a speaker that's off has the cone
+  $ ' in, so it eases from one to the other over PWM_EASE seconds before the
+  $ ' sound and back after it - no pop at the start, no click at the end.
+  $ '
+  $ FUNCTION render_pwm&
+  $     CONST PWM_EASE = 0.03
+  $     DIM d AS LONG, stp AS DOUBLE, ppos AS DOUBLE, k AS LONG, n AS LONG, e AS LONG
+  $     DIM a AS LONG, b AS LONG, i AS LONG, s AS DOUBLE, w AS LONG, pk AS DOUBLE""")
+  $ r("""    PCSPK_CaptureBegin
+  $     PCSPK_SetVolume SFXR_SpeakerVolume
+  $     PCSPK_SpeakerOn
+  $     n = INT(mixN / stp)
+  $     FOR k = 0 TO n - 1""","""    PCSPK_CaptureBegin
+  $     PCSPK_SetVolume SFXR_SpeakerVolume
+  $     PCSPK_SpeakerOn
+  $     n = INT(mixN / stp)
+  $     e = CLNG(PWM_EASE * PCSPK_PIT_HZ / d)
+  $     pwm_ease d, e, 0 ' cone in -> half way
+  $     FOR k = 0 TO n - 1""")
+  $ r("""        PCSPK_PitWrite PCSPK_MODE_ONESHOT, w
+  $         PCSPK_AdvanceClocks d
+  $         ppos = ppos + stp
+  $     NEXT
+  $     PCSPK_SpeakerOff
+  $     PCSPK_AdvanceSeconds 0.05
+  $     render_pwm = PCSPK_CaptureEnd
+  $ END FUNCTION""","""        PCSPK_PitWrite PCSPK_MODE_ONESHOT, w
+  $         PCSPK_AdvanceClocks d
+  $         ppos = ppos + stp
+  $     NEXT
+  $     pwm_ease d, e, -1 ' half way -> cone in
+  $     PCSPK_SpeakerOff
+  $     PCSPK_AdvanceSeconds 0.05
+  $     render_pwm = PCSPK_CaptureEnd
+  $ END FUNCTION
+  $ 
+  $ 
+  $ ''
+  $ ' e carrier periods of silence easing the cone (raised cosine) from in to
+  $ ' half way out, or back (down = TRUE).
+  $ '
+  $ SUB pwm_ease (d AS LONG, e AS LONG, down AS INTEGER)
+  $     DIM k AS LONG, g AS DOUBLE
+  $     FOR k = 0 TO e - 1
+  $         g = 0.5 - 0.5 * COS(_PI * (k + 0.5) / e) ' 0 -> 1
+  $         IF down THEN g = 1 - g
+  $         ' the level goes 0 (cone in) -> 0.5; the pulse is LOW for w clocks
+  $         PCSPK_PitWrite PCSPK_MODE_ONESHOT, CLNG((1 - g * 0.5) * (d - 2)) + 1
+  $         PCSPK_AdvanceClocks d
+  $     NEXT
+  $ END SUB""")
+  $ # fade the mix's last 3 ms (sfxr can stop dead at its frequency cutoff)
+  $ r("""    load_voice sel
+  $     IF mixN = 0 THEN set_status "Every voice is off": EXIT SUB
+  $ ""","""    load_voice sel
+  $     IF mixN = 0 THEN set_status "Every voice is off": EXIT SUB
+  $     ' the last 3 ms faded out: an sfxr voice can stop dead (frequency cutoff)
+  $     n = SFXR_RATE * 3 \\ 1000
+  $     IF n > mixN THEN n = mixN
+  $     FOR i = 0 TO n - 1
+  $         mixL(mixN - 1 - i) = mixL(mixN - 1 - i) * i / n
+  $         mixR(mixN - 1 - i) = mixR(mixN - 1 - i) * i / n
+  $     NEXT
+  $ """)
+  $ open(p,'w').write(s)
+  $ ...[truncated]
+2026-10-03T15:05:27-0400  INFO     bash_end      [ok] 1L stdout
+  | ok
+2026-10-03T15:05:42-0400  INFO     bash_start    [t=400000ms] export SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad; cp $SP/pw/EXPORT/EXPLOSION-pwm.wav $SP/pw/old-pwm.wav 2>/dev/null; cd /home/grymmjack…
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND
+  $ export SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad; cp $SP/pw/EXPORT/EXPLOSION-pwm.wav $SP/pw/old-pwm.wav 2>/dev/null; cd /home/grymmjack/git/qb64/qb64/SOUND/PWMSFXR && python3 - <<'PYEOF'
+  $ import os
+  $ SP=os.environ['SP']
+  $ s=open('PWMSFXR.BAS').read()
+  $ s=s.replace("DIM k AS LONG, f AS STRING, prevMb AS INTEGER","DIM tsN AS LONG\nDIM k AS LONG, f AS STRING, prevMb AS INTEGER",1)
+  $ a="""    _DISPLAY
+  $     _LIMIT 60
+  $ LOOP UNTIL quitApp"""
+  $ s=s.replace(a,"""    _DISPLAY
+  $     tsN = tsN + 1
+  $     IF tsN = 5 THEN export_wav 1: quitApp = -1
+  $     _LIMIT 60
+  $ LOOP UNTIL quitApp""")
+  $ open('_PWT.BAS','w').write(s)
+  $ PYEOF
+  $ timeout 290 /home/grymmjack/git/qb64pe/qb64pe -x _PWT.BAS -o $SP/pw/PWT 2>&1 | grep -iE "error|line [0-9]|Output"; rm -f _PWT.BAS; cd $SP/pw/run && env -u WAYLAND_DISPLAY -u XDG_CURRENT_DESKTOP -u KDE_FULL_SESSION -u XDG_SESSION_TYPE QT_QPA_PLATFORM=xcb DISPLAY=:99 HOME=$SP/pw/home timeout 60 ../PWT >/dev/null 2>&1; cd $SP/pw && python3 - <<'EOF'
+  $ import wave,struct
+  $ def load(f):
+  $     w=wave.open(f); sr=w.getframerate(); r=w.readframes(w.getnframes()); x=struct.unpack('<%dh'%(len(r)//2),r)[::w.getnchannels()]; return x,sr
+  $ for f in ['old-pwm.wav','EXPORT/EXPLOSION-pwm.wav']:
+  $     x,sr=load(f)
+  $     pk=max(abs(v) for v in x)
+  $     # the biggest sample-to-sample jump in the first / last 5 ms, against the sound's peak
+  $     def jump(seg): return max(abs(seg[i+1]-seg[i]) for i in range(len(seg)-1))
+  $     n5=int(0.005*sr)
+  $     # the end: find where the sound stops (the last 60 ms holds the tail + release)
+  $     print(f, 'peak',pk,' first-5ms max level %.0f%%'%(100*max(abs(v) for v in x[:n5])/pk), ' start jump %.0f%%'%(100*jump(x[:n5])/pk), ' last-80ms max level %.0f%%'%(100*max(abs(v) for v in x[-int(0.08*sr):])/pk))
+  $ EOF
+2026-10-03T15:05:43-0400  WARNING  bash_end      [stderr] 3L stdout / 2L stderr
+  | Beginning C++ output from QB64 code... 
+  | old-pwm.wav peak 16715  first-5ms max level 100%  start jump 100%  last-80ms max level 51%
+  | EXPORT/EXPLOSION-pwm.wav peak 16715  first-5ms max level 100%  start jump 100%  last-80ms max level 51%
+  ! 
+  ! Shell cwd was reset to /home/grymmjack/git/qb64
+2026-10-03T15:05:47-0400  INFO     bash_start    [t=300000ms] cd /home/grymmjack/git/qb64/qb64/SOUND/PWMSFXR && timeout 290 /home/grymmjack/git/qb64pe/qb64pe -x PWMSFXR.BAS -o /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8…
+  > cwd: /home/grymmjack/git/qb64
+  $ cd /home/grymmjack/git/qb64/qb64/SOUND/PWMSFXR && timeout 290 /home/grymmjack/git/qb64pe/qb64pe -x PWMSFXR.BAS -o /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/PWMSFXR 2>&1 | grep -v "^\[" | tail -6
+2026-10-03T15:05:47-0400  INFO     bash_end      [ok] 5L stdout
+  | Beginning C++ output from QB64 code... 
+  | 
+  | [38;5;9mName already in use (pwm_ease)
+  | [38;5;7mCaused by (or after):
+  | [38;5;8mLINE [38;5;15m407:[38;5;7mSUB PWM_EASE ( D AS LONG , E AS LONG , DOWN AS INTEGER )
+2026-10-03T15:05:57-0400  INFO     bash_start    [t=400000ms] export SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad; cd /home/grymmjack/git/qb64/qb64/SOUND/PWMSFXR && sed -i 's/^SUB pwm_ease (/SUB ease_…
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PWMSFXR
+  $ export SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad; cd /home/grymmjack/git/qb64/qb64/SOUND/PWMSFXR && sed -i 's/^SUB pwm_ease (/SUB ease_cone (/; s/    pwm_ease d, e, /    ease_cone d, e, /' PWMSFXR.BAS && grep -n "ease_cone\|pwm_ease" PWMSFXR.BAS && python3 - <<'PYEOF'
+  $ import os
+  $ s=open('PWMSFXR.BAS').read()
+  $ s=s.replace("DIM k AS LONG, f AS STRING, prevMb AS INTEGER","DIM tsN AS LONG\nDIM k AS LONG, f AS STRING, prevMb AS INTEGER",1)
+  $ a="""    _DISPLAY
+  $     _LIMIT 60
+  $ LOOP UNTIL quitApp"""
+  $ s=s.replace(a,"""    _DISPLAY
+  $     tsN = tsN + 1
+  $     IF tsN = 5 THEN export_wav 1: quitApp = -1
+  $     _LIMIT 60
+  $ LOOP UNTIL quitApp""")
+  $ open('_PWT.BAS','w').write(s)
+  $ PYEOF
+  $ timeout 290 /home/grymmjack/git/qb64pe/qb64pe -x _PWT.BAS -o $SP/pw/PWT 2>&1 | grep -v "^\[" | grep -iE "error|line [0-9]|Output|in use|not"; rm -f _PWT.BAS; cd $SP/pw/run && env -u WAYLAND_DISPLAY -u XDG_CURRENT_DESKTOP -u KDE_FULL_SESSION -u XDG_SESSION_TYPE QT_QPA_PLATFORM=xcb DISPLAY=:99 HOME=$SP/pw/home timeout 60 ../PWT >/dev/null 2>&1; cd $SP/pw && python3 - <<'EOF'
+  $ import wave,struct
+  $ def load(f):
+  $     w=wave.open(f); sr=w.getframerate(); r=w.readframes(w.getnframes()); x=struct.unpack('<%dh'%(len(r)//2),r)[::w.getnchannels()]; return x,sr
+  $ for f in ['old-pwm.wav','EXPORT/EXPLOSION-pwm.wav']:
+  $     x,sr=load(f)
+  $     pk=max(abs(v) for v in x)
+  $     n5=int(0.005*sr)
+  $     jump=lambda seg: max(abs(seg[i+1]-seg[i]) for i in range(len(seg)-1))
+  $     print(f,'peak',pk,' first-5ms level %.0f%%'%(100*max(abs(v) for v in x[:n5])/pk),' start jump %.0f%%'%(100*jump(x[:n5])/pk),' last-80ms level %.0f%%'%(100*max(abs(v) for v in x[-int(0.08*sr):])/pk), ' last-80ms jump %.0f%%'%(100*jump(x[-int(0.08*sr):])/pk))
+  $ EOF
+2026-10-03T15:06:00-0400  WARNING  bash_end      [stderr] 7L stdout / 2L stderr
+  | 378:    ease_cone d, e, 0 ' cone in -> half way
+  | 396:    ease_cone d, e, -1 ' half way -> cone in
+  | 407:SUB ease_cone (d AS LONG, e AS LONG, down AS INTEGER)
+  | Beginning C++ output from QB64 code... 
+  | Output: /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/pw/PWT
+  | old-pwm.wav peak 16715  first-5ms level 100%  start jump 100%  last-80ms level 51%  last-80ms jump 100%
+  | EXPORT/EXPLOSION-pwm.wav peak 13720  first-5ms level 14%  start jump 15%  last-80ms level 65%  last-80ms jump 122%
+  ! 
+  ! Shell cwd was reset to /home/grymmjack/git/qb64
+2026-10-03T15:06:12-0400  INFO     bash_start    cd /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/pw && python3 - <<'EOF' | import wave,struct | w=wave.open('EXPORT/EXPLOSION-pwm.wav'); sr=w.getframerate(…
+  > cwd: /home/grymmjack/git/qb64
+  $ cd /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/pw && python3 - <<'EOF'
+  $ import wave,struct
+  $ w=wave.open('EXPORT/EXPLOSION-pwm.wav'); sr=w.getframerate(); r=w.readframes(w.getnframes()); x=struct.unpack('<%dh'%(len(r)//2),r)[::w.getnchannels()]
+  $ n=len(x); pk=max(abs(v) for v in x)
+  $ # where is the end of the sound content? 50 ms tail + 30 ms ease at the end
+  $ seg=x[-int(0.12*sr):]
+  $ j=[abs(seg[i+1]-seg[i]) for i in range(len(seg)-1)]
+  $ m=max(j); i=j.index(m)
+  $ print('len %.3f s, biggest jump in last 120 ms: %.0f%% at %.1f ms before the end'%(n/sr,100*m/pk,(len(seg)-i)/sr*1000))
+  $ for ms in (120,100,80,60,40,30,20,10,2):
+  $     a=n-int(ms/1000*sr); print(ms,'ms before end: level',round(100*max(abs(v) for v in x[a:a+int(0.002*sr)])/pk))
+  $ EOF
+2026-10-03T15:06:12-0400  WARNING  bash_end      [stderr] 10L stdout / 2L stderr
+  | len 0.350 s, biggest jump in last 120 ms: 122% at 73.5 ms before the end
+  | 120 ms before end: level 66
+  | 100 ms before end: level 64
+  | 80 ms before end: level 62
+  | 60 ms before end: level 36
+  | 40 ms before end: level 4
+  | 30 ms before end: level 1
+  | 20 ms before end: level 0
+  | 10 ms before end: level 0
+  | 2 ms before end: level 0
+  ! 
+  ! Shell cwd was reset to /home/grymmjack/git/qb64
+2026-10-03T15:06:29-0400  INFO     bash_start    [t=300000ms] cd /home/grymmjack/git/qb64/qb64/SOUND/PWMSFXR && python3 - <<'PYEOF' | p='PWMSFXR.BAS'; s=open(p).read() | def r(a,b): | global s | assert s.count(a)==1,a[:80]; s=s.replace(a,b) | r("""…
+  > cwd: /home/grymmjack/git/qb64
+  $ cd /home/grymmjack/git/qb64/qb64/SOUND/PWMSFXR && python3 - <<'PYEOF'
+  $ p='PWMSFXR.BAS'; s=open(p).read()
+  $ def r(a,b):
+  $     global s
+  $     assert s.count(a)==1,a[:80]; s=s.replace(a,b)
+  $ r("""    ' the last 3 ms faded out: an sfxr voice can stop dead (frequency cutoff)
+  $     n = SFXR_RATE * 3 \\ 1000
+  $     IF n > mixN THEN n = mixN
+  $     FOR i = 0 TO n - 1
+  $         mixL(mixN - 1 - i) = mixL(mixN - 1 - i) * i / n
+  $         mixR(mixN - 1 - i) = mixR(mixN - 1 - i) * i / n
+  $     NEXT
+  $ ""","")
+  $ r("""            FOR i = 0 TO sfxr_pcmN - 1
+  $                 mixL(ofs + i) = mixL(ofs + i) + sfxr_pcm(i) * gl
+  $                 mixR(ofs + i) = mixR(ofs + i) + sfxr_pcm(i) * gr
+  $             NEXT""","""            ' each voice's last 15 ms faded out: an sfxr sound can stop dead (a
+  $             ' zero decay, its frequency cutoff), and that's a click
+  $             fade = SFXR_RATE * 15 \\ 1000
+  $             IF fade > sfxr_pcmN THEN fade = sfxr_pcmN
+  $             FOR i = 0 TO sfxr_pcmN - 1
+  $                 g = 1
+  $                 IF i >= sfxr_pcmN - fade THEN g = (sfxr_pcmN - i) / fade
+  $                 mixL(ofs + i) = mixL(ofs + i) + sfxr_pcm(i) * gl * g
+  $                 mixR(ofs + i) = mixR(ofs + i) + sfxr_pcm(i) * gr * g
+  $             NEXT""")
+  $ r("""    DIM a AS LONG, b AS LONG, j AS LONG, v AS SINGLE, pk AS SINGLE, hz AS STRING, ev AS STRING, dv AS STRING""","""    DIM a AS LONG, b AS LONG, j AS LONG, v AS SINGLE, pk AS SINGLE, hz AS STRING, ev AS STRING, dv AS STRING
+  $     DIM fade AS LONG, g AS SINGLE""")
+  $ open(p,'w').write(s)
+  $ PYEOF
+  $ SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad; timeout 290 /home/grymmjack/git/qb64pe/qb64pe -x PWMSFXR.BAS -o $SP/PWMSFXR 2>&1 | grep -v "^\[" | grep -iE "error|line [0-9]|Output|in use|not"
+2026-10-03T15:06:31-0400  INFO     bash_end      [ok] 2L stdout
+  | Beginning C++ output from QB64 code... 
+  | Output: /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/PWMSFXR
+2026-10-03T15:06:45-0400  INFO     bash_start    [BG] export SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad; cd /home/grymmjack/git/qb64/qb64/SOUND/PWMSFXR && python3 - <<'PYEOF' | s=open('PWMSFXR.BAS')…
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PWMSFXR
+  $ export SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad; cd /home/grymmjack/git/qb64/qb64/SOUND/PWMSFXR && python3 - <<'PYEOF'
+  $ s=open('PWMSFXR.BAS').read()
+  $ s=s.replace("DIM k AS LONG, f AS STRING, prevMb AS INTEGER","DIM tsN AS LONG\nDIM k AS LONG, f AS STRING, prevMb AS INTEGER",1)
+  $ s=s.replace("""    _DISPLAY
+  $     _LIMIT 60
+  $ LOOP UNTIL quitApp""","""    _DISPLAY
+  $     tsN = tsN + 1
+  $     IF tsN = 5 THEN export_wav 1: quitApp = -1
+  $     _LIMIT 60
+  $ LOOP UNTIL quitApp""")
+  $ open('_PWT.BAS','w').write(s)
+  $ PYEOF
+  $ timeout 290 /home/grymmjack/git/qb64pe/qb64pe -x _PWT.BAS -o $SP/pw/PWT 2>&1 | grep -v "^\[" | grep -iE "error|Output"; rm -f _PWT.BAS; cd $SP/pw/run && env -u WAYLAND_DISPLAY -u XDG_CURRENT_DESKTOP -u KDE_FULL_SESSION -u XDG_SESSION_TYPE QT_QPA_PLATFORM=xcb DISPLAY=:99 HOME=$SP/pw/home timeout 60 ../PWT >/dev/null 2>&1; cd $SP/pw && python3 - <<'EOF'
+  $ import wave,struct
+  $ w=wave.open('EXPORT/EXPLOSION-pwm.wav'); sr=w.getframerate(); r=w.readframes(w.getnframes()); x=struct.unpack('<%dh'%(len(r)//2),r)[::w.getnchannels()]
+  $ n=len(x); pk=max(abs(v) for v in x)
+  $ print('start: first-5ms level %.0f%%'%(100*max(abs(v) for v in x[:int(0.005*sr)])/pk))
+  $ print('end profile (level per 5 ms, last 120 ms):', [round(100*max(abs(v) for v in x[n-int(ms/1000*sr):n-int((ms-5)/1000*sr)])/pk) for ms in range(120,0,-5)])
+  $ EOF
+  $ cd /home/grymmjack/git/qb64/qb64/SOUND/PCSFXR && timeout 290 /home/grymmjack/git/qb64pe/qb64pe -x PCSFXR.BAS -o $SP/PCSFXR 2>&1 | grep -v "^\[" | grep -iE "error|Output"; cd $SP/pw/EXPORT && cp /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER/PCSPLAY.B? . && timeout 290 /home/grymmjack/git/qb64pe/qb64pe -x PT.BAS -o ./PT 2>&1 | grep -v "^\[" | grep -iE "error|Output"; ./PT; python3 -c "
+  $ import wave,struct
+  $ w=wave.open('pt.wav'); sr=w.getframerate(); r=w.readframes(w.getnframes()); x=struct.unpack('<%dh'%(len(r)//2),r)[::w.getnchannels()]
+  $ pk=max(abs(v) for v in x); print('PCSPLAY sample: first-3ms level %.0f%%, levels per 5ms at start:'%(100*max(abs(v) for v in x[:int(0.003*sr)])/pk), [round(100*max(abs(v) for v in x[int(i*0.005*sr):int((i+1)*0.005*sr)])/pk) for i in range(6)])"
+2026-10-03T15:06:45-0400  INFO     bash_end      [ok] 0L stdout
+2026-10-03T15:06:51-0400  NOTICE   prompt        <task-notification>
+  > <task-notification>
+  > <task-id>bv5zgqxn1</task-id>
+  > <tool-use-id>toolu_01AoCyrU6uLDh8zarguuYUsS</tool-use-id>
+  > <output-file>/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/tasks/bv5zgqxn1.output</output-file>
+  > <status>completed</status>
+  > <summary>Background command "export SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad; cd /home/grymmjack/git/qb64/qb64/SOUND/PWMSFXR &amp;&amp; python3 - &lt;&lt;'PYEOF'
+  > s=open('PWMSFXR.BAS').read()
+  > s=s.replace("DIM k AS LONG, f AS STRING, prevMb AS INTEGER","DIM tsN AS LONG\nDIM k AS LONG, f AS STRING, prevMb AS INTEGER",1)
+  > s=s.replace("""    _DISPLAY
+  >     _LIMIT 60
+  > LOOP UNTIL quitApp""","""    _DISPLAY
+  >     tsN = tsN + 1
+  >     IF tsN = 5 THEN export_wav 1: quitApp = -1
+  >     _LIMIT 60
+  > LOOP UNTIL quitApp""")
+  > open('_PWT.BAS','w').write(s)
+  > PYEOF
+  > timeout 290 /home/grymmjack/git/qb64pe/qb64pe -x _PWT.BAS -o $SP/pw/PWT 2&gt;&amp;1 | grep -v "^\[" | grep -iE "error|Output"; rm -f _PWT.BAS; cd $SP/pw/run &amp;&amp; env -u WAYLAND_DISPLAY -u XDG_CURRENT_DESKTOP -u KDE_FULL_SESSION -u XDG_SESSION_TYPE QT_QPA_PLATFORM=xcb DISPLAY=:99 HOME=$SP/pw/home timeout 60 ../PWT &gt;/dev/null 2&gt;&amp;1; cd $SP/pw &amp;&amp; python3 - &lt;&lt;'EOF'
+  > import wave,struct
+  > w=wave.open('EXPORT/EXPLOSION-pwm.wav'); sr=w.getframerate(); r=w.readframes(w.getnframes()); x=struct.unpack('&lt;%dh'%(len(r)//2),r)[::w.getnchannels()]
+  > n=len(x); pk=max(abs(v) for v in x)
+  > print('start: first-5ms level %.0f%%'%(100*max(abs(v) for v in x[:int(0.005*sr)])/pk))
+  > print('end profile (level per 5 ms, last 120 ms):', [round(100*max(abs(v) for v in x[n-int(ms/1000*sr):n-int((ms-5)/1000*sr)])/pk) for ms in range(120,0,-5)])
+  > EOF
+  > cd /home/grymmjack/git/qb64/qb64/SOUND/PCSFXR &amp;&amp; timeout 290 /home/grymmjack/git/qb64pe/qb64pe -x PCSFXR.BAS -o $SP/PCSFXR 2&gt;&amp;1 | grep -v "^\[" | grep -iE "error|Output"; cd $SP/pw/EXPORT &amp;&amp; cp /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER/PCSPLAY.B? . &amp;&amp; timeout 290 /home/grymmjack/git/qb64pe/qb64pe -x PT.BAS -o ./PT 2&gt;&amp;1 | grep -v "^\[" | grep -iE "error|Output"; ./PT; python3 -c "
+  > import wave,struct
+  > w=wave.open('pt.wav'); sr=w.getframerate(); r=w.readframes(w.getnframes()); x=struct.unpack('&lt;%dh'%(len(r)//2),r)[::w.getnchannels()]
+  > pk=max(abs(v) for v in x); print('PCSPLAY sample: first-3ms level %.0f%%, levels per 5ms at start:'%(100*max(abs(v) for v in x[:int(0.003*sr)])/pk), [round(100*max(abs(v) for v in x[int(i*0.005*sr):int((i+1)*0.005*sr)])/pk) for i in range(6)])"" completed (exit code 0)</summary>
+  > </task-notification>
+2026-10-03T15:06:54-0400  INFO     bash_start    cat /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/tasks/bv5zgqxn1.output | cut -c1-200
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PWMSFXR
+  $ cat /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/tasks/bv5zgqxn1.output | cut -c1-200
+2026-10-03T15:06:54-0400  INFO     bash_end      [ok] 13L stdout
+  | Beginning C++ output from QB64 code... 
+  | Output: /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/pw/PWT
+  | start: first-5ms level 14%
+  | end profile (level per 5 ms, last 120 ms): [63, 63, 63, 63, 63, 62, 62, 62, 62, 66, 66, 48, 36, 24, 14, 8, 4, 2, 1, 1, 0, 0, 0, 0]
+  | Beginning C++ output from QB64 code... 
+  | Output: /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/PCSFXR
+  | Beginning C++ output from QB64 code... 
+  | Output: /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/pw/EXPORT/PT
+  | sounds 1  rate 11025  bytes 6685 
+  | sfx after 0.5 s: 0 
+  | PCSPLAY sample: first-3ms level 22%, levels per 5ms at start: [52, 100, 97, 79, 61, 63]
+  | 
+  | [exited with code 0]
+2026-10-03T15:10:14-0400  NOTICE   prompt        <ide_opened_file>The user opened the file /home/grymmjack/git/qb64/qb64/SOUND/PWMSFXR/PWMSFXR.BAS in the IDE. This may or may not be related to the current task.</ide_opened_file>
+  > <ide_opened_file>The user opened the file /home/grymmjack/git/qb64/qb64/SOUND/PWMSFXR/PWMSFXR.BAS in the IDE. This may or may not be related to the current task.</ide_opened_file>
+  > send to pcsedit from pcmsfxr doesn't work if pcsedit isn't already running...
+  > 
+  > also pwmsfxr says to switch to arp mode which is false for pwmsfxr sounds?
+2026-10-03T15:10:41-0400  INFO     bash_start    cd /home/grymmjack/git/qb64/qb64/SOUND && python3 - <<'PYEOF' | # --- PCSEDIT: who sent it; ask about ARP only for PCSFXR | p='PC-SPEAKER/PCSEDIT.BAS'; s=open(p).read() | def r(a,b,c=1): | global s |…
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PWMSFXR
+  $ cd /home/grymmjack/git/qb64/qb64/SOUND && python3 - <<'PYEOF'
+  $ # --- PCSEDIT: who sent it; ask about ARP only for PCSFXR
+  $ p='PC-SPEAKER/PCSEDIT.BAS'; s=open(p).read()
+  $ def r(a,b,c=1):
+  $     global s
+  $     assert s.count(a)==c,(a[:90],s.count(a)); s=s.replace(a,b)
+  $ r("""SUB inbox_import (f AS STRING)
+  $     DIM ff AS LONG, d AS STRING, n AS LONG, i AS LONG, o AS LONG, e AS LONG, nm AS STRING, k AS LONG
+  $     DIM got AS LONG, last AS LONG""","""SUB inbox_import (f AS STRING)
+  $     DIM ff AS LONG, d AS STRING, n AS LONG, i AS LONG, o AS LONG, e AS LONG, nm AS STRING, k AS LONG
+  $     DIM got AS LONG, last AS LONG, src AS STRING
+  $     ' who sent it (the file name says): PCSFXR or PWMSFXR
+  $     src = "PCSFXR"
+  $     IF LEFT$(LCASE$(MID$(f, _INSTRREV(f, "/") + _INSTRREV(f, "\\\\") + 1)), 8) = "pwmsfxr_" THEN src = "PWMSFXR\"""")
+  $ r("""        set_status "From PCSFXR: " + sndName(last) + " - added to the bank as sound" + STR$(last)
+  $         ' PCSFXR's sounds are made for ARP (how games play them): in PWM mode,
+  $         ' ask once whether to switch, and remember the answer
+  $         IF polyMode = POLY_PWM THEN""","""        set_status "From " + src + ": " + sndName(last) + " - added to the bank as sound" + STR$(last)
+  $         ' PCSFXR's sounds are made for ARP (how games play them): in PWM mode,
+  $         ' ask once whether to switch, and remember the answer. (PWMSFXR's
+  $         ' layered sounds are made for PWM: they leave the mode alone.)
+  $         IF polyMode = POLY_PWM AND src = "PCSFXR" THEN""")
+  $ open(p,'w').write(s)
+  $ 
+  $ # --- shared launcher text for both FX programs
+  $ launcher = '''FUNCTION start_pcsedit%
+  $     DIM cand AS STRING, pdir AS STRING, exe AS STRING, i AS LONG, j AS LONG, p AS LONG
+  $     ' PCSEDIT lives in ../PC-SPEAKER: next to where this was started from, or
+  $     ' next to this program's own folder
+  $     FOR j = 1 TO 2
+  $         IF j = 1 THEN cand = _STARTDIR$ ELSE cand = COMMAND$(0)
+  $         IF j = 2 THEN ' (the program file: its folder)
+  $             p = _INSTRREV(cand, "/")
+  $             IF _INSTRREV(cand, "\\\\") > p THEN p = _INSTRREV(cand, "\\\\")
+  $             cand = LEFT$(cand, p)
+  $         END IF
+  $         IF RIGHT$(cand, 1) = "/" OR RIGHT$(cand, 1) = "\\\\" THEN cand = LEFT$(cand, LEN(cand) - 1)
+  $         p = _INSTRREV(cand, "/")
+  $         IF _INSTRREV(cand, "\\\\") > p THEN p = _INSTRREV(cand, "\\\\")
+  $         pdir = LEFT$(cand, p) + "PC-SPEAKER"
+  $         IF _DIREXISTS(pdir) THEN
+  $             FOR i = 1 TO 3
+  $                 SELECT CASE i
+  $                     CASE 1: exe = "PCSEDIT.exe"
+  $                     CASE 2: exe = "PCSEDIT.run"
+  $                     CASE 3: exe = "PCSEDIT"
+  $                 END SELECT
+  $                 IF _FILEEXISTS(pdir + "/" + exe) THEN
+  $                     $IF WIN THEN
+  $                         SHELL _DONTWAIT "cd /d " + CHR$(34) + pdir + CHR$(34) + " && start " + CHR$(34) + CHR$(34) + " " + CHR$(34) + exe + CHR$(34)
+  $                     $ELSE
+  $                         SHELL _DONTWAIT "cd '" + pdir + "' && './" + exe + "' >/dev/null 2>&1 &"
+  $                     $END IF
+  $                     start_pcsedit = -1
+  $                     EXIT FUNCTION
+  $                 END IF
+  $             NEXT
+  $         END IF
+  $     NEXT
+  $ END FUNCTION
+  $ '''
+  $ p='PCSFXR/PCSFXR.BAS'; s=open(p).read()
+  $ i=s.index("FUNCTION start_pcsedit%"); j=s.index("END FUNCTION",i)+len("END FUNCTION\n")
+  $ s=s[:i]+launcher+s[j:]
+  $ open(p,'w').write(s)
+  $ 
+  $ p='PWMSFXR/PWMSFXR.BAS'; s=open(p).read()
+  $ r("""    IF pcsedit_alive(box) THEN
+  $         set_status "Sent " + nm + " to PCSEDIT (" + LTRIM$(STR$(used)) + " voice(s) - pitches only: the speaker has no waveforms)"
+  $     ELSE
+  $         set_status nm + " is waiting in PCSEDIT's inbox - start PCSEDIT to get it"
+  $     END IF
+  $ END SUB""","""    IF pcsedit_alive(box) THEN
+  $         set_status "Sent " + nm + " to PCSEDIT (" + LTRIM$(STR$(used)) + " voice(s) - pitches only: the speaker has no waveforms)"
+  $     ELSEIF start_pcsedit THEN
+  $         set_status "Started PCSEDIT - " + nm + " will be in its bank"
+  $     ELSE
+  $         set_status nm + " is waiting in PCSEDIT's inbox - start PCSEDIT to get it (compile PC-SPEAKER/PCSEDIT.BAS and it'll start by itself)"
+  $     END IF
+  $ END SUB
+  $ ...[truncated]
+2026-10-03T15:10:41-0400  INFO     bash_end      [ok] 3L stdout
+  | 834:            IF _INSTRREV(cand, "\\") > p THEN p = _INSTRREV(cand, "\\")
+  | 839:        IF _INSTRREV(cand, "\\") > p THEN p = _INSTRREV(cand, "\\")
+  | 877:    IF _INSTRREV(f, "\") > p THEN p = _INSTRREV(f, "\")
+2026-10-03T15:10:46-0400  INFO     bash_start    for f in PCSFXR/PCSFXR.BAS PWMSFXR/PWMSFXR.BAS PC-SPEAKER/PCSEDIT.BAS; do python3 - "$f" <<'PYEOF' | import sys | p=sys.argv[1]; s=open(p).read() | bad='"'+'\\'*2+'"'; good='"'+'\\'+'"' | n=s.count(b…
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND
+  $ for f in PCSFXR/PCSFXR.BAS PWMSFXR/PWMSFXR.BAS PC-SPEAKER/PCSEDIT.BAS; do python3 - "$f" <<'PYEOF'
+  $ import sys
+  $ p=sys.argv[1]; s=open(p).read()
+  $ bad='"'+'\\'*2+'"'; good='"'+'\\'+'"'
+  $ n=s.count(bad); s=s.replace(bad,good); open(p,'w').write(s); print(p,'fixed',n)
+  $ PYEOF
+  $ done; grep -n 'src = "PWMSFXR"' -B1 PC-SPEAKER/PCSEDIT.BAS
+2026-10-03T15:10:46-0400  INFO     bash_end      [ok] 5L stdout
+  | PCSFXR/PCSFXR.BAS fixed 5
+  | PWMSFXR/PWMSFXR.BAS fixed 5
+  | PC-SPEAKER/PCSEDIT.BAS fixed 1
+  | 6718-    src = "PCSFXR"
+  | 6719:    IF LEFT$(LCASE$(MID$(f, _INSTRREV(f, "/") + _INSTRREV(f, "\") + 1)), 8) = "pwmsfxr_" THEN src = "PWMSFXR"
+2026-10-03T15:11:06-0400  INFO     bash_start    [BG] export SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad; rm -rf $SP/tree && mkdir -p $SP/tree/PC-SPEAKER $SP/tree/PWMSFXR $SP/tree/home; cd /home/grym…
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND
+  $ export SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad; rm -rf $SP/tree && mkdir -p $SP/tree/PC-SPEAKER $SP/tree/PWMSFXR $SP/tree/home; cd /home/grymmjack/git/qb64/qb64/SOUND && python3 - <<'PYEOF'
+  $ import os
+  $ SP=os.environ['SP']
+  $ s=open('PC-SPEAKER/PCSEDIT.BAS').read()
+  $ lines=s.split('\n'); i=lines.index('DO')
+  $ lines.insert(i,'DIM SHARED shT AS DOUBLE: shT = TIMER: DIM shI AS LONG')
+  $ s='\n'.join(lines)
+  $ a="    inbox_poll ' sounds sent from PCSFXR\n"
+  $ s=s.replace(a,a+'    IF TIMER - shT > 3 THEN OPEN "%s/tree/ed.txt" FOR APPEND AS #9: PRINT #9, "PCSEDIT started, sounds"; sndCount; " mode"; polyMode; " ["; statusMsg; "]": FOR shI = 1 TO sndCount: PRINT #9, "  "; shI; sndName(shI); voices_used(shI): NEXT: CLOSE #9: EXIT DO\n' % SP,1)
+  $ open(SP+'/help/_IBT.BAS','w').write(s)
+  $ s=open('PWMSFXR/PWMSFXR.BAS').read()
+  $ s=s.replace("DIM k AS LONG, f AS STRING, prevMb AS INTEGER","DIM tsN AS LONG\nDIM k AS LONG, f AS STRING, prevMb AS INTEGER",1)
+  $ s=s.replace("""    _DISPLAY
+  $     _LIMIT 60
+  $ LOOP UNTIL quitApp""","""    _DISPLAY
+  $     tsN = tsN + 1
+  $     IF tsN = 5 THEN send_to_pcsedit: OPEN "%s/tree/fx.txt" FOR OUTPUT AS #9: PRINT #9, statusMsg: CLOSE #9: quitApp = -1
+  $     _LIMIT 60
+  $ LOOP UNTIL quitApp""" % SP)
+  $ open('PWMSFXR/_PWT.BAS','w').write(s)
+  $ PYEOF
+  $ cp PC-SPEAKER/PCSMIDI.B? PC-SPEAKER/PCSPKR.B? $SP/help/; (cd $SP/help && timeout 290 /home/grymmjack/git/qb64pe/qb64pe -x _IBT.BAS -o $SP/tree/PC-SPEAKER/PCSEDIT.run 2>&1 | grep -v "^\[" | grep -iE "error|Output"); (cd PWMSFXR && timeout 290 /home/grymmjack/git/qb64pe/qb64pe -x _PWT.BAS -o $SP/tree/PWMSFXR/PWT 2>&1 | grep -v "^\[" | grep -iE "error|Output"; rm -f _PWT.BAS); for d in PCSFXR PWMSFXR; do (cd $d && timeout 290 /home/grymmjack/git/qb64pe/qb64pe -x $d.BAS -o $SP/$d 2>&1 | grep -v "^\[" | grep -iE "error|Output"); done; cd $SP/tree/PWMSFXR && env -u WAYLAND_DISPLAY -u XDG_CURRENT_DESKTOP -u KDE_FULL_SESSION -u XDG_SESSION_TYPE QT_QPA_PLATFORM=xcb DISPLAY=:99 HOME=$SP/tree/home PCSEDIT_NOMIDI=1 timeout 60 ./PWT >/dev/null 2>&1; cat ../fx.txt; for i in 1 2 3 4 5 6 7 8 9 10; do [ -f ../ed.txt ] && break; sleep 1; done; sleep 1; cat ../ed.txt; ls ../home/.config/pcsedit-inbox/
+2026-10-03T15:11:06-0400  INFO     bash_end      [ok] 0L stdout
+2026-10-03T15:11:21-0400  NOTICE   prompt        <task-notification>
+  > <task-notification>
+  > <task-id>bmx8f49o4</task-id>
+  > <tool-use-id>toolu_01VatAc3S9bS4pNEnZHQCkq7</tool-use-id>
+  > <output-file>/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/tasks/bmx8f49o4.output</output-file>
+  > <status>completed</status>
+  > <summary>Background command "export SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad; rm -rf $SP/tree &amp;&amp; mkdir -p $SP/tree/PC-SPEAKER $SP/tree/PWMSFXR $SP/tree/home; cd /home/grymmjack/git/qb64/qb64/SOUND &amp;&amp; python3 - &lt;&lt;'PYEOF'
+  > import os
+  > SP=os.environ['SP']
+  > s=open('PC-SPEAKER/PCSEDIT.BAS').read()
+  > lines=s.split('\n'); i=lines.index('DO')
+  > lines.insert(i,'DIM SHARED shT AS DOUBLE: shT = TIMER: DIM shI AS LONG')
+  > s='\n'.join(lines)
+  > a="    inbox_poll ' sounds sent from PCSFXR\n"
+  > s=s.replace(a,a+'    IF TIMER - shT &gt; 3 THEN OPEN "%s/tree/ed.txt" FOR APPEND AS #9: PRINT #9, "PCSEDIT started, sounds"; sndCount; " mode"; polyMode; " ["; statusMsg; "]": FOR shI = 1 TO sndCount: PRINT #9, "  "; shI; sndName(shI); voices_used(shI): NEXT: CLOSE #9: EXIT DO\n' % SP,1)
+  > open(SP+'/help/_IBT.BAS','w').write(s)
+  > s=open('PWMSFXR/PWMSFXR.BAS').read()
+  > s=s.replace("DIM k AS LONG, f AS STRING, prevMb AS INTEGER","DIM tsN AS LONG\nDIM k AS LONG, f AS STRING, prevMb AS INTEGER",1)
+  > s=s.replace("""    _DISPLAY
+  >     _LIMIT 60
+  > LOOP UNTIL quitApp""","""    _DISPLAY
+  >     tsN = tsN + 1
+  >     IF tsN = 5 THEN send_to_pcsedit: OPEN "%s/tree/fx.txt" FOR OUTPUT AS #9: PRINT #9, statusMsg: CLOSE #9: quitApp = -1
+  >     _LIMIT 60
+  > LOOP UNTIL quitApp""" % SP)
+  > open('PWMSFXR/_PWT.BAS','w').write(s)
+  > PYEOF
+  > cp PC-SPEAKER/PCSMIDI.B? PC-SPEAKER/PCSPKR.B? $SP/help/; (cd $SP/help &amp;&amp; timeout 290 /home/grymmjack/git/qb64pe/qb64pe -x _IBT.BAS -o $SP/tree/PC-SPEAKER/PCSEDIT.run 2&gt;&amp;1 | grep -v "^\[" | grep -iE "error|Output"); (cd PWMSFXR &amp;&amp; timeout 290 /home/grymmjack/git/qb64pe/qb64pe -x _PWT.BAS -o $SP/tree/PWMSFXR/PWT 2&gt;&amp;1 | grep -v "^\[" | grep -iE "error|Output"; rm -f _PWT.BAS); for d in PCSFXR PWMSFXR; do (cd $d &amp;&amp; timeout 290 /home/grymmjack/git/qb64pe/qb64pe -x $d.BAS -o $SP/$d 2&gt;&amp;1 | grep -v "^\[" | grep -iE "error|Output"); done; cd $SP/tree/PWMSFXR &amp;&amp; env -u WAYLAND_DISPLAY -u XDG_CURRENT_DESKTOP -u KDE_FULL_SESSION -u XDG_SESSION_TYPE QT_QPA_PLATFORM=xcb DISPLAY=:99 HOME=$SP/tree/home PCSEDIT_NOMIDI=1 timeout 60 ./PWT &gt;/dev/null 2&gt;&amp;1; cat ../fx.txt; for i in 1 2 3 4 5 6 7 8 9 10; do [ -f ../ed.txt ] &amp;&amp; break; sleep 1; done; sleep 1; cat ../ed.txt; ls ../home/.config/pcsedit-inbox/" completed (exit code 0)</summary>
+  > </task-notification>
+2026-10-03T15:11:24-0400  INFO     bash_start    cat /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/tasks/bmx8f49o4.output | cut -c1-200; pgrep -a PCSEDIT.run
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND
+  $ cat /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/tasks/bmx8f49o4.output | cut -c1-200; pgrep -a PCSEDIT.run
+2026-10-03T15:27:44-0400  NOTICE   prompt        you delete the line - it should be able to detect pwm or not ?
+  > you delete the line - it should be able to detect pwm or not ?
+2026-10-03T15:27:54-0400  INFO     bash_start    pgrep -a -f "PCSEDIT" | grep -v "pgrep\|zsh -c" | head; grep -n "pcsfxr_arp\|^poly=" ~/.config/pcsedit.ini
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND
+  $ pgrep -a -f "PCSEDIT" | grep -v "pgrep\|zsh -c" | head; grep -n "pcsfxr_arp\|^poly=" ~/.config/pcsedit.ini
+2026-10-03T15:27:55-0400  INFO     bash_end      [ok] 2L stdout
+  | 21:poly=0
+  | 23:pcsfxr_arp=1
+2026-10-03T15:28:04-0400  INFO     bash_start    [t=300000ms] sed -i '/^pcsfxr_arp=/d' ~/.config/pcsedit.ini && grep -c "pcsfxr_arp" ~/.config/pcsedit.ini; cd /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER && python3 - <<'PYEOF' | p='PCSEDIT.BAS'; …
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND
+  $ sed -i '/^pcsfxr_arp=/d' ~/.config/pcsedit.ini && grep -c "pcsfxr_arp" ~/.config/pcsedit.ini; cd /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER && python3 - <<'PYEOF'
+  $ p='PCSEDIT.BAS'; s=open(p).read()
+  $ a="""            IF fxrArp = 1 THEN
+  $                 polyMode = POLY_ARP
+  $                 set_status "From PCSFXR: " + sndName(last) + " - added as sound" + STR$(last) + ", playing in ARP mode (Ctrl+J: PWM)"
+  $             END IF
+  $         END IF
+  $     END IF"""
+  $ assert a in s
+  $ s=s.replace(a,"""            IF fxrArp = 1 THEN
+  $                 polyMode = POLY_ARP
+  $                 set_status "From PCSFXR: " + sndName(last) + " - added as sound" + STR$(last) + ", playing in ARP mode (Ctrl+J: PWM)"
+  $             END IF
+  $         END IF
+  $         ' PWMSFXR's layered sounds are made to sound together: one with
+  $         ' several voices switches PCSEDIT to PWM (no question - it's what it is)
+  $         IF src = "PWMSFXR" AND polyMode <> POLY_PWM AND voices_used(last) > 1 THEN
+  $             polyMode = POLY_PWM
+  $             set_status "From PWMSFXR: " + sndName(last) + " - added as sound" + STR$(last) + " with" + STR$(voices_used(last)) + " voices, playing in PWM mode (Ctrl+J: ARP)"
+  $         END IF
+  $     END IF""")
+  $ open(p,'w').write(s)
+  $ PYEOF
+  $ SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad; timeout 290 /home/grymmjack/git/qb64pe/qb64pe -x PCSEDIT.BAS -o $SP/PCSEDIT 2>&1 | grep -v "^\[" | grep -iE "error|Output"
+2026-10-03T15:28:08-0400  INFO     bash_end      [ok] 3L stdout
+  | 0
+  | Beginning C++ output from QB64 code... 
+  | Output: /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/PCSEDIT
+2026-10-03T15:28:19-0400  INFO     bash_start    [BG] export SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad; rm -f $SP/tree/ed.txt $SP/tree/fx.txt; rm -rf $SP/tree/home; mkdir -p $SP/tree/home; cd /home…
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ export SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad; rm -f $SP/tree/ed.txt $SP/tree/fx.txt; rm -rf $SP/tree/home; mkdir -p $SP/tree/home; cd /home/grymmjack/git/qb64/qb64/SOUND && python3 - <<'PYEOF'
+  $ import os
+  $ SP=os.environ['SP']
+  $ s=open('PC-SPEAKER/PCSEDIT.BAS').read()
+  $ lines=s.split('\n'); i=lines.index('DO')
+  $ lines.insert(i,'DIM SHARED shT AS DOUBLE: shT = TIMER: DIM shI AS LONG')
+  $ s='\n'.join(lines)
+  $ a="    inbox_poll ' sounds sent from PCSFXR\n"
+  $ s=s.replace(a,a+'    IF TIMER - shT > 3 THEN OPEN "%s/tree/ed.txt" FOR APPEND AS #9: PRINT #9, "PCSEDIT started, sounds"; sndCount; " mode"; polyMode; " ["; statusMsg; "]": FOR shI = 1 TO sndCount: PRINT #9, "  "; shI; sndName(shI); voices_used(shI): NEXT: CLOSE #9: EXIT DO\n' % SP,1)
+  $ open(SP+'/help/_IBT.BAS','w').write(s)
+  $ PYEOF
+  $ (cd $SP/help && timeout 290 /home/grymmjack/git/qb64pe/qb64pe -x _IBT.BAS -o $SP/tree/PC-SPEAKER/PCSEDIT.run 2>&1 | grep -v "^\[" | grep -iE "error|Output"); cd $SP/tree/PWMSFXR && env -u WAYLAND_DISPLAY -u XDG_CURRENT_DESKTOP -u KDE_FULL_SESSION -u XDG_SESSION_TYPE QT_QPA_PLATFORM=xcb DISPLAY=:99 HOME=$SP/tree/home PCSEDIT_NOMIDI=1 timeout 60 ./PWT >/dev/null 2>&1; cat ../fx.txt; for i in 1 2 3 4 5 6 7 8 9 10; do [ -f ../ed.txt ] && break; sleep 1; done; sleep 1; cat ../ed.txt
+2026-10-03T15:28:19-0400  INFO     bash_end      [ok] 0L stdout
+2026-10-03T15:28:29-0400  NOTICE   prompt        <task-notification>
+  > <task-notification>
+  > <task-id>brf6vq7zw</task-id>
+  > <tool-use-id>toolu_019mGz7TwqxYFKCFYheMrdmh</tool-use-id>
+  > <output-file>/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/tasks/brf6vq7zw.output</output-file>
+  > <status>completed</status>
+  > <summary>Background command "export SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad; rm -f $SP/tree/ed.txt $SP/tree/fx.txt; rm -rf $SP/tree/home; mkdir -p $SP/tree/home; cd /home/grymmjack/git/qb64/qb64/SOUND &amp;&amp; python3 - &lt;&lt;'PYEOF'
+  > import os
+  > SP=os.environ['SP']
+  > s=open('PC-SPEAKER/PCSEDIT.BAS').read()
+  > lines=s.split('\n'); i=lines.index('DO')
+  > lines.insert(i,'DIM SHARED shT AS DOUBLE: shT = TIMER: DIM shI AS LONG')
+  > s='\n'.join(lines)
+  > a="    inbox_poll ' sounds sent from PCSFXR\n"
+  > s=s.replace(a,a+'    IF TIMER - shT &gt; 3 THEN OPEN "%s/tree/ed.txt" FOR APPEND AS #9: PRINT #9, "PCSEDIT started, sounds"; sndCount; " mode"; polyMode; " ["; statusMsg; "]": FOR shI = 1 TO sndCount: PRINT #9, "  "; shI; sndName(shI); voices_used(shI): NEXT: CLOSE #9: EXIT DO\n' % SP,1)
+  > open(SP+'/help/_IBT.BAS','w').write(s)
+  > PYEOF
+  > (cd $SP/help &amp;&amp; timeout 290 /home/grymmjack/git/qb64pe/qb64pe -x _IBT.BAS -o $SP/tree/PC-SPEAKER/PCSEDIT.run 2&gt;&amp;1 | grep -v "^\[" | grep -iE "error|Output"); cd $SP/tree/PWMSFXR &amp;&amp; env -u WAYLAND_DISPLAY -u XDG_CURRENT_DESKTOP -u KDE_FULL_SESSION -u XDG_SESSION_TYPE QT_QPA_PLATFORM=xcb DISPLAY=:99 HOME=$SP/tree/home PCSEDIT_NOMIDI=1 timeout 60 ./PWT &gt;/dev/null 2&gt;&amp;1; cat ../fx.txt; for i in 1 2 3 4 5 6 7 8 9 10; do [ -f ../ed.txt ] &amp;&amp; break; sleep 1; done; sleep 1; cat ../ed.txt" completed (exit code 0)</summary>
+  > </task-notification>
+2026-10-03T15:28:31-0400  INFO     bash_start    cat /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/tasks/brf6vq7zw.output | cut -c1-200
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ cat /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/tasks/brf6vq7zw.output | cut -c1-200
+2026-10-03T15:28:31-0400  INFO     bash_end      [ok] 7L stdout
+  | Beginning C++ output from QB64 code... 
+  | Output: /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/tree/PC-SPEAKER/PCSEDIT.run
+  | Started PCSEDIT - EXPLOSION will be in its bank
+  | PCSEDIT started, sounds 1  mode 1  [From PWMSFXR: EXPLOSION - added as sound 1 with 3 voices, playing in PWM mode (Ctrl+J: ARP)]
+  |    1 EXPLOSION 3 
+  | 
+  | [exited with code 0]
+2026-10-03T15:30:05-0400  NOTICE   prompt        <ide_opened_file>The user opened the file /home/grymmjack/git/qb64/qb64/SOUND/PWMSFXR/PWMSFXR.BAS in the IDE. This may or may not be related to the current task.</ide_opened_file>
+  > <ide_opened_file>The user opened the file /home/grymmjack/git/qb64/qb64/SOUND/PWMSFXR/PWMSFXR.BAS in the IDE. This may or may not be related to the current task.</ide_opened_file>
+  > great commit and push
+2026-10-03T15:30:08-0400  INFO     bash_start    cd /home/grymmjack/git/qb64 && ls qb64/SOUND/PWMSFXR qb64/SOUND/PCSFXR | grep -i "_PWT\|_IBT\|EXPORT"; git add -A .claude/activity.log qb64/SOUND/PC-SPEAKER qb64/SOUND/PCSFXR qb64/SOUND/PWMSFXR && gi…
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ cd /home/grymmjack/git/qb64 && ls qb64/SOUND/PWMSFXR qb64/SOUND/PCSFXR | grep -i "_PWT\|_IBT\|EXPORT"; git add -A .claude/activity.log qb64/SOUND/PC-SPEAKER qb64/SOUND/PCSFXR qb64/SOUND/PWMSFXR && git status --short | grep -v "^?? MYSOUNDS.SND"

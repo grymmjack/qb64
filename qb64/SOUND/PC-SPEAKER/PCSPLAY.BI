@@ -12,6 +12,7 @@
 '   '$INCLUDE:'PCSPLAY.BI'
 '
 '   IF PCSP_LoadBank("MYGAME.SND") = 0 THEN PRINT "no sounds"
+'   i = PCSP_LoadWav("BOOM", "BOOM.WAV") ' a sample (PWMSFXR), played with PWM
 '   PCSP_Music "THEME", PCSP_LOOP
 '   DO
 '       ...
@@ -38,6 +39,7 @@ $IF PCSPLAY_BI = UNDEFINED THEN
     REDIM SHARED pcspData(0 TO 0) AS STRING ' the sound (the ARP mix for a multi-voice one): 2 bytes / step
     REDIM SHARED pcspVoice(0 TO 0) AS STRING ' its voices: sound * 4 + 0 ... 3
     REDIM SHARED pcspNV(0 TO 0) AS INTEGER ' how many voices it has (1 = just pcspData)
+    REDIM SHARED pcspRate(0 TO 0) AS LONG ' 0: IFS divisors; else a PCM sample (8-bit, this many Hz) played with PWM
     DIM SHARED pcspCount AS LONG
 
     DIM SHARED pcspSfx AS LONG ' the effect playing (-1 = none), and where
@@ -50,4 +52,5 @@ $IF PCSPLAY_BI = UNDEFINED THEN
     DIM SHARED pcspLastDiv AS LONG
     DIM SHARED pcspPh(1 TO 4) AS DOUBLE ' PWM: each voice's place in its square wave
     DIM SHARED pcspTemp AS LONG ' the slot PCSP_Beep / Sweep / Noise use
+    DIM SHARED pcspSfxPh AS DOUBLE ' a sample effect: where it is (in samples)
 $END IF

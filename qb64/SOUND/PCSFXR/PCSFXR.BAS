@@ -824,27 +824,37 @@ END FUNCTION
 ' Start PCSEDIT from ../PC-SPEAKER if it has been compiled there.
 '
 FUNCTION start_pcsedit%
-    DIM pdir AS STRING, exe AS STRING, i AS LONG, p AS LONG
-    pdir = _STARTDIR$
-    IF RIGHT$(pdir, 1) = "/" OR RIGHT$(pdir, 1) = "\" THEN pdir = LEFT$(pdir, LEN(pdir) - 1)
-    p = _INSTRREV(pdir, "/")
-    IF _INSTRREV(pdir, "\") > p THEN p = _INSTRREV(pdir, "\")
-    pdir = LEFT$(pdir, p) + "PC-SPEAKER" ' (PCSFXR's sibling folder)
-    IF NOT _DIREXISTS(pdir) THEN EXIT FUNCTION
-    FOR i = 1 TO 3
-        SELECT CASE i
-            CASE 1: exe = "PCSEDIT.exe"
-            CASE 2: exe = "PCSEDIT.run"
-            CASE 3: exe = "PCSEDIT"
-        END SELECT
-        IF _FILEEXISTS(pdir + "/" + exe) THEN
-            $IF WIN THEN
-                SHELL _DONTWAIT "cd /d " + CHR$(34) + pdir + CHR$(34) + " && start " + CHR$(34) + CHR$(34) + " " + CHR$(34) + exe + CHR$(34)
-            $ELSE
-                SHELL _DONTWAIT "cd '" + pdir + "' && './" + exe + "' >/dev/null 2>&1 &"
-            $END IF
-            start_pcsedit = -1
-            EXIT FUNCTION
+    DIM cand AS STRING, pdir AS STRING, exe AS STRING, i AS LONG, j AS LONG, p AS LONG
+    ' PCSEDIT lives in ../PC-SPEAKER: next to where this was started from, or
+    ' next to this program's own folder
+    FOR j = 1 TO 2
+        IF j = 1 THEN cand = _STARTDIR$ ELSE cand = COMMAND$(0)
+        IF j = 2 THEN ' (the program file: its folder)
+            p = _INSTRREV(cand, "/")
+            IF _INSTRREV(cand, "\") > p THEN p = _INSTRREV(cand, "\")
+            cand = LEFT$(cand, p)
+        END IF
+        IF RIGHT$(cand, 1) = "/" OR RIGHT$(cand, 1) = "\" THEN cand = LEFT$(cand, LEN(cand) - 1)
+        p = _INSTRREV(cand, "/")
+        IF _INSTRREV(cand, "\") > p THEN p = _INSTRREV(cand, "\")
+        pdir = LEFT$(cand, p) + "PC-SPEAKER"
+        IF _DIREXISTS(pdir) THEN
+            FOR i = 1 TO 3
+                SELECT CASE i
+                    CASE 1: exe = "PCSEDIT.exe"
+                    CASE 2: exe = "PCSEDIT.run"
+                    CASE 3: exe = "PCSEDIT"
+                END SELECT
+                IF _FILEEXISTS(pdir + "/" + exe) THEN
+                    $IF WIN THEN
+                        SHELL _DONTWAIT "cd /d " + CHR$(34) + pdir + CHR$(34) + " && start " + CHR$(34) + CHR$(34) + " " + CHR$(34) + exe + CHR$(34)
+                    $ELSE
+                        SHELL _DONTWAIT "cd '" + pdir + "' && './" + exe + "' >/dev/null 2>&1 &"
+                    $END IF
+                    start_pcsedit = -1
+                    EXIT FUNCTION
+                END IF
+            NEXT
         END IF
     NEXT
 END FUNCTION

@@ -94,13 +94,96 @@ $IF PCSPLAY_BM = UNDEFINED THEN
             REDIM _PRESERVE pcspPri(0 TO pcspCount * 2 + 8) AS INTEGER
             REDIM _PRESERVE pcspData(0 TO pcspCount * 2 + 8) AS STRING
             REDIM _PRESERVE pcspNV(0 TO pcspCount * 2 + 8) AS INTEGER
+            REDIM _PRESERVE pcspRate(0 TO pcspCount * 2 + 8) AS LONG
             REDIM _PRESERVE pcspVoice(0 TO (pcspCount * 2 + 8) * 4 + 3) AS STRING
         END IF
         pcspName(pcspCount) = nm: pcspPri(pcspCount) = pri: pcspData(pcspCount) = dat
         pcspNV(pcspCount) = 1
+        pcspRate(pcspCount) = 0
         PCSP_AddSound = pcspCount
         pcspCount = pcspCount + 1
     END FUNCTION
+
+
+    ''
+    ' A sample (a .wav: PCM, 8 or 16-bit, mono or stereo - PWMSFXR saves
+    ' them) as a sound effect called nm; it plays through the speaker with
+    ' PWM. Returns its number (-1 if it isn't a WAV it can read).
+    '
+    FUNCTION PCSP_LoadWav& (nm AS STRING, fileName AS STRING)
+        DIM ff AS LONG, d AS STRING
+        PCSP_LoadWav = -1
+        IF NOT _FILEEXISTS(fileName) THEN EXIT FUNCTION
+        ff = FREEFILE
+        OPEN fileName FOR BINARY AS #ff
+        d = SPACE$(LOF(ff))
+        GET #ff, 1, d
+        CLOSE #ff
+        PCSP_LoadWav = PCSP_LoadWavData(nm, d)
+    END FUNCTION
+
+
+    FUNCTION PCSP_LoadWavHex& (nm AS STRING, h AS STRING)
+        DIM d AS STRING, i AS LONG
+        d = SPACE$(LEN(h) \ 2)
+        FOR i = 1 TO LEN(h) \ 2
+            MID$(d, i, 1) = CHR$(VAL("&H" + MID$(h, i * 2 - 1, 2)))
+        NEXT
+        PCSP_LoadWavHex = PCSP_LoadWavData(nm, d)
+    END FUNCTION
+
+
+    FUNCTION PCSP_LoadWavData& (nm AS STRING, d AS STRING)
+        DIM p AS LONG, ck AS STRING, ln AS LONG, ch AS LONG, rate AS LONG, bits AS LONG, fmtOK AS INTEGER
+        DIM pcm AS STRING, n AS LONG, i AS LONG, v AS LONG, k AS LONG, a AS LONG
+        PCSP_LoadWavData = -1
+        PCSP_Init
+        IF LEFT$(d, 4) <> "RIFF" OR MID$(d, 9, 4) <> "WAVE" THEN EXIT FUNCTION
+        p = 13
+        DO WHILE p + 8 <= LEN(d)
+            ck = MID$(d, p, 4)
+            ln = CVL(MID$(d, p + 4, 4))
+            IF ck = "fmt " THEN
+                fmtOK = (CVI(MID$(d, p + 8, 2)) = 1) ' PCM
+                ch = CVI(MID$(d, p + 10, 2))
+                rate = CVL(MID$(d, p + 12, 4))
+                bits = CVI(MID$(d, p + 22, 2))
+            ELSEIF ck = "data" AND fmtOK AND ch >= 1 AND (bits = 8 OR bits = 16) THEN
+                ' to 8-bit unsigned mono
+                n = ln \ (ch * bits \ 8)
+                pcm = SPACE$(n)
+                FOR i = 0 TO n - 1
+                    a = 0
+                    FOR k = 0 TO ch - 1
+                        IF bits = 8 THEN
+                            v = ASC(d, p + 8 + i * ch + k) - 128
+                        ELSE
+                            v = CVI(MID$(d, p + 8 + (i * ch + k) * 2, 2)) \ 256
+                        END IF
+                        a = a + v
+                    NEXT
+                    v = a \ ch + 128
+                    IF v < 0 THEN v = 0
+                    IF v > 255 THEN v = 255
+                    MID$(pcm, i + 1, 1) = CHR$(v)
+                NEXT
+                i = PCSP_AddSound(nm, 50, pcm)
+                pcspRate(i) = rate
+                PCSP_LoadWavData = i
+                EXIT FUNCTION
+            END IF
+            p = p + 8 + ln + (ln AND 1)
+        LOOP
+    END FUNCTION
+
+
+    ''
+    ' A sound's IFS priority (0-255): an effect only cuts in over a playing
+    ' one of the same or lower priority. Samples load with 50.
+    '
+    SUB PCSP_SetPriority (i AS LONG, pri AS INTEGER)
+        IF i >= 0 AND i < pcspCount THEN pcspPri(i) = pri
+    END SUB
 
 
     ''
@@ -142,7 +225,7 @@ $IF PCSPLAY_BM = UNDEFINED THEN
         IF pcspSfx >= 0 THEN
             IF pcspPri(i) < pcspPri(pcspSfx) THEN EXIT SUB ' less important: skip it
         END IF
-        pcspSfx = i: pcspSfxPos = 0
+        pcspSfx = i: pcspSfxPos = 0: pcspSfxPh = 0
     END SUB
 
 
@@ -158,6 +241,7 @@ $IF PCSPLAY_BM = UNDEFINED THEN
         DIM k AS LONG
         PCSP_Init
         IF i < 0 OR i >= pcspCount THEN EXIT SUB
+        IF pcspRate(i) THEN PCSP_SfxNum i: EXIT SUB ' (a sample plays as an effect)
         pcspMus = i: pcspMusPos = 0: pcspMusLoop = loops
         FOR k = 1 TO 4: pcspPh(k) = 0: NEXT
     END SUB
@@ -296,6 +380,11 @@ $IF PCSPLAY_BM = UNDEFINED THEN
             END IF
         END IF
         IF pcspSfx >= 0 THEN
+            IF pcspRate(pcspSfx) THEN ' a sample: PWM
+                PCSP_SampleTick
+                IF pcspMus >= 0 THEN pcspMusPos = pcspMusPos + 1
+                EXIT SUB
+            END IF
             v = PCSP_Step(pcspData(pcspSfx), pcspSfxPos)
             pcspSfxPos = pcspSfxPos + 1
             IF pcspSfxPos >= LEN(pcspData(pcspSfx)) \ 2 THEN pcspSfx = -1
@@ -316,6 +405,44 @@ $IF PCSPLAY_BM = UNDEFINED THEN
             PCSP_Square PCSP_Step(pcspData(mv), pcspMusPos)
         END IF
         pcspMusPos = pcspMusPos + 1
+    END SUB
+
+
+    ''
+    ' One step of a sample effect: a PWM pulse per carrier period, as wide as
+    ' the sample is high.
+    '
+    SUB PCSP_SampleTick
+        CONST CARRIER = 76
+        CONST EASE = 236 ' carrier periods (15 ms) to ease the cone in / out: no pop, no click
+        DIM p AS LONG, periods AS LONG, clk AS DOUBLE, stp AS DOUBLE, k AS LONG, d AS STRING, n AS LONG
+        DIM done AS LONG, lv AS DOUBLE, g AS DOUBLE
+        clk = pcspk.tickClk
+        d = pcspData(pcspSfx): n = LEN(d)
+        stp = CARRIER / PCSPK_PIT_HZ * pcspRate(pcspSfx) ' samples per carrier period
+        PCSPK_SpeakerOn
+        periods = INT(clk / CARRIER)
+        FOR p = 1 TO periods
+            k = INT(pcspSfxPh)
+            done = INT((pcspSfxPh - n) / stp) ' periods past the end
+            IF done >= EASE THEN EXIT FOR
+            IF k < n THEN lv = ASC(d, k + 1) / 255 ELSE lv = 0.5
+            ' the cone: in (speaker off) -> the sound -> back in, smoothly
+            g = 1
+            IF pcspSfxPh / stp < EASE THEN g = 0.5 - 0.5 * COS(_PI * (pcspSfxPh / stp) / EASE)
+            IF done >= 0 THEN g = 0.5 + 0.5 * COS(_PI * done / EASE)
+            lv = lv * g
+            PCSPK_PitWrite PCSPK_MODE_ONESHOT, 1 + CLNG((1 - lv) * (CARRIER - 2))
+            PCSPK_AdvanceClocks CARRIER
+            pcspSfxPh = pcspSfxPh + stp
+        NEXT
+        IF p <= periods THEN ' it ended part way through
+            PCSPK_SpeakerOff
+            PCSPK_AdvanceClocks (periods - p + 1) * CARRIER
+            pcspSfx = -1
+        END IF
+        PCSPK_AdvanceClocks clk - periods * CARRIER
+        pcspLastDiv = -1
     END SUB
 
 

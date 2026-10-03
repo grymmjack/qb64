@@ -98,7 +98,7 @@ $IF SFXR_BM = UNDEFINED THEN
             IF sfxr_p(i) > 1 THEN sfxr_p(i) = 1
         NEXT
         sfxr_p(0) = INT(sfxr_p(0))
-        IF sfxr_p(0) < 0 OR sfxr_p(0) > 3 THEN sfxr_p(0) = SFXR_SQUARE
+        IF sfxr_p(0) < 0 OR sfxr_p(0) >= SFXR_WAVES THEN sfxr_p(0) = SFXR_SQUARE
         IF sfxr_vol < 0 THEN sfxr_vol = 0
         IF sfxr_vol > 1 THEN sfxr_vol = 1
     END SUB
@@ -439,6 +439,7 @@ $IF SFXR_BM = UNDEFINED THEN
         DIM rfperiod AS DOUBLE, iperiod AS LONG, envVol AS DOUBLE, envf AS DOUBLE
         DIM sample AS DOUBLE, subSample AS DOUBLE, fp AS DOUBLE
         DIM tickLen AS DOUBLE, nextTick AS DOUBLE
+        DIM pk0 AS DOUBLE, pk1 AS DOUBLE, pk2 AS DOUBLE, wn AS DOUBLE, br AS DOUBLE, lfsr AS LONG
 
         SFXR_Init
         SFXR_InitVoice
@@ -451,6 +452,9 @@ $IF SFXR_BM = UNDEFINED THEN
         sfxr_clipped = 0
         REDIM sfxr_pcm(0 TO 65535) AS SINGLE
         REDIM sfxr_div(0 TO 255) AS LONG
+        REDIM sfxr_tickHzOut(0 TO 255) AS SINGLE
+        REDIM sfxr_tickEnv(0 TO 255) AS SINGLE
+        lfsr = &H7FFF
         IF sfxr_tickHz <= 0 THEN sfxr_tickHz = PCSPK_IFS_DEFAULT_HZ
         tickLen = SFXR_RATE / sfxr_tickHz
         nextTick = 0
@@ -529,11 +533,33 @@ $IF SFXR_BM = UNDEFINED THEN
                 phase = phase + 1
                 IF phase >= iperiod THEN
                     phase = phase MOD iperiod
-                    IF sfxr_v.waveShape = SFXR_NOISE THEN
-                        FOR i = 0 TO 31
-                            noise(i) = RND * 2 - 1
-                        NEXT
-                    END IF
+                    SELECT CASE sfxr_v.waveShape
+                        CASE SFXR_NOISE
+                            FOR i = 0 TO 31
+                                noise(i) = RND * 2 - 1
+                            NEXT
+                        CASE SFXR_PINK ' white noise through Paul Kellet's pink filter
+                            FOR i = 0 TO 31
+                                wn = RND * 2 - 1
+                                pk0 = 0.99765 * pk0 + wn * 0.099046
+                                pk1 = 0.963 * pk1 + wn * 0.2965164
+                                pk2 = 0.57 * pk2 + wn * 1.0526913
+                                noise(i) = (pk0 + pk1 + pk2 + wn * 0.1848) * 0.3
+                            NEXT
+                        CASE SFXR_BROWN ' a random walk (leaky, so it stays put)
+                            FOR i = 0 TO 31
+                                br = (br + (RND * 2 - 1) * 0.12) * 0.995
+                                IF br > 1 THEN br = 1
+                                IF br < -1 THEN br = -1
+                                noise(i) = br * 1.6
+                            NEXT
+                        CASE SFXR_METAL ' a short 7-bit LFSR: a metallic, pitched buzz
+                            FOR i = 0 TO 31
+                                lfsr = ((lfsr \ 2) OR ((((lfsr XOR (lfsr \ 2)) AND 1)) * 64)) AND 127
+                                IF lfsr = 0 THEN lfsr = 1
+                                IF lfsr AND 1 THEN noise(i) = 0.5 ELSE noise(i) = -0.5
+                            NEXT
+                    END SELECT
                 END IF
 
                 ' base waveform
@@ -549,7 +575,9 @@ $IF SFXR_BM = UNDEFINED THEN
                         END IF
                     CASE SFXR_SINE
                         subSample = SIN(fp * 2 * _PI)
-                    CASE ELSE
+                    CASE SFXR_TRIANGLE
+                        subSample = 1 - 4 * ABS(fp - 0.5)
+                    CASE ELSE ' the noises
                         subSample = noise(INT(phase * 32 / iperiod))
                 END SELECT
 
@@ -607,7 +635,7 @@ $IF SFXR_BM = UNDEFINED THEN
         DIM f AS DOUBLE, d AS LONG
         IF envVol >= sfxr_gate AND rfperiod > 0 THEN
             f = SFXR_RATE * SFXR_OVERSAMPLING / rfperiod
-            IF sfxr_v.waveShape = SFXR_NOISE THEN
+            IF SFXR_IsNoise(sfxr_v.waveShape) THEN
                 f = f * 8 * 2 ^ (RND * 3 - 1.5)
                 IF f < 80 THEN f = 80 + RND * 80
             END IF
@@ -616,10 +644,22 @@ $IF SFXR_BM = UNDEFINED THEN
             IF d < 20 THEN d = 20
             IF d > 65535 THEN d = 65535
         END IF
-        IF sfxr_divN > UBOUND(sfxr_div) THEN REDIM _PRESERVE sfxr_div(0 TO UBOUND(sfxr_div) * 2 + 1) AS LONG
+        IF sfxr_divN > UBOUND(sfxr_div) THEN
+            REDIM _PRESERVE sfxr_div(0 TO UBOUND(sfxr_div) * 2 + 1) AS LONG
+            REDIM _PRESERVE sfxr_tickHzOut(0 TO UBOUND(sfxr_div)) AS SINGLE
+            REDIM _PRESERVE sfxr_tickEnv(0 TO UBOUND(sfxr_div)) AS SINGLE
+        END IF
         sfxr_div(sfxr_divN) = d
+        ' the pitch and level too, for players that have volume (QB64-PE SOUND / PLAY)
+        IF rfperiod > 0 THEN sfxr_tickHzOut(sfxr_divN) = SFXR_RATE * SFXR_OVERSAMPLING / rfperiod ELSE sfxr_tickHzOut(sfxr_divN) = 0
+        sfxr_tickEnv(sfxr_divN) = envVol
         sfxr_divN = sfxr_divN + 1
     END SUB
+
+
+    FUNCTION SFXR_IsNoise%% (w AS LONG)
+        SFXR_IsNoise = (w = SFXR_NOISE OR w = SFXR_PINK OR w = SFXR_BROWN OR w = SFXR_METAL)
+    END FUNCTION
 
 
     '-------------------------------------------------------------------------
@@ -678,7 +718,7 @@ $IF SFXR_BM = UNDEFINED THEN
     ' every carrier tick. Resolution is log2(PIT clock / carrier) bits.
     '
     FUNCTION SFXR_RenderPWM&
-        DIM d AS LONG, stp AS DOUBLE, ppos AS DOUBLE, k AS LONG, n AS LONG
+        DIM d AS LONG, stp AS DOUBLE, ppos AS DOUBLE, k AS LONG, n AS LONG, e AS LONG, g AS DOUBLE
         DIM a AS LONG, b AS LONG, i AS LONG, s AS DOUBLE, w AS LONG, pk AS DOUBLE
 
         d = SFXR_PWMDivisor
@@ -691,6 +731,14 @@ $IF SFXR_BM = UNDEFINED THEN
         PCSPK_SpeakerOn
         n = INT(sfxr_pcmN / stp)
         ppos = 0
+        ' a PWM silence has the cone half way out, a speaker that's off has it
+        ' in: ease between the two (30 ms) so the sound has no pop / click
+        e = CLNG(0.03 * PCSPK_PIT_HZ / d)
+        FOR k = 0 TO e - 1
+            g = 0.5 - 0.5 * COS(_PI * (k + 0.5) / e)
+            PCSPK_PitWrite PCSPK_MODE_ONESHOT, CLNG((1 - g * 0.5) * (d - 2)) + 1
+            PCSPK_AdvanceClocks d
+        NEXT
         FOR k = 0 TO n - 1
             a = INT(ppos)
             b = INT(ppos + stp)
@@ -707,6 +755,11 @@ $IF SFXR_BM = UNDEFINED THEN
             PCSPK_PitWrite PCSPK_MODE_ONESHOT, w
             PCSPK_AdvanceClocks d
             ppos = ppos + stp
+        NEXT
+        FOR k = 0 TO e - 1
+            g = 0.5 + 0.5 * COS(_PI * (k + 0.5) / e)
+            PCSPK_PitWrite PCSPK_MODE_ONESHOT, CLNG((1 - g * 0.5) * (d - 2)) + 1
+            PCSPK_AdvanceClocks d
         NEXT
         PCSPK_SpeakerOff
         PCSPK_AdvanceSeconds 0.05

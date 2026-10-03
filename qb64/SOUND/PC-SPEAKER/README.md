@@ -504,6 +504,8 @@ LOOP
 | Call | What it does |
 | --- | --- |
 | `PCSP_LoadBank&(file)` / `PCSP_LoadBankData&(bytes)` / `PCSP_LoadBankHex&(hex)` | add a bank's sounds (from a file, a string, or hex text); returns how many |
+| `PCSP_LoadWav&(name, file)` / `PCSP_LoadWavData&` / `PCSP_LoadWavHex&` | a sample (8 or 16-bit PCM `.wav`, from [PWMSFXR](../PWMSFXR) say) as a sound effect; it plays through the speaker with PWM |
+| `PCSP_SetPriority i, pri` | a sound's IFS priority (samples load with 50) |
 | `PCSP_Music name, PCSP_LOOP` (or `PCSP_ONCE`) / `PCSP_MusicNum i, ...` | music, by name or number |
 | `PCSP_Sfx name` / `PCSP_SfxNum i` | a sound effect (by IFS priority) |
 | `PCSP_Beep hz, secs` / `PCSP_Sweep hz1, hz2, secs` / `PCSP_Noise hz1, hz2, secs` | effects made on the spot |

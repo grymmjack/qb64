@@ -207,6 +207,7 @@ DIM SHARED pwmGain(1 TO 8) AS SINGLE ' render_pwm_tick: the volume of each divis
 DIM SHARED arpRate AS LONG ' ARP: steps each note of a chord lasts before the next takes over
 DIM SHARED volDragK AS LONG ' dragging a Vol fader: which voice (5 = master)
 DIM SHARED masterVol AS SINGLE ' the master fader (under G): 1 = 100%, up to 2
+DIM SHARED fxrArp AS LONG ' sounds from PCSFXR: 0 = ask (once), 1 = switch to ARP, 2 = leave the mode
 DIM SHARED glideSteps AS LONG ' Ctrl+I: pitch slide between notes, in steps (0 = off)
 DIM SHARED glNow AS DOUBLE ' the keys' glide: the pitch sounding now (-1 = none), from, to, how far
 DIM SHARED glFrom AS DOUBLE
@@ -399,6 +400,7 @@ ON ERROR GOTO trap
 
 ' the window as it was last time (settings_save writes it at quit)
 cfg_load
+fxrArp = VAL(cfg_get("pcsfxr_arp", "0"))
 vibMode = VAL(cfg_get("vibrato", "0"))
 IF vibMode < 0 OR vibMode > 5 THEN vibMode = 0
 vibNote = -1
@@ -6711,7 +6713,10 @@ END SUB
 
 SUB inbox_import (f AS STRING)
     DIM ff AS LONG, d AS STRING, n AS LONG, i AS LONG, o AS LONG, e AS LONG, nm AS STRING, k AS LONG
-    DIM got AS LONG, last AS LONG
+    DIM got AS LONG, last AS LONG, src AS STRING
+    ' who sent it (the file name says): PCSFXR or PWMSFXR
+    src = "PCSFXR"
+    IF LEFT$(LCASE$(MID$(f, _INSTRREV(f, "/") + _INSTRREV(f, "\") + 1)), 8) = "pwmsfxr_" THEN src = "PWMSFXR"
     ff = FREEFILE
     OPEN f FOR BINARY AS #ff
     d = SPACE$(LOF(ff))
@@ -6750,7 +6755,26 @@ SUB inbox_import (f AS STRING)
     NEXT
     IF got THEN
         cursorStep = 0: scrollX = 0
-        set_status "From PCSFXR: " + sndName(last) + " - added to the bank as sound" + STR$(last)
+        set_status "From " + src + ": " + sndName(last) + " - added to the bank as sound" + STR$(last)
+        ' PCSFXR's sounds are made for ARP (how games play them): in PWM mode,
+        ' ask once whether to switch, and remember the answer. (PWMSFXR's
+        ' layered sounds are made for PWM: they leave the mode alone.)
+        IF polyMode = POLY_PWM AND src = "PCSFXR" THEN
+            IF fxrArp = 0 THEN
+                IF ask("PCSEDIT is playing in PWM mode (voices mixed with pulse-width modulation)." + CHR$(10) + CHR$(10) + "Sounds from PCSFXR are made for ARP mode - the way DOS games play them. Switch to ARP now, and every time a sound comes from PCSFXR?" + CHR$(10) + CHR$(10) + "(This is only asked once. Ctrl+J switches between ARP and PWM any time.)", "yesno", "question", 1) = 1 THEN fxrArp = 1 ELSE fxrArp = 2
+                settings_save ' (remembered now, not only at quit)
+            END IF
+            IF fxrArp = 1 THEN
+                polyMode = POLY_ARP
+                set_status "From PCSFXR: " + sndName(last) + " - added as sound" + STR$(last) + ", playing in ARP mode (Ctrl+J: PWM)"
+            END IF
+        END IF
+        ' PWMSFXR's layered sounds are made to sound together: one with
+        ' several voices switches PCSEDIT to PWM (no question - it's what it is)
+        IF src = "PWMSFXR" AND polyMode <> POLY_PWM AND voices_used(last) > 1 THEN
+            polyMode = POLY_PWM
+            set_status "From PWMSFXR: " + sndName(last) + " - added as sound" + STR$(last) + " with" + STR$(voices_used(last)) + " voices, playing in PWM mode (Ctrl+J: ARP)"
+        END IF
     END IF
 END SUB
 
@@ -6833,6 +6857,7 @@ SUB settings_save
     PRINT #ff, "loop="; LTRIM$(STR$(loopOn))
     PRINT #ff, "poly="; LTRIM$(STR$(polyMode))
     PRINT #ff, "arprate="; LTRIM$(STR$(arpRate))
+    PRINT #ff, "pcsfxr_arp="; LTRIM$(STR$(fxrArp))
     PRINT #ff, "glide="; LTRIM$(STR$(glideSteps))
     PRINT #ff, "vibrato="; LTRIM$(STR$(vibMode))
     PRINT #ff, "master="; LTRIM$(STR$(masterVol))
