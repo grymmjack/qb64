@@ -4806,50 +4806,255 @@ SUB draw_scope
 END SUB
 
 
+''
+' F1: the keys, in sections with a colour each, in as many columns as fit
+' the window (the panel shrinks if even that is too big).
+'
 SUB draw_help
-    DIM x AS LONG, y AS LONG, i AS LONG, wMax AS LONG
-    DIM t(1 TO 28) AS STRING
-    t(1) = "PCSEDIT - PC speaker sound editor"
-    t(2) = "Selection: arrows nudge (Shift octave, Alt 1 divisor); Ctrl+Up/Down x2 / half; drag edges to stretch"
-    t(3) = "Tools   D)raw L)ine N)ote W)ave E)rase S)elect M)ove (letter w/ Caps off, Alt+letter, Tab)"
-    t(4) = "        C)ut Ctrl+X  Ctrl+C copy  Ctrl+V paste  Ctrl+A all.  W)ave: 1-5 shape [ ] cycles"
-    t(5) = "Notes   Z S X D C V G B H N J M ,   lower octave     F9/F10 octave  (Caps Lock ON)"
-    t(6) = "        Q 2 W 3 E R 5 T 6 Y 7 U I   upper octave     or a MIDI keyboard"
-    t(7) = "        wheel scroll   Ctrl+wheel zoom   click the time ruler: cursor"
-    t(8) = "F5 rec OFF/STEP/LIVE  Ctrl+R rec now (Ctrl+U count-in)  Ctrl+M metronome off/rec/rec+play"
-    t(15) = "Ctrl+Q quantize LIVE takes   Ctrl+F follow the playhead   Ctrl+Shift+M click volume"
-    t(9) = "F6 snap  F7 MIDI device  F11/F12 note length  Ctrl+G grid  Ctrl+B BPM  ' lines"
-    t(10) = "Space   play / stop            Enter  play from cursor     Ctrl+L  loop"
-    t(11) = "Left/Right cursor  Home/End  PgUp/PgDn next dot (NOTE tool: bar)  Up/Down sound"
-    t(12) = "Insert / Delete  step at cursor    Backspace  delete step before cursor"
-    t(13) = "Ctrl+Up/Down  transpose semitone (Shift: octave)   Ctrl+T trim silence"
-    t(14) = "Ctrl+Z / Ctrl+Y  undo / redo     A  hear what you draw while drawing (on/off)"
-    t(16) = "F2 rename   F3 new sound   F4 duplicate   F8 delete   Ctrl+P priority"
-    t(17) = "Ctrl+N new  Ctrl+O open  Ctrl+S save  Ctrl+Shift+S save as  Ctrl+= / - / 0 display scale"
-    t(18) = "Ctrl+E export .wav   drop a file to open it (.mid/.mml: import)   Ctrl+Shift+V paste a PLAY string"
-    t(19) = "Ctrl+1-4 voice 1-4  Ctrl+5 G all voices  Ctrl+J chords ARP / PWM  (STEP rec: hold keys)"
-    t(20) = "Saves IFS banks (Duke Nukem / Keen format, 140 steps per second)."
-    t(21) = "Opens anything DN1PLAY plays. Saving never replaces the file you"
-    t(22) = "opened unless you choose its name in Save As."
-    t(23) = ""
-    t(24) = "Ctrl+K  keys play the selected SOUND (follows your pick; Ctrl+Shift+K locks it)"
-    t(25) = "        Ctrl+H GATE / ONE-SHOT / LOOP; recording goes into another sound"
-    t(26) = "Click and hold the piano keys to audition a pitch (drag to slide)"
-    t(27) = ""
-    t(28) = "Esc / F1  close this"
-    ' as wide as the longest line, centred
-    FOR i = 1 TO 28
-        IF LEN(t(i)) > wMax THEN wMax = LEN(t(i))
+    STATIC img AS LONG, lastW AS LONG, lastH AS LONG
+    DIM pw AS LONG, ph AS LONG, f AS DOUBLE, x AS LONG, y AS LONG
+    IF img = 0 OR lastW <> SCR_W OR lastH <> SCR_H THEN
+        IF img < -1 THEN _FREEIMAGE img
+        img = help_image(SCR_W - 24, SCR_H - 24)
+        lastW = SCR_W: lastH = SCR_H
+    END IF
+    pw = _WIDTH(img): ph = _HEIGHT(img)
+    f = 1
+    IF pw > SCR_W - 24 THEN f = (SCR_W - 24) / pw
+    IF ph * f > SCR_H - 24 THEN f = (SCR_H - 24) / ph
+    x = (SCR_W - pw * f) \ 2: y = (SCR_H - ph * f) \ 2
+    LINE (0, 0)-(SCR_W - 1, SCR_H - 1), _RGBA32(0, 0, 0, 150), BF ' dim the editor behind it
+    LINE (x + 6, y + 6)-(x + pw * f + 5, y + ph * f + 5), _RGBA32(0, 0, 0, 120), BF ' shadow
+    _PUTIMAGE (x, y)-(x + pw * f - 1, y + ph * f - 1), img
+END SUB
+
+
+''
+' The help's text: "#Heading", then "keys|what they do" lines.
+'
+SUB help_text (t() AS STRING, n AS LONG)
+    n = 0
+    help_add t(), n, "#Tools"
+    help_add t(), n, "D L N W E|Draw  Line  Note  Wave  Erase"
+    help_add t(), n, "S  M|Select  /  Move"
+    help_add t(), n, "letter, Tab|pick a tool (Caps Lock off)"
+    help_add t(), n, "Alt+letter|pick a tool (Caps Lock on)"
+    help_add t(), n, "right drag|erase as you go"
+    help_add t(), n, "Wave: 1-5  [ ]|shape  /  number of cycles"
+    help_add t(), n, "A|hear what you draw"
+    help_add t(), n, "F6|snap to semitones and grid"
+    help_add t(), n, "Alt + drag|place freely, no snap"
+    help_add t(), n, "#Selection"
+    help_add t(), n, "drag (S tool)|select a box (Shift: beats)"
+    help_add t(), n, "Ctrl+A|select everything"
+    help_add t(), n, "Ctrl+X  C  V|cut  /  copy  /  paste"
+    help_add t(), n, "Arrows|nudge it (Shift: an octave)"
+    help_add t(), n, "Alt+Up/Down|nudge by 1 PIT divisor"
+    help_add t(), n, "Ctrl+Up/Down|twice  /  half as long"
+    help_add t(), n, "drag an edge|stretch in time or pitch"
+    help_add t(), n, "Delete  Esc|clear it  /  deselect"
+    help_add t(), n, "#Voices"
+    help_add t(), n, "Ctrl+1 ... 4|edit voice 1 - 4"
+    help_add t(), n, "Ctrl+5|G: edit every voice at once"
+    help_add t(), n, "Ctrl+J|chords as ARP  /  PWM"
+    help_add t(), n, "hold keys|STEP record: a chord"
+    help_add t(), n, "#Playing notes"
+    help_add t(), n, "Z S X D C V ...|lower octave (Caps Lock on)"
+    help_add t(), n, "Q 2 W 3 E R ...|upper octave"
+    help_add t(), n, "F9  F10|octave down  /  up"
+    help_add t(), n, "F7|pick the MIDI keyboard"
+    help_add t(), n, "piano keys|click and hold to hear one"
+    help_add t(), n, "Ctrl+K|keys play the sound (sampler)"
+    help_add t(), n, "Ctrl+Shift+K|lock that instrument"
+    help_add t(), n, "Ctrl+H|GATE  /  ONE-SHOT  /  LOOP"
+    help_add t(), n, "#Recording"
+    help_add t(), n, "F5|record OFF  /  STEP  /  LIVE"
+    help_add t(), n, "F11  F12|note length (Len)"
+    help_add t(), n, "Ctrl+R|record LIVE now"
+    help_add t(), n, "Ctrl+U|count-in: off, 1 or 2 bars"
+    help_add t(), n, "Ctrl+M|metronome (Shift: volume)"
+    help_add t(), n, "Ctrl+Q|quantize LIVE takes"
+    help_add t(), n, "#Playback"
+    help_add t(), n, "Space|play  /  stop"
+    help_add t(), n, "Enter|play from the cursor"
+    help_add t(), n, "Ctrl+L|loop on  /  off"
+    help_add t(), n, "drag the ruler|make a loop region"
+    help_add t(), n, "Ctrl+F|follow the playhead"
+    help_add t(), n, "#Editing"
+    help_add t(), n, "Ctrl+Z  Ctrl+Y|undo  /  redo"
+    help_add t(), n, "Insert  Delete|add  /  remove a step"
+    help_add t(), n, "Backspace|remove the step before"
+    help_add t(), n, "Ctrl+Up/Down|transpose (nothing selected)"
+    help_add t(), n, "Ctrl+Shift+Up/Dn|transpose an octave"
+    help_add t(), n, "Ctrl+T|trim the silence at the end"
+    help_add t(), n, "#Moving around"
+    help_add t(), n, "Left  Right|cursor (Ctrl: a beat)"
+    help_add t(), n, "Home  End|start  /  end"
+    help_add t(), n, "PgUp  PgDn|next dot (Note tool: bar)"
+    help_add t(), n, "Up  Down|previous  /  next sound"
+    help_add t(), n, "wheel|scroll (Ctrl: zoom)"
+    help_add t(), n, "click the ruler|move the cursor"
+    help_add t(), n, "Ctrl+G  Ctrl+B|grid size  /  tempo"
+    help_add t(), n, "' (quote)|grid lines on  /  off"
+    help_add t(), n, "Ctrl+=  -  0|display scale"
+    help_add t(), n, "#Sounds and files"
+    help_add t(), n, "F2  F3|rename  /  new sound"
+    help_add t(), n, "F4  F8|duplicate  /  delete"
+    help_add t(), n, "Ctrl+P|priority"
+    help_add t(), n, "Ctrl+N  Ctrl+O|new bank  /  open"
+    help_add t(), n, "Ctrl+S|save (Shift: save as)"
+    help_add t(), n, "Ctrl+E|export the sound as .wav"
+    help_add t(), n, "Ctrl+Shift+V|paste a PLAY string"
+    help_add t(), n, "drop a file|open it (.mid .mml: add it)"
+END SUB
+
+
+SUB help_add (t() AS STRING, n AS LONG, s AS STRING)
+    n = n + 1
+    IF n > UBOUND(t) THEN REDIM _PRESERVE t(1 TO n + 32) AS STRING
+    t(n) = s
+END SUB
+
+
+''
+' Draw the help panel into a new image, laid out for availW x availH.
+'
+FUNCTION help_image& (availW AS LONG, availH AS LONG)
+    CONST PAD = 22, GAP = 30, TITLE_H = 44, FOOT_H = 50
+    DIM n AS LONG, i AS LONG, k AS LONG, cols AS LONG, ns AS LONG, p AS LONG
+    DIM keyW AS LONG, descW AS LONG, colW AS LONG, total AS LONG
+    DIM pw AS LONG, ph AS LONG, best AS LONG, img AS LONG, d AS LONG, x AS LONG, y AS LONG
+    DIM ac AS _UNSIGNED LONG, kc AS _UNSIGNED LONG, maxH AS LONG, col AS LONG
+    DIM rowH AS LONG, headH AS LONG, secGap AS LONG, roomy AS INTEGER, f AS DOUBLE, bestF AS DOUBLE, try AS LONG
+    REDIM t(1 TO 80) AS STRING
+    help_text t(), n
+
+    ' sections: where each starts and what is in it
+    REDIM sFirst(1 TO 20) AS LONG, sLast(1 TO 20) AS LONG, sN(1 TO 20) AS LONG
+    REDIM sH(1 TO 20) AS LONG, sCol(1 TO 20) AS LONG
+    FOR i = 1 TO n
+        IF LEFT$(t(i), 1) = "#" THEN
+            ns = ns + 1: sFirst(ns) = i: sLast(ns) = i
+        ELSE
+            sLast(ns) = i: sN(ns) = sN(ns) + 1
+            p = INSTR(t(i), "|")
+            IF (p - 1) * 8 > keyW THEN keyW = (p - 1) * 8
+            IF (LEN(t(i)) - p) * 8 > descW THEN descW = (LEN(t(i)) - p) * 8
+        END IF
     NEXT
-    wMax = wMax * 8
-    x = (SCR_W - wMax) \ 2: y = 120
-    LINE (x - 16, y - 16)-(x + wMax + 16, y + 28 * 18), _RGB32(20, 26, 40), BF
-    LINE (x - 16, y - 16)-(x + wMax + 16, y + 28 * 18), _RGB32(120, 140, 180), B
-    FOR i = 1 TO 28
-        IF i = 1 THEN COLOR _RGB32(255, 200, 60) ELSE COLOR _RGB32(210, 220, 235)
-        _PRINTSTRING (x, y + (i - 1) * 18), t(i)
+    colW = keyW + 16 + descW
+
+    ' Roomy spacing in 3 columns when the window has the space for it;
+    ' otherwise whichever column count needs the least shrinking (3 when it's
+    ' a tie, then 2, 4, 1).
+    FOR roomy = -1 TO 0
+        IF roomy THEN rowH = 21: headH = 32: secGap = 18 ELSE rowH = 18: headH = 28: secGap = 12
+        FOR k = 1 TO ns: sH(k) = headH + sN(k) * rowH + secGap: NEXT
+        total = 0
+        FOR k = 1 TO ns: total = total + sH(k): NEXT
+        best = 0: bestF = 0
+        FOR try = 1 TO 4
+            cols = VAL(MID$("3241", try, 1))
+            help_columns sH(), sCol(), ns, cols, total, maxH
+            pw = PAD * 2 + cols * colW + (cols - 1) * GAP
+            ph = PAD + TITLE_H + maxH + FOOT_H
+            f = 1
+            IF pw > availW THEN f = availW / pw
+            IF ph * f > availH THEN f = availH / ph
+            IF f > bestF + 0.001 THEN bestF = f: best = cols
+        NEXT
+        IF NOT roomy OR (bestF >= 1 AND best = 3) THEN EXIT FOR
+    NEXT
+    cols = best
+    help_columns sH(), sCol(), ns, cols, total, maxH
+    pw = PAD * 2 + cols * colW + (cols - 1) * GAP
+    ph = PAD + TITLE_H + maxH + FOOT_H
+
+    img = _NEWIMAGE(pw, ph, 32)
+    d = _DEST
+    _DEST img
+    _PRINTMODE _KEEPBACKGROUND
+    LINE (0, 0)-(pw - 1, ph - 1), _RGB32(15, 19, 30), BF
+    LINE (0, 0)-(pw - 1, TITLE_H - 6), _RGB32(26, 34, 56), BF
+    LINE (0, 0)-(pw - 1, ph - 1), _RGB32(96, 118, 160), B
+    LINE (0, TITLE_H - 6)-(pw - 1, TITLE_H - 6), _RGB32(60, 74, 104)
+    COLOR _RGB32(255, 200, 60)
+    _PRINTSTRING (PAD, 12), "PCSEDIT"
+    COLOR _RGB32(170, 184, 210)
+    _PRINTSTRING (PAD + 72, 12), "PC speaker sound editor  -  keys and mouse"
+    COLOR _RGB32(120, 136, 166)
+    _PRINTSTRING (pw - PAD - 17 * 8, 12), "F1 / Esc  close"
+
+    ' the sections, column by column
+    FOR col = 0 TO cols - 1
+        x = PAD + col * (colW + GAP)
+        y = PAD + TITLE_H - 10
+        FOR k = 1 TO ns
+            IF sCol(k) = col THEN
+                ac = help_accent(k)
+                kc = _RGB32((_RED32(ac) + 255) \ 2, (_GREEN32(ac) + 255) \ 2, (_BLUE32(ac) + 255) \ 2)
+                LINE (x, y + 4)-(x + 5, y + 13), ac, BF
+                COLOR ac
+                _PRINTSTRING (x + 12, y), UCASE$(MID$(t(sFirst(k)), 2))
+                LINE (x, y + 20)-(x + colW - 1, y + 20), _RGB32(_RED32(ac) \ 3, _GREEN32(ac) \ 3, _BLUE32(ac) \ 3)
+                y = y + headH
+                FOR i = sFirst(k) + 1 TO sLast(k)
+                    p = INSTR(t(i), "|")
+                    COLOR kc
+                    _PRINTSTRING (x + 4, y), LEFT$(t(i), p - 1)
+                    COLOR _RGB32(196, 205, 222)
+                    _PRINTSTRING (x + keyW + 16, y), MID$(t(i), p + 1)
+                    y = y + rowH
+                NEXT
+                y = y + secGap
+            END IF
+        NEXT
+    NEXT
+
+    ' footer
+    y = ph - FOOT_H + 6
+    LINE (PAD, y - 6)-(pw - PAD, y - 6), _RGB32(48, 58, 82)
+    COLOR _RGB32(130, 146, 176)
+    _PRINTSTRING (PAD, y + 2), "Saves IFS banks (Duke Nukem / Keen format, 140 steps a second) and opens anything DN1PLAY plays."
+    _PRINTSTRING (PAD, y + 20), "Saving never replaces the file you opened unless you choose its name in Save As."
+    _DEST d
+    help_image = img
+END FUNCTION
+
+
+''
+' Share the sections out over cols columns, in order, each column about
+' total / cols tall. maxH: the tallest column.
+'
+SUB help_columns (sH() AS LONG, sCol() AS LONG, ns AS LONG, cols AS LONG, total AS LONG, maxH AS LONG)
+    DIM k AS LONG, col AS LONG, h AS LONG, target AS DOUBLE
+    target = total / cols
+    maxH = 0
+    FOR k = 1 TO ns
+        ' start the next column when this section fits better there
+        IF h > 0 AND col < cols - 1 THEN
+            IF h + sH(k) - target > target - h THEN col = col + 1: h = 0
+        END IF
+        sCol(k) = col
+        h = h + sH(k)
+        IF h > maxH THEN maxH = h
     NEXT
 END SUB
+
+
+FUNCTION help_accent~& (k AS LONG)
+    SELECT CASE (k - 1) MOD 9
+        CASE 0: help_accent = _RGB32(90, 200, 255)
+        CASE 1: help_accent = _RGB32(110, 222, 130)
+        CASE 2: help_accent = _RGB32(240, 120, 205)
+        CASE 3: help_accent = _RGB32(255, 178, 70)
+        CASE 4: help_accent = _RGB32(255, 110, 100)
+        CASE 5: help_accent = _RGB32(80, 225, 205)
+        CASE 6: help_accent = _RGB32(175, 145, 255)
+        CASE 7: help_accent = _RGB32(230, 220, 95)
+        CASE ELSE: help_accent = _RGB32(120, 165, 255)
+    END SELECT
+END FUNCTION
 
 
 ''

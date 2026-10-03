@@ -20609,3 +20609,394 @@
   $ banks, MIDI files and a PLAY demo, with the scripts that build them.
   $ 
   $ Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>" && timeout 100 git push -q; git log --oneline -1; git status -sb | head -1
+2026-10-01T11:49:29-0400  INFO     bash_end      [ok] 38L stdout
+  | warning: in the working copy of '.claude/activity.log', CRLF will be replaced by LF the next time Git touches it
+  | M  .claude/activity.log
+  | A  qb64/SOUND/PC-SPEAKER/ASSETS/TUNES/BIRTHDAY.SND
+  | A  qb64/SOUND/PC-SPEAKER/ASSETS/TUNES/CANOND.SND
+  | A  qb64/SOUND/PC-SPEAKER/ASSETS/TUNES/CHIPLOOP.SND
+  | A  qb64/SOUND/PC-SPEAKER/ASSETS/TUNES/FURELISE.SND
+  | A  qb64/SOUND/PC-SPEAKER/ASSETS/TUNES/GREENSLEEV.SND
+  | A  qb64/SOUND/PC-SPEAKER/ASSETS/TUNES/JINGLEBELL.SND
+  | A  qb64/SOUND/PC-SPEAKER/ASSETS/TUNES/JINGLES.SND
+  | A  qb64/SOUND/PC-SPEAKER/ASSETS/TUNES/KOROBEINIK.SND
+  | A  qb64/SOUND/PC-SPEAKER/ASSETS/TUNES/MIDI/birthday.mid
+  | A  qb64/SOUND/PC-SPEAKER/ASSETS/TUNES/MIDI/canond.mid
+  | A  qb64/SOUND/PC-SPEAKER/ASSETS/TUNES/MIDI/chiploop.mid
+  | A  qb64/SOUND/PC-SPEAKER/ASSETS/TUNES/MIDI/fanfare.mid
+  | A  qb64/SOUND/PC-SPEAKER/ASSETS/TUNES/MIDI/furelise.mid
+  | A  qb64/SOUND/PC-SPEAKER/ASSETS/TUNES/MIDI/gameover.mid
+  | A  qb64/SOUND/PC-SPEAKER/ASSETS/TUNES/MIDI/greensleev.mid
+  | A  qb64/SOUND/PC-SPEAKER/ASSETS/TUNES/MIDI/jinglebell.mid
+  | A  qb64/SOUND/PC-SPEAKER/ASSETS/TUNES/MIDI/korobeinik.mid
+  | A  qb64/SOUND/PC-SPEAKER/ASSETS/TUNES/MIDI/levelup.mid
+  | A  qb64/SOUND/PC-SPEAKER/ASSETS/TUNES/MIDI/minuetg.mid
+  | A  qb64/SOUND/PC-SPEAKER/ASSETS/TUNES/MIDI/mtnking.mid
+  | A  qb64/SOUND/PC-SPEAKER/ASSETS/TUNES/MIDI/odetojoy.mid
+  | A  qb64/SOUND/PC-SPEAKER/ASSETS/TUNES/MINUETG.SND
+  | A  qb64/SOUND/PC-SPEAKER/ASSETS/TUNES/MTNKING.SND
+  | A  qb64/SOUND/PC-SPEAKER/ASSETS/TUNES/ODETOJOY.SND
+  | A  qb64/SOUND/PC-SPEAKER/ASSETS/TUNES/PLAYDEMO.SND
+  | A  qb64/SOUND/PC-SPEAKER/ASSETS/TUNES/PLAYDEMO.mml
+  | A  qb64/SOUND/PC-SPEAKER/ASSETS/TUNES/make_tunes.py
+  | A  qb64/SOUND/PC-SPEAKER/ASSETS/TUNES/make_tunes.sh
+  | A  qb64/SOUND/PC-SPEAKER/MID2SND.BAS
+  | M  qb64/SOUND/PC-SPEAKER/PCSEDIT.BAS
+  | A  qb64/SOUND/PC-SPEAKER/PCSMIDI.BI
+  | A  qb64/SOUND/PC-SPEAKER/PCSMIDI.BM
+  | M  qb64/SOUND/PC-SPEAKER/README.md
+  | ?? MYSOUNDS.SND
+  | 38450fe8 SOUND/PC-SPEAKER: MIDI and PLAY (MML) import, MID2SND, example tunes
+  | ## main...origin/main
+2026-10-01T14:12:17-0400  NOTICE   prompt        is QB64 PE 100% compatible with mml ?
+  > is QB64 PE 100% compatible with mml ?
+2026-10-01T14:12:43-0400  NOTICE   prompt        the PLAY command?
+  > the PLAY command?
+2026-10-01T14:12:50-0400  INFO     bash_start    cd /home/grymmjack/git/qb64pe/internal/help && ls | grep -i "^ON_PLAY\|^PLAY"; sed -n 1,30p "PLAY_(function)_1111_(00000000).txt" | sed 's/{{[^|]*|//g; s/}}//g'; ls | grep -i "ON_PLAY" | head -2 | wh…
+  > cwd: /home/grymmjack/git/qb64
+  $ cd /home/grymmjack/git/qb64pe/internal/help && ls | grep -i "^ON_PLAY\|^PLAY"; sed -n 1,30p "PLAY_(function)_1111_(00000000).txt" | sed 's/{{[^|]*|//g; s/}}//g'; ls | grep -i "ON_PLAY" | head -2 | while read f; do sed -n 1,25p "$f"; done; grep -n -i "qbasic\|compatib\|differ\|not supported\|only" PLAY_1111.txt | head -20
+2026-10-01T14:12:50-0400  WARNING  bash_end      [stderr] 43L stdout / 2L stderr
+  | {{QBDLDATE:09-19-2026
+  | {{QBDLTIME:14:45:45
+  | The '''PLAY''' function returns the amount of time (in seconds) in the background music queue.
+  | 
+  | 
+  | {{PageSyntax
+  | : remaining# = '''PLAY'''([voice&])
+  | 
+  | 
+  | {{PageParameters
+  | * remaining# is the number of seconds left to play in the background music queue.
+  | * voice& can be any numeric expression. It indicates for which tone voice channel the number of seconds remaining is to be returned. If voice& is not in [0-3], or omitted, the queue for voice 0 is returned.
+  | * '''See also the important version dependent notes in the [[#Availability|Availability]] section.'''
+  | 
+  | 
+  | {{PageDescription
+  | * This function may be used to detect, if the background music queue is still playing.
+  | * When nothing is left to play, this function returns zero.
+  | 
+  | 
+  | {{PageAvailability
+  | <!-- QB64 = a version or none, QBPE = a version or all, Platforms = yes or no -->
+  | <gallery widths="48px" heights="48px" mode="nolines">
+  | File:Qb64.png|'''v0.934'''
+  | File:Qbpe.png|'''v3.1.0'''
+  | File:Apix.png
+  | File:Win.png|'''yes'''
+  | File:Lnx.png|'''yes'''
+  | File:Osx.png|'''yes'''
+  | </gallery>
+  | 29::*'''V''' n - Voice volume in '''QB64 only''' can be any volume from 0 (none) to 100 (full).  The default level is 50 when '''n''' is not specified.
+  | 30::*'''V-'''/'''V+''' - Decrement / Increment the voice volume in '''QB64-PE only'''.
+  | 34::*'''W'''/'''@''' n - Select waveform in '''QB64-PE only''' can be ('''1''' for square (default), '''2''' for sawtooth, '''3''' for triangle, '''4''' for sine, '''5''' for white noise, '''6''' for pink noise, '''7''' for Brownian noise, '''8''' for LFSR noise, '''9''' for pulse or '''10''' for a waveform defined by the [[_WAVE]] statement.
+  | 36::*'''/''' n - Attack duration in '''QB64-PE only''' can be a percentage of note duration from 0 to 100.
+  | 37::*'''\''' n - Decay duration in '''QB64-PE only''' can be a percentage of note duration from 0 to 100.
+  | 38::*'''^''' n - Sustain volume in '''QB64-PE only''' can be a percentage of the voice volume ('''V''') from 0 to 100.
+  | 39::*'''_''' n - Release duration in '''QB64-PE only''' can be a percentage of note duration from 0 to 100.
+  | 40::*'''Q''' n - Simple volume ramp in '''QB64-PE only''' can be a percentage of note duration from 0 to 100. This sets sustain ('''^''') to 100, attack ('''/''') to n, and release ('''_''') to n.
+  | 41::*'''Y''' n - Parameters for the current waveform in '''QB64-PE only''' can be 0 to 100 for pulse waveform, clock rate for LFSR noise, or seed for other noise waveforms.
+  | 43::*'''S''' n - Pan position in '''QB64-PE only''' can be 0 (left-most) to 100 (right-most).
+  | 44::*'''S-'''/'''S+''' - Moves the pan position left / right in '''QB64-PE only'''.
+  | 69:;Example 1:Plays a sound with the volume and note varying from 0 to 50. The maximum note can only be 84.
+  | 368:{{Text|<nowiki>'Play scale in 7 different octaves</nowiki>|#919191}}
+  ! 
+  ! Shell cwd was reset to /home/grymmjack/git/qb64
+2026-10-01T14:12:52-0400  INFO     bash_start    cd /home/grymmjack/git/qb64pe && grep -rli "ON PLAY\|ON_PLAY" internal/help | head -3; grep -n -i "on play\|onplay" source/qb64pe.bas 2>/dev/null | head -5; grep -rn "ON PLAY" internal/help/*.txt | h…
+  > cwd: /home/grymmjack/git/qb64
+  $ cd /home/grymmjack/git/qb64pe && grep -rli "ON PLAY\|ON_PLAY" internal/help | head -3; grep -n -i "on play\|onplay" source/qb64pe.bas 2>/dev/null | head -5; grep -rn "ON PLAY" internal/help/*.txt | head -3
+2026-10-01T14:12:52-0400  WARNING  bash_end      [stderr] 2L stdout / 2L stderr
+  | internal/help/Keywords_currently_not_supported_by_QB64_10000000_000000000_000_000000000_00_1164.txt
+  | internal/help/Keywords_currently_not_supported_by_QB64_10000000_000000000_000_000000000_00_1164.txt:24:* ON PLAY(n), PLAY(n) ON/OFF/STOP. ([[PLAY]] music is supported.)
+  ! 
+  ! Shell cwd was reset to /home/grymmjack/git/qb64
+2026-10-03T10:55:18-0400  NOTICE   prompt        <ide_opened_file>The user opened the file /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER/PCSEDIT.BAS in the IDE. This may or may not be related to the current task.</ide_opened_file>
+  > <ide_opened_file>The user opened the file /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER/PCSEDIT.BAS in the IDE. This may or may not be related to the current task.</ide_opened_file>
+  > let's extend this help screen much wider and give it some space, and categorize things, with some variations in color for showing headings, etc. this is good but ow! my eyes! :D
+2026-10-03T10:55:45-0400  INFO     bash_start    cd /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER && n=$(grep -n "^SUB draw_help" PCSEDIT.BAS | cut -d: -f1); sed -n "$n,$((n+52))p" PCSEDIT.BAS; grep -n "draw_help\|helpOn" PCSEDIT.BAS | head; grep …
+  > cwd: /home/grymmjack/git/qb64
+  $ cd /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER && n=$(grep -n "^SUB draw_help" PCSEDIT.BAS | cut -d: -f1); sed -n "$n,$((n+52))p" PCSEDIT.BAS; grep -n "draw_help\|helpOn" PCSEDIT.BAS | head; grep -n "MIN_LW\|MIN_LH" PCSEDIT.BAS | head -3
+2026-10-03T10:55:45-0400  INFO     bash_end      [ok] 62L stdout
+  | SUB draw_help
+  |     DIM x AS LONG, y AS LONG, i AS LONG, wMax AS LONG
+  |     DIM t(1 TO 28) AS STRING
+  |     t(1) = "PCSEDIT - PC speaker sound editor"
+  |     t(2) = "Selection: arrows nudge (Shift octave, Alt 1 divisor); Ctrl+Up/Down x2 / half; drag edges to stretch"
+  |     t(3) = "Tools   D)raw L)ine N)ote W)ave E)rase S)elect M)ove (letter w/ Caps off, Alt+letter, Tab)"
+  |     t(4) = "        C)ut Ctrl+X  Ctrl+C copy  Ctrl+V paste  Ctrl+A all.  W)ave: 1-5 shape [ ] cycles"
+  |     t(5) = "Notes   Z S X D C V G B H N J M ,   lower octave     F9/F10 octave  (Caps Lock ON)"
+  |     t(6) = "        Q 2 W 3 E R 5 T 6 Y 7 U I   upper octave     or a MIDI keyboard"
+  |     t(7) = "        wheel scroll   Ctrl+wheel zoom   click the time ruler: cursor"
+  |     t(8) = "F5 rec OFF/STEP/LIVE  Ctrl+R rec now (Ctrl+U count-in)  Ctrl+M metronome off/rec/rec+play"
+  |     t(15) = "Ctrl+Q quantize LIVE takes   Ctrl+F follow the playhead   Ctrl+Shift+M click volume"
+  |     t(9) = "F6 snap  F7 MIDI device  F11/F12 note length  Ctrl+G grid  Ctrl+B BPM  ' lines"
+  |     t(10) = "Space   play / stop            Enter  play from cursor     Ctrl+L  loop"
+  |     t(11) = "Left/Right cursor  Home/End  PgUp/PgDn next dot (NOTE tool: bar)  Up/Down sound"
+  |     t(12) = "Insert / Delete  step at cursor    Backspace  delete step before cursor"
+  |     t(13) = "Ctrl+Up/Down  transpose semitone (Shift: octave)   Ctrl+T trim silence"
+  |     t(14) = "Ctrl+Z / Ctrl+Y  undo / redo     A  hear what you draw while drawing (on/off)"
+  |     t(16) = "F2 rename   F3 new sound   F4 duplicate   F8 delete   Ctrl+P priority"
+  |     t(17) = "Ctrl+N new  Ctrl+O open  Ctrl+S save  Ctrl+Shift+S save as  Ctrl+= / - / 0 display scale"
+  |     t(18) = "Ctrl+E export .wav   drop a file to open it (.mid/.mml: import)   Ctrl+Shift+V paste a PLAY string"
+  |     t(19) = "Ctrl+1-4 voice 1-4  Ctrl+5 G all voices  Ctrl+J chords ARP / PWM  (STEP rec: hold keys)"
+  |     t(20) = "Saves IFS banks (Duke Nukem / Keen format, 140 steps per second)."
+  |     t(21) = "Opens anything DN1PLAY plays. Saving never replaces the file you"
+  |     t(22) = "opened unless you choose its name in Save As."
+  |     t(23) = ""
+  |     t(24) = "Ctrl+K  keys play the selected SOUND (follows your pick; Ctrl+Shift+K locks it)"
+  |     t(25) = "        Ctrl+H GATE / ONE-SHOT / LOOP; recording goes into another sound"
+  |     t(26) = "Click and hold the piano keys to audition a pitch (drag to slide)"
+  |     t(27) = ""
+  |     t(28) = "Esc / F1  close this"
+  |     ' as wide as the longest line, centred
+  |     FOR i = 1 TO 28
+  |         IF LEN(t(i)) > wMax THEN wMax = LEN(t(i))
+  |     NEXT
+  |     wMax = wMax * 8
+  |     x = (SCR_W - wMax) \ 2: y = 120
+  |     LINE (x - 16, y - 16)-(x + wMax + 16, y + 28 * 18), _RGB32(20, 26, 40), BF
+  |     LINE (x - 16, y - 16)-(x + wMax + 16, y + 28 * 18), _RGB32(120, 140, 180), B
+  |     FOR i = 1 TO 28
+  |         IF i = 1 THEN COLOR _RGB32(255, 200, 60) ELSE COLOR _RGB32(210, 220, 235)
+  |         _PRINTSTRING (x, y + (i - 1) * 18), t(i)
+  |     NEXT
+  | END SUB
+  | 
+  | 
+  | ''
+  | ' (Re)make the logical-size image for the window size and display scale,
+  | ' and fit the layout to it. A scale too big for the window is reduced.
+  | '
+  | SUB make_ui
+  |     DIM lw AS LONG, lh AS LONG
+  |     DO
+  | 351:DIM SHARED helpOn AS INTEGER
+  | 2856:            IF helpOn THEN
+  | 2857:                helpOn = 0
+  | 2939:        CASE 15104: helpOn = NOT helpOn '                      F1
+  | 4211:    IF helpOn THEN draw_help
+  | 4809:SUB draw_help
+  | 120:CONST MIN_LW = 1000 '                    smallest logical size the layout fits in
+  | 121:CONST MIN_LH = 640
+  | 4863:        IF (lw >= MIN_LW AND lh >= MIN_LH) OR uiScale <= 0.5 THEN EXIT DO
+2026-10-03T10:57:25-0400  INFO     bash_start    python3 - <<'PYEOF' | p='PCSEDIT.BAS'; s=open(p).read() | i=s.index("SUB draw_help\n"); j=s.index("END SUB\n", i)+8 | new = r''''' | ' F1: the keys, in sections with a colour each, in as many columns…
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ python3 - <<'PYEOF'
+  $ p='PCSEDIT.BAS'; s=open(p).read()
+  $ i=s.index("SUB draw_help\n"); j=s.index("END SUB\n", i)+8
+  $ new = r'''''
+  $ ' F1: the keys, in sections with a colour each, in as many columns as fit
+  $ ' the window (the panel shrinks if even that is too big).
+  $ '
+  $ SUB draw_help
+  $     STATIC img AS LONG, lastW AS LONG, lastH AS LONG
+  $     DIM pw AS LONG, ph AS LONG, f AS DOUBLE, x AS LONG, y AS LONG
+  $     IF img = 0 OR lastW <> SCR_W OR lastH <> SCR_H THEN
+  $         IF img < -1 THEN _FREEIMAGE img
+  $         img = help_image(SCR_W - 24, SCR_H - 24)
+  $         lastW = SCR_W: lastH = SCR_H
+  $     END IF
+  $     pw = _WIDTH(img): ph = _HEIGHT(img)
+  $     f = 1
+  $     IF pw > SCR_W - 24 THEN f = (SCR_W - 24) / pw
+  $     IF ph * f > SCR_H - 24 THEN f = (SCR_H - 24) / ph
+  $     x = (SCR_W - pw * f) \ 2: y = (SCR_H - ph * f) \ 2
+  $     LINE (0, 0)-(SCR_W - 1, SCR_H - 1), _RGBA32(0, 0, 0, 150), BF ' dim the editor behind it
+  $     LINE (x + 6, y + 6)-(x + pw * f + 5, y + ph * f + 5), _RGBA32(0, 0, 0, 120), BF ' shadow
+  $     _PUTIMAGE (x, y)-(x + pw * f - 1, y + ph * f - 1), img
+  $ END SUB
+  $ 
+  $ 
+  $ ''
+  $ ' The help's text: "#Heading", then "keys|what they do" lines.
+  $ '
+  $ SUB help_text (t() AS STRING, n AS LONG)
+  $     n = 0
+  $     help_add t(), n, "#Tools"
+  $     help_add t(), n, "D L N W E|Draw  Line  Note  Wave  Erase"
+  $     help_add t(), n, "S  M|Select  /  Move"
+  $     help_add t(), n, "letter, Tab|pick a tool (Caps Lock off)"
+  $     help_add t(), n, "Alt+letter|pick a tool (Caps Lock on)"
+  $     help_add t(), n, "right drag|erase as you go"
+  $     help_add t(), n, "Wave: 1-5  [ ]|shape  /  number of cycles"
+  $     help_add t(), n, "A|hear what you draw"
+  $     help_add t(), n, "F6|snap to semitones and grid"
+  $     help_add t(), n, "Alt + drag|place freely, no snap"
+  $     help_add t(), n, "#Selection"
+  $     help_add t(), n, "drag (S tool)|select a box (Shift: beats)"
+  $     help_add t(), n, "Ctrl+A|select everything"
+  $     help_add t(), n, "Ctrl+X  C  V|cut  /  copy  /  paste"
+  $     help_add t(), n, "Arrows|nudge it (Shift: an octave)"
+  $     help_add t(), n, "Alt+Up/Down|nudge by 1 PIT divisor"
+  $     help_add t(), n, "Ctrl+Up/Down|twice  /  half as long"
+  $     help_add t(), n, "drag an edge|stretch in time or pitch"
+  $     help_add t(), n, "Delete  Esc|clear it  /  deselect"
+  $     help_add t(), n, "#Voices"
+  $     help_add t(), n, "Ctrl+1 ... 4|edit voice 1 - 4"
+  $     help_add t(), n, "Ctrl+5|G: edit every voice at once"
+  $     help_add t(), n, "Ctrl+J|chords as ARP  /  PWM"
+  $     help_add t(), n, "hold keys|STEP record: a chord"
+  $     help_add t(), n, "#Playing notes"
+  $     help_add t(), n, "Z S X D C V ...|lower octave (Caps Lock on)"
+  $     help_add t(), n, "Q 2 W 3 E R ...|upper octave"
+  $     help_add t(), n, "F9  F10|octave down  /  up"
+  $     help_add t(), n, "F7|pick the MIDI keyboard"
+  $     help_add t(), n, "piano keys|click and hold to hear one"
+  $     help_add t(), n, "Ctrl+K|keys play the sound (sampler)"
+  $     help_add t(), n, "Ctrl+Shift+K|lock that instrument"
+  $     help_add t(), n, "Ctrl+H|GATE  /  ONE-SHOT  /  LOOP"
+  $     help_add t(), n, "#Recording"
+  $     help_add t(), n, "F5|record OFF  /  STEP  /  LIVE"
+  $     help_add t(), n, "F11  F12|note length (Len)"
+  $     help_add t(), n, "Ctrl+R|record LIVE now"
+  $     help_add t(), n, "Ctrl+U|count-in: off, 1 or 2 bars"
+  $     help_add t(), n, "Ctrl+M|metronome (Shift: volume)"
+  $     help_add t(), n, "Ctrl+Q|quantize LIVE takes"
+  $     help_add t(), n, "#Playback"
+  $     help_add t(), n, "Space|play  /  stop"
+  $     help_add t(), n, "Enter|play from the cursor"
+  $     help_add t(), n, "Ctrl+L|loop on  /  off"
+  $     help_add t(), n, "drag the ruler|make a loop region"
+  $     help_add t(), n, "Ctrl+F|follow the playhead"
+  $     help_add t(), n, "#Editing"
+  $     help_add t(), n, "Ctrl+Z  Ctrl+Y|undo  /  redo"
+  $     help_add t(), n, "Insert  Delete|add  /  remove a step"
+  $ ...[truncated]
+2026-10-03T10:57:28-0400  INFO     bash_end      [ok] 5L stdout
+  | 4813:SUB draw_help
+  | 4922:FUNCTION help_image& (availW AS LONG, availH AS LONG)
+  | 5021:SUB help_columns (sH() AS LONG, sCol() AS LONG, ns AS LONG, cols AS LONG, total AS LONG, maxH AS LONG)
+  | Beginning C++ output from QB64 code... 
+  | Output: /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/PCSEDIT
+2026-10-03T10:57:39-0400  INFO     bash_start    sed -n 4806,4814p PCSEDIT.BAS; python3 - <<'PYEOF' | p='PCSEDIT.BAS'; s=open(p).read() | for a,b in [(" total = total + 0\n",""), | (" DIM keyW AS LONG, descW AS LONG, colW AS LONG, total AS LONG, ta…
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ sed -n 4806,4814p PCSEDIT.BAS; python3 - <<'PYEOF'
+  $ p='PCSEDIT.BAS'; s=open(p).read()
+  $ for a,b in [("        total = total + 0\n",""),
+  $             ("    DIM keyW AS LONG, descW AS LONG, colW AS LONG, total AS LONG, target AS DOUBLE, ch AS LONG\n","    DIM keyW AS LONG, descW AS LONG, colW AS LONG, total AS LONG\n"),
+  $             ("    DIM n AS LONG, i AS LONG, k AS LONG, c AS LONG, cols AS LONG, ns AS LONG, p AS LONG\n","    DIM n AS LONG, i AS LONG, k AS LONG, cols AS LONG, ns AS LONG, p AS LONG\n")]:
+  $     assert s.count(a)==1,a; s=s.replace(a,b)
+  $ open(p,'w').write(s)
+  $ PYEOF
+  $ export SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad; mkdir -p $SP/help; for sz in 1000x640 1280x800 1900x1060; do w=${sz%x*}; h=${sz#*x}; mkdir -p $SP/help/h$w/.config; printf "width=$w\nheight=$h\nx=0\ny=0\nscale=1\n" > $SP/help/h$w/.config/pcsedit.ini; done
+  $ python3 - <<'PYEOF'
+  $ import os
+  $ SP=os.environ['SP']
+  $ s=open('PCSEDIT.BAS').read()
+  $ lines=s.split('\n'); i=lines.index('DO')
+  $ lines.insert(i,'helpOn = -1\nDIM SHARED shT AS DOUBLE: shT = TIMER')
+  $ s='\n'.join(lines)
+  $ a="    midi_poll\n    metronome\n"
+  $ s=s.replace(a,a+'    IF TIMER - shT > 1.2 THEN _SAVEIMAGE ENVIRON$("SHOT"), scrImg: SYSTEM\n',1)
+  $ open(SP+'/help/H.BAS','w').write(s)
+  $ PYEOF
+  $ cp PCSPKR.B? PCSMIDI.B? $SP/help/ && cd $SP/help && /home/grymmjack/git/qb64pe/qb64pe -x H.BAS -o ./H 2>&1 | grep -i "error\|Output"; for w in 1000 1280 1900; do SHOT=$PWD/help$w.png HOME=$PWD/h$w PCSEDIT_NOMIDI=1 DISPLAY=:99 timeout 20 ./H; done; file help*.png
+2026-10-03T10:57:48-0400  WARNING  bash_end      [stderr] 14L stdout / 2L stderr
+  | END SUB
+  | 
+  | 
+  | ''
+  | ' F1: the keys, in sections with a colour each, in as many columns as fit
+  | ' the window (the panel shrinks if even that is too big).
+  | '
+  | SUB draw_help
+  |     STATIC img AS LONG, lastW AS LONG, lastH AS LONG
+  | Beginning C++ output from QB64 code... 
+  | Output: /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/help/H
+  | help1000.png: PNG image data, 1000 x 640, 8-bit/color RGBA, non-interlaced
+  | help1280.png: PNG image data, 1280 x 800, 8-bit/color RGBA, non-interlaced
+  | help1900.png: PNG image data, 1900 x 1060, 8-bit/color RGBA, non-interlaced
+  ! 
+  ! Shell cwd was reset to /home/grymmjack/git/qb64
+2026-10-03T10:58:32-0400  INFO     bash_start    cd /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER && python3 - <<'PYEOF' | p='PCSEDIT.BAS'; s=open(p).read() | def r(a,b): | global s | assert s.count(a)==1,a; s=s.replace(a,b) | r(''' help_add t(), …
+  > cwd: /home/grymmjack/git/qb64
+  $ cd /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER && python3 - <<'PYEOF'
+  $ p='PCSEDIT.BAS'; s=open(p).read()
+  $ def r(a,b):
+  $     global s
+  $     assert s.count(a)==1,a; s=s.replace(a,b)
+  $ r('''    help_add t(), n, "'|grid lines on  /  off"''','''    help_add t(), n, "' (quote)|grid lines on  /  off"''')
+  $ r("""    CONST PAD = 22, GAP = 30, TITLE_H = 44, FOOT_H = 50, HEAD_H = 28, ROW_H = 18, SEC_GAP = 12""","""    CONST PAD = 22, GAP = 30, TITLE_H = 44, FOOT_H = 50""")
+  $ r("""    DIM ac AS _UNSIGNED LONG, kc AS _UNSIGNED LONG, maxH AS LONG, col AS LONG""","""    DIM ac AS _UNSIGNED LONG, kc AS _UNSIGNED LONG, maxH AS LONG, col AS LONG
+  $     DIM rowH AS LONG, headH AS LONG, secGap AS LONG, roomy AS INTEGER, f AS DOUBLE, bestF AS DOUBLE, try AS LONG""")
+  $ a=s[s.index("    ' sections: where each starts and how tall it is"):s.index("    img = _NEWIMAGE(pw, ph, 32)")]
+  $ r(a,"""    ' sections: where each starts and what is in it
+  $     REDIM sFirst(1 TO 20) AS LONG, sLast(1 TO 20) AS LONG, sN(1 TO 20) AS LONG
+  $     REDIM sH(1 TO 20) AS LONG, sCol(1 TO 20) AS LONG
+  $     FOR i = 1 TO n
+  $         IF LEFT$(t(i), 1) = "#" THEN
+  $             ns = ns + 1: sFirst(ns) = i: sLast(ns) = i
+  $         ELSE
+  $             sLast(ns) = i: sN(ns) = sN(ns) + 1
+  $             p = INSTR(t(i), "|")
+  $             IF (p - 1) * 8 > keyW THEN keyW = (p - 1) * 8
+  $             IF (LEN(t(i)) - p) * 8 > descW THEN descW = (LEN(t(i)) - p) * 8
+  $         END IF
+  $     NEXT
+  $     colW = keyW + 16 + descW
+  $ 
+  $     ' Roomy spacing in 3 columns when the window has the space for it;
+  $     ' otherwise whichever column count needs the least shrinking (3 when it's
+  $     ' a tie, then 2, 4, 1).
+  $     FOR roomy = -1 TO 0
+  $         IF roomy THEN rowH = 21: headH = 32: secGap = 18 ELSE rowH = 18: headH = 28: secGap = 12
+  $         FOR k = 1 TO ns: sH(k) = headH + sN(k) * rowH + secGap: NEXT
+  $         total = 0
+  $         FOR k = 1 TO ns: total = total + sH(k): NEXT
+  $         best = 0: bestF = 0
+  $         FOR try = 1 TO 4
+  $             cols = VAL(MID$("3241", try, 1))
+  $             help_columns sH(), sCol(), ns, cols, total, maxH
+  $             pw = PAD * 2 + cols * colW + (cols - 1) * GAP
+  $             ph = PAD + TITLE_H + maxH + FOOT_H
+  $             f = 1
+  $             IF pw > availW THEN f = availW / pw
+  $             IF ph * f > availH THEN f = availH / ph
+  $             IF f > bestF + 0.001 THEN bestF = f: best = cols
+  $         NEXT
+  $         IF NOT roomy OR (bestF >= 1 AND best = 3) THEN EXIT FOR
+  $     NEXT
+  $     cols = best
+  $     help_columns sH(), sCol(), ns, cols, total, maxH
+  $     pw = PAD * 2 + cols * colW + (cols - 1) * GAP
+  $     ph = PAD + TITLE_H + maxH + FOOT_H
+  $ 
+  $ """)
+  $ r("""                LINE (x, y + 20)-(x + colW - 1, y + 20), _RGB32(_RED32(ac) \\ 3, _GREEN32(ac) \\ 3, _BLUE32(ac) \\ 3)
+  $                 y = y + HEAD_H""","""                LINE (x, y + 20)-(x + colW - 1, y + 20), _RGB32(_RED32(ac) \\ 3, _GREEN32(ac) \\ 3, _BLUE32(ac) \\ 3)
+  $                 y = y + headH""")
+  $ r("""                    y = y + ROW_H
+  $                 NEXT
+  $                 y = y + SEC_GAP""","""                    y = y + rowH
+  $                 NEXT
+  $                 y = y + secGap""")
+  $ open(p,'w').write(s)
+  $ PYEOF
+  $ export SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad; python3 - <<'PYEOF'
+  $ import os
+  $ SP=os.environ['SP']
+  $ s=open('PCSEDIT.BAS').read()
+  $ lines=s.split('\n'); i=lines.index('DO')
+  $ lines.insert(i,'helpOn = -1\nDIM SHARED shT AS DOUBLE: shT = TIMER')
+  $ s='\n'.join(lines)
+  $ a="    midi_poll\n    metronome\n"
+  $ s=s.replace(a,a+'    IF TIMER - shT > 1.2 THEN _SAVEIMAGE ENVIRON$("SHOT"), scrImg: SYSTEM\n',1)
+  $ open(SP+'/help/H.BAS','w').write(s)
+  $ PYEOF
+  $ cd $SP/help && /home/grymmjack/git/qb64pe/qb64pe -x H.BAS -o ./H 2>&1 | grep -i "error\|line [0-9]\|Output"; for w in 1000 1280 1900; do SHOT=$PWD/help$w.png HOME=$PWD/h$w PCSEDIT_NOMIDI=1 DISPLAY=:99 timeout 20 ./H; done; echo done
+2026-10-03T10:58:40-0400  WARNING  bash_end      [stderr] 3L stdout / 2L stderr
+  | Beginning C++ output from QB64 code... 
+  | Output: /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/help/H
+  | done
+  ! 
+  ! Shell cwd was reset to /home/grymmjack/git/qb64
+2026-10-03T11:00:04-0400  NOTICE   prompt        yes. gorgeous!!!! <3
+  > yes. gorgeous!!!! <3
+2026-10-03T11:00:08-0400  INFO     bash_start    git add .claude/activity.log qb64/SOUND/PC-SPEAKER/PCSEDIT.BAS && git commit -q -m "SOUND/PC-SPEAKER: PCSEDIT help screen in coloured sections | | F1 now shows the keys in nine sections with their ow…
+  > cwd: /home/grymmjack/git/qb64
+  $ git add .claude/activity.log qb64/SOUND/PC-SPEAKER/PCSEDIT.BAS && git commit -q -m "SOUND/PC-SPEAKER: PCSEDIT help screen in coloured sections
+  $ 
+  $ F1 now shows the keys in nine sections with their own accent colours,
+  $ laid out in as many columns as the window fits (roomy in big windows,
+  $ shrunk to fit in small ones), over a dimmed editor.
+  $ 
+  $ Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>" && timeout 100 git push -q; git log --oneline -1; git status -sb | head -1
