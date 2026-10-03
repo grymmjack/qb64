@@ -464,7 +464,7 @@ file. This needs Linux, the `alsa-utils` package, and your user in the `audio`
 group. On other systems, use the computer keyboard.
 
 **Importing MIDI files, modules and PLAY music:** open (**Ctrl+O**) or drop
-a `.mid`, `.mod` or `.mml` file, or copy a QB64 `PLAY` string (or a whole `PLAY "..."` line
+a `.mid`, `.mod`, `.rad` or `.mml` file, or copy a QB64 `PLAY` string (or a whole `PLAY "..."` line
 from a program) and press **Ctrl+Shift+V**. It is added to the bank as a new
 sound, with its notes spread over the 4 voices.
 Its melody usually goes to voice 1. If more than 4 notes play at once, the
@@ -473,6 +473,69 @@ control (channels, transposing, a single-voice version for a game) use
 `MID2SND`, below.
 
 ---
+
+## Your sounds in your own game: PCSPLAY
+
+`PCSPLAY.BI` + `PCSPLAY.BM` is a small library for playing PCSEDIT banks
+in a QB64-PE game, on top of the PC speaker emulator. Music loops in the
+background, sound effects take the speaker over it the way Commander Keen
+and Duke Nukem did (an effect only cuts in if its IFS priority is at least
+the playing one's), and the music keeps time underneath. Multi-voice sounds
+play together with PWM, or as the ARP mix a real PC would play.
+
+```basic
+'$INCLUDE:'PCSPKR.BI'
+'$INCLUDE:'PCSPLAY.BI'
+
+IF PCSP_LoadBank("MYGAME.SND") = 0 THEN PRINT "no sounds!"
+PCSP_Music "THEME", PCSP_LOOP
+DO
+    ' ... your game ...
+    IF jumped THEN PCSP_Sfx "JUMP"
+    IF hit THEN PCSP_Noise 100, 900, 0.3
+    PCSP_Update ' every frame: renders what's due, ~80 ms ahead
+    _LIMIT 60
+LOOP
+
+'$INCLUDE:'PCSPKR.BM'
+'$INCLUDE:'PCSPLAY.BM'
+```
+
+| Call | What it does |
+| --- | --- |
+| `PCSP_LoadBank&(file)` / `PCSP_LoadBankData&(bytes)` / `PCSP_LoadBankHex&(hex)` | add a bank's sounds (from a file, a string, or hex text); returns how many |
+| `PCSP_Music name, PCSP_LOOP` (or `PCSP_ONCE`) / `PCSP_MusicNum i, ...` | music, by name or number |
+| `PCSP_Sfx name` / `PCSP_SfxNum i` | a sound effect (by IFS priority) |
+| `PCSP_Beep hz, secs` / `PCSP_Sweep hz1, hz2, secs` / `PCSP_Noise hz1, hz2, secs` | effects made on the spot |
+| `PCSP_StopSfx` / `PCSP_StopMusic` / `PCSP_StopAll` | stop |
+| `PCSP_Update` | call every frame |
+| `PCSP_Volume v` | master volume (1 = normal, up to 4) |
+| `PCSP_SetMode PCSP_PWM` / `PCSP_ARP` | how multi-voice music sounds |
+| `PCSP_Find&(name)`, `PCSP_Count&`, `PCSP_Name$(i)`, `PCSP_SfxPlaying%%`, `PCSP_MusicPlaying%%` | look things up |
+
+`PCSPDEMO.BAS` shows it all (music, effects, beeps, PWM / ARP, volume)
+while a ball bounces around.
+
+**Export as QB64 code (PCSEDIT, Ctrl+Shift+E):** pick a folder and PCSEDIT
+writes `NAME_QB64/` into it, ready to drop into a game:
+
+* `NAME.BM`: the bank embedded in the code (no .SND file needed), `NAME_Load`,
+  and a `SFX_x` and a `MUSIC_x` sub for every sound;
+* `NAME_DEMO.BAS`: a key per sound (Shift: as music);
+* `NAME_SOUND.BM` + `NAME_SOUNDDEMO.BAS`: the same sounds as QB64-PE's own
+  [`SOUND`](https://qb64phoenix.com/qb64wiki/index.php/SOUND) statements, no
+  library at all. Each run of one pitch is a `SOUND hz, ticks, volume, 0, 1,
+  0, voice` (square wave, voices 0-3 for multi-voice sounds, the Vol faders
+  as volumes), queued between `SOUND WAIT` and `SOUND RESUME` so it plays
+  while your program carries on. Pitches and timing are exact, so slides,
+  vibrato and fine pitch come through;
+* `NAME_PLAY.BM` + `NAME_PLAYDEMO.BAS`: the same sounds as
+  [`PLAY`](https://qb64phoenix.com/qb64wiki/index.php/PLAY) strings
+  (background `MB`, square `@1`, each voice's `V`olume; multi-voice sounds
+  use QB64-PE 4's `PLAY a$, b$, c$, d$`). PLAY only does semitones and its
+  own note lengths, so slides and vibrato come out steppier: SOUND is the
+  closer of the two, PLAY the easier to read and edit by hand;
+* a copy of `PCSPKR.BI/.BM` and `PCSPLAY.BI/.BM`.
 
 ## MID2SND: MIDI files, PLAY music and .mod files to PC speaker banks
 
@@ -565,6 +628,16 @@ Most modules are longer than a 4-voice bank holds (about 46 s): use `-s` for
 an excerpt, or `-v 1` for the tune's top line, which fits over 3 minutes.
 PCSEDIT opens `.mod` files too (Ctrl+O or drop one), as up to 64 s in a new
 sound. XM, S3M and IT modules are different formats and aren't read yet.
+
+### AdLib modules (`.rad`)
+
+Reality AdLib Tracker v1 modules (9 FM channels) are read the same way:
+speed changes, pattern breaks, the order list's jump markers (a jump back
+ends the song), key-offs and volume 0. Octave 4's A is 440 Hz, as on the
+AdLib. `-x` leaves instruments out (by number; `-i` lists them with their
+note counts), `-c` picks channels. RAD v2 files aren't read yet. A song
+that's too long for a bank is cut where it fits, with a note saying so;
+`-v 2` or `-v 1` fits much more.
 
 ### How notes become voices
 
@@ -834,7 +907,9 @@ A few things work out differently in QB64-PE:
 | `ASSETS/` | `duke1-b.dn1` (Duke), `SOUNDS.CK1` (Keen), and three test `.wav` files | original repo |
 | `ASSETS/GAMES/` | Sound files for the games in [Supported games](#supported-games). Only the shareware and freeware ones are committed; its `.gitignore` keeps the commercial ones local, and its `README.md` lists which is which. | the games themselves |
 | `ASSETS/freedoom-dp.wad` | The 107 PC speaker sounds from Freedoom: Phase 2, so there are DOOM engine sounds to play without an id Software WAD. BSD licensed, see `FREEDOOM-LICENSE.txt`. | [Freedoom](https://freedoom.github.io/) |
-| **`MID2SND.BAS`** | **Command-line MIDI / PLAY (MML) to IFS bank converter (up to 4 voices).** | new |
+| **`MID2SND.BAS`** | **Command-line MIDI / .mod / .rad / PLAY (MML) to IFS bank converter (up to 4 voices).** | new |
+| **`PCSPLAY.BI` + `PCSPLAY.BM`** | **Music and sound effects for your own QB64-PE game (PCSEDIT banks).** | new |
+| `PCSPDEMO.BAS` | PCSPLAY in a game loop | new |
 | `PCSMIDI.BI` + `PCSMIDI.BM` | The MIDI file and PLAY string reader both PCSEDIT and MID2SND use | new |
 | `ASSETS/TUNES/` | Example tunes as IFS banks and MIDI files, and the script that makes them | new |
 | `SCREENSHOTS/` | The images in this README | |

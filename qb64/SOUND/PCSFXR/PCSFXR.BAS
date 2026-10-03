@@ -1,5 +1,5 @@
 ''
-' PCFXR.BAS - sfxr for the PC speaker
+' PCSFXR.BAS - sfxr for the PC speaker
 '
 ' A QB64-PE take on sfxr.me (jsfxr): roll random game sound effects, tweak
 ' them with sliders, and hear them the way a DOS PC would play them:
@@ -83,7 +83,7 @@ cLine = _RGB32(200, 200, 200)
 cBlue = _RGB32(20, 40, 230)
 
 SCREEN _NEWIMAGE(SCR_W, SCR_H, 32)
-_TITLE "PCFXR - sfxr for the PC speaker"
+_TITLE "PCSFXR - sfxr for the PC speaker"
 _ACCEPTFILEDROP ON
 _PRINTMODE _KEEPBACKGROUND
 make_logo
@@ -232,12 +232,12 @@ END SUB
 
 FUNCTION logo_text& (c AS _UNSIGNED LONG)
     DIM img AS LONG
-    img = _NEWIMAGE(48, 16, 32)
+    img = _NEWIMAGE(56, 16, 32)
     _DEST img
     CLS , _RGBA32(0, 0, 0, 0)
     _PRINTMODE _KEEPBACKGROUND
     COLOR c
-    _PRINTSTRING (4, 0), "pcfxr"
+    _PRINTSTRING (4, 0), "pcsfxr"
     _DEST 0
     logo_text = img
 END FUNCTION
@@ -245,12 +245,12 @@ END FUNCTION
 
 SUB draw_header
     ' chunky 4x logo with a drop shadow
-    _PUTIMAGE (LEFT_X + 3, 9)-(LEFT_X + 3 + 192, 9 + 64), logoShadow
-    _PUTIMAGE (LEFT_X - 2, 4)-(LEFT_X - 2 + 192, 4 + 64), logoImg
+    _PUTIMAGE (LEFT_X + 3, 9)-(LEFT_X + 3 + 224, 9 + 64), logoShadow
+    _PUTIMAGE (LEFT_X - 2, 4)-(LEFT_X - 2 + 224, 4 + 64), logoImg
     COLOR cText
-    _PRINTSTRING (LEFT_X + 210, 20), "sfxr for the PC speaker - a QB64-PE take on sfxr.me (jsfxr)"
+    _PRINTSTRING (LEFT_X + 240, 20), "PC Speaker FXer: sfxr for the PC speaker - a QB64-PE take on sfxr.me (jsfxr)"
     COLOR _RGB32(110, 110, 110)
-    _PRINTSTRING (LEFT_X + 210, 40), "Roll a sound, tweak it, hear it the way a DOS PC would. No sound card required."
+    _PRINTSTRING (LEFT_X + 240, 40), "Roll a sound, tweak it, hear it the way a DOS PC would. No sound card required."
 END SUB
 
 
@@ -473,29 +473,31 @@ SUB draw_speaker
     draw_plot
 
     ' export
-    y = PLOT_Y + PLOT_H + 14
+    y = PLOT_Y + PLOT_H + 10
     bw = RIGHT_W \ 2
     x = RIGHT_X + bw
     IF ui_button(RIGHT_X, y, bw - 2, 26, "Save .WAV", 0) THEN export_wav
     IF ui_button(x, y, RIGHT_W - bw, 26, "Save 8-bit WAV", 0) THEN export_wav8
-    y = y + 30
+    y = y + 28
     IF ui_button(RIGHT_X, y, bw - 2, 26, "Export .BAS", 0) THEN export_bas
     IF ui_button(x, y, RIGHT_W - bw, 26, "Copy .BAS code", 0) THEN
         _CLIPBOARD$ = SFXR_BasCode(sndName)
         set_status "QB64-PE code copied to the clipboard"
     END IF
-    y = y + 30
+    y = y + 28
     IF ui_button(RIGHT_X, y, bw - 2, 26, "Export .SND", 0) THEN export_snd
     IF ui_button(x, y, RIGHT_W - bw, 26, "Add to bank", 0) THEN bank_add
-    y = y + 30
+    y = y + 28
     IF ui_button(RIGHT_X, y, bw - 2, 26, "Save bank .SND", 0) THEN bank_save
     IF ui_button(x, y, RIGHT_W - bw, 26, "Clear bank", 0) THEN bankCount = 0: set_status "Bank cleared"
-    y = y + 30
+    y = y + 28
     IF ui_button(RIGHT_X, y, bw - 2, 26, "Save .json", 0) THEN export_json
     IF ui_button(x, y, RIGHT_W - bw, 26, "Load .json", 0) THEN load_json_dialog
-    y = y + 30
+    y = y + 28
     IF ui_button(RIGHT_X, y, bw - 2, 26, "Copy sfxr.me link", 0) THEN copy_link
     IF ui_button(x, y, RIGHT_W - bw, 26, "Paste link/json", 0) THEN paste_any
+    y = y + 28
+    IF ui_button(RIGHT_X, y, RIGHT_W, 26, "Send to PCSEDIT  (a new sound in its bank)", 1) THEN send_to_pcsedit
 
     ' status line
     IF LEN(statusMsg) THEN
@@ -644,13 +646,34 @@ SUB export_snd
     DIM f AS STRING, d AS STRING
     REDIM nm(0) AS STRING, dt(0) AS STRING
     nm(0) = sndName
-    dt(0) = SFXR_DivisorData
+    dt(0) = divisors_140
     d = SFXR_BuildIFS(nm(), dt(), 1)
     IF d = "" THEN set_status "Too long for an IFS file": EXIT SUB
     f = export_path(".snd")
     SFXR_SaveText f, d
-    set_status "Saved " + f + " - opens in DN1PLAY"
+    set_status "Saved " + f + " - opens in PCSEDIT and DN1PLAY"
 END SUB
+
+
+''
+' The beeper divisors at 140 steps a second - the IFS rate PCSEDIT, DN1PLAY
+' and the games play every .SND at - whatever tick rate the sound was made
+' at (each 1/140 s step takes the tick sounding then).
+'
+FUNCTION divisors_140$
+    DIM d AS STRING, n AS LONG, k AS LONG, src AS LONG, v AS LONG
+    IF sfxr_tickHz = 140 THEN divisors_140 = SFXR_DivisorData: EXIT FUNCTION
+    n = CLNG(sfxr_divN * 140 / sfxr_tickHz)
+    d = SPACE$(n * 2)
+    FOR k = 0 TO n - 1
+        src = INT(k * sfxr_tickHz / 140)
+        IF src > sfxr_divN - 1 THEN src = sfxr_divN - 1
+        v = sfxr_div(src)
+        IF v > 65534 THEN v = 65534 ' (65535 ends a sound)
+        MID$(d, k * 2 + 1, 2) = SFXR_W16(v)
+    NEXT
+    divisors_140 = d
+END FUNCTION
 
 
 SUB bank_add
@@ -659,21 +682,191 @@ SUB bank_add
         REDIM _PRESERVE bankData(0 TO bankCount * 2) AS STRING
     END IF
     bankName(bankCount) = LEFT$(UCASE$(SFXR_SafeName(sndName)), 8) + LTRIM$(STR$(bankCount + 1))
-    bankData(bankCount) = SFXR_DivisorData
+    bankData(bankCount) = divisors_140
     bankCount = bankCount + 1
     set_status "Added " + bankName(bankCount - 1) + " to the bank (" + LTRIM$(STR$(bankCount)) + " sounds)"
 END SUB
 
 
 SUB bank_save
-    DIM d AS STRING
+    DIM d AS STRING, f AS STRING, i AS LONG, n AS LONG, old AS STRING, keep AS LONG
     IF bankCount = 0 THEN set_status "The bank is empty - use Add to bank first": EXIT SUB
-    d = SFXR_BuildIFS(bankName(), bankData(), bankCount)
-    IF d = "" THEN set_status "Bank is over 64K - IFS can't hold it": EXIT SUB
     IF NOT _DIREXISTS("EXPORT") THEN MKDIR "EXPORT"
-    SFXR_SaveText "EXPORT/PCFXR.SND", d
-    set_status "Saved EXPORT/PCFXR.SND (" + LTRIM$(STR$(bankCount)) + " sounds) - opens in DN1PLAY"
+    f = _SAVEFILEDIALOG$("Save the bank (pick an existing .SND to add to it)", _STARTDIR$ + "/EXPORT/PCSFXR.SND", "*.snd|*.SND", "IFS sound bank (PCSEDIT, DN1PLAY)")
+    IF f = "" THEN set_status "Not saved": EXIT SUB
+    IF INSTR(MID$(f, _INSTRREV(f, "/") + 1), ".") = 0 THEN f = f + ".SND"
+    REDIM nm(0 TO bankCount + 255) AS STRING, dt(0 TO bankCount + 255) AS STRING, pr(0 TO bankCount + 255) AS LONG
+    ' an existing bank: add to it (its sounds - PCSEDIT's voices too - stay)
+    IF _FILEEXISTS(f) THEN
+        SELECT CASE _MESSAGEBOX("PCSFXR", PCSFXR_FilePart(f) + " exists." + CHR$(10) + CHR$(10) + "Yes: add these" + STR$(bankCount) + " sounds to it.  No: replace it.", "yesnocancel", "question", 1)
+            CASE 1: keep = -1
+            CASE 2: keep = 0
+            CASE ELSE: set_status "Not saved": EXIT SUB
+        END SELECT
+        IF keep THEN
+            old = read_file(f)
+            IF LEFT$(old, 4) <> "SND" + CHR$(0) THEN set_status PCSFXR_FilePart(f) + " isn't an IFS bank - not saved": EXIT SUB
+            n = ifs_read(old, nm(), dt(), pr())
+        END IF
+    END IF
+    FOR i = 0 TO bankCount - 1
+        nm(n) = bankName(i): dt(n) = bankData(i): pr(n) = 10: n = n + 1
+    NEXT
+    d = ifs_build(nm(), dt(), pr(), n)
+    IF d = "" THEN set_status "Over 64K - an IFS bank can't hold that much": EXIT SUB
+    SFXR_SaveText f, d
+    set_status "Saved " + PCSFXR_FilePart(f) + " (" + LTRIM$(STR$(n)) + " sounds) - open it in PCSEDIT or DN1PLAY"
 END SUB
+
+
+''
+' An IFS bank's sounds (names, data without the end marker, priorities).
+'
+FUNCTION ifs_read& (d AS STRING, nm() AS STRING, dt() AS STRING, pr() AS LONG)
+    DIM n AS LONG, i AS LONG, o AS LONG, e AS LONG, t AS STRING
+    n = CVI(MID$(d, 7, 2)) AND &HFFFF&
+    FOR i = 0 TO n - 1
+        o = CVI(MID$(d, 17 + i * 16, 2)) AND &HFFFF&
+        pr(i) = ASC(d, 19 + i * 16)
+        t = MID$(d, 21 + i * 16, 12)
+        IF INSTR(t, CHR$(0)) THEN t = LEFT$(t, INSTR(t, CHR$(0)) - 1)
+        nm(i) = t
+        e = o + 1
+        DO WHILE e + 1 <= LEN(d)
+            IF ASC(d, e) = 255 AND ASC(d, e + 1) = 255 THEN EXIT DO
+            e = e + 2
+        LOOP
+        dt(i) = MID$(d, o + 1, e - o - 1)
+    NEXT
+    ifs_read = n
+END FUNCTION
+
+
+''
+' An IFS bank from names, data and priorities ("" if it's over 64K). Names
+' are kept as they are (PCSEDIT's NAME~1 voice entries too).
+'
+FUNCTION ifs_build$ (nm() AS STRING, dt() AS STRING, pr() AS LONG, n AS LONG)
+    DIM i AS LONG, ofs AS LONG, tbl AS STRING, body AS STRING, t AS STRING
+    ofs = 16 + n * 16
+    FOR i = 0 TO n - 1
+        t = LEFT$(nm(i), 12)
+        tbl = tbl + SFXR_W16(ofs + LEN(body)) + CHR$(pr(i) AND 255) + CHR$(8) + t + STRING$(12 - LEN(t), 0)
+        body = body + dt(i) + SFXR_W16(&HFFFF&)
+    NEXT
+    IF ofs + LEN(body) > 65535 THEN EXIT FUNCTION
+    ifs_build = "SND" + CHR$(0) + SFXR_W16(ofs + LEN(body)) + SFXR_W16(n) + SFXR_W16(0) + STRING$(6, 0) + tbl + body
+END FUNCTION
+
+
+''
+' "Send to PCSEDIT": the sound (at 140 steps a second) goes into PCSEDIT's
+' inbox; a running PCSEDIT adds it to its bank as a new sound within half a
+' second. Not running: start it if it's been compiled next to PC-SPEAKER,
+' else the sound waits there for the next time it starts.
+'
+SUB send_to_pcsedit
+    DIM d AS STRING, f AS STRING, box AS STRING, nm AS STRING
+    STATIC cnt AS LONG
+    IF sfxr_divN = 0 THEN set_status "Nothing to send - roll a sound first": EXIT SUB
+    REDIM nms(0) AS STRING, dts(0) AS STRING, prs(0) AS LONG
+    nm = UCASE$(LEFT$(SFXR_SafeName(sndName), 12))
+    IF nm = "" THEN nm = "PCSFXR"
+    nms(0) = nm: dts(0) = divisors_140: prs(0) = 10
+    d = ifs_build(nms(), dts(), prs(), 1)
+    IF d = "" THEN set_status "Too long for an IFS sound": EXIT SUB
+    box = pcsedit_inbox
+    cnt = cnt + 1
+    ' (named so they sort oldest first: date, time, then a counter)
+    f = box + "pcsfxr_" + MID$(DATE$, 7, 4) + LEFT$(DATE$, 2) + MID$(DATE$, 4, 2) + "_" + RIGHT$("0000000" + LTRIM$(STR$(INT(TIMER * 100))), 7) + "_" + RIGHT$("0000" + LTRIM$(STR$(cnt)), 4) + ".snd"
+    SFXR_SaveText f, d
+    IF pcsedit_alive(box) THEN
+        set_status "Sent " + nm + " to PCSEDIT"
+    ELSEIF start_pcsedit THEN
+        set_status "Started PCSEDIT - " + nm + " will be in its bank"
+    ELSE
+        set_status nm + " is waiting in PCSEDIT's inbox - start PCSEDIT to get it"
+    END IF
+END SUB
+
+
+FUNCTION pcsedit_inbox$
+    DIM d AS STRING
+    $IF WIN THEN
+        d = ENVIRON$("APPDATA")
+        IF RIGHT$(d, 1) <> "\" THEN d = d + "\"
+        d = d + "pcsedit-inbox\"
+    $ELSE
+        d = ENVIRON$("HOME") + "/.config/"
+        IF NOT _DIREXISTS(d) THEN MKDIR d
+        d = d + "pcsedit-inbox/"
+    $END IF
+    IF NOT _DIREXISTS(d) THEN MKDIR d
+    pcsedit_inbox = d
+END FUNCTION
+
+
+''
+' PCSEDIT writes "date seconds" to pcsedit.alive about twice a second.
+'
+FUNCTION pcsedit_alive% (box AS STRING)
+    DIM t AS STRING, p AS LONG
+    IF NOT _FILEEXISTS(box + "pcsedit.alive") THEN EXIT FUNCTION
+    t = _TRIM$(read_file(box + "pcsedit.alive"))
+    p = INSTR(t, " ")
+    IF p = 0 THEN EXIT FUNCTION
+    IF LEFT$(t, p - 1) <> DATE$ THEN EXIT FUNCTION
+    pcsedit_alive = ABS(TIMER - VAL(MID$(t, p + 1))) <= 5
+END FUNCTION
+
+
+''
+' Start PCSEDIT from ../PC-SPEAKER if it has been compiled there.
+'
+FUNCTION start_pcsedit%
+    DIM pdir AS STRING, exe AS STRING, i AS LONG, p AS LONG
+    pdir = _STARTDIR$
+    IF RIGHT$(pdir, 1) = "/" OR RIGHT$(pdir, 1) = "\" THEN pdir = LEFT$(pdir, LEN(pdir) - 1)
+    p = _INSTRREV(pdir, "/")
+    IF _INSTRREV(pdir, "\") > p THEN p = _INSTRREV(pdir, "\")
+    pdir = LEFT$(pdir, p) + "PC-SPEAKER" ' (PCSFXR's sibling folder)
+    IF NOT _DIREXISTS(pdir) THEN EXIT FUNCTION
+    FOR i = 1 TO 3
+        SELECT CASE i
+            CASE 1: exe = "PCSEDIT.exe"
+            CASE 2: exe = "PCSEDIT.run"
+            CASE 3: exe = "PCSEDIT"
+        END SELECT
+        IF _FILEEXISTS(pdir + "/" + exe) THEN
+            $IF WIN THEN
+                SHELL _DONTWAIT "cd /d " + CHR$(34) + pdir + CHR$(34) + " && start " + CHR$(34) + CHR$(34) + " " + CHR$(34) + exe + CHR$(34)
+            $ELSE
+                SHELL _DONTWAIT "cd '" + pdir + "' && './" + exe + "' >/dev/null 2>&1 &"
+            $END IF
+            start_pcsedit = -1
+            EXIT FUNCTION
+        END IF
+    NEXT
+END FUNCTION
+
+
+FUNCTION read_file$ (f AS STRING)
+    DIM ff AS LONG, d AS STRING
+    ff = FREEFILE
+    OPEN f FOR BINARY AS #ff
+    d = SPACE$(LOF(ff))
+    GET #ff, 1, d
+    CLOSE #ff
+    read_file = d
+END FUNCTION
+
+
+FUNCTION PCSFXR_FilePart$ (f AS STRING)
+    DIM p AS LONG
+    p = _INSTRREV(f, "/")
+    IF _INSTRREV(f, "\") > p THEN p = _INSTRREV(f, "\")
+    PCSFXR_FilePart = MID$(f, p + 1)
+END FUNCTION
 
 
 SUB export_json

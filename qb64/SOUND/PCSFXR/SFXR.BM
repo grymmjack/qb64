@@ -908,7 +908,7 @@ $IF SFXR_BM = UNDEFINED THEN
         q = CHR$(39)
         lbl = LCASE$(SFXR_SafeName(nam)) + "_data"
         s = q + q + nl
-        s = s + q + " " + nam + " - PC speaker sound effect made with PCFXR" + nl
+        s = s + q + " " + nam + " - PC speaker sound effect made with PCSFXR" + nl
         s = s + q + " sfxr.me: https://sfxr.me/#" + SFXR_ToB58 + nl
         s = s + q + nl
         s = s + q + " Needs PCSPKR.BI and PCSPKR.BM (qb64/SOUND/PC-SPEAKER) next to this file." + nl
@@ -982,7 +982,7 @@ $IF SFXR_BM = UNDEFINED THEN
 
 
     ''
-    ' The sound as a jsfxr .json (sfxr.me's "Save As"), plus PCFXR's own
+    ' The sound as a jsfxr .json (sfxr.me's "Save As"), plus PCSFXR's own
     ' settings, which sfxr.me ignores.
     '
     FUNCTION SFXR_ToJSON$
@@ -997,10 +997,10 @@ $IF SFXR_BM = UNDEFINED THEN
         s = s + "  " + q + "sound_vol" + q + ": " + SFXR_Num(sfxr_vol) + "," + nl
         s = s + "  " + q + "sample_rate" + q + ": 44100," + nl
         s = s + "  " + q + "sample_size" + q + ": 8," + nl
-        s = s + "  " + q + "pcfxr_mode" + q + ": " + SFXR_Num(sfxr_mode) + "," + nl
-        s = s + "  " + q + "pcfxr_tick_hz" + q + ": " + SFXR_Num(sfxr_tickHz) + "," + nl
-        s = s + "  " + q + "pcfxr_gate" + q + ": " + SFXR_Num(sfxr_gate) + "," + nl
-        s = s + "  " + q + "pcfxr_pwm_hz" + q + ": " + SFXR_Num(sfxr_pwmHz) + nl
+        s = s + "  " + q + "pcsfxr_mode" + q + ": " + SFXR_Num(sfxr_mode) + "," + nl
+        s = s + "  " + q + "pcsfxr_tick_hz" + q + ": " + SFXR_Num(sfxr_tickHz) + "," + nl
+        s = s + "  " + q + "pcsfxr_gate" + q + ": " + SFXR_Num(sfxr_gate) + "," + nl
+        s = s + "  " + q + "pcsfxr_pwm_hz" + q + ": " + SFXR_Num(sfxr_pwmHz) + nl
         s = s + "}" + nl
         SFXR_ToJSON = s
     END FUNCTION
@@ -1032,7 +1032,7 @@ $IF SFXR_BM = UNDEFINED THEN
 
 
     ''
-    ' Load a jsfxr .json (from sfxr.me or PCFXR). Returns TRUE on success.
+    ' Load a jsfxr .json (from sfxr.me or PCSFXR). Returns TRUE on success.
     '
     FUNCTION SFXR_FromJSON%% (text AS STRING)
         DIM i AS LONG, found AS INTEGER, v AS DOUBLE, gotAny AS INTEGER
@@ -1045,7 +1045,12 @@ $IF SFXR_BM = UNDEFINED THEN
             IF found THEN sfxr_p(i) = v: gotAny = -1
         NEXT
         v = SFXR_JsonNum(text, "sound_vol", found): IF found THEN sfxr_vol = v
+        ' (pcsfxr_*, or pcfxr_* from before the rename)
         v = SFXR_JsonNum(text, "pcfxr_mode", found): IF found THEN sfxr_mode = v
+        v = SFXR_JsonNum(text, "pcsfxr_mode", found): IF found THEN sfxr_mode = v
+        v = SFXR_JsonNum(text, "pcsfxr_tick_hz", found): IF found AND v > 0 THEN sfxr_tickHz = v
+        v = SFXR_JsonNum(text, "pcsfxr_gate", found): IF found THEN sfxr_gate = v
+        v = SFXR_JsonNum(text, "pcsfxr_pwm_hz", found): IF found AND v >= 1000 THEN sfxr_pwmHz = v
         v = SFXR_JsonNum(text, "pcfxr_tick_hz", found): IF found AND v > 0 THEN sfxr_tickHz = v
         v = SFXR_JsonNum(text, "pcfxr_gate", found): IF found THEN sfxr_gate = v
         v = SFXR_JsonNum(text, "pcfxr_pwm_hz", found): IF found AND v >= 1000 THEN sfxr_pwmHz = v

@@ -489,6 +489,146 @@ $IF PCSMIDI_BM = UNDEFINED THEN
 
 
     ''
+    ' Load a Reality AdLib Tracker v1 module (.rad, 9 FM channels): its notes
+    ' as heard (speed changes, pattern breaks, the order list's jump markers -
+    ' the song ends where it would loop back). A note lasts until a key-off,
+    ' the next note on its channel or volume 0. RAD's octave 4 A is 440 Hz.
+    ' Instruments flagged in pcsmidiSkip() are left out.
+    '
+    FUNCTION PCSMIDI_LoadRAD% (fileName AS STRING)
+        DIM ff AS LONG, d AS STRING, q AS LONG, flags AS LONG, nOrd AS LONG, i AS LONG, o AS LONG
+        DIM ord(0 TO 127) AS LONG, patOfs(0 TO 31) AS LONG, speed AS LONG, hz AS DOUBLE, t AS DOUBLE
+        DIM row AS LONG, startRow AS LONG, ch AS LONG, nb AS LONG, b2 AS LONG, eff AS LONG, par AS LONG
+        DIM ins AS LONG, nt AS LONG, lb AS LONG, cb AS LONG, breakTo AS LONG, guard AS LONG, rowDur AS DOUBLE
+        DIM gNote(0 TO 63, 0 TO 8) AS LONG, gIns(0 TO 63, 0 TO 8) AS LONG, gEff(0 TO 63, 0 TO 8) AS LONG, gPar(0 TO 63, 0 TO 8) AS LONG
+        REDIM openN(0 TO 31) AS LONG, chMax(0 TO 31) AS DOUBLE, ls(0 TO 31) AS LONG
+
+        pcsmidiCount = 0: pcsmidiError = "": pcsmidiTitle = "": pcsmidiTracks = 9
+        pcsmidiChanMask = 0: pcsmidiIsMidi = 0
+        IF NOT _FILEEXISTS(fileName) THEN pcsmidiError = "File not found: " + fileName: EXIT FUNCTION
+        ff = FREEFILE
+        OPEN fileName FOR BINARY AS #ff
+        d = SPACE$(LOF(ff))
+        GET #ff, 1, d
+        CLOSE #ff
+        IF LEFT$(d, 16) <> "RAD by REALiTY!!" THEN pcsmidiError = "Not a RAD file": EXIT FUNCTION
+        IF ASC(d, 17) <> &H10 THEN pcsmidiError = "Only RAD v1 files can be read (this is v" + HEX$(ASC(d, 17) \ 16) + "." + HEX$(ASC(d, 17) AND 15) + ")": EXIT FUNCTION
+        flags = ASC(d, 18)
+        speed = flags AND 31: IF speed = 0 THEN speed = 6
+        IF flags AND 64 THEN hz = 18.2 ELSE hz = 50
+        q = 19
+        IF flags AND 128 THEN ' a description, up to a 0
+            DO WHILE q <= LEN(d)
+                IF ASC(d, q) = 0 THEN EXIT DO
+                q = q + 1
+            LOOP
+            q = q + 1
+        END IF
+        ' instruments: number, 11 bytes each, 0 ends them
+        pcsmidiSmpCount = 0
+        FOR i = 1 TO 31: pcsmidiSmpName(i) = "": pcsmidiSmpLen(i) = 0: pcsmidiSmpLoop(i) = 0: pcsmidiSmpNotes(i) = 0: NEXT
+        DO WHILE q <= LEN(d)
+            i = ASC(d, q): q = q + 1
+            IF i = 0 THEN EXIT DO
+            IF i <= 31 AND i > pcsmidiSmpCount THEN pcsmidiSmpCount = i
+            q = q + 11
+        LOOP
+        nOrd = ASC(d, q): q = q + 1
+        FOR i = 0 TO nOrd - 1
+            IF i <= 127 THEN ord(i) = ASC(d, q + i)
+        NEXT
+        q = q + nOrd
+        FOR i = 0 TO 31
+            patOfs(i) = ASC(d, q + i * 2) + ASC(d, q + i * 2 + 1) * 256&
+        NEXT
+
+        FOR ch = 0 TO 31: openN(ch) = -1: NEXT
+        o = 0: startRow = 0
+        DO WHILE o < nOrd AND o <= 127
+            IF ord(o) >= 128 THEN ' a jump marker: back = the song loops, so it ends
+                IF (ord(o) AND 127) <= o THEN EXIT DO
+                o = ord(o) AND 127: startRow = 0
+                _CONTINUE
+            END IF
+            ' unpack the pattern into a 64 x 9 grid
+            FOR row = 0 TO 63
+                FOR ch = 0 TO 8: gNote(row, ch) = 0: gIns(row, ch) = 0: gEff(row, ch) = 0: gPar(row, ch) = 0: NEXT
+            NEXT
+            IF ord(o) <= 31 THEN
+                q = patOfs(ord(o)) + 1
+                IF q > 1 THEN
+                    DO WHILE q <= LEN(d)
+                        lb = ASC(d, q): q = q + 1
+                        row = lb AND 63
+                        DO WHILE q + 1 <= LEN(d)
+                            cb = ASC(d, q)
+                            nb = ASC(d, q + 1): b2 = ASC(d, q + 2): q = q + 3
+                            ch = cb AND 15
+                            eff = b2 AND 15
+                            par = 0
+                            IF eff THEN par = ASC(d, q): q = q + 1
+                            IF ch <= 8 THEN
+                                gNote(row, ch) = nb: gIns(row, ch) = (nb AND 128) \ 8 + b2 \ 16
+                                gEff(row, ch) = eff: gPar(row, ch) = par
+                            END IF
+                            IF cb AND 128 THEN EXIT DO
+                        LOOP
+                        IF lb AND 128 THEN EXIT DO
+                    LOOP
+                END IF
+            END IF
+            breakTo = -1
+            FOR row = startRow TO 63
+                guard = guard + 1
+                IF guard > 64 * 512 THEN EXIT DO
+                FOR ch = 0 TO 8
+                    IF gEff(row, ch) = &HF AND gPar(row, ch) > 0 THEN speed = gPar(row, ch)
+                NEXT
+                rowDur = speed / hz
+                FOR ch = 0 TO 8
+                    nb = gNote(row, ch): ins = gIns(row, ch)
+                    IF ins THEN ls(ch) = ins
+                    nt = nb AND 15
+                    IF nt = 15 THEN
+                        PCSMIDI_ModEnd openN(), chMax(), ch, t ' key off
+                    ELSEIF nt >= 1 AND nt <= 12 THEN
+                        PCSMIDI_ModEnd openN(), chMax(), ch, t
+                        IF ls(ch) >= 1 AND ls(ch) <= 31 THEN
+                            IF NOT pcsmidiSkip(ls(ch)) THEN
+                                openN(ch) = PCSMIDI_ModNote(t, ((nb \ 16) AND 7) * 12 + 12 + nt, ch, ls(ch))
+                                chMax(ch) = 0
+                            END IF
+                        END IF
+                    END IF
+                    SELECT CASE gEff(row, ch)
+                        CASE &HC: IF gPar(row, ch) = 0 THEN PCSMIDI_ModEnd openN(), chMax(), ch, t
+                        CASE &HD: breakTo = gPar(row, ch)
+                    END SELECT
+                NEXT
+                t = t + rowDur
+                IF breakTo >= 0 THEN EXIT FOR
+            NEXT
+            startRow = 0
+            IF breakTo >= 0 AND breakTo < 64 THEN startRow = breakTo
+            o = o + 1
+        LOOP
+        FOR ch = 0 TO 8
+            PCSMIDI_ModEnd openN(), chMax(), ch, t
+        NEXT
+        i = 0
+        FOR o = 0 TO pcsmidiCount - 1
+            IF pcsmidiNote(o).t1 > pcsmidiNote(o).t0 THEN pcsmidiNote(i) = pcsmidiNote(o): i = i + 1
+        NEXT
+        pcsmidiCount = i
+        FOR o = 0 TO pcsmidiCount - 1
+            pcsmidiSmpNotes(pcsmidiNote(o).trk) = pcsmidiSmpNotes(pcsmidiNote(o).trk) + 1
+        NEXT
+        IF pcsmidiCount = 0 THEN pcsmidiError = "No notes in that .rad": EXIT FUNCTION
+        PCSMIDI_LoadRAD = -1
+    END FUNCTION
+
+
+    ''
     ' A .mod note starting at t0 (open-ended): its index.
     '
     FUNCTION PCSMIDI_ModNote& (t0 AS DOUBLE, nt AS LONG, ch AS LONG, smp AS LONG)

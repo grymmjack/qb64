@@ -1,0 +1,372 @@
+''
+' PCSPLAY.BM - PC speaker music and sound effects for QB64-PE games
+' (see PCSPLAY.BI for how to use it)
+'
+$IF PCSPLAY_BM = UNDEFINED THEN
+    $LET PCSPLAY_BM = TRUE
+
+    SUB PCSP_Init
+        IF pcspReady THEN EXIT SUB
+        pcspReady = -1
+        PCSPK_Init
+        PCSPK_SetTickRate PCSP_RATE
+        pcspMode = PCSP_PWM
+        pcspSfx = -1: pcspMus = -1: pcspLastDiv = -1: pcspTemp = -1
+    END SUB
+
+
+    '--- loading --------------------------------------------------------------
+
+    ''
+    ' Load an IFS bank file (adds its sounds to the ones loaded). Returns how
+    ' many sounds it added (0: none, or no such file).
+    '
+    FUNCTION PCSP_LoadBank& (fileName AS STRING)
+        DIM ff AS LONG, d AS STRING
+        IF NOT _FILEEXISTS(fileName) THEN EXIT FUNCTION
+        ff = FREEFILE
+        OPEN fileName FOR BINARY AS #ff
+        d = SPACE$(LOF(ff))
+        GET #ff, 1, d
+        CLOSE #ff
+        PCSP_LoadBank = PCSP_LoadBankData(d)
+    END FUNCTION
+
+
+    ''
+    ' The same from a bank held in a string (the bytes of an .SND file).
+    '
+    FUNCTION PCSP_LoadBankData& (d AS STRING)
+        DIM n AS LONG, i AS LONG, ofs AS LONG, e AS LONG, nm AS STRING, p AS LONG, k AS LONG
+        DIM bnm AS STRING, j AS LONG, added AS LONG, first AS LONG
+        PCSP_Init
+        IF LEFT$(d, 4) <> "SND" + CHR$(0) THEN EXIT FUNCTION
+        n = CVI(MID$(d, 7, 2)) AND &HFFFF&
+        first = pcspCount
+        FOR i = 0 TO n - 1
+            ofs = CVI(MID$(d, 17 + i * 16, 2)) AND &HFFFF&
+            nm = MID$(d, 21 + i * 16, 12)
+            IF INSTR(nm, CHR$(0)) THEN nm = LEFT$(nm, INSTR(nm, CHR$(0)) - 1)
+            e = ofs + 1
+            DO WHILE e + 1 <= LEN(d)
+                IF ASC(d, e) = 255 AND ASC(d, e + 1) = 255 THEN EXIT DO
+                e = e + 2
+            LOOP
+            ' NAME~k: voice k of the sound NAME saved before it (PCSEDIT)
+            p = INSTR(nm, "~")
+            k = 0
+            IF p > 1 AND p = LEN(nm) - 1 THEN k = VAL(MID$(nm, p + 1))
+            IF k >= 1 AND k <= 4 THEN
+                bnm = UCASE$(LEFT$(nm, p - 1))
+                FOR j = pcspCount - 1 TO first STEP -1
+                    IF UCASE$(LEFT$(pcspName(j), 10)) = bnm THEN
+                        pcspVoice(j * 4 + k - 1) = MID$(d, ofs + 1, e - ofs - 1)
+                        IF k > pcspNV(j) THEN pcspNV(j) = k
+                        EXIT FOR
+                    END IF
+                NEXT
+            ELSE
+                j = PCSP_AddSound(nm, ASC(d, 19 + i * 16), MID$(d, ofs + 1, e - ofs - 1))
+                added = added + 1
+            END IF
+        NEXT
+        PCSP_LoadBankData = added
+    END FUNCTION
+
+
+    ''
+    ' The same from hex text (how PCSEDIT's "export as QB64 code" embeds a
+    ' bank in a program).
+    '
+    FUNCTION PCSP_LoadBankHex& (h AS STRING)
+        DIM d AS STRING, i AS LONG
+        d = SPACE$(LEN(h) \ 2)
+        FOR i = 1 TO LEN(h) \ 2
+            MID$(d, i, 1) = CHR$(VAL("&H" + MID$(h, i * 2 - 1, 2)))
+        NEXT
+        PCSP_LoadBankHex = PCSP_LoadBankData(d)
+    END FUNCTION
+
+
+    FUNCTION PCSP_AddSound& (nm AS STRING, pri AS INTEGER, dat AS STRING)
+        IF pcspCount > UBOUND(pcspName) OR pcspCount * 4 + 3 > UBOUND(pcspVoice) THEN
+            REDIM _PRESERVE pcspName(0 TO pcspCount * 2 + 8) AS STRING
+            REDIM _PRESERVE pcspPri(0 TO pcspCount * 2 + 8) AS INTEGER
+            REDIM _PRESERVE pcspData(0 TO pcspCount * 2 + 8) AS STRING
+            REDIM _PRESERVE pcspNV(0 TO pcspCount * 2 + 8) AS INTEGER
+            REDIM _PRESERVE pcspVoice(0 TO (pcspCount * 2 + 8) * 4 + 3) AS STRING
+        END IF
+        pcspName(pcspCount) = nm: pcspPri(pcspCount) = pri: pcspData(pcspCount) = dat
+        pcspNV(pcspCount) = 1
+        PCSP_AddSound = pcspCount
+        pcspCount = pcspCount + 1
+    END FUNCTION
+
+
+    ''
+    ' A sound's number by name (any case), -1 if there's none.
+    '
+    FUNCTION PCSP_Find& (nm AS STRING)
+        DIM i AS LONG
+        PCSP_Find = -1
+        FOR i = 0 TO pcspCount - 1
+            IF UCASE$(pcspName(i)) = UCASE$(nm) THEN PCSP_Find = i: EXIT FUNCTION
+        NEXT
+    END FUNCTION
+
+
+    FUNCTION PCSP_Count&
+        PCSP_Count = pcspCount
+    END FUNCTION
+
+
+    FUNCTION PCSP_Name$ (i AS LONG)
+        IF i >= 0 AND i < pcspCount THEN PCSP_Name = pcspName(i)
+    END FUNCTION
+
+
+    '--- playing --------------------------------------------------------------
+
+    ''
+    ' A sound effect, by name. It takes the speaker unless an effect of
+    ' higher priority is playing (IFS priority, as Keen and Duke did it).
+    '
+    SUB PCSP_Sfx (nm AS STRING)
+        PCSP_SfxNum PCSP_Find(nm)
+    END SUB
+
+
+    SUB PCSP_SfxNum (i AS LONG)
+        PCSP_Init
+        IF i < 0 OR i >= pcspCount THEN EXIT SUB
+        IF pcspSfx >= 0 THEN
+            IF pcspPri(i) < pcspPri(pcspSfx) THEN EXIT SUB ' less important: skip it
+        END IF
+        pcspSfx = i: pcspSfxPos = 0
+    END SUB
+
+
+    ''
+    ' Music, by name: PCSP_LOOP plays it over and over, PCSP_ONCE once.
+    '
+    SUB PCSP_Music (nm AS STRING, loops AS INTEGER)
+        PCSP_MusicNum PCSP_Find(nm), loops
+    END SUB
+
+
+    SUB PCSP_MusicNum (i AS LONG, loops AS INTEGER)
+        DIM k AS LONG
+        PCSP_Init
+        IF i < 0 OR i >= pcspCount THEN EXIT SUB
+        pcspMus = i: pcspMusPos = 0: pcspMusLoop = loops
+        FOR k = 1 TO 4: pcspPh(k) = 0: NEXT
+    END SUB
+
+
+    SUB PCSP_StopSfx
+        pcspSfx = -1
+    END SUB
+
+
+    SUB PCSP_StopMusic
+        pcspMus = -1
+    END SUB
+
+
+    SUB PCSP_StopAll
+        pcspSfx = -1: pcspMus = -1
+    END SUB
+
+
+    FUNCTION PCSP_SfxPlaying%%
+        PCSP_SfxPlaying = pcspSfx >= 0
+    END FUNCTION
+
+
+    FUNCTION PCSP_MusicPlaying%%
+        PCSP_MusicPlaying = pcspMus >= 0
+    END FUNCTION
+
+
+    ''
+    ' Master volume: 1 = normal, 0 = silent, up to 4.
+    '
+    SUB PCSP_Volume (v AS SINGLE)
+        PCSP_Init
+        PCSPK_SetVolume 0.25 * v
+    END SUB
+
+
+    ''
+    ' How music with several voices sounds: PCSP_PWM (together, the
+    ' default) or PCSP_ARP (taking turns, as a real PC game would).
+    '
+    SUB PCSP_SetMode (m AS INTEGER)
+        pcspMode = m
+    END SUB
+
+
+    '--- effects made on the spot -------------------------------------------
+
+    ''
+    ' A beep: hz for seconds.
+    '
+    SUB PCSP_Beep (hz AS DOUBLE, seconds AS DOUBLE)
+        PCSP_Sweep hz, hz, seconds
+    END SUB
+
+
+    ''
+    ' A slide from hz1 to hz2 over seconds (zaps, falls, power-ups).
+    '
+    SUB PCSP_Sweep (hz1 AS DOUBLE, hz2 AS DOUBLE, seconds AS DOUBLE)
+        DIM n AS LONG, i AS LONG, d AS STRING, f AS DOUBLE, v AS LONG
+        PCSP_Init
+        n = CLNG(seconds * PCSP_RATE): IF n < 1 THEN n = 1
+        d = SPACE$(n * 2)
+        FOR i = 0 TO n - 1
+            IF n > 1 THEN f = hz1 * (hz2 / hz1) ^ (i / (n - 1)) ELSE f = hz1 ' even in pitch
+            v = PCSP_Div(f)
+            MID$(d, i * 2 + 1, 2) = CHR$(v AND 255) + CHR$(v \ 256)
+        NEXT
+        PCSP_PlayTemp d
+    END SUB
+
+
+    ''
+    ' Noise: random pitches between hz1 and hz2 (explosions, hits).
+    '
+    SUB PCSP_Noise (hz1 AS DOUBLE, hz2 AS DOUBLE, seconds AS DOUBLE)
+        DIM n AS LONG, i AS LONG, d AS STRING, v AS LONG
+        PCSP_Init
+        n = CLNG(seconds * PCSP_RATE): IF n < 1 THEN n = 1
+        d = SPACE$(n * 2)
+        FOR i = 0 TO n - 1
+            v = PCSP_Div(hz1 + RND * (hz2 - hz1))
+            MID$(d, i * 2 + 1, 2) = CHR$(v AND 255) + CHR$(v \ 256)
+        NEXT
+        PCSP_PlayTemp d
+    END SUB
+
+
+    SUB PCSP_PlayTemp (d AS STRING)
+        IF pcspTemp < 0 THEN pcspTemp = PCSP_AddSound("*TEMP*", 255, "") ' (made the first time)
+        pcspData(pcspTemp) = d
+        pcspSfx = -1 ' (it always plays)
+        PCSP_SfxNum pcspTemp
+    END SUB
+
+
+    FUNCTION PCSP_Div& (hz AS DOUBLE)
+        DIM v AS DOUBLE
+        IF hz <= 18.3 THEN PCSP_Div = 65534: EXIT FUNCTION
+        v = PCSPK_PIT_HZ / hz
+        IF v < 1 THEN v = 1
+        IF v > 65534 THEN v = 65534
+        PCSP_Div = CLNG(v)
+    END FUNCTION
+
+
+    '--- the player -----------------------------------------------------------
+
+    ''
+    ' Call every frame (or more often): renders what's due, about 80 ms
+    ' ahead, so a frame that comes late doesn't stutter the sound.
+    '
+    SUB PCSP_Update
+        PCSP_Init
+        IF pcspk.sink <> PCSPK_SINK_STREAM THEN PCSPK_StreamOpen
+        DO WHILE PCSPK_Buffered < pcspk.lead
+            PCSP_Tick
+        LOOP
+        PCSPK_StreamFlush
+    END SUB
+
+
+    ''
+    ' One 1/140 s step: the effect if there is one (the music keeps time
+    ' under it), else the music.
+    '
+    SUB PCSP_Tick
+        DIM v AS LONG, k AS LONG, n AS LONG, d(1 TO 4) AS LONG, mv AS LONG
+        ' the music's step (even while an effect has the speaker)
+        IF pcspMus >= 0 THEN
+            IF pcspMusPos >= PCSP_Len(pcspMus) THEN
+                IF pcspMusLoop THEN pcspMusPos = 0 ELSE pcspMus = -1
+            END IF
+        END IF
+        IF pcspSfx >= 0 THEN
+            v = PCSP_Step(pcspData(pcspSfx), pcspSfxPos)
+            pcspSfxPos = pcspSfxPos + 1
+            IF pcspSfxPos >= LEN(pcspData(pcspSfx)) \ 2 THEN pcspSfx = -1
+            PCSP_Square v
+            IF pcspMus >= 0 THEN pcspMusPos = pcspMusPos + 1
+            EXIT SUB
+        END IF
+        IF pcspMus < 0 THEN PCSP_Square 0: EXIT SUB
+        mv = pcspMus
+        IF pcspMode = PCSP_PWM AND pcspNV(mv) > 1 THEN
+            FOR k = 1 TO pcspNV(mv)
+                v = PCSP_Step(pcspVoice(mv * 4 + k - 1), pcspMusPos)
+                IF v THEN n = n + 1: d(n) = v
+            NEXT
+            PCSP_PWMTick d(), n
+            pcspLastDiv = -1
+        ELSE
+            PCSP_Square PCSP_Step(pcspData(mv), pcspMusPos)
+        END IF
+        pcspMusPos = pcspMusPos + 1
+    END SUB
+
+
+    FUNCTION PCSP_Len& (i AS LONG)
+        DIM k AS LONG, n AS LONG
+        n = LEN(pcspData(i)) \ 2
+        FOR k = 1 TO pcspNV(i)
+            IF LEN(pcspVoice(i * 4 + k - 1)) \ 2 > n THEN n = LEN(pcspVoice(i * 4 + k - 1)) \ 2
+        NEXT
+        PCSP_Len = n
+    END FUNCTION
+
+
+    FUNCTION PCSP_Step& (d AS STRING, s AS LONG)
+        IF s < 0 OR s * 2 + 2 > LEN(d) THEN EXIT FUNCTION
+        PCSP_Step = ASC(d, s * 2 + 1) + ASC(d, s * 2 + 2) * 256&
+    END FUNCTION
+
+
+    ''
+    ' A plain square wave for one step (the PIT is only written on a change,
+    ' so held notes stay clean).
+    '
+    SUB PCSP_Square (v AS LONG)
+        IF v <> pcspLastDiv THEN PCSPK_SetDivisor v: pcspLastDiv = v
+        PCSPK_AdvanceClocks pcspk.tickClk
+    END SUB
+
+
+    ''
+    ' Several voices for one step with PWM: a 15.7 kHz stream of pulses
+    ' whose width follows how many voices are high (the voices share the
+    ' speaker's swing evenly).
+    '
+    SUB PCSP_PWMTick (d() AS LONG, n AS LONG)
+        CONST CARRIER = 76
+        DIM p AS LONG, periods AS LONG, k AS LONG, hi AS LONG, clk AS DOUBLE
+        clk = pcspk.tickClk
+        IF n = 0 THEN PCSPK_SpeakerOff: PCSPK_AdvanceClocks clk: EXIT SUB
+        PCSPK_SpeakerOn
+        periods = INT(clk / CARRIER)
+        FOR p = 1 TO periods
+            hi = 0
+            FOR k = 1 TO n
+                pcspPh(k) = pcspPh(k) + CARRIER
+                IF pcspPh(k) >= d(k) THEN pcspPh(k) = pcspPh(k) - d(k) * INT(pcspPh(k) / d(k))
+                IF pcspPh(k) < d(k) / 2 THEN hi = hi + 1
+            NEXT
+            PCSPK_PitWrite PCSPK_MODE_ONESHOT, 1 + CLNG(hi * (CARRIER - 2) / n)
+            PCSPK_AdvanceClocks CARRIER
+        NEXT
+        PCSPK_AdvanceClocks clk - periods * CARRIER
+    END SUB
+$END IF

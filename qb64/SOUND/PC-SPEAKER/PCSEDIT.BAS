@@ -138,8 +138,8 @@ CONST VOICE_Y = 104 '                    the voice chips' row
 CONST VOL_Y = 178 '                      the Vol faders: top
 CONST VOL_H = 38 '                       and height
 CONST LIST_W = 200
-CONST RULER_X = 224 '                    piano keys
-CONST CANVAS_X = 268 '                   piano roll
+CONST RULER_X = 264 '                    piano keys
+CONST CANVAS_X = 308 '                   piano roll
 CONST CANVAS_Y = 120
 CONST TIME_Y = 100 '                     time ruler, above the roll
 CONST SCOPE_H = 104
@@ -154,7 +154,7 @@ CONST REC_STEP = 1
 CONST REC_LIVE = 2
 ' file types the Open dialog lists (the native dialogs on Linux are case
 ' sensitive, so both cases)
-CONST OPEN_FILTER = "*.snd|*.SND|*.mid|*.MID|*.midi|*.MIDI|*.mml|*.MML|*.mod|*.MOD|*.dn1|*.DN1|*.dn2|*.DN2|*.dn3|*.DN3|*.ck1|*.CK1|*.wad|*.WAD|*.lmp|*.LMP|*.cmp|*.CMP|*.stn|*.STN|*.ms1|*.MS1|*.ms2|*.MS2|*.ms3|*.MS3|*.hov|*.HOV|*.rov|*.ROV|*.ca2|*.CA2|*.slo|*.SLO|*.8|AUDIOT.*|audiot.*|AUDIOHED.*|audiohed.*"
+CONST OPEN_FILTER = "*.snd|*.SND|*.mid|*.MID|*.midi|*.MIDI|*.mml|*.MML|*.mod|*.MOD|*.rad|*.RAD|*.dn1|*.DN1|*.dn2|*.DN2|*.dn3|*.DN3|*.ck1|*.CK1|*.wad|*.WAD|*.lmp|*.LMP|*.cmp|*.CMP|*.stn|*.STN|*.ms1|*.MS1|*.ms2|*.MS2|*.ms3|*.MS3|*.hov|*.HOV|*.rov|*.ROV|*.ca2|*.CA2|*.slo|*.SLO|*.8|AUDIOT.*|audiot.*|AUDIOHED.*|audiohed.*"
 CONST BEATS_PER_BAR = 4 '                the grid is 4/4
 CONST KEYS_NOTES = 0 '                   what notes play: plain tones...
 CONST KEYS_SOUND = 1 '                   ...or the instrument sound, transposed
@@ -514,6 +514,7 @@ DO
     ' ------------------------------------------------------------ MIDI
     midi_poll
     metronome
+    inbox_poll ' sounds sent from PCSFXR
 
     ' ------------------------------------------------------------ mouse
     wheel = 0
@@ -638,6 +639,7 @@ settings_save
 midi_stop
 PCSPK_Off
 PCSPK_StreamClose
+IF _FILEEXISTS(inbox_dir + "pcsedit.alive") THEN KILL inbox_dir + "pcsedit.alive" ' (PCSFXR: not running now)
 SYSTEM
 
 trap:
@@ -3245,7 +3247,8 @@ FUNCTION handle_key% (k AS LONG, ctrl AS INTEGER, shift AS INTEGER)
                         IF ok_to_lose("Open") THEN open_dialog
                     CASE "S"
                         IF shift THEN save_as ELSE save_now
-                    CASE "E": export_wav
+                    CASE "E"
+                        IF shift THEN export_qb64 ELSE export_wav
                     CASE "K": toggle_keys_mode shift
                     CASE "R": record_now
                     CASE "F"
@@ -3374,7 +3377,7 @@ END SUB
 FUNCTION is_midi% (f AS STRING)
     DIM e AS STRING
     e = LCASE$(MID$(f, _INSTRREV(f, ".") + 1))
-    is_midi = (e = "mid" OR e = "midi" OR e = "mml" OR e = "mod") AND _INSTRREV(f, ".") > 0
+    is_midi = (e = "mid" OR e = "midi" OR e = "mml" OR e = "mod" OR e = "rad") AND _INSTRREV(f, ".") > 0
 END FUNCTION
 
 
@@ -3388,6 +3391,7 @@ SUB import_midi (fileName AS STRING)
     SELECT CASE LCASE$(RIGHT$(fileName, 4))
         CASE ".mml": ok = PCSMIDI_LoadMMLFile(fileName)
         CASE ".mod": ok = PCSMIDI_LoadMOD(fileName)
+        CASE ".rad": ok = PCSMIDI_LoadRAD(fileName)
         CASE ELSE: ok = PCSMIDI_Load(fileName)
     END SELECT
     IF NOT ok THEN set_status pcsmidiError: EXIT SUB
@@ -4251,8 +4255,32 @@ END SUB
 ' has to stay under 64 KB.
 '
 SUB save_bank (fileName AS STRING)
+    DIM img AS STRING, ff AS LONG
+    img = bank_image
+    IF img = "" THEN EXIT SUB ' (too big: bank_image said so)
+    errNum = 0
+    IF _FILEEXISTS(fileName) THEN KILL fileName
+    ff = FREEFILE
+    OPEN fileName FOR BINARY AS #ff
+    IF errNum = 0 THEN
+        PUT #ff, 1, img
+        CLOSE #ff
+    END IF
+    IF errNum THEN set_status "Couldn't save " + fileName + " (error" + STR$(errNum) + ")": EXIT SUB
+    savePath = fileName
+    remember_dir fileName
+    dirty = 0
+    set_status "Saved " + fileName + " -" + STR$(sndCount) + " sounds," + STR$(LEN(img)) + " bytes"
+END SUB
+
+
+''
+' The bank as the bytes of an IFS .SND file ("" if it's too big - the
+' status line says so).
+'
+FUNCTION bank_image$
     DIM hdr AS STRING, tbl AS STRING, body AS STRING, i AS LONG, ofs AS LONG, total AS LONG
-    DIM ff AS LONG, nm AS STRING, entries AS LONG, d AS STRING, s AS LONG, v AS LONG, k AS LONG
+    DIM nm AS STRING, entries AS LONG, d AS STRING, s AS LONG, v AS LONG, k AS LONG
 
     ' A sound with several voices is saved as its ARP mix (what any IFS
     ' player can play) plus one NAME~k entry per voice, so PCSEDIT can take
@@ -4292,25 +4320,11 @@ SUB save_bank (fileName AS STRING)
     total = ofs + LEN(body)
     IF total > 65535 THEN
         set_status "Too big for an IFS bank (" + LTRIM$(STR$(total)) + " bytes, the limit is 65535) - shorten or split it"
-        EXIT SUB
+        EXIT FUNCTION
     END IF
     hdr = "SND" + CHR$(0) + u16$(total) + u16$(entries) + u16$(0) + STRING$(6, 0)
-
-    errNum = 0
-    IF _FILEEXISTS(fileName) THEN KILL fileName
-    ff = FREEFILE
-    OPEN fileName FOR BINARY AS #ff
-    IF errNum = 0 THEN
-        hdr = hdr + tbl + body
-        PUT #ff, 1, hdr
-        CLOSE #ff
-    END IF
-    IF errNum THEN set_status "Couldn't save " + fileName + " (error" + STR$(errNum) + ")": EXIT SUB
-    savePath = fileName
-    remember_dir fileName
-    dirty = 0
-    set_status "Saved " + fileName + " -" + STR$(sndCount) + " sounds," + STR$(total) + " bytes"
-END SUB
+    bank_image = hdr + tbl + body
+END FUNCTION
 
 
 ''
@@ -4464,6 +4478,392 @@ SUB export_wav
 END SUB
 
 
+'--- export as QB64 code ----------------------------------------------------------
+
+''
+' Ctrl+Shift+E: the bank as QB64 code for a game, in a folder of its own:
+'   NAME.BM           the bank (embedded), NAME_Load, and SFX_x / MUSIC_x
+'                     subs for every sound - for the PCSPLAY library
+'   NAME_DEMO.BAS     a demo of it
+'   NAME_PLAY.BM      PLAY_x subs that use QB64's own PLAY (no library;
+'                     notes rounded to semitones)
+'   NAME_PLAYDEMO.BAS a demo of those
+'   PCSPKR.BI/.BM, PCSPLAY.BI/.BM  the library, so the folder works as is
+'
+SUB export_qb64
+    DIM img AS STRING, id AS STRING, d AS STRING, outDir AS STRING, i AS LONG, k AS LONG
+    DIM ff AS LONG, f AS STRING, nm AS STRING, keyList AS STRING, c AS STRING
+    REDIM sid(1 TO sndCount) AS STRING
+    img = bank_image
+    IF img = "" THEN EXIT SUB
+    id = "NEW"
+    IF LEN(savePath) THEN id = PCSPK_FilePart(savePath) ELSE IF LEN(openedPath) THEN id = PCSPK_FilePart(openedPath)
+    IF INSTR(id, ".") THEN id = LEFT$(id, INSTR(id, ".") - 1)
+    id = ident(id)
+    d = start_dir + "EXPORT"
+    IF LEN(exportDir) THEN
+        IF _DIREXISTS(exportDir) THEN d = exportDir
+    END IF
+    IF NOT _DIREXISTS(start_dir + "EXPORT") THEN MKDIR start_dir + "EXPORT"
+    d = _SELECTFOLDERDIALOG$("Export " + id + " as QB64 code - into which folder? (" + id + "_QB64 is made in it)", d)
+    after_dialog
+    IF d = "" THEN set_status "Export cancelled": EXIT SUB
+    IF RIGHT$(d, 1) <> "/" AND RIGHT$(d, 1) <> "\" THEN d = d + "/"
+    exportDir = d
+    outDir = d + id + "_QB64/"
+    errNum = 0
+    IF NOT _DIREXISTS(outDir) THEN MKDIR outDir
+    IF errNum THEN set_status "Couldn't make " + outDir: EXIT SUB
+
+    ' the sounds' names as BASIC names (unique)
+    FOR i = 1 TO sndCount
+        sid(i) = ident(sndName(i))
+        FOR k = 1 TO i - 1
+            IF sid(k) = sid(i) THEN sid(i) = sid(i) + "_" + LTRIM$(STR$(i))
+        NEXT
+    NEXT
+
+    ' the library
+    FOR k = 1 TO 4
+        f = MID$("PCSPKR.BI PCSPKR.BM PCSPLAY.BIPCSPLAY.BM", (k - 1) * 10 + 1, 10)
+        copy_file start_dir + RTRIM$(f), outDir + RTRIM$(f)
+    NEXT
+
+    ' NAME.BM: the bank and its subs
+    ff = FREEFILE
+    OPEN outDir + id + ".BM" FOR OUTPUT AS #ff
+    PRINT #ff, "''"
+    PRINT #ff, "' "; id; ".BM - the "; id; " sound bank for PCSPLAY (made by PCSEDIT)"
+    PRINT #ff, "'"
+    PRINT #ff, "' Include it at the bottom, after PCSPKR.BM and PCSPLAY.BM; call"
+    PRINT #ff, "' "; id; "_Load once, then PCSP_Update every frame:"
+    PRINT #ff, "'   "; id; "_Load"
+    PRINT #ff, "'   MUSIC_"; sid(1); "            ' music (loops)"
+    PRINT #ff, "'   SFX_"; sid(1); "              ' a sound effect"
+    PRINT #ff, "'"
+    PRINT #ff, "SUB "; id; "_Load"
+    PRINT #ff, "    DIM h AS STRING"
+    FOR i = 1 TO LEN(img) STEP 60
+        c = ""
+        FOR k = i TO i + 59
+            IF k > LEN(img) THEN EXIT FOR
+            c = c + RIGHT$("0" + HEX$(ASC(img, k)), 2)
+        NEXT
+        PRINT #ff, "    h = h + "; CHR$(34); c; CHR$(34)
+    NEXT
+    PRINT #ff, "    IF PCSP_LoadBankHex(h) = 0 THEN PRINT "; CHR$(34); id; ": no sounds loaded"; CHR$(34)
+    PRINT #ff, "END SUB"
+    FOR i = 1 TO sndCount
+        PRINT #ff, ""
+        PRINT #ff, "SUB SFX_"; sid(i); " ' "; sndName(i); ":"; snd_len(i); "steps,"; voices_used(i); "voice(s)"
+        PRINT #ff, "    PCSP_Sfx "; CHR$(34); sndName(i); CHR$(34)
+        PRINT #ff, "END SUB"
+        PRINT #ff, ""
+        PRINT #ff, "SUB MUSIC_"; sid(i); " ' over and over (PCSP_StopMusic stops it)"
+        PRINT #ff, "    PCSP_Music "; CHR$(34); sndName(i); CHR$(34); ", PCSP_LOOP"
+        PRINT #ff, "END SUB"
+    NEXT
+    CLOSE #ff
+
+    ' NAME_PLAY.BM: the same with QB64's PLAY
+    ff = FREEFILE
+    OPEN outDir + id + "_PLAY.BM" FOR OUTPUT AS #ff
+    PRINT #ff, "''"
+    PRINT #ff, "' "; id; "_PLAY.BM - the "; id; " sounds as QB64 PLAY statements (made by PCSEDIT)"
+    PRINT #ff, "'"
+    PRINT #ff, "' No library needed: each PLAY_x sub plays in the background (MB) with"
+    PRINT #ff, "' QB64-PE's PLAY (v4+ for sounds with several voices). Pitches are rounded"
+    PRINT #ff, "' to semitones and lengths to what PLAY can do, so slides and vibrato come"
+    PRINT #ff, "' out steppier than in PCSEDIT / PCSPLAY. Include it at the bottom."
+    PRINT #ff, "'"
+    FOR i = 1 TO sndCount
+        PRINT #ff, ""
+        PRINT #ff, "SUB PLAY_"; sid(i); " ' "; sndName(i)
+        nm = ""
+        c = ""
+        FOR k = 1 TO VOICES
+            IF LEN(voice_data(i, k)) THEN
+                c = c + MID$("abcd", LEN(nm) \ 3 + 1, 1)
+                nm = nm + MID$("a$ b$ c$ d$ ", LEN(nm) + 1, 3)
+            END IF
+        NEXT
+        IF LEN(c) THEN
+            PRINT #ff, "    DIM "; MID$("a AS STRING, b AS STRING, c AS STRING, d AS STRING", 1, LEN(c) * 13 - 2)
+            k = 0
+            FOR k = 1 TO VOICES
+                IF LEN(voice_data(i, k)) THEN
+                    write_mml ff, MID$(c, 1, 1), "@1 V" + LTRIM$(STR$(play_vol(k))) + " " + mml_of(voice_data(i, k))
+                    c = MID$(c, 2)
+                END IF
+            NEXT
+            PRINT #ff, "    PLAY "; mml_play_args(voices_used(i))
+        END IF
+        PRINT #ff, "END SUB"
+    NEXT
+    CLOSE #ff
+
+    ' NAME_SOUND.BM: the same with QB64-PE's SOUND (exact pitches)
+    ff = FREEFILE
+    OPEN outDir + id + "_SOUND.BM" FOR OUTPUT AS #ff
+    PRINT #ff, "''"
+    PRINT #ff, "' "; id; "_SOUND.BM - the "; id; " sounds as QB64-PE SOUND statements (made by PCSEDIT)"
+    PRINT #ff, "'"
+    PRINT #ff, "' No library needed: each SOUND_x sub queues its notes (SOUND WAIT ...)"
+    PRINT #ff, "' and starts them (SOUND RESUME), so it plays while your program goes on."
+    PRINT #ff, "' Pitches are exact (in Hz), slides and vibrato too; voices 0-3 play"
+    PRINT #ff, "' together (QB64-PE v4+). Square waves, like the speaker. Include it at"
+    PRINT #ff, "' the bottom."
+    PRINT #ff, "'"
+    FOR i = 1 TO sndCount
+        PRINT #ff, ""
+        PRINT #ff, "SUB SOUND_"; sid(i); " ' "; sndName(i)
+        PRINT #ff, "    SOUND WAIT"
+        c = ""
+        FOR k = 1 TO VOICES
+            IF LEN(voice_data(i, k)) THEN
+                c = c + "x"
+                write_sound ff, voice_data(i, k), LEN(c) - 1, play_vol(k) / 100
+            END IF
+        NEXT
+        PRINT #ff, "    SOUND RESUME"
+        PRINT #ff, "END SUB"
+    NEXT
+    CLOSE #ff
+
+    ' the demos
+    keyList = "1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    FOR k = 0 TO 2
+        ff = FREEFILE
+        SELECT CASE k
+            CASE 0: f = id + "_DEMO.BAS"
+            CASE 1: f = id + "_PLAYDEMO.BAS"
+            CASE ELSE: f = id + "_SOUNDDEMO.BAS"
+        END SELECT
+        OPEN outDir + f FOR OUTPUT AS #ff
+        PRINT #ff, "''"
+        IF k = 0 THEN
+            PRINT #ff, "' "; f; " - the "; id; " sounds through PCSPLAY (made by PCSEDIT)"
+            PRINT #ff, "'"
+            PRINT #ff, "' A key plays a sound as an effect, Shift + the key as looping music,"
+            PRINT #ff, "' Space stops the music, Esc quits. PCSP_Update runs every frame."
+        ELSEIF k = 1 THEN
+            PRINT #ff, "' "; f; " - the "; id; " sounds with QB64's own PLAY (made by PCSEDIT)"
+            PRINT #ff, "'"
+            PRINT #ff, "' A key plays a sound, Esc quits. No library: just PLAY."
+        ELSE
+            PRINT #ff, "' "; f; " - the "; id; " sounds with QB64-PE's SOUND (made by PCSEDIT)"
+            PRINT #ff, "'"
+            PRINT #ff, "' A key plays a sound, Esc quits. No library: just SOUND."
+        END IF
+        PRINT #ff, "'"
+        IF k = 0 THEN
+            PRINT #ff, "'$INCLUDE:'PCSPKR.BI'"
+            PRINT #ff, "'$INCLUDE:'PCSPLAY.BI'"
+            PRINT #ff, ""
+            PRINT #ff, id; "_Load"
+        END IF
+        PRINT #ff, "DIM k AS STRING"
+        PRINT #ff, "SCREEN _NEWIMAGE(640, 480, 32)"
+        PRINT #ff, "_TITLE "; CHR$(34); id; " sounds"; CHR$(34)
+        PRINT #ff, "PRINT "; CHR$(34); " "; id; ": press a key"; CHR$(34)
+        PRINT #ff, "PRINT"
+        FOR i = 1 TO sndCount
+            IF i > LEN(keyList) THEN EXIT FOR
+            PRINT #ff, "PRINT "; CHR$(34); "  "; MID$(keyList, i, 1); "  "; sndName(i); CHR$(34)
+        NEXT
+        PRINT #ff, "PRINT"
+        IF k = 0 THEN PRINT #ff, "PRINT "; CHR$(34); " Shift+key: as music   Space: stop the music   Esc: quit"; CHR$(34) ELSE PRINT #ff, "PRINT "; CHR$(34); " Esc: quit"; CHR$(34)
+        PRINT #ff, "DO"
+        PRINT #ff, "    k = INKEY$"
+        PRINT #ff, "    SELECT CASE k"
+        PRINT #ff, "        CASE CHR$(27): EXIT DO"
+        IF k = 0 THEN PRINT #ff, "        CASE "; CHR$(34); " "; CHR$(34); ": PCSP_StopMusic"
+        FOR i = 1 TO sndCount
+            IF i > LEN(keyList) THEN EXIT FOR
+            c = MID$(keyList, i, 1)
+            IF k = 0 THEN
+                PRINT #ff, "        CASE "; CHR$(34); LCASE$(c); CHR$(34); ": SFX_"; sid(i) ' (Shift: music, below)
+            ELSE
+                IF k = 1 THEN nm = "PLAY_" ELSE nm = "SOUND_"
+                PRINT #ff, "        CASE "; CHR$(34); LCASE$(c); CHR$(34); ", "; CHR$(34); c; CHR$(34); ": "; nm; sid(i)
+            END IF
+        NEXT
+        IF k = 0 THEN
+            ' Shift + a digit / letter: music
+            FOR i = 1 TO sndCount
+                IF i > LEN(keyList) THEN EXIT FOR
+                c = MID$(keyList, i, 1)
+                IF c >= "A" THEN
+                    PRINT #ff, "        CASE "; CHR$(34); c; CHR$(34); ": MUSIC_"; sid(i)
+                ELSE
+                    PRINT #ff, "        CASE "; CHR$(34); MID$("!@#$%^&*()", INSTR("1234567890", c), 1); CHR$(34); ": MUSIC_"; sid(i)
+                END IF
+            NEXT
+        END IF
+        PRINT #ff, "    END SELECT"
+        IF k = 0 THEN PRINT #ff, "    PCSP_Update ' every frame"
+        PRINT #ff, "    _LIMIT 60"
+        PRINT #ff, "LOOP"
+        PRINT #ff, "SYSTEM"
+        PRINT #ff, ""
+        IF k = 0 THEN
+            PRINT #ff, "'$INCLUDE:'PCSPKR.BM'"
+            PRINT #ff, "'$INCLUDE:'PCSPLAY.BM'"
+            PRINT #ff, "'$INCLUDE:'"; id; ".BM'"
+        ELSEIF k = 1 THEN
+            PRINT #ff, "'$INCLUDE:'"; id; "_PLAY.BM'"
+        ELSE
+            PRINT #ff, "'$INCLUDE:'"; id; "_SOUND.BM'"
+        END IF
+        CLOSE #ff
+    NEXT
+    set_status "Exported " + id + " to " + outDir + " - demos: " + id + "_DEMO (PCSPLAY), _PLAYDEMO (PLAY), _SOUNDDEMO (SOUND)"
+END SUB
+
+
+''
+' A name usable in BASIC: letters, digits and _, not starting with a digit.
+'
+FUNCTION ident$ (s AS STRING)
+    DIM i AS LONG, c AS STRING, r AS STRING
+    FOR i = 1 TO LEN(s)
+        c = UCASE$(MID$(s, i, 1))
+        IF INSTR("ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_", c) THEN r = r + c ELSE IF RIGHT$(r, 1) <> "_" THEN r = r + "_"
+    NEXT
+    IF r = "" THEN r = "SND"
+    IF INSTR("0123456789_", LEFT$(r, 1)) THEN r = "S" + r
+    ident = r
+END FUNCTION
+
+
+SUB copy_file (src AS STRING, dst AS STRING)
+    DIM ff AS LONG, d AS STRING
+    IF NOT _FILEEXISTS(src) THEN EXIT SUB
+    ff = FREEFILE
+    OPEN src FOR BINARY AS #ff
+    d = SPACE$(LOF(ff))
+    GET #ff, 1, d
+    CLOSE #ff
+    IF _FILEEXISTS(dst) THEN KILL dst
+    ff = FREEFILE
+    OPEN dst FOR BINARY AS #ff
+    PUT #ff, 1, d
+    CLOSE #ff
+END SUB
+
+
+''
+' One voice as MML for QB64-PE's PLAY: at T255 a 1/n note is 131.76 / n
+' steps, so each run of one pitch becomes the notes (N, legato) that fill
+' it best, keeping the total within about a step of where it should be.
+' Rests are N0. Pitches are rounded to semitones (N45 = A 440).
+'
+FUNCTION mml_of$ (d AS STRING)
+    CONST UNIT = 131.7647058823529 ' steps in a whole note at T255 (140 * 240 / 255)
+    DIM r AS STRING, n AS LONG, i AS LONG, v AS LONG, ln AS LONG, ideal AS DOUBLE, done AS DOUBLE
+    DIM nl AS LONG, lastL AS LONG, nn AS LONG, left AS DOUBLE
+    r = "MB T255 ML "
+    n = LEN(d) \ 2
+    DO WHILE i < n
+        v = ASC(d, i * 2 + 1) + ASC(d, i * 2 + 2) * 256&
+        ln = 1
+        DO WHILE i + ln < n
+            IF ASC(d, (i + ln) * 2 + 1) + ASC(d, (i + ln) * 2 + 2) * 256& <> v THEN EXIT DO
+            ln = ln + 1
+        LOOP
+        ideal = ideal + ln
+        DO
+            left = ideal - done
+            IF left < UNIT / 128 THEN EXIT DO ' under half the shortest note: carried over
+            nl = -INT(-UNIT / left) ' the longest 1/n note that fits
+            IF nl < 1 THEN nl = 1
+            IF nl > 64 THEN nl = 64
+            IF nl <> lastL THEN r = r + "L" + LTRIM$(STR$(nl)): lastL = nl
+            IF v = 0 THEN
+                r = r + "N0"
+            ELSE
+                nn = CLNG(div_note(v)) - 24
+                DO WHILE nn > 84: nn = nn - 12: LOOP
+                DO WHILE nn < 1: nn = nn + 12: LOOP
+                r = r + "N" + LTRIM$(STR$(nn))
+            END IF
+            done = done + UNIT / nl
+        LOOP
+        i = i + ln
+    LOOP
+    mml_of = r
+END FUNCTION
+
+
+''
+' Write an MML string into the code as v = v + "..." lines.
+'
+SUB write_mml (ff AS LONG, v AS STRING, m AS STRING)
+    DIM i AS LONG
+    PRINT #ff, "    "; v; " = "; CHR$(34); CHR$(34)
+    FOR i = 1 TO LEN(m) STEP 96
+        PRINT #ff, "    "; v; " = "; v; " + "; CHR$(34); MID$(m, i, 96); CHR$(34)
+    NEXT
+END SUB
+
+
+''
+' A voice's Vol fader as PLAY's V (50 is PLAY's normal, 100 its most).
+'
+FUNCTION play_vol& (k AS LONG)
+    DIM v AS LONG
+    v = CLNG(50 * vVol(k))
+    IF v > 100 THEN v = 100
+    play_vol = v
+END FUNCTION
+
+
+''
+' NAME_SOUND.BM: a voice as SOUND statements for voice ch - one per run of
+' one pitch, in Hz, so slides, vibrato and fine pitch stay exact (durations
+' in 1/18.2 s ticks: a step is 0.13).
+'
+SUB write_sound (ff AS LONG, d AS STRING, ch AS LONG, vol AS SINGLE)
+    DIM n AS LONG, i AS LONG, v AS LONG, ln AS LONG, hz AS DOUBLE, ln2 AS STRING, cnt AS LONG, vs AS STRING
+    n = LEN(d) \ 2
+    vs = LTRIM$(STR$(vol))
+    IF LEFT$(vs, 1) = "." THEN vs = "0" + vs
+    DO WHILE i < n
+        v = ASC(d, i * 2 + 1) + ASC(d, i * 2 + 2) * 256&
+        ln = 1
+        DO WHILE i + ln < n
+            IF ASC(d, (i + ln) * 2 + 1) + ASC(d, (i + ln) * 2 + 2) * 256& <> v THEN EXIT DO
+            ln = ln + 1
+        LOOP
+        hz = 0
+        IF v THEN hz = PCSPK_PIT_HZ / v
+        IF hz < 37 OR hz > 32767 THEN hz = 0 ' (outside what SOUND can play: a rest)
+        IF LEN(ln2) THEN ln2 = ln2 + ": "
+        ln2 = ln2 + "SOUND " + fmt_num(hz, 2) + ", " + fmt_num(ln * 18.2 / 140, 4) + ", " + vs + ", 0, 1, 0, " + LTRIM$(STR$(ch))
+        cnt = cnt + 1
+        IF cnt = 3 THEN PRINT #ff, "    "; ln2: ln2 = "": cnt = 0
+        i = i + ln
+    LOOP
+    IF LEN(ln2) THEN PRINT #ff, "    "; ln2
+END SUB
+
+
+''
+' x with up to dec decimals, no trailing zeros (and 0.5, not .5).
+'
+FUNCTION fmt_num$ (x AS DOUBLE, dec AS LONG)
+    DIM t AS STRING
+    t = LTRIM$(STR$(CLNG(x * 10 ^ dec) / 10 ^ dec))
+    IF LEFT$(t, 1) = "." THEN t = "0" + t
+    fmt_num = t
+END FUNCTION
+
+
+FUNCTION mml_play_args$ (n AS LONG)
+    mml_play_args = MID$("a, b, c, d", 1, n * 3 - 2)
+END FUNCTION
+
+
 FUNCTION safe_name$ (s AS STRING)
     DIM i AS LONG, c AS STRING, r AS STRING
     FOR i = 1 TO LEN(s)
@@ -4561,6 +4961,16 @@ SUB draw_toolbar
 END SUB
 
 
+''
+' One setting on the mode line at x (moved on past it): bright if on.
+'
+SUB info_tok (x AS LONG, t AS STRING, isOn AS INTEGER)
+    IF isOn THEN COLOR _RGB32(170, 205, 240) ELSE COLOR _RGB32(80, 90, 110)
+    _PRINTSTRING (x, 76), t
+    x = x + LEN(t) * 8 + 12
+END SUB
+
+
 SUB draw_info
     DIM s AS STRING, v AS LONG, x AS LONG
     x = RULER_X
@@ -4622,19 +5032,29 @@ SUB draw_info
         COLOR _RGB32(150, 160, 180)
     END IF
     _PRINTSTRING (x, 76), s
-    COLOR _RGB32(150, 160, 180)
-    IF pianoOn THEN s = "Caps:piano" ELSE s = "Caps:tools"
-    s = s + "  Aud " + on_off(drawAudOn) + "  Snap " + on_off(snapOn) + "  Oct" + LTRIM$(STR$(octave)) + "  Len" + LTRIM$(STR$(noteLen)) + "  Glide " + glide_name + "  Vib " + _TRIM$(vib_name) + "  Loop " + on_off(loopOn) + "  Z" + zoom_name
-    s = s + "  Met " + MID$("offRECR+P", metroMode * 3 + 1, 3) + "  In" + STR$(countIn) + "  Q " + on_off(quantOn) + "  Fol " + on_off(followOn)
-    s = s + "  MIDI: "
+    ' the settings: on / off ones bright when on, dim when off
+    x = RULER_X + 152
+    IF pianoOn THEN info_tok x, "Caps:piano", -1 ELSE info_tok x, "Caps:tools", -1
+    info_tok x, "Aud", drawAudOn
+    info_tok x, "Snap", snapOn
+    info_tok x, "Oct" + LTRIM$(STR$(octave)), -1
+    info_tok x, "Len" + LTRIM$(STR$(noteLen)), -1
+    IF glideSteps THEN info_tok x, "Glide" + STR$(glideSteps), -1 ELSE info_tok x, "Glide", 0
+    IF vibMode THEN info_tok x, "Vib " + _TRIM$(vib_name), -1 ELSE info_tok x, "Vib", 0
+    info_tok x, "Loop", loopOn
+    info_tok x, "Z" + zoom_name, -1
+    IF metroMode THEN info_tok x, "Met " + MID$("offRECR+P", metroMode * 3 + 1, 3), -1 ELSE info_tok x, "Met", 0
+    IF countIn THEN info_tok x, "In" + STR$(countIn), -1 ELSE info_tok x, "In", 0
+    info_tok x, "Q", quantOn
+    info_tok x, "Fol", followOn
     IF midiDevIdx >= 0 AND midiBusy THEN
-        s = s + "BUSY (F7)"
+        info_tok x, "MIDI BUSY (F7)", -1
     ELSEIF midiDevIdx >= 0 THEN
-        s = s + LEFT$(midiDevName(midiDevIdx), 12)
+        info_tok x, "MIDI " + RTRIM$(LEFT$(midiDevName(midiDevIdx), 10)), -1
     ELSE
-        s = s + "off"
+        info_tok x, "MIDI", 0
     END IF
-    _PRINTSTRING (x + 176, 76), s
+    x = RULER_X
     IF heldNote >= 0 OR auditionNote >= 0 THEN
         IF heldNote >= 0 THEN v = heldNote ELSE v = auditionNote
         s = " KEY " + note_name(v) + "  " + LTRIM$(STR$(CLNG(note_hz(v)))) + " Hz  div" + STR$(note_div(v)) + " "
@@ -5991,8 +6411,9 @@ SUB help_text (t() AS STRING, n AS LONG)
     help_add t(), n, "Ctrl+N  Ctrl+O|new bank  /  open"
     help_add t(), n, "Ctrl+S|save (Shift: save as)"
     help_add t(), n, "Ctrl+E|export the sound as .wav"
+    help_add t(), n, "Ctrl+Shift+E|export the bank as QB64 code"
     help_add t(), n, "Ctrl+Shift+V|paste a PLAY string"
-    help_add t(), n, "drop a file|open it (.mid .mml .mod: add it)"
+    help_add t(), n, "drop a file|open it (.mid .mod .rad .mml: add)"
 END SUB
 
 
@@ -6221,6 +6642,118 @@ END SUB
 ' Settings: ~/.config/pcsedit.ini (Windows: %APPDATA%\PCSEDIT.ini), plain
 ' "key=value" lines. Read at start-up, written when PCSEDIT quits.
 '-----------------------------------------------------------------------------
+
+'--- the inbox: sounds sent from PCSFXR -------------------------------------------
+
+''
+' A folder next to the settings that PCSFXR's "Send to PCSEDIT" drops
+' single-sound .snd files into.
+'
+FUNCTION inbox_dir$
+    DIM d AS STRING
+    $IF WIN THEN
+        d = ENVIRON$("APPDATA")
+        IF d = "" THEN d = start_dir
+        IF RIGHT$(d, 1) <> "\" THEN d = d + "\"
+        d = d + "pcsedit-inbox\"
+    $ELSE
+        d = ENVIRON$("HOME")
+        IF d = "" THEN d = start_dir ELSE d = d + "/.config/"
+        d = d + "pcsedit-inbox/"
+    $END IF
+    IF NOT _DIREXISTS(d) THEN MKDIR d
+    inbox_dir = d
+END FUNCTION
+
+
+''
+' About twice a second: say PCSEDIT is running (pcsedit.alive, for PCSFXR)
+' and take in any sounds waiting in the inbox - each becomes a new sound in
+' the bank, after the current one.
+'
+SUB inbox_poll
+    STATIC lastT AS DOUBLE
+    DIM d AS STRING, f AS STRING, n AS LONG, i AS LONG, ff AS LONG
+    IF TIMER >= lastT AND TIMER - lastT < 0.5 THEN EXIT SUB
+    lastT = TIMER
+    d = inbox_dir
+    errNum = 0
+    ff = FREEFILE
+    OPEN d + "pcsedit.alive" FOR OUTPUT AS #ff
+    PRINT #ff, DATE$; " "; LTRIM$(STR$(INT(TIMER)))
+    CLOSE #ff
+    IF recording OR drawing <> 0 THEN EXIT SUB ' (later: not in the middle of something)
+    REDIM names(1 TO 32) AS STRING
+    f = _FILES$(d + "*.snd")
+    DO WHILE LEN(f) AND n < 32
+        n = n + 1: names(n) = f
+        f = _FILES$
+    LOOP
+    ' oldest first (PCSFXR numbers them in order)
+    FOR i = 2 TO n
+        f = names(i)
+        ff = i
+        DO WHILE ff > 1
+            IF names(ff - 1) <= f THEN EXIT DO
+            names(ff) = names(ff - 1): ff = ff - 1
+        LOOP
+        names(ff) = f
+    NEXT
+    FOR i = 1 TO n
+        f = names(i)
+        IF INSTR(f, "/") = 0 AND INSTR(f, "\") = 0 THEN f = d + f
+        inbox_import f
+        IF _FILEEXISTS(f) THEN KILL f
+    NEXT
+    errNum = 0
+END SUB
+
+
+SUB inbox_import (f AS STRING)
+    DIM ff AS LONG, d AS STRING, n AS LONG, i AS LONG, o AS LONG, e AS LONG, nm AS STRING, k AS LONG
+    DIM got AS LONG, last AS LONG
+    ff = FREEFILE
+    OPEN f FOR BINARY AS #ff
+    d = SPACE$(LOF(ff))
+    GET #ff, 1, d
+    CLOSE #ff
+    IF LEFT$(d, 4) <> "SND" + CHR$(0) THEN EXIT SUB
+    stop_playing
+    n = CVI(MID$(d, 7, 2)) AND &HFFFF&
+    FOR i = 0 TO n - 1
+        o = CVI(MID$(d, 17 + i * 16, 2)) AND &HFFFF&
+        nm = MID$(d, 21 + i * 16, 12)
+        IF INSTR(nm, CHR$(0)) THEN nm = LEFT$(nm, INSTR(nm, CHR$(0)) - 1)
+        e = o + 1
+        DO WHILE e + 1 <= LEN(d)
+            IF ASC(d, e) = 255 AND ASC(d, e + 1) = 255 THEN EXIT DO
+            e = e + 2
+        LOOP
+        k = 0
+        IF INSTR(nm, "~") = LEN(nm) - 1 AND LEN(nm) > 2 THEN k = VAL(RIGHT$(nm, 1))
+        IF k >= 1 AND k <= VOICES AND last > 0 THEN
+            IF k = 1 THEN sndData(last) = MID$(d, o + 1, e - o - 1) ELSE sndV(last, k) = MID$(d, o + 1, e - o - 1)
+        ELSEIF sndCount = 1 AND snd_len(1) = 0 AND NOT dirty THEN
+            ' a new, untouched bank: the sound takes the empty one's place
+            sndName(1) = nm
+            sndPri(1) = ASC(d, 19 + i * 16)
+            sndData(1) = MID$(d, o + 1, e - o - 1)
+            select_sound 1
+            last = 1: got = got + 1: dirty = -1
+        ELSEIF sndCount < MAX_SOUNDS THEN
+            add_sound "", ""
+            sndName(cur) = nm
+            sndPri(cur) = ASC(d, 19 + i * 16)
+            sndData(cur) = MID$(d, o + 1, e - o - 1)
+            last = cur: got = got + 1
+        END IF
+    NEXT
+    IF got THEN
+        cursorStep = 0: scrollX = 0
+        set_status "From PCSFXR: " + sndName(last) + " - added to the bank as sound" + STR$(last)
+    END IF
+END SUB
+
 
 FUNCTION cfg_path$
     DIM d AS STRING

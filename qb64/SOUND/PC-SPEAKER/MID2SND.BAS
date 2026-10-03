@@ -11,6 +11,7 @@
 '   MID2SND tune.mml [out.snd] [options]      PLAY strings in a text file
 '   MID2SND -p "T160 O3 L8 CDEFG" out.snd     a PLAY string right here
 '   MID2SND song.mod [out.snd] [options]      a ProTracker module
+'   MID2SND song.rad [out.snd] [options]      a Reality AdLib Tracker v1 module
 '
 ' A .mml (or .txt / .bas) file holds PLAY strings: PLAY "..." lines copied
 ' from a program (each string after a comma is another voice), lines
@@ -26,7 +27,8 @@
 '   -g       no rest between repeated notes of the same pitch
 '   -p MML   convert this PLAY string (in quotes) instead of a file
 '   -r N     ARP speed: each chord note lasts N steps in the mix (default 3)
-'   -x LIST  .mod: leave these samples out, like -x 1,4 (drums, say; -i lists them)
+'   -x LIST  .mod / .rad: leave these samples / instruments out, like -x 1,4
+'            (drums, say; -i lists them)
 '   -i       just list the file's channels, notes and length
 '
 ' The IFS format holds 64 KB. Every step is 2 bytes per voice plus 2 for the
@@ -97,6 +99,7 @@ ELSE
     SELECT CASE ext
         CASE "mml", "txt", "bas": ok = PCSMIDI_LoadMMLFile(inFile)
         CASE "mod": ok = PCSMIDI_LoadMOD(inFile)
+        CASE "rad": ok = PCSMIDI_LoadRAD(inFile)
         CASE ELSE: ok = PCSMIDI_Load(inFile)
     END SELECT
 END IF
@@ -115,6 +118,15 @@ maxSteps = MAX_STEPS
 IF secs > 0 THEN maxSteps = CLNG(secs * PCSMIDI_RATE)
 PCSMIDI_Render nv, tr, chans, gap, maxSteps
 IF pcsmidiUsed = 0 THEN PRINT "Nothing to convert - no notes on those channels (try -i)": SYSTEM 1
+' too long for a bank of its own: cut it where it fits (-s / -v choose otherwise)
+IF NOT appendIt AND secs = 0 THEN
+    k = pcsmidiUsed: IF k > 1 THEN k = k + 1 ' voices + the ARP mix
+    p = (65535 - 16 - (k + 1) * 16 - k * 2) \ (k * 2) ' steps that fit
+    IF pcsmidiSteps > p THEN
+        PRINT "  "; fmt1(pcsmidiSteps / PCSMIDI_RATE); " s is too long for a bank with"; pcsmidiUsed; "voice(s): cut at "; fmt1(p / PCSMIDI_RATE); " s (-v 1 or 2 fits more, -s picks where)"
+        PCSMIDI_Render nv, tr, chans, gap, p
+    END IF
+END IF
 
 IF LEN(mml) THEN PRINT "PLAY string"; ELSE PRINT file_part(inFile);
 PRINT " -> "; file_part(outFile); " as "; nm
@@ -132,6 +144,7 @@ SUB usage
     PRINT "  MID2SND song.mid [out.snd] [options]"
     PRINT "  MID2SND tune.mml [out.snd] [options]     PLAY strings in a text file"
     PRINT "  MID2SND song.mod [out.snd] [options]     a ProTracker module"
+    PRINT "  MID2SND song.rad [out.snd] [options]     a Reality AdLib Tracker v1 module"
     PRINT "  MID2SND -p ";CHR$(34);"T160 O3 L8 CDEFG";CHR$(34);" out.snd    a PLAY string"
     PRINT
     PRINT "  -v N     voices, 1-4 (default 4; 1 = only the top note, for a game)"
@@ -143,7 +156,7 @@ SUB usage
     PRINT "  -g       no rest between repeated notes of the same pitch"
     PRINT "  -r N     ARP speed: each chord note lasts N steps in the mix (default 3)"
     PRINT "  -p MML   convert this PLAY string instead of a file"
-    PRINT "  -x LIST  .mod: leave these samples out, like -x 1,4 (-i lists them)"
+    PRINT "  -x LIST  .mod / .rad: leave these samples / instruments out, like -x 1,4"
     PRINT "  -i       list the file's channels, notes and length"
     SYSTEM 1
 END SUB
@@ -173,7 +186,12 @@ SUB show_info
         END IF
     NEXT
     ' a .mod: its samples (-x leaves some out; drums are usually short and don't loop)
-    IF pcsmidiSmpCount THEN
+    IF pcsmidiSmpCount AND LCASE$(RIGHT$(COMMAND$(1), 4)) = ".rad" THEN
+        PRINT "  instruments (-x to leave out):"
+        FOR i = 1 TO pcsmidiSmpCount
+            IF pcsmidiSmpNotes(i) > 0 THEN PRINT USING "    ##  ##### notes"; i; pcsmidiSmpNotes(i)
+        NEXT
+    ELSEIF pcsmidiSmpCount THEN
         PRINT "  samples (-x to leave out):"
         FOR i = 1 TO pcsmidiSmpCount
             IF pcsmidiSmpNotes(i) > 0 OR LEN(pcsmidiSmpName(i)) > 0 THEN

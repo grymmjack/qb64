@@ -1,4 +1,4 @@
-# PCFXR: sfxr for the PC speaker
+# PCSFXR (PC Speaker FXer): sfxr for the PC speaker
 
 **Short version:** a QB64-PE version of [sfxr.me](https://sfxr.me/) (jsfxr), the
 classic one-click game sound effect generator. Click **Explosion**,
@@ -9,7 +9,7 @@ Duke Nukem-style sound bank, a ready-to-run QB64-PE program, or a `.wav`.
 It is written entirely in QB64-PE, with no C and no `DECLARE LIBRARY`, and is
 built on the PC speaker emulator in [`../PC-SPEAKER`](../PC-SPEAKER).
 
-![PCFXR in Beeper mode, playing an explosion](SCREENSHOTS/1-beeper-explosion.png)
+![PCSFXR in Beeper mode, playing an explosion](SCREENSHOTS/1-beeper-explosion.png)
 
 Built and tested with the QB64-PE **v4.7.0-GLFW** compiler.
 
@@ -17,7 +17,7 @@ Built and tested with the QB64-PE **v4.7.0-GLFW** compiler.
 
 ## Quick start
 
-1. Open **`PCFXR.BAS`** in QB64-PE.
+1. Open **`PCSFXR.BAS`** in QB64-PE.
 2. Press **F5**.
 3. Click any button under **Generator**. Each click rolls a new random sound of
    that kind and plays it.
@@ -42,7 +42,7 @@ Built and tested with the QB64-PE **v4.7.0-GLFW** compiler.
 The PC speaker can't play what sfxr normally makes. It is a 1-bit speaker
 driven by a timer chip: it can play one square wave at a time, at full volume
 or not at all. (See [`../PC-SPEAKER/README.md`](../PC-SPEAKER/README.md) for how
-that hardware works.) So PCFXR offers three ways to hear a sound:
+that hardware works.) So PCSFXR offers three ways to hear a sound:
 
 ### 1. Beeper (the default): how DOS games really did it
 
@@ -67,13 +67,30 @@ A sound made this way is a short list of numbers (a few dozen bytes), the same
 data Duke Nukem 1 stores. That's what **Export .SND** and **Export .BAS**
 save.
 
+**Into PCSEDIT:** every `.SND` PCSFXR saves opens in
+[PCSEDIT](../PC-SPEAKER/README.md#pcsedit-make-your-own-sounds) (and DN1PLAY
+and the games). Whatever tick rate you made a sound at, the `.SND` is
+written at the 140 steps a second they all play at. **Add to bank** collects
+sounds; **Save bank .SND** asks where to save, and if you pick a bank that
+already exists - one you're working on in PCSEDIT, say - it can add the new
+sounds to it, keeping everything that's there (PCSEDIT's multi-voice sounds
+too).
+
+**Send to PCSEDIT** (the orange button at the bottom right) is quicker:
+it puts the sound straight into the bank you have open in PCSEDIT, as a new
+sound after the current one, within half a second. The two talk through an
+inbox folder next to PCSEDIT's settings (`~/.config/pcsedit-inbox/`, or
+`%APPDATA%\pcsedit-inbox\` on Windows). If PCSEDIT isn't running, PCSFXR
+starts it when it's been compiled in `../PC-SPEAKER`; otherwise the sound
+waits in the inbox for the next time PCSEDIT starts.
+
 ### 2. PWM: getting real audio out of a 1-bit speaker
 
-![PCFXR in PWM mode](SCREENSHOTS/2-pwm-laser.png)
+![PCSFXR in PWM mode](SCREENSHOTS/2-pwm-laser.png)
 
 The demo-scene trick: flip the speaker thousands of times a second and vary
 how long it stays out each time. The cone can't keep up, so it averages the
-pulses into a real waveform. PCFXR renders the full sfxr sound, then plays it
+pulses into a real waveform. PCSFXR renders the full sfxr sound, then plays it
 through the emulated speaker this way, so every slider counts.
 
 * **PWM carrier:** how often the speaker flips. 16 kHz gives 74 pulse widths
@@ -86,7 +103,7 @@ because it used almost all the CPU time.
 
 ### 3. sfxr: the original
 
-![PCFXR in sfxr mode](SCREENSHOTS/3-sfxr-powerup.png)
+![PCSFXR in sfxr mode](SCREENSHOTS/3-sfxr-powerup.png)
 
 Plain sfxr output, for comparison. It sounds exactly like sfxr.me: the synth
 was checked against jsfxr's own code and matches it sample for sample.
@@ -104,9 +121,9 @@ Files are written to `EXPORT/`, next to the program, and named after the sound.
 | Export .BAS | a complete QB64-PE program that plays the sound. Put `PCSPKR.BI` and `PCSPKR.BM` next to it. |
 | Copy .BAS code | the same program, copied to the clipboard |
 | Export .SND | a one-sound Duke Nukem 1 / Keen format sound bank. It opens in `../PC-SPEAKER/DN1PLAY.BAS`. |
-| Add to bank / Save bank .SND | collect several sounds, then save them all as one bank, `EXPORT/PCFXR.SND`. Your own Duke-style sound file. |
+| Add to bank / Save bank .SND | collect several sounds, then save them all as one bank, `EXPORT/PCSFXR.SND`. Your own Duke-style sound file. |
 | Save .json / Load .json | sfxr.me's file format. A `.json` saved here loads on sfxr.me, and the other way round. |
-| Copy sfxr.me link / Paste link/json | swap sounds with the website. Paste a link from sfxr.me into PCFXR, or open a PCFXR link in your browser. |
+| Copy sfxr.me link / Paste link/json | swap sounds with the website. Paste a link from sfxr.me into PCSFXR, or open a PCSFXR link in your browser. |
 
 **Export .BAS**, **Export .SND** and the bank always use the Beeper version of
 the sound, whichever mode is selected, because they store tick-by-tick
@@ -117,7 +134,7 @@ divisors.
 ## Using the engine in your own program
 
 `SFXR.BI` / `SFXR.BM` are the synth on their own, without the window. Your game
-can create sounds at run time, or load ones you designed in PCFXR. `SFXDEMO.BAS`
+can create sounds at run time, or load ones you designed in PCSFXR. `SFXDEMO.BAS`
 shows both:
 
 ```basic
@@ -162,7 +179,7 @@ Useful calls:
 
 | File | What it is |
 | --- | --- |
-| **`PCFXR.BAS`** | **The app. Start here.** |
+| **`PCSFXR.BAS`** | **The app. Start here.** |
 | `SFXR.BI` / `SFXR.BM` | The sfxr synth (ported from jsfxr) plus the Beeper and PWM renderers, `.json`/sfxr.me support and the exporters |
 | `SFXDEMO.BAS` | Using the engine from your own code |
 | `SCREENSHOTS/` | The images in this README |
@@ -175,7 +192,7 @@ side by side.
 * [sfxr](https://www.drpetter.se/project_sfxr.html) by DrPetter: the original
   idea, synth and presets
 * [jsfxr](https://github.com/chr15m/jsfxr) by Chris McCormick (chr15m) and
-  contributors, released into the public domain (UNLICENSE). PCFXR's synth,
+  contributors, released into the public domain (UNLICENSE). PCSFXR's synth,
   presets, parameter units, `.json` format and sfxr.me link codes are ported
   from its `sfxr.js`.
 * The PC speaker emulation comes from `../PC-SPEAKER`, a port of NCOT
