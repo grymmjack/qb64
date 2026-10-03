@@ -23283,3 +23283,998 @@
   $   fader under G, middle click clears every M/S/R or resets every fader
   $ 
   $ Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>" && timeout 100 git push -q; git log --oneline -1; git status -sb | head -2
+2026-10-03T13:27:03-0400  INFO     bash_end      [ok] 22L stdout
+  |  M .claude/activity.log
+  |  M qb64/SOUND/PC-SPEAKER/ASSETS/TUNES/BIRTHDAY.SND
+  |  M qb64/SOUND/PC-SPEAKER/ASSETS/TUNES/CANOND.SND
+  |  M qb64/SOUND/PC-SPEAKER/ASSETS/TUNES/CHIPLOOP.SND
+  |  M qb64/SOUND/PC-SPEAKER/ASSETS/TUNES/FURELISE.SND
+  |  M qb64/SOUND/PC-SPEAKER/ASSETS/TUNES/GREENSLEEV.SND
+  |  M qb64/SOUND/PC-SPEAKER/ASSETS/TUNES/JINGLEBELL.SND
+  |  M qb64/SOUND/PC-SPEAKER/ASSETS/TUNES/JINGLES.SND
+  |  M qb64/SOUND/PC-SPEAKER/ASSETS/TUNES/KOROBEINIK.SND
+  |  M qb64/SOUND/PC-SPEAKER/ASSETS/TUNES/MINUETG.SND
+  |  M qb64/SOUND/PC-SPEAKER/ASSETS/TUNES/MTNKING.SND
+  |  M qb64/SOUND/PC-SPEAKER/ASSETS/TUNES/ODETOJOY.SND
+  |  M qb64/SOUND/PC-SPEAKER/ASSETS/TUNES/PLAYDEMO.SND
+  |  M qb64/SOUND/PC-SPEAKER/MID2SND.BAS
+  |  M qb64/SOUND/PC-SPEAKER/PCSEDIT.BAS
+  |  M qb64/SOUND/PC-SPEAKER/PCSMIDI.BM
+  |  M qb64/SOUND/PC-SPEAKER/README.md
+  | warning: in the working copy of '.claude/activity.log', CRLF will be replaced by LF the next time Git touches it
+  | ?? MYSOUNDS.SND
+  | 48742fa6 SOUND/PC-SPEAKER: PCSEDIT key zoom, fit, retime, ARP speed, volumes
+  | ## main...origin/main
+  | ?? MYSOUNDS.SND
+2026-10-03T13:27:15-0400  NOTICE   prompt        can we add pitch slide? is that possible? so we get some really sweet music?
+  > can we add pitch slide? is that possible? so we get some really sweet music?
+2026-10-03T13:27:31-0400  INFO     bash_start    cd /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER && n=$(grep -n "SELECT CASE ctrl_letter\$(k)" PCSEDIT.BAS | head -1 | cut -d: -f1); sed -n "$n,$((n+90))p" PCSEDIT.BAS | grep -o 'CASE "[A-Z]"' | sor…
+  > cwd: /home/grymmjack/git/qb64
+  $ cd /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER && n=$(grep -n "SELECT CASE ctrl_letter\$(k)" PCSEDIT.BAS | head -1 | cut -d: -f1); sed -n "$n,$((n+90))p" PCSEDIT.BAS | grep -o 'CASE "[A-Z]"' | sort | tr '\n' ' '; echo; grep -n "Len\" + \|\"Len\"\|\" Len\"" PCSEDIT.BAS | head -3; grep -n "^SUB draw_info" PCSEDIT.BAS
+2026-10-03T13:27:31-0400  INFO     bash_end      [ok] 4L stdout
+  | sed: -e expression #1, char 1: unknown command: `,'
+  | 
+  | 4588:    s = s + "  Aud " + on_off(drawAudOn) + "  Snap " + on_off(snapOn) + "  Oct" + LTRIM$(STR$(octave)) + "  Len" + LTRIM$(STR$(noteLen)) + "  Loop " + on_off(loopOn) + "  Z" + zoom_name
+  | 4525:SUB draw_info
+2026-10-03T13:27:34-0400  INFO     bash_start    grep -n 'SELECT CASE ctrl_letter' PCSEDIT.BAS; n=$(grep -n 'SELECT CASE ctrl_letter' PCSEDIT.BAS | head -1 | cut -d: -f1); sed -n "${n},$((n+95))p" PCSEDIT.BAS | grep -o 'CASE "[A-Z]"' | sort -u | tr…
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ grep -n 'SELECT CASE ctrl_letter' PCSEDIT.BAS; n=$(grep -n 'SELECT CASE ctrl_letter' PCSEDIT.BAS | head -1 | cut -d: -f1); sed -n "${n},$((n+95))p" PCSEDIT.BAS | grep -o 'CASE "[A-Z]"' | sort -u | tr '\n' ' '; echo; grep -n "CASE 15104\|CASE 156[0-9][0-9]\|CASE 157[0-9][0-9]\|CASE 158[0-9][0-9]\|CASE 159[0-9][0-9]\|CASE 160[0-9][0-9]\|CASE 161[0-9][0-9]\|CASE 17[0-9][0-9][0-9]\|CASE 34[0-9][0-9][0-9]" PCSEDIT.BAS | head -20
+2026-10-03T13:27:35-0400  INFO     bash_end      [ok] 10L stdout
+  | 3199:                SELECT CASE ctrl_letter$(k)
+  | CASE "A" CASE "B" CASE "C" CASE "E" CASE "F" CASE "G" CASE "H" CASE "J" CASE "K" CASE "L" CASE "M" CASE "N" CASE "O" CASE "P" CASE "Q" CASE "R" CASE "S" CASE "T" CASE "U" CASE "V" CASE "X" CASE "Y" CASE "Z" 
+  | 3122:        CASE 15104: helpOn = NOT helpOn '                      F1
+  | 3130:        CASE 15616: add_sound "", "" '                         F3
+  | 3131:        CASE 15872: add_sound sndName(cur), sndData(cur) '     F4
+  | 3132:        CASE 16128 '                                           F5
+  | 3157:        CASE 17152: set_octave octave - 1 '                    F9
+  | 3158:        CASE 17408: set_octave octave + 1 '                    F10
+  | 3159:        CASE 34048: set_note_len noteLen - 1 '                 F11
+  | 3160:        CASE 34304: set_note_len noteLen + 1 '                 F12
+2026-10-03T13:28:01-0400  INFO     bash_start    grep -n " ELSEIF held_count >= 2 AND (NOT recording OR rec_armed) THEN\| pwm_needed = held_count >= 2 AND (NOT recording OR rec_armed)\| ELSEIF heldNote >= 0 THEN\|^ IF rec_armed THEN$" PCSEDIT.BAS; …
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ grep -n "    ELSEIF held_count >= 2 AND (NOT recording OR rec_armed) THEN\|        pwm_needed = held_count >= 2 AND (NOT recording OR rec_armed)\|    ELSEIF heldNote >= 0 THEN\|^    IF rec_armed THEN$" PCSEDIT.BAS; n=$(grep -n "^SUB render_take" PCSEDIT.BAS | cut -d: -f1); m=$(grep -n "^SUB metronome" PCSEDIT.BAS | cut -d: -f1); sed -n "$((m-14)),$((m-4))p" PCSEDIT.BAS
+2026-10-03T13:28:01-0400  INFO     bash_end      [ok] 16L stdout
+  | 668:    ELSEIF held_count >= 2 AND (NOT recording OR rec_armed) THEN
+  | 670:    ELSEIF heldNote >= 0 THEN
+  | 722:    IF rec_armed THEN
+  | 1056:        pwm_needed = held_count >= 2 AND (NOT recording OR rec_armed)
+  | 1629:    IF rec_armed THEN
+  |         IF best >= 0 AND rec_multi THEN
+  |             rec_write s, v, s - ns(best), nk(best)
+  |         ELSE
+  |             rec_write s, v, -1, 0
+  |         END IF
+  |         IF v <> 0 AND s > recLastNote THEN recLastNote = s
+  |     NEXT
+  | END SUB
+  | 
+  | 
+  | ''
+2026-10-03T13:28:02-0400  INFO     bash_start    sed -n 660,680p PCSEDIT.BAS
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ sed -n 660,680p PCSEDIT.BAS
+2026-10-03T13:28:03-0400  INFO     bash_end      [ok] 21L stdout
+  |             IF v < 0 THEN
+  |                 voiceOn = 0
+  |                 v = 0
+  |             ELSE
+  |                 vp = voicePos
+  |                 voicePos = voicePos + 1
+  |             END IF
+  |         END IF
+  |     ELSEIF held_count >= 2 AND (NOT recording OR rec_armed) THEN
+  |         v = note_div(held_note((tickN \ arpRate) MOD held_count)) ' a chord: take turns (ARP)
+  |     ELSEIF heldNote >= 0 THEN
+  |         v = note_div(heldNote)
+  |     ELSEIF auditionNote >= 0 THEN
+  |         v = note_div(auditionNote)
+  |     END IF
+  |     ' drawing audition (A): the step under the pointer, when no key is down
+  |     IF v = 0 AND drawAud > 0 AND NOT recording THEN v = drawAud
+  | 
+  |     IF recording THEN rec_tick v, vp
+  | 
+  |     speaker v
+2026-10-03T13:28:51-0400  INFO     bash_start    python3 - <<'PYEOF' | p='PCSEDIT.BAS'; s=open(p).read() | def r(a,b,c=1): | global s | assert s.count(a)==c,(a[:100],s.count(a)); s=s.replace(a,b) | | r("""DIM SHARED masterVol AS SINGLE ' the master…
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ python3 - <<'PYEOF'
+  $ p='PCSEDIT.BAS'; s=open(p).read()
+  $ def r(a,b,c=1):
+  $     global s
+  $     assert s.count(a)==c,(a[:100],s.count(a)); s=s.replace(a,b)
+  $ 
+  $ r("""DIM SHARED masterVol AS SINGLE ' the master fader (under G): 1 = 100%, up to 2""","""DIM SHARED masterVol AS SINGLE ' the master fader (under G): 1 = 100%, up to 2
+  $ DIM SHARED glideSteps AS LONG ' Ctrl+I: pitch slide between notes, in steps (0 = off)
+  $ DIM SHARED glNow AS DOUBLE ' the keys' glide: the pitch sounding now (-1 = none), from, to, how far
+  $ DIM SHARED glFrom AS DOUBLE
+  $ DIM SHARED glTo AS DOUBLE
+  $ DIM SHARED glPos AS LONG""")
+  $ r("""\ncfg_load\n""","""\ncfg_load\nglideSteps = VAL(cfg_get("glide", "0"))\nIF glideSteps < 0 OR glideSteps > 35 THEN glideSteps = 0\nglNow = -1\n""")
+  $ r("""    PRINT #ff, "arprate="; LTRIM$(STR$(arpRate))""","""    PRINT #ff, "arprate="; LTRIM$(STR$(arpRate))
+  $     PRINT #ff, "glide="; LTRIM$(STR$(glideSteps))""")
+  $ 
+  $ # on_tick: legato glide on the keys
+  $ r("""    ELSEIF held_count >= 2 AND (NOT recording OR rec_armed) THEN
+  $         v = note_div(held_note((tickN \\ arpRate) MOD held_count)) ' a chord: take turns (ARP)
+  $     ELSEIF heldNote >= 0 THEN
+  $         v = note_div(heldNote)
+  $     ELSEIF auditionNote >= 0 THEN""","""    ELSEIF held_count >= 2 AND (NOT recording OR rec_armed) AND (glideSteps = 0 OR rec_armed) THEN
+  $         v = note_div(held_note((tickN \\ arpRate) MOD held_count)) ' a chord: take turns (ARP)
+  $     ELSEIF heldNote >= 0 THEN
+  $         v = note_div(glide_to(heldNote)) ' (with glide on, a new key slides from the last)
+  $     ELSEIF auditionNote >= 0 THEN""")
+  $ r("""    ' drawing audition (A): the step under the pointer, when no key is down
+  $     IF v = 0 AND drawAud > 0 AND NOT recording THEN v = drawAud""","""    IF heldNote < 0 OR keysMode <> KEYS_NOTES THEN glNow = -1 ' let go: the next key starts fresh
+  $     ' drawing audition (A): the step under the pointer, when no key is down
+  $     IF v = 0 AND drawAud > 0 AND NOT recording THEN v = drawAud""")
+  $ r("""        pwm_needed = held_count >= 2 AND (NOT recording OR rec_armed)""","""        pwm_needed = held_count >= 2 AND (NOT recording OR rec_armed) AND (glideSteps = 0 OR rec_armed)""")
+  $ 
+  $ # STEP: a note right after another slides in
+  $ r("""    chordS0 = s0: chordS1 = s1: chordN = 1
+  $     cursorStep = s1""","""    ' glide: slide into this note from the one just before it
+  $     IF glideSteps > 0 AND keysMode = KEYS_NOTES AND s0 > 0 THEN
+  $         IF rec_armed THEN k = arm_voice(1) ELSE k = sndAct(cur)
+  $         i = apply_glide(k, s0 - 1, s1)
+  $     END IF
+  $     chordS0 = s0: chordS1 = s1: chordN = 1
+  $     cursorStep = s1""")
+  $ # quantized LIVE take: put the slides back after re-drawing
+  $ r("""        IF best >= 0 AND rec_multi THEN
+  $             rec_write s, v, s - ns(best), nk(best)
+  $         ELSE
+  $             rec_write s, v, -1, 0
+  $         END IF
+  $         IF v <> 0 AND s > recLastNote THEN recLastNote = s
+  $     NEXT
+  $ END SUB""","""        IF best >= 0 AND rec_multi THEN
+  $             rec_write s, v, s - ns(best), nk(best)
+  $         ELSE
+  $             rec_write s, v, -1, 0
+  $         END IF
+  $         IF v <> 0 AND s > recLastNote THEN recLastNote = s
+  $     NEXT
+  $     ' glide: the quantized notes slide into each other like they did as played
+  $     IF glideSteps > 0 AND keysMode = KEYS_NOTES THEN k = apply_glide(sndAct(cur), recFrom, endS)
+  $ END SUB""")
+  $ 
+  $ # glide functions
+  $ r("""SUB msr_reset""","""'--- glide (pitch slides) -------------------------------------------------------
+  $ 
+  $ ''
+  $ ' Ctrl+I: how long a slide between notes takes. Shift: apply it.
+  $ '
+  $ SUB glide_setting (dirn AS LONG)
+  $     DIM lv(0 TO 9) AS LONG, i AS LONG, at AS LONG
+  $     lv(0) = 0: lv(1) = 2: lv(2) = 3: lv(3) = 4: lv(4) = 6: lv(5) = 8: lv(6) = 12: lv(7) = 16: lv(8) = 24: lv(9) = 35
+  $     FOR i = 0 TO 9
+  $         IF lv(i) <= glideSteps THEN at = i
+  $     NEXT
+  $     at = (at + dirn + 10) MOD 10
+  $     glideSteps = lv(at)
+  $     IF glideSteps THEN
+  $         set_status "Glide" + STR$(glideSteps) + " steps (" + fmt2(glideSteps / rateHz) + " s): the keys slide note to note, STEP / LIVE record it; Ctrl+Shift+I glides a selection"
+  $     ELSE
+  $         set_status "Glide off"
+  $     END IF
+  $ END SUB
+  $ ...[truncated]
+2026-10-03T13:28:54-0400  INFO     bash_end      [ok] 1L stdout
+  | Output: /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/PCSEDIT
+2026-10-03T13:29:10-0400  INFO     bash_start    python3 - <<'PYEOF' | p='PCSEDIT.BAS'; s=open(p).read() | a="""+ " Gl" + MID$("off", 1, -3 * (glideSteps = 0)) + MID$(STR$(glideSteps), 1, -LEN(STR$(glideSteps)) * (glideSteps <> 0)) + " Loop \"""" |…
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ python3 - <<'PYEOF'
+  $ p='PCSEDIT.BAS'; s=open(p).read()
+  $ a="""+ "  Gl" + MID$("off", 1, -3 * (glideSteps = 0)) + MID$(STR$(glideSteps), 1, -LEN(STR$(glideSteps)) * (glideSteps <> 0)) + "  Loop \""""
+  $ assert a in s
+  $ s=s.replace(a,"""+ "  Glide " + glide_name + "  Loop \"""")
+  $ a="""''
+  $ ' The keys with glide on:"""
+  $ assert a in s
+  $ s=s.replace(a,"""FUNCTION glide_name$
+  $     IF glideSteps THEN glide_name = LTRIM$(STR$(glideSteps)) ELSE glide_name = "off"
+  $ END FUNCTION
+  $ 
+  $ 
+  $ """+a)
+  $ open(p,'w').write(s)
+  $ PYEOF
+  $ export SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad && python3 - <<'PYEOF'
+  $ import os
+  $ SP=os.environ['SP']
+  $ s=open('PCSEDIT.BAS').read()
+  $ lines=s.split('\n'); i=lines.index('DO')
+  $ lines.insert(i,'''DIM tsI AS LONG, tsF AS LONG, tsR AS STRING
+  $ tsF = FREEFILE: OPEN "SPX/pt/gl.txt" FOR OUTPUT AS #tsF
+  $ FOR tsI = 0 TO 9: set_step cur, tsI, note_div(60): NEXT
+  $ FOR tsI = 10 TO 19: set_step cur, tsI, note_div(64): NEXT
+  $ glideSteps = 4
+  $ glide_selection
+  $ tsR = "": FOR tsI = 8 TO 16: tsR = tsR + STR$(INT(div_note(get_step(cur, tsI)) * 100 + 0.5) / 100): NEXT
+  $ PRINT #tsF, "glided 8-16:"; tsR; " ["; statusMsg; "]"
+  $ undo
+  $ PRINT #tsF, "undo @11:"; INT(div_note(get_step(cur, 11)) + 0.5)
+  $ ' the keys
+  $ glNow = -1: tsR = ""
+  $ FOR tsI = 1 TO 3: tsR = tsR + STR$(glide_to(60)): NEXT
+  $ FOR tsI = 1 TO 6: tsR = tsR + STR$(glide_to(67)): NEXT
+  $ PRINT #tsF, "keys:"; tsR
+  $ ' STEP: C then G, Len 8, no grid
+  $ new_bank: recMode = REC_STEP: gridDiv = 0: noteLen = 8: cursorStep = 0
+  $ note_on 60: note_off 60: note_on 67: note_off 67
+  $ tsR = "": FOR tsI = 6 TO 13: tsR = tsR + STR$(INT(div_note(get_step(cur, tsI)) * 10 + 0.5) / 10): NEXT
+  $ PRINT #tsF, "STEP 6-13:"; tsR
+  $ glide_setting 1: PRINT #tsF, "setting after 4 -> "; glideSteps; " name "; glide_name
+  $ CLOSE #tsF
+  $ SYSTEM'''.replace('SPX',SP))
+  $ open(SP+'/pt/T11.BAS','w').write('\n'.join(lines))
+  $ PYEOF
+  $ cp PCSMIDI.B? PCSPKR.B? $SP/pt/; cd $SP/pt && /home/grymmjack/git/qb64pe/qb64pe -x T11.BAS -o ./T11 2>&1 | grep -i "error\|Output"; env -u WAYLAND_DISPLAY -u XDG_CURRENT_DESKTOP -u KDE_FULL_SESSION -u XDG_SESSION_TYPE QT_QPA_PLATFORM=xcb GDK_BACKEND=x11 DISPLAY=:99 PCSEDIT_NOMIDI=1 HOME=$SP/pt/home timeout 20 ./T11 2>&1|tail -1; cat gl.txt
+2026-10-03T13:29:13-0400  WARNING  bash_end      [stderr] 7L stdout / 2L stderr
+  | Beginning C++ output from QB64 code... 
+  | Output: /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/pt/T11
+  | glided 8-16: 60 60 60.8 61.6 62.4 63.2 64 64 64 [Glided 1 note change(s) over 4 steps (Ctrl+Z undoes)]
+  | undo @11: 64 
+  | keys: 60 60 60 61.75 63.5 65.25 67 67 67
+  | STEP 6-13: 60 60 67 67 67 67 67 67
+  | setting after 4 ->  6  name 6
+  ! 
+  ! Shell cwd was reset to /home/grymmjack/git/qb64
+2026-10-03T13:29:28-0400  INFO     bash_start    cd /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER && python3 - <<'PYEOF' | p='PCSEDIT.BAS'; s=open(p).read() | a=""" e = b: IF e > n THEN e = n | i = a: IF i < 0 THEN i = 0 | DO WHILE i < e""" | asse…
+  > cwd: /home/grymmjack/git/qb64
+  $ cd /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER && python3 - <<'PYEOF'
+  $ p='PCSEDIT.BAS'; s=open(p).read()
+  $ a="""    e = b: IF e > n THEN e = n
+  $     i = a: IF i < 0 THEN i = 0
+  $     DO WHILE i < e"""
+  $ assert a in s
+  $ s=s.replace(a,"""    e = b: IF e > n THEN e = n
+  $     i = a: IF i < 0 THEN i = 0
+  $     IF i >= n THEN EXIT FUNCTION
+  $     ' start from the beginning of the note a is in, so its length is known
+  $     v = ASC(d, i * 2 + 1) + ASC(d, i * 2 + 2) * 256&
+  $     DO WHILE i > 0
+  $         IF ASC(d, (i - 1) * 2 + 1) + ASC(d, (i - 1) * 2 + 2) * 256& <> v THEN EXIT DO
+  $         i = i - 1
+  $     LOOP
+  $     st = i
+  $     DO WHILE i < e""")
+  $ a="""        IF i > a AND pv <> 0 AND v <> 0 AND pl >= 2 AND ln >= 2 THEN"""
+  $ assert a in s
+  $ s=s.replace(a,"""        IF i > st AND pv <> 0 AND v <> 0 AND pl >= 2 AND ln >= 2 THEN""")
+  $ a="""    DIM g AS LONG, j AS LONG, f AS DOUBLE, t AS DOUBLE, cnt AS LONG, e AS LONG"""
+  $ assert a in s
+  $ s=s.replace(a,a+", st AS LONG")
+  $ a="""    IF fileName = "PLAY.mml" THEN c = "Imported the PLAY string:\""""
+  $ assert a in s
+  $ open(p,'w').write(s)
+  $ PYEOF
+  $ export SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad; python3 - <<'PYEOF'
+  $ import os
+  $ SP=os.environ['SP']
+  $ t=open(SP+'/pt/T11.BAS').read()
+  $ s=open('PCSEDIT.BAS').read()
+  $ i=t.index("DIM tsI AS LONG, tsF AS LONG, tsR"); j=t.index("SYSTEM",i)+6
+  $ lines=s.split('\n'); k=lines.index('DO'); lines.insert(k,t[i:j])
+  $ open(SP+'/pt/T11.BAS','w').write('\n'.join(lines))
+  $ PYEOF
+  $ cd $SP/pt && /home/grymmjack/git/qb64pe/qb64pe -x T11.BAS -o ./T11 2>&1 | grep -i "error\|Output"; env -u WAYLAND_DISPLAY -u XDG_CURRENT_DESKTOP -u KDE_FULL_SESSION -u XDG_SESSION_TYPE QT_QPA_PLATFORM=xcb GDK_BACKEND=x11 DISPLAY=:99 PCSEDIT_NOMIDI=1 HOME=$SP/pt/home timeout 20 ./T11 2>&1|tail -1; cat gl.txt
+2026-10-03T13:29:31-0400  WARNING  bash_end      [stderr] 7L stdout / 2L stderr
+  | Beginning C++ output from QB64 code... 
+  | Output: /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/pt/T11
+  | glided 8-16: 60 60 60.8 61.6 62.4 63.2 64 64 64 [Glided 1 note change(s) over 4 steps (Ctrl+Z undoes)]
+  | undo @11: 64 
+  | keys: 60 60 60 61.75 63.5 65.25 67 67 67
+  | STEP 6-13: 60 60 61.4 62.8 64.2 65.6 67 67
+  | setting after 4 ->  6  name 6
+  ! 
+  ! Shell cwd was reset to /home/grymmjack/git/qb64
+2026-10-03T13:29:40-0400  INFO     bash_start    cd /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER && python3 - <<'PYEOF' | p='README.md'; s=open(p).read() | a="**Follow** (**Ctrl+F**, on by default)" | assert s.count(a)==1 | s=s.replace(a,"""**Gli…
+  > cwd: /home/grymmjack/git/qb64
+  $ cd /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER && python3 - <<'PYEOF'
+  $ p='README.md'; s=open(p).read()
+  $ a="**Follow** (**Ctrl+F**, on by default)"
+  $ assert s.count(a)==1
+  $ s=s.replace(a,"""**Glide (pitch slides):** **Ctrl+I** sets how long a slide between two
+  $ notes takes: off, 2, 3, 4, 6, 8, 12, 16, 24 or 35 steps (35 steps is a
+  $ quarter of a second). The status line shows it as **Glide**. With glide on:
+  $ 
+  $ * playing the keys is legato: press a key while another is still down and
+  $   the pitch slides from the old note to the new one, like a synth's
+  $   portamento (so held chords are off while glide is on). LIVE recording
+  $   writes the slide just as you hear it, and a quantized take gets its slides
+  $   back after the notes are snapped;
+  $ * in STEP record, a note entered straight after another slides in from it;
+  $ * **Ctrl+Shift+I** glides the selection (or the whole voice; with **G**,
+  $   every voice): wherever one note goes straight into another, the new note's
+  $   first steps slide over from the old pitch. Slides you drew, vibrato and
+  $   rests are left alone, and Ctrl+Z undoes it.
+  $ 
+  $ A slide is just a run of steps whose pitch moves a little each 1/140 s, the
+  $ same as a sweep drawn with the Line tool, so games play it exactly as you
+  $ hear it.
+  $ 
+  $ """ + a)
+  $ open(p,'w').write(s)
+  $ PYEOF
+  $ SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad && /home/grymmjack/git/qb64pe/qb64pe -x PCSEDIT.BAS -o $SP/PCSEDIT 2>&1 | tail -1
+2026-10-03T13:29:43-0400  INFO     bash_end      [ok] 1L stdout
+  | Output: /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/PCSEDIT
+2026-10-03T13:30:14-0400  NOTICE   prompt        yes vibrato too please.
+  > yes vibrato too please.
+2026-10-03T13:31:00-0400  INFO     bash_start    python3 - <<'PYEOF' | p='PCSEDIT.BAS'; s=open(p).read() | def r(a,b,c=1): | global s | assert s.count(a)==c,(a[:100],s.count(a)); s=s.replace(a,b) | r("""DIM SHARED glPos AS LONG""","""DIM SHARED glP…
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ python3 - <<'PYEOF'
+  $ p='PCSEDIT.BAS'; s=open(p).read()
+  $ def r(a,b,c=1):
+  $     global s
+  $     assert s.count(a)==c,(a[:100],s.count(a)); s=s.replace(a,b)
+  $ r("""DIM SHARED glPos AS LONG""","""DIM SHARED glPos AS LONG
+  $ DIM SHARED vibMode AS LONG ' Ctrl+W: vibrato preset (0 = off, see vib_name)
+  $ DIM SHARED vibT AS LONG ' the keys' vibrato: ticks since the note began, and which note
+  $ DIM SHARED vibNote AS LONG""")
+  $ r("""CONST ERASE_REACH = 2 '                  G: the eraser takes notes this many semitones from the pointer""","""CONST ERASE_REACH = 2 '                  G: the eraser takes notes this many semitones from the pointer
+  $ CONST VIB_DELAY = 14 '                   vibrato starts this many steps into a note (0.1 s)...
+  $ CONST VIB_FADE = 14 '                    ...and fades in over this many""")
+  $ r("""\ncfg_load\n""","""\ncfg_load\nvibMode = VAL(cfg_get("vibrato", "0"))\nIF vibMode < 0 OR vibMode > 5 THEN vibMode = 0\nvibNote = -1\n""")
+  $ r("""    PRINT #ff, "glide="; LTRIM$(STR$(glideSteps))""","""    PRINT #ff, "glide="; LTRIM$(STR$(glideSteps))
+  $     PRINT #ff, "vibrato="; LTRIM$(STR$(vibMode))""")
+  $ 
+  $ # keys
+  $ r("""        v = note_div(glide_to(heldNote)) ' (with glide on, a new key slides from the last)""","""        IF heldNote <> vibNote THEN vibNote = heldNote: vibT = 0 ELSE vibT = vibT + 1
+  $         ' (glide: a new key slides from the last; vibrato: a held one wobbles)
+  $         v = note_div(glide_to(heldNote) + vib_off(vibT))""")
+  $ r("""    IF heldNote < 0 OR keysMode <> KEYS_NOTES THEN glNow = -1 ' let go: the next key starts fresh""","""    IF heldNote < 0 OR keysMode <> KEYS_NOTES THEN glNow = -1: vibNote = -1 ' let go: the next key starts fresh""")
+  $ # STEP: after glide
+  $ r("""        i = apply_glide(k, s0 - 1, s1)
+  $     END IF""","""        i = apply_glide(k, s0 - 1, s1)
+  $     END IF
+  $     IF vibMode > 0 AND keysMode = KEYS_NOTES THEN
+  $         IF rec_armed THEN k = arm_voice(1) ELSE k = sndAct(cur)
+  $         i = apply_vibrato(k, s0, s1)
+  $     END IF""")
+  $ # quantized take
+  $ r("""    IF glideSteps > 0 AND keysMode = KEYS_NOTES THEN k = apply_glide(sndAct(cur), recFrom, endS)""","""    IF glideSteps > 0 AND keysMode = KEYS_NOTES THEN k = apply_glide(sndAct(cur), recFrom, endS)
+  $     IF vibMode > 0 AND keysMode = KEYS_NOTES THEN k = apply_vibrato(sndAct(cur), recFrom, endS)""")
+  $ 
+  $ # functions
+  $ r("""SUB msr_reset""","""'--- vibrato ---------------------------------------------------------------------
+  $ 
+  $ FUNCTION vib_name$
+  $     vib_name = MID$("off   light normalwide  fast  slow  ", vibMode * 6 + 1, 6)
+  $ END FUNCTION
+  $ 
+  $ 
+  $ ''
+  $ ' The presets: depth (semitones either way) and rate (wobbles a second).
+  $ '
+  $ SUB vib_params (depth AS DOUBLE, rate AS DOUBLE)
+  $     SELECT CASE vibMode
+  $         CASE 1: depth = 0.15: rate = 5.5 ' light
+  $         CASE 2: depth = 0.3: rate = 6 '    normal
+  $         CASE 3: depth = 0.6: rate = 5.5 '  wide
+  $         CASE 4: depth = 0.25: rate = 8.5 ' fast
+  $         CASE 5: depth = 0.45: rate = 4 '   slow
+  $         CASE ELSE: depth = 0: rate = 0
+  $     END SELECT
+  $ END SUB
+  $ 
+  $ 
+  $ ''
+  $ ' The vibrato's pitch offset (semitones) t steps into a note: nothing for
+  $ ' VIB_DELAY steps, then a sine wave that fades in over VIB_FADE.
+  $ '
+  $ FUNCTION vib_off# (t AS LONG)
+  $     DIM depth AS DOUBLE, rate AS DOUBLE, u AS LONG, f AS DOUBLE
+  $     IF vibMode = 0 OR t < VIB_DELAY THEN EXIT FUNCTION
+  $     vib_params depth, rate
+  $     u = t - VIB_DELAY
+  $     f = u / VIB_FADE: IF f > 1 THEN f = 1
+  $     vib_off = depth * f * SIN(2 * _PI * rate * u / rateHz)
+  $ END FUNCTION
+  $ 
+  $ 
+  $ SUB vib_setting
+  $     vibMode = (vibMode + 1) MOD 6
+  $     IF vibMode THEN
+  $         set_status "Vibrato " + _TRIM$(vib_name) + ": held keys wobble after 0.1 s, STEP / LIVE record it; Ctrl+Shift+W adds it to a selection"
+  $     ELSE
+  $         set_status "Vibrato off"
+  $     END IF
+  $ END SUB
+  $ 
+  $ 
+  $ ...[truncated]
+2026-10-03T13:31:03-0400  INFO     bash_end      [ok] 1L stdout
+  | Output: /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/PCSEDIT
+2026-10-03T13:31:03-0400  NOTICE   prompt        and can you create a .mod -> converter? i have loads of mods i love here; /mnt/windows/e/Music/Mods
+  > and can you create a .mod -> converter? i have loads of mods i love here; /mnt/windows/e/Music/Mods
+2026-10-03T13:31:15-0400  INFO     bash_start    export SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad && python3 - <<'PYEOF' | import os | SP=os.environ['SP'] | s=open('PCSEDIT.BAS').read() | lines=s.s…
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ export SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad && python3 - <<'PYEOF'
+  $ import os
+  $ SP=os.environ['SP']
+  $ s=open('PCSEDIT.BAS').read()
+  $ lines=s.split('\n'); i=lines.index('DO')
+  $ lines.insert(i,'''DIM tsI AS LONG, tsF AS LONG, tsR AS STRING
+  $ tsF = FREEFILE: OPEN "SPX/pt/vib.txt" FOR OUTPUT AS #tsF
+  $ FOR tsI = 0 TO 69: set_step cur, tsI, note_div(60): NEXT
+  $ FOR tsI = 70 TO 79: set_step cur, tsI, note_div(64): NEXT
+  $ vibMode = 2
+  $ vibrato_selection
+  $ tsR = "": FOR tsI = 10 TO 69 STEP 4: tsR = tsR + STR$(INT(div_note(get_step(cur, tsI)) * 100 + 0.5) / 100): NEXT
+  $ PRINT #tsF, "C4 run 10-69 /4:"; tsR; " ["; statusMsg; "]"
+  $ PRINT #tsF, "short E4 @75:"; INT(div_note(get_step(cur, 75)) * 100 + 0.5) / 100
+  $ tsR = "": FOR tsI = 0 TO 40 STEP 5: tsR = tsR + STR$(INT(vib_off(tsI) * 1000) / 1000): NEXT
+  $ PRINT #tsF, "vib_off 0-40 /5:"; tsR
+  $ vibMode = 0: tsR = "": FOR tsI = 1 TO 6: vib_setting: tsR = tsR + " " + _TRIM$(vib_name): NEXT
+  $ PRINT #tsF, "cycle:"; tsR
+  $ CLOSE #tsF
+  $ SYSTEM'''.replace('SPX',SP))
+  $ open(SP+'/pt/T12.BAS','w').write('\n'.join(lines))
+  $ PYEOF
+  $ cp PCSMIDI.B? PCSPKR.B? $SP/pt/; cd $SP/pt && /home/grymmjack/git/qb64pe/qb64pe -x T12.BAS -o ./T12 2>&1 | grep -i "error\|Output"; env -u WAYLAND_DISPLAY -u XDG_CURRENT_DESKTOP -u KDE_FULL_SESSION -u XDG_SESSION_TYPE QT_QPA_PLATFORM=xcb GDK_BACKEND=x11 DISPLAY=:99 PCSEDIT_NOMIDI=1 HOME=$SP/pt/home timeout 20 ./T12 2>&1|tail -1; cat vib.txt; ls /mnt/windows/e/Music/Mods | head; find /mnt/windows/e/Music/Mods -type f | sed 's/.*\.//' | tr A-Z a-z | sort | uniq -c | sort -rn | head
+2026-10-03T13:31:18-0400  WARNING  bash_end      [stderr] 26L stdout / 2L stderr
+  | Beginning C++ output from QB64 code... 
+  | Output: /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/pt/T12
+  | C4 run 10-69 /4: 60 60 60.07 60.14 59.98 59.72 59.76 60.05 60.29 60.22 59.92 59.71 59.8 60.11 60.3 [Vibrato (normal) on 1 note(s) (Ctrl+Z undoes)]
+  | short E4 @75: 64 
+  | vib_off 0-40 /5: 0 0 0 .005 .128 .042-.276-.177 .197
+  | cycle: light normal wide fast slow off
+  | '+goooooa! 3-cia!+.mod'
+  | '-_ APEX _-.mod'
+  | 0mainscr.mod
+  | 04.explosive.mod
+  | 2b-funky.mod
+  | 2ND_PM.S3M
+  | 4-Mat
+  | 4ma.mod
+  | 4ma.xrns
+  | 4mat-auf_weidersehn.mod
+  |     400 mod
+  |      65 xm
+  |      46 it
+  |      41 s3m
+  |       4 rmt
+  |       4 rad
+  |       3 dbm
+  |       2 xrns
+  |       2 mgb
+  |       1 zip
+  ! 
+  ! Shell cwd was reset to /home/grymmjack/git/qb64
+2026-10-03T13:33:12-0400  INFO     bash_start    cd /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER && python3 - <<'PYEOF' | p='PCSMIDI.BI'; s=open(p).read() | a=""" ' PCSMIDI_Render's results""" | assert a in s | s=s.replace(a,""" DIM SHARED pcsmid…
+  > cwd: /home/grymmjack/git/qb64
+  $ cd /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER && python3 - <<'PYEOF'
+  $ p='PCSMIDI.BI'; s=open(p).read()
+  $ a="""    ' PCSMIDI_Render's results"""
+  $ assert a in s
+  $ s=s.replace(a,"""    DIM SHARED pcsmidiIsMidi AS INTEGER ' the notes came from a MIDI file (channel 10 = drums)
+  $     ' .mod files: the samples, and which to leave out (PCSMIDI_LoadMOD)
+  $     DIM SHARED pcsmidiSmpName(1 TO 31) AS STRING
+  $     DIM SHARED pcsmidiSmpLen(1 TO 31) AS LONG ' bytes
+  $     DIM SHARED pcsmidiSmpLoop(1 TO 31) AS INTEGER
+  $     DIM SHARED pcsmidiSmpNotes(1 TO 31) AS LONG
+  $     DIM SHARED pcsmidiSmpCount AS LONG
+  $     DIM SHARED pcsmidiSkip(0 TO 31) AS INTEGER ' set to leave a sample's notes out
+  $ 
+  $ """+a)
+  $ s=s.replace("""' data PCSEDIT edits. Used by PCSEDIT (open / drop a .mid) and MID2SND.BAS.""","""' data PCSEDIT edits. Also reads QB64 PLAY strings (MML) and ProTracker
+  $ ' .mod music. Used by PCSEDIT (open / drop a file) and MID2SND.BAS.""")
+  $ open(p,'w').write(s)
+  $ 
+  $ p='PCSMIDI.BM'; s=open(p).read()
+  $ def r(a,b,c=1):
+  $     global s
+  $     assert s.count(a)==c,(a[:100],s.count(a)); s=s.replace(a,b)
+  $ r("""        pcsmidiCount = 0: pcsmidiError = "": pcsmidiTitle = "": pcsmidiTracks = 0
+  $         pcsmidiChanMask = 0
+  $         pcsmidiTempoN = 0""","""        pcsmidiCount = 0: pcsmidiError = "": pcsmidiTitle = "": pcsmidiTracks = 0
+  $         pcsmidiChanMask = 0: pcsmidiIsMidi = -1: pcsmidiSmpCount = 0
+  $         pcsmidiTempoN = 0""")
+  $ r("""        pcsmidiCount = 0: pcsmidiError = "": pcsmidiTitle = "": pcsmidiTracks = 0: pcsmidiChanMask = 0
+  $         t = txt + CHR$(10)""","""        pcsmidiCount = 0: pcsmidiError = "": pcsmidiTitle = "": pcsmidiTracks = 0: pcsmidiChanMask = 0
+  $         pcsmidiIsMidi = 0: pcsmidiSmpCount = 0
+  $         t = txt + CHR$(10)""")
+  $ r("""            IF chanKeep = 0 THEN
+  $                 keep = pcsmidiNote(i).chan <> 9""","""            IF chanKeep = 0 THEN
+  $                 keep = NOT (pcsmidiIsMidi AND pcsmidiNote(i).chan = 9) ' (MIDI's drums)""")
+  $ r("""    ''
+  $     ' Turn the loaded notes into voices (pcsmidiVoice):""","""    ''
+  $     ' Load a ProTracker / NoiseTracker / SoundTracker .mod: its notes, as
+  $     ' heard (speed and tempo changes, pattern breaks and jumps - the song ends
+  $     ' where it would loop back). Each channel's notes last until the next
+  $     ' note, a cut or volume 0, and a sample that doesn't loop ends a note when
+  $     ' the sample would. Arpeggios (0xy) become notes a tick long. Period 428
+  $     ' (ProTracker's C-2) is middle C. Samples flagged in pcsmidiSkip() are
+  $     ' left out (drums, say).
+  $     '
+  $     FUNCTION PCSMIDI_LoadMOD% (fileName AS STRING)
+  $         DIM ff AS LONG, d AS STRING, sig AS STRING, nCh AS LONG, nSmp AS LONG, i AS LONG, b AS LONG
+  $         DIM songLen AS LONG, ordAt AS LONG, patAt AS LONG, nPat AS LONG, ord(0 TO 127) AS LONG
+  $         DIM speed AS LONG, bpm AS LONG, t AS DOUBLE, tick AS DOUBLE, rowDur AS DOUBLE
+  $         DIM o AS LONG, row AS LONG, startRow AS LONG, ch AS LONG, c AS LONG, smp AS LONG, per AS LONG
+  $         DIM eff AS LONG, par AS LONG, jumpTo AS LONG, breakTo AS LONG, guard AS LONG, st AS DOUBLE
+  $         DIM k AS LONG, x AS LONG, y AS LONG, p0 AS LONG, nt AS LONG, smpVol(1 TO 31) AS LONG
+  $         REDIM openN(0 TO 31) AS LONG, chMax(0 TO 31) AS DOUBLE, ls(0 TO 31) AS LONG, chPitch(0 TO 31) AS LONG
+  $ 
+  $         pcsmidiCount = 0: pcsmidiError = "": pcsmidiTitle = "": pcsmidiTracks = 0
+  $         pcsmidiChanMask = 0: pcsmidiIsMidi = 0
+  $         IF NOT _FILEEXISTS(fileName) THEN pcsmidiError = "File not found: " + fileName: EXIT FUNCTION
+  $         ff = FREEFILE
+  $         OPEN fileName FOR BINARY AS #ff
+  $         d = SPACE$(LOF(ff))
+  $         GET #ff, 1, d
+  $         CLOSE #ff
+  $         IF LEN(d) < 600 THEN pcsmidiError = "Too short to be a .mod": EXIT FUNCTION
+  $ 
+  $         ' how many channels (from the tag at 1080), 31 samples; no tag: an
+  $         ' old 15-sample SoundTracker module with 4
+  $         nSmp = 31
+  $         IF LEN(d) >= 1084 THEN sig = MID$(d, 1081, 4)
+  $         SELECT CASE sig
+  $             CASE "M.K.", "M!K!", "FLT4", "4CHN", "N.T.", "M&K!": nCh = 4
+  $             CASE "6CHN": nCh = 6
+  $             CASE "8CHN", "OCTA", "CD81", "FLT8": nCh = 8
+  $             CASE ELSE
+  $                 IF MID$(sig, 2, 3) = "CHN" AND VAL(LEFT$(sig, 1)) > 0 THEN nCh = VAL(LEFT$(sig, 1))
+  $                 IF (MID$(sig, 3, 2) = "CH" OR MID$(sig, 3, 2) = "CN") AND VAL(LEFT$(sig, 2)) > 0 THEN nCh = VAL(LEFT$(sig, 2))
+  $         END SELECT
+  $         IF nCh = 0 THEN nSmp = 15: nCh = 4
+  $         IF nCh > 32 THEN pcsmidiError = "Too many channels": EXIT FUNCTION
+  $         pcsmidiTitle = PCSMIDI_Clean(LEFT$(d, 20))
+  $         pcsmidiTracks = nCh
+  $         pcsmidiSmpCount = nSmp
+  $ ...[truncated]
+2026-10-03T13:33:12-0400  INFO     bash_end      [ok] 1L stdout
+  | ok
+2026-10-03T13:33:37-0400  INFO     bash_start    python3 - <<'PYEOF' | p='MID2SND.BAS'; s=open(p).read() | def r(a,b,c=1): | global s | assert s.count(a)==c,(a[:100],s.count(a)); s=s.replace(a,b) | r("""' MID2SND - convert a MIDI file (.mid) or QB6…
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ python3 - <<'PYEOF'
+  $ p='MID2SND.BAS'; s=open(p).read()
+  $ def r(a,b,c=1):
+  $     global s
+  $     assert s.count(a)==c,(a[:100],s.count(a)); s=s.replace(a,b)
+  $ r("""' MID2SND - convert a MIDI file (.mid) or QB64 PLAY music (MML) into a PC
+  $ ' speaker IFS sound bank""","""' MID2SND - convert a MIDI file (.mid), QB64 PLAY music (MML) or a tracker
+  $ ' module (.mod) into a PC speaker IFS sound bank""")
+  $ r("""'   MID2SND -p "T160 O3 L8 CDEFG" out.snd     a PLAY string right here""","""'   MID2SND -p "T160 O3 L8 CDEFG" out.snd     a PLAY string right here
+  $ '   MID2SND song.mod [out.snd] [options]      a ProTracker module""")
+  $ r("""'   -i       just list the file's channels, notes and length""","""'   -x LIST  .mod: leave these samples out, like -x 1,4 (drums, say; -i lists them)
+  $ '   -i       just list the file's channels, notes and length""")
+  $ r("""        CASE "-p": i = i + 1: mml = COMMAND$(i)""","""        CASE "-p": i = i + 1: mml = COMMAND$(i)
+  $         CASE "-x"
+  $             i = i + 1: t = COMMAND$(i) + ","
+  $             DO WHILE LEN(t)
+  $                 p = INSTR(t, ",")
+  $                 c = VAL(LEFT$(t, p - 1))
+  $                 IF c >= 1 AND c <= 31 THEN pcsmidiSkip(c) = -1
+  $                 t = MID$(t, p + 1)
+  $             LOOP""")
+  $ r("""    IF ext = "mml" OR ext = "txt" OR ext = "bas" THEN ok = PCSMIDI_LoadMMLFile(inFile) ELSE ok = PCSMIDI_Load(inFile)""","""    SELECT CASE ext
+  $         CASE "mml", "txt", "bas": ok = PCSMIDI_LoadMMLFile(inFile)
+  $         CASE "mod": ok = PCSMIDI_LoadMOD(inFile)
+  $         CASE ELSE: ok = PCSMIDI_Load(inFile)
+  $     END SELECT""")
+  $ r("""            IF c >= 1 AND c <= 16 THEN chans = chans OR _SHL(1, c - 1)""","""            IF c >= 1 AND c <= 32 THEN chans = chans OR _SHL(1, c - 1)""")
+  $ r("""            PRINT "  channel"; c + 1; ":"; n; "notes, "; note_name(lo); " - "; note_name(hi);
+  $             IF c = 9 THEN PRINT "  (drums - left out unless -c 10)" ELSE PRINT
+  $         END IF
+  $     NEXT""","""            PRINT "  channel"; c + 1; ":"; n; "notes, "; note_name(lo); " - "; note_name(hi);
+  $             IF c = 9 AND pcsmidiIsMidi THEN PRINT "  (drums - left out unless -c 10)" ELSE PRINT
+  $         END IF
+  $     NEXT
+  $     ' a .mod: its samples (-x leaves some out; drums are usually short and don't loop)
+  $     IF pcsmidiSmpCount THEN
+  $         PRINT "  samples (-x to leave out):"
+  $         FOR i = 1 TO pcsmidiSmpCount
+  $             IF pcsmidiSmpNotes(i) > 0 OR LEN(pcsmidiSmpName(i)) > 0 THEN
+  $                 IF pcsmidiSmpLen(i) > 2 THEN
+  $                     PRINT USING "    ## \\                    \\ ###### bytes  \\   \\ ##### notes"; i; pcsmidiSmpName(i); pcsmidiSmpLen(i); MID$("loops", 1, -5 * pcsmidiSmpLoop(i)) + MID$("once ", 1, -5 * (NOT pcsmidiSmpLoop(i))); pcsmidiSmpNotes(i)
+  $                 END IF
+  $             END IF
+  $         NEXT
+  $     END IF""")
+  $ r("""    FOR c = 0 TO 15
+  $         n = 0: lo = 999: hi = -1""","""    FOR c = 0 TO 31
+  $         n = 0: lo = 999: hi = -1""")
+  $ r("""    PRINT "  -p MML   convert this PLAY string instead of a file\"""","""    PRINT "  -p MML   convert this PLAY string instead of a file"
+  $     PRINT "  -x LIST  .mod: leave these samples out, like -x 1,4 (-i lists them)\"""")
+  $ r("""    PRINT "  MID2SND tune.mml [out.snd] [options]     PLAY strings in a text file\"""","""    PRINT "  MID2SND tune.mml [out.snd] [options]     PLAY strings in a text file"
+  $     PRINT "  MID2SND song.mod [out.snd] [options]     a ProTracker module\"""")
+  $ r("""                IF pcsmidiNote(j).chan <> 9 THEN""","""                IF pcsmidiNote(j).chan <> 9 OR NOT pcsmidiIsMidi THEN""")
+  $ r("""        IF pcsmidiNote(i).chan <> 9 THEN
+  $             n = 0""","""        IF pcsmidiNote(i).chan <> 9 OR NOT pcsmidiIsMidi THEN
+  $             n = 0""")
+  $ open(p,'w').write(s)
+  $ 
+  $ p='PCSEDIT.BAS'; s=open(p).read()
+  $ def r(a,b,c=1):
+  $     global s
+  $     assert s.count(a)==c,(a[:100],s.count(a)); s=s.replace(a,b)
+  $ r('CONST OPEN_FILTER = "*.snd|*.SND|*.mid|*.MID|*.midi|*.MIDI|*.mml|*.MML|','CONST OPEN_FILTER = "*.snd|*.SND|*.mid|*.MID|*.midi|*.MIDI|*.mml|*.MML|*.mod|*.MOD|')
+  $ r("""    is_midi = (e = "mid" OR e = "midi" OR e = "mml") AND _INSTRREV(f, ".") > 0""","""    is_midi = (e = "mid" OR e = "midi" OR e = "mml" OR e = "mod") AND _INSTRREV(f, ".") > 0""")
+  $ r("""    IF LCASE$(RIGHT$(fileName, 4)) = ".mml" THEN ok = PCSMIDI_LoadMMLFile(fileName) ELSE ok = PCSMIDI_Load(fileName)""","""    SELECT CASE LCASE$(RIGHT$(fileName, 4))
+  $         CASE ".mml": ok = PCSMIDI_LoadMMLFile(fileName)
+  $         CASE ".mod": ok = PCSMIDI_LoadMOD(fileName)
+  $         CASE ELSE: ok = PCSMIDI_Load(fileName)
+  $     END SELECT""")
+  $ r('t(18) = "Ctrl+E export .wav   drop a file to open it (.mid/.mml: import)   Ctrl+Shift+V paste a PLAY string"','t(18) = "Ctrl+E export .wav   drop a file to open it (.mid/.mml/.mod: import)   Ctrl+Shift+V paste a PLAY string"') if 't(18) = "Ctrl+E export .wav' in s else None
+  $ r('''    help_add t(), n, "drop a file|open it (.mid .mml: add it)"''','''    help_add t(), n, "drop a file|open it (.mid .mml .mod: add it)"''')
+  $ open(p,'w').write(s)
+  $ PYEOF
+  $ SP=/tmp/claude-1000/-home-grymmjack/git-qb64/8aae2dea; SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad; /home/grymmjack/git/qb64pe/qb64pe -x MID2SND.BAS -o $SP/MID2SND 2>&1 | tail -3 | grep -i "error\|line\|Output"; /home/grymmjack/git/qb64pe/qb64pe -x PCSEDIT.BAS -o $SP/PCSEDIT 2>&1 | tail -3 | grep -i "error\|line\|Output"
+2026-10-03T13:33:42-0400  INFO     bash_end      [ok] 2L stdout
+  | Output: /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/MID2SND
+  | Output: /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/PCSEDIT
+2026-10-03T13:33:47-0400  INFO     bash_start    cd /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad && mkdir -p mods && cp "/mnt/windows/e/Music/Mods/4mat-auf_weidersehn.mod" "/mnt/windows/e/Music/Mods/2b-f…
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ cd /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad && mkdir -p mods && cp "/mnt/windows/e/Music/Mods/4mat-auf_weidersehn.mod" "/mnt/windows/e/Music/Mods/2b-funky.mod" "/mnt/windows/e/Music/Mods/0mainscr.mod" mods/ && cd mods && for f in *.mod; do ../MID2SND "$f" -i | head -30; echo; done
+2026-10-03T13:33:49-0400  WARNING  bash_end      [stderr] 83L stdout / 2L stderr
+  | 0mainscr.mod
+  |   title: 0mainscr
+  |   4 track(s) / PLAY voice(s), 1682 notes
+  |   length 125.4 s
+  |   channel 1 : 468 notes, A5 - A5
+  |   channel 2 : 45 notes, C4 - D#5
+  |   channel 3 : 534 notes, B3 - B5
+  |   channel 4 : 635 notes, D4 - B5
+  |   samples (-x to leave out):
+  |      1 ***  main screen  ***    7932 bytes  once     47 notes
+  |      2 4musicbusinesswrite2:    7716 bytes  once     73 notes
+  |      3 robert szczepaniak       8310 bytes  once     50 notes
+  |      4 pow. w-wy 1/33           7344 bytes  loops    45 notes
+  |      5 21-100 lubartow          8296 bytes  once     25 notes
+  |      6 poland                   8190 bytes  once     64 notes
+  |      7 (......mod&mid......)    8252 bytes  once     57 notes
+  |      8                          8138 bytes  once     51 notes
+  |      9                         57836 bytes  loops    45 notes
+  |     10                          3736 bytes  loops   103 notes
+  |     11                          1608 bytes  loops    80 notes
+  |     12                          2036 bytes  loops    10 notes
+  |     15                          2750 bytes  loops   106 notes
+  |     17                          3102 bytes  once     30 notes
+  |     18                          3626 bytes  once     30 notes
+  |     25                         14068 bytes  once     54 notes
+  |     26                         10436 bytes  loops    83 notes
+  |     27                          5374 bytes  once    155 notes
+  |     28                          3694 bytes  once     72 notes
+  |     29                          4748 bytes  loops   256 notes
+  |     30                          3632 bytes  loops   246 notes
+  | 
+  | 2b-funky.mod
+  |   title: 2b-funky
+  |   4 track(s) / PLAY voice(s), 2861 notes
+  |   length 175.3 s
+  |   channel 1 : 366 notes, E3 - G5
+  |   channel 2 : 1051 notes, E4 - B5
+  |   channel 3 : 512 notes, A#3 - G5
+  |   channel 4 : 932 notes, F#4 - A#5
+  |   samples (-x to leave out):
+  |      1 ____[prodigy/oops]       8774 bytes  loops   307 notes
+  |      2 ________[1995]           9984 bytes  once    198 notes
+  |      3                          9986 bytes  once    185 notes
+  |      4                          6844 bytes  once     94 notes
+  |      5                          7634 bytes  loops    13 notes
+  |      6                          9020 bytes  loops     4 notes
+  |      7                          1684 bytes  once     62 notes
+  |      8                          2276 bytes  once    370 notes
+  |      9                          1804 bytes  once    201 notes
+  |     10                          5456 bytes  once    190 notes
+  |     11                         13662 bytes  once     19 notes
+  |     12                          5948 bytes  once    181 notes
+  |     13                          2842 bytes  once    126 notes
+  |     14                         14800 bytes  once     49 notes
+  |     15                          8414 bytes  loops    10 notes
+  |     16                          2032 bytes  once      8 notes
+  |     17                          3222 bytes  once     20 notes
+  |     19                          4150 bytes  once     40 notes
+  |     21                          3808 bytes  once     79 notes
+  |     22                          2144 bytes  once     79 notes
+  |     25                          6020 bytes  once     32 notes
+  | 
+  | 4mat-auf_weidersehn.mod
+  |   title: auf weidersehn
+  |   4 track(s) / PLAY voice(s), 11363 notes
+  |   length 364.8 s
+  |   channel 1 : 6113 notes, G#3 - A5
+  |   channel 2 : 658 notes, C3 - A5
+  |   channel 3 : 2292 notes, D3 - B5
+  |   channel 4 : 2300 notes, E3 - A#5
+  |   samples (-x to leave out):
+  |      1 by 4-mat                 4488 bytes  once    327 notes
+  |      2                          3190 bytes  once   5176 notes
+  |      3                          6686 bytes  once    495 notes
+  |      4                          3304 bytes  once     42 notes
+  |      5                           258 bytes  loops  2202 notes
+  |      6                           130 bytes  loops   140 notes
+  |     10                           398 bytes  loops   203 notes
+  |     11                           768 bytes  once   2250 notes
+  |     12                            32 bytes  loops   155 notes
+  | ...[truncated]
+  ! 
+  ! Shell cwd was reset to /home/grymmjack/git/qb64
+2026-10-03T13:33:57-0400  INFO     bash_start    cd /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/mods && ../MID2SND 2b-funky.mod funky4.snd -s 40; ../MID2SND 2b-funky.mod funky1.snd -v 1; ../MID2SND 4mat…
+  > cwd: /home/grymmjack/git/qb64
+  $ cd /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/mods && ../MID2SND 2b-funky.mod funky4.snd -s 40; ../MID2SND 2b-funky.mod funky1.snd -v 1; ../MID2SND 4mat-auf_weidersehn.mod auf.snd -s 45 -n AUFWIEDER; ../MID2SND 4mat-auf_weidersehn.mod auf1.snd -v 1
+2026-10-03T13:33:57-0400  WARNING  bash_end      [stderr] 17L stdout / 2L stderr
+  | 2b-funky.mod -> funky4.snd as 2BFUNKY
+  |   497 notes, 4 voice(s), 5600 steps (40.0 s)
+  |   2364 notes past the end were cut
+  |   saved funky4.snd: 5 entries, 56106 bytes
+  | 2b-funky.mod -> funky1.snd as 2BFUNKY
+  |   1875 notes, 1 voice(s), 24542 steps (175.3 s)
+  |   986 notes left out: more than 1 at once
+  |   saved funky1.snd: 1 entries, 49118 bytes
+  | 4mat-auf_weidersehn.mod -> auf.snd as AUFWIEDER
+  |   545 notes, 4 voice(s), 6300 steps (45.0 s)
+  |   10818 notes past the end were cut
+  |   saved auf.snd: 5 entries, 62994 bytes
+  | 4mat-auf_weidersehn.mod -> auf1.snd as 4MATAUF_WE
+  |   3668 notes, 1 voice(s), 32000 steps (228.6 s)
+  |   3418 notes left out: more than 1 at once
+  |   4277 notes past the end were cut
+  |   saved auf1.snd: 1 entries, 64034 bytes
+  ! 
+  ! Shell cwd was reset to /home/grymmjack/git/qb64
+2026-10-03T13:34:06-0400  INFO     bash_start    cd /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER && export SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad && python3 - <<'PYEOF' | import os | SP=os.env…
+  > cwd: /home/grymmjack/git/qb64
+  $ cd /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER && export SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad && python3 - <<'PYEOF'
+  $ import os
+  $ SP=os.environ['SP']
+  $ s=open('PCSEDIT.BAS').read()
+  $ lines=s.split('\n'); i=lines.index('DO')
+  $ lines.insert(i,'''DIM tsF AS LONG
+  $ tsF = FREEFILE: OPEN "SPX/pt/modimp.txt" FOR OUTPUT AS #tsF
+  $ import_midi "SPX/mods/2b-funky.mod"
+  $ PRINT #tsF, sndName(cur); " used"; voices_used(cur); " len"; snd_len(cur); " ["; statusMsg; "]"
+  $ CLOSE #tsF
+  $ SYSTEM'''.replace('SPX',SP))
+  $ open(SP+'/pt/T13.BAS','w').write('\n'.join(lines))
+  $ PYEOF
+  $ cp PCSMIDI.B? PCSPKR.B? $SP/pt/; cd $SP/pt && /home/grymmjack/git/qb64pe/qb64pe -x T13.BAS -o ./T13 2>&1 | grep -i "error\|Output"; env -u WAYLAND_DISPLAY -u XDG_CURRENT_DESKTOP -u KDE_FULL_SESSION -u XDG_SESSION_TYPE QT_QPA_PLATFORM=xcb GDK_BACKEND=x11 DISPLAY=:99 PCSEDIT_NOMIDI=1 HOME=$SP/pt/home timeout 20 ./T13 2>&1|tail -1; cat modimp.txt
+2026-10-03T13:34:10-0400  WARNING  bash_end      [stderr] 3L stdout / 2L stderr
+  | Beginning C++ output from QB64 code... 
+  | Output: /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/pt/T13
+  | 2BFUNKY used 4  len 9000  [Imported 2b-funky.mod: 1013 notes, 4 voice(s), 64.29 s - 1 notes left out (more than 4 at once) - cut at 64 s]
+  ! 
+  ! Shell cwd was reset to /home/grymmjack/git/qb64
+2026-10-03T13:34:24-0400  INFO     bash_start    cd /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER && python3 - <<'PYEOF' | p='README.md'; s=open(p).read() | def r(a,b): | global s | assert s.count(a)==1,a[:60]; s=s.replace(a,b) | r("""## MID2SND: …
+  > cwd: /home/grymmjack/git/qb64
+  $ cd /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER && python3 - <<'PYEOF'
+  $ p='README.md'; s=open(p).read()
+  $ def r(a,b):
+  $     global s
+  $     assert s.count(a)==1,a[:60]; s=s.replace(a,b)
+  $ r("""## MID2SND: MIDI files and PLAY music to PC speaker banks
+  $ 
+  $ `MID2SND.BAS` is a command-line converter. It turns a MIDI file, or QB64
+  $ `PLAY` music (MML), into one""","""## MID2SND: MIDI files, PLAY music and .mod files to PC speaker banks
+  $ 
+  $ `MID2SND.BAS` is a command-line converter. It turns a MIDI file, QB64
+  $ `PLAY` music (MML), or a ProTracker `.mod`, into one""")
+  $ r("""./MID2SND -p "T160 O2 L8 CDEFGAB>C" scale.snd
+  $ ```""","""./MID2SND -p "T160 O2 L8 CDEFGAB>C" scale.snd
+  $ ./MID2SND song.mod -i                 # a .mod: its channels and samples
+  $ ./MID2SND song.mod tune.snd -x 2,5 -s 40   # without samples 2 and 5, the first 40 s
+  $ ```""")
+  $ r("""| `-p MML` | convert this PLAY string instead of a file |""","""| `-p MML` | convert this PLAY string instead of a file |
+  $ | `-x LIST` | `.mod`: leave these samples out, like `-x 2,5` (drums, usually) |""")
+  $ r("""### How notes become voices""","""### Tracker modules (`.mod`)
+  $ 
+  $ ProTracker, NoiseTracker and SoundTracker modules (4, 6, 8 or more
+  $ channels, and the old 15-sample kind) are read as they play:
+  $ 
+  $ * speed and tempo changes (`Fxx`), pattern breaks (`Dxx`) and position
+  $   jumps (`Bxx`). A jump back to an earlier position is the song looping, so
+  $   the conversion ends there;
+  $ * each channel's note lasts until its next note, a note cut (`ECx`) or
+  $   volume 0 (`C00`). A sample that doesn't loop (drum hits, plucks) ends its
+  $   note when the sample would run out; note delays (`EDx`) are followed;
+  $ * arpeggios (`0xy`), the classic tracker chord, become notes a tick long
+  $   cycling through the chord, which is just what a PC speaker game does;
+  $ * ProTracker's C-2 (period 428) is middle C. Slides, vibrato and volume
+  $   effects are not converted. Use PCSEDIT's glide and vibrato afterwards if
+  $   you like.
+  $ 
+  $ Drums turn into short beeps. `-i` lists every sample with its length,
+  $ whether it loops, and how many notes it plays, so you can spot the drums
+  $ (short, played a lot, usually not looping) and leave them out with `-x`.
+  $ Most modules are longer than a 4-voice bank holds (about 46 s): use `-s` for
+  $ an excerpt, or `-v 1` for the tune's top line, which fits over 3 minutes.
+  $ PCSEDIT opens `.mod` files too (Ctrl+O or drop one), as up to 64 s in a new
+  $ sound. XM, S3M and IT modules are different formats and aren't read yet.
+  $ 
+  $ ### How notes become voices""")
+  $ r("""**Importing MIDI files and PLAY music:** open (**Ctrl+O**) or drop a `.mid`
+  $ or `.mml` file,""","""**Importing MIDI files, modules and PLAY music:** open (**Ctrl+O**) or drop
+  $ a `.mid`, `.mod` or `.mml` file,""")
+  $ open(p,'w').write(s)
+  $ PYEOF
+  $ SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad && /home/grymmjack/git/qb64pe/qb64pe -x PCSEDIT.BAS -o $SP/PCSEDIT 2>&1 | tail -1; git -C /home/grymmjack/git/qb64 status --short
+2026-10-03T13:34:27-0400  INFO     bash_end      [ok] 8L stdout
+  | Output: /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/PCSEDIT
+  |  M .claude/activity.log
+  |  M qb64/SOUND/PC-SPEAKER/MID2SND.BAS
+  |  M qb64/SOUND/PC-SPEAKER/PCSEDIT.BAS
+  |  M qb64/SOUND/PC-SPEAKER/PCSMIDI.BI
+  |  M qb64/SOUND/PC-SPEAKER/PCSMIDI.BM
+  |  M qb64/SOUND/PC-SPEAKER/README.md
+  | ?? MYSOUNDS.SND
+2026-10-03T13:38:01-0400  NOTICE   prompt        <ide_opened_file>The user opened the file /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER/PCSEDIT.BAS in the IDE. This may or may not be related to the current task.</ide_opened_file>
+  > <ide_opened_file>The user opened the file /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER/PCSEDIT.BAS in the IDE. This may or may not be related to the current task.</ide_opened_file>
+  > can you copy a bunch of mods to the SOUNDS/PC-SPEAKER/TUNES/MOD-CONVERSIONS folder? :D then commit and push
+2026-10-03T13:38:19-0400  INFO     bash_start    cd /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad && M=$PWD/MID2SND; cd /mnt/windows/e/Music/Mods && find . -maxdepth 2 -iname "*.mod" -size -120k | head -4…
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ cd /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad && M=$PWD/MID2SND; cd /mnt/windows/e/Music/Mods && find . -maxdepth 2 -iname "*.mod" -size -120k | head -400 | while read f; do o=$($M "$f" -i 2>/dev/null); t=$(echo "$o" | sed -n 's/.*title: //p'); n=$(echo "$o" | grep -o '[0-9]* notes' | head -1); l=$(echo "$o" | sed -n 's/.*length \([0-9.]*\) s/\1/p'); tr=$(echo "$o" | grep -o '^  [0-9]* track' | grep -o '[0-9]*'); sz=$(stat -c %s "$f"); echo "$sz|$tr|$l|$n|$f|$t"; done > $OLDPWD/modscan.txt 2>/dev/null; wc -l $OLDPWD/modscan.txt; sort -t'|' -k1 -n $OLDPWD/modscan.txt | awk -F'|' '$2==4 && $3>20' | head -60
+2026-10-03T13:39:07-0400  WARNING  bash_end      [stderr] 61L stdout / 2L stderr
+  | 180 /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/modscan.txt
+  | 4816|4|30.7|1558 notes|./Heatbeat/Heatbeat - Deathsong.mod|deathsong
+  | 5316|4|30.7|1298 notes|./4mat-menu8.mod|anarchy menu 8
+  | 6582|4|51.2|212 notes|./4mat-menu12.mod|anarchymenu12
+  | 7808|4|33.6|788 notes|./4mat-menu16.mod|anarchymenu16
+  | 8000|4|61.4|3223 notes|./4mat-menu6.mod|anarchy menu 6
+  | 8256|4|92.2|1616 notes|./4mat-menu7.mod|anarchy menu 7
+  | 8658|4|30.7|1154 notes|./XTD/XTD - ## Syntherella 3 ##.mod|## syntherella 3 ##
+  | 9012|4|20.5|1067 notes|./Jester/Jester - Chipmunks.mod|chipmunks
+  | 9082|4|51.2|1453 notes|./4mat-menu9.mod|anarchy menu 9
+  | 9294|4|92.2|6245 notes|./Dr.Awesome/Dr.Awesome - Intromusic2.mod|intromusic2
+  | 9456|4|61.4|2660 notes|./Heatbeat/Heatbeat - Matkamies.mod|matkamies
+  | 9530|4|38.4|788 notes|./4mat-menu18.mod|anarchy menu 18
+  | 10486|4|46.1|1510 notes|./4-Mat/4-Mat - Anarme 10.mod|a10
+  | 12128|4|53.8|1950 notes|./4mat-menu11.mod|anarchy menu 11
+  | 13006|4|31.4|632 notes|./4mat-menu14.mod|anarchymenu14
+  | 14636|4|147.8|6331 notes|./4-Mat/4-Mat - Anarmen 1.mod|Anarmen 1
+  | 14636|4|147.8|6331 notes|./4mat-menu1.mod|anarchy menu 1
+  | 15350|4|80.6|1801 notes|./4mat-menu4.mod|anarchy menu 4
+  | 17118|4|92.2|703 notes|./4mat-menu2.mod|anarchy menu 2
+  | 17376|4|51.2|2516 notes|./XTD/XTD - ModuleInfo.mod|ModuleInfo
+  | 17504|4|153.6|2986 notes|./4mat-intro_music.mod|intro music
+  | 18098|4|169.0|6302 notes|./4mat-zapped-out.mod|zapped-out
+  | 18114|4|107.5|7370 notes|./4mat-starworx.mod|starworx
+  | 20078|4|36.1|2731 notes|./XTD/XTD - ## Shaky ##.mod|## shaky ##
+  | 20476|4|230.4|9477 notes|./4mat-termination_day.mod|termination day
+  | 20514|4|138.2|4260 notes|./4-Mat/4-Mat - Chip Shop.mod|chip shop
+  | 20514|4|138.2|4260 notes|./4mat-menu3.mod|anarchy menu 3
+  | 21462|4|46.1|574 notes|./Jester/Jester - Sunset Glow.mod|sunset glow
+  | 22474|4|75.2|2360 notes|./Jester/Jester - Spice it up.mod|spice it up
+  | 23354|4|44.8|649 notes|./XTD/XTD - ## Economy 3 ##.mod|## economy 3 ##
+  | 23390|4|145.9|5122 notes|./4-Mat/4-Mat - Menuloader.mod|menuloader
+  | 23390|4|145.9|5122 notes|./4mat-menuloader.mod|menuloader
+  | 23484|4|49.8|1716 notes|./XTD/XTD - ## Syntherella ##.mod|## syntherella ##
+  | 23760|4|69.0|4373 notes|./Heatbeat/Heatbeat - Kakofonia.mod|kakofonia
+  | 25584|4|38.5|1026 notes|./XTD/XTD - Benny.mod|benny
+  | 25878|4|176.6|2739 notes|./2998z.mod|2998z
+  | 26920|4|29.2|1235 notes|./XTD/XTD - ## Mochoom ##.mod|## mochoom ##
+  | 27064|4|187.8|8715 notes|./4mat-comic_bakery.mod|anarchy.07
+  | 27598|4|158.7|10116 notes|./4ma.mod|4mat
+  | 27598|4|158.7|10116 notes|./4-Mat/4-Mat - L.I.I.mod|L..
+  | 27840|4|69.1|1354 notes|./XTD/XTD - Game6+(ingame-sb).mod|game6+(ingame-sb)
+  | 27976|4|41.7|866 notes|./XTD/XTD - ## Economy 14 ##.mod|## economy 14 ##
+  | 28160|4|76.8|2139 notes|./XTD/XTD - ## Economy ##.mod|## economy ##
+  | 28394|4|184.3|7455 notes|./XTD/XTD - ## Seeker ##.mod|## seeker ##
+  | 29122|4|27.4|497 notes|./XTD/XTD - ## Economy 6 ##.mod|## economy 6 ##
+  | 29144|4|169.0|11114 notes|./4-Mat/4-Mat - Velocity.mod|velocity
+  | 29552|4|119.2|4262 notes|./XTD/XTD - ## Economy 11 ##.mod|## economy 11 ##
+  | 29870|4|51.2|1102 notes|./XTD/XTD - ## Economy 17 ##.mod|## economy 17 ##
+  | 29944|4|47.0|989 notes|./XTD/XTD - ## Economy 9 ##.mod|## economy 9 ##
+  | 31490|4|86.2|1162 notes|./Heatbeat/Heatbeat - Cheeseburger.mod|cheeseburger
+  | 31572|4|128.8|3953 notes|./XTD/XTD - ## Conrad ##.mod|## conrad ##
+  | 32476|4|107.5|4149 notes|./Dubmood/Dubmood & JosSs - Starchip.mod|* * * Starchip * * *
+  | 32904|4|76.8|1859 notes|./Jester/Jester - Time warped.mod|timewarped
+  | 33044|4|138.2|5858 notes|./4-Mat/4-Mat - MagicLand-Dizzy.mod|MagicLand-Dizzy
+  | 33266|4|89.6|1514 notes|./XTD/XTD - Stamper.mod|stamper
+  | 33896|4|46.1|421 notes|./endtheme.mod|endtheme
+  | 34366|4|44.8|546 notes|./Audiomonster/Audiomonster - Flashback - Voyage.mod|flashback-voyage
+  | 34928|4|80.6|2220 notes|./Jester/Jester - Choices.mod|choices
+  | 36758|4|31.8|290 notes|./Audiomonster/Audiomonster - Flashback - Reunion.mod|flashback-reunion
+  | 37234|4|54.9|724 notes|./XTD/XTD - ## Break off mix ##.mod|## break off mix ##
+  ! 
+  ! Shell cwd was reset to /home/grymmjack/git/qb64
+2026-10-03T13:39:22-0400  INFO     bash_start    D=/home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER/ASSETS/TUNES/MOD-CONVERSIONS; S=/mnt/windows/e/Music/Mods; mkdir -p $D/MODS && cd $D && while IFS='|' read src dst; do cp "$S/$src" "MODS/$dst.mod"; d…
+  > cwd: /home/grymmjack/git/qb64
+  $ D=/home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER/ASSETS/TUNES/MOD-CONVERSIONS; S=/mnt/windows/e/Music/Mods; mkdir -p $D/MODS && cd $D && while IFS='|' read src dst; do cp "$S/$src" "MODS/$dst.mod"; done <<'EOF'
+  $ Heatbeat/Heatbeat - Deathsong.mod|heatbeat-deathsong
+  $ Heatbeat/Heatbeat - Matkamies.mod|heatbeat-matkamies
+  $ 4mat-menu8.mod|4mat-menu8
+  $ 4mat-menu9.mod|4mat-menu9
+  $ 4mat-menu12.mod|4mat-menu12
+  $ 4mat-menu16.mod|4mat-menu16
+  $ 4-Mat/4-Mat - Anarme 10.mod|4mat-anarme10
+  $ 4-Mat/4-Mat - Chip Shop.mod|4mat-chipshop
+  $ 4mat-zapped-out.mod|4mat-zappedout
+  $ XTD/XTD - ## Syntherella 3 ##.mod|xtd-syntherella3
+  $ XTD/XTD - ## Shaky ##.mod|xtd-shaky
+  $ XTD/XTD - ## Mochoom ##.mod|xtd-mochoom
+  $ XTD/XTD - Benny.mod|xtd-benny
+  $ XTD/XTD - ## Economy 6 ##.mod|xtd-economy6
+  $ Jester/Jester - Chipmunks.mod|jester-chipmunks
+  $ Jester/Jester - Sunset Glow.mod|jester-sunsetglow
+  $ Dr.Awesome/Dr.Awesome - Intromusic2.mod|drawesome-intromusic2
+  $ Dubmood/Dubmood & JosSs - Starchip.mod|dubmood-starchip
+  $ EOF
+  $ cat > convert.sh <<'EOF'
+  $ #!/bin/sh
+  $ # Rebuild the .SND banks from the modules in MODS/: 4 voices, at most 45 s
+  $ # (what fits a 64 KB IFS bank). Needs MID2SND compiled next to it or on the
+  $ # PATH:  qb64pe -x ../../../MID2SND.BAS -o MID2SND
+  $ cd "$(dirname "$0")" || exit 1
+  $ M=./MID2SND
+  $ [ -x "$M" ] || M=MID2SND
+  $ for f in MODS/*.mod; do
+  $     b=$(basename "$f" .mod)
+  $     "$M" "$f" "$(echo "$b" | tr a-z- A-Z_).SND" -s 45 || exit 1
+  $ done
+  $ EOF
+  $ chmod +x convert.sh; cp /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/MID2SND . && ./convert.sh | grep -E "\->|left out|saved" ; rm MID2SND; ls; du -sh .
+2026-10-03T13:41:23-0400  INFO     bash_end      [ok] 0L stdout
+2026-10-03T13:41:23-0400  NOTICE   prompt        also we need to make a little more space so text does not overlap...
+  > also we need to make a little more space so text does not overlap...
+2026-10-03T13:41:23-0400  NOTICE   prompt        can you make .rad conversion -> too ? i have loads of rads i love in ~/git/DRAW/ASSETS/THEMES/MUSIC - alloyrun is my favorite
+  > can you make .rad conversion -> too ? i have loads of rads i love in ~/git/DRAW/ASSETS/THEMES/MUSIC - alloyrun is my favorite
+2026-10-03T13:41:23-0400  NOTICE   prompt        also can we make a .BAS export that uses play, and various beep sounds and stuff in basic code so that the users can have the music they build in their games? with sound effects too, etc. i'd like to…
+  > also can we make a .BAS export that uses play, and various beep sounds and stuff in basic code so that the users can have the music they build in their games? with sound effects too, etc. i'd like to have them as subs or something with a player library the player calls on a tick or whatever.. is that possible? with a cool API?
+2026-10-03T13:41:31-0400  INFO     bash_start    cat /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/tasks/bzr3s4tfq.output; ls /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER/ASSETS/TUNES/MOD-CONVERSIONS/; pgrep -a MI…
+  > cwd: /home/grymmjack/git/qb64
+  $ cat /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/tasks/bzr3s4tfq.output; ls /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER/ASSETS/TUNES/MOD-CONVERSIONS/; pgrep -a MID2SND
+2026-10-03T13:41:50-0400  INFO     bash_start    D=/home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER/ASSETS/TUNES/MOD-CONVERSIONS; ls $D/MID2SND 2>/dev/null && rm $D/MID2SND; cat > $D/README.md <<'EOF' | # MOD-CONVERSIONS: tracker modules on the PC sp…
+  > cwd: /home/grymmjack/git/qb64
+  $ D=/home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER/ASSETS/TUNES/MOD-CONVERSIONS; ls $D/MID2SND 2>/dev/null && rm $D/MID2SND; cat > $D/README.md <<'EOF'
+  $ # MOD-CONVERSIONS: tracker modules on the PC speaker
+  $ 
+  $ Amiga / PC tracker modules (`MODS/*.mod`) converted with `MID2SND` into IFS
+  $ banks: 4 voices, the first 45 seconds (what fits a 64 KB bank). Open a bank
+  $ in PCSEDIT and press **Ctrl+J** for PWM to hear the voices together, or play
+  $ it in DN1PLAY to hear the ARP version a game would play. Drums come out as
+  $ short beeps; see `MID2SND -i` and `-x` in the main README to leave them out.
+  $ 
+  $ `convert.sh` rebuilds the banks from the modules.
+  $ 
+  $ The music is by its authors, not part of this project. These are scene
+  $ modules, made to be passed around and shared freely; they're here as
+  $ examples of the converter, credited below. If you're the author and would
+  $ rather they weren't, open an issue and they'll go.
+  $ 
+  $ | Bank | Module | Author |
+  $ | --- | --- | --- |
+  $ | `4MAT_MENU8.SND` | anarchy menu 8 | 4-Mat (Anarchy) |
+  $ | `4MAT_MENU9.SND` | anarchy menu 9 | 4-Mat (Anarchy) |
+  $ | `4MAT_MENU12.SND` | anarchy menu 12 | 4-Mat (Anarchy) |
+  $ | `4MAT_MENU16.SND` | anarchy menu 16 | 4-Mat (Anarchy) |
+  $ | `4MAT_ANARME10.SND` | a10 (Anarme 10) | 4-Mat |
+  $ | `4MAT_CHIPSHOP.SND` | chip shop | 4-Mat |
+  $ | `4MAT_ZAPPEDOUT.SND` | zapped-out | 4-Mat |
+  $ | `HEATBEAT_DEATHSONG.SND` | deathsong | Heatbeat |
+  $ | `HEATBEAT_MATKAMIES.SND` | matkamies | Heatbeat |
+  $ | `XTD_SYNTHERELLA3.SND` | syntherella 3 | XTD |
+  $ | `XTD_SHAKY.SND` | shaky | XTD |
+  $ | `XTD_MOCHOOM.SND` | mochoom | XTD |
+  $ | `XTD_BENNY.SND` | benny | XTD |
+  $ | `XTD_ECONOMY6.SND` | economy 6 | XTD |
+  $ | `JESTER_CHIPMUNKS.SND` | chipmunks | Jester |
+  $ | `JESTER_SUNSETGLOW.SND` | sunset glow | Jester |
+  $ | `DRAWESOME_INTROMUSIC2.SND` | intromusic2 | Dr. Awesome |
+  $ | `DUBMOOD_STARCHIP.SND` | Starchip | Dubmood & JosSs |
+  $ EOF
+  $ cd /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER && python3 - <<'PYEOF'
+  $ p='README.md'; s=open(p).read()
+  $ a="""They are all public domain or written for this project."""
+  $ assert a in s
+  $ s=s.replace(a,"""`MOD-CONVERSIONS/` holds 18 tracker modules by 4-Mat, XTD, Jester,
+  $ Heatbeat, Dr. Awesome and Dubmood converted the same way (credits in its
+  $ README).
+  $ 
+  $ """+a)
+  $ open(p,'w').write(s)
+  $ PYEOF
+  $ cd /home/grymmjack/git/qb64 && git add .claude/activity.log qb64/SOUND/PC-SPEAKER && git status --short | grep -v "^A  qb64/SOUND/PC-SPEAKER/ASSETS/TUNES/MOD-CONVERSIONS/" ; git commit -q -m "SOUND/PC-SPEAKER: glide, vibrato, .mod conversion, 18 module examples
+  $ 
+  $ - PCSEDIT glide (Ctrl+I, Ctrl+Shift+I on a selection): legato key slides,
+  $   recorded in STEP and LIVE (quantized takes too)
+  $ - vibrato presets (Ctrl+W, Ctrl+Shift+W): delayed, fading in, on held keys,
+  $   STEP / LIVE takes and selections
+  $ - PCSMIDI reads ProTracker / NoiseTracker / SoundTracker .mod files (speed,
+  $   tempo, breaks, jumps, cuts, delays, arpeggios; short samples end notes);
+  $   MID2SND -x leaves samples out, -i lists them; PCSEDIT imports .mod
+  $ - ASSETS/TUNES/MOD-CONVERSIONS: 18 scene modules and their banks, credited
+  $ 
+  $ Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>" && timeout 100 git push -q; git log --oneline -1; git status -sb | head -1

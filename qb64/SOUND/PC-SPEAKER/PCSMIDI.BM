@@ -17,7 +17,7 @@ $IF PCSMIDI_BM = UNDEFINED THEN
         DIM openNote(0 TO 2047) AS LONG
 
         pcsmidiCount = 0: pcsmidiError = "": pcsmidiTitle = "": pcsmidiTracks = 0
-        pcsmidiChanMask = 0
+        pcsmidiChanMask = 0: pcsmidiIsMidi = -1: pcsmidiSmpCount = 0
         pcsmidiTempoN = 0
         PCSMIDI_AddTempo 0, 500000 ' 120 BPM until told otherwise
 
@@ -143,6 +143,7 @@ $IF PCSMIDI_BM = UNDEFINED THEN
         DIM ln AS STRING, i AS LONG, j AS LONG, k AS LONG, c AS STRING, u AS STRING, inQ AS INTEGER
         DIM vs(1 TO PCSMIDI_VOICES) AS STRING, t AS STRING
         pcsmidiCount = 0: pcsmidiError = "": pcsmidiTitle = "": pcsmidiTracks = 0: pcsmidiChanMask = 0
+        pcsmidiIsMidi = 0: pcsmidiSmpCount = 0
         t = txt + CHR$(10)
         DO WHILE LEN(t)
             i = INSTR(t, CHR$(10))
@@ -326,6 +327,208 @@ $IF PCSMIDI_BM = UNDEFINED THEN
 
 
     ''
+    ' Load a ProTracker / NoiseTracker / SoundTracker .mod: its notes, as
+    ' heard (speed and tempo changes, pattern breaks and jumps - the song ends
+    ' where it would loop back). Each channel's notes last until the next
+    ' note, a cut or volume 0, and a sample that doesn't loop ends a note when
+    ' the sample would. Arpeggios (0xy) become notes a tick long. Period 428
+    ' (ProTracker's C-2) is middle C. Samples flagged in pcsmidiSkip() are
+    ' left out (drums, say).
+    '
+    FUNCTION PCSMIDI_LoadMOD% (fileName AS STRING)
+        DIM ff AS LONG, d AS STRING, sig AS STRING, nCh AS LONG, nSmp AS LONG, i AS LONG, b AS LONG
+        DIM songLen AS LONG, ordAt AS LONG, patAt AS LONG, nPat AS LONG, ord(0 TO 127) AS LONG
+        DIM speed AS LONG, bpm AS LONG, t AS DOUBLE, tick AS DOUBLE, rowDur AS DOUBLE
+        DIM o AS LONG, row AS LONG, startRow AS LONG, ch AS LONG, c AS LONG, smp AS LONG, per AS LONG
+        DIM eff AS LONG, par AS LONG, jumpTo AS LONG, breakTo AS LONG, guard AS LONG, st AS DOUBLE
+        DIM k AS LONG, x AS LONG, y AS LONG, p0 AS LONG, nt AS LONG, smpVol(1 TO 31) AS LONG
+        REDIM openN(0 TO 31) AS LONG, chMax(0 TO 31) AS DOUBLE, ls(0 TO 31) AS LONG, chPitch(0 TO 31) AS LONG
+
+        pcsmidiCount = 0: pcsmidiError = "": pcsmidiTitle = "": pcsmidiTracks = 0
+        pcsmidiChanMask = 0: pcsmidiIsMidi = 0
+        IF NOT _FILEEXISTS(fileName) THEN pcsmidiError = "File not found: " + fileName: EXIT FUNCTION
+        ff = FREEFILE
+        OPEN fileName FOR BINARY AS #ff
+        d = SPACE$(LOF(ff))
+        GET #ff, 1, d
+        CLOSE #ff
+        IF LEN(d) < 600 THEN pcsmidiError = "Too short to be a .mod": EXIT FUNCTION
+
+        ' how many channels (from the tag at 1080), 31 samples; no tag: an
+        ' old 15-sample SoundTracker module with 4
+        nSmp = 31
+        IF LEN(d) >= 1084 THEN sig = MID$(d, 1081, 4)
+        SELECT CASE sig
+            CASE "M.K.", "M!K!", "FLT4", "4CHN", "N.T.", "M&K!": nCh = 4
+            CASE "6CHN": nCh = 6
+            CASE "8CHN", "OCTA", "CD81", "FLT8": nCh = 8
+            CASE ELSE
+                IF MID$(sig, 2, 3) = "CHN" AND VAL(LEFT$(sig, 1)) > 0 THEN nCh = VAL(LEFT$(sig, 1))
+                IF (MID$(sig, 3, 2) = "CH" OR MID$(sig, 3, 2) = "CN") AND VAL(LEFT$(sig, 2)) > 0 THEN nCh = VAL(LEFT$(sig, 2))
+        END SELECT
+        IF nCh = 0 THEN nSmp = 15: nCh = 4
+        IF nCh > 32 THEN pcsmidiError = "Too many channels": EXIT FUNCTION
+        pcsmidiTitle = PCSMIDI_Clean(LEFT$(d, 20))
+        pcsmidiTracks = nCh
+        pcsmidiSmpCount = nSmp
+
+        FOR i = 1 TO 31
+            pcsmidiSmpName(i) = "": pcsmidiSmpLen(i) = 0: pcsmidiSmpLoop(i) = 0: pcsmidiSmpNotes(i) = 0
+        NEXT
+        FOR i = 1 TO nSmp
+            b = 21 + (i - 1) * 30
+            pcsmidiSmpName(i) = PCSMIDI_Clean(MID$(d, b, 22))
+            pcsmidiSmpLen(i) = PCSMIDI_BE(d, b + 22, 2) * 2
+            smpVol(i) = ASC(d, b + 25)
+            pcsmidiSmpLoop(i) = PCSMIDI_BE(d, b + 28, 2) > 1
+        NEXT
+        ordAt = 20 + nSmp * 30 + 1 ' (1 based: the song length byte)
+        songLen = ASC(d, ordAt)
+        IF songLen < 1 OR songLen > 128 THEN pcsmidiError = "Not a .mod (bad song length)": EXIT FUNCTION
+        FOR i = 0 TO 127
+            ord(i) = ASC(d, ordAt + 2 + i)
+            IF ord(i) + 1 > nPat AND ord(i) < 128 THEN nPat = ord(i) + 1
+        NEXT
+        IF nSmp = 31 THEN patAt = 1085 ELSE patAt = 601
+
+        FOR ch = 0 TO 31: openN(ch) = -1: chPitch(ch) = -1: NEXT
+        speed = 6: bpm = 125
+        o = 0: startRow = 0
+        DO WHILE o < songLen
+            IF ord(o) >= nPat THEN EXIT DO
+            jumpTo = -1: breakTo = -1
+            FOR row = startRow TO 63
+                guard = guard + 1
+                IF guard > 64 * 512 THEN EXIT DO ' a song that never ends
+                ' speed / tempo changes take effect on their own row
+                FOR ch = 0 TO nCh - 1
+                    c = patAt + ((ord(o) * 64 + row) * nCh + ch) * 4
+                    IF c + 3 > LEN(d) THEN EXIT FOR
+                    IF (ASC(d, c + 2) AND 15) = &HF THEN
+                        par = ASC(d, c + 3)
+                        IF par > 0 AND par < 32 THEN speed = par ELSE IF par >= 32 THEN bpm = par
+                    END IF
+                NEXT
+                tick = 2.5 / bpm
+                rowDur = speed * tick
+                FOR ch = 0 TO nCh - 1
+                    c = patAt + ((ord(o) * 64 + row) * nCh + ch) * 4
+                    IF c + 3 > LEN(d) THEN EXIT FOR
+                    smp = (ASC(d, c) AND &HF0) OR (ASC(d, c + 2) \ 16)
+                    per = (ASC(d, c) AND 15) * 256 + ASC(d, c + 1)
+                    eff = ASC(d, c + 2) AND 15
+                    par = ASC(d, c + 3)
+                    IF smp >= 1 AND smp <= 31 THEN ls(ch) = smp
+                    st = t
+                    IF eff = &HE AND par \ 16 = &HD THEN st = t + (par AND 15) * tick ' note delay
+                    IF per > 0 THEN
+                        PCSMIDI_ModEnd openN(), chMax(), ch, st
+                        chPitch(ch) = -1
+                        smp = ls(ch)
+                        IF smp >= 1 AND smp <= 31 THEN
+                            IF NOT pcsmidiSkip(smp) AND smpVol(smp) > 0 AND pcsmidiSmpLen(smp) > 2 THEN
+                                nt = CLNG(60 + 12 * LOG(428 / per) / LOG(2))
+                                chPitch(ch) = nt
+                                openN(ch) = PCSMIDI_ModNote(st, nt, ch, smp)
+                                ' a sample that doesn't loop: the note lasts as long as it does
+                                chMax(ch) = 0
+                                IF NOT pcsmidiSmpLoop(smp) THEN chMax(ch) = st + pcsmidiSmpLen(smp) / (7093789.2 / (2 * per))
+                            END IF
+                        END IF
+                    END IF
+                    SELECT CASE eff
+                        CASE 0 ' arpeggio: base, +x, +y semitones, a tick each
+                            IF par > 0 AND chPitch(ch) >= 0 THEN
+                                x = par \ 16: y = par AND 15
+                                PCSMIDI_ModEnd openN(), chMax(), ch, t
+                                FOR k = 0 TO speed - 1
+                                    p0 = chPitch(ch)
+                                    IF k MOD 3 = 1 THEN p0 = p0 + x
+                                    IF k MOD 3 = 2 THEN p0 = p0 + y
+                                    i = PCSMIDI_ModNote(t + k * tick, p0, ch, ls(ch))
+                                    pcsmidiNote(i).t1 = t + (k + 1) * tick
+                                NEXT
+                                ' then the note carries on
+                                openN(ch) = PCSMIDI_ModNote(t + rowDur, chPitch(ch), ch, ls(ch))
+                            END IF
+                        CASE &HC ' volume 0: the note stops
+                            IF par = 0 THEN PCSMIDI_ModEnd openN(), chMax(), ch, t: chPitch(ch) = -1
+                        CASE &HE
+                            IF par \ 16 = &HC THEN PCSMIDI_ModEnd openN(), chMax(), ch, t + (par AND 15) * tick: chPitch(ch) = -1
+                        CASE &HB: jumpTo = par
+                        CASE &HD: breakTo = (par \ 16) * 10 + (par AND 15)
+                    END SELECT
+                NEXT
+                t = t + rowDur
+                IF jumpTo >= 0 OR breakTo >= 0 THEN EXIT FOR
+            NEXT
+            startRow = 0
+            IF breakTo >= 0 AND breakTo < 64 THEN startRow = breakTo
+            IF jumpTo >= 0 THEN
+                IF jumpTo <= o THEN EXIT DO ' jumping back: the song loops, so it ends here
+                o = jumpTo
+            ELSE
+                o = o + 1
+            END IF
+        LOOP
+        FOR ch = 0 TO nCh - 1
+            PCSMIDI_ModEnd openN(), chMax(), ch, t
+        NEXT
+        ' drop notes that ended up with no length
+        k = 0
+        FOR i = 0 TO pcsmidiCount - 1
+            IF pcsmidiNote(i).t1 > pcsmidiNote(i).t0 THEN pcsmidiNote(k) = pcsmidiNote(i): k = k + 1
+        NEXT
+        pcsmidiCount = k
+        FOR i = 0 TO pcsmidiCount - 1
+            pcsmidiSmpNotes(pcsmidiNote(i).trk) = pcsmidiSmpNotes(pcsmidiNote(i).trk) + 1
+        NEXT
+        IF pcsmidiCount = 0 THEN pcsmidiError = "No notes in that .mod": EXIT FUNCTION
+        PCSMIDI_LoadMOD = -1
+    END FUNCTION
+
+
+    ''
+    ' A .mod note starting at t0 (open-ended): its index.
+    '
+    FUNCTION PCSMIDI_ModNote& (t0 AS DOUBLE, nt AS LONG, ch AS LONG, smp AS LONG)
+        IF pcsmidiCount > UBOUND(pcsmidiNote) THEN REDIM _PRESERVE pcsmidiNote(0 TO pcsmidiCount * 2 + 64) AS PCSMIDI_NOTE
+        pcsmidiNote(pcsmidiCount).t0 = t0
+        pcsmidiNote(pcsmidiCount).t1 = -1
+        pcsmidiNote(pcsmidiCount).pitch = nt
+        pcsmidiNote(pcsmidiCount).chan = ch
+        pcsmidiNote(pcsmidiCount).trk = smp
+        pcsmidiChanMask = pcsmidiChanMask OR _SHL(1, ch)
+        PCSMIDI_ModNote = pcsmidiCount
+        pcsmidiCount = pcsmidiCount + 1
+    END FUNCTION
+
+
+    ''
+    ' End channel ch's note at t (or sooner, if its sample ran out).
+    '
+    SUB PCSMIDI_ModEnd (openN() AS LONG, chMax() AS DOUBLE, ch AS LONG, t AS DOUBLE)
+        DIM e AS DOUBLE
+        IF openN(ch) < 0 THEN EXIT SUB
+        e = t
+        IF chMax(ch) > 0 AND chMax(ch) < e THEN e = chMax(ch)
+        pcsmidiNote(openN(ch)).t1 = e
+        openN(ch) = -1
+    END SUB
+
+
+    FUNCTION PCSMIDI_Clean$ (s AS STRING)
+        DIM i AS LONG, r AS STRING, c AS LONG
+        FOR i = 1 TO LEN(s)
+            c = ASC(s, i)
+            IF c = 0 THEN EXIT FOR
+            IF c >= 32 AND c < 127 THEN r = r + CHR$(c)
+        NEXT
+        PCSMIDI_Clean = _TRIM$(r)
+    END FUNCTION
+
+
+    ''
     ' Turn the loaded notes into voices (pcsmidiVoice):
     '   maxV      1-4 voices; 1 = the top note wins (a melody line)
     '   semis     transpose by this many semitones
@@ -355,7 +558,7 @@ $IF PCSMIDI_BM = UNDEFINED THEN
         first = 2147483647
         FOR i = 0 TO pcsmidiCount - 1
             IF chanKeep = 0 THEN
-                keep = pcsmidiNote(i).chan <> 9
+                keep = NOT (pcsmidiIsMidi AND pcsmidiNote(i).chan = 9) ' (MIDI's drums)
             ELSE
                 keep = (chanKeep AND _SHL(1, pcsmidiNote(i).chan)) <> 0
             END IF

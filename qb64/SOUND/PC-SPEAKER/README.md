@@ -346,6 +346,33 @@ name, so DN1PLAY and the games play it. It also holds one `NAME~1` ...
 the bank is opened. The game would see those as extra sounds, and they cost
 space in the 64 KB limit.
 
+**Glide (pitch slides):** **Ctrl+I** sets how long a slide between two
+notes takes: off, 2, 3, 4, 6, 8, 12, 16, 24 or 35 steps (35 steps is a
+quarter of a second). The status line shows it as **Glide**. With glide on:
+
+* playing the keys is legato: press a key while another is still down and
+  the pitch slides from the old note to the new one, like a synth's
+  portamento (so held chords are off while glide is on). LIVE recording
+  writes the slide just as you hear it, and a quantized take gets its slides
+  back after the notes are snapped;
+* in STEP record, a note entered straight after another slides in from it;
+* **Ctrl+Shift+I** glides the selection (or the whole voice; with **G**,
+  every voice): wherever one note goes straight into another, the new note's
+  first steps slide over from the old pitch. Slides you drew, vibrato and
+  rests are left alone, and Ctrl+Z undoes it.
+
+**Vibrato:** **Ctrl+W** picks one: off, light, normal, wide, fast or slow
+(each a depth and a speed; the status line shows it as **Vib**). A note
+starts steady and the vibrato fades in after 0.1 s, the way a singer or a
+violin does it. With vibrato on, held keys wobble and STEP / LIVE record it;
+**Ctrl+Shift+W** puts it on every note in the selection (or the whole voice;
+with **G**, every voice) that is long enough, leaving slides alone. Glide
+and vibrato work together: the slide first, then the wobble.
+
+Slides and vibrato are just runs of steps whose pitch moves a little each
+1/140 s, the same as a sweep drawn with the Line tool, so games play them
+exactly as you hear them.
+
 **Follow** (**Ctrl+F**, on by default): while playing, the view pages along
 with the playhead so it never runs off the right edge.
 
@@ -436,8 +463,8 @@ that file every frame. When PCSEDIT quits, it stops `amidi` and deletes the
 file. This needs Linux, the `alsa-utils` package, and your user in the `audio`
 group. On other systems, use the computer keyboard.
 
-**Importing MIDI files and PLAY music:** open (**Ctrl+O**) or drop a `.mid`
-or `.mml` file, or copy a QB64 `PLAY` string (or a whole `PLAY "..."` line
+**Importing MIDI files, modules and PLAY music:** open (**Ctrl+O**) or drop
+a `.mid`, `.mod` or `.mml` file, or copy a QB64 `PLAY` string (or a whole `PLAY "..."` line
 from a program) and press **Ctrl+Shift+V**. It is added to the bank as a new
 sound, with its notes spread over the 4 voices.
 Its melody usually goes to voice 1. If more than 4 notes play at once, the
@@ -447,10 +474,10 @@ control (channels, transposing, a single-voice version for a game) use
 
 ---
 
-## MID2SND: MIDI files and PLAY music to PC speaker banks
+## MID2SND: MIDI files, PLAY music and .mod files to PC speaker banks
 
-`MID2SND.BAS` is a command-line converter. It turns a MIDI file, or QB64
-`PLAY` music (MML), into one
+`MID2SND.BAS` is a command-line converter. It turns a MIDI file, QB64
+`PLAY` music (MML), or a ProTracker `.mod`, into one
 sound with up to 4 voices, saved the way PCSEDIT saves voices (see
 [Chords](#pcsedit-make-your-own-sounds)). The bank holds the ARP mix that
 DN1PLAY and the games can play, plus the separate voices for PCSEDIT, which
@@ -464,6 +491,8 @@ qb64pe -x MID2SND.BAS
 ./MID2SND song.mid tunes.snd -a -n THEME -c 1,2 -t -12 -s 30
 ./MID2SND tune.mml                    # QB64 PLAY strings in a text file
 ./MID2SND -p "T160 O2 L8 CDEFGAB>C" scale.snd
+./MID2SND song.mod -i                 # a .mod: its channels and samples
+./MID2SND song.mod tune.snd -x 2,5 -s 40   # without samples 2 and 5, the first 40 s
 ```
 
 | Option | What it does |
@@ -476,6 +505,7 @@ qb64pe -x MID2SND.BAS
 | `-s SECS` | stop after SECS seconds |
 | `-g` | no one-step rest between repeated notes of the same pitch (by default there is one, so they don't run together into one long note) |
 | `-p MML` | convert this PLAY string instead of a file |
+| `-x LIST` | `.mod`: leave these samples out, like `-x 2,5` (drums, usually) |
 | `-r N` | ARP speed for the mix: each chord note lasts N steps (default 3) |
 | `-i` | list the file's channels, notes, length and the most notes at once |
 
@@ -511,6 +541,31 @@ T120 O2 L4 CDE                              ' anything else: more for voice 1
 Lines for the same voice are joined, so a long tune can span many lines.
 `ASSETS/TUNES/PLAYDEMO.mml` is a short 3-voice example.
 
+### Tracker modules (`.mod`)
+
+ProTracker, NoiseTracker and SoundTracker modules (4, 6, 8 or more
+channels, and the old 15-sample kind) are read as they play:
+
+* speed and tempo changes (`Fxx`), pattern breaks (`Dxx`) and position
+  jumps (`Bxx`). A jump back to an earlier position is the song looping, so
+  the conversion ends there;
+* each channel's note lasts until its next note, a note cut (`ECx`) or
+  volume 0 (`C00`). A sample that doesn't loop (drum hits, plucks) ends its
+  note when the sample would run out; note delays (`EDx`) are followed;
+* arpeggios (`0xy`), the classic tracker chord, become notes a tick long
+  cycling through the chord, which is just what a PC speaker game does;
+* ProTracker's C-2 (period 428) is middle C. Slides, vibrato and volume
+  effects are not converted. Use PCSEDIT's glide and vibrato afterwards if
+  you like.
+
+Drums turn into short beeps. `-i` lists every sample with its length,
+whether it loops, and how many notes it plays, so you can spot the drums
+(short, played a lot, usually not looping) and leave them out with `-x`.
+Most modules are longer than a 4-voice bank holds (about 46 s): use `-s` for
+an excerpt, or `-v 1` for the tune's top line, which fits over 3 minutes.
+PCSEDIT opens `.mod` files too (Ctrl+O or drop one), as up to 64 s in a new
+sound. XM, S3M and IT modules are different formats and aren't read yet.
+
 ### How notes become voices
 
 Tempo changes are followed, and the tune starts at its first note. Notes are
@@ -541,6 +596,10 @@ play.
 | `CHIPLOOP.SND` | an original chiptune loop |
 | `JINGLES.SND` | three original game jingles: FANFARE, LEVELUP, GAMEOVER |
 | `PLAYDEMO.SND` | an original march, written as QB64 PLAY strings in `PLAYDEMO.mml` |
+
+`MOD-CONVERSIONS/` holds 18 tracker modules by 4-Mat, XTD, Jester,
+Heatbeat, Dr. Awesome and Dubmood converted the same way (credits in its
+README).
 
 They are all public domain or written for this project. The arrangements are
 in `make_tunes.py` as plain note lists, so they are easy to change or add to.

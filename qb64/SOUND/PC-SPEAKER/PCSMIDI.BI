@@ -3,7 +3,8 @@
 '
 ' Reads a type 0 or type 1 MIDI file (tempo changes included) and turns its
 ' notes into up to 4 voices of PIT divisors at 140 steps a second - the same
-' data PCSEDIT edits. Used by PCSEDIT (open / drop a .mid) and MID2SND.BAS.
+' data PCSEDIT edits. Also reads QB64 PLAY strings (MML) and ProTracker
+' .mod music. Used by PCSEDIT (open / drop a file) and MID2SND.BAS.
 '
 ' Usage:
 '   '$INCLUDE:'PCSMIDI.BI'          at the top
@@ -38,6 +39,15 @@ $IF PCSMIDI_BI = UNDEFINED THEN
     DIM SHARED pcsmidiTitle AS STRING ' the first track name, if any
     DIM SHARED pcsmidiTracks AS LONG
     DIM SHARED pcsmidiChanMask AS LONG ' bit n: channel n is used (n = 0-15)
+
+    DIM SHARED pcsmidiIsMidi AS INTEGER ' the notes came from a MIDI file (channel 10 = drums)
+    ' .mod files: the samples, and which to leave out (PCSMIDI_LoadMOD)
+    DIM SHARED pcsmidiSmpName(1 TO 31) AS STRING
+    DIM SHARED pcsmidiSmpLen(1 TO 31) AS LONG ' bytes
+    DIM SHARED pcsmidiSmpLoop(1 TO 31) AS INTEGER
+    DIM SHARED pcsmidiSmpNotes(1 TO 31) AS LONG
+    DIM SHARED pcsmidiSmpCount AS LONG
+    DIM SHARED pcsmidiSkip(0 TO 31) AS INTEGER ' set to leave a sample's notes out
 
     ' PCSMIDI_Render's results
     DIM SHARED pcsmidiVoice(1 TO PCSMIDI_VOICES) AS STRING ' 2 bytes (divisor) per step

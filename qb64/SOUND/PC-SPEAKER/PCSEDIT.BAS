@@ -154,7 +154,7 @@ CONST REC_STEP = 1
 CONST REC_LIVE = 2
 ' file types the Open dialog lists (the native dialogs on Linux are case
 ' sensitive, so both cases)
-CONST OPEN_FILTER = "*.snd|*.SND|*.mid|*.MID|*.midi|*.MIDI|*.mml|*.MML|*.dn1|*.DN1|*.dn2|*.DN2|*.dn3|*.DN3|*.ck1|*.CK1|*.wad|*.WAD|*.lmp|*.LMP|*.cmp|*.CMP|*.stn|*.STN|*.ms1|*.MS1|*.ms2|*.MS2|*.ms3|*.MS3|*.hov|*.HOV|*.rov|*.ROV|*.ca2|*.CA2|*.slo|*.SLO|*.8|AUDIOT.*|audiot.*|AUDIOHED.*|audiohed.*"
+CONST OPEN_FILTER = "*.snd|*.SND|*.mid|*.MID|*.midi|*.MIDI|*.mml|*.MML|*.mod|*.MOD|*.dn1|*.DN1|*.dn2|*.DN2|*.dn3|*.DN3|*.ck1|*.CK1|*.wad|*.WAD|*.lmp|*.LMP|*.cmp|*.CMP|*.stn|*.STN|*.ms1|*.MS1|*.ms2|*.MS2|*.ms3|*.MS3|*.hov|*.HOV|*.rov|*.ROV|*.ca2|*.CA2|*.slo|*.SLO|*.8|AUDIOT.*|audiot.*|AUDIOHED.*|audiohed.*"
 CONST BEATS_PER_BAR = 4 '                the grid is 4/4
 CONST KEYS_NOTES = 0 '                   what notes play: plain tones...
 CONST KEYS_SOUND = 1 '                   ...or the instrument sound, transposed
@@ -167,6 +167,8 @@ CONST POLY_ARP = 0 '                     voices take turns, one step each
 CONST POLY_PWM = 1 '                     voices mixed with pulse-width modulation
 CONST PWM_DIV = 76 '                     PWM carrier: PIT clock / 76 = 15.7 kHz
 CONST ERASE_REACH = 2 '                  G: the eraser takes notes this many semitones from the pointer
+CONST VIB_DELAY = 14 '                   vibrato starts this many steps into a note (0.1 s)...
+CONST VIB_FADE = 14 '                    ...and fades in over this many
 CONST TOOL_DRAW = 0
 CONST TOOL_NOTE = 1
 CONST TOOL_ERASE = 2
@@ -205,6 +207,14 @@ DIM SHARED pwmGain(1 TO 8) AS SINGLE ' render_pwm_tick: the volume of each divis
 DIM SHARED arpRate AS LONG ' ARP: steps each note of a chord lasts before the next takes over
 DIM SHARED volDragK AS LONG ' dragging a Vol fader: which voice (5 = master)
 DIM SHARED masterVol AS SINGLE ' the master fader (under G): 1 = 100%, up to 2
+DIM SHARED glideSteps AS LONG ' Ctrl+I: pitch slide between notes, in steps (0 = off)
+DIM SHARED glNow AS DOUBLE ' the keys' glide: the pitch sounding now (-1 = none), from, to, how far
+DIM SHARED glFrom AS DOUBLE
+DIM SHARED glTo AS DOUBLE
+DIM SHARED glPos AS LONG
+DIM SHARED vibMode AS LONG ' Ctrl+W: vibrato preset (0 = off, see vib_name)
+DIM SHARED vibT AS LONG ' the keys' vibrato: ticks since the note began, and which note
+DIM SHARED vibNote AS LONG
 DIM SHARED pwmPh(1 TO 8) AS DOUBLE ' PWM: each voice's place in its square wave (PIT clocks)
 DIM SHARED spkLast AS LONG ' the divisor the speaker was last set to (see speaker)
 DIM SHARED tickN AS LONG ' 140 Hz ticks, for arpeggiating held chords
@@ -389,6 +399,12 @@ ON ERROR GOTO trap
 
 ' the window as it was last time (settings_save writes it at quit)
 cfg_load
+vibMode = VAL(cfg_get("vibrato", "0"))
+IF vibMode < 0 OR vibMode > 5 THEN vibMode = 0
+vibNote = -1
+glideSteps = VAL(cfg_get("glide", "0"))
+IF glideSteps < 0 OR glideSteps > 35 THEN glideSteps = 0
+glNow = -1
 masterVol = VAL(cfg_get("master", "1"))
 IF masterVol < 0 OR masterVol > 2 THEN masterVol = 1
 arpRate = VAL(cfg_get("arprate", "3")) ' 3 steps a note: still a chord, not a blur
@@ -665,13 +681,16 @@ SUB on_tick
                 voicePos = voicePos + 1
             END IF
         END IF
-    ELSEIF held_count >= 2 AND (NOT recording OR rec_armed) THEN
+    ELSEIF held_count >= 2 AND (NOT recording OR rec_armed) AND (glideSteps = 0 OR rec_armed) THEN
         v = note_div(held_note((tickN \ arpRate) MOD held_count)) ' a chord: take turns (ARP)
     ELSEIF heldNote >= 0 THEN
-        v = note_div(heldNote)
+        IF heldNote <> vibNote THEN vibNote = heldNote: vibT = 0 ELSE vibT = vibT + 1
+        ' (glide: a new key slides from the last; vibrato: a held one wobbles)
+        v = note_div(glide_to(heldNote) + vib_off(vibT))
     ELSEIF auditionNote >= 0 THEN
         v = note_div(auditionNote)
     END IF
+    IF heldNote < 0 OR keysMode <> KEYS_NOTES THEN glNow = -1: vibNote = -1 ' let go: the next key starts fresh
     ' drawing audition (A): the step under the pointer, when no key is down
     IF v = 0 AND drawAud > 0 AND NOT recording THEN v = drawAud
 
@@ -1053,7 +1072,7 @@ FUNCTION pwm_needed%
         ' Ctrl+K: an instrument with several voices
         pwm_needed = voiceOn <> 0 AND voices_used(instIdx) > 1 ' (recording too: see pump_pwm)
     ELSE
-        pwm_needed = held_count >= 2 AND (NOT recording OR rec_armed)
+        pwm_needed = held_count >= 2 AND (NOT recording OR rec_armed) AND (glideSteps = 0 OR rec_armed)
     END IF
 END FUNCTION
 
@@ -1463,6 +1482,15 @@ SUB step_enter (n AS LONG)
             NEXT
         END IF
     NEXT
+    ' glide: slide into this note from the one just before it
+    IF glideSteps > 0 AND keysMode = KEYS_NOTES AND s0 > 0 THEN
+        IF rec_armed THEN k = arm_voice(1) ELSE k = sndAct(cur)
+        i = apply_glide(k, s0 - 1, s1)
+    END IF
+    IF vibMode > 0 AND keysMode = KEYS_NOTES THEN
+        IF rec_armed THEN k = arm_voice(1) ELSE k = sndAct(cur)
+        i = apply_vibrato(k, s0, s1)
+    END IF
     chordS0 = s0: chordS1 = s1: chordN = 1
     cursorStep = s1
     IF cursorStep > MAX_STEPS THEN cursorStep = MAX_STEPS
@@ -1692,6 +1720,9 @@ SUB render_take (final AS INTEGER)
         END IF
         IF v <> 0 AND s > recLastNote THEN recLastNote = s
     NEXT
+    ' glide: the quantized notes slide into each other like they did as played
+    IF glideSteps > 0 AND keysMode = KEYS_NOTES THEN k = apply_glide(sndAct(cur), recFrom, endS)
+    IF vibMode > 0 AND keysMode = KEYS_NOTES THEN k = apply_vibrato(sndAct(cur), recFrom, endS)
 END SUB
 
 
@@ -3203,6 +3234,10 @@ FUNCTION handle_key% (k AS LONG, ctrl AS INTEGER, shift AS INTEGER)
                     CASE "J"
                         IF shift THEN arp_speed 1 ELSE toggle_poly
                     CASE "T": trim_end
+                    CASE "I"
+                        IF shift THEN glide_selection ELSE glide_setting 1
+                    CASE "W"
+                        IF shift THEN vibrato_selection ELSE vib_setting
                     CASE "P": ask_priority
                     CASE "N"
                         IF ok_to_lose("New bank") THEN new_bank: set_status "New bank"
@@ -3339,7 +3374,7 @@ END SUB
 FUNCTION is_midi% (f AS STRING)
     DIM e AS STRING
     e = LCASE$(MID$(f, _INSTRREV(f, ".") + 1))
-    is_midi = (e = "mid" OR e = "midi" OR e = "mml") AND _INSTRREV(f, ".") > 0
+    is_midi = (e = "mid" OR e = "midi" OR e = "mml" OR e = "mod") AND _INSTRREV(f, ".") > 0
 END FUNCTION
 
 
@@ -3350,7 +3385,11 @@ END FUNCTION
 '
 SUB import_midi (fileName AS STRING)
     DIM k AS LONG, nm AS STRING, i AS LONG, c AS STRING, ok AS INTEGER
-    IF LCASE$(RIGHT$(fileName, 4)) = ".mml" THEN ok = PCSMIDI_LoadMMLFile(fileName) ELSE ok = PCSMIDI_Load(fileName)
+    SELECT CASE LCASE$(RIGHT$(fileName, 4))
+        CASE ".mml": ok = PCSMIDI_LoadMMLFile(fileName)
+        CASE ".mod": ok = PCSMIDI_LoadMOD(fileName)
+        CASE ELSE: ok = PCSMIDI_Load(fileName)
+    END SELECT
     IF NOT ok THEN set_status pcsmidiError: EXIT SUB
     remember_dir fileName
     import_notes fileName
@@ -4585,7 +4624,7 @@ SUB draw_info
     _PRINTSTRING (x, 76), s
     COLOR _RGB32(150, 160, 180)
     IF pianoOn THEN s = "Caps:piano" ELSE s = "Caps:tools"
-    s = s + "  Aud " + on_off(drawAudOn) + "  Snap " + on_off(snapOn) + "  Oct" + LTRIM$(STR$(octave)) + "  Len" + LTRIM$(STR$(noteLen)) + "  Loop " + on_off(loopOn) + "  Z" + zoom_name
+    s = s + "  Aud " + on_off(drawAudOn) + "  Snap " + on_off(snapOn) + "  Oct" + LTRIM$(STR$(octave)) + "  Len" + LTRIM$(STR$(noteLen)) + "  Glide " + glide_name + "  Vib " + _TRIM$(vib_name) + "  Loop " + on_off(loopOn) + "  Z" + zoom_name
     s = s + "  Met " + MID$("offRECR+P", metroMode * 3 + 1, 3) + "  In" + STR$(countIn) + "  Q " + on_off(quantOn) + "  Fol " + on_off(followOn)
     s = s + "  MIDI: "
     IF midiDevIdx >= 0 AND midiBusy THEN
@@ -4860,6 +4899,221 @@ END SUB
 '
 SUB apply_master
     PCSPK_SetVolume 0.25 * masterVol
+END SUB
+
+
+'--- glide (pitch slides) -------------------------------------------------------
+
+''
+' Ctrl+I: how long a slide between notes takes. Shift: apply it.
+'
+SUB glide_setting (dirn AS LONG)
+    DIM lv(0 TO 9) AS LONG, i AS LONG, at AS LONG
+    lv(0) = 0: lv(1) = 2: lv(2) = 3: lv(3) = 4: lv(4) = 6: lv(5) = 8: lv(6) = 12: lv(7) = 16: lv(8) = 24: lv(9) = 35
+    FOR i = 0 TO 9
+        IF lv(i) <= glideSteps THEN at = i
+    NEXT
+    at = (at + dirn + 10) MOD 10
+    glideSteps = lv(at)
+    IF glideSteps THEN
+        set_status "Glide" + STR$(glideSteps) + " steps (" + fmt2(glideSteps / rateHz) + " s): the keys slide note to note, STEP / LIVE record it; Ctrl+Shift+I glides a selection"
+    ELSE
+        set_status "Glide off"
+    END IF
+END SUB
+
+
+FUNCTION glide_name$
+    IF glideSteps THEN glide_name = LTRIM$(STR$(glideSteps)) ELSE glide_name = "off"
+END FUNCTION
+
+
+''
+' The keys with glide on: the pitch to sound this tick, sliding from the
+' last note to nt over glideSteps ticks (a fresh key, after silence, starts
+' on its note).
+'
+FUNCTION glide_to# (nt AS LONG)
+    IF glideSteps = 0 THEN glNow = nt: glide_to = nt: EXIT FUNCTION
+    IF glNow < 0 THEN glNow = nt: glTo = nt: glPos = glideSteps
+    IF nt <> glTo THEN glFrom = glNow: glTo = nt: glPos = 0
+    IF glPos < glideSteps THEN
+        glPos = glPos + 1
+        glNow = glFrom + (glTo - glFrom) * glPos / glideSteps
+    ELSE
+        glNow = glTo
+    END IF
+    glide_to = glNow
+END FUNCTION
+
+
+''
+' Slide into every note change in voice k between steps a and b: where one
+' note (2 steps or more) goes straight into another, the new note's first
+' steps move smoothly (in semitones) from the old pitch to the new one.
+' Slides, vibrato or rests already there are left alone. How many it made.
+'
+FUNCTION apply_glide& (k AS LONG, a AS LONG, b AS LONG)
+    DIM d AS STRING, n AS LONG, i AS LONG, v AS LONG, ln AS LONG, pv AS LONG, pl AS LONG
+    DIM g AS LONG, j AS LONG, f AS DOUBLE, t AS DOUBLE, cnt AS LONG, e AS LONG, st AS LONG
+    IF glideSteps = 0 THEN EXIT FUNCTION
+    d = voice_data(cur, k) ' (the notes as they were: slides don't chain)
+    n = LEN(d) \ 2
+    e = b: IF e > n THEN e = n
+    i = a: IF i < 0 THEN i = 0
+    IF i >= n THEN EXIT FUNCTION
+    ' start from the beginning of the note a is in, so its length is known
+    v = ASC(d, i * 2 + 1) + ASC(d, i * 2 + 2) * 256&
+    DO WHILE i > 0
+        IF ASC(d, (i - 1) * 2 + 1) + ASC(d, (i - 1) * 2 + 2) * 256& <> v THEN EXIT DO
+        i = i - 1
+    LOOP
+    st = i
+    DO WHILE i < e
+        v = ASC(d, i * 2 + 1) + ASC(d, i * 2 + 2) * 256&
+        ln = 1
+        DO WHILE i + ln < n
+            IF ASC(d, (i + ln) * 2 + 1) + ASC(d, (i + ln) * 2 + 2) * 256& <> v THEN EXIT DO
+            ln = ln + 1
+        LOOP
+        IF i > st AND pv <> 0 AND v <> 0 AND pl >= 2 AND ln >= 2 THEN
+            g = glideSteps
+            IF g > ln - 1 THEN g = ln - 1 ' the note still lands
+            f = div_note(pv): t = div_note(v)
+            FOR j = 0 TO g - 1
+                set_voice_step cur, k, i + j, note_div(f + (t - f) * (j + 1) / (g + 1))
+            NEXT
+            cnt = cnt + 1
+        END IF
+        pv = v: pl = ln
+        i = i + ln
+    LOOP
+    apply_glide = cnt
+END FUNCTION
+
+
+''
+' Ctrl+Shift+I: glide the selection (or the whole voice); G: every voice.
+'
+SUB glide_selection
+    DIM k AS LONG, a AS LONG, b AS LONG, cnt AS LONG
+    IF glideSteps = 0 THEN set_status "Glide is off - Ctrl+I sets how long a slide takes": EXIT SUB
+    push_undo
+    a = 0: b = snd_len(cur)
+    IF selOn THEN a = selS0: b = selS1
+    set_vmask
+    FOR k = 1 TO VOICES
+        IF vMask(k) THEN cnt = cnt + apply_glide(k, a, b)
+    NEXT
+    IF cnt = 0 THEN
+        IF undoN > 0 THEN undoN = undoN - 1
+        set_status "No note changes to glide (notes need 2 steps or more, one straight after the other)"
+    ELSE
+        set_status "Glided" + STR$(cnt) + " note change(s) over" + STR$(glideSteps) + " steps (Ctrl+Z undoes)"
+    END IF
+END SUB
+
+
+'--- vibrato ---------------------------------------------------------------------
+
+FUNCTION vib_name$
+    vib_name = MID$("off   light normalwide  fast  slow  ", vibMode * 6 + 1, 6)
+END FUNCTION
+
+
+''
+' The presets: depth (semitones either way) and rate (wobbles a second).
+'
+SUB vib_params (depth AS DOUBLE, rate AS DOUBLE)
+    SELECT CASE vibMode
+        CASE 1: depth = 0.15: rate = 5.5 ' light
+        CASE 2: depth = 0.3: rate = 6 '    normal
+        CASE 3: depth = 0.6: rate = 5.5 '  wide
+        CASE 4: depth = 0.25: rate = 8.5 ' fast
+        CASE 5: depth = 0.45: rate = 4 '   slow
+        CASE ELSE: depth = 0: rate = 0
+    END SELECT
+END SUB
+
+
+''
+' The vibrato's pitch offset (semitones) t steps into a note: nothing for
+' VIB_DELAY steps, then a sine wave that fades in over VIB_FADE.
+'
+FUNCTION vib_off# (t AS LONG)
+    DIM depth AS DOUBLE, rate AS DOUBLE, u AS LONG, f AS DOUBLE
+    IF vibMode = 0 OR t < VIB_DELAY THEN EXIT FUNCTION
+    vib_params depth, rate
+    u = t - VIB_DELAY
+    f = u / VIB_FADE: IF f > 1 THEN f = 1
+    vib_off = depth * f * SIN(2 * _PI * rate * u / rateHz)
+END FUNCTION
+
+
+SUB vib_setting
+    vibMode = (vibMode + 1) MOD 6
+    IF vibMode THEN
+        set_status "Vibrato " + _TRIM$(vib_name) + ": held keys wobble after 0.1 s, STEP / LIVE record it; Ctrl+Shift+W adds it to a selection"
+    ELSE
+        set_status "Vibrato off"
+    END IF
+END SUB
+
+
+''
+' Vibrato on every note of voice k between steps a and b: each steady note
+' long enough for it (VIB_DELAY + a few steps) wobbles from VIB_DELAY on.
+' Slides and notes that already move are left alone. How many it did.
+'
+FUNCTION apply_vibrato& (k AS LONG, a AS LONG, b AS LONG)
+    DIM d AS STRING, n AS LONG, i AS LONG, v AS LONG, ln AS LONG, j AS LONG, e AS LONG
+    DIM o AS DOUBLE, nt AS DOUBLE, cnt AS LONG
+    IF vibMode = 0 THEN EXIT FUNCTION
+    d = voice_data(cur, k)
+    n = LEN(d) \ 2
+    e = b: IF e > n THEN e = n
+    i = a: IF i < 0 THEN i = 0
+    DO WHILE i < e
+        v = ASC(d, i * 2 + 1) + ASC(d, i * 2 + 2) * 256&
+        ln = 1
+        DO WHILE i + ln < n
+            IF ASC(d, (i + ln) * 2 + 1) + ASC(d, (i + ln) * 2 + 2) * 256& <> v THEN EXIT DO
+            ln = ln + 1
+        LOOP
+        IF v <> 0 AND ln >= VIB_DELAY + 6 THEN
+            nt = div_note(v)
+            FOR j = VIB_DELAY TO ln - 1
+                IF i + j >= e THEN EXIT FOR
+                o = vib_off(j)
+                set_voice_step cur, k, i + j, note_div(nt + o)
+            NEXT
+            cnt = cnt + 1
+        END IF
+        i = i + ln
+    LOOP
+    apply_vibrato = cnt
+END FUNCTION
+
+
+''
+' Ctrl+Shift+W: vibrato on the selection (or the whole voice); G: every voice.
+'
+SUB vibrato_selection
+    DIM k AS LONG, a AS LONG, b AS LONG, cnt AS LONG
+    IF vibMode = 0 THEN set_status "Vibrato is off - Ctrl+W picks one": EXIT SUB
+    push_undo
+    a = 0: b = snd_len(cur)
+    IF selOn THEN a = selS0: b = selS1
+    set_vmask
+    FOR k = 1 TO VOICES
+        IF vMask(k) THEN cnt = cnt + apply_vibrato(k, a, b)
+    NEXT
+    IF cnt = 0 THEN
+        IF undoN > 0 THEN undoN = undoN - 1
+        set_status "No notes long enough for vibrato (it starts" + STR$(VIB_DELAY) + " steps into a note)"
+    ELSE
+        set_status "Vibrato (" + _TRIM$(vib_name) + ") on" + STR$(cnt) + " note(s) (Ctrl+Z undoes)"
+    END IF
 END SUB
 
 
@@ -5698,6 +5952,10 @@ SUB help_text (t() AS STRING, n AS LONG)
     help_add t(), n, "Ctrl+U|count-in: off, 1 or 2 bars"
     help_add t(), n, "Ctrl+M|metronome (Shift: volume)"
     help_add t(), n, "Ctrl+Q|quantize LIVE takes"
+    help_add t(), n, "Ctrl+I|glide: slide between notes"
+    help_add t(), n, "Ctrl+Shift+I|glide the selection"
+    help_add t(), n, "Ctrl+W|vibrato: off / light ... slow"
+    help_add t(), n, "Ctrl+Shift+W|vibrato on the selection"
     help_add t(), n, "#Playback"
     help_add t(), n, "Space|play  /  stop"
     help_add t(), n, "Enter|play from the cursor"
@@ -5734,7 +5992,7 @@ SUB help_text (t() AS STRING, n AS LONG)
     help_add t(), n, "Ctrl+S|save (Shift: save as)"
     help_add t(), n, "Ctrl+E|export the sound as .wav"
     help_add t(), n, "Ctrl+Shift+V|paste a PLAY string"
-    help_add t(), n, "drop a file|open it (.mid .mml: add it)"
+    help_add t(), n, "drop a file|open it (.mid .mml .mod: add it)"
 END SUB
 
 
@@ -6042,6 +6300,8 @@ SUB settings_save
     PRINT #ff, "loop="; LTRIM$(STR$(loopOn))
     PRINT #ff, "poly="; LTRIM$(STR$(polyMode))
     PRINT #ff, "arprate="; LTRIM$(STR$(arpRate))
+    PRINT #ff, "glide="; LTRIM$(STR$(glideSteps))
+    PRINT #ff, "vibrato="; LTRIM$(STR$(vibMode))
     PRINT #ff, "master="; LTRIM$(STR$(masterVol))
     FOR k = 1 TO VOICES
         PRINT #ff, "vol"; LTRIM$(STR$(k)); "="; LTRIM$(STR$(vVol(k)))
