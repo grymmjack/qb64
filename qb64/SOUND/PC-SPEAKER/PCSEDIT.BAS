@@ -44,6 +44,8 @@
 '   the selection, Esc deselects
 '   right drag erases with any tool
 '   wheel             scroll          Ctrl+wheel     zoom
+'   Shift+wheel       key size (all notes ... one octave); wheel over the keys,
+'                     or the bar left of them, scrolls the notes
 '   click time ruler  move the cursor
 '
 ' Notes - computer keyboard (two octaves, tracker layout):
@@ -78,7 +80,7 @@
 '   F6 snap (semitones, grid)     F7 MIDI device   F9/F10 octave -/+
 '   F11/F12 note length -/+ (in grid cells while the grid is on)
 '   Ctrl+G / Ctrl+Shift+G   grid: off, 1/4 ... 1/128, 1/8T, 1/16T
-'   Ctrl+B                  tempo (BPM) for the grid
+'   Ctrl+B                  tempo (BPM) for the grid - and, if you say so, the notes
 '   Ctrl+L                  loop on/off
 '   Ctrl+K                  keys play NOTES / play the selected SOUND
 '   Ctrl+H                  instrument: GATE / ONE-SHOT / LOOP
@@ -106,7 +108,17 @@ DIM SHARED LIST_ROWS AS LONG
 DIM SHARED CANVAS_W AS LONG
 DIM SHARED CANVAS_H AS LONG
 DIM SHARED SCOPE_Y AS LONG
-DIM SHARED PX_SEMI AS LONG ' pixels per semitone row: CANVAS_H = (NOTE_HI - NOTE_LO) * PX_SEMI
+DIM SHARED PX_SEMI AS LONG ' pixels per semitone row (Shift+wheel: taller rows, fewer notes in view)
+DIM SHARED pxFull AS LONG ' PX_SEMI with every note in view: CANVAS_H = (NOTE_HI - NOTE_LO) * pxFull
+DIM SHARED viewLo AS LONG ' the note at the bottom of the roll
+DIM SHARED viewN AS LONG ' about how many notes are in view (84 = all, 12 = one octave)
+DIM SHARED vbarUntil AS DOUBLE ' show the note scrollbar until then (it hides when not in use)
+DIM SHARED vbarGrab AS LONG ' dragging it: where on the thumb it was taken
+DIM SHARED lastDir AS STRING ' the folder of the last bank opened / saved / imported (dialogs start there)
+DIM SHARED exportDir AS STRING ' the folder of the last .wav export
+DIM SHARED lastClickT AS DOUBLE ' the last left click, for double clicks
+DIM SHARED lastClickX AS LONG
+DIM SHARED lastClickY AS LONG
 DIM SHARED uiScale AS DOUBLE
 DIM SHARED uiImg AS LONG ' what is drawn, at the logical size
 DIM SHARED scrImg AS LONG ' the window
@@ -121,7 +133,10 @@ CONST MIN_LW = 1000 '                    smallest logical size the layout fits i
 CONST MIN_LH = 640
 CONST ROW_H = 16
 CONST LIST_X = 8
-CONST LIST_Y = 144 '                     (the voice chips are on the row above the list)
+CONST LIST_Y = 240 '                     (the voice chips, their M / S / R rows and Vol faders are above the list)
+CONST VOICE_Y = 104 '                    the voice chips' row
+CONST VOL_Y = 178 '                      the Vol faders: top
+CONST VOL_H = 38 '                       and height
 CONST LIST_W = 200
 CONST RULER_X = 224 '                    piano keys
 CONST CANVAS_X = 268 '                   piano roll
@@ -180,6 +195,16 @@ DIM SHARED polyMode AS INTEGER ' POLY_ARP / POLY_PWM
 DIM SHARED allVoices AS INTEGER ' G: the editing tools act on every voice at once
 DIM SHARED vMask(1 TO VOICES) AS INTEGER ' the voices the edit in progress works on
 DIM SHARED noteHome AS LONG ' G + NOTE tool: the voice to go back to after placing a note
+DIM SHARED vMute(1 TO VOICES) AS INTEGER ' M: not heard when playing (or exporting) the sound
+DIM SHARED vRec(1 TO VOICES) AS INTEGER ' R: recording spreads chords over these voices
+DIM SHARED soloV AS LONG ' S: the voice soloed (0 = none)
+DIM SHARED soloSave(1 TO VOICES) AS INTEGER ' the mutes from before the solo
+DIM SHARED recVN(1 TO VOICES) AS LONG ' LIVE + R: the note each armed voice is recording (-1 = none)
+DIM SHARED vVol(1 TO VOICES) AS SINGLE ' each voice's volume in PWM mode (1 = 100%, up to 2)
+DIM SHARED pwmGain(1 TO 8) AS SINGLE ' render_pwm_tick: the volume of each divisor it is given
+DIM SHARED arpRate AS LONG ' ARP: steps each note of a chord lasts before the next takes over
+DIM SHARED volDragK AS LONG ' dragging a Vol fader: which voice (5 = master)
+DIM SHARED masterVol AS SINGLE ' the master fader (under G): 1 = 100%, up to 2
 DIM SHARED pwmPh(1 TO 8) AS DOUBLE ' PWM: each voice's place in its square wave (PIT clocks)
 DIM SHARED spkLast AS LONG ' the divisor the speaker was last set to (see speaker)
 DIM SHARED tickN AS LONG ' 140 Hz ticks, for arpeggiating held chords
@@ -354,7 +379,7 @@ DIM SHARED modCtrl AS INTEGER ' modifier keys, tracked from the key events
 DIM SHARED modShift AS INTEGER
 DIM SHARED modAlt AS INTEGER
 
-DIM k AS LONG, f AS STRING, wheel AS LONG, mx AS LONG, my AS LONG, b1 AS INTEGER, b2 AS INTEGER
+DIM k AS LONG, f AS STRING, wheel AS LONG, mx AS LONG, my AS LONG, b1 AS INTEGER, b2 AS INTEGER, mid3 AS INTEGER
 DIM ctrl AS INTEGER, shift AS INTEGER, quitNow AS INTEGER, oldScr AS LONG
 
 ' Disk and device errors must not stop the program with QB64's "Continue?"
@@ -364,6 +389,18 @@ ON ERROR GOTO trap
 
 ' the window as it was last time (settings_save writes it at quit)
 cfg_load
+masterVol = VAL(cfg_get("master", "1"))
+IF masterVol < 0 OR masterVol > 2 THEN masterVol = 1
+arpRate = VAL(cfg_get("arprate", "3")) ' 3 steps a note: still a chord, not a blur
+IF arpRate < 1 OR arpRate > 16 THEN arpRate = 3
+FOR k = 1 TO VOICES
+    vVol(k) = VAL(cfg_get("vol" + LTRIM$(STR$(k)), "1"))
+    IF vVol(k) < 0 OR vVol(k) > 2 THEN vVol(k) = 1
+NEXT
+lastDir = cfg_get("lastdir", "")
+exportDir = cfg_get("exportdir", "")
+viewN = VAL(cfg_get("vzoom", "84")) ' (before make_ui lays out the roll)
+viewLo = VAL(cfg_get("vlow", "33"))
 uiScale = VAL(cfg_get("scale", "1"))
 IF uiScale < 0.5 OR uiScale > 3 THEN uiScale = 1
 physW = VAL(cfg_get("width", "1280"))
@@ -447,6 +484,7 @@ waveCycles = 4
 waveDuty = 0.5
 set_status "Caps Lock ON = computer keyboard plays notes, OFF = letters pick tools (D L N W E S M, C cut)"
 
+apply_master ' the master fader's level
 DO
     ' ------------------------------------------------------------ audio
     IF pwm_needed THEN
@@ -467,11 +505,37 @@ DO
         wheel = wheel + _MOUSEWHEEL
         mlx = INT(_MOUSEX / uiScale): mly = INT(_MOUSEY / uiScale)
         handle_mouse mlx, mly, _MOUSEBUTTON(1), _MOUSEBUTTON(2)
+        ' middle click over the roll, its keys or its ruler: fit the notes
+        ' and the length at once
+        IF _MOUSEBUTTON(3) AND NOT mid3 THEN
+            k = msr_hit(mlx, mly)
+            IF k >= 11 AND k <= 34 THEN
+                msr_reset ' any M / S / R: all of them off
+            ELSEIF k >= 41 AND k <= 45 THEN
+                vol_reset ' any fader: all back to 100%
+            ELSEIF mlx >= RULER_X - 30 AND mly >= TIME_Y AND mly < CANVAS_Y + CANVAS_H THEN
+                fit_notes: fit_length
+            END IF
+        END IF
+        mid3 = _MOUSEBUTTON(3)
     LOOP
     ctrl = _KEYDOWN(100305) OR _KEYDOWN(100306)
     shift = _KEYDOWN(100303) OR _KEYDOWN(100304)
     IF wheel THEN
-        IF ctrl THEN
+        IF msr_hit(mlx, mly) \ 10 = 4 THEN
+            k = msr_hit(mlx, mly) MOD 10
+            IF k = 5 THEN
+                set_volume 5, masterVol - wheel * 0.05
+            ELSE
+                set_volume k, vVol(k) - wheel * 0.05 ' wheel up: louder
+            END IF
+        ELSEIF msr_hit(mlx, mly) = 50 THEN
+            arp_speed -SGN(wheel)
+        ELSEIF shift AND NOT ctrl THEN
+            vzoom SGN(wheel), mly ' Shift+wheel up: taller rows (fewer notes), down: shorter
+        ELSEIF mlx >= RULER_X - 12 AND mlx < CANVAS_X AND mly >= CANVAS_Y AND mly < CANVAS_Y + CANVAS_H THEN
+            vscroll -wheel * 2 ' over the piano keys: scroll the notes
+        ELSEIF ctrl THEN
             ' about a quarter per click, so 1 to 64 is a quick spin, not 60 clicks
             IF wheel < 0 THEN
                 set_zoom_at zoom_step(1), mlx
@@ -584,7 +648,7 @@ SUB on_tick
                 EXIT SUB
             END IF
         END IF
-        speaker mix_step(cur, playPos)
+        speaker heard_step(cur, playPos)
         playPos = playPos + 1
         EXIT SUB
     END IF
@@ -601,8 +665,8 @@ SUB on_tick
                 voicePos = voicePos + 1
             END IF
         END IF
-    ELSEIF held_count >= 2 AND NOT recording THEN
-        v = note_div(held_note(tickN MOD held_count)) ' a chord: take turns (ARP)
+    ELSEIF held_count >= 2 AND (NOT recording OR rec_armed) THEN
+        v = note_div(held_note((tickN \ arpRate) MOD held_count)) ' a chord: take turns (ARP)
     ELSEIF heldNote >= 0 THEN
         v = note_div(heldNote)
     ELSEIF auditionNote >= 0 THEN
@@ -655,6 +719,16 @@ END FUNCTION
 '
 SUB rec_write (s AS LONG, v AS LONG, vp AS LONG, nt AS LONG)
     DIM k AS LONG, vk AS LONG
+    IF rec_armed THEN
+        FOR k = 1 TO VOICES
+            IF vRec(k) THEN
+                vk = 0
+                IF recVN(k) >= 0 THEN vk = note_div(recVN(k))
+                IF vk <> 0 OR s * 2 < LEN(voice_data(cur, k)) THEN set_voice_step cur, k, s, vk
+            END IF
+        NEXT
+        EXIT SUB
+    END IF
     IF NOT rec_multi THEN set_step cur, s, v: EXIT SUB
     FOR k = 1 TO VOICES
         vk = 0
@@ -817,7 +891,7 @@ FUNCTION mix_step& (i AS LONG, s AS LONG)
         v = voice_step(i, k, s)
         IF v THEN n = n + 1: notes(n) = v
     NEXT
-    IF n THEN mix_step = notes((s MOD n) + 1)
+    IF n THEN mix_step = notes(((s \ arpRate) MOD n) + 1)
 END FUNCTION
 
 
@@ -973,12 +1047,13 @@ END FUNCTION
 FUNCTION pwm_needed%
     IF polyMode <> POLY_PWM THEN EXIT FUNCTION
     IF playing THEN
-        pwm_needed = voices_used(cur) > 1
+        ' several voices, or one whose volume isn't 100%
+        pwm_needed = voices_used(cur) > 1 OR vol_set
     ELSEIF keysMode = KEYS_SOUND THEN
         ' Ctrl+K: an instrument with several voices
         pwm_needed = voiceOn <> 0 AND voices_used(instIdx) > 1 ' (recording too: see pump_pwm)
     ELSE
-        pwm_needed = held_count >= 2 AND NOT recording
+        pwm_needed = held_count >= 2 AND (NOT recording OR rec_armed)
     END IF
 END FUNCTION
 
@@ -1001,7 +1076,7 @@ FUNCTION inst_divs& (stepPos AS LONG, nt AS LONG, d() AS LONG)
             v = CLNG(v / 2 ^ ((nt - ROOT_NOTE) / 12))
             IF v < 1 THEN v = 1
             IF v > 65534 THEN v = 65534
-            n = n + 1: d(n) = v
+            n = n + 1: d(n) = v: pwmGain(n) = 1
         END IF
     NEXT
     inst_divs = n
@@ -1014,7 +1089,7 @@ END FUNCTION
 ' are high right now - the same trick WAV.BAS uses for recorded sound.
 '
 SUB render_pwm_tick (d() AS LONG, n AS LONG)
-    DIM p AS LONG, periods AS LONG, k AS LONG, hi AS LONG, cnt AS LONG, clk AS DOUBLE
+    DIM p AS LONG, periods AS LONG, k AS LONG, hi AS LONG, cnt AS LONG, clk AS DOUBLE, acc AS SINGLE, g AS SINGLE
     clk = pcspk.tickClk
     IF n = 0 THEN
         PCSPK_SpeakerOff
@@ -1023,14 +1098,20 @@ SUB render_pwm_tick (d() AS LONG, n AS LONG)
     END IF
     PCSPK_SpeakerOn
     periods = INT(clk / PWM_DIV)
+    ' each voice swings +-1 times its volume and the voices share the swing
+    ' evenly (1/n): clean at 100%; a voice turned up past that can clip
+    g = 1 / n
     FOR p = 1 TO periods
-        hi = 0
+        acc = 0
         FOR k = 1 TO n
             pwmPh(k) = pwmPh(k) + PWM_DIV
             IF pwmPh(k) >= d(k) THEN pwmPh(k) = pwmPh(k) - d(k) * INT(pwmPh(k) / d(k))
-            IF pwmPh(k) < d(k) / 2 THEN hi = hi + 1
+            IF pwmPh(k) < d(k) / 2 THEN acc = acc + pwmGain(k) ELSE acc = acc - pwmGain(k)
         NEXT
-        cnt = 1 + CLNG(hi * (PWM_DIV - 2) / n)
+        acc = 0.5 + 0.5 * acc * g
+        IF acc < 0 THEN acc = 0
+        IF acc > 1 THEN acc = 1
+        cnt = 1 + CLNG(acc * (PWM_DIV - 2))
         PCSPK_PitWrite PCSPK_MODE_ONESHOT, cnt
         PCSPK_AdvanceClocks PWM_DIV
     NEXT
@@ -1044,8 +1125,13 @@ END SUB
 FUNCTION step_divs& (i AS LONG, s AS LONG, d() AS LONG)
     DIM k AS LONG, n AS LONG, v AS LONG
     FOR k = 1 TO VOICES
-        v = voice_step(i, k, s)
-        IF v THEN n = n + 1: d(n) = v
+        IF NOT (i = cur AND vMute(k)) THEN ' (muted voices left out)
+            v = voice_step(i, k, s)
+            IF v THEN
+                n = n + 1: d(n) = v
+                IF i = cur THEN pwmGain(n) = vVol(k) ELSE pwmGain(n) = 1
+            END IF
+        END IF
     NEXT
     step_divs = n
 END FUNCTION
@@ -1088,9 +1174,10 @@ SUB pump_pwm
             n = held_count
             IF n > 8 THEN n = 8
             FOR k = 1 TO n
-                d(k) = note_div(held_note(k - 1))
+                d(k) = note_div(held_note(k - 1)): pwmGain(k) = 1
             NEXT
             IF n < 2 THEN EXIT DO ' chord let go: back to the normal path
+            IF recording THEN rec_tick d(1), -1 ' (R: the armed voices take the notes)
         END IF
         render_pwm_tick d(), n
     LOOP
@@ -1287,7 +1374,7 @@ SUB note_on (n AS LONG)
             END IF
     END SELECT
     start_voice n ' after ensure_target, which may switch sounds
-    IF recMode = REC_LIVE THEN rec_event n, -1
+    IF recMode = REC_LIVE THEN rec_arm_on n: rec_event n, -1
 END SUB
 
 
@@ -1296,6 +1383,7 @@ SUB note_off (n AS LONG)
     IF n < 0 OR n > 127 THEN EXIT SUB
     IF noteStamp(n) <> 0 THEN rec_event n, 0
     noteStamp(n) = 0
+    rec_arm_off n
     heldNote = -1
     FOR i = 0 TO 127
         IF noteStamp(i) > best THEN best = noteStamp(i): heldNote = i
@@ -1316,7 +1404,7 @@ END SUB
 ' STEP record: write the note for noteLen steps at the cursor and move on.
 '
 SUB step_enter (n AS LONG)
-    DIM i AS LONG, c AS LONG, s0 AS LONG, s1 AS LONG, last AS LONG, v AS LONG, k AS LONG
+    DIM i AS LONG, c AS LONG, s0 AS LONG, s1 AS LONG, last AS LONG, v AS LONG, k AS LONG, used AS INTEGER
     push_undo
     ' a key pressed while another is still down: a chord note, in the next
     ' voice at the same steps (plain notes only)
@@ -1354,6 +1442,8 @@ SUB step_enter (n AS LONG)
             v = voice_div(i - s0, n)
             IF v < 0 THEN v = 0
             rec_write i, v, i - s0, n
+        ELSEIF rec_armed THEN
+            set_voice_step cur, arm_voice(1), i, note_div(n) ' R: the first armed voice
         ELSE
             v = note_div(n)
             set_step cur, i, v
@@ -1362,9 +1452,14 @@ SUB step_enter (n AS LONG)
     ' the other voices are cleared here, so a new chord doesn't mix with old
     ' notes (not when a multi-voice instrument has just written them)
     FOR k = 1 TO VOICES
-        IF k <> sndAct(cur) AND LEN(sndV(cur, k)) > 0 AND NOT rec_multi THEN
+        IF rec_armed THEN
+            used = vRec(k) AND k <> arm_voice(1) AND LEN(voice_data(cur, k)) > 0 ' R: only the armed voices
+        ELSE
+            used = k <> sndAct(cur) AND LEN(sndV(cur, k)) > 0 AND NOT rec_multi
+        END IF
+        IF used THEN
             FOR i = s0 TO s1 - 1
-                IF i * 2 + 2 <= LEN(sndV(cur, k)) THEN set_voice_step cur, k, i, 0
+                IF i * 2 + 2 <= LEN(voice_data(cur, k)) THEN set_voice_step cur, k, i, 0
             NEXT
         END IF
     NEXT
@@ -1381,6 +1476,7 @@ END SUB
 '
 FUNCTION chord_voice& (n AS LONG)
     DIM k AS LONG, c AS LONG
+    IF rec_armed THEN chord_voice = arm_voice(n): EXIT FUNCTION ' R: the armed voices in turn
     IF n <= 1 THEN chord_voice = sndAct(cur): EXIT FUNCTION
     c = 1
     FOR k = 1 TO VOICES
@@ -1418,7 +1514,7 @@ SUB begin_live (at AS LONG, countBars AS LONG)
     recPos = at - CLNG(countBars * BEATS_PER_BAR * 60 * rateHz / bpm)
     recPos0 = recPos
     recStartLen = steps_of(cur)
-    FOR k = 1 TO VOICES: recStartLenV(k) = LEN(voice_data(cur, k)) \ 2: NEXT
+    FOR k = 1 TO VOICES: recStartLenV(k) = LEN(voice_data(cur, k)) \ 2: recVN(k) = -1: NEXT
     recLastNote = -1
     evCount = 0: protectUntil = 0
     lastBeat = -999999
@@ -1528,6 +1624,46 @@ SUB render_take (final AS INTEGER)
     NEXT
     IF endS > MAX_STEPS THEN endS = MAX_STEPS
 
+    ' R: every note gets a free armed voice (in order of start), so chords
+    ' spread out; the armed voices are cleared over the take first
+    IF rec_armed THEN
+        DIM vEnd(1 TO VOICES) AS LONG, used AS INTEGER
+        REDIM done(0 TO nn) AS INTEGER
+        FOR k = 1 TO VOICES
+            IF vRec(k) THEN
+                FOR s = recFrom TO endS - 1
+                    IF s * 2 + 2 <= LEN(voice_data(cur, k)) THEN set_voice_step cur, k, s, 0
+                NEXT
+            END IF
+        NEXT
+        FOR i = 0 TO nn - 1
+            ' the earliest note not placed yet
+            best = -1
+            FOR j = 0 TO nn - 1
+                IF NOT done(j) THEN
+                    IF best < 0 THEN
+                        best = j
+                    ELSEIF ns(j) < ns(best) THEN
+                        best = j
+                    END IF
+                END IF
+            NEXT
+            done(best) = -1
+            FOR k = 1 TO VOICES
+                IF vRec(k) AND vEnd(k) <= ns(best) THEN
+                    v = note_div(nk(best))
+                    FOR s = ns(best) TO ne(best) - 1
+                        IF s < MAX_STEPS THEN set_voice_step cur, k, s, v
+                    NEXT
+                    vEnd(k) = ne(best)
+                    IF ne(best) - 1 > recLastNote THEN recLastNote = ne(best) - 1
+                    EXIT FOR
+                END IF
+            NEXT
+        NEXT
+        EXIT SUB
+    END IF
+
     ' each step plays the most recently started note that is still sounding
     FOR s = recFrom TO endS - 1
         best = -1
@@ -1616,6 +1752,7 @@ SUB stop_recording
     DIM keepLen AS LONG, k AS LONG
     IF NOT recording THEN EXIT SUB
     recording = 0
+    FOR k = 1 TO VOICES: recVN(k) = -1: NEXT
     IF quantOn AND gridDiv <> 0 AND evCount > 0 THEN
         render_take -1
         ' re-find the last note: quantizing may have moved it either way
@@ -1807,7 +1944,7 @@ END SUB
 
 SUB handle_mouse (mx AS LONG, my AS LONG, b1 AS INTEGER, b2 AS INTEGER)
     STATIC wasDown AS INTEGER
-    DIM s AS LONG, nt AS DOUBLE, shift AS INTEGER, inCanvas AS INTEGER, row AS LONG
+    DIM s AS LONG, nt AS DOUBLE, shift AS INTEGER, inCanvas AS INTEGER, row AS LONG, dbl AS INTEGER
 
     shift = _KEYDOWN(100303) OR _KEYDOWN(100304) OR modShift
     inCanvas = mx >= CANVAS_X AND mx < CANVAS_X + CANVAS_W AND my >= CANVAS_Y AND my < CANVAS_Y + CANVAS_H
@@ -1819,6 +1956,49 @@ SUB handle_mouse (mx AS LONG, my AS LONG, b1 AS INTEGER, b2 AS INTEGER)
     nt = y_note(my)
     mouseStep = s
     mouseNote = nt
+
+    ' --- double clicks: on the keys, fit the notes; on the ruler, the length
+    IF b1 AND NOT wasDown AND drawing = 0 THEN
+        dbl = TIMER - lastClickT < 0.35 AND TIMER >= lastClickT AND ABS(mx - lastClickX) < 6 AND ABS(my - lastClickY) < 6
+        lastClickT = TIMER: lastClickX = mx: lastClickY = my
+        IF dbl THEN
+            lastClickT = 0 ' (a third click starts over)
+            IF mx >= RULER_X AND mx < CANVAS_X AND my >= CANVAS_Y AND my < CANVAS_Y + CANVAS_H THEN
+                audition_stop
+                fit_notes
+                wasDown = -1: EXIT SUB
+            ELSEIF mx >= CANVAS_X AND my >= TIME_Y AND my < CANVAS_Y THEN
+                fit_length
+                wasDown = -1: EXIT SUB
+            ELSEIF msr_hit(mx, my) \ 10 = 4 THEN
+                set_volume msr_hit(mx, my) MOD 10, 1 ' a Vol button: back to 100%
+                wasDown = -1: EXIT SUB
+            END IF
+        END IF
+    END IF
+
+    ' --- dragging a voice's Vol button: up = louder (100 px = 100%)
+    IF drawing = 21 THEN
+        IF b1 THEN fader_at volDragK, my ELSE drawing = 0
+        wasDown = b1 OR b2
+        EXIT SUB
+    END IF
+
+    ' --- the note scrollbar (left of the piano keys, while zoomed)
+    IF drawing = 20 THEN
+        IF b1 THEN vbar_drag my ELSE drawing = 0
+        wasDown = b1 OR b2
+        EXIT SUB
+    END IF
+    IF b1 AND NOT wasDown AND view_zoomed AND mx >= RULER_X - 11 AND mx < RULER_X AND my >= CANVAS_Y AND my < CANVAS_Y + CANVAS_H THEN
+        DIM vt AS LONG, vb AS LONG
+        vbar_thumb vt, vb
+        IF my >= vt AND my <= vb THEN vbarGrab = my - vt ELSE vbarGrab = (vb - vt) \ 2 ' off the thumb: jump there
+        drawing = 20
+        vbar_drag my
+        wasDown = -1
+        EXIT SUB
+    END IF
 
     ' --- piano keys: hold to hear the pitch, drag to slide
     IF auditionNote >= 0 THEN
@@ -2007,6 +2187,9 @@ SUB handle_mouse (mx AS LONG, my AS LONG, b1 AS INTEGER, b2 AS INTEGER)
                 cursorStep = s
                 IF grid_snap THEN cursorStep = snap_cell(s)
             END IF
+        ' --- M / S / R under the voice chips
+        ELSEIF msr_hit(mx, my) THEN
+            msr_click msr_hit(mx, my)
         ' --- voice chips
         ELSEIF voice_chip_hit(mx, my) THEN
             SELECT CASE voice_chip_hit(mx, my)
@@ -3017,7 +3200,8 @@ FUNCTION handle_key% (k AS LONG, ctrl AS INTEGER, shift AS INTEGER)
                     CASE "Z": undo
                     CASE "Y": redo
                     CASE "L": toggle_loop
-                    CASE "J": toggle_poly
+                    CASE "J"
+                        IF shift THEN arp_speed 1 ELSE toggle_poly
                     CASE "T": trim_end
                     CASE "P": ask_priority
                     CASE "N"
@@ -3168,6 +3352,7 @@ SUB import_midi (fileName AS STRING)
     DIM k AS LONG, nm AS STRING, i AS LONG, c AS STRING, ok AS INTEGER
     IF LCASE$(RIGHT$(fileName, 4)) = ".mml" THEN ok = PCSMIDI_LoadMMLFile(fileName) ELSE ok = PCSMIDI_Load(fileName)
     IF NOT ok THEN set_status pcsmidiError: EXIT SUB
+    remember_dir fileName
     import_notes fileName
 END SUB
 
@@ -3256,16 +3441,80 @@ END SUB
 
 
 SUB ask_bpm
-    DIM t AS STRING
+    DIM t AS STRING, nb AS DOUBLE
     t = _INPUTBOX$("Tempo", "Tempo for the grid, in BPM (20-400):", LTRIM$(STR$(bpm)))
     after_dialog
     IF t = "" THEN EXIT SUB
-    IF VAL(t) >= 20 AND VAL(t) <= 400 THEN
-        bpm = VAL(t)
-        set_status "Tempo" + STR$(bpm) + " BPM" + grid_info
+    IF VAL(t) < 20 OR VAL(t) > 400 THEN set_status "Tempo has to be between 20 and 400 BPM": EXIT SUB
+    nb = VAL(t)
+    IF nb = bpm THEN EXIT SUB
+    ' the sound was written at the old tempo: move its notes to the new one?
+    IF snd_len(cur) > 0 THEN
+        SELECT CASE ask("Tempo" + STR$(bpm) + " -> " + LTRIM$(STR$(nb)) + " BPM." + CHR$(10) + CHR$(10) + "Change the timing of " + sndName(cur) + "'s notes to the new tempo?" + CHR$(10) + "(Yes: the notes speed up / slow down with it. No: only the grid changes.)", "yesnocancel", "question", 1)
+            CASE 1
+                retime bpm / nb
+                set_status "Tempo" + STR$(nb) + " BPM - " + sndName(cur) + " retimed to" + STR$(snd_len(cur)) + " steps (Ctrl+Z undoes)"
+            CASE 2
+                set_status "Tempo" + STR$(nb) + " BPM (the grid only - the notes kept their timing)"
+            CASE ELSE
+                set_status "Tempo unchanged": EXIT SUB
+        END SELECT
     ELSE
-        set_status "Tempo has to be between 20 and 400 BPM"
+        set_status "Tempo" + STR$(nb) + " BPM" + grid_info
     END IF
+    bpm = nb
+END SUB
+
+
+''
+' Stretch (f > 1) or squeeze (f < 1) the current sound in time, every
+' voice. Each run of one pitch (or of silence) is moved and resized as a
+' whole, so notes keep their rests between them; the selection, the loop
+' region and the cursor go along.
+'
+SUB retime (f AS DOUBLE)
+    DIM k AS LONG, d AS STRING, o AS STRING, i AS LONG, n AS LONG, a AS LONG, b AS LONG
+    DIM v AS LONG, na AS LONG, nb AS LONG, pe AS LONG, j AS LONG, home AS LONG
+    push_undo
+    stop_playing
+    home = sndAct(cur)
+    FOR k = 1 TO VOICES
+        d = voice_data(cur, k)
+        n = LEN(d) \ 2
+        IF n THEN
+            o = "": pe = 0
+            a = 0
+            DO WHILE a < n
+                v = ASC(d, a * 2 + 1) + ASC(d, a * 2 + 2) * 256&
+                b = a + 1
+                DO WHILE b < n
+                    IF ASC(d, b * 2 + 1) + ASC(d, b * 2 + 2) * 256& <> v THEN EXIT DO
+                    b = b + 1
+                LOOP
+                ' the run a..b-1 goes to na..nb-1 (at least a step, never
+                ' overlapping the run before it)
+                na = CLNG(a * f): IF na < pe THEN na = pe
+                nb = CLNG(b * f): IF nb <= na THEN nb = na + 1
+                IF nb > MAX_STEPS THEN nb = MAX_STEPS
+                IF na > LEN(o) \ 2 THEN o = o + STRING$((na - LEN(o) \ 2) * 2, 0)
+                FOR j = na TO nb - 1
+                    o = o + CHR$(v AND 255) + CHR$(v \ 256)
+                NEXT
+                pe = nb
+                a = b
+                IF pe >= MAX_STEPS THEN EXIT DO
+            LOOP
+            IF k = home THEN sndData(cur) = o ELSE sndV(cur, k) = o
+        END IF
+    NEXT
+    selS0 = CLNG(selS0 * f): selS1 = CLNG(selS1 * f)
+    IF selS1 <= selS0 THEN selS1 = selS0 + 1
+    loopA = CLNG(loopA * f): loopB = CLNG(loopB * f)
+    IF loopB <= loopA THEN loopB = loopA + 1
+    cursorStep = CLNG(cursorStep * f)
+    IF cursorStep > snd_len(cur) THEN cursorStep = snd_len(cur)
+    dirty = -1
+    follow cursorStep
 END SUB
 
 
@@ -3920,6 +4169,7 @@ SUB open_bank (fileName AS STRING)
     ok = PCSPK_IFSLoad(full)
     IF errNum THEN set_status "Can't read " + full: EXIT SUB
     IF NOT ok THEN set_status "No PC speaker sounds in " + full: EXIT SUB
+    remember_dir full
 
     stop_playing
     stop_recording
@@ -4018,6 +4268,7 @@ SUB save_bank (fileName AS STRING)
     END IF
     IF errNum THEN set_status "Couldn't save " + fileName + " (error" + STR$(errNum) + ")": EXIT SUB
     savePath = fileName
+    remember_dir fileName
     dirty = 0
     set_status "Saved " + fileName + " -" + STR$(sndCount) + " sounds," + STR$(total) + " bytes"
 END SUB
@@ -4074,12 +4325,36 @@ FUNCTION start_dir$
 END FUNCTION
 
 
+''
+' Where file dialogs start: the folder used last time (it's remembered in
+' the settings), or ASSETS/ next to PCSEDIT the first time.
+'
 FUNCTION default_dir$
     DIM d AS STRING
+    IF LEN(lastDir) THEN
+        IF _DIREXISTS(lastDir) THEN default_dir = lastDir: EXIT FUNCTION
+    END IF
     d = start_dir
     IF _DIREXISTS(d + "ASSETS") THEN d = d + "ASSETS/"
     default_dir = d
 END FUNCTION
+
+
+''
+' The folder part of a file name, with its / on the end ("" if none).
+'
+FUNCTION dir_of$ (f AS STRING)
+    DIM p AS LONG
+    p = _INSTRREV(f, "/")
+    IF _INSTRREV(f, "\") > p THEN p = _INSTRREV(f, "\")
+    IF p THEN dir_of = LEFT$(f, p)
+END FUNCTION
+
+
+SUB remember_dir (f AS STRING)
+    IF LEN(dir_of(f)) THEN lastDir = dir_of(_FULLPATH$(dir_of(f)))
+    IF RIGHT$(lastDir, 1) <> "/" AND RIGHT$(lastDir, 1) <> "\" AND LEN(lastDir) THEN lastDir = lastDir + "/"
+END SUB
 
 
 ''
@@ -4106,7 +4381,7 @@ END FUNCTION
 ' Render the current sound through the emulated speaker into a .wav.
 '
 SUB export_wav
-    DIM s AS LONG, h AS LONG, outName AS STRING, bankName AS STRING, v AS LONG, lastV AS LONG
+    DIM s AS LONG, h AS LONG, outName AS STRING, bankName AS STRING, v AS LONG, lastV AS LONG, t AS STRING
     DIM d(1 TO 8) AS LONG, n AS LONG
     IF snd_len(cur) = 0 THEN set_status "Nothing to export": EXIT SUB
     stop_playing
@@ -4118,7 +4393,11 @@ SUB export_wav
     ELSEIF LEN(openedPath) THEN
         bankName = PCSPK_FilePart(openedPath)
     END IF
-    outName = _SAVEFILEDIALOG$("Export " + sndName(cur) + " as .wav", start_dir + "EXPORT/" + safe_name(bankName) + "_" + safe_name(sndName(cur)) + ".wav", "*.wav|*.WAV", "WAV audio")
+    t = start_dir + "EXPORT/" ' (the first time; then where the last export went)
+    IF LEN(exportDir) THEN
+        IF _DIREXISTS(exportDir) THEN t = exportDir
+    END IF
+    outName = _SAVEFILEDIALOG$("Export " + sndName(cur) + " as .wav", t + safe_name(bankName) + "_" + safe_name(sndName(cur)) + ".wav", "*.wav|*.WAV", "WAV audio")
     after_dialog
     IF outName = "" THEN set_status "Export cancelled": EXIT SUB
     IF INSTR(PCSPK_FilePart(outName), ".") = 0 THEN outName = outName + ".wav"
@@ -4126,12 +4405,12 @@ SUB export_wav
     lastV = -1
     FOR s = 1 TO 8: pwmPh(s) = 0: NEXT
     FOR s = 0 TO snd_len(cur) - 1
-        IF polyMode = POLY_PWM AND voices_used(cur) > 1 THEN
+        IF polyMode = POLY_PWM AND (voices_used(cur) > 1 OR vol_set) THEN
             n = step_divs(cur, s, d())
             render_pwm_tick d(), n
             lastV = -1
         ELSE
-            v = mix_step(cur, s)
+            v = heard_step(cur, s) ' (muted voices left out)
             IF v <> lastV THEN PCSPK_SetDivisor v: lastV = v ' only on a change, see speaker
             PCSPK_AdvanceClocks PCSPK_PIT_HZ / rateHz
         END IF
@@ -4140,6 +4419,7 @@ SUB export_wav
     PCSPK_AdvanceSeconds 0.05
     h = PCSPK_CaptureEnd
     PCSPK_SaveWAV outName
+    IF LEN(dir_of(outName)) THEN exportDir = dir_of(outName)
     IF h > 0 THEN _SNDCLOSE h
     IF errNum THEN set_status "Couldn't write " + outName ELSE set_status "Saved " + outName
 END SUB
@@ -4160,12 +4440,12 @@ END FUNCTION
 '=============================================================================
 
 FUNCTION note_y& (nt AS DOUBLE)
-    note_y = CANVAS_Y + CANVAS_H - CLNG((nt - NOTE_LO + 0.5) * PX_SEMI)
+    note_y = CANVAS_Y + CANVAS_H - CLNG((nt - viewLo + 0.5) * PX_SEMI)
 END FUNCTION
 
 
 FUNCTION y_note# (y AS LONG)
-    y_note = NOTE_LO + (CANVAS_Y + CANVAS_H - y) / PX_SEMI - 0.5
+    y_note = viewLo + (CANVAS_Y + CANVAS_H - y) / PX_SEMI - 0.5
 END FUNCTION
 
 
@@ -4375,8 +4655,9 @@ END SUB
 ' voices have notes, and the mode. All clickable (see voice_chip_hit).
 '
 SUB draw_voice_chips
-    DIM k AS LONG, x AS LONG, y AS LONG, c AS _UNSIGNED LONG
-    y = LIST_Y - 40
+    DIM k AS LONG, x AS LONG, y AS LONG, c AS _UNSIGNED LONG, row AS LONG, lit AS INTEGER, fg AS _UNSIGNED LONG
+    DIM hp AS LONG, fh AS LONG
+    y = VOICE_Y
     COLOR _RGB32(120, 140, 170)
     _PRINTSTRING (LIST_X, y), "Voice"
     FOR k = 1 TO VOICES
@@ -4405,7 +4686,297 @@ SUB draw_voice_chips
     LINE (x - 3, y - 2)-(x + 28, y + 15), _RGB32(120, 140, 180), B
     IF polyMode = POLY_PWM THEN COLOR _RGB32(120, 230, 255) ELSE COLOR _RGB32(255, 200, 60)
     _PRINTSTRING (x + 1, y), poly_name
+
+    ' ARP speed, under the ARP / PWM chip
+    x = LIST_X + 48 + (VOICES + 1) * 22 + 6
+    COLOR _RGB32(110, 124, 150)
+    _PRINTSTRING (x + 2, VOICE_Y + 20), "arp"
+    LINE (x - 3, VOICE_Y + 37)-(x + 28, VOICE_Y + 53), _RGB32(120, 140, 180), B
+    IF polyMode = POLY_ARP THEN COLOR _RGB32(255, 200, 60) ELSE COLOR _RGB32(120, 132, 156)
+    _PRINTSTRING (x + 13 - LEN(LTRIM$(STR$(arpRate))) * 4, VOICE_Y + 38), LTRIM$(STR$(arpRate))
+
+    ' Vol: a fader per voice (heard in PWM mode), lit while the voice sounds
+    y = VOL_Y
+    COLOR _RGB32(110, 124, 150)
+    _PRINTSTRING (LIST_X, y + VOL_H \ 2 - 8), "Vol"
+    IF playing THEN hp = heard_pos(playPos) ELSE hp = -1
+    FOR k = 1 TO VOICES
+        x = LIST_X + 48 + (k - 1) * 22
+        LINE (x - 3, y)-(x + 12, y + VOL_H - 1), _RGB32(20, 24, 34), BF
+        LINE (x - 3, y)-(x + 12, y + VOL_H - 1), _RGB32(64, 74, 96), B
+        c = voice_col(k)
+        lit = -1
+        IF polyMode <> POLY_PWM OR vMute(k) THEN lit = 0
+        IF hp >= 0 THEN
+            IF voice_step(cur, k, hp) = 0 THEN lit = 0 ' silent right now
+        END IF
+        IF NOT lit THEN c = _RGB32(_RED32(c) * 0.45, _GREEN32(c) * 0.45, _BLUE32(c) * 0.45)
+        fh = CLNG(vVol(k) / 2 * (VOL_H - 4))
+        IF fh > 0 THEN LINE (x - 1, y + VOL_H - 2 - fh)-(x + 10, y + VOL_H - 3), c, BF
+        LINE (x - 3, y + VOL_H \ 2)-(x + 12, y + VOL_H \ 2), _RGB32(170, 180, 200) ' 100%
+    NEXT
+
+    ' the master fader, under G: everything you hear (and export)
+    x = LIST_X + 48 + VOICES * 22
+    y = VOICE_Y + 19
+    fh = VOL_Y + VOL_H - y
+    LINE (x - 3, y)-(x + 12, y + fh - 1), _RGB32(20, 24, 34), BF
+    LINE (x - 3, y)-(x + 12, y + fh - 1), _RGB32(96, 104, 124), B
+    c = _RGB32(225, 228, 238)
+    IF playing THEN c = _RGB32(255, 255, 255) ELSE c = _RGB32(170, 174, 186)
+    k = CLNG(masterVol / 2 * (fh - 4))
+    IF k > 0 THEN LINE (x - 1, y + fh - 2 - k)-(x + 10, y + fh - 3), c, BF
+    LINE (x - 3, y + fh \ 2)-(x + 12, y + fh \ 2), _RGB32(255, 200, 60) ' 100%
+
+    ' Mute / Solo / Rec, a button per voice under its chip
+    FOR row = 1 TO 3
+        y = VOICE_Y + row * 18 + 2
+        COLOR _RGB32(110, 124, 150)
+        _PRINTSTRING (LIST_X, y), MID$("MuteSoloRec ", row * 4 - 3, 4)
+        FOR k = 1 TO VOICES
+            x = LIST_X + 48 + (k - 1) * 22
+            SELECT CASE row
+                CASE 1: lit = vMute(k): c = _RGB32(215, 85, 85): fg = _RGB32(255, 255, 255)
+                CASE 2: lit = (soloV = k): c = _RGB32(240, 210, 70): fg = _RGB32(0, 0, 0)
+                CASE ELSE: lit = vRec(k): c = _RGB32(255, 60, 60): fg = _RGB32(255, 255, 255)
+            END SELECT
+            IF lit THEN
+                LINE (x - 3, y - 1)-(x + 12, y + 15), c, BF
+                COLOR fg
+            ELSE
+                LINE (x - 3, y - 1)-(x + 12, y + 15), _RGB32(64, 74, 96), B
+                COLOR _RGB32(120, 132, 156)
+            END IF
+            _PRINTSTRING (x + 1, y), MID$("MSR", row, 1)
+        NEXT
+    NEXT
 END SUB
+
+
+''
+' Which M / S / R button is at (mx, my): row * 10 + voice (0 = none).
+'
+FUNCTION msr_hit& (mx AS LONG, my AS LONG)
+    DIM k AS LONG, x AS LONG, y AS LONG, row AS LONG
+    ' the ARP speed box: 50
+    x = LIST_X + 48 + (VOICES + 1) * 22 + 6
+    IF mx >= x - 3 AND mx <= x + 28 AND my >= VOICE_Y + 20 AND my <= VOICE_Y + 53 THEN msr_hit = 50: EXIT FUNCTION
+    x = LIST_X + 48 + VOICES * 22 ' the master fader under G: 45
+    IF mx >= x - 3 AND mx <= x + 12 AND my >= VOICE_Y + 19 AND my < VOL_Y + VOL_H THEN msr_hit = 45: EXIT FUNCTION
+    IF my >= VOL_Y AND my < VOL_Y + VOL_H THEN ' the Vol faders: 41 - 44
+        FOR k = 1 TO VOICES
+            x = LIST_X + 48 + (k - 1) * 22
+            IF mx >= x - 3 AND mx <= x + 12 THEN msr_hit = 40 + k: EXIT FUNCTION
+        NEXT
+    END IF
+    FOR row = 1 TO 3
+        y = VOICE_Y + row * 18 + 2
+        IF my >= y - 1 AND my <= y + 15 THEN
+            FOR k = 1 TO VOICES
+                x = LIST_X + 48 + (k - 1) * 22
+                IF mx >= x - 3 AND mx <= x + 12 THEN msr_hit = row * 10 + k: EXIT FUNCTION
+            NEXT
+        END IF
+    NEXT
+END FUNCTION
+
+
+SUB msr_click (h AS LONG)
+    DIM k AS LONG, j AS LONG
+    k = h MOD 10
+    SELECT CASE h \ 10
+        CASE 5: arp_speed 1
+        CASE 4 ' Vol: the level is where you click / drag (wheel too; double click: 100%)
+            volDragK = k
+            fader_at k, mly
+            drawing = 21
+        CASE 1 ' mute: a change by hand ends a solo
+            vMute(k) = NOT vMute(k)
+            soloV = 0
+            IF vMute(k) THEN set_status "Voice" + STR$(k) + " muted (playback and export; saving keeps it)" ELSE set_status "Voice" + STR$(k) + " heard"
+        CASE 2
+            IF soloV = 0 THEN
+                ' solo: hear only this voice
+                FOR j = 1 TO VOICES: soloSave(j) = vMute(j): vMute(j) = (j <> k): NEXT
+                soloV = k
+                set_status "Solo voice" + STR$(k) + " - S on another voice adds it, S here again undoes the solo"
+            ELSEIF soloV = k THEN
+                ' undo the solo: the mutes from before it
+                FOR j = 1 TO VOICES: vMute(j) = soloSave(j): NEXT
+                soloV = 0
+                set_status "Solo off"
+            ELSE
+                ' hear this one too: now it's just mutes
+                vMute(k) = 0
+                soloV = 0
+                set_status "Voice" + STR$(k) + " added - the others stay muted (M to change them)"
+            END IF
+        CASE 3
+            vRec(k) = NOT vRec(k)
+            IF rec_armed THEN
+                set_status "Recording spreads chords over the R voices:" + arm_list + " (plain notes, STEP and LIVE)"
+            ELSE
+                set_status "No voice armed: recording goes into the voice you edit"
+            END IF
+    END SELECT
+END SUB
+
+
+''
+' R: recording plain notes spreads chords over the armed voices.
+'
+''
+' ARP speed: how many steps each note of a chord lasts (1 = 1/140 s, the
+' buzzy blur; 8 = a clear arpeggio). Saved banks use it too.
+'
+SUB arp_speed (dirn AS LONG)
+    DIM lv(0 TO 7) AS LONG, i AS LONG, at AS LONG
+    lv(0) = 1: lv(1) = 2: lv(2) = 3: lv(3) = 4: lv(4) = 6: lv(5) = 8: lv(6) = 12: lv(7) = 16
+    FOR i = 0 TO 7
+        IF lv(i) <= arpRate THEN at = i ' the level now (or the one below it)
+    NEXT
+    at = (at + dirn + 8) MOD 8 ' round and round
+    arpRate = lv(at)
+    set_status "ARP speed" + STR$(arpRate) + " step(s) a note =" + STR$(CLNG(140 / arpRate)) + " notes a second" + MID$(" (heard in ARP mode - Ctrl+J)", 1, -31 * (polyMode <> POLY_ARP))
+END SUB
+
+
+''
+' A Vol fader clicked / dragged at y: its bottom is 0, its top 200%.
+'
+SUB fader_at (k AS LONG, y AS LONG)
+    DIM h AS LONG
+    IF k = 5 THEN ' the master: taller
+        h = VOL_Y + VOL_H - (VOICE_Y + 19)
+        set_volume k, (VOL_Y + VOL_H - 3 - y) / (h - 4) * 2
+    ELSE
+        set_volume k, (VOL_Y + VOL_H - 3 - y) / (VOL_H - 4) * 2
+    END IF
+END SUB
+
+
+''
+' The master fader sets the emulator's output level (0.25 is its normal).
+'
+SUB apply_master
+    PCSPK_SetVolume 0.25 * masterVol
+END SUB
+
+
+SUB msr_reset
+    DIM k AS LONG
+    FOR k = 1 TO VOICES: vMute(k) = 0: vRec(k) = 0: NEXT
+    soloV = 0
+    set_status "Mute, solo and record arm cleared on every voice"
+END SUB
+
+
+SUB vol_reset
+    DIM k AS LONG
+    FOR k = 1 TO VOICES: vVol(k) = 1: NEXT
+    masterVol = 1
+    apply_master
+    set_status "Every fader back to 100%"
+END SUB
+
+
+FUNCTION vol_set%
+    DIM k AS LONG
+    FOR k = 1 TO VOICES
+        IF vVol(k) <> 1 THEN vol_set = -1: EXIT FUNCTION
+    NEXT
+END FUNCTION
+
+
+SUB set_volume (k AS LONG, v AS SINGLE)
+    IF k = 5 THEN
+        masterVol = v
+        IF masterVol < 0 THEN masterVol = 0
+        IF masterVol > 2 THEN masterVol = 2
+        masterVol = CLNG(masterVol * 20) / 20
+        apply_master
+        set_status "Master volume" + STR$(CLNG(masterVol * 100)) + "% (everything you hear, and Ctrl+E exports)"
+        EXIT SUB
+    END IF
+    vVol(k) = v
+    IF vVol(k) < 0 THEN vVol(k) = 0
+    IF vVol(k) > 2 THEN vVol(k) = 2
+    vVol(k) = CLNG(vVol(k) * 20) / 20 ' 5% steps
+    set_status "Voice" + STR$(k) + " volume" + STR$(CLNG(vVol(k) * 100)) + "%" + MID$(" (heard in PWM mode - Ctrl+J)", 1, -31 * (polyMode <> POLY_PWM))
+END SUB
+
+
+FUNCTION rec_armed%
+    DIM k AS LONG
+    IF keysMode <> KEYS_NOTES THEN EXIT FUNCTION
+    FOR k = 1 TO VOICES
+        IF vRec(k) THEN rec_armed = -1: EXIT FUNCTION
+    NEXT
+END FUNCTION
+
+
+''
+' The n-th armed voice (0: fewer than n are armed).
+'
+FUNCTION arm_voice& (n AS LONG)
+    DIM k AS LONG, c AS LONG
+    FOR k = 1 TO VOICES
+        IF vRec(k) THEN
+            c = c + 1
+            IF c = n THEN arm_voice = k: EXIT FUNCTION
+        END IF
+    NEXT
+END FUNCTION
+
+
+FUNCTION arm_list$
+    DIM k AS LONG, t AS STRING
+    FOR k = 1 TO VOICES
+        IF vRec(k) THEN t = t + STR$(k)
+    NEXT
+    arm_list = t
+END FUNCTION
+
+
+''
+' LIVE + R: a key takes the first armed voice that is free; letting go
+' frees it. More keys than armed voices: the extra ones aren't recorded.
+'
+SUB rec_arm_on (n AS LONG)
+    DIM k AS LONG
+    IF NOT rec_armed THEN EXIT SUB
+    FOR k = 1 TO VOICES
+        IF recVN(k) = n THEN EXIT SUB
+    NEXT
+    FOR k = 1 TO VOICES
+        IF vRec(k) AND recVN(k) < 0 THEN recVN(k) = n: EXIT SUB
+    NEXT
+END SUB
+
+
+SUB rec_arm_off (n AS LONG)
+    DIM k AS LONG
+    FOR k = 1 TO VOICES
+        IF recVN(k) = n THEN recVN(k) = -1
+    NEXT
+END SUB
+
+
+''
+' Step s of sound i as heard: like mix_step, without the muted voices (of
+' the sound being edited).
+'
+FUNCTION heard_step& (i AS LONG, s AS LONG)
+    DIM k AS LONG, n AS LONG, v AS LONG, notes(1 TO VOICES) AS LONG
+    IF i < 1 OR i > sndCount THEN EXIT FUNCTION
+    FOR k = 1 TO VOICES
+        IF NOT (i = cur AND vMute(k)) THEN
+            v = voice_step(i, k, s)
+            IF v THEN n = n + 1: notes(n) = v
+        END IF
+    NEXT
+    IF n THEN heard_step = notes(((s \ arpRate) MOD n) + 1)
+END FUNCTION
 
 
 ''
@@ -4414,7 +4985,7 @@ END SUB
 '
 FUNCTION voice_chip_hit& (mx AS LONG, my AS LONG)
     DIM k AS LONG, x AS LONG, y AS LONG
-    y = LIST_Y - 40
+    y = VOICE_Y
     IF my < y - 2 OR my > y + 15 THEN EXIT FUNCTION
     FOR k = 1 TO VOICES + 1 ' the voices, then G
         x = LIST_X + 48 + (k - 1) * 22
@@ -4428,21 +4999,24 @@ END FUNCTION
 SUB draw_roll
     DIM nt AS LONG, y AS LONG, x AS LONG, s AS LONG, v AS LONG, vis AS LONG, endX AS LONG
     DIM w AS LONG, nn AS DOUBLE, col AS _UNSIGNED LONG, hp AS LONG, isBlack AS INTEGER, prevY AS LONG, hv AS INTEGER, yb AS LONG
-    DIM k AS LONG, vc AS _UNSIGNED LONG
+    DIM k AS LONG, vc AS _UNSIGNED LONG, th AS LONG, runV AS LONG, runX AS LONG, runY AS LONG
 
     vis = INT(CANVAS_W / zoom)
 
     ' piano keys + note rows: white-key rows lighter, black-key rows darker,
     ' like a piano roll, so you can see which row you are on
-    FOR nt = NOTE_LO TO NOTE_HI - 1
+    LINE (RULER_X, CANVAS_Y)-(RULER_X + 40, CANVAS_Y + CANVAS_H - 1), _RGB32(16, 18, 24), BF
+    FOR nt = viewLo TO view_hi
         y = note_y(nt)
         isBlack = MID$("010100101010", (nt MOD 12) + 1, 1) = "1"
         IF isBlack THEN
-            LINE (RULER_X, y - PX_SEMI \ 2)-(RULER_X + 26, y + PX_SEMI \ 2 - 1), _RGB32(30, 30, 36), BF
-            LINE (CANVAS_X, y - PX_SEMI \ 2)-(CANVAS_X + CANVAS_W - 1, y + PX_SEMI \ 2 - 1), _RGB32(11, 12, 17), BF
+            band RULER_X, RULER_X + 26, y - PX_SEMI \ 2, y + PX_SEMI \ 2 - 1, _RGB32(30, 30, 36)
+            band CANVAS_X, CANVAS_X + CANVAS_W - 1, y - PX_SEMI \ 2, y + PX_SEMI \ 2 - 1, _RGB32(11, 12, 17)
         ELSE
-            LINE (RULER_X, y - PX_SEMI \ 2)-(RULER_X + 40, y + PX_SEMI \ 2 - 1), _RGB32(200, 200, 205), BF
-            LINE (CANVAS_X, y - PX_SEMI \ 2)-(CANVAS_X + CANVAS_W - 1, y + PX_SEMI \ 2 - 1), _RGB32(26, 30, 42), BF
+            band RULER_X, RULER_X + 40, y - PX_SEMI \ 2, y + PX_SEMI \ 2 - 1, _RGB32(200, 200, 205)
+            band CANVAS_X, CANVAS_X + CANVAS_W - 1, y - PX_SEMI \ 2, y + PX_SEMI \ 2 - 1, _RGB32(26, 30, 42)
+            ' a thin gap between white keys once they're tall
+            IF PX_SEMI >= 10 THEN band RULER_X, RULER_X + 40, y + PX_SEMI \ 2 - 1, y + PX_SEMI \ 2 - 1, _RGB32(150, 150, 158)
         END IF
     NEXT
 
@@ -4450,10 +5024,28 @@ SUB draw_roll
     ' the grid as well as the lit key
     nt = heldNote
     IF nt < 0 THEN nt = auditionNote
-    IF nt >= NOTE_LO AND nt < NOTE_HI THEN
+    IF nt >= viewLo AND nt <= view_hi THEN
         y = note_y(nt)
-        LINE (RULER_X, y - PX_SEMI \ 2)-(RULER_X + 40, y + PX_SEMI \ 2 - 1), _RGB32(255, 170, 40), BF
-        LINE (CANVAS_X, y - PX_SEMI \ 2)-(CANVAS_X + CANVAS_W - 1, y + PX_SEMI \ 2 - 1), _RGB32(70, 52, 22), BF
+        band RULER_X, RULER_X + 40, y - PX_SEMI \ 2, y + PX_SEMI \ 2 - 1, _RGB32(255, 170, 40)
+        band CANVAS_X, CANVAS_X + CANVAS_W - 1, y - PX_SEMI \ 2, y + PX_SEMI \ 2 - 1, _RGB32(70, 52, 22)
+    END IF
+
+    ' the keys' names, once they're tall enough to read
+    IF PX_SEMI >= 9 THEN
+        IF PX_SEMI < 15 THEN _FONT 8
+        FOR nt = viewLo TO view_hi
+            y = note_y(nt) - _FONTHEIGHT \ 2
+            IF y >= CANVAS_Y AND y + _FONTHEIGHT <= CANVAS_Y + CANVAS_H THEN
+                IF MID$("010100101010", (nt MOD 12) + 1, 1) = "1" THEN
+                    IF nt = heldNote OR nt = auditionNote THEN COLOR _RGB32(40, 30, 10) ELSE COLOR _RGB32(170, 170, 180)
+                    _PRINTSTRING (RULER_X + 2, y), note_name(nt)
+                ELSE
+                    IF nt MOD 12 = 0 THEN COLOR _RGB32(150, 60, 20) ELSE COLOR _RGB32(70, 74, 90)
+                    _PRINTSTRING (RULER_X + 40 - LEN(note_name(nt)) * 8, y), note_name(nt)
+                END IF
+            END IF
+        NEXT
+        _FONT 16
     END IF
 
 
@@ -4462,9 +5054,9 @@ SUB draw_roll
     ' grid lines (' key): one between every note row, and one per step when
     ' the grid is off and there is room (draw_grid does cells when it is on)
     IF linesOn THEN
-        FOR nt = NOTE_LO TO NOTE_HI - 1
+        FOR nt = viewLo TO view_hi
             y = note_y(nt) - PX_SEMI \ 2 - 1
-            IF nt MOD 12 <> 11 THEN LINE (CANVAS_X, y)-(CANVAS_X + CANVAS_W - 1, y), _RGB32(30, 36, 50)
+            IF nt MOD 12 <> 11 THEN band CANVAS_X, CANVAS_X + CANVAS_W - 1, y, y, _RGB32(30, 36, 50)
         NEXT
         IF gridDiv = 0 AND zoom >= 4 THEN
             FOR s = scrollX TO scrollX + vis
@@ -4497,15 +5089,17 @@ SUB draw_roll
 
     ' octave markers: a brighter line under every C, labelled at both edges
     ' of the grid (and on the piano keys)
-    FOR nt = NOTE_LO TO NOTE_HI - 1
+    FOR nt = viewLo TO view_hi
         IF nt MOD 12 = 0 THEN
             y = note_y(nt) + PX_SEMI \ 2 - 1
-            LINE (CANVAS_X, y)-(CANVAS_X + CANVAS_W - 1, y), _RGB32(64, 78, 104)
-            COLOR _RGB32(150, 160, 180)
-            _PRINTSTRING (RULER_X - 26, y - 13), "C" + LTRIM$(STR$(nt \ 12 - 1))
-            COLOR _RGB32(90, 104, 132)
-            _PRINTSTRING (CANVAS_X + 3, y - 15), "C" + LTRIM$(STR$(nt \ 12 - 1))
-            _PRINTSTRING (CANVAS_X + CANVAS_W - 22, y - 15), "C" + LTRIM$(STR$(nt \ 12 - 1))
+            band CANVAS_X, CANVAS_X + CANVAS_W - 1, y, y, _RGB32(64, 78, 104)
+            IF y - 15 >= CANVAS_Y AND y <= CANVAS_Y + CANVAS_H THEN
+                COLOR _RGB32(150, 160, 180)
+                _PRINTSTRING (RULER_X - 26, y - 13), "C" + LTRIM$(STR$(nt \ 12 - 1))
+                COLOR _RGB32(90, 104, 132)
+                _PRINTSTRING (CANVAS_X + 3, y - 15), "C" + LTRIM$(STR$(nt \ 12 - 1))
+                _PRINTSTRING (CANVAS_X + CANVAS_W - 22, y - 15), "C" + LTRIM$(STR$(nt \ 12 - 1))
+            END IF
         END IF
     NEXT
 
@@ -4527,19 +5121,26 @@ SUB draw_roll
             vc = voice_col(k)
             ' dimmed, unless G makes them editable too
             IF NOT allVoices THEN vc = _RGB32(_RED32(vc) * 0.55, _GREEN32(vc) * 0.55, _BLUE32(vc) * 0.55)
-            FOR s = scrollX TO scrollX + vis
-                v = voice_step(cur, k, s)
+            IF vMute(k) THEN vc = _RGB32(_RED32(vc) * 0.4, _GREEN32(vc) * 0.4, _BLUE32(vc) * 0.4) ' muted
+            th = bar_th: runV = 0
+            FOR s = scrollX TO scrollX + vis + 1
+                v = 0
+                IF s <= scrollX + vis THEN v = voice_step(cur, k, s)
+                x = CANVAS_X + (s - scrollX) * zoom
+                IF v <> runV THEN ' a run of one pitch ended: its name, if it fits
+                    IF runV THEN bar_label runX, x, runY, th, runV, _RGB32(_RED32(vc) \ 4, _GREEN32(vc) \ 4, _BLUE32(vc) \ 4)
+                    runV = v: runX = x
+                END IF
                 IF v THEN
                     nn = div_note(v)
                     IF nn >= NOTE_HI THEN nn = NOTE_HI - 0.5
                     IF nn < NOTE_LO THEN nn = NOTE_LO
-                    y = note_y(nn)
-                    x = CANVAS_X + (s - scrollX) * zoom
+                    y = note_y(nn): runY = y
                     col = vc
                     IF allVoices THEN
                         IF in_sel(s, v) THEN col = _RGB32(90, 220, 255)
                     END IF
-                    LINE (x, y - 1)-(x + w, y + 1), col, BF
+                    band x, x + w, y - th \ 2, y - th \ 2 + th - 1, col
                 END IF
             NEXT
         END IF
@@ -4548,22 +5149,29 @@ SUB draw_roll
     ' two sounding steps in a row, so jumps and slides read as one shape;
     ' silence breaks the line.
     prevY = -1
-    FOR s = scrollX TO scrollX + vis
-        IF s >= steps_of(cur) THEN EXIT FOR
+    th = bar_th: runV = 0
+    FOR s = scrollX TO scrollX + vis + 1
         x = CANVAS_X + (s - scrollX) * zoom
-        v = get_step(cur, s)
+        v = 0
+        IF s <= scrollX + vis AND s < steps_of(cur) THEN v = get_step(cur, s)
+        IF v <> runV THEN ' a run of one pitch ended: its name, if it fits
+            IF runV THEN bar_label runX, x, runY, th, runV, _RGB32(40, 24, 0)
+            runV = v: runX = x
+        END IF
+        IF s > scrollX + vis OR s >= steps_of(cur) THEN EXIT FOR
         IF v = 0 THEN prevY = -1
         IF v THEN
             nn = div_note(v)
             col = _RGB32(255, 170, 40)
+            IF vMute(sndAct(cur)) THEN col = _RGB32(105, 72, 26) ' muted
             IF nn >= NOTE_HI THEN nn = NOTE_HI - 0.5: col = _RGB32(255, 120, 200)
             IF nn < NOTE_LO THEN nn = NOTE_LO: col = _RGB32(255, 120, 200)
-            y = note_y(nn)
+            y = note_y(nn): runY = y
             IF in_sel(s, v) THEN col = _RGB32(90, 220, 255)
-            IF prevY >= 0 AND prevY <> y THEN LINE (x, prevY)-(x, y), _RGB32(120, 80, 20)
+            IF prevY >= 0 AND prevY <> y THEN LINE (x, clip_y(prevY))-(x, clip_y(y)), _RGB32(120, 80, 20)
             ' full width, as in DN1PLAY: a run of one pitch reads as one solid
-            ' bar instead of a row of dots
-            LINE (x, y - 1)-(x + w, y + 1), col, BF
+            ' bar instead of a row of dots (thicker when zoomed in)
+            band x, x + w, y - th \ 2, y - th \ 2 + th - 1, col
             prevY = y
         ELSE
             LINE (x, CANVAS_Y + CANVAS_H - 3)-(x + w - 1, CANVAS_Y + CANVAS_H - 1), _RGB32(70, 80, 100), BF
@@ -4636,23 +5244,24 @@ SUB draw_roll
         s = mouseStep
         IF grid_snap THEN s = cell_start(cell_of(mouseStep))
         x = CANVAS_X + (s - scrollX) * zoom
-        LINE (x, y - 2)-(x + (note_tool_end(s) - s) * zoom - 2, y + 2), _RGBA32(255, 255, 255, 110), BF
+        band x, x + (note_tool_end(s) - s) * zoom - 2, y - 2, y + 2, _RGBA32(255, 255, 255, 110)
     END IF
     IF mouseIn AND drawing = 0 AND (tool = TOOL_DRAW OR tool = TOOL_ERASE OR tool = TOOL_LINE OR tool = TOOL_WAVE) THEN
         y = note_y(INT(mouseNote + 0.5))
         IF NOT snapOn THEN y = note_y(mouseNote)
         IF grid_snap THEN
             x = CANVAS_X + (cell_start(cell_of(mouseStep)) - scrollX) * zoom
-            LINE (x, y - 2)-(x + (cell_start(cell_of(mouseStep) + 1) - cell_start(cell_of(mouseStep))) * zoom - 2, y + 2), _RGBA32(255, 255, 255, 120), BF
+            band x, x + (cell_start(cell_of(mouseStep) + 1) - cell_start(cell_of(mouseStep))) * zoom - 2, y - 2, y + 2, _RGBA32(255, 255, 255, 120)
         ELSE
             x = CANVAS_X + (mouseStep - scrollX) * zoom
-            LINE (x, y - 2)-(x + w - 1, y + 2), _RGBA32(255, 255, 255, 120), BF
+            band x, x + w - 1, y - 2, y + 2, _RGBA32(255, 255, 255, 120)
         END IF
     END IF
 
     LINE (CANVAS_X - 1, CANVAS_Y - 1)-(CANVAS_X + CANVAS_W, CANVAS_Y + CANVAS_H), _RGB32(70, 80, 100), B
+    draw_vbar
     COLOR _RGB32(100, 115, 140)
-    _PRINTSTRING (CANVAS_X, CANVAS_Y + CANVAS_H + 6), "Step" + STR$(scrollX) + " -" + STR$(scrollX + vis) + "   (140 steps = 1 second)   wheel scrolls, Ctrl+wheel zooms"
+    _PRINTSTRING (CANVAS_X, CANVAS_Y + CANVAS_H + 6), "Step" + STR$(scrollX) + " -" + STR$(scrollX + vis) + "   (140 steps = 1 second)   wheel scrolls, Ctrl+wheel zooms, Shift+wheel: key size"
 END SUB
 
 
@@ -4663,6 +5272,215 @@ END SUB
 ' Keep a y inside the piano roll (boxes for pitches off the roll are cut off
 ' at its edge instead of drawing over the toolbar or the scope).
 '
+'--- vertical zoom: the note range in view ------------------------------------
+
+''
+' Row height from viewN, and viewLo kept in range (no empty space above the
+' top note or below the bottom one).
+'
+SUB fit_view
+    IF viewN < 12 THEN viewN = 12
+    IF viewN > NOTE_HI - NOTE_LO THEN viewN = NOTE_HI - NOTE_LO
+    PX_SEMI = CANVAS_H \ viewN
+    IF PX_SEMI < pxFull THEN PX_SEMI = pxFull
+    IF viewLo > NOTE_HI - CANVAS_H / PX_SEMI THEN viewLo = INT(NOTE_HI - CANVAS_H / PX_SEMI)
+    IF viewLo < NOTE_LO THEN viewLo = NOTE_LO
+END SUB
+
+
+''
+' The highest note row that shows (the top one may be cut off).
+'
+FUNCTION view_hi&
+    DIM h AS LONG ' (reading view_hi here would call it again)
+    h = viewLo + (CANVAS_H + PX_SEMI - 1) \ PX_SEMI - 1
+    IF h > NOTE_HI - 1 THEN h = NOTE_HI - 1
+    view_hi = h
+END FUNCTION
+
+
+FUNCTION view_zoomed%
+    view_zoomed = PX_SEMI > pxFull
+END FUNCTION
+
+
+''
+' Shift+wheel: 84 notes (all), 72, 60, 48, 36, 24, 12 (one octave) - the
+' note under the mouse stays where it is.
+'
+SUB vzoom (dirn AS LONG, my AS LONG)
+    DIM anchor AS DOUBLE, ay AS LONG, n AS LONG
+    ay = my
+    IF ay < CANVAS_Y OR ay >= CANVAS_Y + CANVAS_H THEN ay = CANVAS_Y + CANVAS_H \ 2
+    anchor = y_note(ay)
+    n = ((viewN + 11) \ 12) * 12 ' whole octaves
+    n = n + dirn * 12
+    IF n > NOTE_HI - NOTE_LO THEN n = NOTE_HI - NOTE_LO
+    IF n < 12 THEN n = 12
+    viewN = n
+    fit_view
+    ' keep the anchor note under the mouse
+    viewLo = CLNG(anchor + 0.5 - (CANVAS_Y + CANVAS_H - ay) / PX_SEMI)
+    fit_view
+    vbarUntil = TIMER + 1.5
+    IF view_zoomed THEN
+        set_status "Notes " + note_name(viewLo) + " - " + note_name(view_hi) + "  (Shift+wheel: key size, wheel over the keys or the bar: scroll)"
+    ELSE
+        set_status "All notes in view"
+    END IF
+END SUB
+
+
+''
+' Double click on the keys: zoom the notes to fit the selection, or every
+' note of the sound (all voices), with a semitone to spare above and below.
+'
+SUB fit_notes
+    DIM lo AS LONG, hi AS LONG, k AS LONG, i AS LONG, n AS LONG, d AS STRING, rows AS DOUBLE
+    lo = 999: hi = -1
+    IF selOn THEN
+        lo = selLo: hi = selHi
+    ELSE
+        FOR k = 1 TO VOICES
+            d = voice_data(cur, k)
+            FOR i = 1 TO LEN(d) - 1 STEP 2
+                n = ASC(d, i) + ASC(d, i + 1) * 256&
+                IF n THEN
+                    n = INT(div_note(n) + 0.5)
+                    IF n < lo THEN lo = n
+                    IF n > hi THEN hi = n
+                END IF
+            NEXT
+        NEXT
+    END IF
+    IF hi < 0 THEN set_status "No notes to fit": EXIT SUB
+    IF lo < NOTE_LO THEN lo = NOTE_LO
+    IF hi > NOTE_HI - 1 THEN hi = NOTE_HI - 1
+    viewN = hi - lo + 3
+    fit_view
+    rows = CANVAS_H / PX_SEMI
+    viewLo = INT((lo + hi + 1) / 2 - rows / 2 + 0.5) ' centred
+    fit_view
+    vbarUntil = TIMER + 1.5
+    IF selOn THEN k = 0 ELSE k = 1
+    set_status "Fit " + MID$("the selection's", 1, -14 * (k = 0)) + MID$("the sound's", 1, -11 * (k = 1)) + " notes: " + note_name(lo) + " - " + note_name(hi) + "  (middle click: notes and length)"
+END SUB
+
+
+''
+' Double click on the time ruler: zoom to fit the selection, or the whole
+' sound, across the roll (on the zoom ladder, so steps stay even).
+'
+SUB fit_length
+    DIM s0 AS LONG, s1 AS LONG, z AS DOUBLE, lv AS STRING, p AS LONG, q AS LONG, v AS DOUBLE
+    s0 = 0: s1 = snd_len(cur)
+    IF selOn THEN s0 = selS0: s1 = selS1
+    IF s1 <= s0 THEN set_status "Nothing to fit": EXIT SUB
+    lv = "64 48 32 24 16 12 10 8 6 5 4 3 2 1 -2 -3 -4 -5 -6 -8 -10 " ' (zoom_step's ladder)
+    z = 0.1
+    p = 1
+    DO
+        q = INSTR(p, lv, " ")
+        IF q = 0 THEN EXIT DO
+        v = VAL(MID$(lv, p, q - p))
+        IF v < 0 THEN v = 1 / -v
+        IF (s1 - s0) * v <= CANVAS_W - 4 THEN z = v: EXIT DO
+        p = q + 1
+    LOOP
+    set_zoom_at z, CANVAS_X
+    scroll_to s0
+    set_status "Fit " + LTRIM$(STR$(s1 - s0)) + " steps (zoom " + zoom_name + ")  (middle click: notes and length)"
+END SUB
+
+
+SUB vscroll (dn AS LONG)
+    viewLo = viewLo + dn
+    fit_view
+    vbarUntil = TIMER + 1.5
+END SUB
+
+
+''
+' The note scrollbar, left of the piano keys: shown while zoomed and in use
+' (scrolling, zooming, the mouse over the keys, or dragging it).
+'
+FUNCTION vbar_shown%
+    IF NOT view_zoomed THEN EXIT FUNCTION
+    vbar_shown = TIMER < vbarUntil OR drawing = 20 OR (mlx >= RULER_X - 12 AND mlx < CANVAS_X AND mly >= CANVAS_Y AND mly < CANVAS_Y + CANVAS_H)
+END FUNCTION
+
+
+SUB vbar_thumb (t AS LONG, b AS LONG)
+    DIM full AS DOUBLE
+    full = NOTE_HI - NOTE_LO
+    t = CANVAS_Y + CLNG((NOTE_HI - (viewLo + CANVAS_H / PX_SEMI)) / full * CANVAS_H)
+    b = CANVAS_Y + CLNG((NOTE_HI - viewLo) / full * CANVAS_H) - 1
+    IF b - t < 12 THEN b = t + 12
+END SUB
+
+
+SUB draw_vbar
+    DIM t AS LONG, b AS LONG, x AS LONG, c AS _UNSIGNED LONG
+    IF NOT vbar_shown THEN EXIT SUB
+    x = RULER_X - 9
+    LINE (x, CANVAS_Y)-(x + 5, CANVAS_Y + CANVAS_H - 1), _RGB32(30, 36, 50), BF
+    vbar_thumb t, b
+    IF drawing = 20 THEN c = _RGB32(160, 190, 240) ELSE c = _RGB32(110, 130, 170)
+    LINE (x, t)-(x + 5, b), c, BF
+END SUB
+
+
+''
+' Dragging the scrollbar (drawing 20): the thumb follows the mouse.
+'
+SUB vbar_drag (my AS LONG)
+    DIM t AS LONG
+    t = my - vbarGrab
+    viewLo = CLNG(NOTE_HI - CANVAS_H / PX_SEMI - (t - CANVAS_Y) / CANVAS_H * (NOTE_HI - NOTE_LO))
+    fit_view
+    vbarUntil = TIMER + 1.5
+END SUB
+
+
+''
+' A filled band across the roll, cut off at its top and bottom edges.
+'
+SUB band (x0 AS LONG, x1 AS LONG, ya AS LONG, yb AS LONG, c AS _UNSIGNED LONG)
+    DIM a AS LONG, b AS LONG
+    a = ya: b = yb
+    IF a < CANVAS_Y THEN a = CANVAS_Y
+    IF b > CANVAS_Y + CANVAS_H - 1 THEN b = CANVAS_Y + CANVAS_H - 1
+    IF a <= b THEN LINE (x0, a)-(x1, b), c, BF
+END SUB
+
+
+''
+' A note's name on its bar (x0 - x1 at y, th tall) when it fits.
+'
+SUB bar_label (x0 AS LONG, x1 AS LONG, y AS LONG, th AS LONG, v AS LONG, c AS _UNSIGNED LONG)
+    DIM t AS STRING, fh AS LONG
+    IF th < 8 OR v = 0 THEN EXIT SUB
+    t = note_name(INT(div_note(v) + 0.5))
+    IF x1 - x0 < LEN(t) * 8 + 4 THEN EXIT SUB
+    IF x0 + 2 < CANVAS_X OR x0 + 2 + LEN(t) * 8 > CANVAS_X + CANVAS_W THEN EXIT SUB
+    IF th >= 15 THEN fh = 16 ELSE fh = 8
+    IF y - fh \ 2 < CANVAS_Y OR y + fh \ 2 > CANVAS_Y + CANVAS_H THEN EXIT SUB
+    IF fh = 8 THEN _FONT 8
+    COLOR c
+    _PRINTSTRING (x0 + 3, y - fh \ 2), t
+    IF fh = 8 THEN _FONT 16
+END SUB
+
+
+''
+' How thick note bars are: thin with all the notes in view, filling most of
+' the row when zoomed in.
+'
+FUNCTION bar_th&
+    IF PX_SEMI < 8 THEN bar_th = 3 ELSE bar_th = PX_SEMI - 3
+END FUNCTION
+
+
 FUNCTION clip_y& (y AS LONG)
     clip_y = y
     IF y < CANVAS_Y THEN clip_y = CANVAS_Y
@@ -4857,7 +5675,13 @@ SUB help_text (t() AS STRING, n AS LONG)
     help_add t(), n, "Ctrl+1 ... 4|edit voice 1 - 4"
     help_add t(), n, "Ctrl+5|G: edit every voice at once"
     help_add t(), n, "Ctrl+J|chords as ARP  /  PWM"
+    help_add t(), n, "Ctrl+Shift+J|ARP speed (or its box)"
+    help_add t(), n, "Vol (PWM)|wheel / drag; double click: 100%"
+    help_add t(), n, "fader under G|master volume (everything)"
+    help_add t(), n, "middle click|M/S/R: clear all; faders: 100%"
     help_add t(), n, "hold keys|STEP record: a chord"
+    help_add t(), n, "M  S  R buttons|mute / solo / arm for recording"
+    help_add t(), n, "R on voices|chords recorded across them"
     help_add t(), n, "#Playing notes"
     help_add t(), n, "Z S X D C V ...|lower octave (Caps Lock on)"
     help_add t(), n, "Q 2 W 3 E R ...|upper octave"
@@ -4893,8 +5717,13 @@ SUB help_text (t() AS STRING, n AS LONG)
     help_add t(), n, "PgUp  PgDn|next dot (Note tool: bar)"
     help_add t(), n, "Up  Down|previous  /  next sound"
     help_add t(), n, "wheel|scroll (Ctrl: zoom)"
+    help_add t(), n, "Shift+wheel|key size: all notes ... 1 octave"
+    help_add t(), n, "wheel on keys|scroll the notes up / down"
+    help_add t(), n, "2x click keys|fit the notes (or selection)"
+    help_add t(), n, "2x click ruler|fit the length (or selection)"
+    help_add t(), n, "middle click|fit both"
     help_add t(), n, "click the ruler|move the cursor"
-    help_add t(), n, "Ctrl+G  Ctrl+B|grid size  /  tempo"
+    help_add t(), n, "Ctrl+G  Ctrl+B|grid size  /  tempo (retimes)"
     help_add t(), n, "' (quote)|grid lines on  /  off"
     help_add t(), n, "Ctrl+=  -  0|display scale"
     help_add t(), n, "#Sounds and files"
@@ -5088,9 +5917,10 @@ SUB do_layout (lw AS LONG, lh AS LONG)
     SCR_W = lw: SCR_H = lh
     CANVAS_W = SCR_W - CANVAS_X - 8
     avail = SCR_H - CANVAS_Y - 28 - (SCOPE_H + 4) - 32 ' footer, scope, status line
-    PX_SEMI = avail \ (NOTE_HI - NOTE_LO)
-    IF PX_SEMI < 4 THEN PX_SEMI = 4
-    CANVAS_H = PX_SEMI * (NOTE_HI - NOTE_LO)
+    pxFull = avail \ (NOTE_HI - NOTE_LO)
+    IF pxFull < 4 THEN pxFull = 4
+    CANVAS_H = pxFull * (NOTE_HI - NOTE_LO)
+    fit_view
     SCOPE_Y = CANVAS_Y + CANVAS_H + 28
     LIST_ROWS = (CANVAS_Y + CANVAS_H - LIST_Y) \ ROW_H
     IF zoom > 0 THEN scroll_to scrollX ' (not yet set the first time, at start-up)
@@ -5184,7 +6014,7 @@ END FUNCTION
 
 
 SUB settings_save
-    DIM ff AS LONG, f AS STRING
+    DIM ff AS LONG, f AS STRING, k AS LONG
     f = cfg_path
     errNum = 0
     ff = FREEFILE
@@ -5211,6 +6041,15 @@ SUB settings_save
     PRINT #ff, "follow="; LTRIM$(STR$(followOn))
     PRINT #ff, "loop="; LTRIM$(STR$(loopOn))
     PRINT #ff, "poly="; LTRIM$(STR$(polyMode))
+    PRINT #ff, "arprate="; LTRIM$(STR$(arpRate))
+    PRINT #ff, "master="; LTRIM$(STR$(masterVol))
+    FOR k = 1 TO VOICES
+        PRINT #ff, "vol"; LTRIM$(STR$(k)); "="; LTRIM$(STR$(vVol(k)))
+    NEXT
+    PRINT #ff, "lastdir="; lastDir
+    PRINT #ff, "exportdir="; exportDir
+    PRINT #ff, "vzoom="; LTRIM$(STR$(viewN))
+    PRINT #ff, "vlow="; LTRIM$(STR$(viewLo))
     CLOSE #ff
 END SUB
 

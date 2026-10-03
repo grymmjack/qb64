@@ -24,6 +24,7 @@
 '   -s SECS  stop after SECS seconds
 '   -g       no rest between repeated notes of the same pitch
 '   -p MML   convert this PLAY string (in quotes) instead of a file
+'   -r N     ARP speed: each chord note lasts N steps in the mix (default 3)
 '   -i       just list the file's channels, notes and length
 '
 ' The IFS format holds 64 KB. Every step is 2 bytes per voice plus 2 for the
@@ -35,13 +36,14 @@ OPTION _EXPLICIT
 '$INCLUDE:'PCSMIDI.BI'
 
 CONST MAX_STEPS = 32000
+DIM SHARED arpRate AS LONG
 
 DIM inFile AS STRING, outFile AS STRING, a AS STRING, i AS LONG, nv AS LONG, tr AS LONG
 DIM chans AS LONG, nm AS STRING, appendIt AS INTEGER, secs AS DOUBLE, gap AS LONG, infoOnly AS INTEGER
 DIM maxSteps AS LONG, k AS LONG, p AS LONG, c AS LONG, t AS STRING, mml AS STRING, ok AS INTEGER, ext AS STRING
 
 CHDIR _STARTDIR$ ' file names are relative to where it was run from, not where it lives
-nv = 4: gap = 1
+nv = 4: gap = 1: arpRate = 3
 i = 1
 DO WHILE i <= _COMMANDCOUNT
     a = COMMAND$(i)
@@ -53,6 +55,7 @@ DO WHILE i <= _COMMANDCOUNT
         CASE "-a": appendIt = -1
         CASE "-g": gap = 0
         CASE "-i": infoOnly = -1
+        CASE "-r": i = i + 1: arpRate = VAL(COMMAND$(i))
         CASE "-p": i = i + 1: mml = COMMAND$(i)
         CASE "-c"
             i = i + 1: t = COMMAND$(i) + ","
@@ -123,6 +126,7 @@ SUB usage
     PRINT "  -a       add the sound to out.snd instead of replacing it"
     PRINT "  -s SECS  stop after SECS seconds"
     PRINT "  -g       no rest between repeated notes of the same pitch"
+    PRINT "  -r N     ARP speed: each chord note lasts N steps in the mix (default 3)"
     PRINT "  -p MML   convert this PLAY string instead of a file"
     PRINT "  -i       list the file's channels, notes and length"
     SYSTEM 1
@@ -211,7 +215,7 @@ FUNCTION write_bank% (fileName AS STRING, nm AS STRING, appendIt AS INTEGER)
 
     ' the new sound: its ARP mix, then each voice
     names(en) = nm: pris(en) = 10
-    IF pcsmidiUsed > 1 THEN datas(en) = PCSMIDI_ArpMix ELSE datas(en) = pcsmidiVoice(1)
+    IF pcsmidiUsed > 1 THEN datas(en) = PCSMIDI_ArpMix(arpRate) ELSE datas(en) = pcsmidiVoice(1)
     en = en + 1
     IF pcsmidiUsed > 1 THEN
         FOR k = 1 TO pcsmidiUsed

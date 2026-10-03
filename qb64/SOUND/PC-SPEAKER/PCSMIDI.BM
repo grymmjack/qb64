@@ -475,10 +475,12 @@ $IF PCSMIDI_BM = UNDEFINED THEN
 
     ''
     ' The voices combined the ARP way (what a game can play): the notes
-    ' sounding at a step take turns, one per step. Same as PCSEDIT's.
+    ' sounding at a step take turns, each for rate steps. Same as PCSEDIT's.
     '
-    FUNCTION PCSMIDI_ArpMix$
-        DIM r AS STRING, s AS LONG, k AS LONG, n AS LONG, v AS LONG
+    FUNCTION PCSMIDI_ArpMix$ (rate AS LONG)
+        DIM r AS STRING, s AS LONG, k AS LONG, n AS LONG, v AS LONG, rt AS LONG
+        rt = rate
+        IF rt < 1 THEN rt = 1
         DIM notes(1 TO PCSMIDI_VOICES) AS LONG
         r = SPACE$(pcsmidiSteps * 2)
         FOR s = 0 TO pcsmidiSteps - 1
@@ -490,7 +492,7 @@ $IF PCSMIDI_BM = UNDEFINED THEN
                 END IF
             NEXT
             v = 0
-            IF n THEN v = notes((s MOD n) + 1)
+            IF n THEN v = notes(((s \ rt) MOD n) + 1)
             MID$(r, s * 2 + 1, 2) = CHR$(v AND 255) + CHR$(v \ 256)
         NEXT
         PCSMIDI_ArpMix = r

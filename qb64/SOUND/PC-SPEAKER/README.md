@@ -119,10 +119,29 @@ and try again.
 
 PCSEDIT **remembers** the window size, position and display scale, plus your
 working settings (grid and tempo, metronome mode and volume, count-in,
-quantize, follow, loop, grid lines, audition, snap, octave, note length and
-zoom). They are saved when you quit, to `~/.config/pcsedit.ini`
+quantize, follow, loop, grid lines, audition, snap, octave, note length,
+zoom, key zoom and ARP/PWM) and **the last folders you used**: the open, save
+and import dialogs start in the folder of the last bank you opened, saved
+or imported, and Ctrl+E in the folder of the last export. They are saved when you quit, to `~/.config/pcsedit.ini`
 (`%APPDATA%\PCSEDIT.ini` on Windows), a plain `key=value` text file. Delete it
 to go back to the defaults.
+
+**Zooming the keys:** **Shift+wheel** makes the note rows taller or
+shorter: every note in view (as it starts), then 6, 5, 4, 3, 2 octaves, down
+to a single octave. The note under the mouse stays put. Zoomed in:
+
+* the wheel over the piano keys scrolls up and down through the notes, and a
+  thin scrollbar appears left of the keys while you scroll, zoom or point at
+  the keys (drag it, or click above or below its thumb to jump);
+* the keys show their names (C4, F#4, ...) once there is room, and note bars
+  grow thicker and show their note names when they're long enough.
+
+**Zoom to fit:** double click the piano keys to fit the notes in view (the
+selection's, or every note of the sound in all voices). Double click the
+time ruler to fit the length (the selection, or the whole sound). A middle
+click on the roll does both.
+
+The zoom and the notes in view are remembered between sessions.
 
 **Reading the roll:** white-key rows are lighter and black-key rows darker, like
 a piano roll. Every C has a brighter octave line, labelled at both edges of the
@@ -181,7 +200,11 @@ Shift+click to get a straight line from the last point.
 
 **Musical grid:** **Ctrl+G** steps through the grid sizes: off, 1/4, 1/8,
 1/16, 1/32, 1/64, 1/128, then 1/8 and 1/16 triplets (**Ctrl+Shift+G** goes back). **Ctrl+B**
-sets the tempo, which starts at 120 BPM. With the grid on:
+sets the tempo, which starts at 120 BPM. When the sound already has notes, a new tempo asks
+whether to retime them: **Yes** speeds the notes up or slows them down to
+the new tempo (every voice; the selection, loop region and cursor go along;
+Ctrl+Z undoes it), **No** changes only the grid, **Cancel** keeps the old
+tempo. With the grid on:
 
 * the roll shows a line for every cell, a stronger one for every beat, and a
   numbered line for every bar (4/4), and the cursor shows *bar.beat*;
@@ -273,6 +296,37 @@ voices** and two ways to hear them together:
   note in a voice that is free there, so clicking notes above each other
   builds a chord. Draw, Line and Wave still draw in the voice whose chip is
   underlined. Picking a voice (Ctrl+1-4) leaves G.
+* **M / S / R** buttons sit under each voice chip:
+  * **M** mutes the voice: it isn't heard when the sound plays, loops or is
+    exported (Ctrl+E). Saving keeps it. Muted notes are faded in the roll.
+  * **S** solos it: the other voices are muted. **S** on another voice while
+    one is soloed adds that voice too, and from then on it is just mutes
+    (the S light goes out, M changes them). **S** on the soloed voice again
+    puts the mutes back as they were.
+  * **R** arms the voice for recording. With voices armed, recording plain
+    notes (computer keys or MIDI, STEP or LIVE, quantized or not) spreads
+    chords over the armed voices only: arm 2, 3 and 4 and a triad goes into
+    those three, leaving the melody in voice 1 alone. Each key takes the
+    first free armed voice; more keys than armed voices are left out. With
+    nothing armed, recording goes into the voice you are editing, as before.
+* **ARP speed:** the small box under the ARP / PWM chip (click it, use the
+  wheel on it, or **Ctrl+Shift+J**) sets how many steps each chord note
+  lasts before the next one takes over: 1 (a buzzy blur at 140 notes a
+  second), 2, 3 (the default), 4, 6, 8, 12 or 16 (a slow, clear arpeggio). The ARP
+  version saved in the bank uses it too, so games play it the same way.
+* **Vol** (PWM mode): a fader per voice, 0 at the bottom, 100% at the line
+  in the middle, 200% at the top. Click or drag in it to set the level, use
+  the wheel on it, or double click it for 100%. While a sound plays, each
+  fader lights up when its voice is sounding. A 1-bit speaker can only get
+  quieter or louder through PWM, so the levels do nothing in ARP mode. In
+  PWM the voices share the speaker's swing evenly, which is clean at 100%;
+  turning a voice up past 100% brings it forward but can clip.
+* **Master volume:** the tall fader under **G** sets the level of
+  everything you hear: ARP or PWM, the keys, and Ctrl+E exports (100% is
+  the middle line, up to 200%).
+* **Middle click** on any M, S or R button clears all of them (every mute,
+  the solo, and every record arm); on any fader, it puts every fader back to
+  100%.
 * **Chords from the keys:** in STEP record, hold a note and press more. The
   first note goes in the voice you're editing and the others go in the next
   voices, at the same steps.
@@ -422,6 +476,7 @@ qb64pe -x MID2SND.BAS
 | `-s SECS` | stop after SECS seconds |
 | `-g` | no one-step rest between repeated notes of the same pitch (by default there is one, so they don't run together into one long note) |
 | `-p MML` | convert this PLAY string instead of a file |
+| `-r N` | ARP speed for the mix: each chord note lasts N steps (default 3) |
 | `-i` | list the file's channels, notes, length and the most notes at once |
 
 ### PLAY strings (MML)

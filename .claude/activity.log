@@ -21000,3 +21000,2286 @@
   $ shrunk to fit in small ones), over a dimmed editor.
   $ 
   $ Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>" && timeout 100 git push -q; git log --oneline -1; git status -sb | head -1
+2026-10-03T11:00:10-0400  INFO     bash_end      [ok] 3L stdout
+  | warning: in the working copy of '.claude/activity.log', CRLF will be replaced by LF the next time Git touches it
+  | cb533e3c SOUND/PC-SPEAKER: PCSEDIT help screen in coloured sections
+  | ## main...origin/main
+2026-10-03T11:04:51-0400  NOTICE   prompt        can you add a few buttons under the voices - M / S / R - 
+  > can you add a few buttons under the voices - M / S / R - 
+  > 
+  > M = Mute
+  > S = Solo (when clicked it mutes others) if clicking solo on other voices while already soloed, adds to solo and unmutes  that voice. Solo = Mute others, first click. Additional other lane voices when clicked and already solo = unmute them. unsolo but keep mutes - so basically S = hear one, if want to hear more than one, just shows it's actually muting others and removes the S from original S - make sense?
+  > 
+  > R = Record - When midi recording automatically spreads voices for chords across the available voices - up to the limit of voice count. So if chord is played wiht a triad and R is set for 2,3,4 it will only record the notes for that triad on 2,3,4 and leave voice 1 alone (for presumably melody like in birthday tune).
+  > 
+  > Make sense? :)
+2026-10-03T11:05:49-0400  INFO     bash_start    cd /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER && grep -n "^SUB note_on" -A22 PCSEDIT.BAS | head -24; grep -n "^FUNCTION step_divs\|^FUNCTION mix_step\|step_divs(\|mix_step(" PCSEDIT.BAS
+  > cwd: /home/grymmjack/git/qb64
+  $ cd /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER && grep -n "^SUB note_on" -A22 PCSEDIT.BAS | head -24; grep -n "^FUNCTION step_divs\|^FUNCTION mix_step\|step_divs(\|mix_step(" PCSEDIT.BAS
+2026-10-03T11:05:49-0400  INFO     bash_end      [ok] 32L stdout
+  | 1271:SUB note_on (n AS LONG)
+  | 1272-    IF n < 0 OR n > 127 THEN EXIT SUB
+  | 1273-    stampCount = stampCount + 1
+  | 1274-    noteStamp(n) = stampCount
+  | 1275-    heldNote = n
+  | 1276-    IF playing THEN stop_playing
+  | 1277-
+  | 1278-    SELECT CASE recMode
+  | 1279-        CASE REC_STEP
+  | 1280-            ensure_target
+  | 1281-            step_enter n
+  | 1282-        CASE REC_LIVE
+  | 1283-            IF NOT recording THEN
+  | 1284-                ensure_target
+  | 1285-                push_undo
+  | 1286-                begin_live cursorStep, 0
+  | 1287-            END IF
+  | 1288-    END SELECT
+  | 1289-    start_voice n ' after ensure_target, which may switch sounds
+  | 1290-    IF recMode = REC_LIVE THEN rec_event n, -1
+  | 1291-END SUB
+  | 1292-
+  | 1293-
+  | 587:        speaker mix_step(cur, playPos)
+  | 721:    v = mix_step(instIdx, p)
+  | 813:FUNCTION mix_step& (i AS LONG, s AS LONG)
+  | 1044:FUNCTION step_divs& (i AS LONG, s AS LONG, d() AS LONG)
+  | 1074:            n = step_divs(cur, playPos, d())
+  | 1624:            IF mix_step(cur, keepLen) THEN recLastNote = keepLen: EXIT FOR
+  | 3981:                v = mix_step(i, s)
+  | 4130:            n = step_divs(cur, s, d())
+  | 4134:            v = mix_step(cur, s)
+2026-10-03T11:06:16-0400  INFO     bash_start    grep -n "LIST_ROWS" PCSEDIT.BAS | head -5; grep -n "LIST_Y - 40" PCSEDIT.BAS; grep -n "col = _RGB32(255, 170, 40)" PCSEDIT.BAS
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ grep -n "LIST_ROWS" PCSEDIT.BAS | head -5; grep -n "LIST_Y - 40" PCSEDIT.BAS; grep -n "col = _RGB32(255, 170, 40)" PCSEDIT.BAS
+2026-10-03T11:06:16-0400  INFO     bash_end      [ok] 9L stdout
+  | 105:DIM SHARED LIST_ROWS AS LONG
+  | 2018:        ELSEIF mx >= LIST_X AND mx < LIST_X + LIST_W AND my >= LIST_Y AND my < LIST_Y + LIST_ROWS * ROW_H THEN
+  | 3734:    IF cur - 1 >= listTop + LIST_ROWS THEN listTop = cur - LIST_ROWS
+  | 4350:    FOR i = 0 TO LIST_ROWS - 1
+  | 4365:    IF sndCount > LIST_ROWS THEN
+  | 4379:    y = LIST_Y - 40
+  | 4417:    y = LIST_Y - 40
+  | 938:        CASE 1: voice_col = _RGB32(255, 170, 40)
+  | 4558:            col = _RGB32(255, 170, 40)
+2026-10-03T11:06:19-0400  INFO     bash_start    grep -n "LIST_ROWS =" PCSEDIT.BAS; n=$(grep -n "^SUB render_take" PCSEDIT.BAS | cut -d: -f1); sed -n "$((n+40)),$((n+75))p" PCSEDIT.BAS
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ grep -n "LIST_ROWS =" PCSEDIT.BAS; n=$(grep -n "^SUB render_take" PCSEDIT.BAS | cut -d: -f1); sed -n "$((n+40)),$((n+75))p" PCSEDIT.BAS
+2026-10-03T11:06:19-0400  INFO     bash_end      [ok] 37L stdout
+  | 5095:    LIST_ROWS = (CANVAS_Y + CANVAS_H - LIST_Y) \ ROW_H
+  |     IF endS > MAX_STEPS THEN endS = MAX_STEPS
+  | 
+  |     ' each step plays the most recently started note that is still sounding
+  |     FOR s = recFrom TO endS - 1
+  |         best = -1
+  |         FOR k = 0 TO nn - 1
+  |             IF s >= ns(k) AND s < ne(k) THEN
+  |                 IF best < 0 THEN
+  |                     best = k
+  |                 ELSEIF ns(k) >= ns(best) THEN
+  |                     best = k
+  |                 END IF
+  |             END IF
+  |         NEXT
+  |         v = 0
+  |         IF best >= 0 THEN
+  |             IF keysMode = KEYS_SOUND THEN
+  |                 v = voice_div(s - ns(best), nk(best))
+  |                 IF v < 0 THEN v = 0
+  |             ELSE
+  |                 v = note_div(nk(best))
+  |             END IF
+  |         END IF
+  |         IF best >= 0 AND rec_multi THEN
+  |             rec_write s, v, s - ns(best), nk(best)
+  |         ELSE
+  |             rec_write s, v, -1, 0
+  |         END IF
+  |         IF v <> 0 AND s > recLastNote THEN recLastNote = s
+  |     NEXT
+  | END SUB
+  | 
+  | 
+  | ''
+  | ' Clicks on every beat while recording (higher on the first beat of a bar),
+  | ' timed by what you hear, not by what is queued.
+2026-10-03T11:07:11-0400  INFO     bash_start    python3 - <<'PYEOF' | p='PCSEDIT.BAS'; s=open(p).read() | def r(a,b,c=1): | global s | assert s.count(a)==c,(a[:100],s.count(a)); s=s.replace(a,b) | | # ---------- state / layout | r("CONST LIST_Y = …
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ python3 - <<'PYEOF'
+  $ p='PCSEDIT.BAS'; s=open(p).read()
+  $ def r(a,b,c=1):
+  $     global s
+  $     assert s.count(a)==c,(a[:100],s.count(a)); s=s.replace(a,b)
+  $ 
+  $ # ---------- state / layout
+  $ r("CONST LIST_Y = 144 '                     (the voice chips are on the row above the list)",
+  $   "CONST LIST_Y = 198 '                     (the voice chips and their M / S / R rows are above the list)\nCONST VOICE_Y = 104 '                    the voice chips' row")
+  $ r("""DIM SHARED noteHome AS LONG ' G + NOTE tool: the voice to go back to after placing a note""","""DIM SHARED noteHome AS LONG ' G + NOTE tool: the voice to go back to after placing a note
+  $ DIM SHARED vMute(1 TO VOICES) AS INTEGER ' M: not heard when playing (or exporting) the sound
+  $ DIM SHARED vRec(1 TO VOICES) AS INTEGER ' R: recording spreads chords over these voices
+  $ DIM SHARED soloV AS LONG ' S: the voice soloed (0 = none)
+  $ DIM SHARED soloSave(1 TO VOICES) AS INTEGER ' the mutes from before the solo
+  $ DIM SHARED recVN(1 TO VOICES) AS LONG ' LIVE + R: the note each armed voice is recording (-1 = none)""")
+  $ 
+  $ # ---------- chips row position
+  $ r("""SUB draw_voice_chips
+  $     DIM k AS LONG, x AS LONG, y AS LONG, c AS _UNSIGNED LONG
+  $     y = LIST_Y - 40""","""SUB draw_voice_chips
+  $     DIM k AS LONG, x AS LONG, y AS LONG, c AS _UNSIGNED LONG, row AS LONG, on AS INTEGER, fg AS _UNSIGNED LONG
+  $     y = VOICE_Y""")
+  $ r("""FUNCTION voice_chip_hit& (mx AS LONG, my AS LONG)
+  $     DIM k AS LONG, x AS LONG, y AS LONG
+  $     y = LIST_Y - 40""","""FUNCTION voice_chip_hit& (mx AS LONG, my AS LONG)
+  $     DIM k AS LONG, x AS LONG, y AS LONG
+  $     y = VOICE_Y""")
+  $ # draw the M S R rows at the end of draw_voice_chips
+  $ r("""    IF polyMode = POLY_PWM THEN COLOR _RGB32(120, 230, 255) ELSE COLOR _RGB32(255, 200, 60)
+  $     _PRINTSTRING (x + 1, y), poly_name
+  $ END SUB""","""    IF polyMode = POLY_PWM THEN COLOR _RGB32(120, 230, 255) ELSE COLOR _RGB32(255, 200, 60)
+  $     _PRINTSTRING (x + 1, y), poly_name
+  $ 
+  $     ' Mute / Solo / Rec, a button per voice under its chip
+  $     FOR row = 1 TO 3
+  $         y = VOICE_Y + row * 18 + 2
+  $         COLOR _RGB32(110, 124, 150)
+  $         _PRINTSTRING (LIST_X, y), MID$("MuteSoloRec ", row * 4 - 3, 4)
+  $         FOR k = 1 TO VOICES
+  $             x = LIST_X + 48 + (k - 1) * 22
+  $             SELECT CASE row
+  $                 CASE 1: on = vMute(k): c = _RGB32(215, 85, 85): fg = _RGB32(255, 255, 255)
+  $                 CASE 2: on = (soloV = k): c = _RGB32(240, 210, 70): fg = _RGB32(0, 0, 0)
+  $                 CASE ELSE: on = vRec(k): c = _RGB32(255, 60, 60): fg = _RGB32(255, 255, 255)
+  $             END SELECT
+  $             IF on THEN
+  $                 LINE (x - 3, y - 1)-(x + 12, y + 15), c, BF
+  $                 COLOR fg
+  $             ELSE
+  $                 LINE (x - 3, y - 1)-(x + 12, y + 15), _RGB32(64, 74, 96), B
+  $                 COLOR _RGB32(120, 132, 156)
+  $             END IF
+  $             _PRINTSTRING (x + 1, y), MID$("MSR", row, 1)
+  $         NEXT
+  $     NEXT
+  $ END SUB
+  $ 
+  $ 
+  $ ''
+  $ ' Which M / S / R button is at (mx, my): row * 10 + voice (0 = none).
+  $ '
+  $ FUNCTION msr_hit& (mx AS LONG, my AS LONG)
+  $     DIM k AS LONG, x AS LONG, y AS LONG, row AS LONG
+  $     FOR row = 1 TO 3
+  $         y = VOICE_Y + row * 18 + 2
+  $         IF my >= y - 1 AND my <= y + 15 THEN
+  $             FOR k = 1 TO VOICES
+  $                 x = LIST_X + 48 + (k - 1) * 22
+  $                 IF mx >= x - 3 AND mx <= x + 12 THEN msr_hit = row * 10 + k: EXIT FUNCTION
+  $             NEXT
+  $         END IF
+  $     NEXT
+  $ END FUNCTION
+  $ 
+  $ 
+  $ SUB msr_click (h AS LONG)
+  $     DIM k AS LONG, j AS LONG
+  $     k = h MOD 10
+  $     SELECT CASE h \\ 10
+  $         CASE 1 ' mute: a change by hand ends a solo
+  $ ...[truncated]
+2026-10-03T11:07:12-0400  INFO     bash_end      [ok] 10L stdout
+  | 1392:        IF used THEN
+  | 1393-            FOR i = s0 TO s1 - 1
+  | 1394-                IF i * 2 + 2 <= LEN(sndV(cur, k)) THEN set_voice_step cur, k, i, 0
+  | 1395-            NEXT
+  | 1396-        END IF
+  | 1397-    NEXT
+  | 1398-    chordS0 = s0: chordS1 = s1: chordN = 1
+  | 1399-    cursorStep = s1
+  | 1400-    IF cursorStep > MAX_STEPS THEN cursorStep = MAX_STEPS
+  | Beginning C++ output from QB64 code...
+2026-10-03T11:07:17-0400  INFO     bash_start    sed -i '1394s/IF i \* 2 + 2 <= LEN(sndV(cur, k)) THEN/IF i * 2 + 2 <= LEN(voice_data(cur, k)) THEN/' PCSEDIT.BAS && sed -n 1394p PCSEDIT.BAS; SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-621…
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ sed -i '1394s/IF i \* 2 + 2 <= LEN(sndV(cur, k)) THEN/IF i * 2 + 2 <= LEN(voice_data(cur, k)) THEN/' PCSEDIT.BAS && sed -n 1394p PCSEDIT.BAS; SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad && /home/grymmjack/git/qb64pe/qb64pe -x PCSEDIT.BAS -o $SP/PCSEDIT 2>&1 | tail -5
+2026-10-03T11:07:17-0400  INFO     bash_end      [ok] 6L stdout
+  |                 IF i * 2 + 2 <= LEN(voice_data(cur, k)) THEN set_voice_step cur, k, i, 0
+  | [..............................                    ] 60%[A
+  | 
+  | [38;5;9mName already in use (on)
+  | [38;5;7mCaused by (or after):DIM K AS LONG , X AS LONG , Y AS LONG , C AS _UNSIGNED LONG , ROW AS LONG , ON AS INTEGER , FG AS _UNSIGNED LONG
+  | [38;5;8mLINE [38;5;15m4450:[38;5;7mDIM k AS LONG, x AS LONG, y AS LONG, c AS _UNSIGNED LONG, row AS LONG, on AS INTEGER, fg AS _UNSIGNED LONG
+2026-10-03T11:07:23-0400  INFO     bash_start    python3 - <<'PYEOF' | p='PCSEDIT.BAS'; s=open(p).read() | s=s.replace("row AS LONG, on AS INTEGER, fg AS _UNSIGNED LONG","row AS LONG, lit AS INTEGER, fg AS _UNSIGNED LONG") | for a in ["CASE 1: on =…
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ python3 - <<'PYEOF'
+  $ p='PCSEDIT.BAS'; s=open(p).read()
+  $ s=s.replace("row AS LONG, on AS INTEGER, fg AS _UNSIGNED LONG","row AS LONG, lit AS INTEGER, fg AS _UNSIGNED LONG")
+  $ for a in ["CASE 1: on = vMute(k)","CASE 2: on = (soloV = k)","CASE ELSE: on = vRec(k)"]:
+  $     assert a in s; s=s.replace(a,a.replace(" on ="," lit ="))
+  $ a="""            IF on THEN
+  $                 LINE (x - 3, y - 1)-(x + 12, y + 15), c, BF"""
+  $ assert a in s; s=s.replace(a,a.replace("IF on THEN","IF lit THEN"))
+  $ open(p,'w').write(s)
+  $ PYEOF
+  $ SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad && /home/grymmjack/git/qb64pe/qb64pe -x PCSEDIT.BAS -o $SP/PCSEDIT 2>&1 | tail -3
+2026-10-03T11:07:26-0400  INFO     bash_end      [ok] 2L stdout
+  | Compiling C++ code into executable...
+  | Output: /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/PCSEDIT
+2026-10-03T11:07:44-0400  INFO     bash_start    export SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad && python3 - <<'PYEOF' | import os | SP=os.environ['SP'] | s=open('PCSEDIT.BAS').read() | lines=s.s…
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ export SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad && python3 - <<'PYEOF'
+  $ import os
+  $ SP=os.environ['SP']
+  $ s=open('PCSEDIT.BAS').read()
+  $ lines=s.split('\n'); i=lines.index('DO')
+  $ lines.insert(i,'''DIM tsI AS LONG, tsF AS LONG
+  $ tsF = FREEFILE: OPEN "SPX/pt/msr.txt" FOR OUTPUT AS #tsF
+  $ ' solo / mute
+  $ msr_click 22: PRINT #tsF, "solo2 mutes"; vMute(1); vMute(2); vMute(3); vMute(4); " soloV"; soloV
+  $ msr_click 23: PRINT #tsF, "S3 adds  "; vMute(1); vMute(2); vMute(3); vMute(4); " soloV"; soloV
+  $ msr_click 11: PRINT #tsF, "M1      "; vMute(1); vMute(2); vMute(3); vMute(4)
+  $ msr_click 24: PRINT #tsF, "S4 solo "; vMute(1); vMute(2); vMute(3); vMute(4); " soloV"; soloV
+  $ msr_click 24: PRINT #tsF, "S4 undo "; vMute(1); vMute(2); vMute(3); vMute(4); " soloV"; soloV
+  $ FOR tsI = 1 TO 4: vMute(tsI) = 0: NEXT
+  $ ' melody in voice 1
+  $ FOR tsI = 0 TO 199: set_step cur, tsI, note_div(72): NEXT
+  $ msr_click 32: msr_click 33: msr_click 34
+  $ PRINT #tsF, "armed"; rec_armed; " list"; arm_list
+  $ ' STEP: a triad
+  $ recMode = REC_STEP: gridDiv = 0: noteLen = 8: cursorStep = 0
+  $ note_on 60: note_on 64: note_on 67: note_off 60: note_off 64: note_off 67
+  $ PRINT #tsF, "STEP @0 v1-4"; voice_step(1, 1, 0); voice_step(1, 2, 0); voice_step(1, 3, 0); voice_step(1, 4, 0); " want"; note_div(72); note_div(60); note_div(64); note_div(67); " cursor"; cursorStep
+  $ ' LIVE, not quantized
+  $ recMode = REC_OFF: quantOn = 0: cursorStep = 20: recMode = REC_LIVE
+  $ note_on 62: note_on 65: note_on 69
+  $ FOR tsI = 1 TO 10: on_tick: NEXT
+  $ note_off 62: note_off 65: note_off 69
+  $ FOR tsI = 1 TO 3: on_tick: NEXT
+  $ stop_recording: recMode = REC_OFF
+  $ PRINT #tsF, "LIVE @25 v1-4"; voice_step(1, 1, 25); voice_step(1, 2, 25); voice_step(1, 3, 25); voice_step(1, 4, 25); " want"; note_div(72); note_div(62); note_div(65); note_div(69)
+  $ ' LIVE quantized
+  $ quantOn = -1: gridDiv = 16: cursorStep = 70: recMode = REC_LIVE
+  $ note_on 57: note_on 60
+  $ FOR tsI = 1 TO 30: on_tick: NEXT
+  $ note_off 57: note_off 60
+  $ FOR tsI = 1 TO 3: on_tick: NEXT
+  $ stop_recording: recMode = REC_OFF
+  $ PRINT #tsF, "LIVEQ @75 v1-4"; voice_step(1, 1, 75); voice_step(1, 2, 75); voice_step(1, 3, 75); voice_step(1, 4, 75); " want"; note_div(72); note_div(57); note_div(60); " used"; voices_used(1)
+  $ ' heard with voice 1 muted
+  $ vMute(1) = -1
+  $ PRINT #tsF, "heard@0 muted1:"; heard_step(1, 0); heard_step(1, 1); heard_step(1, 2); heard_step(1, 3)
+  $ CLOSE #tsF
+  $ SYSTEM'''.replace('SPX',SP))
+  $ open(SP+'/pt/T3.BAS','w').write('\n'.join(lines))
+  $ PYEOF
+  $ cp PCSMIDI.B? PCSPKR.B? $SP/pt/; cd $SP/pt && /home/grymmjack/git/qb64pe/qb64pe -x T3.BAS -o ./T3 2>&1 | grep -i "error\|Output"; HOME=$SP/pt/home PCSEDIT_NOMIDI=1 DISPLAY=:99 timeout 20 ./T3; cat msr.txt
+2026-10-03T11:07:48-0400  WARNING  bash_end      [stderr] 12L stdout / 2L stderr
+  | Beginning C++ output from QB64 code... 
+  | Output: /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/pt/T3
+  | solo2 mutes-1  0 -1 -1  soloV 2 
+  | S3 adds  -1  0  0 -1  soloV 0 
+  | M1       0  0  0 -1 
+  | S4 solo -1 -1 -1  0  soloV 4 
+  | S4 undo  0  0  0 -1  soloV 0 
+  | armed-1  list 2 3 4
+  | STEP @0 v1-4 2280  4561  3620  3044  want 2280  4561  3620  3044  cursor 8 
+  | LIVE @25 v1-4 2280  4063  3417  2712  want 2280  4063  3417  2712 
+  | LIVEQ @75 v1-4 2280  5424  4561  0  want 2280  5424  4561  used 4 
+  | heard@0 muted1: 4561  3620  3044  4561
+  ! 
+  ! Shell cwd was reset to /home/grymmjack/git/qb64
+2026-10-03T11:07:57-0400  INFO     bash_start    cd /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER && export SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad && python3 - <<'PYEOF' | import os | SP=os.env…
+  > cwd: /home/grymmjack/git/qb64
+  $ cd /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER && export SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad && python3 - <<'PYEOF'
+  $ import os
+  $ SP=os.environ['SP']; here=os.getcwd()
+  $ s=open('PCSEDIT.BAS').read()
+  $ lines=s.split('\n'); i=lines.index('DO')
+  $ lines.insert(i,'open_bank "%s/ASSETS/TUNES/BIRTHDAY.SND"\nmsr_click 12: msr_click 32: msr_click 33: msr_click 34\nDIM SHARED shT AS DOUBLE: shT = TIMER' % here)
+  $ s='\n'.join(lines)
+  $ a="    midi_poll\n    metronome\n"
+  $ s=s.replace(a,a+'    IF TIMER - shT > 1.2 THEN _SAVEIMAGE ENVIRON$("SHOT"), scrImg: SYSTEM\n',1)
+  $ open(SP+'/help/M.BAS','w').write(s)
+  $ PYEOF
+  $ cd $SP/help && /home/grymmjack/git/qb64pe/qb64pe -x M.BAS -o ./M 2>&1 | grep -i "error\|Output"; SHOT=$PWD/msr.png HOME=$PWD/h1280 PCSEDIT_NOMIDI=1 DISPLAY=:99 timeout 20 ./M; python3 -c "
+  $ import zlib,struct
+  $ " ; convert msr.png -crop 640x420+0+0 msr_crop.png 2>/dev/null || magick msr.png -crop 640x420+0+0 msr_crop.png
+2026-10-03T11:08:02-0400  WARNING  bash_end      [stderr] 2L stdout / 2L stderr
+  | Beginning C++ output from QB64 code... 
+  | Output: /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/help/M
+  ! 
+  ! Shell cwd was reset to /home/grymmjack/git/qb64
+2026-10-03T11:08:13-0400  INFO     bash_start    cd /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER && python3 - <<'PYEOF' | p='PCSEDIT.BAS'; s=open(p).read() | a=''' help_add t(), n, "hold keys|STEP record: a chord"''' | assert a in s | s=s.replace…
+  > cwd: /home/grymmjack/git/qb64
+  $ cd /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER && python3 - <<'PYEOF'
+  $ p='PCSEDIT.BAS'; s=open(p).read()
+  $ a='''    help_add t(), n, "hold keys|STEP record: a chord"'''
+  $ assert a in s
+  $ s=s.replace(a,a+'''
+  $     help_add t(), n, "M  S  R buttons|mute / solo / arm for recording"
+  $     help_add t(), n, "R on voices|chords recorded across them"''')
+  $ open(p,'w').write(s)
+  $ p='README.md'; s=open(p).read()
+  $ a="""* **Chords from the keys:** in STEP record"""
+  $ assert s.count(a)==1
+  $ s=s.replace(a,"""* **M / S / R** buttons sit under each voice chip:
+  $   * **M** mutes the voice: it isn't heard when the sound plays, loops or is
+  $     exported (Ctrl+E). Saving keeps it. Muted notes are faded in the roll.
+  $   * **S** solos it: the other voices are muted. **S** on another voice while
+  $     one is soloed adds that voice too, and from then on it is just mutes
+  $     (the S light goes out, M changes them). **S** on the soloed voice again
+  $     puts the mutes back as they were.
+  $   * **R** arms the voice for recording. With voices armed, recording plain
+  $     notes (computer keys or MIDI, STEP or LIVE, quantized or not) spreads
+  $     chords over the armed voices only: arm 2, 3 and 4 and a triad goes into
+  $     those three, leaving the melody in voice 1 alone. Each key takes the
+  $     first free armed voice; more keys than armed voices are left out. With
+  $     nothing armed, recording goes into the voice you are editing, as before.
+  $ """ + a)
+  $ open(p,'w').write(s)
+  $ PYEOF
+  $ SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad && /home/grymmjack/git/qb64pe/qb64pe -x PCSEDIT.BAS -o $SP/PCSEDIT 2>&1 | tail -1
+2026-10-03T11:08:16-0400  INFO     bash_end      [ok] 1L stdout
+  | Output: /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/PCSEDIT
+2026-10-03T11:13:50-0400  NOTICE   prompt        can you create a new feature for me - shift+mousewheel zooms the thickness of the keys? and if it can accommodate the name of the note/octave ads that in - i'd like it to be able to zoom into a singl…
+  > can you create a new feature for me - shift+mousewheel  zooms the thickness of the keys? and if it can accommodate the name of the note/octave ads that in - i'd like it to be able to zoom into a single octave, then have a scrollbar next to the piano keys autohides when not scrolling (click/drag to move it up and down or mousewheel over keys to change what keys are in view) -- from all the way out like we have at max zoom out to into 1 octave, 2, 3, 4, etc. and make it so the piano notes themselves if they can accommodate it with their height also show their octave/note?  does this make sesne?
+2026-10-03T11:13:57-0400  INFO     bash_start    grep -n "NOTE_LO\|NOTE_HI\|PX_SEMI\|CANVAS_H =" PCSEDIT.BAS | grep -v "^\s*'" | head -80; sed -n "$(grep -n '^SUB do_layout' PCSEDIT.BAS | cut -d: -f1),+20p" PCSEDIT.BAS
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ grep -n "NOTE_LO\|NOTE_HI\|PX_SEMI\|CANVAS_H =" PCSEDIT.BAS | grep -v "^\s*'" | head -80; sed -n "$(grep -n '^SUB do_layout' PCSEDIT.BAS | cut -d: -f1),+20p" PCSEDIT.BAS
+2026-10-03T11:13:57-0400  INFO     bash_end      [ok] 54L stdout
+  | 109:DIM SHARED PX_SEMI AS LONG ' pixels per semitone row: CANVAS_H = (NOTE_HI - NOTE_LO) * PX_SEMI
+  | 133:CONST NOTE_LO = 33 '                     A1, 55 Hz at the bottom edge
+  | 134:CONST NOTE_HI = 117 '                    A8, 7040 Hz at the top edge
+  | 2265:    yt = clip_y(note_y(wave_max) - PX_SEMI \ 2)
+  | 2266:    yb = clip_y(note_y(wave_min) + PX_SEMI \ 2)
+  | 2474:    IF hi < lo THEN lo = NOTE_LO: hi = NOTE_HI - 1
+  | 2713:    yt = clip_y(note_y(selHi) - PX_SEMI \ 2)
+  | 2714:    yb = clip_y(note_y(selLo) + PX_SEMI \ 2)
+  | 4235:    note_y = CANVAS_Y + CANVAS_H - CLNG((nt - NOTE_LO + 0.5) * PX_SEMI)
+  | 4240:    y_note = NOTE_LO + (CANVAS_Y + CANVAS_H - y) / PX_SEMI - 0.5
+  | 4661:    FOR nt = NOTE_LO TO NOTE_HI - 1
+  | 4665:            LINE (RULER_X, y - PX_SEMI \ 2)-(RULER_X + 26, y + PX_SEMI \ 2 - 1), _RGB32(30, 30, 36), BF
+  | 4666:            LINE (CANVAS_X, y - PX_SEMI \ 2)-(CANVAS_X + CANVAS_W - 1, y + PX_SEMI \ 2 - 1), _RGB32(11, 12, 17), BF
+  | 4668:            LINE (RULER_X, y - PX_SEMI \ 2)-(RULER_X + 40, y + PX_SEMI \ 2 - 1), _RGB32(200, 200, 205), BF
+  | 4669:            LINE (CANVAS_X, y - PX_SEMI \ 2)-(CANVAS_X + CANVAS_W - 1, y + PX_SEMI \ 2 - 1), _RGB32(26, 30, 42), BF
+  | 4677:    IF nt >= NOTE_LO AND nt < NOTE_HI THEN
+  | 4679:        LINE (RULER_X, y - PX_SEMI \ 2)-(RULER_X + 40, y + PX_SEMI \ 2 - 1), _RGB32(255, 170, 40), BF
+  | 4680:        LINE (CANVAS_X, y - PX_SEMI \ 2)-(CANVAS_X + CANVAS_W - 1, y + PX_SEMI \ 2 - 1), _RGB32(70, 52, 22), BF
+  | 4689:        FOR nt = NOTE_LO TO NOTE_HI - 1
+  | 4690:            y = note_y(nt) - PX_SEMI \ 2 - 1
+  | 4724:    FOR nt = NOTE_LO TO NOTE_HI - 1
+  | 4726:            y = note_y(nt) + PX_SEMI \ 2 - 1
+  | 4759:                    IF nn >= NOTE_HI THEN nn = NOTE_HI - 0.5
+  | 4760:                    IF nn < NOTE_LO THEN nn = NOTE_LO
+  | 4785:            IF nn >= NOTE_HI THEN nn = NOTE_HI - 0.5: col = _RGB32(255, 120, 200)
+  | 4786:            IF nn < NOTE_LO THEN nn = NOTE_LO: col = _RGB32(255, 120, 200)
+  | 4806:            y = clip_y(note_y(wave_max) - PX_SEMI \ 2)
+  | 4807:            yb = clip_y(note_y(wave_min) + PX_SEMI \ 2)
+  | 4825:            y = clip_y(note_y(selHi) - PX_SEMI \ 2)
+  | 4826:            yb = clip_y(note_y(selLo) + PX_SEMI \ 2)
+  | 5319:    PX_SEMI = avail \ (NOTE_HI - NOTE_LO)
+  | 5320:    IF PX_SEMI < 4 THEN PX_SEMI = 4
+  | 5321:    CANVAS_H = PX_SEMI * (NOTE_HI - NOTE_LO)
+  | SUB do_layout (lw AS LONG, lh AS LONG)
+  |     DIM avail AS LONG
+  |     SCR_W = lw: SCR_H = lh
+  |     CANVAS_W = SCR_W - CANVAS_X - 8
+  |     avail = SCR_H - CANVAS_Y - 28 - (SCOPE_H + 4) - 32 ' footer, scope, status line
+  |     PX_SEMI = avail \ (NOTE_HI - NOTE_LO)
+  |     IF PX_SEMI < 4 THEN PX_SEMI = 4
+  |     CANVAS_H = PX_SEMI * (NOTE_HI - NOTE_LO)
+  |     SCOPE_Y = CANVAS_Y + CANVAS_H + 28
+  |     LIST_ROWS = (CANVAS_Y + CANVAS_H - LIST_Y) \ ROW_H
+  |     IF zoom > 0 THEN scroll_to scrollX ' (not yet set the first time, at start-up)
+  | END SUB
+  | 
+  | 
+  | ''
+  | ' Ctrl+= / Ctrl+- / Ctrl+0: display scale 50% ... 300%.
+  | '
+  | SUB set_ui_scale (dirn AS LONG)
+  |     DIM lv AS STRING, i AS LONG, n AS LONG, sc(0 TO 15) AS DOUBLE, best AS LONG, want AS DOUBLE
+  |     lv = "0.5 0.625 0.75 0.875 1 1.25 1.5 1.75 2 2.5 3 "
+  |     DO WHILE LEN(lv)
+2026-10-03T11:14:38-0400  INFO     bash_start    grep -n "wheel" PCSEDIT.BAS | head -20; grep -n "^FUNCTION clip_y" -A5 PCSEDIT.BAS; grep -n "CONST RULER_X\|CONST CANVAS_X\|CONST TIME_Y" PCSEDIT.BAS
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ grep -n "wheel" PCSEDIT.BAS | head -20; grep -n "^FUNCTION clip_y" -A5 PCSEDIT.BAS; grep -n "CONST RULER_X\|CONST CANVAS_X\|CONST TIME_Y" PCSEDIT.BAS
+2026-10-03T11:14:38-0400  INFO     bash_end      [ok] 20L stdout
+  | 46:'   wheel             scroll          Ctrl+wheel     zoom
+  | 363:DIM k AS LONG, f AS STRING, wheel AS LONG, mx AS LONG, my AS LONG, b1 AS INTEGER, b2 AS INTEGER
+  | 471:    wheel = 0
+  | 473:        wheel = wheel + _MOUSEWHEEL
+  | 479:    IF wheel THEN
+  | 482:            IF wheel < 0 THEN
+  | 488:            user_select cur + wheel
+  | 490:            scroll_to scrollX + wheel * (INT(60 / zoom) + 1)
+  | 3780:' A sound picked by you (keys, list, wheel). In SOUND keys mode the
+  | 4881:    _PRINTSTRING (CANVAS_X, CANVAS_Y + CANVAS_H + 6), "Step" + STR$(scrollX) + " -" + STR$(scrollX + vis) + "   (140 steps = 1 second)   wheel scrolls, Ctrl+wheel zooms"
+  | 5123:    help_add t(), n, "wheel|scroll (Ctrl: zoom)"
+  | 4892:FUNCTION clip_y& (y AS LONG)
+  | 4893-    clip_y = y
+  | 4894-    IF y < CANVAS_Y THEN clip_y = CANVAS_Y
+  | 4895-    IF y > CANVAS_Y + CANVAS_H - 1 THEN clip_y = CANVAS_Y + CANVAS_H - 1
+  | 4896-END FUNCTION
+  | 4897-
+  | 127:CONST RULER_X = 224 '                    piano keys
+  | 128:CONST CANVAS_X = 268 '                   piano roll
+  | 130:CONST TIME_Y = 100 '                     time ruler, above the roll
+2026-10-03T11:14:40-0400  INFO     bash_start    sed -n 465,495p PCSEDIT.BAS; n=$(grep -n "^SUB draw_roll" PCSEDIT.BAS | cut -d: -f1); sed -n "$n,$((n+50))p" PCSEDIT.BAS; sed -n "$((n+95)),$((n+175))p" PCSEDIT.BAS
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ sed -n 465,495p PCSEDIT.BAS; n=$(grep -n "^SUB draw_roll" PCSEDIT.BAS | cut -d: -f1); sed -n "$n,$((n+50))p" PCSEDIT.BAS; sed -n "$((n+95)),$((n+175))p" PCSEDIT.BAS
+2026-10-03T11:14:40-0400  INFO     bash_end      [ok] 162L stdout
+  |     ' ------------------------------------------------------------ MIDI
+  |     midi_poll
+  |     metronome
+  | 
+  |     ' ------------------------------------------------------------ mouse
+  |     wheel = 0
+  |     DO WHILE _MOUSEINPUT
+  |         wheel = wheel + _MOUSEWHEEL
+  |         mlx = INT(_MOUSEX / uiScale): mly = INT(_MOUSEY / uiScale)
+  |         handle_mouse mlx, mly, _MOUSEBUTTON(1), _MOUSEBUTTON(2)
+  |     LOOP
+  |     ctrl = _KEYDOWN(100305) OR _KEYDOWN(100306)
+  |     shift = _KEYDOWN(100303) OR _KEYDOWN(100304)
+  |     IF wheel THEN
+  |         IF ctrl THEN
+  |             ' about a quarter per click, so 1 to 64 is a quick spin, not 60 clicks
+  |             IF wheel < 0 THEN
+  |                 set_zoom_at zoom_step(1), mlx
+  |             ELSE
+  |                 set_zoom_at zoom_step(-1), mlx
+  |             END IF
+  |         ELSEIF mlx < RULER_X THEN
+  |             user_select cur + wheel
+  |         ELSE
+  |             scroll_to scrollX + wheel * (INT(60 / zoom) + 1)
+  |         END IF
+  |     END IF
+  | 
+  |     ' ------------------------------------------------------------ keys
+  |     ' Caps Lock is the switch: on = the keyboard is a piano, off = letters
+  | SUB draw_roll
+  |     DIM nt AS LONG, y AS LONG, x AS LONG, s AS LONG, v AS LONG, vis AS LONG, endX AS LONG
+  |     DIM w AS LONG, nn AS DOUBLE, col AS _UNSIGNED LONG, hp AS LONG, isBlack AS INTEGER, prevY AS LONG, hv AS INTEGER, yb AS LONG
+  |     DIM k AS LONG, vc AS _UNSIGNED LONG
+  | 
+  |     vis = INT(CANVAS_W / zoom)
+  | 
+  |     ' piano keys + note rows: white-key rows lighter, black-key rows darker,
+  |     ' like a piano roll, so you can see which row you are on
+  |     FOR nt = NOTE_LO TO NOTE_HI - 1
+  |         y = note_y(nt)
+  |         isBlack = MID$("010100101010", (nt MOD 12) + 1, 1) = "1"
+  |         IF isBlack THEN
+  |             LINE (RULER_X, y - PX_SEMI \ 2)-(RULER_X + 26, y + PX_SEMI \ 2 - 1), _RGB32(30, 30, 36), BF
+  |             LINE (CANVAS_X, y - PX_SEMI \ 2)-(CANVAS_X + CANVAS_W - 1, y + PX_SEMI \ 2 - 1), _RGB32(11, 12, 17), BF
+  |         ELSE
+  |             LINE (RULER_X, y - PX_SEMI \ 2)-(RULER_X + 40, y + PX_SEMI \ 2 - 1), _RGB32(200, 200, 205), BF
+  |             LINE (CANVAS_X, y - PX_SEMI \ 2)-(CANVAS_X + CANVAS_W - 1, y + PX_SEMI \ 2 - 1), _RGB32(26, 30, 42), BF
+  |         END IF
+  |     NEXT
+  | 
+  |     ' the key being played (keyboard, MIDI or the piano keys): a band across
+  |     ' the grid as well as the lit key
+  |     nt = heldNote
+  |     IF nt < 0 THEN nt = auditionNote
+  |     IF nt >= NOTE_LO AND nt < NOTE_HI THEN
+  |         y = note_y(nt)
+  |         LINE (RULER_X, y - PX_SEMI \ 2)-(RULER_X + 40, y + PX_SEMI \ 2 - 1), _RGB32(255, 170, 40), BF
+  |         LINE (CANVAS_X, y - PX_SEMI \ 2)-(CANVAS_X + CANVAS_W - 1, y + PX_SEMI \ 2 - 1), _RGB32(70, 52, 22), BF
+  |     END IF
+  | 
+  | 
+  |     LINE (CANVAS_X, TIME_Y)-(CANVAS_X + CANVAS_W - 1, CANVAS_Y - 2), _RGB32(26, 32, 44), BF
+  | 
+  |     ' grid lines (' key): one between every note row, and one per step when
+  |     ' the grid is off and there is room (draw_grid does cells when it is on)
+  |     IF linesOn THEN
+  |         FOR nt = NOTE_LO TO NOTE_HI - 1
+  |             y = note_y(nt) - PX_SEMI \ 2 - 1
+  |             IF nt MOD 12 <> 11 THEN LINE (CANVAS_X, y)-(CANVAS_X + CANVAS_W - 1, y), _RGB32(30, 36, 50)
+  |         NEXT
+  |         IF gridDiv = 0 AND zoom >= 4 THEN
+  |             FOR s = scrollX TO scrollX + vis
+  |                 x = CANVAS_X + (s - scrollX) * zoom
+  |                 LINE (x, CANVAS_Y)-(x, CANVAS_Y + CANVAS_H - 1), _RGB32(38, 46, 64)
+  |             NEXT
+  |         END IF
+  |     END IF
+  | 
+  |     IF gridDiv THEN
+  | ...[truncated]
+2026-10-03T11:15:22-0400  INFO     bash_start    n=$(grep -n "' octave markers: a brighter line under every C" PCSEDIT.BAS | cut -d: -f1); sed -n "$n,$((n+16))p" PCSEDIT.BAS; grep -n "draw_seconds\|^SUB draw_grid" PCSEDIT.BAS | head -3; sed -n "$(g…
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ n=$(grep -n "' octave markers: a brighter line under every C" PCSEDIT.BAS | cut -d: -f1); sed -n "$n,$((n+16))p" PCSEDIT.BAS; grep -n "draw_seconds\|^SUB draw_grid" PCSEDIT.BAS | head -3; sed -n "$(grep -n '^SUB draw_grid' PCSEDIT.BAS | cut -d: -f1),+40p" PCSEDIT.BAS | grep -n "CANVAS_H\|note_y" ; grep -n "mouseIn AND drawing = 0 AND tool = TOOL_NOTE" -A20 PCSEDIT.BAS | head -24
+2026-10-03T11:15:22-0400  INFO     bash_end      [ok] 44L stdout
+  |     ' octave markers: a brighter line under every C, labelled at both edges
+  |     ' of the grid (and on the piano keys)
+  |     FOR nt = NOTE_LO TO NOTE_HI - 1
+  |         IF nt MOD 12 = 0 THEN
+  |             y = note_y(nt) + PX_SEMI \ 2 - 1
+  |             LINE (CANVAS_X, y)-(CANVAS_X + CANVAS_W - 1, y), _RGB32(64, 78, 104)
+  |             COLOR _RGB32(150, 160, 180)
+  |             _PRINTSTRING (RULER_X - 26, y - 13), "C" + LTRIM$(STR$(nt \ 12 - 1))
+  |             COLOR _RGB32(90, 104, 132)
+  |             _PRINTSTRING (CANVAS_X + 3, y - 15), "C" + LTRIM$(STR$(nt \ 12 - 1))
+  |             _PRINTSTRING (CANVAS_X + CANVAS_W - 22, y - 15), "C" + LTRIM$(STR$(nt \ 12 - 1))
+  |         END IF
+  |     NEXT
+  | 
+  |     ' past the end of the sound (over the lines, so it all dims evenly)
+  |     endX = CANVAS_X + (snd_len(cur) - scrollX) * zoom
+  |     IF endX < CANVAS_X THEN endX = CANVAS_X
+  | 4704:        draw_seconds vis
+  | 4922:SUB draw_seconds (vis AS LONG)
+  | 4949:SUB draw_grid (vis AS LONG)
+  | 16:                LINE (x, TIME_Y)-(x, CANVAS_Y + CANVAS_H - 1), _RGB32(110, 130, 170)
+  | 25:                LINE (x, CANVAS_Y)-(x, CANVAS_Y + CANVAS_H - 1), _RGB32(52, 60, 82)
+  | 28:                LINE (x, CANVAS_Y)-(x, CANVAS_Y + CANVAS_H - 1), _RGB32(38, 46, 64)
+  | 4859:    IF mouseIn AND drawing = 0 AND tool = TOOL_NOTE THEN
+  | 4860-        y = note_y(INT(mouseNote + 0.5))
+  | 4861-        IF NOT snapOn THEN y = note_y(mouseNote)
+  | 4862-        s = mouseStep
+  | 4863-        IF grid_snap THEN s = cell_start(cell_of(mouseStep))
+  | 4864-        x = CANVAS_X + (s - scrollX) * zoom
+  | 4865-        LINE (x, y - 2)-(x + (note_tool_end(s) - s) * zoom - 2, y + 2), _RGBA32(255, 255, 255, 110), BF
+  | 4866-    END IF
+  | 4867-    IF mouseIn AND drawing = 0 AND (tool = TOOL_DRAW OR tool = TOOL_ERASE OR tool = TOOL_LINE OR tool = TOOL_WAVE) THEN
+  | 4868-        y = note_y(INT(mouseNote + 0.5))
+  | 4869-        IF NOT snapOn THEN y = note_y(mouseNote)
+  | 4870-        IF grid_snap THEN
+  | 4871-            x = CANVAS_X + (cell_start(cell_of(mouseStep)) - scrollX) * zoom
+  | 4872-            LINE (x, y - 2)-(x + (cell_start(cell_of(mouseStep) + 1) - cell_start(cell_of(mouseStep))) * zoom - 2, y + 2), _RGBA32(255, 255, 255, 120), BF
+  | 4873-        ELSE
+  | 4874-            x = CANVAS_X + (mouseStep - scrollX) * zoom
+  | 4875-            LINE (x, y - 2)-(x + w - 1, y + 2), _RGBA32(255, 255, 255, 120), BF
+  | 4876-        END IF
+  | 4877-    END IF
+  | 4878-
+  | 4879-    LINE (CANVAS_X - 1, CANVAS_Y - 1)-(CANVAS_X + CANVAS_W, CANVAS_Y + CANVAS_H), _RGB32(70, 80, 100), B
+2026-10-03T11:16:36-0400  INFO     bash_start    python3 - <<'PYEOF' | p='PCSEDIT.BAS'; s=open(p).read() | def r(a,b,c=1): | global s | assert s.count(a)==c,(a[:100],s.count(a)); s=s.replace(a,b) | | # ---------- state | r("""DIM SHARED PX_SEMI AS …
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ python3 - <<'PYEOF'
+  $ p='PCSEDIT.BAS'; s=open(p).read()
+  $ def r(a,b,c=1):
+  $     global s
+  $     assert s.count(a)==c,(a[:100],s.count(a)); s=s.replace(a,b)
+  $ 
+  $ # ---------- state
+  $ r("""DIM SHARED PX_SEMI AS LONG ' pixels per semitone row: CANVAS_H = (NOTE_HI - NOTE_LO) * PX_SEMI""","""DIM SHARED PX_SEMI AS LONG ' pixels per semitone row (Shift+wheel: taller rows, fewer notes in view)
+  $ DIM SHARED pxFull AS LONG ' PX_SEMI with every note in view: CANVAS_H = (NOTE_HI - NOTE_LO) * pxFull
+  $ DIM SHARED viewLo AS LONG ' the note at the bottom of the roll
+  $ DIM SHARED viewN AS LONG ' about how many notes are in view (84 = all, 12 = one octave)
+  $ DIM SHARED vbarUntil AS DOUBLE ' show the note scrollbar until then (it hides when not in use)
+  $ DIM SHARED vbarGrab AS LONG ' dragging it: where on the thumb it was taken""")
+  $ 
+  $ # ---------- settings
+  $ r("""polyMode = VAL(cfg_get("poly", "0"))""","""polyMode = VAL(cfg_get("poly", "0"))
+  $ viewN = VAL(cfg_get("vzoom", "84"))
+  $ viewLo = VAL(cfg_get("vlow", "33"))""")
+  $ r("""    PRINT #ff, "poly="; LTRIM$(STR$(polyMode))""","""    PRINT #ff, "poly="; LTRIM$(STR$(polyMode))
+  $     PRINT #ff, "vzoom="; LTRIM$(STR$(viewN))
+  $     PRINT #ff, "vlow="; LTRIM$(STR$(viewLo))""")
+  $ 
+  $ # ---------- layout
+  $ r("""    PX_SEMI = avail \\ (NOTE_HI - NOTE_LO)
+  $     IF PX_SEMI < 4 THEN PX_SEMI = 4
+  $     CANVAS_H = PX_SEMI * (NOTE_HI - NOTE_LO)""","""    pxFull = avail \\ (NOTE_HI - NOTE_LO)
+  $     IF pxFull < 4 THEN pxFull = 4
+  $     CANVAS_H = pxFull * (NOTE_HI - NOTE_LO)
+  $     fit_view""")
+  $ r("""FUNCTION note_y& (nt AS DOUBLE)
+  $     note_y = CANVAS_Y + CANVAS_H - CLNG((nt - NOTE_LO + 0.5) * PX_SEMI)""","""FUNCTION note_y& (nt AS DOUBLE)
+  $     note_y = CANVAS_Y + CANVAS_H - CLNG((nt - viewLo + 0.5) * PX_SEMI)""")
+  $ r("""    y_note = NOTE_LO + (CANVAS_Y + CANVAS_H - y) / PX_SEMI - 0.5""","""    y_note = viewLo + (CANVAS_Y + CANVAS_H - y) / PX_SEMI - 0.5""")
+  $ r("""FUNCTION clip_y& (y AS LONG)""","""'--- vertical zoom: the note range in view ------------------------------------
+  $ 
+  $ ''
+  $ ' Row height from viewN, and viewLo kept in range (no empty space above the
+  $ ' top note or below the bottom one).
+  $ '
+  $ SUB fit_view
+  $     IF viewN < 12 THEN viewN = 12
+  $     IF viewN > NOTE_HI - NOTE_LO THEN viewN = NOTE_HI - NOTE_LO
+  $     PX_SEMI = CANVAS_H \\ viewN
+  $     IF PX_SEMI < pxFull THEN PX_SEMI = pxFull
+  $     IF viewLo > NOTE_HI - CANVAS_H / PX_SEMI THEN viewLo = INT(NOTE_HI - CANVAS_H / PX_SEMI)
+  $     IF viewLo < NOTE_LO THEN viewLo = NOTE_LO
+  $ END SUB
+  $ 
+  $ 
+  $ ''
+  $ ' The highest note row that shows (the top one may be cut off).
+  $ '
+  $ FUNCTION view_hi&
+  $     view_hi = viewLo + (CANVAS_H + PX_SEMI - 1) \\ PX_SEMI - 1
+  $     IF view_hi > NOTE_HI - 1 THEN view_hi = NOTE_HI - 1
+  $ END FUNCTION
+  $ 
+  $ 
+  $ FUNCTION view_zoomed%
+  $     view_zoomed = PX_SEMI > pxFull
+  $ END FUNCTION
+  $ 
+  $ 
+  $ ''
+  $ ' Shift+wheel: 84 notes (all), 72, 60, 48, 36, 24, 12 (one octave) - the
+  $ ' note under the mouse stays where it is.
+  $ '
+  $ SUB vzoom (dirn AS LONG, my AS LONG)
+  $     DIM anchor AS DOUBLE, ay AS LONG, n AS LONG
+  $     ay = my
+  $     IF ay < CANVAS_Y OR ay >= CANVAS_Y + CANVAS_H THEN ay = CANVAS_Y + CANVAS_H \\ 2
+  $     anchor = y_note(ay)
+  $     n = ((viewN + 11) \\ 12) * 12 ' whole octaves
+  $     n = n + dirn * 12
+  $     IF n > NOTE_HI - NOTE_LO THEN n = NOTE_HI - NOTE_LO
+  $     IF n < 12 THEN n = 12
+  $     viewN = n
+  $     fit_view
+  $     ' keep the anchor note under the mouse
+  $     viewLo = CLNG(anchor + 0.5 - (CANVAS_Y + CANVAS_H - ay) / PX_SEMI)
+  $ ...[truncated]
+2026-10-03T11:16:39-0400  INFO     bash_end      [ok] 2L stdout
+  | Compiling C++ code into executable...
+  | Output: /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/PCSEDIT
+2026-10-03T11:16:46-0400  INFO     bash_start    grep -n "^make_ui\|^viewN = VAL\|^cfg_load" PCSEDIT.BAS
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ grep -n "^make_ui\|^viewN = VAL\|^cfg_load" PCSEDIT.BAS
+2026-10-03T11:16:46-0400  INFO     bash_end      [ok] 3L stdout
+  | 377:cfg_load
+  | 386:make_ui
+  | 423:viewN = VAL(cfg_get("vzoom", "84"))
+2026-10-03T11:16:55-0400  INFO     bash_start    python3 - <<'PYEOF' | p='PCSEDIT.BAS'; s=open(p).read() | def r(a,b): | global s | assert s.count(a)==1,a; s=s.replace(a,b) | r("""viewN = VAL(cfg_get("vzoom", "84")) | viewLo = VAL(cfg_get("vlow", "…
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ python3 - <<'PYEOF'
+  $ p='PCSEDIT.BAS'; s=open(p).read()
+  $ def r(a,b):
+  $     global s
+  $     assert s.count(a)==1,a; s=s.replace(a,b)
+  $ r("""viewN = VAL(cfg_get("vzoom", "84"))
+  $ viewLo = VAL(cfg_get("vlow", "33"))
+  $ ""","")
+  $ r("""cfg_load
+  $ ""","""cfg_load
+  $ viewN = VAL(cfg_get("vzoom", "84")) ' (before make_ui lays out the roll)
+  $ viewLo = VAL(cfg_get("vlow", "33"))
+  $ """)
+  $ open(p,'w').write(s)
+  $ PYEOF
+  $ sed -n 375,382p PCSEDIT.BAS; export SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad && python3 - <<'PYEOF'
+  $ import os
+  $ SP=os.environ['SP']; here=os.getcwd()
+  $ s=open('PCSEDIT.BAS').read()
+  $ lines=s.split('\n'); i=lines.index('DO')
+  $ lines.insert(i,'''open_bank "%s/ASSETS/TUNES/BIRTHDAY.SND"
+  $ set_zoom 2
+  $ viewN = VAL(ENVIRON$("VZ")): viewLo = VAL(ENVIRON$("VL")): fit_view
+  $ vbarUntil = TIMER + 100
+  $ heldNote = 64
+  $ DIM SHARED shT AS DOUBLE: shT = TIMER''' % here)
+  $ s='\n'.join(lines)
+  $ a="    midi_poll\n    metronome\n"
+  $ s=s.replace(a,a+'    IF TIMER - shT > 1.2 THEN _SAVEIMAGE ENVIRON$("SHOT"), scrImg: SYSTEM\n',1)
+  $ open(SP+'/help/V.BAS','w').write(s)
+  $ PYEOF
+  $ cp PCSMIDI.B? PCSPKR.B? $SP/help/; cd $SP/help && /home/grymmjack/git/qb64pe/qb64pe -x V.BAS -o ./V 2>&1 | grep -i "error\|Output"; for z in "84 33" "24 50" "12 58"; do set -- $z; SHOT=$PWD/v$1.png VZ=$1 VL=$2 HOME=$PWD/h1280 PCSEDIT_NOMIDI=1 DISPLAY=:99 timeout 20 ./V; done; ls v*.png
+2026-10-03T11:17:29-0400  NOTICE   prompt        again
+  > again
+2026-10-03T11:17:46-0400  INFO     bash_start    python3 - <<'PYEOF' | p='PCSEDIT.BAS'; s=open(p).read() | def r(a,b): | global s | assert s.count(a)==1,a; s=s.replace(a,b) | r("""FUNCTION view_hi& | view_hi = viewLo + (CANVAS_H + PX_SEMI - 1) \\ P…
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ python3 - <<'PYEOF'
+  $ p='PCSEDIT.BAS'; s=open(p).read()
+  $ def r(a,b):
+  $     global s
+  $     assert s.count(a)==1,a; s=s.replace(a,b)
+  $ r("""FUNCTION view_hi&
+  $     view_hi = viewLo + (CANVAS_H + PX_SEMI - 1) \\ PX_SEMI - 1
+  $     IF view_hi > NOTE_HI - 1 THEN view_hi = NOTE_HI - 1
+  $ END FUNCTION""","""FUNCTION view_hi&
+  $     DIM h AS LONG ' (reading view_hi here would call it again)
+  $     h = viewLo + (CANVAS_H + PX_SEMI - 1) \\ PX_SEMI - 1
+  $     IF h > NOTE_HI - 1 THEN h = NOTE_HI - 1
+  $     view_hi = h
+  $ END FUNCTION""")
+  $ r("""viewN = VAL(cfg_get("vzoom", "84"))
+  $ viewLo = VAL(cfg_get("vlow", "33"))
+  $ ""","")
+  $ r("""\ncfg_load\nuiScale""","""\ncfg_load\nviewN = VAL(cfg_get("vzoom", "84")) ' (before make_ui lays out the roll)\nviewLo = VAL(cfg_get("vlow", "33"))\nuiScale""")
+  $ open(p,'w').write(s)
+  $ PYEOF
+  $ grep -n "FUNCTION [a-z_]*[&%#!$~]*$" PCSEDIT.BAS | awk -F'FUNCTION ' '{print $2}' | sed 's/[&%#!$~]*$//' | while read f; do awk -v f="$f" '$0 ~ "^FUNCTION "f"[&%#!$~]*$"{inf=1;next} inf && /^END FUNCTION/{inf=0} inf && $0 ~ "(IF|=|\\(|\\+|-|AND|OR) *"f"([^_a-zA-Z0-9(]|$)" && $0 !~ "^ *"f" *=" {print f": "$0}' PCSEDIT.BAS; done | head
+2026-10-03T11:17:46-0400  INFO     bash_end      [ok] 0L stdout
+2026-10-03T11:17:46-0400  NOTICE   prompt        keeps happening you need to do this with catch onerror
+  > keeps happening you need to do this with catch onerror
+2026-10-03T11:17:49-0400  INFO     bash_start    pgrep -a -x V; pgrep -a -x M; pgrep -a -x H; pgrep -a -x T3; pgrep -a PCSEDIT; pkill -x V; pkill -x M; pkill -x H; sleep 0.5; pgrep -a -x V || echo "no V left"
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ pgrep -a -x V; pgrep -a -x M; pgrep -a -x H; pgrep -a -x T3; pgrep -a PCSEDIT; pkill -x V; pkill -x M; pkill -x H; sleep 0.5; pgrep -a -x V || echo "no V left"
+2026-10-03T11:17:50-0400  INFO     bash_end      [ok] 1L stdout
+  | no V left
+2026-10-03T11:17:54-0400  INFO     bash_start    grep -n "ON ERROR\|errNum\b.*=.*ERR\|^err_trap\|RESUME" PCSEDIT.BAS | head; grep -n "ON ERROR\|RESUME" DN1PLAY.BAS | head
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ grep -n "ON ERROR\|errNum\b.*=.*ERR\|^err_trap\|RESUME" PCSEDIT.BAS | head; grep -n "ON ERROR\|RESUME" DN1PLAY.BAS | head
+2026-10-03T11:17:54-0400  INFO     bash_end      [ok] 5L stdout
+  | 374:ON ERROR GOTO trap
+  | 581:errNum = ERR
+  | 582:RESUME NEXT
+  | 98:ON ERROR GOTO trap
+  | 247:RESUME NEXT
+2026-10-03T11:18:04-0400  INFO     bash_start    cat >> /home/grymmjack/.claude/projects/-home-grymmjack-git-qb64/memory/no-desktop-automation.md <<'EOF' | | Also: QB64 runtime error dialogs (and _MESSAGEBOX / file dialogs) go through kdialog/zenit…
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ cat >> /home/grymmjack/.claude/projects/-home-grymmjack-git-qb64/memory/no-desktop-automation.md <<'EOF'
+  $ 
+  $ Also: QB64 runtime error dialogs (and _MESSAGEBOX / file dialogs) go through kdialog/zenity, which follow WAYLAND_DISPLAY and the KDE session, not DISPLAY=:99 - a crashing test build pops "Critical Error" boxes on the user's desktop. Run every GUI test as `env -u WAYLAND_DISPLAY -u XDG_CURRENT_DESKTOP -u KDE_FULL_SESSION -u XDG_SESSION_TYPE QT_QPA_PLATFORM=xcb GDK_BACKEND=x11 DISPLAY=:99 ...`.
+  $ EOF
+  $ echo saved
+2026-10-03T11:18:04-0400  INFO     bash_end      [ok] 1L stdout
+  | saved
+2026-10-03T11:18:12-0400  INFO     bash_start    export SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad && /home/grymmjack/git/qb64pe/qb64pe -x PCSEDIT.BAS -o $SP/PCSEDIT 2>&1 | grep -i "error\|Output" &…
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ export SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad && /home/grymmjack/git/qb64pe/qb64pe -x PCSEDIT.BAS -o $SP/PCSEDIT 2>&1 | grep -i "error\|Output" && python3 - <<'PYEOF'
+  $ import os
+  $ SP=os.environ['SP']; here=os.getcwd()
+  $ s=open('PCSEDIT.BAS').read()
+  $ lines=s.split('\n'); i=lines.index('DO')
+  $ lines.insert(i,'''open_bank "%s/ASSETS/TUNES/BIRTHDAY.SND"
+  $ set_zoom 2
+  $ viewN = VAL(ENVIRON$("VZ")): viewLo = VAL(ENVIRON$("VL")): fit_view
+  $ vbarUntil = TIMER + 100
+  $ heldNote = 64
+  $ DIM SHARED shT AS DOUBLE: shT = TIMER''' % here)
+  $ s='\n'.join(lines)
+  $ a="    midi_poll\n    metronome\n"
+  $ s=s.replace(a,a+'    IF TIMER - shT > 1.2 THEN _SAVEIMAGE ENVIRON$("SHOT"), scrImg: SYSTEM\n',1)
+  $ open(SP+'/help/V.BAS','w').write(s)
+  $ PYEOF
+  $ cp PCSMIDI.B? PCSPKR.B? $SP/help/; cd $SP/help && /home/grymmjack/git/qb64pe/qb64pe -x V.BAS -o ./V 2>&1 | grep -i "error\|Output"; for z in "84 33" "24 50" "12 58"; do set -- $z; env -u WAYLAND_DISPLAY -u XDG_CURRENT_DESKTOP -u KDE_FULL_SESSION -u XDG_SESSION_TYPE QT_QPA_PLATFORM=xcb GDK_BACKEND=x11 DISPLAY=:99 SHOT=$PWD/v$1.png VZ=$1 VL=$2 HOME=$PWD/h1280 PCSEDIT_NOMIDI=1 timeout 20 ./V 2>&1 | tail -2; done; ls v*.png
+2026-10-03T11:18:23-0400  WARNING  bash_end      [stderr] 7L stdout / 2L stderr
+  | Beginning C++ output from QB64 code... 
+  | Output: /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/PCSEDIT
+  | Beginning C++ output from QB64 code... 
+  | Output: /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/help/V
+  | 'v12 58.png'
+  | 'v24 50.png'
+  | 'v84 33.png'
+  ! 
+  ! Shell cwd was reset to /home/grymmjack/git/qb64
+2026-10-03T11:18:35-0400  INFO     bash_start    cd /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/help && rm -f v*.png; for z in 24:50 12:58; do vz=${z%:*}; vl=${z#*:}; env -u WAYLAND_DISPLAY -u XDG_CURRE…
+  > cwd: /home/grymmjack/git/qb64
+  $ cd /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/help && rm -f v*.png; for z in 24:50 12:58; do vz=${z%:*}; vl=${z#*:}; env -u WAYLAND_DISPLAY -u XDG_CURRENT_DESKTOP -u KDE_FULL_SESSION -u XDG_SESSION_TYPE QT_QPA_PLATFORM=xcb GDK_BACKEND=x11 DISPLAY=:99 SHOT=$PWD/v$vz.png VZ=$vz VL=$vl HOME=$PWD/h1280 PCSEDIT_NOMIDI=1 timeout 20 ./V 2>&1 | tail -2; done; ls v*.png
+2026-10-03T11:18:39-0400  WARNING  bash_end      [stderr] 2L stdout / 2L stderr
+  | v12.png
+  | v24.png
+  ! 
+  ! Shell cwd was reset to /home/grymmjack/git/qb64
+2026-10-03T11:18:57-0400  INFO     bash_start    cd /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER && export SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad && python3 - <<'PYEOF' | import os | SP=os.env…
+  > cwd: /home/grymmjack/git/qb64
+  $ cd /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER && export SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad && python3 - <<'PYEOF'
+  $ import os
+  $ SP=os.environ['SP']
+  $ s=open('PCSEDIT.BAS').read()
+  $ lines=s.split('\n'); i=lines.index('DO')
+  $ lines.insert(i,'''DIM tsF AS LONG, tsY AS LONG, tsI AS LONG
+  $ tsF = FREEFILE: OPEN "SPX/pt/vz.txt" FOR OUTPUT AS #tsF
+  $ viewN = 84: fit_view
+  $ PRINT #tsF, "full: px"; PX_SEMI; " lo"; viewLo; " hi"; view_hi; " zoomed"; view_zoomed
+  $ tsY = note_y(60)
+  $ FOR tsI = 1 TO 6: vzoom 1, tsY: PRINT #tsF, "zoom in: n"; viewN; " px"; PX_SEMI; " lo"; viewLo; " hi"; view_hi; " note@mouse"; y_note(tsY): NEXT
+  $ vzoom 1, tsY: PRINT #tsF, "past 1 oct: n"; viewN
+  $ vscroll 100: PRINT #tsF, "scroll top: lo"; viewLo; " hi"; view_hi
+  $ vscroll -200: PRINT #tsF, "scroll bottom: lo"; viewLo
+  $ vbar_drag CANVAS_Y: PRINT #tsF, "drag to top: lo"; viewLo; " hi"; view_hi
+  $ vbar_drag CANVAS_Y + CANVAS_H: PRINT #tsF, "drag to bottom: lo"; viewLo
+  $ FOR tsI = 1 TO 8: vzoom -1, tsY: NEXT: PRINT #tsF, "zoom out: n"; viewN; " px"; PX_SEMI; " lo"; viewLo; " zoomed"; view_zoomed
+  $ CLOSE #tsF
+  $ SYSTEM'''.replace('SPX',SP))
+  $ open(SP+'/pt/T4.BAS','w').write('\n'.join(lines))
+  $ PYEOF
+  $ cp PCSMIDI.B? PCSPKR.B? $SP/pt/; cd $SP/pt && /home/grymmjack/git/qb64pe/qb64pe -x T4.BAS -o ./T4 2>&1 | grep -i "error\|Output"; env -u WAYLAND_DISPLAY -u XDG_CURRENT_DESKTOP -u KDE_FULL_SESSION -u XDG_SESSION_TYPE QT_QPA_PLATFORM=xcb GDK_BACKEND=x11 DISPLAY=:99 HOME=$SP/pt/home PCSEDIT_NOMIDI=1 timeout 20 ./T4 2>&1 | tail -2; cat vz.txt
+2026-10-03T11:19:01-0400  WARNING  bash_end      [stderr] 15L stdout / 2L stderr
+  | Beginning C++ output from QB64 code... 
+  | Output: /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/pt/T4
+  | full: px 6  lo 33  hi 116  zoomed 0 
+  | zoom in: n 84  px 6  lo 33  hi 116  note@mouse 60 
+  | zoom in: n 84  px 6  lo 33  hi 116  note@mouse 60 
+  | zoom in: n 84  px 6  lo 33  hi 116  note@mouse 60 
+  | zoom in: n 84  px 6  lo 33  hi 116  note@mouse 60 
+  | zoom in: n 84  px 6  lo 33  hi 116  note@mouse 60 
+  | zoom in: n 84  px 6  lo 33  hi 116  note@mouse 60 
+  | past 1 oct: n 84 
+  | scroll top: lo 33  hi 116 
+  | scroll bottom: lo 33 
+  | drag to top: lo 33  hi 116 
+  | drag to bottom: lo 33 
+  | zoom out: n 12  px 42  lo 57  zoomed-1
+  ! 
+  ! Shell cwd was reset to /home/grymmjack/git/qb64
+2026-10-03T11:19:10-0400  INFO     bash_start    cd /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER && sed -i 's/ vzoom -SGN(wheel), mly '"'"' Shift+wheel: taller \/ shorter note rows/ vzoom SGN(wheel), mly '"'"' Shift+wheel up: taller rows (fewer n…
+  > cwd: /home/grymmjack/git/qb64
+  $ cd /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER && sed -i 's/            vzoom -SGN(wheel), mly '"'"' Shift+wheel: taller \/ shorter note rows/            vzoom SGN(wheel), mly '"'"' Shift+wheel up: taller rows (fewer notes), down: shorter/' PCSEDIT.BAS && grep -n "vzoom SGN(wheel)" PCSEDIT.BAS && export SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad && cd $SP/pt && sed -i 's/vzoom 1, tsY: PRINT #tsF, "zoom in/vzoom -1, tsY: PRINT #tsF, "zoom in/; s/vzoom 1, tsY: PRINT #tsF, "past/vzoom -1, tsY: PRINT #tsF, "past/; s/FOR tsI = 1 TO 8: vzoom -1, tsY/FOR tsI = 1 TO 8: vzoom 1, tsY/' T4.BAS && /home/grymmjack/git/qb64pe/qb64pe -x T4.BAS -o ./T4 2>&1 | grep -i "error\|Output"; env -u WAYLAND_DISPLAY -u XDG_CURRENT_DESKTOP -u KDE_FULL_SESSION -u XDG_SESSION_TYPE QT_QPA_PLATFORM=xcb GDK_BACKEND=x11 DISPLAY=:99 HOME=$SP/pt/home PCSEDIT_NOMIDI=1 timeout 20 ./T4 2>&1 | tail -2; cat vz.txt
+2026-10-03T11:19:14-0400  WARNING  bash_end      [stderr] 16L stdout / 2L stderr
+  | 488:            vzoom SGN(wheel), mly ' Shift+wheel up: taller rows (fewer notes), down: shorter
+  | Beginning C++ output from QB64 code... 
+  | Output: /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/pt/T4
+  | full: px 6  lo 33  hi 116  zoomed 0 
+  | zoom in: n 72  px 7  lo 37  hi 108  note@mouse 60.07142857142857 
+  | zoom in: n 60  px 8  lo 40  hi 102  note@mouse 60.125 
+  | zoom in: n 48  px 10  lo 44  hi 94  note@mouse 60 
+  | zoom in: n 36  px 14  lo 49  hi 84  note@mouse 60.28571428571428 
+  | zoom in: n 24  px 21  lo 53  hi 76  note@mouse 60.35714285714285 
+  | zoom in: n 12  px 42  lo 57  hi 68  note@mouse 60.42857142857143 
+  | past 1 oct: n 12 
+  | scroll top: lo 105  hi 116 
+  | scroll bottom: lo 33 
+  | drag to top: lo 105  hi 116 
+  | drag to bottom: lo 33 
+  | zoom out: n 84  px 6  lo 33  zoomed 0
+  ! 
+  ! Shell cwd was reset to /home/grymmjack/git/qb64
+2026-10-03T11:19:25-0400  INFO     bash_start    cd /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER && python3 - <<'PYEOF' | p='PCSEDIT.BAS'; s=open(p).read() | a=''' help_add t(), n, "wheel|scroll (Ctrl: zoom)"''' | assert a in s | s=s.replace(a,a+…
+  > cwd: /home/grymmjack/git/qb64
+  $ cd /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER && python3 - <<'PYEOF'
+  $ p='PCSEDIT.BAS'; s=open(p).read()
+  $ a='''    help_add t(), n, "wheel|scroll (Ctrl: zoom)"'''
+  $ assert a in s
+  $ s=s.replace(a,a+'''
+  $     help_add t(), n, "Shift+wheel|key size: all notes ... 1 octave"
+  $     help_add t(), n, "wheel on keys|scroll the notes up / down"''')
+  $ a="'   wheel             scroll          Ctrl+wheel     zoom"
+  $ assert a in s
+  $ s=s.replace(a,a+"\n'   Shift+wheel       key size (all notes ... one octave); wheel over the keys,\n'                     or the bar left of them, scrolls the notes")
+  $ open(p,'w').write(s)
+  $ p='README.md'; s=open(p).read()
+  $ a="**Reading the roll:**"
+  $ assert s.count(a)==1
+  $ s=s.replace(a,"""**Zooming the keys:** **Shift+wheel** makes the note rows taller or
+  $ shorter: every note in view (as it starts), then 6, 5, 4, 3, 2 octaves, down
+  $ to a single octave. The note under the mouse stays put. Zoomed in:
+  $ 
+  $ * the wheel over the piano keys scrolls up and down through the notes, and a
+  $   thin scrollbar appears left of the keys while you scroll, zoom or point at
+  $   the keys (drag it, or click above or below its thumb to jump);
+  $ * the keys show their names (C4, F#4, ...) once there is room, and note bars
+  $   grow thicker and show their note names when they're long enough.
+  $ 
+  $ The zoom and the notes in view are remembered between sessions.
+  $ 
+  $ """ + a)
+  $ open(p,'w').write(s)
+  $ PYEOF
+  $ SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad && /home/grymmjack/git/qb64pe/qb64pe -x PCSEDIT.BAS -o $SP/PCSEDIT 2>&1 | tail -1; git -C /home/grymmjack/git/qb64 status --short
+2026-10-03T11:19:28-0400  INFO     bash_end      [ok] 5L stdout
+  | Output: /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/PCSEDIT
+  |  M .claude/activity.log
+  |  M qb64/SOUND/PC-SPEAKER/PCSEDIT.BAS
+  |  M qb64/SOUND/PC-SPEAKER/README.md
+  | ?? MYSOUNDS.SND
+2026-10-03T11:49:40-0400  NOTICE   prompt        <ide_opened_file>The user opened the file /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER/PCSEDIT.BAS in the IDE. This may or may not be related to the current task.</ide_opened_file>
+  > <ide_opened_file>The user opened the file /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER/PCSEDIT.BAS in the IDE. This may or may not be related to the current task.</ide_opened_file>
+  > this is excellent work!
+  > 
+  > Can we make double clicking on the piano keys zoom to fit whatever notes are in the track, or the selected notes. this way i can quickly zoom in and out.
+  > 
+  > And double clicking in the top timeline bar to zoom to fit the length?
+  > 
+  > So double click notes = fit height, double click bar = fit length?
+  > 
+  > And middle click = do both at once?
+2026-10-03T11:49:54-0400  INFO     bash_start    sed -n "$(grep -n '^SUB set_zoom ' PCSEDIT.BAS | cut -d: -f1),+55p" PCSEDIT.BAS
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ sed -n "$(grep -n '^SUB set_zoom ' PCSEDIT.BAS | cut -d: -f1),+55p" PCSEDIT.BAS
+2026-10-03T11:49:54-0400  INFO     bash_end      [ok] 56L stdout
+  | SUB set_zoom (z AS DOUBLE)
+  |     set_zoom_at z, CANVAS_X + CANVAS_W \ 2
+  | END SUB
+  | 
+  | 
+  | ''
+  | ' Zoom keeping the step under screen x (the mouse) where it is.
+  | '
+  | ''
+  | ' The zoom ladder: whole pixels per step down to 1, then whole steps per
+  | ' pixel (1/2 ... 1/10), so steps never straddle pixels unevenly. 1/10 fits
+  | ' the longest sound (64 s) on screen; 1/4 fits 16 bars at 120 BPM.
+  | '
+  | FUNCTION zoom_step# (dirn AS LONG)
+  |     DIM lv AS STRING, i AS LONG, n AS LONG, z(0 TO 30) AS DOUBLE, best AS LONG, p AS LONG, q AS LONG
+  |     lv = "64 48 32 24 16 12 10 8 6 5 4 3 2 1 -2 -3 -4 -5 -6 -8 -10 "
+  |     p = 1
+  |     DO
+  |         q = INSTR(p, lv, " ")
+  |         IF q = 0 THEN EXIT DO
+  |         z(n) = VAL(MID$(lv, p, q - p))
+  |         IF z(n) < 0 THEN z(n) = 1 / -z(n)
+  |         n = n + 1
+  |         p = q + 1
+  |     LOOP
+  |     ' the level nearest the zoom now, then one along (in = bigger)
+  |     best = 0
+  |     FOR i = 1 TO n - 1
+  |         IF ABS(LOG(z(i) / zoom)) < ABS(LOG(z(best) / zoom)) THEN best = i
+  |     NEXT
+  |     best = best - dirn
+  |     IF best < 0 THEN best = 0
+  |     IF best > n - 1 THEN best = n - 1
+  |     zoom_step = z(best)
+  | END FUNCTION
+  | 
+  | 
+  | FUNCTION zoom_name$
+  |     IF zoom >= 1 THEN zoom_name = LTRIM$(STR$(CLNG(zoom))) ELSE zoom_name = "1/" + LTRIM$(STR$(CLNG(1 / zoom)))
+  | END FUNCTION
+  | 
+  | 
+  | SUB set_zoom_at (z AS DOUBLE, x AS LONG)
+  |     DIM px AS LONG, at AS DOUBLE
+  |     px = x - CANVAS_X
+  |     IF px < 0 OR px >= CANVAS_W THEN px = CANVAS_W \ 2
+  |     at = scrollX + px / zoom ' the step under x, before zooming
+  |     zoom = z
+  |     IF zoom < 0.1 THEN zoom = 0.1 ' 1/10: about 10,000 steps (71 s) on screen
+  |     IF zoom > 64 THEN zoom = 64 ' 64 px a step: about 15 steps (0.1 s) on screen
+  |     scroll_to CLNG(at - px / zoom)
+  | END SUB
+  | 
+  | 
+  | SUB scroll_to (s AS LONG)
+  |     scrollX = s
+2026-10-03T11:50:33-0400  INFO     bash_start    python3 - <<'PYEOF' | p='PCSEDIT.BAS'; s=open(p).read() | def r(a,b,c=1): | global s | assert s.count(a)==c,(a[:100],s.count(a)); s=s.replace(a,b) | | r("""DIM SHARED vbarGrab AS LONG ' dragging it: …
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ python3 - <<'PYEOF'
+  $ p='PCSEDIT.BAS'; s=open(p).read()
+  $ def r(a,b,c=1):
+  $     global s
+  $     assert s.count(a)==c,(a[:100],s.count(a)); s=s.replace(a,b)
+  $ 
+  $ r("""DIM SHARED vbarGrab AS LONG ' dragging it: where on the thumb it was taken""","""DIM SHARED vbarGrab AS LONG ' dragging it: where on the thumb it was taken
+  $ DIM SHARED lastClickT AS DOUBLE ' the last left click, for double clicks
+  $ DIM SHARED lastClickX AS LONG
+  $ DIM SHARED lastClickY AS LONG""")
+  $ 
+  $ # main loop: middle click
+  $ r("""    wheel = 0
+  $     DO WHILE _MOUSEINPUT
+  $         wheel = wheel + _MOUSEWHEEL
+  $         mlx = INT(_MOUSEX / uiScale): mly = INT(_MOUSEY / uiScale)
+  $         handle_mouse mlx, mly, _MOUSEBUTTON(1), _MOUSEBUTTON(2)
+  $     LOOP""","""    wheel = 0
+  $     DO WHILE _MOUSEINPUT
+  $         wheel = wheel + _MOUSEWHEEL
+  $         mlx = INT(_MOUSEX / uiScale): mly = INT(_MOUSEY / uiScale)
+  $         handle_mouse mlx, mly, _MOUSEBUTTON(1), _MOUSEBUTTON(2)
+  $         ' middle click over the roll, its keys or its ruler: fit the notes
+  $         ' and the length at once
+  $         IF _MOUSEBUTTON(3) AND NOT mid3 THEN
+  $             IF mlx >= RULER_X - 30 AND mly >= TIME_Y AND mly < CANVAS_Y + CANVAS_H THEN fit_notes: fit_length
+  $         END IF
+  $         mid3 = _MOUSEBUTTON(3)
+  $     LOOP""")
+  $ r("""DIM k AS LONG, f AS STRING, wheel AS LONG, mx AS LONG, my AS LONG, b1 AS INTEGER, b2 AS INTEGER""","""DIM k AS LONG, f AS STRING, wheel AS LONG, mx AS LONG, my AS LONG, b1 AS INTEGER, b2 AS INTEGER, mid3 AS INTEGER""")
+  $ 
+  $ # handle_mouse: double clicks
+  $ r("""    ' --- the note scrollbar (left of the piano keys, while zoomed)
+  $     IF drawing = 20 THEN""","""    ' --- double clicks: on the keys, fit the notes; on the ruler, the length
+  $     IF b1 AND NOT wasDown AND drawing = 0 THEN
+  $         dbl = TIMER - lastClickT < 0.35 AND TIMER >= lastClickT AND ABS(mx - lastClickX) < 6 AND ABS(my - lastClickY) < 6
+  $         lastClickT = TIMER: lastClickX = mx: lastClickY = my
+  $         IF dbl THEN
+  $             lastClickT = 0 ' (a third click starts over)
+  $             IF mx >= RULER_X AND mx < CANVAS_X AND my >= CANVAS_Y AND my < CANVAS_Y + CANVAS_H THEN
+  $                 audition_stop
+  $                 fit_notes
+  $                 wasDown = -1: EXIT SUB
+  $             ELSEIF mx >= CANVAS_X AND my >= TIME_Y AND my < CANVAS_Y THEN
+  $                 fit_length
+  $                 wasDown = -1: EXIT SUB
+  $             END IF
+  $         END IF
+  $     END IF
+  $ 
+  $     ' --- the note scrollbar (left of the piano keys, while zoomed)
+  $     IF drawing = 20 THEN""")
+  $ r("""SUB handle_mouse (mx AS LONG, my AS LONG, b1 AS INTEGER, b2 AS INTEGER)
+  $     STATIC wasDown AS INTEGER
+  $     DIM s AS LONG, nt AS DOUBLE, shift AS INTEGER, inCanvas AS INTEGER, row AS LONG""","""SUB handle_mouse (mx AS LONG, my AS LONG, b1 AS INTEGER, b2 AS INTEGER)
+  $     STATIC wasDown AS INTEGER
+  $     DIM s AS LONG, nt AS DOUBLE, shift AS INTEGER, inCanvas AS INTEGER, row AS LONG, dbl AS INTEGER""")
+  $ 
+  $ # fit functions
+  $ r("""SUB vscroll (dn AS LONG)""","""''
+  $ ' Double click on the keys: zoom the notes to fit the selection, or every
+  $ ' note of the sound (all voices), with a semitone to spare above and below.
+  $ '
+  $ SUB fit_notes
+  $     DIM lo AS LONG, hi AS LONG, k AS LONG, i AS LONG, n AS LONG, d AS STRING, rows AS DOUBLE
+  $     lo = 999: hi = -1
+  $     IF selOn THEN
+  $         lo = selLo: hi = selHi
+  $     ELSE
+  $         FOR k = 1 TO VOICES
+  $             d = voice_data(cur, k)
+  $             FOR i = 1 TO LEN(d) - 1 STEP 2
+  $                 n = ASC(d, i) + ASC(d, i + 1) * 256&
+  $                 IF n THEN
+  $                     n = INT(div_note(n) + 0.5)
+  $                     IF n < lo THEN lo = n
+  $                     IF n > hi THEN hi = n
+  $                 END IF
+  $             NEXT
+  $         NEXT
+  $ ...[truncated]
+2026-10-03T11:50:37-0400  INFO     bash_end      [ok] 1L stdout
+  | Output: /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/PCSEDIT
+2026-10-03T11:50:48-0400  INFO     bash_start    export SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad && python3 - <<'PYEOF' | import os | SP=os.environ['SP']; here=os.getcwd() | s=open('PCSEDIT.BAS').…
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ export SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad && python3 - <<'PYEOF'
+  $ import os
+  $ SP=os.environ['SP']; here=os.getcwd()
+  $ s=open('PCSEDIT.BAS').read()
+  $ lines=s.split('\n'); i=lines.index('DO')
+  $ lines.insert(i,'''DIM tsF AS LONG, tsY AS LONG
+  $ open_bank "HERE/ASSETS/TUNES/CANOND.SND"
+  $ tsF = FREEFILE: OPEN "SPX/pt/fit.txt" FOR OUTPUT AS #tsF
+  $ tsY = CANVAS_Y + 200
+  $ handle_mouse RULER_X + 10, tsY, -1, 0: handle_mouse RULER_X + 10, tsY, 0, 0
+  $ handle_mouse RULER_X + 10, tsY, -1, 0: handle_mouse RULER_X + 10, tsY, 0, 0
+  $ PRINT #tsF, "dbl keys: lo "; note_name(viewLo); " hi "; note_name(view_hi); " px"; PX_SEMI; " ["; statusMsg; "]"
+  $ handle_mouse CANVAS_X + 300, TIME_Y + 5, -1, 0: handle_mouse CANVAS_X + 300, TIME_Y + 5, 0, 0
+  $ handle_mouse CANVAS_X + 300, TIME_Y + 5, -1, 0: handle_mouse CANVAS_X + 300, TIME_Y + 5, 0, 0
+  $ PRINT #tsF, "dbl ruler: zoom"; zoom; " scrollX"; scrollX; " len"; snd_len(cur); " shows"; CANVAS_W / zoom; " ["; statusMsg; "]"
+  $ selS0 = 1000: selS1 = 1500: selLo = 60: selHi = 72: selOn = -1
+  $ fit_notes: fit_length
+  $ PRINT #tsF, "sel: lo "; note_name(viewLo); " hi "; note_name(view_hi); " zoom"; zoom; " scrollX"; scrollX
+  $ CLOSE #tsF
+  $ DIM SHARED shT AS DOUBLE: shT = TIMER'''.replace('SPX',SP).replace('HERE',here))
+  $ s='\n'.join(lines)
+  $ a="    midi_poll\n    metronome\n"
+  $ s=s.replace(a,a+'    IF TIMER - shT > 1.2 THEN _SAVEIMAGE "'+SP+'/pt/fit.png", scrImg: SYSTEM\n',1)
+  $ open(SP+'/pt/T5.BAS','w').write(s)
+  $ PYEOF
+  $ cp PCSMIDI.B? PCSPKR.B? $SP/pt/; cd $SP/pt && /home/grymmjack/git/qb64pe/qb64pe -x T5.BAS -o ./T5 2>&1 | grep -i "error\|Output"; env -u WAYLAND_DISPLAY -u XDG_CURRENT_DESKTOP -u KDE_FULL_SESSION -u XDG_SESSION_TYPE QT_QPA_PLATFORM=xcb GDK_BACKEND=x11 DISPLAY=:99 HOME=$SP/help/h1280 PCSEDIT_NOMIDI=1 timeout 20 ./T5 2>&1 | tail -2; cat fit.txt
+2026-10-03T11:50:53-0400  WARNING  bash_end      [stderr] 5L stdout / 2L stderr
+  | Beginning C++ output from QB64 code... 
+  | Output: /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/pt/T5
+  | dbl keys: lo B1 hi C#7 px 8  [Fit the sound's notes: D2 - A6  (middle click: notes and length)]
+  | dbl ruler: zoom .1666666666666667  scrollX 0  len 5950  shows 6024  [Fit 5950 steps (zoom 1/6)  (middle click: notes and length)]
+  | sel: lo B3 hi D5 zoom 2  scrollX 1000
+  ! 
+  ! Shell cwd was reset to /home/grymmjack/git/qb64
+2026-10-03T12:36:38-0400  NOTICE   prompt        <ide_opened_file>The user opened the file /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER/PCSEDIT.BAS in the IDE. This may or may not be related to the current task.</ide_opened_file>
+  > <ide_opened_file>The user opened the file /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER/PCSEDIT.BAS in the IDE. This may or may not be related to the current task.</ide_opened_file>
+  > when i change the bpm i expected the notes to change their timing. can you modify the code so that happens - and it asks when we do a bpm change? so that the notes are adjusted to accommodate that new speed?
+2026-10-03T12:36:51-0400  INFO     bash_start    cd /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER && sed -n "$(grep -n '^SUB ask_bpm' PCSEDIT.BAS | cut -d: -f1),+18p" PCSEDIT.BAS; sed -n "$(grep -n '^FUNCTION ask&' PCSEDIT.BAS | cut -d: -f1),+28p"…
+  > cwd: /home/grymmjack/git/qb64
+  $ cd /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER && sed -n "$(grep -n '^SUB ask_bpm' PCSEDIT.BAS | cut -d: -f1),+18p" PCSEDIT.BAS; sed -n "$(grep -n '^FUNCTION ask&' PCSEDIT.BAS | cut -d: -f1),+28p" PCSEDIT.BAS
+2026-10-03T12:36:51-0400  INFO     bash_end      [ok] 48L stdout
+  | SUB ask_bpm
+  |     DIM t AS STRING
+  |     t = _INPUTBOX$("Tempo", "Tempo for the grid, in BPM (20-400):", LTRIM$(STR$(bpm)))
+  |     after_dialog
+  |     IF t = "" THEN EXIT SUB
+  |     IF VAL(t) >= 20 AND VAL(t) <= 400 THEN
+  |         bpm = VAL(t)
+  |         set_status "Tempo" + STR$(bpm) + " BPM" + grid_info
+  |     ELSE
+  |         set_status "Tempo has to be between 20 and 400 BPM"
+  |     END IF
+  | END SUB
+  | 
+  | 
+  | ''
+  | ' Ctrl+K: plain notes <-> the selected sound as an instrument. With a
+  | ' different sound selected than the instrument, it becomes the instrument.
+  | '
+  | SUB toggle_keys_mode (lockIt AS INTEGER)
+  | FUNCTION ask& (msg AS STRING, kind AS STRING, icon AS STRING, defaultBtn AS LONG)
+  |     ask = _MESSAGEBOX("PCSEDIT", msg, kind, icon, defaultBtn)
+  |     after_dialog
+  | END FUNCTION
+  | 
+  | 
+  | ''
+  | ' Before something that throws the bank away (quit, new, open): with
+  | ' unsaved changes ask Save / Don't save / Cancel. TRUE = go ahead.
+  | '
+  | FUNCTION ok_to_lose% (what AS STRING)
+  |     DIM nm AS STRING
+  |     IF NOT dirty THEN ok_to_lose = -1: EXIT FUNCTION
+  |     nm = "this bank"
+  |     IF LEN(savePath) THEN nm = PCSPK_FilePart(savePath) ELSE IF LEN(openedPath) THEN nm = PCSPK_FilePart(openedPath)
+  |     SELECT CASE ask(what + ": save the changes to " + nm + " first?", "yesnocancel", "warning", 1)
+  |         CASE 1 '                                       Yes: save, then go on if it saved
+  |             save_now
+  |             ok_to_lose = NOT dirty
+  |         CASE 2 '                                       No: throw the changes away
+  |             ok_to_lose = -1
+  |     END SELECT '                                       Cancel (0): stay
+  | END FUNCTION
+  | 
+  | 
+  | ''
+  | ' Ctrl+S: save to the file saved before, or ask where (Save As).
+  | '
+  | SUB save_now
+2026-10-03T12:37:10-0400  INFO     bash_start    python3 - <<'PYEOF' | p='PCSEDIT.BAS'; s=open(p).read() | def r(a,b): | global s | assert s.count(a)==1,a[:80]; s=s.replace(a,b) | r(""" IF VAL(t) >= 20 AND VAL(t) <= 400 THEN | bpm = VAL(t) | set_st…
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ python3 - <<'PYEOF'
+  $ p='PCSEDIT.BAS'; s=open(p).read()
+  $ def r(a,b):
+  $     global s
+  $     assert s.count(a)==1,a[:80]; s=s.replace(a,b)
+  $ r("""    IF VAL(t) >= 20 AND VAL(t) <= 400 THEN
+  $         bpm = VAL(t)
+  $         set_status "Tempo" + STR$(bpm) + " BPM" + grid_info
+  $     ELSE
+  $         set_status "Tempo has to be between 20 and 400 BPM"
+  $     END IF
+  $ END SUB""","""    IF VAL(t) < 20 OR VAL(t) > 400 THEN set_status "Tempo has to be between 20 and 400 BPM": EXIT SUB
+  $     nb = VAL(t)
+  $     IF nb = bpm THEN EXIT SUB
+  $     ' the sound was written at the old tempo: move its notes to the new one?
+  $     IF snd_len(cur) > 0 THEN
+  $         SELECT CASE ask("Tempo" + STR$(bpm) + " -> " + LTRIM$(STR$(nb)) + " BPM." + CHR$(10) + CHR$(10) + "Change the timing of " + sndName(cur) + "'s notes to the new tempo?" + CHR$(10) + "(Yes: the notes speed up / slow down with it. No: only the grid changes.)", "yesnocancel", "question", 1)
+  $             CASE 1
+  $                 retime bpm / nb
+  $                 set_status "Tempo" + STR$(nb) + " BPM - " + sndName(cur) + " retimed to" + STR$(snd_len(cur)) + " steps (Ctrl+Z undoes)"
+  $             CASE 2
+  $                 set_status "Tempo" + STR$(nb) + " BPM (the grid only - the notes kept their timing)"
+  $             CASE ELSE
+  $                 set_status "Tempo unchanged": EXIT SUB
+  $         END SELECT
+  $     ELSE
+  $         set_status "Tempo" + STR$(nb) + " BPM" + grid_info
+  $     END IF
+  $     bpm = nb
+  $ END SUB
+  $ 
+  $ 
+  $ ''
+  $ ' Stretch (f > 1) or squeeze (f < 1) the current sound in time, every
+  $ ' voice. Each run of one pitch (or of silence) is moved and resized as a
+  $ ' whole, so notes keep their rests between them; the selection, the loop
+  $ ' region and the cursor go along.
+  $ '
+  $ SUB retime (f AS DOUBLE)
+  $     DIM k AS LONG, d AS STRING, o AS STRING, i AS LONG, n AS LONG, a AS LONG, b AS LONG
+  $     DIM v AS LONG, na AS LONG, nb AS LONG, pe AS LONG, j AS LONG, home AS LONG
+  $     push_undo
+  $     stop_playing
+  $     home = sndAct(cur)
+  $     FOR k = 1 TO VOICES
+  $         d = voice_data(cur, k)
+  $         n = LEN(d) \\ 2
+  $         IF n THEN
+  $             o = "": pe = 0
+  $             a = 0
+  $             DO WHILE a < n
+  $                 v = ASC(d, a * 2 + 1) + ASC(d, a * 2 + 2) * 256&
+  $                 b = a + 1
+  $                 DO WHILE b < n
+  $                     IF ASC(d, b * 2 + 1) + ASC(d, b * 2 + 2) * 256& <> v THEN EXIT DO
+  $                     b = b + 1
+  $                 LOOP
+  $                 ' the run a..b-1 goes to na..nb-1 (at least a step, never
+  $                 ' overlapping the run before it)
+  $                 na = CLNG(a * f): IF na < pe THEN na = pe
+  $                 nb = CLNG(b * f): IF nb <= na THEN nb = na + 1
+  $                 IF nb > MAX_STEPS THEN nb = MAX_STEPS
+  $                 IF na > LEN(o) \\ 2 THEN o = o + STRING$((na - LEN(o) \\ 2) * 2, 0)
+  $                 FOR j = na TO nb - 1
+  $                     o = o + CHR$(v AND 255) + CHR$(v \\ 256)
+  $                 NEXT
+  $                 pe = nb
+  $                 a = b
+  $                 IF pe >= MAX_STEPS THEN EXIT DO
+  $             LOOP
+  $             IF k = home THEN sndData(cur) = o ELSE sndV(cur, k) = o
+  $         END IF
+  $     NEXT
+  $     selS0 = CLNG(selS0 * f): selS1 = CLNG(selS1 * f)
+  $     IF selS1 <= selS0 THEN selS1 = selS0 + 1
+  $     loopA = CLNG(loopA * f): loopB = CLNG(loopB * f)
+  $     IF loopB <= loopA THEN loopB = loopA + 1
+  $     cursorStep = CLNG(cursorStep * f)
+  $     IF cursorStep > snd_len(cur) THEN cursorStep = snd_len(cur)
+  $     dirty = -1
+  $ ...[truncated]
+2026-10-03T12:37:13-0400  INFO     bash_end      [ok] 3L stdout
+  | 305:DIM SHARED bpm AS DOUBLE
+  | 321:DIM SHARED loopA AS LONG ' loop region from the time ruler: steps loopA to loopB - 1
+  | Output: /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/PCSEDIT
+2026-10-03T12:37:24-0400  INFO     bash_start    export SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad && python3 - <<'PYEOF' | import os | SP=os.environ['SP']; here=os.getcwd() | s=open('PCSEDIT.BAS').…
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ export SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad && python3 - <<'PYEOF'
+  $ import os
+  $ SP=os.environ['SP']; here=os.getcwd()
+  $ s=open('PCSEDIT.BAS').read()
+  $ lines=s.split('\n'); i=lines.index('DO')
+  $ lines.insert(i,'''DIM tsF AS LONG, tsI AS LONG, tsR AS STRING, tsP AS STRING
+  $ open_bank "HERE/ASSETS/TUNES/BIRTHDAY.SND"
+  $ tsF = FREEFILE: OPEN "SPX/pt/bpm.txt" FOR OUTPUT AS #tsF
+  $ tsP = pack_voices(1)
+  $ PRINT #tsF, "orig len"; snd_len(1);
+  $ GOSUB tsRuns
+  $ retime 2
+  $ PRINT #tsF, "x2   len"; snd_len(1);
+  $ GOSUB tsRuns
+  $ undo
+  $ PRINT #tsF, "undo same:"; pack_voices(1) = tsP
+  $ retime 0.5
+  $ PRINT #tsF, "x0.5 len"; snd_len(1);
+  $ GOSUB tsRuns
+  $ CLOSE #tsF
+  $ SYSTEM
+  $ tsRuns:
+  $ ' the first notes of voice 1: (divisor x steps)
+  $ tsR = "": tsI = 0
+  $ DIM tsA AS LONG, tsB AS LONG, tsV AS LONG, tsC AS LONG
+  $ tsA = 0: tsC = 0
+  $ DO WHILE tsA < LEN(voice_data(1, 1)) \\ 2 AND tsC < 8
+  $     tsV = voice_step(1, 1, tsA): tsB = tsA
+  $     DO WHILE voice_step(1, 1, tsB) = tsV AND tsB < LEN(voice_data(1, 1)) \\ 2: tsB = tsB + 1: LOOP
+  $     tsR = tsR + " " + LTRIM$(STR$(tsV)) + "x" + LTRIM$(STR$(tsB - tsA))
+  $     tsA = tsB: tsC = tsC + 1
+  $ LOOP
+  $ PRINT #tsF, tsR
+  $ RETURN'''.replace('SPX',SP).replace('HERE',here))
+  $ open(SP+'/pt/T6.BAS','w').write('\n'.join(lines))
+  $ PYEOF
+  $ cp PCSMIDI.B? PCSPKR.B? $SP/pt/; cd $SP/pt && /home/grymmjack/git/qb64pe/qb64pe -x T6.BAS -o ./T6 2>&1 | grep -i "error\|Output"; env -u WAYLAND_DISPLAY -u XDG_CURRENT_DESKTOP -u KDE_FULL_SESSION -u XDG_SESSION_TYPE QT_QPA_PLATFORM=xcb GDK_BACKEND=x11 DISPLAY=:99 HOME=$SP/help/h1280 PCSEDIT_NOMIDI=1 timeout 20 ./T6 2>&1 | tail -2; cat bpm.txt
+2026-10-03T12:37:28-0400  WARNING  bash_end      [stderr] 6L stdout / 2L stderr
+  | Beginning C++ output from QB64 code... 
+  | Output: /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/pt/T6
+  | orig len 1750  3044x51 0x1 3044x18 2712x70 3044x70 2280x70 2416x140 3044x51
+  | x2   len 3500  3044x102 0x2 3044x36 2712x140 3044x140 2280x140 2416x280 3044x102
+  | undo same:-1 
+  | x0.5 len 875  3044x26 0x1 3044x8 2712x35 3044x35 2280x35 2416x70 3044x26
+  ! 
+  ! Shell cwd was reset to /home/grymmjack/git/qb64
+2026-10-03T12:37:36-0400  INFO     bash_start    cd /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER && python3 - <<'PYEOF' | p='README.md'; s=open(p).read() | a="sets the tempo, which starts at 120 BPM." | assert s.count(a)==1, s.count(a) | s=s.repl…
+  > cwd: /home/grymmjack/git/qb64
+  $ cd /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER && python3 - <<'PYEOF'
+  $ p='README.md'; s=open(p).read()
+  $ a="sets the tempo, which starts at 120 BPM."
+  $ assert s.count(a)==1, s.count(a)
+  $ s=s.replace(a,a+""" When the sound already has notes, a new tempo asks
+  $ whether to retime them: **Yes** speeds the notes up or slows them down to
+  $ the new tempo (every voice; the selection, loop region and cursor go along;
+  $ Ctrl+Z undoes it), **No** changes only the grid, **Cancel** keeps the old
+  $ tempo.""")
+  $ open(p,'w').write(s)
+  $ p='PCSEDIT.BAS'; s=open(p).read()
+  $ a='''    help_add t(), n, "Ctrl+G  Ctrl+B|grid size  /  tempo"'''
+  $ assert a in s
+  $ s=s.replace(a,'''    help_add t(), n, "Ctrl+G  Ctrl+B|grid size  /  tempo (retimes)"''')
+  $ a="'   Ctrl+B                  tempo (BPM) for the grid"
+  $ assert a in s
+  $ s=s.replace(a,"'   Ctrl+B                  tempo (BPM) for the grid - and, if you say so, the notes")
+  $ open(p,'w').write(s)
+  $ PYEOF
+  $ SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad && /home/grymmjack/git/qb64pe/qb64pe -x PCSEDIT.BAS -o $SP/PCSEDIT 2>&1 | tail -1
+2026-10-03T12:37:39-0400  INFO     bash_end      [ok] 1L stdout
+  | Output: /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/PCSEDIT
+2026-10-03T12:40:32-0400  NOTICE   prompt        <ide_opened_file>The user opened the file /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER/PCSEDIT.BAS in the IDE. This may or may not be related to the current task.</ide_opened_file>
+  > <ide_opened_file>The user opened the file /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER/PCSEDIT.BAS in the IDE. This may or may not be related to the current task.</ide_opened_file>
+  > can you also make it remember the last directory for file operations?
+2026-10-03T12:40:35-0400  INFO     bash_start    grep -n "_OPENFILEDIALOG\|_SAVEFILEDIALOG\|FUNCTION default_dir\|FUNCTION suggest_save\|FUNCTION start_dir" PCSEDIT.BAS; sed -n "$(grep -n '^FUNCTION start_dir' PCSEDIT.BAS | cut -d: -f1),+40p" PCSED…
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ grep -n "_OPENFILEDIALOG\|_SAVEFILEDIALOG\|FUNCTION default_dir\|FUNCTION suggest_save\|FUNCTION start_dir" PCSEDIT.BAS; sed -n "$(grep -n '^FUNCTION start_dir' PCSEDIT.BAS | cut -d: -f1),+40p" PCSEDIT.BAS
+2026-10-03T12:40:35-0400  INFO     bash_end      [ok] 49L stdout
+  | 3215:' Native dialogs (QB64-PE: _MESSAGEBOX, _INPUTBOX$, _OPENFILEDIALOG$,
+  | 3216:' _SAVEFILEDIALOG$ - zenity / kdialog on Linux)
+  | 3265:    f = _SAVEFILEDIALOG$("Save IFS sound bank", suggest_save, "*.snd|*.SND", "IFS sound bank (Duke Nukem / Keen format)")
+  | 3275:    f = _OPENFILEDIALOG$("Open a PC speaker sound bank", default_dir, OPEN_FILTER, "Sound banks DN1PLAY can play")
+  | 4260:FUNCTION start_dir$
+  | 4268:FUNCTION default_dir$
+  | 4280:FUNCTION suggest_save$
+  | 4312:    outName = _SAVEFILEDIALOG$("Export " + sndName(cur) + " as .wav", start_dir + "EXPORT/" + safe_name(bankName) + "_" + safe_name(sndName(cur)) + ".wav", "*.wav|*.WAV", "WAV audio")
+  | FUNCTION start_dir$
+  |     DIM d AS STRING
+  |     d = _STARTDIR$
+  |     IF RIGHT$(d, 1) <> "/" AND RIGHT$(d, 1) <> "\" THEN d = d + "/"
+  |     start_dir = d
+  | END FUNCTION
+  | 
+  | 
+  | FUNCTION default_dir$
+  |     DIM d AS STRING
+  |     d = start_dir
+  |     IF _DIREXISTS(d + "ASSETS") THEN d = d + "ASSETS/"
+  |     default_dir = d
+  | END FUNCTION
+  | 
+  | 
+  | ''
+  | ' A name for Save As: the bank you opened with .SND on the end (so a game's
+  | ' own file isn't replaced), or ASSETS/MYSOUNDS.SND for a new bank.
+  | '
+  | FUNCTION suggest_save$
+  |     DIM p AS LONG
+  |     IF LEN(savePath) THEN suggest_save = savePath: EXIT FUNCTION
+  |     IF LEN(openedPath) THEN
+  |         p = _INSTRREV(openedPath, ".")
+  |         IF p > _INSTRREV(openedPath, "/") AND p > _INSTRREV(openedPath, "\") THEN
+  |             suggest_save = LEFT$(openedPath, p - 1) + "-EDIT.SND"
+  |         ELSE
+  |             suggest_save = openedPath + "-EDIT.SND"
+  |         END IF
+  |     ELSE
+  |         suggest_save = default_dir + "MYSOUNDS.SND"
+  |     END IF
+  | END FUNCTION
+  | 
+  | 
+  | ''
+  | ' Render the current sound through the emulated speaker into a .wav.
+  | '
+  | SUB export_wav
+  |     DIM s AS LONG, h AS LONG, outName AS STRING, bankName AS STRING, v AS LONG, lastV AS LONG
+2026-10-03T12:40:43-0400  INFO     bash_start    grep -n "^SUB save_bank\|^SUB open_bank\|^SUB import_midi\| PCSPK_SaveWAV outName\|^ errNum = 0$" PCSEDIT.BAS | head; sed -n "$(grep -n '^SUB save_bank' PCSEDIT.BAS | cut -d: -f1),+4p" PCSEDIT.BAS; g…
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ grep -n "^SUB save_bank\|^SUB open_bank\|^SUB import_midi\|    PCSPK_SaveWAV outName\|^    errNum = 0$" PCSEDIT.BAS | head; sed -n "$(grep -n '^SUB save_bank' PCSEDIT.BAS | cut -d: -f1),+4p" PCSEDIT.BAS; grep -n "savePath = full\|savePath = fileName\|savePath =" PCSEDIT.BAS | head
+2026-10-03T12:40:43-0400  INFO     bash_end      [ok] 18L stdout
+  | 1849:    errNum = 0
+  | 3294:SUB import_midi (fileName AS STRING)
+  | 4104:SUB open_bank (fileName AS STRING)
+  | 4107:    errNum = 0
+  | 4110:    errNum = 0
+  | 4155:SUB save_bank (fileName AS STRING)
+  | 4201:    errNum = 0
+  | 4304:    errNum = 0
+  | 4333:    PCSPK_SaveWAV outName
+  | 5757:    errNum = 0
+  | SUB save_bank (fileName AS STRING)
+  |     DIM hdr AS STRING, tbl AS STRING, body AS STRING, i AS LONG, ofs AS LONG, total AS LONG
+  |     DIM ff AS LONG, nm AS STRING, entries AS LONG, d AS STRING, s AS LONG, v AS LONG, k AS LONG
+  | 
+  |     ' A sound with several voices is saved as its ARP mix (what any IFS
+  | 3810:    savePath = ""
+  | 4138:    savePath = "" ' never overwrite a game's file by accident: first save asks
+  | 4211:    savePath = fileName
+2026-10-03T12:40:59-0400  INFO     bash_start    sed -n 4205,4215p PCSEDIT.BAS; python3 - <<'PYEOF' | p='PCSEDIT.BAS'; s=open(p).read() | def r(a,b): | global s | assert s.count(a)==1,a[:80]; s=s.replace(a,b) | r("""DIM SHARED lastClickT AS DOUBLE …
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ sed -n 4205,4215p PCSEDIT.BAS; python3 - <<'PYEOF'
+  $ p='PCSEDIT.BAS'; s=open(p).read()
+  $ def r(a,b):
+  $     global s
+  $     assert s.count(a)==1,a[:80]; s=s.replace(a,b)
+  $ r("""DIM SHARED lastClickT AS DOUBLE ' the last left click, for double clicks""","""DIM SHARED lastDir AS STRING ' the folder of the last bank opened / saved / imported (dialogs start there)
+  $ DIM SHARED exportDir AS STRING ' the folder of the last .wav export
+  $ DIM SHARED lastClickT AS DOUBLE ' the last left click, for double clicks""")
+  $ r("""\ncfg_load\n""","""\ncfg_load\nlastDir = cfg_get("lastdir", "")\nexportDir = cfg_get("exportdir", "")\n""")
+  $ r("""    PRINT #ff, "poly="; LTRIM$(STR$(polyMode))""","""    PRINT #ff, "poly="; LTRIM$(STR$(polyMode))
+  $     PRINT #ff, "lastdir="; lastDir
+  $     PRINT #ff, "exportdir="; exportDir""")
+  $ r("""FUNCTION default_dir$
+  $     DIM d AS STRING
+  $     d = start_dir
+  $     IF _DIREXISTS(d + "ASSETS") THEN d = d + "ASSETS/"
+  $     default_dir = d
+  $ END FUNCTION""","""''
+  $ ' Where file dialogs start: the folder used last time (it's remembered in
+  $ ' the settings), or ASSETS/ next to PCSEDIT the first time.
+  $ '
+  $ FUNCTION default_dir$
+  $     DIM d AS STRING
+  $     IF LEN(lastDir) THEN
+  $         IF _DIREXISTS(lastDir) THEN default_dir = lastDir: EXIT FUNCTION
+  $     END IF
+  $     d = start_dir
+  $     IF _DIREXISTS(d + "ASSETS") THEN d = d + "ASSETS/"
+  $     default_dir = d
+  $ END FUNCTION
+  $ 
+  $ 
+  $ ''
+  $ ' The folder part of a file name, with its / on the end ("" if none).
+  $ '
+  $ FUNCTION dir_of$ (f AS STRING)
+  $     DIM p AS LONG
+  $     p = _INSTRREV(f, "/")
+  $     IF _INSTRREV(f, "\\") > p THEN p = _INSTRREV(f, "\\")
+  $     IF p THEN dir_of = LEFT$(f, p)
+  $ END FUNCTION
+  $ 
+  $ 
+  $ SUB remember_dir (f AS STRING)
+  $     IF LEN(dir_of(f)) THEN lastDir = dir_of(_FULLPATH$(dir_of(f)))
+  $     IF RIGHT$(lastDir, 1) <> "/" AND RIGHT$(lastDir, 1) <> "\\" AND LEN(lastDir) THEN lastDir = lastDir + "/"
+  $ END SUB""")
+  $ # open / import / save remember
+  $ r("""    ok = PCSPK_IFSLoad(full)
+  $     IF errNum THEN set_status "Can't read " + full: EXIT SUB
+  $     IF NOT ok THEN set_status "No PC speaker sounds in " + full: EXIT SUB
+  $ ""","""    ok = PCSPK_IFSLoad(full)
+  $     IF errNum THEN set_status "Can't read " + full: EXIT SUB
+  $     IF NOT ok THEN set_status "No PC speaker sounds in " + full: EXIT SUB
+  $     remember_dir full
+  $ """)
+  $ r("""    IF NOT ok THEN set_status pcsmidiError: EXIT SUB
+  $     import_notes fileName""","""    IF NOT ok THEN set_status pcsmidiError: EXIT SUB
+  $     remember_dir fileName
+  $     import_notes fileName""")
+  $ r("""    savePath = fileName""","""    savePath = fileName
+  $     remember_dir fileName""")
+  $ # export dialog
+  $ r("""    outName = _SAVEFILEDIALOG$("Export " + sndName(cur) + " as .wav", start_dir + "EXPORT/" + safe_name(bankName) + "_" + safe_name(sndName(cur)) + ".wav", "*.wav|*.WAV", "WAV audio")""","""    t = start_dir + "EXPORT/" ' (the first time; then where the last export went)
+  $     IF LEN(exportDir) THEN
+  $         IF _DIREXISTS(exportDir) THEN t = exportDir
+  $     END IF
+  $     outName = _SAVEFILEDIALOG$("Export " + sndName(cur) + " as .wav", t + safe_name(bankName) + "_" + safe_name(sndName(cur)) + ".wav", "*.wav|*.WAV", "WAV audio")""")
+  $ r("""    PCSPK_SaveWAV outName""","""    PCSPK_SaveWAV outName
+  $     IF LEN(dir_of(outName)) THEN exportDir = dir_of(outName)""")
+  $ r("""SUB export_wav
+  $     DIM s AS LONG, h AS LONG, outName AS STRING, bankName AS STRING, v AS LONG, lastV AS LONG""","""SUB export_wav
+  $     DIM s AS LONG, h AS LONG, outName AS STRING, bankName AS STRING, v AS LONG, lastV AS LONG, t AS STRING""")
+  $ open(p,'w').write(s)
+  $ PYEOF
+  $ SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad && /home/grymmjack/git/qb64pe/qb64pe -x PCSEDIT.BAS -o $SP/PCSEDIT 2>&1 | tail -3 | grep -i "error\|line\|Output"
+2026-10-03T12:41:03-0400  INFO     bash_end      [ok] 12L stdout
+  |     IF errNum = 0 THEN
+  |         hdr = hdr + tbl + body
+  |         PUT #ff, 1, hdr
+  |         CLOSE #ff
+  |     END IF
+  |     IF errNum THEN set_status "Couldn't save " + fileName + " (error" + STR$(errNum) + ")": EXIT SUB
+  |     savePath = fileName
+  |     dirty = 0
+  |     set_status "Saved " + fileName + " -" + STR$(sndCount) + " sounds," + STR$(total) + " bytes"
+  | END SUB
+  | 
+  | Output: /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/PCSEDIT
+2026-10-03T12:41:14-0400  INFO     bash_start    export SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad && rm -rf $SP/pt/dirhome && mkdir -p $SP/pt/dirhome && python3 - <<'PYEOF' | import os | SP=os.envi…
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ export SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad && rm -rf $SP/pt/dirhome && mkdir -p $SP/pt/dirhome && python3 - <<'PYEOF'
+  $ import os
+  $ SP=os.environ['SP']; here=os.getcwd()
+  $ s=open('PCSEDIT.BAS').read()
+  $ lines=s.split('\n'); i=lines.index('DO')
+  $ lines.insert(i,'''DIM tsF AS LONG
+  $ tsF = FREEFILE: OPEN "SPX/pt/dir.txt" FOR APPEND AS #tsF
+  $ PRINT #tsF, "start: default_dir="; default_dir; "  suggest="; suggest_save
+  $ IF ENVIRON$("STEP1") = "1" THEN
+  $     open_bank "HERE/ASSETS/TUNES/BIRTHDAY.SND"
+  $     PRINT #tsF, "after open: lastDir="; lastDir; "  default_dir="; default_dir
+  $     import_midi "HERE/ASSETS/TUNES/MIDI/fanfare.mid"
+  $     PRINT #tsF, "after import: lastDir="; lastDir
+  $     settings_save
+  $ END IF
+  $ CLOSE #tsF
+  $ SYSTEM'''.replace('SPX',SP).replace('HERE',here))
+  $ open(SP+'/pt/T7.BAS','w').write('\n'.join(lines))
+  $ PYEOF
+  $ cp PCSMIDI.B? PCSPKR.B? $SP/pt/; cd $SP/pt && rm -f dir.txt && /home/grymmjack/git/qb64pe/qb64pe -x T7.BAS -o ./T7 2>&1 | grep -i "error\|Output"; E="env -u WAYLAND_DISPLAY -u XDG_CURRENT_DESKTOP -u KDE_FULL_SESSION -u XDG_SESSION_TYPE QT_QPA_PLATFORM=xcb GDK_BACKEND=x11 DISPLAY=:99 HOME=$SP/pt/dirhome PCSEDIT_NOMIDI=1"; eval $E STEP1=1 timeout 20 ./T7; eval $E timeout 20 ./T7; cat dir.txt; grep dir $SP/pt/dirhome/.config/pcsedit.ini
+2026-10-03T12:41:18-0400  WARNING  bash_end      [stderr] 8L stdout / 2L stderr
+  | Beginning C++ output from QB64 code... 
+  | Output: /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/pt/T7
+  | start: default_dir=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/pt/  suggest=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/pt/MYSOUNDS.SND
+  | after open: lastDir=/home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER/ASSETS/TUNES/  default_dir=/home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER/ASSETS/TUNES/
+  | after import: lastDir=/home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER/ASSETS/TUNES/MIDI/
+  | start: default_dir=/home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER/ASSETS/TUNES/MIDI/  suggest=/home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER/ASSETS/TUNES/MIDI/MYSOUNDS.SND
+  | lastdir=/home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER/ASSETS/TUNES/MIDI/
+  | exportdir=
+  ! 
+  ! Shell cwd was reset to /home/grymmjack/git/qb64
+2026-10-03T12:41:21-0400  INFO     bash_start    cd /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER && grep -n "pcsedit.ini" README.md | head -3
+  > cwd: /home/grymmjack/git/qb64
+  $ cd /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER && grep -n "pcsedit.ini" README.md | head -3
+2026-10-03T12:41:21-0400  INFO     bash_end      [ok] 1L stdout
+  | 123:zoom). They are saved when you quit, to `~/.config/pcsedit.ini`
+2026-10-03T12:41:23-0400  INFO     bash_start    sed -n 118,128p README.md
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ sed -n 118,128p README.md
+2026-10-03T12:41:23-0400  INFO     bash_end      [ok] 11L stdout
+  | and try again.
+  | 
+  | PCSEDIT **remembers** the window size, position and display scale, plus your
+  | working settings (grid and tempo, metronome mode and volume, count-in,
+  | quantize, follow, loop, grid lines, audition, snap, octave, note length and
+  | zoom). They are saved when you quit, to `~/.config/pcsedit.ini`
+  | (`%APPDATA%\PCSEDIT.ini` on Windows), a plain `key=value` text file. Delete it
+  | to go back to the defaults.
+  | 
+  | **Zooming the keys:** **Shift+wheel** makes the note rows taller or
+  | shorter: every note in view (as it starts), then 6, 5, 4, 3, 2 octaves, down
+2026-10-03T12:41:26-0400  INFO     bash_start    python3 - <<'PYEOF' | p='README.md'; s=open(p).read() | a="""quantize, follow, loop, grid lines, audition, snap, octave, note length and | zoom). They are saved""" | assert a in s | s=s.replace(a,"""…
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ python3 - <<'PYEOF'
+  $ p='README.md'; s=open(p).read()
+  $ a="""quantize, follow, loop, grid lines, audition, snap, octave, note length and
+  $ zoom). They are saved"""
+  $ assert a in s
+  $ s=s.replace(a,"""quantize, follow, loop, grid lines, audition, snap, octave, note length,
+  $ zoom, key zoom and ARP/PWM) and **the last folders you used**: the open, save
+  $ and import dialogs start in the folder of the last bank you opened, saved
+  $ or imported, and Ctrl+E in the folder of the last export. They are saved""")
+  $ open(p,'w').write(s)
+  $ PYEOF
+  $ echo ok
+2026-10-03T12:41:26-0400  INFO     bash_end      [ok] 1L stdout
+  | ok
+2026-10-03T12:43:01-0400  NOTICE   prompt        can we also add option for arp speed? right now it's super fast and i understand why but i'd like to be able to adjust it... 
+  > can we also add option for arp speed? right now it's super fast and i understand why but i'd like to be able to adjust it... 
+  > 
+  > is that possible? also is it possible to give volume controls to the individual voices? here's why - with 1 voice and PWM off, it is much louder than when PWM is used.
+2026-10-03T12:43:56-0400  INFO     bash_start    export SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad && python3 - <<'PYEOF' | import os | SP=os.environ['SP'] | s=open('PCSEDIT.BAS').read() | lines=s.s…
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ export SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad && python3 - <<'PYEOF'
+  $ import os
+  $ SP=os.environ['SP']
+  $ s=open('PCSEDIT.BAS').read()
+  $ lines=s.split('\n'); i=lines.index('DO')
+  $ lines.insert(i,'''DIM tsI AS LONG, tsH AS LONG, tsD(1 TO 8) AS LONG
+  $ PCSPK_CaptureBegin
+  $ PCSPK_SetDivisor note_div(60)
+  $ FOR tsI = 1 TO 140: PCSPK_AdvanceClocks pcspk.tickClk: NEXT
+  $ PCSPK_Off: PCSPK_AdvanceSeconds 0.05
+  $ tsH = PCSPK_CaptureEnd: PCSPK_SaveWAV "SPX/pt/sq.wav"
+  $ PCSPK_CaptureBegin
+  $ tsD(1) = note_div(60)
+  $ FOR tsI = 1 TO 140: render_pwm_tick tsD(), 1: NEXT
+  $ PCSPK_Off: PCSPK_AdvanceSeconds 0.05
+  $ tsH = PCSPK_CaptureEnd: PCSPK_SaveWAV "SPX/pt/pwm1.wav"
+  $ PCSPK_CaptureBegin
+  $ tsD(1) = note_div(60): tsD(2) = note_div(64): tsD(3) = note_div(67)
+  $ FOR tsI = 1 TO 140: render_pwm_tick tsD(), 3: NEXT
+  $ PCSPK_Off: PCSPK_AdvanceSeconds 0.05
+  $ tsH = PCSPK_CaptureEnd: PCSPK_SaveWAV "SPX/pt/pwm3.wav"
+  $ SYSTEM'''.replace('SPX',SP))
+  $ open(SP+'/pt/T8.BAS','w').write('\n'.join(lines))
+  $ PYEOF
+  $ cp PCSMIDI.B? PCSPKR.B? $SP/pt/; cd $SP/pt && /home/grymmjack/git/qb64pe/qb64pe -x T8.BAS -o ./T8 2>&1 | grep -i "error\|Output"; env -u WAYLAND_DISPLAY -u XDG_CURRENT_DESKTOP -u KDE_FULL_SESSION -u XDG_SESSION_TYPE QT_QPA_PLATFORM=xcb GDK_BACKEND=x11 DISPLAY=:99 HOME=$SP/pt/home PCSEDIT_NOMIDI=1 timeout 20 ./T8 2>&1|tail -1; python3 -c "
+  $ import wave,struct,math
+  $ for f in ['sq','pwm1','pwm3']:
+  $     w=wave.open(f+'.wav'); r=w.readframes(w.getnframes()); x=struct.unpack('<%dh'%(len(r)//2),r)[::w.getnchannels()]
+  $     x=x[2000:40000]; m=sum(x)/len(x)
+  $     print(f, 'rms %.0f'%math.sqrt(sum((v-m)**2 for v in x)/len(x)), 'peak', max(x)-min(x))"
+2026-10-03T12:44:00-0400  WARNING  bash_end      [stderr] 5L stdout / 2L stderr
+  | Beginning C++ output from QB64 code... 
+  | Output: /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/pt/T8
+  | sq rms 8153 peak 18364
+  | pwm1 rms 7944 peak 18348
+  | pwm3 rms 6661 peak 17930
+  ! 
+  ! Shell cwd was reset to /home/grymmjack/git/qb64
+2026-10-03T12:44:27-0400  INFO     bash_start    cd /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER && grep -n "render_pwm_tick\|step_divs(\|inst_divs(\|FUNCTION step_divs\|FUNCTION inst_divs\|held_note(tickN MOD held_count)\|notes((s MOD n) + 1)" P…
+  > cwd: /home/grymmjack/git/qb64
+  $ cd /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER && grep -n "render_pwm_tick\|step_divs(\|inst_divs(\|FUNCTION step_divs\|FUNCTION inst_divs\|held_note(tickN MOD held_count)\|notes((s MOD n) + 1)" PCSEDIT.BAS PCSMIDI.BM
+2026-10-03T12:44:27-0400  INFO     bash_end      [ok] 12L stdout
+  | PCSMIDI.BM:493:            IF n THEN v = notes((s MOD n) + 1)
+  | PCSEDIT.BAS:637:        v = note_div(held_note(tickN MOD held_count)) ' a chord: take turns (ARP)
+  | PCSEDIT.BAS:862:    IF n THEN mix_step = notes((s MOD n) + 1)
+  | PCSEDIT.BAS:1032:FUNCTION inst_divs& (stepPos AS LONG, nt AS LONG, d() AS LONG)
+  | PCSEDIT.BAS:1058:SUB render_pwm_tick (d() AS LONG, n AS LONG)
+  | PCSEDIT.BAS:1086:FUNCTION step_divs& (i AS LONG, s AS LONG, d() AS LONG)
+  | PCSEDIT.BAS:1118:            n = step_divs(cur, playPos, d())
+  | PCSEDIT.BAS:1123:            n = inst_divs(vp, voiceNote, d())
+  | PCSEDIT.BAS:1140:        render_pwm_tick d(), n
+  | PCSEDIT.BAS:4356:            n = step_divs(cur, s, d())
+  | PCSEDIT.BAS:4357:            render_pwm_tick d(), n
+  | PCSEDIT.BAS:4786:    IF n THEN heard_step = notes((s MOD n) + 1)
+2026-10-03T12:44:29-0400  INFO     bash_start    sed -n 1055,1100p PCSEDIT.BAS; sed -n 4346,4362p PCSEDIT.BAS
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ sed -n 1055,1100p PCSEDIT.BAS; sed -n 4346,4362p PCSEDIT.BAS
+2026-10-03T12:44:29-0400  INFO     bash_end      [ok] 63L stdout
+  | ' speaker gets one pulse whose width is how many of the voices' square waves
+  | ' are high right now - the same trick WAV.BAS uses for recorded sound.
+  | '
+  | SUB render_pwm_tick (d() AS LONG, n AS LONG)
+  |     DIM p AS LONG, periods AS LONG, k AS LONG, hi AS LONG, cnt AS LONG, clk AS DOUBLE
+  |     clk = pcspk.tickClk
+  |     IF n = 0 THEN
+  |         PCSPK_SpeakerOff
+  |         PCSPK_AdvanceClocks clk
+  |         EXIT SUB
+  |     END IF
+  |     PCSPK_SpeakerOn
+  |     periods = INT(clk / PWM_DIV)
+  |     FOR p = 1 TO periods
+  |         hi = 0
+  |         FOR k = 1 TO n
+  |             pwmPh(k) = pwmPh(k) + PWM_DIV
+  |             IF pwmPh(k) >= d(k) THEN pwmPh(k) = pwmPh(k) - d(k) * INT(pwmPh(k) / d(k))
+  |             IF pwmPh(k) < d(k) / 2 THEN hi = hi + 1
+  |         NEXT
+  |         cnt = 1 + CLNG(hi * (PWM_DIV - 2) / n)
+  |         PCSPK_PitWrite PCSPK_MODE_ONESHOT, cnt
+  |         PCSPK_AdvanceClocks PWM_DIV
+  |     NEXT
+  |     PCSPK_AdvanceClocks clk - periods * PWM_DIV
+  | END SUB
+  | 
+  | 
+  | ''
+  | ' The divisors sounding at step s of sound i (for PWM).
+  | '
+  | FUNCTION step_divs& (i AS LONG, s AS LONG, d() AS LONG)
+  |     DIM k AS LONG, n AS LONG, v AS LONG
+  |     FOR k = 1 TO VOICES
+  |         IF NOT (i = cur AND vMute(k)) THEN ' (muted voices left out)
+  |             v = voice_step(i, k, s)
+  |             IF v THEN n = n + 1: d(n) = v
+  |         END IF
+  |     NEXT
+  |     step_divs = n
+  | END FUNCTION
+  | 
+  | 
+  | ''
+  | ' Keep the audio stream fed in PWM mode (instead of PCSPK_Tick / on_tick).
+  | '
+  |     END IF
+  |     outName = _SAVEFILEDIALOG$("Export " + sndName(cur) + " as .wav", t + safe_name(bankName) + "_" + safe_name(sndName(cur)) + ".wav", "*.wav|*.WAV", "WAV audio")
+  |     after_dialog
+  |     IF outName = "" THEN set_status "Export cancelled": EXIT SUB
+  |     IF INSTR(PCSPK_FilePart(outName), ".") = 0 THEN outName = outName + ".wav"
+  |     PCSPK_CaptureBegin
+  |     lastV = -1
+  |     FOR s = 1 TO 8: pwmPh(s) = 0: NEXT
+  |     FOR s = 0 TO snd_len(cur) - 1
+  |         IF polyMode = POLY_PWM AND voices_used(cur) > 1 THEN
+  |             n = step_divs(cur, s, d())
+  |             render_pwm_tick d(), n
+  |             lastV = -1
+  |         ELSE
+  |             v = heard_step(cur, s) ' (muted voices left out)
+  |             IF v <> lastV THEN PCSPK_SetDivisor v: lastV = v ' only on a change, see speaker
+  |             PCSPK_AdvanceClocks PCSPK_PIT_HZ / rateHz
+2026-10-03T12:45:19-0400  INFO     bash_start    python3 - <<'PYEOF' | p='PCSEDIT.BAS'; s=open(p).read() | def r(a,b,c=1): | global s | assert s.count(a)==c,(a[:100],s.count(a)); s=s.replace(a,b) | | # ---------- state / layout | r("CONST LIST_Y = …
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ python3 - <<'PYEOF'
+  $ p='PCSEDIT.BAS'; s=open(p).read()
+  $ def r(a,b,c=1):
+  $     global s
+  $     assert s.count(a)==c,(a[:100],s.count(a)); s=s.replace(a,b)
+  $ 
+  $ # ---------- state / layout
+  $ r("CONST LIST_Y = 198 '                     (the voice chips and their M / S / R rows are above the list)",
+  $   "CONST LIST_Y = 216 '                     (the voice chips and their M / S / R / Vol rows are above the list)")
+  $ r("""DIM SHARED recVN(1 TO VOICES) AS LONG ' LIVE + R: the note each armed voice is recording (-1 = none)""","""DIM SHARED recVN(1 TO VOICES) AS LONG ' LIVE + R: the note each armed voice is recording (-1 = none)
+  $ DIM SHARED vVol(1 TO VOICES) AS SINGLE ' each voice's volume in PWM mode (1 = 100%, up to 2)
+  $ DIM SHARED pwmGain(1 TO 8) AS SINGLE ' render_pwm_tick: the volume of each divisor it is given
+  $ DIM SHARED arpRate AS LONG ' ARP: steps each note of a chord lasts before the next takes over
+  $ DIM SHARED volDragK AS LONG ' dragging a Vol button: which voice, from where
+  $ DIM SHARED volDragY AS LONG
+  $ DIM SHARED volDragV AS SINGLE""")
+  $ r("""\ncfg_load\n""","""\ncfg_load\narpRate = VAL(cfg_get("arprate", "1"))\nIF arpRate < 1 OR arpRate > 16 THEN arpRate = 1\nFOR k = 1 TO VOICES\n    vVol(k) = VAL(cfg_get("vol" + LTRIM$(STR$(k)), "1"))\n    IF vVol(k) < 0 OR vVol(k) > 2 THEN vVol(k) = 1\nNEXT\n""")
+  $ r("""    PRINT #ff, "poly="; LTRIM$(STR$(polyMode))""","""    PRINT #ff, "poly="; LTRIM$(STR$(polyMode))
+  $     PRINT #ff, "arprate="; LTRIM$(STR$(arpRate))
+  $     FOR k = 1 TO VOICES
+  $         PRINT #ff, "vol"; LTRIM$(STR$(k)); "="; LTRIM$(STR$(vVol(k)))
+  $     NEXT""")
+  $ 
+  $ # ---------- ARP rate
+  $ r("""    IF n THEN mix_step = notes((s MOD n) + 1)""","""    IF n THEN mix_step = notes(((s \\ arpRate) MOD n) + 1)""")
+  $ r("""    IF n THEN heard_step = notes((s MOD n) + 1)""","""    IF n THEN heard_step = notes(((s \\ arpRate) MOD n) + 1)""")
+  $ r("""        v = note_div(held_note(tickN MOD held_count)) ' a chord: take turns (ARP)""","""        v = note_div(held_note((tickN \\ arpRate) MOD held_count)) ' a chord: take turns (ARP)""")
+  $ 
+  $ # ---------- PWM mixing with volumes
+  $ r("""SUB render_pwm_tick (d() AS LONG, n AS LONG)
+  $     DIM p AS LONG, periods AS LONG, k AS LONG, hi AS LONG, cnt AS LONG, clk AS DOUBLE""","""SUB render_pwm_tick (d() AS LONG, n AS LONG)
+  $     DIM p AS LONG, periods AS LONG, k AS LONG, hi AS LONG, cnt AS LONG, clk AS DOUBLE, acc AS SINGLE, g AS SINGLE""")
+  $ r("""    PCSPK_SpeakerOn
+  $     periods = INT(clk / PWM_DIV)
+  $     FOR p = 1 TO periods
+  $         hi = 0
+  $         FOR k = 1 TO n
+  $             pwmPh(k) = pwmPh(k) + PWM_DIV
+  $             IF pwmPh(k) >= d(k) THEN pwmPh(k) = pwmPh(k) - d(k) * INT(pwmPh(k) / d(k))
+  $             IF pwmPh(k) < d(k) / 2 THEN hi = hi + 1
+  $         NEXT
+  $         cnt = 1 + CLNG(hi * (PWM_DIV - 2) / n)""","""    PCSPK_SpeakerOn
+  $     periods = INT(clk / PWM_DIV)
+  $     ' each voice swings +-1 times its volume; the sum is scaled by 1/sqrt(n),
+  $     ' not 1/n, so a chord stays nearly as loud as one voice (peaks clip)
+  $     g = 1 / SQR(n)
+  $     FOR p = 1 TO periods
+  $         acc = 0
+  $         FOR k = 1 TO n
+  $             pwmPh(k) = pwmPh(k) + PWM_DIV
+  $             IF pwmPh(k) >= d(k) THEN pwmPh(k) = pwmPh(k) - d(k) * INT(pwmPh(k) / d(k))
+  $             IF pwmPh(k) < d(k) / 2 THEN acc = acc + pwmGain(k) ELSE acc = acc - pwmGain(k)
+  $         NEXT
+  $         acc = 0.5 + 0.5 * acc * g
+  $         IF acc < 0 THEN acc = 0
+  $         IF acc > 1 THEN acc = 1
+  $         cnt = 1 + CLNG(acc * (PWM_DIV - 2))""")
+  $ r("""        IF NOT (i = cur AND vMute(k)) THEN ' (muted voices left out)
+  $             v = voice_step(i, k, s)
+  $             IF v THEN n = n + 1: d(n) = v
+  $         END IF""","""        IF NOT (i = cur AND vMute(k)) THEN ' (muted voices left out)
+  $             v = voice_step(i, k, s)
+  $             IF v THEN
+  $                 n = n + 1: d(n) = v
+  $                 IF i = cur THEN pwmGain(n) = vVol(k) ELSE pwmGain(n) = 1
+  $             END IF
+  $         END IF""")
+  $ # instrument and held chords: full volume
+  $ r("""            n = n + 1: d(n) = v
+  $         END IF
+  $     NEXT
+  $     inst_divs = n""","""            n = n + 1: d(n) = v: pwmGain(n) = 1
+  $         END IF
+  $     NEXT
+  $     inst_divs = n""")
+  $ r("""            FOR k = 1 TO n
+  $                 d(k) = note_div(held_note(k - 1))
+  $             NEXT""","""            FOR k = 1 TO n
+  $                 d(k) = note_div(held_note(k - 1)): pwmGain(k) = 1
+  $             NEXT""")
+  $ ...[truncated]
+2026-10-03T12:45:21-0400  INFO     bash_end      [ok] 2L stdout
+  | [38;5;8mLINE [38;5;15m5946:[38;5;7mFOR k = 1 TO VOICES
+  | Output: /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/MID2SND
+2026-10-03T12:45:24-0400  INFO     bash_start    n=$(grep -n "^SUB settings_save" PCSEDIT.BAS | cut -d: -f1); sed -n "$n,$((n+3))p" PCSEDIT.BAS
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ n=$(grep -n "^SUB settings_save" PCSEDIT.BAS | cut -d: -f1); sed -n "$n,$((n+3))p" PCSEDIT.BAS
+2026-10-03T12:45:25-0400  INFO     bash_end      [ok] 4L stdout
+  | SUB settings_save
+  |     DIM ff AS LONG, f AS STRING
+  |     f = cfg_path
+  |     errNum = 0
+2026-10-03T12:45:29-0400  INFO     bash_start    python3 - <<'PYEOF' | p='PCSEDIT.BAS'; s=open(p).read() | a="SUB settings_save\n DIM ff AS LONG, f AS STRING\n" | assert s.count(a)==1 | s=s.replace(a,"SUB settings_save\n DIM ff AS LONG, f AS STRING…
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ python3 - <<'PYEOF'
+  $ p='PCSEDIT.BAS'; s=open(p).read()
+  $ a="SUB settings_save\n    DIM ff AS LONG, f AS STRING\n"
+  $ assert s.count(a)==1
+  $ s=s.replace(a,"SUB settings_save\n    DIM ff AS LONG, f AS STRING, k AS LONG\n")
+  $ open(p,'w').write(s)
+  $ PYEOF
+  $ grep -n "^DIM k AS LONG\|^cfg_load" PCSEDIT.BAS | head -3; SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad && /home/grymmjack/git/qb64pe/qb64pe -x PCSEDIT.BAS -o $SP/PCSEDIT 2>&1 | tail -3 | grep -i "error\|line\|Output"
+2026-10-03T12:45:32-0400  INFO     bash_end      [ok] 3L stdout
+  | 381:DIM k AS LONG, f AS STRING, wheel AS LONG, mx AS LONG, my AS LONG, b1 AS INTEGER, b2 AS INTEGER, mid3 AS INTEGER
+  | 390:cfg_load
+  | Output: /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/PCSEDIT
+2026-10-03T12:45:48-0400  INFO     bash_start    export SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad && python3 - <<'PYEOF' | import os | SP=os.environ['SP'] | s=open('PCSEDIT.BAS').read() | lines=s.s…
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ export SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad && python3 - <<'PYEOF'
+  $ import os
+  $ SP=os.environ['SP']
+  $ s=open('PCSEDIT.BAS').read()
+  $ lines=s.split('\n'); i=lines.index('DO')
+  $ lines.insert(i,'''DIM tsI AS LONG, tsH AS LONG, tsD(1 TO 8) AS LONG, tsF AS LONG, tsR AS STRING
+  $ tsF = FREEFILE: OPEN "SPX/pt/arp.txt" FOR OUTPUT AS #tsF
+  $ arpRate = 1: tsR = ""
+  $ FOR tsI = 1 TO 9: arp_speed 1: tsR = tsR + STR$(arpRate): NEXT
+  $ PRINT #tsF, "cycle up:"; tsR
+  $ arp_speed -1: arp_speed -1: PRINT #tsF, "down twice:"; arpRate
+  $ FOR tsI = 0 TO 15: set_step cur, tsI, note_div(60): NEXT
+  $ switch_voice 2: FOR tsI = 0 TO 15: set_step cur, tsI, note_div(64): NEXT: switch_voice 1
+  $ arpRate = 4: tsR = ""
+  $ FOR tsI = 0 TO 15: tsR = tsR + STR$(mix_step(1, tsI)): NEXT
+  $ PRINT #tsF, "rate 4 mix:"; tsR
+  $ set_volume 1, 3: PRINT #tsF, "vol clamp:"; vVol(1)
+  $ set_volume 1, 1.234: PRINT #tsF, "vol step:"; vVol(1)
+  $ CLOSE #tsF
+  $ FOR tsI = 1 TO 8: pwmGain(tsI) = 1: NEXT
+  $ tsD(1) = note_div(60): tsD(2) = note_div(64): tsD(3) = note_div(67)
+  $ PCSPK_CaptureBegin
+  $ FOR tsI = 1 TO 140: render_pwm_tick tsD(), 1: NEXT
+  $ PCSPK_Off: PCSPK_AdvanceSeconds 0.05: tsH = PCSPK_CaptureEnd: PCSPK_SaveWAV "SPX/pt/p1.wav"
+  $ PCSPK_CaptureBegin
+  $ FOR tsI = 1 TO 140: render_pwm_tick tsD(), 3: NEXT
+  $ PCSPK_Off: PCSPK_AdvanceSeconds 0.05: tsH = PCSPK_CaptureEnd: PCSPK_SaveWAV "SPX/pt/p3.wav"
+  $ pwmGain(1) = 2: pwmGain(2) = 0.5: pwmGain(3) = 0.5
+  $ PCSPK_CaptureBegin
+  $ FOR tsI = 1 TO 140: render_pwm_tick tsD(), 3: NEXT
+  $ PCSPK_Off: PCSPK_AdvanceSeconds 0.05: tsH = PCSPK_CaptureEnd: PCSPK_SaveWAV "SPX/pt/p3v.wav"
+  $ SYSTEM'''.replace('SPX',SP))
+  $ open(SP+'/pt/T9.BAS','w').write('\n'.join(lines))
+  $ PYEOF
+  $ cp PCSMIDI.B? PCSPKR.B? $SP/pt/; cd $SP/pt && /home/grymmjack/git/qb64pe/qb64pe -x T9.BAS -o ./T9 2>&1 | grep -i "error\|Output"; env -u WAYLAND_DISPLAY -u XDG_CURRENT_DESKTOP -u KDE_FULL_SESSION -u XDG_SESSION_TYPE QT_QPA_PLATFORM=xcb GDK_BACKEND=x11 DISPLAY=:99 HOME=$SP/pt/home PCSEDIT_NOMIDI=1 timeout 20 ./T9 2>&1|tail -1; cat arp.txt; python3 -c "
+  $ import wave,struct,math
+  $ def load(f):
+  $     w=wave.open(f); r=w.readframes(w.getnframes()); x=struct.unpack('<%dh'%(len(r)//2),r)[::w.getnchannels()]; return x[2000:40000],w.getframerate()
+  $ def g(x,sr,h):
+  $     k=2*math.cos(2*math.pi*h/sr); a=b=0
+  $     for v in x: c=v+k*a-b; b=a; a=c
+  $     return math.sqrt(a*a+b*b-k*a*b)/len(x)
+  $ for f in ['sq.wav','p1.wav','p3.wav','p3v.wav']:
+  $     x,sr=load(f); m=sum(x)/len(x)
+  $     print(f,'rms %.0f'%math.sqrt(sum((v-m)**2 for v in x)/len(x)), ' C4 %.0f E4 %.0f G4 %.0f'%(g(x,sr,261.6),g(x,sr,329.6),g(x,sr,392)))"
+2026-10-03T12:45:52-0400  WARNING  bash_end      [stderr] 11L stdout / 2L stderr
+  | Beginning C++ output from QB64 code... 
+  | Output: /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/pt/T9
+  | cycle up: 234681216 1234681216 1234681216 1234681216 1234681216 1234681216 1234681216 1234681216 1234681216
+  | down twice: 1216 
+  | rate 4 mix: 4561 4561 4561 4561 3620 3620 3620 3620 4561 4561 4561 4561 3620 3620 3620 3620
+  | vol clamp: 2 
+  | vol step: 1.25 
+  | sq.wav rms 8153  C4 5205 E4 15 G4 8
+  | p1.wav rms 7944  C4 4540 E4 4 G4 19
+  | p3.wav rms 6712  C4 1783 E4 1656 G4 1490
+  | p3v.wav rms 7557  C4 4051 E4 452 G4 406
+  ! 
+  ! Shell cwd was reset to /home/grymmjack/git/qb64
+2026-10-03T12:46:08-0400  INFO     bash_start    cd /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER && python3 - <<'PYEOF' | p='PCSEDIT.BAS'; s=open(p).read() | i=s.index("SUB arp_speed (dirn AS LONG)"); j=s.index(" set_status \"ARP speed\"", i) | s…
+  > cwd: /home/grymmjack/git/qb64
+  $ cd /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER && python3 - <<'PYEOF'
+  $ p='PCSEDIT.BAS'; s=open(p).read()
+  $ i=s.index("SUB arp_speed (dirn AS LONG)"); j=s.index("    set_status \"ARP speed\"", i)
+  $ s=s[:i]+"""SUB arp_speed (dirn AS LONG)
+  $     DIM lv(0 TO 7) AS LONG, i AS LONG, at AS LONG
+  $     lv(0) = 1: lv(1) = 2: lv(2) = 3: lv(3) = 4: lv(4) = 6: lv(5) = 8: lv(6) = 12: lv(7) = 16
+  $     FOR i = 0 TO 7
+  $         IF lv(i) <= arpRate THEN at = i ' the level now (or the one below it)
+  $     NEXT
+  $     at = (at + dirn + 8) MOD 8 ' round and round
+  $     arpRate = lv(at)
+  $ """+s[j:]
+  $ open(p,'w').write(s)
+  $ PYEOF
+  $ export SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad; python3 - <<'PYEOF'
+  $ import os
+  $ SP=os.environ['SP']
+  $ t=open(SP+'/pt/T9.BAS').read()
+  $ s=open('/home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER/PCSEDIT.BAS').read()
+  $ i=t.index("DIM tsI AS LONG, tsH"); j=t.index("SYSTEM",i)+6
+  $ lines=s.split('\n'); k=lines.index('DO'); lines.insert(k,t[i:j])
+  $ open(SP+'/pt/T9.BAS','w').write('\n'.join(lines))
+  $ PYEOF
+  $ cd $SP/pt && /home/grymmjack/git/qb64pe/qb64pe -x T9.BAS -o ./T9 2>&1 | grep -i "error\|Output"; env -u WAYLAND_DISPLAY -u XDG_CURRENT_DESKTOP -u KDE_FULL_SESSION -u XDG_SESSION_TYPE QT_QPA_PLATFORM=xcb GDK_BACKEND=x11 DISPLAY=:99 HOME=$SP/pt/home PCSEDIT_NOMIDI=1 timeout 20 ./T9 2>&1|tail -1; head -3 arp.txt
+2026-10-03T12:46:12-0400  WARNING  bash_end      [stderr] 5L stdout / 2L stderr
+  | Beginning C++ output from QB64 code... 
+  | Output: /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/pt/T9
+  | cycle up: 2 3 4 6 8 12 16 1 2
+  | down twice: 16 
+  | rate 4 mix: 4561 4561 4561 4561 3620 3620 3620 3620 4561 4561 4561 4561 3620 3620 3620 3620
+  ! 
+  ! Shell cwd was reset to /home/grymmjack/git/qb64
+2026-10-03T12:46:20-0400  INFO     bash_start    cd /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER && export SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad && python3 - <<'PYEOF' | import os | SP=os.env…
+  > cwd: /home/grymmjack/git/qb64
+  $ cd /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER && export SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad && python3 - <<'PYEOF'
+  $ import os
+  $ SP=os.environ['SP']; here=os.getcwd()
+  $ s=open('PCSEDIT.BAS').read()
+  $ lines=s.split('\n'); i=lines.index('DO')
+  $ lines.insert(i,'open_bank "%s/ASSETS/TUNES/BIRTHDAY.SND"\npolyMode = POLY_PWM: arpRate = 6: vVol(1) = 1.6: vVol(2) = 0.5: vVol(3) = 0.75: vVol(4) = 1\nmsr_click 33\nDIM SHARED shT AS DOUBLE: shT = TIMER' % here)
+  $ s='\n'.join(lines)
+  $ a="    midi_poll\n    metronome\n"
+  $ s=s.replace(a,a+'    IF TIMER - shT > 1.2 THEN _SAVEIMAGE ENVIRON$("SHOT"), scrImg: SYSTEM\n',1)
+  $ open(SP+'/help/M.BAS','w').write(s)
+  $ PYEOF
+  $ cd $SP/help && cp /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER/PCSMIDI.B? . && /home/grymmjack/git/qb64pe/qb64pe -x M.BAS -o ./M 2>&1 | grep -i "error\|Output"; env -u WAYLAND_DISPLAY -u XDG_CURRENT_DESKTOP -u KDE_FULL_SESSION -u XDG_SESSION_TYPE QT_QPA_PLATFORM=xcb GDK_BACKEND=x11 DISPLAY=:99 SHOT=$PWD/vol.png HOME=$PWD/h1280 PCSEDIT_NOMIDI=1 timeout 20 ./M 2>&1|tail -1; magick vol.png -crop 330x300+0+0 -scale 200% vol_crop.png
+2026-10-03T12:46:25-0400  WARNING  bash_end      [stderr] 2L stdout / 2L stderr
+  | Beginning C++ output from QB64 code... 
+  | Output: /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/help/M
+  ! 
+  ! Shell cwd was reset to /home/grymmjack/git/qb64
+2026-10-03T12:46:38-0400  INFO     bash_start    cd /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER && python3 - <<'PYEOF' | p='README.md'; s=open(p).read() | def r(a,b): | global s | assert s.count(a)==1,a[:60]; s=s.replace(a,b) | r("""* **Chords f…
+  > cwd: /home/grymmjack/git/qb64
+  $ cd /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER && python3 - <<'PYEOF'
+  $ p='README.md'; s=open(p).read()
+  $ def r(a,b):
+  $     global s
+  $     assert s.count(a)==1,a[:60]; s=s.replace(a,b)
+  $ r("""* **Chords from the keys:** in STEP record""","""* **ARP speed:** the small box under the ARP / PWM chip (click it, use the
+  $   wheel on it, or **Ctrl+Shift+J**) sets how many steps each chord note
+  $   lasts before the next one takes over: 1 (the default, a buzzy blur at 140
+  $   notes a second), 2, 3, 4, 6, 8, 12 or 16 (a slow, clear arpeggio). The ARP
+  $   version saved in the bank uses it too, so games play it the same way.
+  $ * **Vol** (PWM mode): a level per voice, 0 to 200%. Use the wheel on it, or
+  $   drag it up or down, and double click it for 100%. In PWM mode every
+  $   playback and export goes through PWM, so the levels always apply. A 1-bit
+  $   speaker can't be quieter or louder any other way, so in ARP mode they do
+  $   nothing. Voices in a chord share the speaker's swing; PWM mixes them a bit
+  $   hotter than an even split, so a chord is nearly as loud as one voice, and
+  $   Vol lets you bring the melody forward.
+  $ """ + """* **Chords from the keys:** in STEP record""")
+  $ r("""| `-p MML` | convert this PLAY string instead of a file |""","""| `-p MML` | convert this PLAY string instead of a file |
+  $ | `-r N` | ARP speed for the mix: each chord note lasts N steps (default 1) |""")
+  $ open(p,'w').write(s)
+  $ PYEOF
+  $ SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad && /home/grymmjack/git/qb64pe/qb64pe -x PCSEDIT.BAS -o $SP/PCSEDIT 2>&1 | tail -1; /home/grymmjack/git/qb64pe/qb64pe -x MID2SND.BAS -o $SP/MID2SND 2>&1 | tail -1; $SP/MID2SND ASSETS/TUNES/MIDI/fanfare.mid $SP/f.snd -r 4 | tail -1
+2026-10-03T12:46:42-0400  INFO     bash_end      [ok] 3L stdout
+  | Output: /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/PCSEDIT
+  | Output: /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/MID2SND
+  |   saved f.snd: 4 entries, 4160 bytes
+2026-10-03T12:48:16-0400  NOTICE   prompt        <ide_opened_file>The user opened the file /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER/PCSEDIT.BAS in the IDE. This may or may not be related to the current task.</ide_opened_file>
+  > <ide_opened_file>The user opened the file /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER/PCSEDIT.BAS in the IDE. This may or may not be related to the current task.</ide_opened_file>
+  > the volume sliders are wayy too small - can we make them taller - also they don't show response in the meter above? is that what's supposed to happen? also the sound is very distorted by default in PWM - so what you did please adjust/undo or something - i loaded birthday song from tunes and hit play and it was distorted
+2026-10-03T12:49:01-0400  INFO     bash_start    grep -n "FUNCTION heard_pos" PCSEDIT.BAS; python3 - <<'PYEOF' | p='PCSEDIT.BAS'; s=open(p).read() | def r(a,b,c=1): | global s | assert s.count(a)==c,(a[:100],s.count(a)); s=s.replace(a,b) | # --- la…
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ grep -n "FUNCTION heard_pos" PCSEDIT.BAS; python3 - <<'PYEOF'
+  $ p='PCSEDIT.BAS'; s=open(p).read()
+  $ def r(a,b,c=1):
+  $     global s
+  $     assert s.count(a)==c,(a[:100],s.count(a)); s=s.replace(a,b)
+  $ # --- layout
+  $ r("CONST LIST_Y = 216 '                     (the voice chips and their M / S / R / Vol rows are above the list)",
+  $   "CONST LIST_Y = 240 '                     (the voice chips, their M / S / R rows and Vol faders are above the list)")
+  $ r("CONST VOICE_Y = 104 '                    the voice chips' row","CONST VOICE_Y = 104 '                    the voice chips' row\nCONST VOL_Y = 178 '                      the Vol faders: top\nCONST VOL_H = 38 '                       and height")
+  $ # --- mixing back to an even split (no clipping at 100%)
+  $ r("""    ' each voice swings +-1 times its volume; the sum is scaled by 1/sqrt(n),
+  $     ' not 1/n, so a chord stays nearly as loud as one voice (peaks clip)
+  $     g = 1 / SQR(n)""","""    ' each voice swings +-1 times its volume and the voices share the swing
+  $     ' evenly (1/n): clean at 100%; a voice turned up past that can clip
+  $     g = 1 / n""")
+  $ r("""    IF playing THEN
+  $         pwm_needed = -1 ' (even one voice: its volume applies)""","""    IF playing THEN
+  $         ' several voices, or one whose volume isn't 100%
+  $         pwm_needed = voices_used(cur) > 1 OR vol_set""")
+  $ r("""        IF polyMode = POLY_PWM THEN
+  $             n = step_divs(cur, s, d())""","""        IF polyMode = POLY_PWM AND (voices_used(cur) > 1 OR vol_set) THEN
+  $             n = step_divs(cur, s, d())""")
+  $ r("""SUB set_volume (k AS LONG, v AS SINGLE)""","""FUNCTION vol_set%
+  $     DIM k AS LONG
+  $     FOR k = 1 TO VOICES
+  $         IF vVol(k) <> 1 THEN vol_set = -1: EXIT FUNCTION
+  $     NEXT
+  $ END FUNCTION
+  $ 
+  $ 
+  $ SUB set_volume (k AS LONG, v AS SINGLE)""")
+  $ # --- the faders
+  $ a=s[s.index("    ' Vol: a level per voice (heard in PWM mode)"):s.index("    ' Mute / Solo / Rec, a button per voice under its chip")]
+  $ r(a,"""    ' Vol: a fader per voice (heard in PWM mode), lit while the voice sounds
+  $     y = VOL_Y
+  $     COLOR _RGB32(110, 124, 150)
+  $     _PRINTSTRING (LIST_X, y + VOL_H \\ 2 - 8), "Vol"
+  $     IF playing THEN hp = heard_pos(playPos) ELSE hp = -1
+  $     FOR k = 1 TO VOICES
+  $         x = LIST_X + 48 + (k - 1) * 22
+  $         LINE (x - 3, y)-(x + 12, y + VOL_H - 1), _RGB32(20, 24, 34), BF
+  $         LINE (x - 3, y)-(x + 12, y + VOL_H - 1), _RGB32(64, 74, 96), B
+  $         c = voice_col(k)
+  $         lit = -1
+  $         IF polyMode <> POLY_PWM OR vMute(k) THEN lit = 0
+  $         IF hp >= 0 THEN
+  $             IF voice_step(cur, k, hp) = 0 THEN lit = 0 ' silent right now
+  $         END IF
+  $         IF NOT lit THEN c = _RGB32(_RED32(c) * 0.45, _GREEN32(c) * 0.45, _BLUE32(c) * 0.45)
+  $         fh = CLNG(vVol(k) / 2 * (VOL_H - 4))
+  $         IF fh > 0 THEN LINE (x - 1, y + VOL_H - 2 - fh)-(x + 10, y + VOL_H - 3), c, BF
+  $         LINE (x - 3, y + VOL_H \\ 2)-(x + 12, y + VOL_H \\ 2), _RGB32(170, 180, 200) ' 100%
+  $     NEXT
+  $ 
+  $ """)
+  $ r("""SUB draw_voice_chips
+  $     DIM k AS LONG, x AS LONG, y AS LONG, c AS _UNSIGNED LONG, row AS LONG, lit AS INTEGER, fg AS _UNSIGNED LONG""","""SUB draw_voice_chips
+  $     DIM k AS LONG, x AS LONG, y AS LONG, c AS _UNSIGNED LONG, row AS LONG, lit AS INTEGER, fg AS _UNSIGNED LONG
+  $     DIM hp AS LONG, fh AS LONG""")
+  $ # --- hit test: row 4 is the faders
+  $ r("""    FOR row = 1 TO 4 ' (4: Vol)
+  $         y = VOICE_Y + row * 18 + 2
+  $         IF my >= y - 1 AND my <= y + 15 THEN""","""    IF my >= VOL_Y AND my < VOL_Y + VOL_H THEN ' the Vol faders: 41 - 44
+  $         FOR k = 1 TO VOICES
+  $             x = LIST_X + 48 + (k - 1) * 22
+  $             IF mx >= x - 3 AND mx <= x + 12 THEN msr_hit = 40 + k: EXIT FUNCTION
+  $         NEXT
+  $     END IF
+  $     FOR row = 1 TO 3
+  $         y = VOICE_Y + row * 18 + 2
+  $         IF my >= y - 1 AND my <= y + 15 THEN""")
+  $ # --- click / drag sets the level from the mouse position
+  $ r("""        CASE 4 ' Vol: drag up / down (or the wheel; double click: 100%)
+  $             volDragK = k: volDragY = mly: volDragV = vVol(k)
+  $             drawing = 21""","""        CASE 4 ' Vol: the level is where you click / drag (wheel too; double click: 100%)
+  $             volDragK = k
+  $             fader_at k, mly
+  $             drawing = 21""")
+  $ r("""        IF b1 THEN set_volume volDragK, volDragV + (volDragY - my) / 100 ELSE drawing = 0""","""        IF b1 THEN fader_at volDragK, my ELSE drawing = 0""")
+  $ r("""FUNCTION vol_set%""","""''
+  $ ...[truncated]
+2026-10-03T12:49:04-0400  INFO     bash_end      [ok] 4L stdout
+  | 1288:FUNCTION heard_pos& (p AS LONG)
+  | 207:DIM SHARED volDragY AS LONG
+  | 208:DIM SHARED volDragV AS SINGLE
+  | Output: /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/PCSEDIT
+2026-10-03T12:49:18-0400  INFO     bash_start    python3 - <<'PYEOF' | p='PCSEDIT.BAS'; s=open(p).read() | for a in ["DIM SHARED volDragY AS LONG\n","DIM SHARED volDragV AS SINGLE\n"]: | assert s.count(a)==1; s=s.replace(a,"") | s=s.replace("DIM SH…
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ python3 - <<'PYEOF'
+  $ p='PCSEDIT.BAS'; s=open(p).read()
+  $ for a in ["DIM SHARED volDragY AS LONG\n","DIM SHARED volDragV AS SINGLE\n"]:
+  $     assert s.count(a)==1; s=s.replace(a,"")
+  $ s=s.replace("DIM SHARED volDragK AS LONG ' dragging a Vol button: which voice, from where","DIM SHARED volDragK AS LONG ' dragging a Vol fader: which voice")
+  $ open(p,'w').write(s)
+  $ PYEOF
+  $ export SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad; python3 - <<'PYEOF'
+  $ import os
+  $ SP=os.environ['SP']
+  $ t=open(SP+'/pt/T9.BAS').read()
+  $ s=open('PCSEDIT.BAS').read()
+  $ i=t.index("DIM tsI AS LONG, tsH"); j=t.index("SYSTEM",i)+6
+  $ lines=s.split('\n'); k=lines.index('DO'); lines.insert(k,t[i:j])
+  $ open(SP+'/pt/T9.BAS','w').write('\n'.join(lines))
+  $ here=os.getcwd()
+  $ lines=s.split('\n'); i=lines.index('DO')
+  $ lines.insert(i,'open_bank "%s/ASSETS/TUNES/BIRTHDAY.SND"\npolyMode = POLY_PWM: vVol(1) = 1.5: vVol(2) = 0.6\nplay_from 0\nDIM SHARED shT AS DOUBLE: shT = TIMER' % here)
+  $ s2='\n'.join(lines)
+  $ a="    midi_poll\n    metronome\n"
+  $ s2=s2.replace(a,a+'    IF TIMER - shT > 2.3 THEN _SAVEIMAGE ENVIRON$("SHOT"), scrImg: SYSTEM\n',1)
+  $ open(SP+'/help/M.BAS','w').write(s2)
+  $ PYEOF
+  $ cp PCSMIDI.B? PCSPKR.B? $SP/pt/; cp PCSMIDI.B? $SP/help/; E="env -u WAYLAND_DISPLAY -u XDG_CURRENT_DESKTOP -u KDE_FULL_SESSION -u XDG_SESSION_TYPE QT_QPA_PLATFORM=xcb GDK_BACKEND=x11 DISPLAY=:99 PCSEDIT_NOMIDI=1"; cd $SP/pt && /home/grymmjack/git/qb64pe/qb64pe -x T9.BAS -o ./T9 2>&1 | grep -i "error\|Output"; eval $E HOME=$SP/pt/home timeout 20 ./T9 2>&1|tail -1; python3 -c "
+  $ import wave,struct,math
+  $ for f in ['p1.wav','p3.wav','p3v.wav']:
+  $     w=wave.open(f); r=w.readframes(w.getnframes()); x=struct.unpack('<%dh'%(len(r)//2),r)[::w.getnchannels()][2000:40000]; m=sum(x)/len(x)
+  $     print(f,'rms %.0f'%math.sqrt(sum((v-m)**2 for v in x)/len(x)))"; cd $SP/help && /home/grymmjack/git/qb64pe/qb64pe -x M.BAS -o ./M 2>&1 | grep -i "error\|Output"; eval $E SHOT=$PWD/vol.png HOME=$PWD/h1280 timeout 20 ./M 2>&1|tail -1; magick vol.png -crop 330x330+0+0 -scale 200% vol_crop.png
+2026-10-03T12:49:28-0400  WARNING  bash_end      [stderr] 7L stdout / 2L stderr
+  | Beginning C++ output from QB64 code... 
+  | Output: /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/pt/T9
+  | p1.wav rms 7944
+  | p3.wav rms 6661
+  | p3v.wav rms 6774
+  | Beginning C++ output from QB64 code... 
+  | Output: /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/help/M
+  ! 
+  ! Shell cwd was reset to /home/grymmjack/git/qb64
+2026-10-03T12:49:38-0400  INFO     bash_start    cd /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER && python3 - <<'PYEOF' | p='README.md'; s=open(p).read() | i=s.index("* **Vol** (PWM mode):"); j=s.index("* **Chords from the keys:**", i) | s=s[:i]+…
+  > cwd: /home/grymmjack/git/qb64
+  $ cd /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER && python3 - <<'PYEOF'
+  $ p='README.md'; s=open(p).read()
+  $ i=s.index("* **Vol** (PWM mode):"); j=s.index("* **Chords from the keys:**", i)
+  $ s=s[:i]+"""* **Vol** (PWM mode): a fader per voice, 0 at the bottom, 100% at the line
+  $   in the middle, 200% at the top. Click or drag in it to set the level, use
+  $   the wheel on it, or double click it for 100%. While a sound plays, each
+  $   fader lights up when its voice is sounding. A 1-bit speaker can only get
+  $   quieter or louder through PWM, so the levels do nothing in ARP mode. In
+  $   PWM the voices share the speaker's swing evenly, which is clean at 100%;
+  $   turning a voice up past 100% brings it forward but can clip.
+  $ """+s[j:]
+  $ open(p,'w').write(s)
+  $ PYEOF
+  $ SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad && /home/grymmjack/git/qb64pe/qb64pe -x PCSEDIT.BAS -o $SP/PCSEDIT 2>&1 | tail -1
+2026-10-03T12:49:41-0400  INFO     bash_end      [ok] 1L stdout
+  | Output: /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/PCSEDIT
+2026-10-03T12:57:13-0400  NOTICE   prompt        <ide_opened_file>The user opened the file /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER/PCSEDIT.BAS in the IDE. This may or may not be related to the current task.</ide_opened_file>
+  > <ide_opened_file>The user opened the file /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER/PCSEDIT.BAS in the IDE. This may or may not be related to the current task.</ide_opened_file>
+  > can i have a vol slider under G too? that's taller? also, can middle click of mouse on any m/s/r reset it's entire state of m/s/r buttons? so they are all disabled at once? thanks
+2026-10-03T12:57:22-0400  INFO     bash_start    grep -n -i "volume\|gain\|amplitude\|\.amp\b\|level" PCSPKR.BI | head -20
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ grep -n -i "volume\|gain\|amplitude\|\.amp\b\|level" PCSPKR.BI | head -20
+2026-10-03T12:57:22-0400  INFO     bash_end      [ok] 2L stdout
+  | 84:        sampAcc AS DOUBLE ' integral of speaker level over those clocks
+  | 93:        volume AS SINGLE
+2026-10-03T12:57:24-0400  INFO     bash_start    grep -n "\.volume\|PCSPK_SetVolume\|SUB PCSPK_Volume" PCSPKR.BM | head
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ grep -n "\.volume\|PCSPK_SetVolume\|SUB PCSPK_Volume" PCSPKR.BM | head
+2026-10-03T12:57:24-0400  INFO     bash_end      [ok] 6L stdout
+  | 41:        pcspk.volume = 0.25
+  | 73:    SUB PCSPK_SetVolume (vol AS SINGLE)
+  | 75:        pcspk.volume = vol
+  | 76:        IF pcspk.volume < 0 THEN pcspk.volume = 0
+  | 77:        IF pcspk.volume > 1 THEN pcspk.volume = 1
+  | 303:        y = y * pcspk.volume
+2026-10-03T12:57:55-0400  INFO     bash_start    grep -n "PCSPK_SetVolume" PCSEDIT.BAS | head; python3 - <<'PYEOF' | p='PCSEDIT.BAS'; s=open(p).read() | def r(a,b,c=1): | global s | assert s.count(a)==c,(a[:100],s.count(a)); s=s.replace(a,b) | r(""…
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ grep -n "PCSPK_SetVolume" PCSEDIT.BAS | head; python3 - <<'PYEOF'
+  $ p='PCSEDIT.BAS'; s=open(p).read()
+  $ def r(a,b,c=1):
+  $     global s
+  $     assert s.count(a)==c,(a[:100],s.count(a)); s=s.replace(a,b)
+  $ r("""DIM SHARED volDragK AS LONG ' dragging a Vol fader: which voice""","""DIM SHARED volDragK AS LONG ' dragging a Vol fader: which voice (5 = master)
+  $ DIM SHARED masterVol AS SINGLE ' the master fader (under G): 1 = 100%, up to 2""")
+  $ r("""\ncfg_load\n""","""\ncfg_load\nmasterVol = VAL(cfg_get("master", "1"))\nIF masterVol < 0 OR masterVol > 2 THEN masterVol = 1\n""")
+  $ r("""    PRINT #ff, "arprate="; LTRIM$(STR$(arpRate))""","""    PRINT #ff, "arprate="; LTRIM$(STR$(arpRate))
+  $     PRINT #ff, "master="; LTRIM$(STR$(masterVol))""")
+  $ # apply at start-up: after the emulator is set up (make_ui is after cfg); put before main DO
+  $ lines=s.split('\n'); i=lines.index('DO')
+  $ lines.insert(i,"apply_master ' the master fader's level")
+  $ s='\n'.join(lines)
+  $ 
+  $ # draw the master fader
+  $ r("""    ' Mute / Solo / Rec, a button per voice under its chip
+  $     FOR row = 1 TO 3""","""    ' the master fader, under G: everything you hear (and export)
+  $     x = LIST_X + 48 + VOICES * 22
+  $     y = VOICE_Y + 19
+  $     fh = VOL_Y + VOL_H - y
+  $     LINE (x - 3, y)-(x + 12, y + fh - 1), _RGB32(20, 24, 34), BF
+  $     LINE (x - 3, y)-(x + 12, y + fh - 1), _RGB32(96, 104, 124), B
+  $     c = _RGB32(225, 228, 238)
+  $     IF playing THEN c = _RGB32(255, 255, 255) ELSE c = _RGB32(170, 174, 186)
+  $     k = CLNG(masterVol / 2 * (fh - 4))
+  $     IF k > 0 THEN LINE (x - 1, y + fh - 2 - k)-(x + 10, y + fh - 3), c, BF
+  $     LINE (x - 3, y + fh \\ 2)-(x + 12, y + fh \\ 2), _RGB32(255, 200, 60) ' 100%
+  $ 
+  $     ' Mute / Solo / Rec, a button per voice under its chip
+  $     FOR row = 1 TO 3""")
+  $ # hit test: master = 45
+  $ r("""    IF my >= VOL_Y AND my < VOL_Y + VOL_H THEN ' the Vol faders: 41 - 44""","""    x = LIST_X + 48 + VOICES * 22 ' the master fader under G: 45
+  $     IF mx >= x - 3 AND mx <= x + 12 AND my >= VOICE_Y + 19 AND my < VOL_Y + VOL_H THEN msr_hit = 45: EXIT FUNCTION
+  $     IF my >= VOL_Y AND my < VOL_Y + VOL_H THEN ' the Vol faders: 41 - 44""")
+  $ # fader_at / set_volume handle k = 5
+  $ r("""SUB fader_at (k AS LONG, y AS LONG)
+  $     set_volume k, (VOL_Y + VOL_H - 3 - y) / (VOL_H - 4) * 2
+  $ END SUB""","""SUB fader_at (k AS LONG, y AS LONG)
+  $     DIM h AS LONG
+  $     IF k = 5 THEN ' the master: taller
+  $         h = VOL_Y + VOL_H - (VOICE_Y + 19)
+  $         set_volume k, (VOL_Y + VOL_H - 3 - y) / (h - 4) * 2
+  $     ELSE
+  $         set_volume k, (VOL_Y + VOL_H - 3 - y) / (VOL_H - 4) * 2
+  $     END IF
+  $ END SUB
+  $ 
+  $ 
+  $ ''
+  $ ' The master fader sets the emulator's output level (0.25 is its normal).
+  $ '
+  $ SUB apply_master
+  $     PCSPK_SetVolume 0.25 * masterVol
+  $ END SUB""")
+  $ r("""SUB set_volume (k AS LONG, v AS SINGLE)
+  $     vVol(k) = v""","""SUB set_volume (k AS LONG, v AS SINGLE)
+  $     IF k = 5 THEN
+  $         masterVol = v
+  $         IF masterVol < 0 THEN masterVol = 0
+  $         IF masterVol > 2 THEN masterVol = 2
+  $         masterVol = CLNG(masterVol * 20) / 20
+  $         apply_master
+  $         set_status "Master volume" + STR$(CLNG(masterVol * 100)) + "% (everything you hear, and Ctrl+E exports)"
+  $         EXIT SUB
+  $     END IF
+  $     vVol(k) = v""")
+  $ # wheel over master: uses msr_hit\10 = 4 and k = 5 -> vVol(5) out of range: route
+  $ r("""            k = msr_hit(mlx, mly) MOD 10
+  $             set_volume k, vVol(k) - wheel * 0.05 ' wheel up: louder""","""            k = msr_hit(mlx, mly) MOD 10
+  $             IF k = 5 THEN
+  $                 set_volume 5, masterVol - wheel * 0.05
+  $             ELSE
+  $                 set_volume k, vVol(k) - wheel * 0.05 ' wheel up: louder
+  $             END IF""")
+  $ # middle click: M/S/R reset, faders reset
+  $ r("""        IF _MOUSEBUTTON(3) AND NOT mid3 THEN
+  $             IF mlx >= RULER_X - 30 AND mly >= TIME_Y AND mly < CANVAS_Y + CANVAS_H THEN fit_notes: fit_length
+  $         END IF""","""        IF _MOUSEBUTTON(3) AND NOT mid3 THEN
+  $             k = msr_hit(mlx, mly)
+  $ ...[truncated]
+2026-10-03T12:57:59-0400  INFO     bash_end      [ok] 1L stdout
+  | Output: /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/PCSEDIT
+2026-10-03T12:58:04-0400  INFO     bash_start    sed -n 36,44p PCSPKR.BM; sed -n 70,80p PCSPKR.BM
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ sed -n 36,44p PCSPKR.BM; sed -n 70,80p PCSPKR.BM
+2026-10-03T12:58:04-0400  INFO     bash_end      [ok] 18L stdout
+  |         IF pcspk.initialized THEN EXIT SUB
+  |         pcspk.rate = _SNDRATE
+  |         IF pcspk.rate <= 0 THEN pcspk.rate = 44100
+  |         pcspk.clkPerSample = PCSPK_PIT_HZ / pcspk.rate
+  |         pcspk.dcR = 1 - (2 * _PI * 20 / pcspk.rate) ' ~20 Hz cone DC blocker
+  |         pcspk.volume = 0.25
+  |         pcspk.lead = 0.08
+  |         pcspk.initialized = -1
+  |         PCSPK_SetTickRate PCSPK_BIOS_TICK_HZ
+  |     ''
+  |     ' Master volume, 0.0 - 1.0 (default 0.25 - a raw square wave is LOUD).
+  |     '
+  |     SUB PCSPK_SetVolume (vol AS SINGLE)
+  |         PCSPK_Init
+  |         pcspk.volume = vol
+  |         IF pcspk.volume < 0 THEN pcspk.volume = 0
+  |         IF pcspk.volume > 1 THEN pcspk.volume = 1
+  |     END SUB
+2026-10-03T12:58:19-0400  INFO     bash_start    export SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad && python3 - <<'PYEOF' | import os | SP=os.environ['SP']; here=os.getcwd() | s=open('PCSEDIT.BAS').…
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER
+  $ export SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad && python3 - <<'PYEOF'
+  $ import os
+  $ SP=os.environ['SP']; here=os.getcwd()
+  $ s=open('PCSEDIT.BAS').read()
+  $ lines=s.split('\n'); i=lines.index('DO')
+  $ lines.insert(i,'''DIM tsI AS LONG, tsH AS LONG, tsF AS LONG
+  $ open_bank "HERE/ASSETS/TUNES/BIRTHDAY.SND"
+  $ tsF = FREEFILE: OPEN "SPX/pt/mv.txt" FOR OUTPUT AS #tsF
+  $ msr_click 12: msr_click 23: msr_click 31: msr_click 34
+  $ PRINT #tsF, "before reset M"; vMute(1); vMute(2); vMute(3); vMute(4); " solo"; soloV; " R"; vRec(1); vRec(2); vRec(3); vRec(4)
+  $ msr_reset
+  $ PRINT #tsF, "after reset  M"; vMute(1); vMute(2); vMute(3); vMute(4); " solo"; soloV; " R"; vRec(1); vRec(2); vRec(3); vRec(4)
+  $ PRINT #tsF, "hit master:"; msr_hit(LIST_X + 48 + VOICES * 22 + 4, VOICE_Y + 40); " fader2:"; msr_hit(LIST_X + 48 + 22 + 4, VOL_Y + 10); " M3:"; msr_hit(LIST_X + 48 + 44 + 4, VOICE_Y + 22)
+  $ FOR tsI = 1 TO 2
+  $     IF tsI = 1 THEN set_volume 5, 1 ELSE set_volume 5, 0.5
+  $     PCSPK_CaptureBegin
+  $     PCSPK_SetDivisor note_div(60)
+  $     FOR tsH = 1 TO 140: PCSPK_AdvanceClocks pcspk.tickClk: NEXT
+  $     PCSPK_Off: PCSPK_AdvanceSeconds 0.05
+  $     tsH = PCSPK_CaptureEnd: PCSPK_SaveWAV "SPX/pt/mv" + LTRIM$(STR$(tsI)) + ".wav"
+  $ NEXT
+  $ vVol(2) = 0.3: set_volume 5, 1.5: vol_reset
+  $ PRINT #tsF, "vol reset:"; vVol(2); masterVol; pcspk.volume
+  $ CLOSE #tsF
+  $ polyMode = POLY_PWM: masterVol = 1.4: vVol(1) = 1.5: play_from 0
+  $ DIM SHARED shT AS DOUBLE: shT = TIMER'''.replace('SPX',SP).replace('HERE',here))
+  $ s='\n'.join(lines)
+  $ a="    midi_poll\n    metronome\n"
+  $ s=s.replace(a,a+'    IF TIMER - shT > 2.3 THEN _SAVEIMAGE "'+SP+'/pt/mv.png", scrImg: SYSTEM\n',1)
+  $ open(SP+'/pt/T10.BAS','w').write(s)
+  $ PYEOF
+  $ cp PCSMIDI.B? PCSPKR.B? $SP/pt/; cd $SP/pt && /home/grymmjack/git/qb64pe/qb64pe -x T10.BAS -o ./T10 2>&1 | grep -i "error\|Output"; env -u WAYLAND_DISPLAY -u XDG_CURRENT_DESKTOP -u KDE_FULL_SESSION -u XDG_SESSION_TYPE QT_QPA_PLATFORM=xcb GDK_BACKEND=x11 DISPLAY=:99 PCSEDIT_NOMIDI=1 HOME=$SP/help/h1280 timeout 20 ./T10 2>&1|tail -1; cat mv.txt; python3 -c "
+  $ import wave,struct,math
+  $ for f in ['mv1.wav','mv2.wav']:
+  $     w=wave.open(f); r=w.readframes(w.getnframes()); x=struct.unpack('<%dh'%(len(r)//2),r)[::w.getnchannels()][2000:40000]; m=sum(x)/len(x)
+  $     print(f,'rms %.0f'%math.sqrt(sum((v-m)**2 for v in x)/len(x)))"; magick mv.png -crop 330x330+0+0 -scale 200% mv_crop.png
+2026-10-03T12:58:25-0400  WARNING  bash_end      [stderr] 8L stdout / 2L stderr
+  | Beginning C++ output from QB64 code... 
+  | Output: /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/pt/T10
+  | before reset M-1 -1  0 -1  solo 3  R-1  0  0 -1 
+  | after reset  M 0  0  0  0  solo 0  R 0  0  0  0 
+  | hit master: 45  fader2: 42  M3: 13 
+  | vol reset: 1  1  .25 
+  | mv1.wav rms 8153
+  | mv2.wav rms 4076
+  ! 
+  ! Shell cwd was reset to /home/grymmjack/git/qb64
+2026-10-03T13:22:55-0400  NOTICE   prompt        <ide_opened_file>The user opened the file /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER/PCSEDIT.BAS in the IDE. This may or may not be related to the current task.</ide_opened_file>
+  > <ide_opened_file>The user opened the file /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER/PCSEDIT.BAS in the IDE. This may or may not be related to the current task.</ide_opened_file>
+  > can you make the default arp speed 3 - that's a better default than 1 - because 1 is so fast it becomes enharmonic... 
+  > 
+  > thanks
+2026-10-03T13:23:08-0400  INFO     bash_start    cd /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER && python3 - <<'PYEOF' | import re | p='PCSEDIT.BAS'; s=open(p).read() | a='arpRate = VAL(cfg_get("arprate", "1"))\nIF arpRate < 1 OR arpRate > 16 TH…
+  > cwd: /home/grymmjack/git/qb64
+  $ cd /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER && python3 - <<'PYEOF'
+  $ import re
+  $ p='PCSEDIT.BAS'; s=open(p).read()
+  $ a='arpRate = VAL(cfg_get("arprate", "1"))\nIF arpRate < 1 OR arpRate > 16 THEN arpRate = 1'
+  $ assert a in s
+  $ s=s.replace(a,'arpRate = VAL(cfg_get("arprate", "3")) \' 3 steps a note: still a chord, not a blur\nIF arpRate < 1 OR arpRate > 16 THEN arpRate = 3')
+  $ open(p,'w').write(s)
+  $ p='MID2SND.BAS'; s=open(p).read()
+  $ for a,b in [("nv = 4: gap = 1: arpRate = 1","nv = 4: gap = 1: arpRate = 3"),
+  $             ("'   -r N     ARP speed: each chord note lasts N steps in the mix (default 1)","'   -r N     ARP speed: each chord note lasts N steps in the mix (default 3)"),
+  $             ('    PRINT "  -r N     ARP speed: each chord note lasts N steps in the mix (default 1)"','    PRINT "  -r N     ARP speed: each chord note lasts N steps in the mix (default 3)"')]:
+  $     assert a in s,a; s=s.replace(a,b)
+  $ open(p,'w').write(s)
+  $ p='README.md'; s=open(p).read()
+  $ for a,b in [("lasts before the next one takes over: 1 (the default, a buzzy blur at 140\n  notes a second), 2, 3, 4, 6, 8, 12 or 16 (a slow, clear arpeggio).",
+  $              "lasts before the next one takes over: 1 (a buzzy blur at 140 notes a\n  second), 2, 3 (the default), 4, 6, 8, 12 or 16 (a slow, clear arpeggio)."),
+  $             ("| `-r N` | ARP speed for the mix: each chord note lasts N steps (default 1) |","| `-r N` | ARP speed for the mix: each chord note lasts N steps (default 3) |")]:
+  $     assert a in s,a; s=s.replace(a,b)
+  $ open(p,'w').write(s)
+  $ PYEOF
+  $ SP=/tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad && /home/grymmjack/git/qb64pe/qb64pe -x PCSEDIT.BAS -o $SP/PCSEDIT 2>&1 | tail -1 && /home/grymmjack/git/qb64pe/qb64pe -x MID2SND.BAS -o $SP/MID2SND 2>&1 | tail -1 && cd ASSETS/TUNES && cp $SP/MID2SND . && ./make_tunes.sh 2>&1 | grep -ciE "saved"; rm MID2SND; grep -c "" /dev/null; grep arprate ~/.config/pcsedit.ini; git -C /home/grymmjack/git/qb64 status --short | head
+2026-10-03T13:23:13-0400  INFO     bash_end      [ok] 15L stdout
+  | Output: /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/PCSEDIT
+  | Output: /tmp/claude-1000/-home-grymmjack-git-qb64/8aae2dea-6211-45f1-bf59-216af8899b42/scratchpad/MID2SND
+  | 14
+  | 0
+  | arprate=3
+  |  M .claude/activity.log
+  |  M qb64/SOUND/PC-SPEAKER/ASSETS/TUNES/BIRTHDAY.SND
+  |  M qb64/SOUND/PC-SPEAKER/ASSETS/TUNES/CANOND.SND
+  |  M qb64/SOUND/PC-SPEAKER/ASSETS/TUNES/CHIPLOOP.SND
+  |  M qb64/SOUND/PC-SPEAKER/ASSETS/TUNES/FURELISE.SND
+  |  M qb64/SOUND/PC-SPEAKER/ASSETS/TUNES/GREENSLEEV.SND
+  |  M qb64/SOUND/PC-SPEAKER/ASSETS/TUNES/JINGLEBELL.SND
+  |  M qb64/SOUND/PC-SPEAKER/ASSETS/TUNES/JINGLES.SND
+  |  M qb64/SOUND/PC-SPEAKER/ASSETS/TUNES/KOROBEINIK.SND
+  |  M qb64/SOUND/PC-SPEAKER/ASSETS/TUNES/MINUETG.SND
+2026-10-03T13:26:55-0400  NOTICE   prompt        <ide_opened_file>The user opened the file /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER/PCSEDIT.BAS in the IDE. This may or may not be related to the current task.</ide_opened_file>
+  > <ide_opened_file>The user opened the file /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER/PCSEDIT.BAS in the IDE. This may or may not be related to the current task.</ide_opened_file>
+  > this is sick. please commit and push
+2026-10-03T13:27:01-0400  INFO     bash_start    cd /home/grymmjack/git/qb64 && git status --short | grep -v "^?? MYSOUNDS.SND" ; git add .claude/activity.log qb64/SOUND/PC-SPEAKER && git status --short | grep -v "^M \|^A " ; git commit -q -m "SOUN…
+  > cwd: /home/grymmjack/git/qb64/qb64/SOUND/PC-SPEAKER/ASSETS/TUNES
+  $ cd /home/grymmjack/git/qb64 && git status --short | grep -v "^?? MYSOUNDS.SND" ; git add .claude/activity.log qb64/SOUND/PC-SPEAKER && git status --short | grep -v "^M \|^A " ; git commit -q -m "SOUND/PC-SPEAKER: PCSEDIT key zoom, fit, retime, ARP speed, volumes
+  $ 
+  $ - Shift+wheel zooms the note rows (all notes down to one octave), the wheel
+  $   over the keys or a hiding scrollbar scrolls them; keys and note bars show
+  $   their note names once there is room
+  $ - double click the keys / the time ruler fits the notes / the length (or
+  $   the selection); middle click does both
+  $ - a new tempo (Ctrl+B) can retime the sound's notes, every voice, run by run
+  $ - the last folders used for banks and for exports are remembered
+  $ - ARP speed (1-16 steps a note, default 3) for playback and saved banks;
+  $   MID2SND -r; example banks rebuilt with it
+  $ - per-voice Vol faders (PWM) that light while their voice sounds, a master
+  $   fader under G, middle click clears every M/S/R or resets every fader
+  $ 
+  $ Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>" && timeout 100 git push -q; git log --oneline -1; git status -sb | head -2
