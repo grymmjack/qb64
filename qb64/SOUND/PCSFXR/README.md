@@ -131,6 +131,27 @@ divisors.
 
 ---
 
+## Command line
+
+Give PCSFXR options and it runs without a window: the options are steps,
+run left to right on one sound. `PCSFXR -help` lists them all.
+
+```sh
+PCSFXR -seed 7 -preset jump -set decay=0.2 -mode pwm -wav jump.wav -json
+PCSFXR -load coin.json -mode beeper -snd COIN.SND -bas
+PCSFXR -link "https://sfxr.me/#34T6Pk..." -info -play
+```
+
+* **Make:** `-preset`, `-load` (.json), `-link` (sfxr.me link / code),
+  `-seed N` (repeatable), `-mutate`, `-set key=value,...` (`p_` and `env_`
+  optional: `decay=0.2`), `-wave`, `-gain`, `-name`.
+* **Playing:** `-mode beeper|pwm|clean`, `-tick`, `-gate`, `-pwmhz`,
+  `-cone on|off`.
+* **Out:** `-wav`, `-wav8`, `-json`, `-bas`, `-snd`, `-url`, `-info`,
+  `-play`. File names are optional (`NAME.ext` where you ran it).
+
+`PCSFXR sound.json` (no options) opens the window with it loaded.
+
 ## Using the engine in your own program
 
 `SFXR.BI` / `SFXR.BM` are the synth on their own, without the window. Your game

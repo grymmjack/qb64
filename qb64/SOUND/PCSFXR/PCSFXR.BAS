@@ -19,6 +19,12 @@
 ' Keys:  Space play, Ctrl+C copy sfxr.me link, Ctrl+V paste link/json, Esc quit
 ' Drop a .json file on the window to load it.
 '
+' Command line (no window): PCSFXR -help. The arguments are steps, run left
+' to right on one sound, e.g.
+'   PCSFXR -seed 7 -preset jump -set p_decay=0.2 -mode pwm -wav jump.wav
+'
+$CONSOLE
+$SCREENHIDE
 OPTION _EXPLICIT
 '$INCLUDE:'../PC-SPEAKER/PCSPKR.BI'
 '$INCLUDE:'SFXR.BI'
@@ -82,7 +88,11 @@ cTrack = _RGB32(40, 40, 40)
 cLine = _RGB32(200, 200, 200)
 cBlue = _RGB32(20, 40, 230)
 
+IF cli_wanted THEN cli_main ' -flags: run from the command line, no window
+
+_CONSOLE OFF
 SCREEN _NEWIMAGE(SCR_W, SCR_H, 32)
+_SCREENSHOW
 _TITLE "PCSFXR - sfxr for the PC speaker"
 _ACCEPTFILEDROP ON
 _PRINTMODE _KEEPBACKGROUND
@@ -93,6 +103,7 @@ coneLP = 0
 apply_cone
 sndName = "pickupCoin"
 SFXR_Preset sndName
+IF _COMMANDCOUNT >= 1 THEN load_json_file SFXR_CliPath(COMMAND$(1)) ' PCSFXR sound.json
 needRender = -1
 playAfter = 0
 
@@ -1013,3 +1024,231 @@ END FUNCTION
 
 '$INCLUDE:'../PC-SPEAKER/PCSPKR.BM'
 '$INCLUDE:'SFXR.BM'
+
+
+'-----------------------------------------------------------------------------
+' Command line
+'-----------------------------------------------------------------------------
+
+''
+' Any argument starting with "-" means the command line; a lone file name
+' just opens it in the window.
+'
+FUNCTION cli_wanted%
+    DIM i AS LONG
+    FOR i = 1 TO _COMMANDCOUNT
+        IF LEFT$(COMMAND$(i), 1) = "-" THEN cli_wanted = -1: EXIT FUNCTION
+    NEXT
+END FUNCTION
+
+
+SUB cli_main
+    DIM i AS LONG, a AS STRING, v AS STRING, f AS STRING, p AS LONG, w AS LONG, d AS STRING
+    _DEST _CONSOLE
+    SFXR_Init
+    coneLP = 0
+    sndName = "sfx"
+    i = 1
+    DO WHILE i <= _COMMANDCOUNT
+        a = LCASE$(COMMAND$(i))
+        IF LEFT$(a, 2) = "--" THEN a = MID$(a, 2)
+        SELECT CASE a
+            CASE "-h", "-help", "-?": cli_help: SYSTEM
+            CASE "-preset"
+                v = cli_arg(i)
+                IF INSTR(" pickupcoin lasershoot explosion powerup hithurt jump blipselect synth tone click random ", " " + LCASE$(v) + " ") = 0 THEN cli_fail "Unknown preset: " + v
+                SFXR_Preset v
+                sndName = v
+            CASE "-load"
+                f = SFXR_CliPath(cli_arg(i))
+                IF NOT _FILEEXISTS(f) THEN cli_fail "Can't find " + f
+                IF NOT SFXR_Import(PCSPK_ReadFile(f)) THEN cli_fail "Not an sfxr .json / link: " + f
+                sndName = PCSFXR_FilePart(f)
+                p = _INSTRREV(sndName, ".")
+                IF p > 1 THEN sndName = LEFT$(sndName, p - 1)
+            CASE "-link"
+                IF NOT SFXR_Import(cli_arg(i)) THEN cli_fail "Not an sfxr.me link or code"
+            CASE "-seed": RANDOMIZE USING VAL(cli_arg(i))
+            CASE "-mutate": SFXR_Mutate
+            CASE "-set"
+                v = cli_arg(i) + ","
+                DO WHILE LEN(v)
+                    p = INSTR(v, ",")
+                    IF p > 1 THEN
+                        IF NOT SFXR_SetParam(LEFT$(v, p - 1)) THEN cli_fail "Bad -set: " + LEFT$(v, p - 1) + " (see -help for the keys)"
+                    END IF
+                    v = MID$(v, p + 1)
+                LOOP
+            CASE "-wave"
+                w = SFXR_WaveByName(cli_arg(i))
+                IF w < 0 THEN cli_fail "Unknown wave: " + COMMAND$(i)
+                sfxr_p(0) = w
+            CASE "-gain": sfxr_vol = VAL(cli_arg(i)): SFXR_Clamp
+            CASE "-mode"
+                SELECT CASE LCASE$(cli_arg(i))
+                    CASE "beeper": sfxr_mode = SFXR_MODE_BEEPER
+                    CASE "pwm": sfxr_mode = SFXR_MODE_PWM
+                    CASE "clean", "sfxr": sfxr_mode = SFXR_MODE_CLEAN
+                    CASE ELSE: cli_fail "-mode is beeper, pwm or clean"
+                END SELECT
+            CASE "-tick": sfxr_tickHz = VAL(cli_arg(i)): IF sfxr_tickHz <= 0 THEN cli_fail "-tick needs Hz > 0"
+            CASE "-gate": sfxr_gate = VAL(cli_arg(i))
+            CASE "-pwmhz": sfxr_pwmHz = VAL(cli_arg(i)): IF sfxr_pwmHz < 1000 THEN cli_fail "-pwmhz needs 1000 Hz or more"
+            CASE "-cone": coneLP = cli_onoff(cli_arg(i))
+            CASE "-name": sndName = cli_arg(i)
+            CASE "-wav"
+                cli_render
+                f = cli_out(i, ".wav")
+                SFXR_SaveWAV f
+                cli_saved f
+            CASE "-wav8"
+                cli_render
+                f = cli_out(i, "-8bit.wav")
+                SFXR_Save8BitWAV f, 8000
+                cli_saved f
+            CASE "-json"
+                f = cli_out(i, ".json")
+                SFXR_SaveText f, SFXR_ToJSON
+                cli_saved f
+            CASE "-bas"
+                cli_render
+                f = cli_out(i, ".bas")
+                SFXR_SaveText f, SFXR_BasCode(sndName)
+                cli_saved f
+            CASE "-snd"
+                cli_render
+                REDIM nm(0) AS STRING, dt(0) AS STRING
+                nm(0) = sndName
+                dt(0) = divisors_140
+                d = SFXR_BuildIFS(nm(), dt(), 1)
+                IF d = "" THEN cli_fail "Too long for an IFS file"
+                f = cli_out(i, ".snd")
+                SFXR_SaveText f, d
+                cli_saved f
+            CASE "-url": PRINT "https://sfxr.me/#" + SFXR_ToB58
+            CASE "-info"
+                cli_render
+                PRINT "name = "; sndName
+                PRINT SFXR_ParamDump;
+                PRINT "length ="; SFXR_Seconds; "s"
+            CASE "-play"
+                cli_render
+                IF snd > 0 THEN
+                    _SNDPLAY snd
+                    DO WHILE _SNDPLAYING(snd): _LIMIT 100: LOOP
+                ELSE
+                    PRINT "No audio device"
+                END IF
+            CASE ELSE
+                cli_fail "Unknown option: " + COMMAND$(i) + " (try -help)"
+        END SELECT
+        i = i + 1
+    LOOP
+    IF snd > 0 THEN _SNDCLOSE snd
+    SYSTEM
+END SUB
+
+
+SUB cli_render
+    IF snd > 0 THEN _SNDSTOP snd: _SNDCLOSE snd: snd = 0
+    apply_cone
+    snd = SFXR_Render
+END SUB
+
+
+''
+' The value after option i (and i moves past it).
+'
+FUNCTION cli_arg$ (i AS LONG)
+    IF i >= _COMMANDCOUNT THEN cli_fail COMMAND$(i) + " needs a value"
+    i = i + 1
+    cli_arg = COMMAND$(i)
+END FUNCTION
+
+
+''
+' An output file: the path after option i if there is one, else NAME + ext
+' in the folder the program was run from.
+'
+FUNCTION cli_out$ (i AS LONG, ext AS STRING)
+    IF i < _COMMANDCOUNT THEN
+        IF LEFT$(COMMAND$(i + 1), 1) <> "-" THEN
+            i = i + 1
+            cli_out = SFXR_CliPath(COMMAND$(i))
+            EXIT FUNCTION
+        END IF
+    END IF
+    cli_out = SFXR_CliPath(SFXR_SafeName(sndName) + ext)
+END FUNCTION
+
+
+FUNCTION cli_onoff% (v AS STRING)
+    SELECT CASE LCASE$(v)
+        CASE "on", "1", "yes", "true": cli_onoff = -1
+        CASE "off", "0", "no", "false": cli_onoff = 0
+        CASE ELSE: cli_fail "Expected on or off, got " + v
+    END SELECT
+END FUNCTION
+
+
+SUB cli_saved (f AS STRING)
+    PRINT "Saved "; f
+END SUB
+
+
+SUB cli_fail (msg AS STRING)
+    PRINT "PCSFXR: "; msg
+    SYSTEM 1
+END SUB
+
+
+SUB cli_help
+    DIM i AS LONG, s AS STRING
+    PRINT "PCSFXR - sfxr for the PC speaker"
+    PRINT
+    PRINT "  PCSFXR                 open the window"
+    PRINT "  PCSFXR sound.json      open the window with a sound loaded"
+    PRINT "  PCSFXR -option ...     run from the command line (no window)"
+    PRINT
+    PRINT "Options are steps, run left to right on one sound:"
+    PRINT
+    PRINT "Make a sound"
+    PRINT "  -preset KIND       pickupCoin laserShoot explosion powerUp hitHurt jump"
+    PRINT "                     blipSelect synth tone click random"
+    PRINT "  -load FILE         a jsfxr .json (or a text file with an sfxr.me link)"
+    PRINT "  -link CODE         an sfxr.me link or its code"
+    PRINT "  -seed N            repeatable presets / mutations (put it first)"
+    PRINT "  -mutate            nudge every parameter a little"
+    PRINT "  -set K=V[,K=V]     set parameters (keys below; p_ and env_ optional)"
+    PRINT "  -wave NAME         square sawtooth sine noise triangle pink brown metal"
+    PRINT "  -gain G            sound_vol, 0-1"
+    PRINT "  -name NAME         the sound's name (default file names, .bas / .snd)"
+    PRINT
+    PRINT "How it plays"
+    PRINT "  -mode M            beeper (default), pwm or clean"
+    PRINT "  -tick HZ           beeper tick rate (140 = Keen / Duke)"
+    PRINT "  -gate G            beeper: envelope below this is silence"
+    PRINT "  -pwmhz HZ          PWM carrier (8000 11025 16000 22050)"
+    PRINT "  -cone on|off       speaker cone low-pass filter"
+    PRINT
+    PRINT "Output (FILE is optional: default NAME.ext where you ran it)"
+    PRINT "  -wav [FILE]        16-bit WAV in the current mode"
+    PRINT "  -wav8 [FILE]       8 kHz 8-bit WAV (PC-SPEAKER/WAV.BAS)"
+    PRINT "  -json [FILE]       jsfxr .json (loads on sfxr.me)"
+    PRINT "  -bas [FILE]        ready-to-run QB64-PE program"
+    PRINT "  -snd [FILE]        Duke / Keen IFS bank (PCSEDIT, DN1PLAY)"
+    PRINT "  -url               print the sfxr.me link"
+    PRINT "  -info              print the parameters"
+    PRINT "  -play              play it and wait"
+    PRINT
+    PRINT "Parameter keys:"
+    s = "  wave_type sound_vol"
+    FOR i = 1 TO SFXR_NPARAMS
+        IF LEN(s) + LEN(sfxr_key(i)) > 76 THEN PRINT s: s = " "
+        s = s + " " + sfxr_key(i)
+    NEXT
+    PRINT s
+    PRINT
+    PRINT "Example:"
+    PRINT "  PCSFXR -seed 7 -preset jump -set decay=0.2 -mode pwm -wav jump.wav -json"
+END SUB

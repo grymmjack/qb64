@@ -58,3 +58,30 @@ Written entirely in QB64-PE, on top of the PC speaker emulator in
 QB64-PE's SOUND and PLAY have no filters or flanger, so those sliders only
 count in PWM / clean / WAV / PCSPLAY. Square waves with the duty cycle away
 from 50% become SOUND's pulse wave.
+
+## Command line
+
+Give PWMSFXR options and it runs without a window: the options are steps,
+run left to right on one sound, so you can design, tweak and export from a
+script. `PWMSFXR -help` lists them all.
+
+```sh
+PWMSFXR -load step.pwmsfx -wav step.wav                 # render a saved sound
+PWMSFXR -seed 3 -preset clank -voice 2 -vol 0.4 -save clank.pwmsfx -wav
+PWMSFXR -clear -vpreset hitHurt -wave brown -set decay=0.2 -mode clean -wav thud.wav
+```
+
+* **The whole sound:** `-preset` (the generator buttons), `-load`, `-clear`,
+  `-seed N` (repeatable), `-mutate`, `-name`.
+* **A voice:** `-voice N` picks the voice the next options change: `-on` /
+  `-off`, `-vol`, `-pan`, `-delay`, `-vpreset` (an sfxr preset), `-sfxr`
+  (a .json or sfxr.me link), `-wave`, `-set key=value,...` (sfxr keys,
+  `p_` and `env_` optional: `decay=0.2`).
+* **Playing:** `-mode pwm|clean`, `-pwmhz`, `-cone on|off`, `-gain`.
+* **Out:** `-wav`, `-wav8`, `-save` (.pwmsfx), `-pcsplay`, `-soundcode`,
+  `-playcode`, `-info`, `-play`. File names are optional (`NAME.ext` where
+  you ran it).
+
+`PWMSFXR sound.pwmsfx` (no options) opens the window with it loaded.
+[NEON-CASTER's sounds](../../GAMES/neon-caster/sfx/make-sfx.sh) are made
+this way.

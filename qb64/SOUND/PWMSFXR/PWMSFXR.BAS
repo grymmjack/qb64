@@ -19,6 +19,13 @@
 ' Mouse: click buttons, drag sliders, right-click a slider to reset it.
 ' Keys:  Space play, 1-4 pick a voice, Esc quit. Drop a .pwmsfx to load it.
 '
+' Command line (no window): PWMSFXR -help. The arguments are steps, run left
+' to right on one sound, e.g.
+'   PWMSFXR -load step.pwmsfx -wav step.wav
+'   PWMSFXR -seed 3 -preset clank -voice 2 -vol 0.4 -save clank.pwmsfx -wav
+'
+$CONSOLE
+$SCREENHIDE
 OPTION _EXPLICIT
 '$INCLUDE:'../PC-SPEAKER/PCSPKR.BI'
 '$INCLUDE:'../PCSFXR/SFXR.BI'
@@ -78,6 +85,8 @@ DIM SHARED coneLP AS INTEGER
 DIM SHARED needRender AS INTEGER
 DIM SHARED playAfter AS INTEGER
 DIM SHARED quitApp AS INTEGER
+DIM SHARED cliMode AS INTEGER ' running from the command line: status goes to stdout
+DIM SHARED exportDir AS STRING ' where export_path puts things (EXPORT)
 DIM SHARED plotMin(0 TO PLOT_N - 1) AS SINGLE
 DIM SHARED plotMax(0 TO PLOT_N - 1) AS SINGLE
 DIM SHARED logoImg AS LONG, logoShadow AS LONG
@@ -99,19 +108,26 @@ cGreen = _RGB32(52, 150, 40)
 cTrack = _RGB32(40, 40, 40)
 cLine = _RGB32(200, 200, 200)
 
-SCREEN _NEWIMAGE(SCR_W, SCR_H, 32)
-_TITLE "PWMSFXR - layered sfxr through the PC speaker"
-_ACCEPTFILEDROP ON
-_PRINTMODE _KEEPBACKGROUND
-make_logo
-
 SFXR_Init
 sfxr_tickHz = 140
 sfxr_pwmHz = 16000
 usePWM = -1
 coneLP = 0
+exportDir = "EXPORT"
 FOR k = 1 TO NV: vVol(k) = 0.8: NEXT
+
+IF cli_wanted THEN cli_main ' -flags: run from the command line, no window
+
+_CONSOLE OFF
+SCREEN _NEWIMAGE(SCR_W, SCR_H, 32)
+_SCREENSHOW
+_TITLE "PWMSFXR - layered sfxr through the PC speaker"
+_ACCEPTFILEDROP ON
+_PRINTMODE _KEEPBACKGROUND
+make_logo
+
 layered "explosion"
+IF _COMMANDCOUNT >= 1 THEN load_patch SFXR_CliPath(COMMAND$(1)) ' PWMSFXR sound.pwmsfx
 needRender = -1
 playAfter = 0
 
@@ -782,8 +798,8 @@ END SUB
 '-----------------------------------------------------------------------------
 
 FUNCTION export_path$ (ext AS STRING)
-    IF NOT _DIREXISTS("EXPORT") THEN MKDIR "EXPORT"
-    export_path = "EXPORT/" + UCASE$(SFXR_SafeName(sndName)) + ext
+    IF NOT _DIREXISTS(exportDir) THEN MKDIR exportDir
+    export_path = exportDir + "/" + UCASE$(SFXR_SafeName(sndName)) + ext
 END FUNCTION
 
 
@@ -1274,11 +1290,21 @@ END FUNCTION
 '-----------------------------------------------------------------------------
 
 SUB save_patch
-    DIM f AS STRING, t AS STRING, k AS LONG
-    store_voice sel
+    DIM f AS STRING
     f = _SAVEFILEDIALOG$("Save the sound", export_path(".pwmsfx"), "*.pwmsfx|*.PWMSFX", "PWMSFXR sounds")
     IF f = "" THEN EXIT SUB
     IF INSTR(MID$(f, _INSTRREV(f, "/") + 1), ".") = 0 THEN f = f + ".pwmsfx"
+    write_file f, patch_text
+    set_status "Saved " + f
+END SUB
+
+
+''
+' The whole sound as a .pwmsfx: each voice's settings and its sfxr .json.
+'
+FUNCTION patch_text$
+    DIM t AS STRING, k AS LONG
+    store_voice sel
     t = "PWMSFXR 1" + CHR$(10) + "name=" + sndName + CHR$(10)
     FOR k = 1 TO NV
         load_voice k
@@ -1286,9 +1312,8 @@ SUB save_patch
         t = t + SFXR_ToJSON + CHR$(10)
     NEXT
     load_voice sel
-    write_file f, t
-    set_status "Saved " + f
-END SUB
+    patch_text = t
+END FUNCTION
 
 
 SUB load_patch (f AS STRING)
@@ -1347,6 +1372,7 @@ END FUNCTION
 
 
 SUB set_status (msg AS STRING)
+    IF cliMode THEN PRINT msg: EXIT SUB
     statusMsg = msg
     statusUntil = TIMER(0.001) + 5
 END SUB
@@ -1423,3 +1449,285 @@ END FUNCTION
 
 '$INCLUDE:'../PC-SPEAKER/PCSPKR.BM'
 '$INCLUDE:'../PCSFXR/SFXR.BM'
+
+
+'-----------------------------------------------------------------------------
+' Command line
+'-----------------------------------------------------------------------------
+
+''
+' Any argument starting with "-" means the command line; a lone file name
+' just opens it in the window.
+'
+FUNCTION cli_wanted%
+    DIM i AS LONG
+    FOR i = 1 TO _COMMANDCOUNT
+        IF LEFT$(COMMAND$(i), 1) = "-" THEN cli_wanted = -1: EXIT FUNCTION
+    NEXT
+END FUNCTION
+
+
+SUB cli_main
+    DIM i AS LONG, a AS STRING, v AS STRING, f AS STRING, p AS LONG, w AS LONG, k AS LONG
+    _DEST _CONSOLE
+    cliMode = -1
+    layered "explosion" ' (what the window starts with; -load / -preset / -clear replace it)
+    sndName = "sfx"
+    i = 1
+    DO WHILE i <= _COMMANDCOUNT
+        a = LCASE$(COMMAND$(i))
+        IF LEFT$(a, 2) = "--" THEN a = MID$(a, 2)
+        SELECT CASE a
+            CASE "-h", "-help", "-?": cli_help: SYSTEM
+
+            ' --- the whole sound
+            CASE "-preset"
+                v = LCASE$(cli_arg(i))
+                IF INSTR(" coin laser explosion powerup hit jump clank blip zap random ", " " + v + " ") = 0 THEN cli_fail "Unknown preset: " + v
+                layered v
+            CASE "-load"
+                f = SFXR_CliPath(cli_arg(i))
+                IF NOT _FILEEXISTS(f) THEN cli_fail "Can't find " + f
+                IF LEFT$(read_file(f), 7) <> "PWMSFXR" THEN cli_fail "Not a .pwmsfx: " + f
+                load_patch f
+            CASE "-clear"
+                FOR k = 1 TO NV
+                    SFXR_Reset: store_voice k
+                    vOn(k) = 0: vVol(k) = 0.8: vPan(k) = 0: vDelay(k) = 0
+                NEXT
+                sel = 1: load_voice 1
+            CASE "-seed": RANDOMIZE USING VAL(cli_arg(i))
+            CASE "-mutate"
+                store_voice sel
+                FOR k = 1 TO NV
+                    IF vOn(k) THEN load_voice k: SFXR_Mutate: store_voice k
+                NEXT
+                load_voice sel
+            CASE "-name": sndName = cli_arg(i)
+
+            ' --- the voice being edited
+            CASE "-voice"
+                k = VAL(cli_arg(i))
+                IF k < 1 OR k > NV THEN cli_fail "-voice is 1 to" + STR$(NV)
+                pick_voice k
+            CASE "-on": vOn(sel) = -1
+            CASE "-off": vOn(sel) = 0
+            CASE "-vol": vVol(sel) = VAL(cli_arg(i))
+            CASE "-pan": vPan(sel) = VAL(cli_arg(i))
+            CASE "-delay": vDelay(sel) = VAL(cli_arg(i))
+            CASE "-vpreset"
+                v = cli_arg(i)
+                IF INSTR(" pickupcoin lasershoot explosion powerup hithurt jump blipselect synth tone click random ", " " + LCASE$(v) + " ") = 0 THEN cli_fail "Unknown sfxr preset: " + v
+                SFXR_Preset v
+                vOn(sel) = -1
+            CASE "-sfxr"
+                v = cli_arg(i)
+                f = SFXR_CliPath(v)
+                IF _FILEEXISTS(f) THEN v = read_file(f)
+                IF NOT SFXR_Import(v) THEN cli_fail "Not an sfxr .json, link or code: " + COMMAND$(i)
+                vOn(sel) = -1
+            CASE "-wave"
+                w = SFXR_WaveByName(cli_arg(i))
+                IF w < 0 THEN cli_fail "Unknown wave: " + COMMAND$(i)
+                sfxr_p(0) = w
+            CASE "-set"
+                v = cli_arg(i) + ","
+                DO WHILE LEN(v)
+                    p = INSTR(v, ",")
+                    IF p > 1 THEN
+                        IF NOT SFXR_SetParam(LEFT$(v, p - 1)) THEN cli_fail "Bad -set: " + LEFT$(v, p - 1) + " (see -help for the keys)"
+                    END IF
+                    v = MID$(v, p + 1)
+                LOOP
+
+            ' --- how it plays
+            CASE "-mode"
+                SELECT CASE LCASE$(cli_arg(i))
+                    CASE "pwm": usePWM = -1
+                    CASE "clean": usePWM = 0
+                    CASE ELSE: cli_fail "-mode is pwm or clean"
+                END SELECT
+            CASE "-pwmhz": sfxr_pwmHz = VAL(cli_arg(i)): IF sfxr_pwmHz < 1000 THEN cli_fail "-pwmhz needs 1000 Hz or more"
+            CASE "-cone": coneLP = cli_onoff(cli_arg(i))
+            CASE "-gain": sfxr_vol = VAL(cli_arg(i)): SFXR_Clamp
+
+            ' --- output
+            CASE "-wav"
+                cli_render
+                f = cli_out(i, ".wav")
+                IF usePWM THEN PCSPK_SaveWAV f ELSE write_file f, wav_clean
+                set_status "Saved " + f
+            CASE "-wav8"
+                cli_render
+                f = cli_out(i, "-8bit.wav")
+                write_file f, wav_8bit
+                set_status "Saved " + f
+            CASE "-save"
+                f = cli_out(i, ".pwmsfx")
+                write_file f, patch_text
+                set_status "Saved " + f
+            CASE "-pcsplay", "-soundcode", "-playcode"
+                cli_render
+                exportDir = cli_outdir(i)
+                IF a = "-pcsplay" THEN export_pcsplay
+                IF a = "-soundcode" THEN export_code 0
+                IF a = "-playcode" THEN export_code 1
+            CASE "-info"
+                cli_render
+                cli_info
+            CASE "-play"
+                cli_render
+                IF snd > 0 THEN
+                    _SNDPLAY snd
+                    DO WHILE _SNDPLAYING(snd): _LIMIT 100: LOOP
+                ELSE
+                    PRINT "No audio device"
+                END IF
+            CASE ELSE
+                cli_fail "Unknown option: " + COMMAND$(i) + " (try -help)"
+        END SELECT
+        i = i + 1
+    LOOP
+    IF snd > 0 THEN _SNDCLOSE snd
+    SYSTEM
+END SUB
+
+
+SUB cli_render
+    render_sound
+    IF mixN = 0 THEN SYSTEM 1 ' (render_sound said why)
+END SUB
+
+
+SUB cli_info
+    DIM k AS LONG
+    store_voice sel
+    PRINT "name = "; sndName; "   length ="; mixN / SFXR_RATE; "s   mode = ";
+    IF usePWM THEN PRINT "pwm"; sfxr_pwmHz; "Hz" ELSE PRINT "clean"
+    FOR k = 1 TO NV
+        PRINT "voice"; k; ": ";
+        IF vOn(k) THEN PRINT "on "; ELSE PRINT "off";
+        PRINT "  "; SFXR_WaveName(vp(k, 0)); "  vol "; fmt_n(vVol(k), 3); "  pan "; fmt_n(vPan(k), 3); "  delay "; fmt_n(vDelay(k), 3); " s";
+        IF k = sel THEN PRINT "   <- editing" ELSE PRINT
+    NEXT
+    PRINT
+    PRINT "voice"; sel; "parameters:"
+    PRINT SFXR_ParamDump;
+END SUB
+
+
+''
+' The value after option i (and i moves past it).
+'
+FUNCTION cli_arg$ (i AS LONG)
+    IF i >= _COMMANDCOUNT THEN cli_fail COMMAND$(i) + " needs a value"
+    i = i + 1
+    cli_arg = COMMAND$(i)
+END FUNCTION
+
+
+''
+' An output file: the path after option i if there is one, else NAME + ext
+' in the folder the program was run from.
+'
+FUNCTION cli_out$ (i AS LONG, ext AS STRING)
+    IF i < _COMMANDCOUNT THEN
+        IF LEFT$(COMMAND$(i + 1), 1) <> "-" THEN
+            i = i + 1
+            cli_out = SFXR_CliPath(COMMAND$(i))
+            EXIT FUNCTION
+        END IF
+    END IF
+    cli_out = SFXR_CliPath(UCASE$(SFXR_SafeName(sndName)) + ext)
+END FUNCTION
+
+
+''
+' An output folder: the one after option i if there is one, else the
+' folder the program was run from.
+'
+FUNCTION cli_outdir$ (i AS LONG)
+    DIM d AS STRING
+    d = SFXR_CliPath(".")
+    IF i < _COMMANDCOUNT THEN
+        IF LEFT$(COMMAND$(i + 1), 1) <> "-" THEN i = i + 1: d = SFXR_CliPath(COMMAND$(i))
+    END IF
+    IF RIGHT$(d, 1) = "/" OR RIGHT$(d, 1) = "\" THEN d = LEFT$(d, LEN(d) - 1)
+    cli_outdir = d
+END FUNCTION
+
+
+FUNCTION cli_onoff% (v AS STRING)
+    SELECT CASE LCASE$(v)
+        CASE "on", "1", "yes", "true": cli_onoff = -1
+        CASE "off", "0", "no", "false": cli_onoff = 0
+        CASE ELSE: cli_fail "Expected on or off, got " + v
+    END SELECT
+END FUNCTION
+
+
+SUB cli_fail (msg AS STRING)
+    PRINT "PWMSFXR: "; msg
+    SYSTEM 1
+END SUB
+
+
+SUB cli_help
+    DIM i AS LONG, s AS STRING
+    PRINT "PWMSFXR - layered sfxr through the PC speaker"
+    PRINT
+    PRINT "  PWMSFXR                 open the window"
+    PRINT "  PWMSFXR sound.pwmsfx    open the window with a sound loaded"
+    PRINT "  PWMSFXR -option ...     run from the command line (no window)"
+    PRINT
+    PRINT "Options are steps, run left to right on one sound (up to 4 voices):"
+    PRINT
+    PRINT "The whole sound"
+    PRINT "  -preset KIND       coin laser explosion powerup hit jump clank blip zap random"
+    PRINT "  -load FILE         a .pwmsfx"
+    PRINT "  -clear             every voice off and reset (build one from scratch)"
+    PRINT "  -seed N            repeatable presets / mutations (put it first)"
+    PRINT "  -mutate            nudge every voice a little"
+    PRINT "  -name NAME         the sound's name (default file names, code)"
+    PRINT
+    PRINT "The voice being edited (voice 1 to start with)"
+    PRINT "  -voice N           edit voice N (1-4)"
+    PRINT "  -on / -off         that voice in the mix or not"
+    PRINT "  -vol V  -pan P  -delay S     volume 0-1, pan -1..1, start delay (s)"
+    PRINT "  -vpreset KIND      an sfxr preset into this voice: pickupCoin laserShoot"
+    PRINT "                     explosion powerUp hitHurt jump blipSelect synth tone"
+    PRINT "                     click random"
+    PRINT "  -sfxr FILE|LINK    a jsfxr .json, sfxr.me link or code into this voice"
+    PRINT "  -wave NAME         square sawtooth sine noise triangle pink brown metal"
+    PRINT "  -set K=V[,K=V]     set its parameters (keys below; p_ and env_ optional)"
+    PRINT
+    PRINT "How it plays"
+    PRINT "  -mode M            pwm (PC speaker, default) or clean (stereo)"
+    PRINT "  -pwmhz HZ          PWM carrier (8000 11025 16000 22050)"
+    PRINT "  -cone on|off       speaker cone low-pass filter"
+    PRINT "  -gain G            output gain 0-1"
+    PRINT
+    PRINT "Output (FILE / DIR optional: default NAME.ext where you ran it)"
+    PRINT "  -wav [FILE]        WAV in the current mode (PWM mono, or clean stereo)"
+    PRINT "  -wav8 [FILE]       8-bit mono 11025 Hz WAV"
+    PRINT "  -save [FILE]       the .pwmsfx (opens in the window)"
+    PRINT "  -pcsplay [DIR]     NAME.wav + NAME_PCSPLAY.BM for a PCSPLAY game"
+    PRINT "  -soundcode [DIR]   NAME_SOUND.BAS (QB64-PE SOUND statements)"
+    PRINT "  -playcode [DIR]    NAME_PLAY.BAS (QB64-PE PLAY strings)"
+    PRINT "  -info              print the voices and the edited voice's parameters"
+    PRINT "  -play              play it and wait"
+    PRINT
+    PRINT "Parameter keys:"
+    SFXR_Init
+    s = "  wave_type"
+    FOR i = 1 TO SFXR_NPARAMS
+        IF LEN(s) + LEN(sfxr_key(i)) > 76 THEN PRINT s: s = " "
+        s = s + " " + sfxr_key(i)
+    NEXT
+    PRINT s
+    PRINT
+    PRINT "Examples:"
+    PRINT "  PWMSFXR -load step.pwmsfx -wav step.wav"
+    PRINT "  PWMSFXR -seed 3 -preset clank -voice 2 -vol 0.4 -save clank.pwmsfx -wav"
+    PRINT "  PWMSFXR -clear -vpreset hitHurt -wave brown -set decay=0.2 -mode clean -wav"
+END SUB

@@ -1345,4 +1345,108 @@ $IF SFXR_BM = UNDEFINED THEN
                 SFXR_BeeperUses = -1
         END SELECT
     END FUNCTION
+
+    '-------------------------------------------------------------------------
+    ' Command line helpers (PCSFXR / PWMSFXR -flags)
+    '-------------------------------------------------------------------------
+
+    ''
+    ' A waveform from its name (square, sawtooth / saw, sine, noise / white,
+    ' triangle, pink, brown, metal / lfsr) or number. -1 if it's neither.
+    '
+    FUNCTION SFXR_WaveByName& (s AS STRING)
+        DIM t AS STRING
+        t = LCASE$(_TRIM$(s))
+        SFXR_WaveByName = -1
+        SELECT CASE t
+            CASE "square", "pulse": SFXR_WaveByName = SFXR_SQUARE
+            CASE "sawtooth", "saw": SFXR_WaveByName = SFXR_SAWTOOTH
+            CASE "sine", "sin": SFXR_WaveByName = SFXR_SINE
+            CASE "noise", "white": SFXR_WaveByName = SFXR_NOISE
+            CASE "triangle", "tri": SFXR_WaveByName = SFXR_TRIANGLE
+            CASE "pink": SFXR_WaveByName = SFXR_PINK
+            CASE "brown": SFXR_WaveByName = SFXR_BROWN
+            CASE "metal", "lfsr": SFXR_WaveByName = SFXR_METAL
+            CASE ELSE
+                IF LEN(t) = 1 AND INSTR("01234567", t) > 0 THEN SFXR_WaveByName = VAL(t)
+        END SELECT
+    END FUNCTION
+
+
+    FUNCTION SFXR_WaveName$ (w AS LONG)
+        SELECT CASE w
+            CASE SFXR_SQUARE: SFXR_WaveName = "square"
+            CASE SFXR_SAWTOOTH: SFXR_WaveName = "sawtooth"
+            CASE SFXR_SINE: SFXR_WaveName = "sine"
+            CASE SFXR_NOISE: SFXR_WaveName = "noise"
+            CASE SFXR_TRIANGLE: SFXR_WaveName = "triangle"
+            CASE SFXR_PINK: SFXR_WaveName = "pink"
+            CASE SFXR_BROWN: SFXR_WaveName = "brown"
+            CASE SFXR_METAL: SFXR_WaveName = "metal"
+        END SELECT
+    END FUNCTION
+
+
+    ''
+    ' Set one parameter from "key=value": a jsfxr key (p_base_freq, or just
+    ' base_freq; p_env_decay, or just decay), wave / wave_type (a name or number) or sound_vol / gain.
+    ' Returns TRUE if the key was known.
+    '
+    FUNCTION SFXR_SetParam%% (assign AS STRING)
+        DIM p AS LONG, k AS STRING, v AS STRING, i AS LONG, w AS LONG
+        SFXR_Init
+        p = INSTR(assign, "=")
+        IF p = 0 THEN EXIT FUNCTION
+        k = LCASE$(_TRIM$(LEFT$(assign, p - 1)))
+        v = _TRIM$(MID$(assign, p + 1))
+        IF k = "wave" OR k = "wave_type" THEN
+            w = SFXR_WaveByName(v)
+            IF w < 0 THEN EXIT FUNCTION
+            sfxr_p(0) = w
+            SFXR_SetParam = -1
+            EXIT FUNCTION
+        END IF
+        IF k = "sound_vol" OR k = "gain" THEN sfxr_vol = VAL(v): SFXR_Clamp: SFXR_SetParam = -1: EXIT FUNCTION
+        IF LEFT$(k, 2) = "p_" THEN k = MID$(k, 3)
+        FOR i = 1 TO SFXR_NPARAMS ' p_ and env_ are optional: decay = p_env_decay
+            IF sfxr_key(i) = "p_" + k OR sfxr_key(i) = "p_env_" + k THEN
+                sfxr_p(i) = VAL(v)
+                SFXR_Clamp
+                SFXR_SetParam = -1
+                EXIT FUNCTION
+            END IF
+        NEXT
+    END FUNCTION
+
+
+    ''
+    ' The current sound's parameters, one "key = value  (meaning)" per line.
+    '
+    FUNCTION SFXR_ParamDump$
+        DIM i AS LONG, s AS STRING, nl AS STRING
+        SFXR_Init
+        nl = CHR$(10)
+        s = "wave_type = " + SFXR_WaveName(sfxr_p(0)) + nl
+        FOR i = 1 TO SFXR_NPARAMS
+            s = s + sfxr_key(i) + " = " + SFXR_Num(sfxr_p(i)) + "  (" + sfxr_label(i) + ": " + SFXR_ParamText(i) + ")" + nl
+        NEXT
+        s = s + "sound_vol = " + SFXR_Num(sfxr_vol) + "  (" + SFXR_GainText + ")" + nl
+        SFXR_ParamDump = s
+    END FUNCTION
+
+
+    ''
+    ' A path from the command line. QB64-PE programs can start in their own
+    ' folder, so a relative path is taken from where the program was run.
+    '
+    FUNCTION SFXR_CliPath$ (f AS STRING)
+        DIM d AS STRING
+        IF LEFT$(f, 1) = "/" OR LEFT$(f, 1) = "\" OR MID$(f, 2, 1) = ":" THEN
+            SFXR_CliPath = f
+        ELSE
+            d = _STARTDIR$
+            IF RIGHT$(d, 1) <> "/" AND RIGHT$(d, 1) <> "\" THEN d = d + "/"
+            SFXR_CliPath = d + f
+        END IF
+    END FUNCTION
 $END IF
